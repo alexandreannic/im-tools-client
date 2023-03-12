@@ -4,6 +4,8 @@ import {UUID} from '../../core/type'
 import React, {useEffect} from 'react'
 import {Box, BoxProps, GlobalStyles} from '@mui/material'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {Svg} from './Ukraine.svg'
+import {UkraineMapSvg} from './ukraine'
 
 const generalStyles = <GlobalStyles
   styles={{
@@ -20,17 +22,25 @@ const generalStyles = <GlobalStyles
 
 const Pdf = (props: BoxProps) => {
   return (
-    <Box
-      {...props}
-      sx={{
-        size: 'landscape',
-        '@media screen': {
-          my: 2,
-          mx: 'auto',
-          maxWidth: 900,
-        }
-      }}
-    />
+    <Box sx={{
+      '@media screen': {
+        background: '#f6f7f9',
+        padding: 2,
+      }
+    }}>
+
+      <Box
+        {...props}
+        sx={{
+          size: 'landscape',
+          '@media screen': {
+            my: 2,
+            mx: 'auto',
+            maxWidth: 900,
+          }
+        }}
+      />
+    </Box>
   )
 }
 
@@ -39,8 +49,9 @@ const Slide = (props: BoxProps) => {
     <Box
       {...props}
       sx={{
+        background: 'white',
+        overflow: 'hidden',
         '@media screen': {
-          overflow: 'hidden',
           aspectRatio: (297 / 210) + '',
           mb: 2,
           borderRadius: '6px',
@@ -58,15 +69,16 @@ export const ProtectionSnapshot = ({formId}: {formId: UUID}) => {
   const _answers = useFetcher(api.kobo.getAnswers)
 
   useEffect(() => {
-    console.log('fetch')
     _answers.fetch({}, formId, {start: new Date(2022, 11, 1), end: new Date(2023, 3, 1)})
   }, [formId])
 
+  console.log(_answers.entity)
   return (
-    <Box sx={{
-      padding: 2,
-      background: '#f6f7f9',
-    }}>
+    <>
+      <Box sx={{margin: 'auto', maxWidth: 900}}>
+        <UkraineMapSvg fill={{'UA-05': 1}}/>
+      </Box>
+
       {generalStyles}
       <div className="noprint">
         <button onClick={() => window.print()}>Download</button>
@@ -75,13 +87,13 @@ export const ProtectionSnapshot = ({formId}: {formId: UUID}) => {
         <Slide>
           Holalal
           <h1>Grey h1 element</h1>
-          <HorizontalBarChartGoogle data={[{label: 'A', value: 1}, {label: 'B', value: 10}]}/>
+          {/*<Svg/>*/}
         </Slide>
         <Slide>
           Holalal
           <h1>P22</h1>
           <HorizontalBarChartGoogle data={[
-            {label: 'C', value: 12}, 
+            {label: 'C', value: 12},
             {label: '1', value: 10},
             {label: '2', value: 10},
             {label: '3', value: 10},
@@ -91,7 +103,7 @@ export const ProtectionSnapshot = ({formId}: {formId: UUID}) => {
             {label: '7', value: 10},
             {label: '8', value: 10},
             {label: '9', value: 10},
-            {label: '1C', value: 12}, 
+            {label: '1C', value: 12},
             {label: '11', value: 10},
             {label: '12', value: 10},
             {label: '13', value: 10},
@@ -104,6 +116,6 @@ export const ProtectionSnapshot = ({formId}: {formId: UUID}) => {
           ]}/>
         </Slide>
       </Pdf>
-    </Box>
+    </>
   )
 }
