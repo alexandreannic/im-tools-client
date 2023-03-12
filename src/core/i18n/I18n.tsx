@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {ReactNode, useContext, useEffect, useMemo, useState} from 'react'
 import {en} from './localization/en'
-import {ua} from './localization/ua'
 import {Enum} from '@alexandreannic/ts-utils'
 
 export interface I18nContextProps {
@@ -18,7 +17,7 @@ export interface I18nContextProps {
 }
 
 export const appLangs = {
-  ua,
+  // ua,
   en
 }
 
@@ -46,8 +45,8 @@ export const I18nProvider = ({
 
   const {messages: m, ...others}: typeof en = useMemo(() => {
     switch (lang) {
-      case 'ua':
-        return ua
+      // case 'ua':
+      //   return ua
       default:
         return en
     }
