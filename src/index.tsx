@@ -12,6 +12,7 @@ import {ApiSdk} from './core/sdk/ApiSdk'
 import {ApiClient} from './core/sdk/ApiClient'
 import {ApiContextProvider} from './core/context/ApiContext'
 import {NfiProvider} from './core/context/NfiContext'
+import {KoboProvider} from './core/context/KoboContext'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,6 +31,7 @@ root.render(
     _ => <HashRouter children={_}/>,
     _ => <ApiContextProvider children={_} api={api}/>,
     _ => <NfiProvider children={_}/>,
+    _ => <KoboProvider children={_}/>,
   ]}>
     <App/>
   </Provide>
