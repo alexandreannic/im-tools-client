@@ -39,4 +39,15 @@ export interface KoboAnswerMetaData {
   // _submitted_by: any
 }
 
-export type KoboAnswer = (KoboAnswerMetaData & {[key: string]: string})
+export type KoboAnswer = (KoboAnswerMetaData & {[key: string]: any})
+
+export class KoboType {
+  static readonly mapAnswerMetaData = (k: Record<keyof KoboAnswerMetaData, any>): KoboAnswerMetaData => {
+    return {
+      ...k,
+      start: new Date(k.start),
+      end: new Date(k.end),
+      _submission_time: new Date(k._submission_time),
+    }
+  }
+}

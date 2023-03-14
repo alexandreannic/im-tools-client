@@ -26,7 +26,7 @@ export const dateFromNow = (d?: Date): string | undefined => {
 }
 
 export const formatLargeNumber = (n?: number): string => {
-  return n !== undefined && n !== null ? n.toLocaleString('fr-FR') : '-'
+  return n !== undefined && n !== null ? n.toLocaleString('en-EN') : '-'
 }
 
 export const formatDuration = formatDurationFns
@@ -59,6 +59,30 @@ export const en = Object.freeze({
       east: 'East',
       south: 'South',
       west: 'West'
-    }
+    },
+    decidingFactorsToReturn: 'Deciding factors to return',
+    displacement: 'Displacement',
+    origin: 'Origin',
+    current: 'Current',
+    protectionHHSnapshot: {
+      title: 'Protection Monitoring',
+      subTitle: 'Ukraine',
+      disclaimer: `
+        This SNAPSHOT summarizes the findings of Protection Monitoring conducted in the regions/oblasts of Chernihiv, Dnipro, Lviv, Chernivtsi, and Kharkiv, Ukraine. Protection monitoring has been mainly implemented through household interviews, complemented by focus group discussions, observation checklists, and Rapid Protection Assessments. DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people directly exposed to and affected by the current armed conflict. 
+      `,
+    },
+    factorsToReturn: {      
+      shelter_is_repaired: 'Shelter is repaired',
+      improvement_in_security_situat: 'Improvement in security situation',
+      increased_service_availability: 'Increased service availability',
+      infrastructure__including_heat: 'Infrastructure is repaired',
+      cessation_of_hostilities: 'Cessation of hostilities',
+      health_facilties_are_accessibl: 'Health facilities accessible',
+      government_regains_territory_f: 'Government regains territory from NGCA',
+      other219: 'Other',
+      education_facilities__schools_: 'Education facilities accessible',
+    },
+    departureFromAreaOfOrigin: `Departure from area of origin`,
+    dateOfDeparture: `Date of departure`,
   },
 })

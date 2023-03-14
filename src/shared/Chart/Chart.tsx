@@ -13,7 +13,7 @@ export interface ScLineChartPropsBase {
   disableAnimation?: boolean
   hideLabelToggle?: boolean
   height?: number
-  sx: SxProps
+  sx?: SxProps
 }
 
 interface Props extends ScLineChartPropsBase {
@@ -59,12 +59,12 @@ export const ScLineChart = memo(({sx, disableAnimation, hideLabelToggle, curves,
           ))}
         </Box>
       )}
-      <Box sx={{height, ...sx}}>
+      <Box sx={{height, ml: -4, ...sx}}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart width={500} height={height - 60} data={mappedData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
+          <LineChart height={height - 60} data={mappedData}>
+            <CartesianGrid strokeDasharray="3 3"/>
+            <XAxis dataKey="date"/>
+            <YAxis/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}}/>
             {curves.map((_, i) => (
               <Line
@@ -114,11 +114,11 @@ export const ScBarChart = ({curves, height}: Props) => {
     <div style={{height: height ?? 300}}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart width={500} height={300} data={mappedData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend wrapperStyle={{position: 'relative', marginTop: -16}} />
+          <CartesianGrid strokeDasharray="3 3"/>
+          <XAxis dataKey="date"/>
+          <YAxis/>
+          <Tooltip/>
+          <Legend wrapperStyle={{position: 'relative', marginTop: -16}}/>
           {curves.map((_, i) => (
             <Bar
               stackId="_"

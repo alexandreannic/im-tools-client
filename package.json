@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alexandreannic/react-hooks-lib": "^1.11.19",
-    "@alexandreannic/ts-utils": "^1.7.15",
+    "@alexandreannic/ts-utils": "^1.7.19",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/material": "^5.11.11",

@@ -3,6 +3,7 @@ import {ukraineSvgPath} from './ukraineSvgPath'
 import {alpha, Box, BoxProps, useTheme} from '@mui/material'
 import {useMemo} from 'react'
 import {Oblast, OblastIndex} from './oblastIndex'
+import {Txt} from 'mui-extension'
 
 // viewBox="22.138577 52.380834 40.220623 44.387017"
 // width="612.47321"
@@ -14,8 +15,10 @@ export const UkraineMap = ({
   values = {},
   total,
   onSelect,
+  legend,
   sx,
 }: {
+  legend?: string
   onSelect?: (oblast: Oblast) => void
   total?: number
   values?: Partial<Record<keyof typeof ukraineSvgPath, number>>
@@ -32,44 +35,45 @@ export const UkraineMap = ({
     return res
   }, [values])
 
-  console.log(values)
   return (
-    <Box
-      component="svg"
-      sx={sx}
-      preserveAspectRatio="xMidYMin slice"
-      // style={{width: '100%',}}
-      viewBox="0 0 612 408"
-    >
-      <g stroke={theme.palette.background.paper} strokeWidth="1">
-        {Enum.keys(ukraineSvgPath).map(iso =>
-          <Box
-            onClick={() => {
-              const o = OblastIndex.findByIso(iso)
-              if (o && onSelect) {
-                onSelect(o)
-              }
-            }}
-            component="path"
-            key={iso}
-            d={ukraineSvgPath[iso].d}
-            fill={map(fill[iso], _ => alpha(theme.palette.primary.main, _)) ?? theme.palette.divider}
-            sx={{
-              transition: t => t.transitions.create('fill'),
-              '&:hover': {
-                fill: t => t.palette.primary.dark
-              }
-            }}
-          >
-            {map(OblastIndex.findByIso(iso), _ => (
-              <title>
-                {_.name}<br/>{'\n'}
-                {total ? ((values[iso] ?? 0) / total * 100).toFixed(1) + ' %' : values[iso]}
-              </title>
-            ))}
-          </Box>
-        )}
-      </g>
+    <Box sx={sx}>
+      <Box
+        component="svg"
+        preserveAspectRatio="xMidYMin slice"
+        // style={{width: '100%',}}
+        viewBox="0 0 612 408"
+      >
+        <g stroke={theme.palette.background.paper} strokeWidth="1">
+          {Enum.keys(ukraineSvgPath).map(iso =>
+            <Box
+              onClick={() => {
+                const o = OblastIndex.findByIso(iso)
+                if (o && onSelect) {
+                  onSelect(o)
+                }
+              }}
+              component="path"
+              key={iso}
+              d={ukraineSvgPath[iso].d}
+              fill={map(fill[iso], _ => alpha(theme.palette.primary.main, _)) ?? theme.palette.divider}
+              sx={{
+                transition: t => t.transitions.create('fill'),
+                '&:hover': {
+                  fill: t => t.palette.primary.dark
+                }
+              }}
+            >
+              {map(OblastIndex.findByIso(iso), _ => (
+                <title>
+                  {_.name}<br/>{'\n'}
+                  {total ? ((values[iso] ?? 0) / total * 100).toFixed(1) + ' %' : values[iso]}
+                </title>
+              ))}
+            </Box>
+          )}
+        </g>
+      </Box>
+      {legend && <Txt block sx={{mt: .25, textAlign: 'center'}} color="hint">{legend}</Txt>}
     </Box>
   )
 }
