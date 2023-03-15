@@ -4,6 +4,7 @@ export interface Oblast {
   koboKey: string
   name: string
   iso: string
+  drcOffice?: string
 }
 
 export class OblastIndex {
@@ -16,6 +17,10 @@ export class OblastIndex {
   }
 }
 
+// "dnipro"
+// "chernihiv"
+// "lviv"
+// "chernivsti"
 const oblastsByKoboKey: Record<string, Oblast> = {
   vin: {
     koboKey: 'vin',
@@ -95,7 +100,8 @@ const oblastsByKoboKey: Record<string, Oblast> = {
   pol: {
     koboKey: 'pol',
     name: 'Poltavska',
-    iso: 'UA-53'
+    iso: 'UA-53',
+    drcOffice: 'poltava'
   },
   riv: {
     koboKey: 'riv',
@@ -140,7 +146,8 @@ const oblastsByKoboKey: Record<string, Oblast> = {
   cherni: {
     koboKey: 'cherni',
     name: 'Chernihivska',
-    iso: 'UA-74'
+    iso: 'UA-74',
+    // drcOffice: 'chernivsti'
   },
   sev: {
     koboKey: 'sev',

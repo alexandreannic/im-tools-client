@@ -12,7 +12,7 @@ export namespace ChartTools {
     data: F[][],
     type?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
     m?: Record<F, string>,
-    sortBy?: 'value' | 'label'
+    sortBy?: 'value' | 'name'
   }) => {
     const all = data.flatMap(_ => _)
     const obj = Arr(all).reduceObject<Record<F, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
@@ -21,7 +21,7 @@ export namespace ChartTools {
       percentOfTotalChoices: all.length,
     }, _ => undefined)
     return Enum.entries(obj)
-      .map(([k, v]) => ({label: m ? m[k] : k, value: v / (base ?? 1)}))
+      .map(([k, v]) => ({name: m ? m[k] : k, value: v / (base ?? 1)}))
       .sort((a, b) => (b[sortBy] + '').localeCompare('' + a[sortBy], undefined, {numeric: true}))
   }
 

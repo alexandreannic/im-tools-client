@@ -1,7 +1,7 @@
 import React, {ReactNode, useContext} from 'react'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useApi} from './ApiContext'
-import {koboFormId} from '../koboFormId'
+import {useConfig} from './ConfigContext'
+import {koboFormId} from '../img/koboFormId'
 import {AnswersFilters} from 'core/sdk/kobo/KoboClient'
 import {ApiPaginate} from '../type'
 import {KoboAnswer} from '../sdk/kobo/KoboType'
@@ -19,7 +19,7 @@ export const KoboProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const api = useApi()
+  const {api} = useConfig()
   const hh = useFetcher((_: AnswersFilters = {}) => api.kobo.getAnswers(koboFormId.prod.protectionHh, _))
 
   return (

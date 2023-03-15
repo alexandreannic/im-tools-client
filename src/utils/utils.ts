@@ -3,7 +3,7 @@ export const generateId = () => ('' + Math.random()).split('.')[1]
 export type ValueOf<T> = T[keyof T];
 
 export const capitalize = (_: string) => {
-  return _.charAt(0).toUpperCase() + _.slice(1);
+  return _.charAt(0).toUpperCase() + _.slice(1)
 }
 
 export const objectToQueryString = (obj: {[key: string]: any} = {}): string => {
@@ -22,3 +22,10 @@ export const objectToQueryString = (obj: {[key: string]: any} = {}): string => {
   return params.toString()
 }
 
+export const objToArray = <T extends object, K extends string = 'name', V extends string = 'value'>(
+  obj: T,
+  keyName: K = 'name' as K,
+  valueName: V = 'value' as V
+): ({ [KK in K]: keyof T } & { [VV in V]: T[keyof T] })[] => {
+  return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
+}

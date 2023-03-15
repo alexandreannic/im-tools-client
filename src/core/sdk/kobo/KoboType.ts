@@ -31,7 +31,7 @@ export interface KoboAnswerMetaData {
   _uuid: UUID,
   // _attachments: KoboAnswerAttachements[],
   // _status: KoboAnswerStatus,
-  // _geolocation: KoboAnswerGeolocation[],
+  _geolocation: [number, number],
   _submission_time: Date,
   // _tags: KoboAnswerTags[],
   // _notes: KoboAnswerNotes[],

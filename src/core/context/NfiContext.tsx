@@ -1,6 +1,6 @@
 import React, {ReactNode, useContext} from 'react'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useApi} from './ApiContext'
+import {useConfig} from './ConfigContext'
 import {ApiSdk} from '../sdk/ApiSdk'
 
 export interface NfiContext {
@@ -16,7 +16,7 @@ export const NfiProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const api = useApi()
+  const {api} = useConfig()
   const index = useFetcher(api.nfi.index)
 
   return (

@@ -6,7 +6,7 @@ import {useI18n} from '../../core/i18n'
 import {Txt} from 'mui-extension'
 
 export interface HorizontalBarChartGoogleData {
-  label: ReactNode
+  name: ReactNode
   value: number
   color?: string
   disabled?: boolean
@@ -55,7 +55,7 @@ const TooltipWrapper = ({
       title={
         <>
           <Txt size="big" block bold>
-            {item.label}
+            {item.name}
           </Txt>
           {item.desc && (
             <Txt block color="hint">
@@ -116,7 +116,7 @@ export const HorizontalBarChartGoogle = ({
               }}>
                 <Box sx={{mt: .5, pt: .5, pb: 0, display: 'flex', mb: barHeight + 'px',}}>
                   <Txt sx={{p: 0, pr: 2, flex: 1}} truncate>
-                    <Txt block truncate>{item.label}</Txt>
+                    <Txt block truncate>{item.name}</Txt>
                     {item.desc && <Txt block color="hint" truncate size="small">{item.desc}</Txt>}
                   </Txt>
                   {!item.disabled && (
@@ -151,7 +151,7 @@ export const HorizontalBarChartGoogle = ({
           mt: 2,
           color: t => t.palette.text.disabled
         }}>
-          <Icon sx={{fontSize: '3rem !important'}}>block</Icon>
+          <Icon sx={{fontSize: '3em !important'}}>block</Icon>
           <Box>{m.noDataAtm}</Box>
         </Box>
       )}

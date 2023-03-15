@@ -76,7 +76,7 @@ export const styleUtils = (t: Theme) => ({
 export const defaultSpacing = 8
 
 export const muiTheme = (dark?: boolean): Theme => {
-  const defaultRadius = 6
+  const defaultRadius = 4
   const fontFamily = '"Open Sans", sans-serif'
   const fontSize = 14
   const mainColor = '#c9000a'

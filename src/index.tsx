@@ -10,7 +10,7 @@ import {ToastProvider} from 'mui-extension'
 import {HashRouter} from 'react-router-dom'
 import {ApiSdk} from './core/sdk/ApiSdk'
 import {ApiClient} from './core/sdk/ApiClient'
-import {ApiContextProvider} from './core/context/ApiContext'
+import {ConfigContextProvider} from './core/context/ConfigContext'
 import {NfiProvider} from './core/context/NfiContext'
 import {KoboProvider} from './core/context/KoboContext'
 
@@ -29,13 +29,15 @@ root.render(
     _ => <I18nProvider children={_}/>,
     _ => <ToastProvider children={_}/>,
     _ => <HashRouter children={_}/>,
-    _ => <ApiContextProvider children={_} api={api}/>,
+    _ => <ConfigContextProvider children={_} api={api}/>,
     _ => <NfiProvider children={_}/>,
     _ => <KoboProvider children={_}/>,
   ]}>
     <App/>
   </Provide>
 )
+console.log('))))))))))))))')
+console.log(process.env.GOOGLE_MAPS_API_KEY)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

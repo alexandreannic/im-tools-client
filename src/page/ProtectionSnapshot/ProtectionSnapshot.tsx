@@ -1,51 +1,50 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useApi} from '../../core/context/ApiContext'
+import {useConfig} from '../../core/context/ConfigContext'
 import {UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {Box, Icon} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
-import {_Arr, Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 import {Oblast} from '../../shared/UkraineMap/oblastIndex'
 import {useKoboContext} from '../../core/context/KoboContext'
-import {KoboAnswerMetaData} from '../../core/sdk/kobo/KoboType'
-import {Fender} from 'mui-extension'
-import {ProtectionSnapshotBody, ProtectionSnapshotHeader, slidePadding, SlidePanel} from './ProtectionShapshotHeader'
+import {Fender, Txt} from 'mui-extension'
+import {Slide, SlideBody, SlideCard, SlideHeader, SlidePanel} from 'shared/PdfLayout/Slide'
 import {ScLineChart} from '../../shared/Chart/Chart'
-import {Pdf, Slide} from 'shared/PdfLayout/PdfLayout'
+import {Pdf, usePdfContext} from 'shared/PdfLayout/PdfLayout'
 import {useI18n} from '../../core/i18n'
 import {useProtectionSnapshotData} from './useProtectionSnapshotData'
-import { format } from 'date-fns'
+import {format} from 'date-fns'
+import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
+import LatLngLiteral = google.maps.LatLngLiteral
+import Answer = KoboFormProtHH.Answser
+import mapAnswers = KoboFormProtHH.mapAnswers
+import {Pie, PieChart, ResponsiveContainer} from 'recharts'
 
-const padding = 4
-
-type FactorsToReturn =
-  'shelter_is_repaired'
-  | 'improvement_in_security_situat'
-  | 'increased_service_availability'
-  | 'infrastructure__including_heat'
-  | 'cessation_of_hostilities'
-  | 'health_facilties_are_accessibl'
-  | 'government_regains_territory_f'
-  | 'other219'
-  | 'education_facilities__schools_'
-
-type T_12_7_1_Do_you_plan_to_return_to_your_ = 'yes21' | 'don_t21' | 'don_t_know21' | 'yes_but_no_clear_timeframe' | 'prefer_not_to_answer21'
-
-const mapAnswers = (a: KoboAnswerMetaData & Record<string, string | undefined>) => {
-  return {
-    ...a,
-    _8_What_is_your_household_size: map(a._8_What_is_your_household_size, _ => +_),
-    _12_1_What_oblast_are_you_from_001: a._12_1_What_oblast_are_you_from_001,
-    _4_What_oblast_are_you_from: a._4_What_oblast_are_you_from,
-    _12_8_1_What_would_be_the_deciding_fac: (a._12_8_1_What_would_be_the_deciding_fac?.split(' ') as FactorsToReturn[] | undefined)
-      ?.map(_ => _ === 'government_regains_territory_f' ? 'improvement_in_security_situat' : _),
-    _12_7_1_Do_you_plan_to_return_to_your_: a._12_7_1_Do_you_plan_to_return_to_your_ as T_12_7_1_Do_you_plan_to_return_to_your_,
-    _12_3_1_When_did_you_your_area_of_origin: a._12_3_1_When_did_you_your_area_of_origin,
-  }
+const initGoogleMaps = (color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
+  const ukraineCenter: LatLngLiteral = {lat: 48.96008674231441, lng: 31.702957509661097}
+  const map = new google.maps.Map(document.querySelector('#map') as HTMLElement, {
+    center: ukraineCenter,
+    zoom: 5.2,
+  })
+  bubbles.forEach(_ => {
+    if (!_.loc?.[0]) return
+    const circle = new google.maps.Circle({
+      clickable: true,
+      strokeColor: color,
+      strokeOpacity: 0.8,
+      strokeWeight: 1,
+      fillColor: color,
+      fillOpacity: 0.25,
+      map,
+      center: {lat: _.loc[0], lng: _.loc[1]},
+      radius: Math.sqrt(_.size ?? 1) * 5500,
+    })
+    google.maps.event.addListener(circle, 'mouseover', function () {
+      map.getDiv().setAttribute('title', _.size + '')
+    })
+  })
 }
-
-export type ProtectionHHAnswer = ReturnType<typeof mapAnswers>
 
 interface FormFilters {
   _12_1_What_oblast_are_you_from_001: string[]
@@ -62,7 +61,7 @@ export const ProtectionSnapshot = ({
   period?: [Date, Date]
   previousPeriod?: [Date, Date]
 }) => {
-  const api = useApi()
+  const {api} = useConfig()
   const _hh = useKoboContext().hh
   const _form = useFetcher(api.kobo.getForm)
   const [filters, setFilters] = useState<Partial<FormFilters>>({})
@@ -109,14 +108,16 @@ export const _ProtectionSnapshot = ({
   filters,
   onFilter
 }: {
-  data: _Arr<ProtectionHHAnswer>
+  data: _Arr<Answer>
   period: [Date, Date]
   previousPeriod: [Date, Date]
   filters: Partial<FormFilters>
   onFilter: Dispatch<SetStateAction<Partial<FormFilters>>>
 }) => {
+  const theme = useTheme()
+  const {pdfTheme} = usePdfContext()
   const {m, formatLargeNumber} = useI18n()
-  const transformed = useProtectionSnapshotData(data, {start: period[0], end: period[1]})
+  const computed = useProtectionSnapshotData(data, {start: period[0], end: period[1]})
 
   const updateOblastFilters = (key: keyof typeof filters) => (oblast: Oblast) => {
     onFilter(f => {
@@ -136,7 +137,17 @@ export const _ProtectionSnapshot = ({
     })
   }
 
-  const totalMembers = useMemo(() => data.sum(_ => _._8_What_is_your_household_size ?? 0), [data])
+  useEffect(() => {
+    initGoogleMaps(
+      theme.palette.primary.main,
+      data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
+    )
+  }, [])
+
+  console.log(computed._8_individuals.persons)
+  console.log(computed._8_individuals.byAgeGroup)
+  console.log(computed._8_individuals.byGender)
+  console.log('---')
   // console.log('_12_7_1_planToReturn,', _12_7_1_planToReturn)
   // console.log('_12_3_1_dateDeparture', _12_3_1_dateDeparture)
   // console.log(new Set(data.map(_ => _._12_7_1_Do_you_plan_to_return_to_your_)))
@@ -145,28 +156,69 @@ export const _ProtectionSnapshot = ({
   return (
     <Pdf>
       <Slide>
-        <ProtectionSnapshotHeader>{m.protectionHHSnapshot.title}: {m.protectionHHSnapshot.subTitle}</ProtectionSnapshotHeader>
-        {format(period[0], 'LLLL yyyy')} - {format(period[0], 'LLLL yyyy')}
-        <ProtectionSnapshotBody sx={{display: 'flex'}}>
-          <Box>{m.protectionHHSnapshot.disclaimer}</Box>
-          <SlidePanel>
-            <Box>{formatLargeNumber(data.length)}</Box>
-            <Box>{formatLargeNumber(totalMembers)}</Box>
-            <Box>{(totalMembers / data.length).toFixed(1)}</Box>
-          </SlidePanel>
-        </ProtectionSnapshotBody>
+        <SlideHeader>{m.protectionHHSnapshot.title}: {m.protectionHHSnapshot.subTitle}</SlideHeader>
+        <SlideBody>
+          <Box sx={{display: 'flex', flexDirection: 'row'}}>
+            <Box sx={{flex: 1, mr: pdfTheme.slidePadding}}>
+              <Txt size="big" color="hint" block sx={{mb: 1}}>
+                {format(period[0], 'LLLL yyyy')} - {format(period[0], 'LLLL yyyy')}
+              </Txt>
+              <Box sx={{textAlign: 'justify'}}>{m.protectionHHSnapshot.disclaimer}</Box>
+              <Box sx={{display: 'flex'}}>
+                <SlideCard title={m.hhs} icon="home">
+                  {formatLargeNumber(data.length)}
+                </SlideCard>
+                <SlideCard title={m.individuals} icon="person">
+                  {formatLargeNumber(computed.totalMembers)}
+                </SlideCard>
+                <SlideCard title={m.hhSize} icon="group">
+                  {(computed.totalMembers / data.length).toFixed(1)}
+                </SlideCard>
+              </Box>
+
+              <Box sx={{display: 'flex'}}>
+                <SlidePanel>
+                  <Box sx={{height: 200, width: 200}}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart width={200} height={200}>
+                        <Pie
+                          data={computed._8_individuals.byGender}
+                          dataKey="value"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={60}
+                          fill="#8884d8"
+                          label
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </Box>
+                </SlidePanel>
+                <SlidePanel>
+                <HorizontalBarChartGoogle
+                  data={computed._8_individuals.byAgeGroup}
+                />
+                </SlidePanel>
+              </Box>
+
+            </Box>
+            <Box sx={{flex: 1}}>
+              <Box id="map" sx={{height: 400, borderRadius: pdfTheme.slideRadius}}/>
+            </Box>
+          </Box>
+        </SlideBody>
       </Slide>
       <Slide>
-        <ProtectionSnapshotHeader>Displacement</ProtectionSnapshotHeader>
-        <ProtectionSnapshotBody sx={{display: 'flex'}}>
+        <SlideHeader>{m.displacement}</SlideHeader>
+        <SlideBody sx={{display: 'flex'}}>
           <SlidePanel
-            sx={{flex: 1, mr: slidePadding}}
+            sx={{flex: 1, mr: pdfTheme.slidePadding}}
             title={m.displacement}
           >
-            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Box sx={{display: 'flex', flexDirection: 'column'}}>
               <UkraineMap
                 total={data.length}
-                values={transformed.oblastOrigins}
+                values={computed.oblastOrigins}
                 onSelect={updateOblastFilters('_12_1_What_oblast_are_you_from_001')}
                 legend={m.origin}
                 sx={{mb: 2, width: '100%'}}
@@ -178,7 +230,7 @@ export const _ProtectionSnapshot = ({
               </Box>
               <UkraineMap
                 total={data.length}
-                values={transformed.oblastCurrent}
+                values={computed.oblastCurrent}
                 onSelect={updateOblastFilters('_4_What_oblast_are_you_from')}
                 legend={m.current}
                 sx={{width: '100%'}}
@@ -189,20 +241,20 @@ export const _ProtectionSnapshot = ({
             <SlidePanel>
               {/*<ChartIndicator*/}
               {/*  percent*/}
-              {/*  value={+transformed._12_7_1_planToReturn.toFixed(1)}*/}
+              {/*  value={+computed._12_7_1_planToReturn.toFixed(1)}*/}
               {/*  sx={{fontSize: '1.4rem'}}*/}
               {/*/>*/}
             </SlidePanel>
             <SlidePanel>
               <ScLineChart height={200} hideLabelToggle curves={[
-                {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: transformed._12_3_1_dateDeparture},
+                {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: computed._12_3_1_dateDeparture},
               ]}/>
             </SlidePanel>
             <SlidePanel title={m.decidingFactorsToReturn}>
-              <HorizontalBarChartGoogle barHeight={3} data={transformed._12_8_1_What_would_be_the_deciding_fac} base={data.length}/>
+              <HorizontalBarChartGoogle barHeight={3} data={computed._12_8_1_What_would_be_the_deciding_fac} base={data.length}/>
             </SlidePanel>
           </Box>
-        </ProtectionSnapshotBody>
+        </SlideBody>
       </Slide>
     </Pdf>
   )
