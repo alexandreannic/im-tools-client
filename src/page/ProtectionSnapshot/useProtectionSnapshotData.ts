@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {ChartTools} from '../../core/ChartTools'
+import {ChartTools} from '../../core/chartTools'
 import {format} from 'date-fns'
 import {_Arr, Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
@@ -9,6 +9,10 @@ import {objToArray} from '../../utils/utils'
 import Person = KoboFormProtHH.Person
 import Answer = KoboFormProtHH.Answser
 import Gender = KoboFormProtHH.Gender
+import PropertyDamage = KoboFormProtHH.PropertyDamage
+import {HorizontalBarChartGoogleData} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
+
+export type UseProtectionSnapshotData = ReturnType<typeof useProtectionSnapshotData>
 
 export const useProtectionSnapshotData = (data: _Arr<Answer>, {
   start,
@@ -21,11 +25,36 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
   return useMemo(() => {
     return {
-      _12_8_1_What_would_be_the_deciding_fac: ChartTools.multiple({
-        data: data.map(_ => _._12_8_1_What_would_be_the_deciding_fac).compact(),
-        m: m.factorsToReturn,
+      _27_Has_your_house_apartment_been_: ChartTools.percentage({
+        data: data.map(_ => _._27_Has_your_house_apartment_been_),
+        value: _ => _ === 'yes39'
       }),
 
+      _12_Do_you_identify_as_any_of: ChartTools.single({
+        data: data.map(_ => _._12_Do_you_identify_as_any_of).compact(),
+      }).sort((a, b) => b.value - a.value),
+      
+      _27_1_If_yes_what_is_level_of_the_damage: ChartTools.single({
+        data: data.map(_ => _._27_1_If_yes_what_is_level_of_the_damage).compact(),
+      }).sort((a, b) => {
+        const obj = Enum.keys(PropertyDamage)
+        return obj.indexOf(b.name) - obj.indexOf(a.name)
+      }).map(_ => ({
+        ..._,
+        name: m.protectionHHSnapshot.propertyDamaged[_.name].title,
+        desc: m.protectionHHSnapshot.propertyDamaged[_.name].desc,
+      })),
+
+      _12_8_1_What_would_be_the_deciding_fac: ChartTools.multiple({
+        data: data.map(_ => _._12_8_1_What_would_be_the_deciding_fac).compact(),
+      }).map(_ => ({..._, name: (m.factorsToReturn as any)[_.name]})),
+
+      _12_7_1_planToReturn: (() => {
+        return ChartTools.percentage({
+          data: data.map(_ => _._12_7_1_Do_you_plan_to_return_to_your_),
+          value: _ => _ === 'yes21' || _ === 'yes_but_no_clear_timeframe'
+        })
+      })(),
       // _12_7_1_planToReturn: (() => {
       //   const curve = ChartTools.indexByDate({
       //     data: data,
@@ -64,26 +93,26 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         const persons: Person[] = data.flatMap((d) =>
           ageFields.map(([ageCol, sexCol]) => ({
             age: d[ageCol] as number | undefined,
-            gender: d[sexCol] === 'don_t_know' || d[sexCol] === 'prefer_not_to_answer' ? undefined : d[sexCol] as Gender | undefined
+            gender: d[sexCol] as Gender | undefined
           }))
         ).filter(x => x.gender !== undefined || x.age !== undefined)
 
-        const byAgeGroup = Arr(persons).reduceObject<Record<string, number>>((p, acc) => {
+        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof KoboFormProtHH.ageGroup, number>>((p, acc) => {
           const group = Enum.keys(KoboFormProtHH.ageGroup).find(k => {
             const [min, max] = KoboFormProtHH.ageGroup[k]
             return p.age && p.age >= min && p.age <= max
           })
-          return [group ?? 'undefined', (acc[group!] ?? 0) + 1]
+          if (group) return [group, (acc[group] ?? 0) + 1]
         })
-        
+
         const byGender = Arr(persons).reduceObject<Record<Gender | 'undefined', number>>((p, acc) => {
           return [p.gender ?? 'undefined', (acc[p.gender!] ?? 0) + 1]
         })
-        
+
         return {
           persons: persons,
-          byAgeGroup: objToArray(byAgeGroup),
-          byGender: objToArray(byGender),
+          byAgeGroup: objToArray(byAgeGroup).sort((a, b) => KoboFormProtHH.ageGroup[a.name][0] - KoboFormProtHH.ageGroup[b.name][0]),
+          byGender: byGender,
         }
       })()
     }

@@ -1,4 +1,5 @@
 import {formatDistance, formatDuration as formatDurationFns} from 'date-fns'
+import {externalLinks} from '../../externalLinks'
 
 const invalidDate = '-'
 
@@ -67,14 +68,60 @@ export const en = Object.freeze({
     displacement: 'Displacement',
     origin: 'Origin',
     current: 'Current',
+    age: 'Age',
+    ageGroup: 'Age group',
+    sex: 'Sex',
+    status: 'Current status',
+    male: 'Male',
+    female: 'Female',
+    undefined: 'Unknown',
+    sample: 'Sample',
+    propertyDamaged: 'Property damaged due to the conflict',
+    intentionToReturn: 'Intention to return',
     protectionHHSnapshot: {
+      propertyDamaged: {
+        fully_damaged_needs_full_reconstruction: {
+          title: '⚫ Fully damaged',
+          desc: 'Full rebuild needed',
+        },
+        partially_damaged__considerable_repair_i: {
+          title: '🔴 Heavily damaged',
+          desc: 'Structural repair needed',
+        },
+        partially_damage: {
+          title: '🟠 Medium damaged',
+          desc: 'No structural repairs needed',
+        },
+        light_damage: {
+          title: '🟢 Light damaged',
+          desc: 'No structural repair needed',
+        },
+      },
       title: 'Protection Monitoring',
       subTitle: 'Ukraine',
       disclaimer: `
-        This SNAPSHOT summarizes the findings of Protection Monitoring conducted in the regions/oblasts of Chernihiv, Dnipro, Lviv, Chernivtsi, and Kharkiv, Ukraine. Protection monitoring has been mainly implemented through household interviews, complemented by focus group discussions, observation checklists, and Rapid Protection Assessments. DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people directly exposed to and affected by the current armed conflict. 
+        This SNAPSHOT summarizes the findings of Protection Monitoring conducted in the regions/oblasts of 
+        Chernihiv, Dnipro, Lviv, Chernivtsi, and Kharkiv, Ukraine. Protection monitoring has been mainly implemented 
+        through household interviews, complemented by focus group discussions, observation checklists, 
+        and Rapid Protection Assessments. DRC protection monitoring targeted Internally Displaced Persons (IDPs)
+         and people directly exposed to and affected by the current armed conflict. 
       `,
+      sample: {
+        desc: `The conflict in Ukraine has generated various protection risks for IDPs and conflict-affected populations.
+          While all areas where PM took place were directly or indirectly affected by the conflict,
+          needs and protection risks vary in each monitored region and are different according to the
+          monitored population group: internally displaced persons, communities directly exposed and 
+          affected by the current armed conflict (from now on referred to as conflict-affected), and host communities.`
+      },
+      displacement: {
+        desc: `Significant population movements were observed at the beginning of the crisis. 
+          In May 2022, 8 million IDPs were reported by 
+          <a href="${externalLinks.iomDtm}" class="link">IOM's Displacement Tracking Matrix</a>.
+          Displacement is widely associated with conflict and direct threats to life, 
+          security, and safety.`,
+      }
     },
-    factorsToReturn: {      
+    factorsToReturn: {
       shelter_is_repaired: 'Shelter is repaired',
       improvement_in_security_situat: 'Improvement in security situation',
       increased_service_availability: 'Increased service availability',

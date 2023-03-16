@@ -33,7 +33,6 @@ export const Pdf = (props: BoxProps) => {
     <>
       {generalStyles}
       <Box sx={{
-        lineHeight: 1.5,
         fontSize: 15,
         '@media screen': {
           background: '#f6f7f9',

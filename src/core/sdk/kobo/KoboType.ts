@@ -42,7 +42,7 @@ export interface KoboAnswerMetaData {
 export type KoboAnswer = (KoboAnswerMetaData & {[key: string]: any})
 
 export class KoboType {
-  static readonly mapAnswerMetaData = (k: Record<keyof KoboAnswerMetaData, any>): KoboAnswerMetaData => {
+  static readonly mapAnswerMetaData = (k: Record<keyof KoboAnswerMetaData, any>): KoboAnswer => {
     return {
       ...k,
       start: new Date(k.start),

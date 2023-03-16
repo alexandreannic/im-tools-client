@@ -1,8 +1,8 @@
 import {Layout} from '../../shared/Layout/Layout'
-import {ProtectionSnapshot} from '../ProtectionSnapshot/ProtectionSnapshot'
+import {ProtSnapshot} from '../ProtectionSnapshot/ProtSnapshot'
 
 export const Home = () => {
   return (
-    <ProtectionSnapshot formId="aFU8x6tHksveU2c3hK7RUG"/>
+    <ProtSnapshot formId="aFU8x6tHksveU2c3hK7RUG"/>
   )
 }

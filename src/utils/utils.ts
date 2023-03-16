@@ -1,3 +1,5 @@
+import {Enum} from '@alexandreannic/ts-utils'
+
 export const generateId = () => ('' + Math.random()).split('.')[1]
 
 export type ValueOf<T> = T[keyof T];
@@ -28,4 +30,14 @@ export const objToArray = <T extends object, K extends string = 'name', V extend
   valueName: V = 'value' as V
 ): ({ [KK in K]: keyof T } & { [VV in V]: T[keyof T] })[] => {
   return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
+}
+
+export const sortObject = <T extends Record<any, any>>(
+  obj: T,
+  predicate: (a: [keyof T, T[keyof T]], b: [keyof T, T[keyof T]]) => number
+): T => {
+  return Enum.entries(obj).sort(predicate).reduce<T>((acc, [k, v]) => {
+    acc[k] = v
+    return acc
+  }, {} as T)
 }

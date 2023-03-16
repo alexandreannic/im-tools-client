@@ -14,6 +14,8 @@ export interface ScLineChartPropsBase {
   hideLabelToggle?: boolean
   height?: number
   sx?: SxProps
+  hideYTicks?: boolean
+  hideXTicks?: boolean
 }
 
 interface Props extends ScLineChartPropsBase {
@@ -27,7 +29,15 @@ interface Props extends ScLineChartPropsBase {
 
 const colors = (t: Theme) => [t.palette.primary.main, '#e48c00', 'red', 'green']
 
-export const ScLineChart = memo(({sx, disableAnimation, hideLabelToggle, curves, height = 300}: Props) => {
+export const ScLineChart = memo(({
+  sx,
+  hideYTicks,
+  hideXTicks,
+  disableAnimation,
+  hideLabelToggle,
+  curves,
+  height = 300
+}: Props) => {
   const theme = useTheme()
   const [showCurves, setShowCurves] = useState<boolean[]>(new Array(curves.length).fill(false))
   const {m} = useI18n()
@@ -59,12 +69,12 @@ export const ScLineChart = memo(({sx, disableAnimation, hideLabelToggle, curves,
           ))}
         </Box>
       )}
-      <Box sx={{height, ml: -4, ...sx}}>
+      <Box sx={{height, ml: -4 - (hideYTicks ? 4 : 0), mb: hideXTicks ? -4 : 0, ...sx}}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={mappedData}>
             <CartesianGrid strokeDasharray="3 3"/>
-            <XAxis dataKey="date"/>
-            <YAxis/>
+            <XAxis tick={!hideXTicks} dataKey="date"/>
+            <YAxis tick={!hideYTicks}/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}}/>
             {curves.map((_, i) => (
               <Line

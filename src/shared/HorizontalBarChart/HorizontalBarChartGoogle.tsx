@@ -14,6 +14,7 @@ export interface HorizontalBarChartGoogleData {
 }
 
 interface Props {
+  hideValue?: boolean
   dense?: boolean
   base?: number
   data?: HorizontalBarChartGoogleData[]
@@ -80,7 +81,8 @@ const TooltipWrapper = ({
 export const HorizontalBarChartGoogle = ({
   data,
   base,
-  barHeight = 4
+  barHeight = 3,
+  hideValue,
 }: Props) => {
   const {m} = useI18n()
 
@@ -114,19 +116,22 @@ export const HorizontalBarChartGoogle = ({
                   }
                 }
               }}>
-                <Box sx={{mt: .5, pt: .5, pb: 0, display: 'flex', mb: barHeight + 'px',}}>
+                <Box sx={{mt: .5, pt: .5, pb: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', mb: barHeight + 'px',}}>
                   <Txt sx={{p: 0, pr: 2, flex: 1}} truncate>
                     <Txt block truncate>{item.name}</Txt>
                     {item.desc && <Txt block color="hint" truncate size="small">{item.desc}</Txt>}
                   </Txt>
                   {!item.disabled && (
                     <Box sx={{display: 'flex', textAlign: 'right',}}>
-                      <Txt color="hint">{formatLargeNumber(item.value)}</Txt>
-                      <Box sx={{
-                        minWidth: 110,
+                      {!hideValue && (
+                        <Txt color="hint" sx={{flex: 1, ml: 2}}>{formatLargeNumber(item.value)}</Txt>
+                      )}
+                      <Txt sx={{
+                        flex: 1,
+                        ml: 1,
                         color: t => t.palette.primary.main,
                         fontWeight: t => t.typography.fontWeightBold,
-                      }}>{percentOfBase.toFixed(1)}%</Box>
+                      }}>{percentOfBase.toFixed(1)}%</Txt>
                     </Box>
                   )}
                 </Box>

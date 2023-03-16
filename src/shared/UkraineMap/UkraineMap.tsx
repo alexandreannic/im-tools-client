@@ -73,7 +73,7 @@ export const UkraineMap = ({
           )}
         </g>
       </Box>
-      {legend && <Txt block sx={{mt: .25, textAlign: 'center'}} color="hint">{legend}</Txt>}
+      {legend && <Txt block sx={{mt: -1, textAlign: 'center'}} size="small" color="hint">{legend}</Txt>}
     </Box>
   )
 }

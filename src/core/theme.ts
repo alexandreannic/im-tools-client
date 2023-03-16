@@ -120,6 +120,9 @@ export const muiTheme = (dark?: boolean): Theme => {
           '.recharts-surface': {
             overflow: 'visible',
           },
+          b: {
+            fontWeight: 'bold',
+          },
           html: {
             fontSize: baseTheme.typography.fontSize,
             fontFamily,
@@ -127,7 +130,7 @@ export const muiTheme = (dark?: boolean): Theme => {
           body: {
             color: baseTheme.palette.text.primary,
             fontSize: '1rem',
-            lineHeight: '1.5rem',
+            lineHeight: '1.5',
             background: baseTheme.palette.background.paper,
             margin: 0,
             boxSizing: 'border-box',
@@ -144,6 +147,10 @@ export const muiTheme = (dark?: boolean): Theme => {
           p: {
             ...baseTheme.typography.body1,
             textAlign: 'justify',
+          },
+          '.link': {
+            color: baseTheme.palette.info.main,
+            textDecoration: 'underline',
           },
           a: {
             color: 'inherit',
