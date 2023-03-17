@@ -41,3 +41,7 @@ export const sortObject = <T extends Record<any, any>>(
     return acc
   }, {} as T)
 }
+
+export const includedIn = <T extends string>(t: T, checks: T[]) => {
+  
+}

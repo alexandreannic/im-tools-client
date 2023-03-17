@@ -1,5 +1,7 @@
 import {formatDistance, formatDuration as formatDurationFns} from 'date-fns'
 import {externalLinks} from '../../externalLinks'
+import {KoboFormProtHH} from '../../koboForm/koboFormProtHH'
+import Status = KoboFormProtHH.Status
 
 const invalidDate = '-'
 
@@ -69,6 +71,10 @@ export const en = Object.freeze({
     origin: 'Origin',
     current: 'Current',
     age: 'Age',
+    hohhOlder: 'HoHH 60+',
+    hohhFemale: 'HoHH female',
+    vulnerabilities: 'Vulnerabilities',
+    selectAll: 'Select all',
     ageGroup: 'Age group',
     sex: 'Sex',
     status: 'Current status',
@@ -78,7 +84,69 @@ export const en = Object.freeze({
     sample: 'Sample',
     propertyDamaged: 'Property damaged due to the conflict',
     intentionToReturn: 'Intention to return',
+    hhCategoryType: {
+      idp: 'IDP',
+      hohh60: 'HoHH 60+',
+      hohhFemale: 'HoHH Female',
+      memberWithDisability: 'Member with disability',
+    },
+    statusType: {
+      conflict_affected_person: 'Conflict affected person',
+      idp: 'IDP',
+      host_community_member: 'Host community member',
+      idp_returnee: 'IDP returnee',
+    } as Record<Status, string>,
+    basicNeeds: {
+      gas: 'Gas',
+      electricity: 'Electricity',
+      drinking_water: 'Drinking water',
+      toilets: 'Toilets',
+      shower: 'Shower',
+      heating_system: 'Heating system',
+      hot_water: 'Hot water',
+      usage_water: 'Usage water',
+      none_of_the_above40: 'None of the above',
+    },
+    shelter: 'Shelter',
+    health: 'Health',
+    cash: 'Cash',
     protectionHHSnapshot: {
+      firstPriorityNeed: '1st priority need by HH type',
+      _40_1_pn_shelter_byCategory: 'Shelter as 1st priority need by HH type',
+      _40_1_pn_health_byCategory: 'Health as 1st priority need by HH type',
+      _40_1_pn_cash_byCategory: 'Cash as 1st priority need by HH type',
+      _29_nfiNeededByCategory: 'Need for NFI by HH type',
+
+      priorityNeeds: {
+        health: 'Health',
+        shelter: 'Shelter',
+        food: 'Food',
+        livelihoods: 'Livelihoods',
+        other: 'Other',
+        winter_items: 'Winter items',
+        cash: 'Cash',
+        civil_documentation: 'Civil documentation',
+        university_or_teritary_eduction: 'University or teritary eduction',
+        education_for_children: 'Education for children',
+        nfis: 'NFIS',
+        wash: 'Wash',
+      },
+      vulnerability: {
+        person_with_a_disability: 'Person with a disability',
+        elderly_head_of_household__60__with_mino: 'Older person at risk',
+        woman_at_risk: 'Woman at risk',
+        exterme_poverty_impacting_acce: 'Extreme poverty impacting access to service',
+        person_with_a_serious_medical_: 'Person with a serious medical ',
+        child_at_risk: 'Child at risk',
+        single_parent: 'Single parent',
+        single_parent_male: 'Single parent male',
+        single_parent_female: 'Single parent female',
+        other_specifyg: 'Other',
+        multiple_displacements: 'Multiple displacements',
+        gbv_risk: 'GBV risk',
+        no_legal_documentation: 'No legal documentation',
+        unaccompanied_or_separated_chi: 'Unaccompanied or separated child',
+      },
       propertyDamaged: {
         fully_damaged_needs_full_reconstruction: {
           title: '⚫ Fully damaged',

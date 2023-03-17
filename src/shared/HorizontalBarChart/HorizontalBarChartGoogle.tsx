@@ -8,6 +8,7 @@ import {Txt} from 'mui-extension'
 export interface HorizontalBarChartGoogleData {
   name: ReactNode
   value: number
+  base?: number
   color?: string
   disabled?: boolean
   desc?: string
@@ -88,20 +89,22 @@ export const HorizontalBarChartGoogle = ({
 
   const maxValue = useMemo(() => data && Math.max(...data.map(_ => _.value)), [data])
   const sumValue = useMemo(() => data && data.reduce((sum, _) => _.value + sum, 0), [data])
+  const percents = useMemo(() => data && sumValue && data.map(_ => _.value / (_.base ? _.base : base ?? sumValue) * 100), [data])
+  const maxPercent = useMemo(() => percents && Math.max(...percents), [percents])
+
   const [appeared, setAppeared] = useState<boolean>(false)
+
   const {formatLargeNumber} = useI18n()
 
   useTimeout(() => setAppeared(true), 200)
 
   return (
     <Box sx={{overflow: 'hidden'}}>
-      {data && maxValue && sumValue ? (
+      {(data && percents && maxPercent && maxValue) ? (
         data.map((item, i) => {
-          const percentOfMax = (item.value / maxValue) * 100
-          const percentOfBase = (item.value / (base ?? sumValue)) * 100
-          const percentOfAll = (item.value / sumValue) * 100
+          const percentOfMax = 100 * (item.base ? percents[i] / maxPercent : item.value / maxValue)
           return (
-            <TooltipWrapper percentOfBase={percentOfBase} percentOfAll={percentOfAll} key={i} item={item}>
+            <TooltipWrapper percentOfBase={percents[i]} percentOfAll={base ? percents[i] : item.value / data.length} key={i} item={item}>
               <Box sx={{
                 mx: 0,
                 ...item.disabled ? {
@@ -128,10 +131,10 @@ export const HorizontalBarChartGoogle = ({
                       )}
                       <Txt sx={{
                         flex: 1,
-                        ml: 1,
+                        ml: 2,
                         color: t => t.palette.primary.main,
                         fontWeight: t => t.typography.fontWeightBold,
-                      }}>{percentOfBase.toFixed(1)}%</Txt>
+                      }}>{percents[i].toFixed(1)}%</Txt>
                     </Box>
                   )}
                 </Box>

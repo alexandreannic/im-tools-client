@@ -27,7 +27,7 @@ export const ProtSnapshotDisplacement = ({
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
 
-  const updateOblastFilters = (key: keyof typeof filters) => (oblast: Oblast) => {
+  const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001' | '_4_What_oblast_are_you_from') => (oblast: Oblast) => {
     onFilter(f => {
       const value = f[key]
       if (value?.includes(oblast.koboKey)) {
@@ -69,8 +69,8 @@ export const ProtSnapshotDisplacement = ({
                 sx={{width: '100%'}}
               />
               <Box sx={{textAlign: 'center', my: 1}}>
-                {mapFor(3, () => (
-                  <Icon color="disabled" fontSize="large">arrow_downward</Icon>
+                {mapFor(3, i => (
+                  <Icon key={i} color="disabled" fontSize="large">arrow_downward</Icon>
                 ))}
               </Box>
               <UkraineMap

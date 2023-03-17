@@ -61,7 +61,7 @@ export const ProtSnapshotHome = ({
                   <AaPieChart
                     outerRadius={65}
                     height={140}
-                    width={245}
+                    width={260}
                     m={{
                       male: m.male,
                       female: m.female,

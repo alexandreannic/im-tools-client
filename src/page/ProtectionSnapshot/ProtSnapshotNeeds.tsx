@@ -1,19 +1,12 @@
-import {map, mapFor} from '@alexandreannic/ts-utils'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
-import {Box, Icon, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
-import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
-import {ScLineChart} from '../../shared/Chart/ScLineChart'
+import {useTheme} from '@mui/material'
+import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel} from '../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {Oblast} from '../../shared/UkraineMap/oblastIndex'
-import {format} from 'date-fns'
-import {Txt} from 'mui-extension'
-import {ChartIndicator} from '../../shared/ChartIndicator'
 
-export const ProtSnapshotDisplacement = ({
+export const ProtSnapshotNeeds = ({
   current: {
     data,
     period,
@@ -33,9 +26,36 @@ export const ProtSnapshotDisplacement = ({
       <SlideHeader>{m.displacement}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer sx={{flex: 2}} flexDirection="column"></SlideContainer>
-
-          <SlideContainer flexDirection="column" sx={{flex: 5}}></SlideContainer>
+          <SlideContainer flexDirection="column">
+            <SlidePanel>
+              <HorizontalBarChartGoogle
+                data={computed._40_2_What_is_your_second_priority}
+              />
+            </SlidePanel>
+          </SlideContainer>
+          <SlideContainer flexDirection="column">
+            {/*<SlidePanel title={m.protectionHHSnapshot._40_1_pn_shelter_byCategory}>*/}
+            {/*  <HorizontalBarChartGoogle*/}
+            {/*    data={computed._40_1_pn_shelter_byCategory}*/}
+            {/*  />*/}
+            {/*</SlidePanel>*/}
+            <SlidePanel title={m.protectionHHSnapshot._40_1_pn_health_byCategory}>
+              <HorizontalBarChartGoogle
+                data={computed._40_1_pn_health_byCategory}
+              />
+            </SlidePanel>
+            <SlidePanel title={m.protectionHHSnapshot._40_1_pn_cash_byCategory}>
+              <HorizontalBarChartGoogle
+                data={computed._40_1_pn_cash_byCategory}
+              />
+            </SlidePanel>
+            <SlidePanel title={m.protectionHHSnapshot._29_nfiNeededByCategory}>
+              <HorizontalBarChartGoogle
+                data={computed._29_nfiNeededByCategory}
+              />
+            </SlidePanel>
+          </SlideContainer>
+          <SlideContainer flexDirection="column"></SlideContainer>
         </SlideContainer>
       </SlideBody>
     </Slide>

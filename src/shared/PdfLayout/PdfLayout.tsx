@@ -1,5 +1,5 @@
 import {Box, BoxProps, GlobalStyles} from '@mui/material'
-import React, {useContext} from 'react'
+import React, {ReactNode, useContext} from 'react'
 
 const generalStyles = <GlobalStyles
   styles={{
@@ -28,7 +28,7 @@ const PdfContext = React.createContext({
 
 export const usePdfContext = () => useContext(PdfContext)
 
-export const Pdf = (props: BoxProps) => {
+export const Pdf = ({children, ...props}: BoxProps) => {
   return (
     <>
       {generalStyles}
@@ -50,7 +50,9 @@ export const Pdf = (props: BoxProps) => {
               width: '29.7cm',
             }
           }}
-        />
+        >
+          {children}
+        </Box>
       </Box>
     </>
   )
