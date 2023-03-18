@@ -148,22 +148,18 @@ export const en = Object.freeze({
         unaccompanied_or_separated_chi: 'Unaccompanied or separated child',
       },
       propertyDamaged: {
-        fully_damaged_needs_full_reconstruction: {
-          title: '⚫ Fully damaged',
-          desc: 'Full rebuild needed',
+        title: {
+          fully_damaged_needs_full_reconstruction: '⚫ Fully damaged',
+          partially_damaged__considerable_repair_i: '🔴 Heavily damaged',
+          partially_damage: '🟠 Medium damaged',
+          light_damage: '🟢 Light damaged',
         },
-        partially_damaged__considerable_repair_i: {
-          title: '🔴 Heavily damaged',
-          desc: 'Structural repair needed',
-        },
-        partially_damage: {
-          title: '🟠 Medium damaged',
-          desc: 'No structural repairs needed',
-        },
-        light_damage: {
-          title: '🟢 Light damaged',
-          desc: 'No structural repair needed',
-        },
+        desc: {
+          fully_damaged_needs_full_reconstruction: 'Full rebuild needed',
+          partially_damaged__considerable_repair_i: 'Structural repair needed',
+          partially_damage: 'No structural repairs needed',
+          light_damage: 'No structural repair needed',
+        }
       },
       title: 'Protection Monitoring',
       subTitle: 'Ukraine',

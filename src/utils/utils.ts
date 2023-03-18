@@ -42,6 +42,30 @@ export const sortObject = <T extends Record<any, any>>(
   }, {} as T)
 }
 
-export const includedIn = <T extends string>(t: T, checks: T[]) => {
-  
+type PipeFunction = <T, R>(fn1: (arg: T) => R, ...fns: (((arg: R) => R) | undefined)[]) => (arg: T) => R;
+
+export const pipe: PipeFunction = (fn1, ...fns) => {
+  return (arg) => fns.reduce((prev, fn) => fn ? fn(prev) : prev, fn1(arg))
 }
+
+class Chain<T> {
+  constructor(private value?: T) {
+  }
+
+  readonly map = <B>(f: (t: T) => B): Chain<B> => {
+    return new Chain<B>(this.value ? f(this.value) : undefined)
+  }
+
+  readonly get: T = this.value as T
+  
+  get val() {
+    return this.value
+  }
+
+  readonly getOrElse = (orElse: () => T): T => {
+    if (this.value) return this.value
+    return orElse()
+  }
+}
+
+export const chain = <T>(value?: T) => new Chain(value)

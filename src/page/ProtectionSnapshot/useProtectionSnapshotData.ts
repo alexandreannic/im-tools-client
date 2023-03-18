@@ -5,7 +5,7 @@ import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {useI18n} from '../../core/i18n'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
-import {objToArray} from '../../utils/utils'
+import {chain, objToArray, sortObject} from '../../utils/utils'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import PropertyDamage = KoboFormProtHH.PropertyDamage
@@ -38,88 +38,108 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
   const sortBy = {
     value: (a: {value: number}, b: {value: number}) => b.value - a.value,
-    percent: (a: {value: number, base: number}, b: {value: number, base: number}) => b.value / b.base - a.value / a.base
+    percent: (a: {value: number, base: number}, b: {value: number, base: number}) => b.value / b.base - a.value / a.base,
   }
 
   return useMemo(() => {
     return {
-      _29_nfiNeededByOblast: ChartTools.groupBy({
-        data,
-        groupBy: _ => _._4_What_oblast_are_you_from,
-        filter: _ => _._29_Which_NFI_do_you_need !== undefined && !_._29_Which_NFI_do_you_need.includes(KoboFormProtHH.NFI.do_not_require41)
-      }).sort(sortBy.percent)
-        .map(ChartTools.translate(m.hhCategoryType)),
+      _29_nfiNeededByOblast: chain(
+        ChartTools.groupBy({
+          data,
+          groupBy: _ => _._4_What_oblast_are_you_from,
+          filter: _ => _._29_Which_NFI_do_you_need !== undefined && !_._29_Which_NFI_do_you_need.includes(KoboFormProtHH.NFI.do_not_require41)
+        })).val,
 
-      _29_nfiNeededByCategory: ChartTools.byCategory({
+      _29_nfiNeededByCategory: chain(ChartTools.byCategory({
         data,
         categories: categoryFilters,
         filter: _ => _._29_Which_NFI_do_you_need !== undefined && !_._29_Which_NFI_do_you_need.includes(KoboFormProtHH.NFI.do_not_require41)
-      }).sort(sortBy.percent)
-        .map(ChartTools.translate(m.hhCategoryType)),
+      }))
+        .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType))
+        .val,
 
-      _40_1_pn_cash_byCategory: ChartTools.byCategory({
+      _40_1_pn_cash_byCategory: chain(ChartTools.byCategory({
         data,
         categories: categoryFilters,
         filter: _ => !!_._40_1_What_is_your_first_priorty?.includes(PriorityNeed.cash)
-      }).sort(sortBy.percent)
-        .map(ChartTools.translate(m.hhCategoryType)),
+      }))
+        .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType))
+        .val,
 
-      _40_1_pn_shelter_byCategory: ChartTools.byCategory({
+      _40_1_pn_shelter_byCategory: chain(ChartTools.byCategory({
         data,
         categories: categoryFilters,
         filter: _ => !!_._40_1_What_is_your_first_priorty?.includes(PriorityNeed.shelter)
-      }).sort(sortBy.percent)
-        .map(ChartTools.translate(m.hhCategoryType)),
+      }))
+        .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType))
+        .val,
 
-      _40_1_pn_health_byCategory: ChartTools.byCategory({
+      _40_1_pn_health_byCategory: chain(ChartTools.byCategory({
         data,
         categories: categoryFilters,
         filter: _ => !!_._40_1_What_is_your_first_priorty?.includes(PriorityNeed.health)
-      }).sort(sortBy.percent)
-        .map(ChartTools.translate(m.hhCategoryType)),
+      }))
+        .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType))
+        .val,
 
-      _40_1_What_is_your_first_priorty: ChartTools.single({
+      _40_1_What_is_your_first_priorty: chain(ChartTools.single({
         data: data.map(_ => _._40_1_What_is_your_first_priorty).compact(),
-      }).sort(sortBy.value)
-        .map(ChartTools.translate(m.protectionHHSnapshot.priorityNeeds)),
+      }))
+        .map(ChartTools.sortBy.value)
+        .map(ChartTools.setLabel(m.protectionHHSnapshot.priorityNeeds))
+        .val,
 
       _27_Has_your_house_apartment_been_: ChartTools.percentage({
         data: data.map(_ => _._27_Has_your_house_apartment_been_),
         value: _ => _ === 'yes39'
       }),
 
-      _12_Do_you_identify_as_any_of: ChartTools.single({
+      _12_Do_you_identify_as_any_of: chain(ChartTools.single({
         data: data.map(_ => _._12_Do_you_identify_as_any_of).compact(),
-      }).sort(sortBy.value)
-        .map(ChartTools.translate(m.statusType)),
+      }))
+        .map(ChartTools.sortBy.value)
+        .map(ChartTools.setLabel(m.statusType))
+        .val,
 
-      _40_2_What_is_your_second_priority: ChartTools.single({
+      _40_2_What_is_your_second_priority: chain(ChartTools.single({
         data: data.map(_ => _._40_2_What_is_your_second_priority).compact(),
-      }).sort(sortBy.value)
-        .map(ChartTools.translate(m.protectionHHSnapshot.priorityNeeds)),
+      }))
+        .map(ChartTools.sortBy.value)
+        .map(ChartTools.setLabel(m.protectionHHSnapshot.priorityNeeds))
+        .val,
 
-      _27_1_If_yes_what_is_level_of_the_damage: ChartTools.single({
+      _27_1_If_yes_what_is_level_of_the_damage: chain(ChartTools.single({
         data: data.map(_ => _._27_1_If_yes_what_is_level_of_the_damage).compact(),
-      }).sort((a, b) => {
-        const obj = Enum.keys(PropertyDamage)
-        return obj.indexOf(b.name) - obj.indexOf(a.name)
-      }).map(_ => ({
-        ..._,
-        name: m.protectionHHSnapshot.propertyDamaged[_.name].title,
-        desc: m.protectionHHSnapshot.propertyDamaged[_.name].desc,
-      })),
+      }))
+        .map(_ => sortObject(_, ([labelA], [labelB]) => {
+          const obj = Enum.keys(PropertyDamage)
+          return obj.indexOf(labelB) - obj.indexOf(labelA)
+        }))
+        .map(ChartTools.setLabel(m.protectionHHSnapshot.propertyDamaged.title))
+        .map(ChartTools.setDesc(m.protectionHHSnapshot.propertyDamaged.desc))
+        .val,
 
-      C_Vulnerability_catergories_that: ChartTools.multiple({
+      C_Vulnerability_catergories_that: chain(ChartTools.multiple({
         data: data.map(_ => _.C_Vulnerability_catergories_that).compact(),
-      }).map(ChartTools.translate(m.protectionHHSnapshot.vulnerability)),
+      }))
+        .map(ChartTools.setLabel(m.protectionHHSnapshot.vulnerability))
+        .val,
 
-      _28_Do_you_have_acce_current_accomodation: ChartTools.multiple({
+      _28_Do_you_have_acce_current_accomodation: chain(ChartTools.multiple({
         data: data.map(_ => _._28_Do_you_have_acce_current_accomodation).compact(),
-      }).map(ChartTools.translate(m.protectionHHSnapshot.vulnerability)),
+      }))
+        .map(ChartTools.setLabel(m.protectionHHSnapshot.vulnerability))
+        .val,
 
-      _12_8_1_What_would_be_the_deciding_fac: ChartTools.multiple({
+      _12_8_1_What_would_be_the_deciding_fac: chain(ChartTools.multiple({
         data: data.map(_ => _._12_8_1_What_would_be_the_deciding_fac).compact(),
-      }).map(ChartTools.translate(m.factorsToReturn)),
+      }))
+        .map(ChartTools.setLabel(m.factorsToReturn))
+        .val,
 
       _12_7_1_planToReturn: ChartTools.percentage({
         data: data.map(_ => _._12_7_1_Do_you_plan_to_return_to_your_),
@@ -156,12 +176,12 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _8_individuals: (() => {
         const persons = data.flatMap(_ => _.persons)
-        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof KoboFormProtHH.ageGroup, number>>((p, acc) => {
+        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof KoboFormProtHH.ageGroup, {value: number}>>((p, acc) => {
           const group = Enum.keys(KoboFormProtHH.ageGroup).find(k => {
             const [min, max] = KoboFormProtHH.ageGroup[k]
             return p.age && p.age >= min && p.age <= max
           })
-          if (group) return [group, (acc[group] ?? 0) + 1]
+          if (group) return [group, {value: (acc[group]?.value ?? 0) + 1}]
         })
 
         const byGender = Arr(persons).reduceObject<Record<Gender | 'undefined', number>>((p, acc) => {
@@ -170,7 +190,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
         return {
           persons: persons,
-          byAgeGroup: objToArray(byAgeGroup).sort((a, b) => KoboFormProtHH.ageGroup[a.name][0] - KoboFormProtHH.ageGroup[b.name][0]),
+          byAgeGroup: byAgeGroup,
           byGender: byGender,
         }
       })()

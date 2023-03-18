@@ -56,8 +56,8 @@ export const ProtSnapshotDisplacement = ({
                 {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: computed._12_3_1_dateDeparture},
               ]}/>
               <Txt color="hint" size="small" sx={{display: 'flex', justifyContent: 'space-between'}}>
-                {map(computed._12_3_1_dateDeparture.head?.date, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
-                {map(computed._12_3_1_dateDeparture.last?.date, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
+                {map(computed._12_3_1_dateDeparture.head?.value, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
+                {map(computed._12_3_1_dateDeparture.last?.value, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
               </Txt>
             </SlidePanel>
             <div>

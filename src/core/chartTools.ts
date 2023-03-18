@@ -1,6 +1,7 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {objToArray} from '../utils/utils'
+import {objToArray, sortObject} from '../utils/utils'
 
+/** @deprecated*/
 export interface ChartData {
   name: string
   value: number
@@ -8,34 +9,55 @@ export interface ChartData {
 
 export interface ChartDataObjValue {
   value: number
-  baseValue?: number
-  text?: string
+  base?: number
+  label?: string
+  desc?: string
 }
+
+export type ChartD<K extends string = string> = Record<K, ChartDataObjValue>
 
 export type ChartDataObj<T extends string> = Record<T, ChartDataObjValue>
 
 export namespace ChartTools {
 
+  export const sortBy = {
+    percent: <T extends string>(obj: Record<T, ChartDataObjValue>): Record<T, ChartDataObjValue> => {
+      return sortObject(obj as Record<string, ChartDataObjValue>, ([aK, aV], [bK, bV]) => {
+        try {
+          return bV.value / (bV.base ?? 1) - aV.value / (aV.base ?? 1)
+        } catch (e) {
+          return 0
+        }
+      })
+    },
+    value: <T extends string>(obj: Record<T, ChartDataObjValue>): Record<T, ChartDataObjValue> => {
+      return sortObject(obj as Record<string, ChartDataObjValue>, ([aK, aV], [bK, bV]) => {
+        return bV.value - aV.value
+      })
+    }
+  }
+
   export const multiple = <A extends string>({
     data,
     type,
-    m,
-    sortBy = 'value'
   }: {
     data: A[][],
     type?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
-    m?: Record<A, string>,
-    sortBy?: 'value' | 'name'
-  }): ChartData[] => {
+  }): ChartD<A> => {
     const all = data.flatMap(_ => _)
     const obj = Arr(all).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
     const base = fnSwitch(type!, {
       percentOfTotalAnswers: data.length,
       percentOfTotalChoices: all.length,
     }, _ => undefined)
-    return Enum.entries(obj)
-      .map(([k, v]) => ({name: m ? m[k] : k, value: v / (base ?? 1)}))
-      .sort((a, b) => (b[sortBy] + '').localeCompare('' + a[sortBy], undefined, {numeric: true}))
+    const res: ChartD = {}
+    Enum.keys(obj).forEach(k => {
+      if (!res[k]) res[k] = {value: 0, base: 0}
+      // res[k].value = obj[k]
+      res[k].value = obj[k]
+      res[k].value = obj[k] / (base ?? 1)
+    })
+    return res
   }
 
   export const groupBy = <A extends Record<string, any>, K extends string>({
@@ -48,17 +70,18 @@ export namespace ChartTools {
     groupBy: (_: A) => any
     filter: (_: A) => boolean
     filterBase?: (_: A) => boolean
-  }): {name: string, value: number, base: number}[] => {
-    const res: Record<string, {value: number, base: number}> = {} as any
+  }): ChartD => {
+    const res: ChartD<any> = {} as any
     data.forEach(x => {
       const value = groupBy(x)
       if (filterBase && !filterBase(x)) return
-      value[x].base = (value[x].base ?? 0) + 1
+      if (!res[value]) res[value] = {value: 0, base: 0} as ChartDataObjValue
+      res[value].base = res[value].base! + 1
       if (filter(x)) {
-        value[x].value = (value[x].base ?? 0) + 1
+        res[value].value = res[value].base! + 1
       }
     })
-    return objToArray(res).map(_ => ({..._, ..._.value}))
+    return res
   }
 
   export const byCategory = <A extends Record<string, any>, K extends string>({
@@ -71,7 +94,7 @@ export namespace ChartTools {
     filter: (_: A) => boolean
     filterBase?: (_: A) => boolean
     categories: Record<K, (_: A) => boolean>
-  }): {name: K, value: number, base: number}[] => {
+  }): Record<K, ChartDataObjValue> => {
     const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: {value: 0, base: 0}}), {} as Record<K, {value: number, base: number}>)
     data.forEach(x => {
       Enum.entries(categories).forEach(([category, isCategory]) => {
@@ -83,7 +106,7 @@ export namespace ChartTools {
         }
       })
     })
-    return objToArray(res).map(_ => ({..._, ..._.value}))
+    return res
   }
 
   export const single = <A extends string>({
@@ -92,15 +115,34 @@ export namespace ChartTools {
   }: {
     data: A[],
     percent?: boolean
-  }) => {
+  }): ChartD<A> => {
     const obj = Arr(data).reduceObject<Record<A, number>>((curr, acc) => {
       return [curr, (acc[curr] ?? 0) + 1]
     })
-    return Enum.entries(obj)
-      .map(([k, v]) => ({name: k, value: v / (percent ? data.length : 1)}))
+    const res: ChartD = {}
+    Enum.keys(obj).forEach(k => {
+      res[k] = {value: obj[k] / (percent ? data.length : 1)}
+    })
+    return res
   }
 
-  export const translate = (m: Record<string, string>) => (data: ChartData): ChartData => {
+  export const setLabel = (m: Record<string, string>) => (data: ChartD): ChartD => {
+    Object.keys(data).forEach(k => {
+      data[k].label = m[k]
+    })
+    return data
+  }
+
+
+  export const setDesc = (m: Record<string, string>) => (data: ChartD): ChartD => {
+    Object.keys(data).forEach(k => {
+      data[k].desc = m[k]
+    })
+    return data
+  }
+
+  /** @deprecated */
+  export const translateOld = (m: Record<string, string>) => (data: ChartData): ChartData => {
     data.name = m[data.name] ?? data.name
     return data
   }
@@ -119,7 +161,7 @@ export namespace ChartTools {
     return v / b
   }
 
-  export const groupByDate = <F>({
+  export const groupByDate = <F extends string>({
     data,
     getDate,
     percentageOf,
@@ -127,7 +169,7 @@ export namespace ChartTools {
     data: F[]
     getDate: (_: F) => string | undefined
     percentageOf?: (_: F) => boolean
-  }): _Arr<{date: string, count: number}> => {
+  }): ChartD<F> => {
     const obj = Arr(data).reduceObject<Record<string, {filter: number, total: number}>>((x, acc) => {
       const date = getDate(x) ?? 'undefined'
       let value = acc[date]
@@ -138,6 +180,13 @@ export namespace ChartTools {
       value.total += 1
       return [date, value]
     })
-    return Arr(Enum.entries(obj).map(([k, v]) => ({date: k, count: percentageOf ? v.filter / v.total : v.total})))
+    const res: ChartD = {}
+    Object.entries(obj).forEach(([k, v]) => {
+      res[k] = {
+        label: k,
+        value: percentageOf ? v.filter / v.total : v.total,
+      }
+    })
+    return res
   }
 }

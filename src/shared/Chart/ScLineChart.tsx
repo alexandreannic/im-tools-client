@@ -22,7 +22,7 @@ interface Props extends ScLineChartPropsBase {
   curves: {
     label: string
     key: string
-    curve: {date: string; count: number}[]
+    curve: Record<string, {label?: string; value: number}>
     color?: string
   }[]
 }
@@ -40,13 +40,12 @@ export const ScLineChart = memo(({
 }: Props) => {
   const theme = useTheme()
   const [showCurves, setShowCurves] = useState<boolean[]>(new Array(curves.length).fill(false))
-  const {m} = useI18n()
   const mappedData = useMemo(() => {
     const res: any[] = []
     curves.forEach((curve, i) => {
-      curve.curve.forEach((data, j) => {
-        if (!res[j]) res[j] = {date: data.date} as any
-        res[j][curve.key] = data.count
+      Object.entries(curve.curve).forEach(([k, data], j) => {
+        if (!res[j]) res[j] = {date: data.label ?? k} as any
+        res[j][curve.key] = data.value
       })
       res.push()
     })
@@ -111,9 +110,9 @@ export const ScBarChart = ({curves, height}: Props) => {
   const mappedData = useMemo(() => {
     const res: any[] = []
     curves.forEach((curve, i) => {
-      curve.curve.forEach((data, j) => {
-        if (!res[j]) res[j] = {date: data.date} as any
-        res[j][curve.key] = data.count
+      Object.values(curve.curve).forEach((data, j) => {
+        if (!res[j]) res[j] = {date: data.label} as any
+        res[j][curve.key] = data.value
       })
       res.push()
     })

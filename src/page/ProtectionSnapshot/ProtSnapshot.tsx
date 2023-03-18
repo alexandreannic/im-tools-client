@@ -14,11 +14,12 @@ import {KoboAnswer} from '../../core/sdk/kobo/KoboType'
 import {useI18n} from '../../core/i18n'
 import {AaSelect} from '../../shared/Select/Select'
 import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
-import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {HorizontalBarChartGoogle, HorizontalBarChartGoogleData} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import LatLngLiteral = google.maps.LatLngLiteral
 import Answer = KoboFormProtHH.Answer
 import mapAnswers = KoboFormProtHH.mapAnswers
 import Status = KoboFormProtHH.Status
+import {ChartDataObjValue} from '../../core/chartTools'
 
 const initGoogleMaps = async (mapId: string, color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
   let trys = 0
