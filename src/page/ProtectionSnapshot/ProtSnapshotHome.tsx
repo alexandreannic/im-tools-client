@@ -24,24 +24,24 @@ export const ProtSnapshotHome = ({
   const theme = useTheme()
   return (
     <Slide>
-      <SlideHeader>{m.protectionHHSnapshot.title}: {m.protectionHHSnapshot.subTitle}</SlideHeader>
+      <SlideHeader>{m.protHHSnapshot.title}: {m.protHHSnapshot.subTitle}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 1}}>
+          <SlideContainer flexDirection="column" sx={{flex: 4}}>
             <SlideTxt size="big" color="hint">
               {format(period.start, 'LLLL yyyy')} - {format(period.end, 'LLLL yyyy')}
             </SlideTxt>
 
-            <SlideTxt>{m.protectionHHSnapshot.disclaimer}</SlideTxt>
+            <SlideTxt>{m.protHHSnapshot.disclaimer}</SlideTxt>
 
             <Box id="map" sx={{height: 400, borderRadius: pdfTheme.slideRadius}}/>
           </SlideContainer>
 
-          <SlideContainer flexDirection="column" sx={{flex: 1}}>
+          <SlideContainer flexDirection="column" sx={{flex: 5}}>
 
             <SlideH1>{m.sample}</SlideH1>
 
-            <SlideTxt>{m.protectionHHSnapshot.sample.desc}</SlideTxt>
+            <SlideTxt>{m.protHHSnapshot.sample.desc}</SlideTxt>
 
             <Box sx={{display: 'flex'}}>
               <SlideCard title={m.hhs} icon="home">
@@ -59,8 +59,8 @@ export const ProtSnapshotHome = ({
               <SlideContainer flexDirection="column">
                 <SlidePanel>
                   <AaPieChart
-                    outerRadius={65}
-                    height={140}
+                    outerRadius={60}
+                    height={120}
                     width={260}
                     m={{
                       male: m.male,

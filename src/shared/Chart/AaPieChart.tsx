@@ -42,22 +42,42 @@ export const AaPieChart = <T extends Record<string, number>>({
   colors,
   m,
   outerRadius,
+  innerRadius,
+  hideLabel,
+  valueInMiddle,
   ...props
 }: {
   data: T
   outerRadius?: number
+  innerRadius?: number
   m: Record<keyof T, string>,
   colors?: Partial<Record<keyof T, string>>
   height?: number
   width?: number
-  children: ReactNode,
+  hideLabel?: boolean
+  valueInMiddle?: string
+  children?: ReactNode,
   sx?: SxProps<Theme>
 }) => {
   const theme = useTheme()
   height = height ?? width ?? 200
   width = width ?? height ?? 200
   return (
-    <Box sx={{height, width, mx: -1}} {...props}>
+    <Box sx={{position: 'relative', height, width, ...sx}} {...props}>
+      {valueInMiddle && (
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1.25em',
+          fontWeight: t => t.typography.fontWeightBold,
+        }}>{valueInMiddle}</Box>
+      )}
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Tooltip/>
@@ -71,9 +91,10 @@ export const AaPieChart = <T extends Record<string, number>>({
             cy="50%"
             labelLine={false}
             outerRadius={outerRadius}
+            innerRadius={innerRadius}
             dataKey="value"
             fill={theme.palette.primary.main}
-            label={renderCustomizedLabel}
+            label={hideLabel ? false : renderCustomizedLabel}
             // label={renderCustomizedLabel(data)}
           >
             {colors && Object.keys(colors).map(k => <Cell key={k} fill={colors[k] ?? theme.palette.primary.main}/>)}

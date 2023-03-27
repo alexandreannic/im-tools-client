@@ -21,7 +21,7 @@ export interface KoboQuestion {
 }
 
 export interface KoboAnswerMetaData {
-  // _id: number,
+  _id: number,
   // 'formhub/uuid': string,
   start: Date,
   end: Date,

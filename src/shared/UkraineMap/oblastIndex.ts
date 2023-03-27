@@ -1,7 +1,9 @@
 import {Enum} from '@alexandreannic/ts-utils'
+import {OblastISO} from './ukraineSvgPath'
+import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 
 export interface Oblast {
-  koboKey: string
+  koboKey: KoboFormProtHH.GetType<'oblast'>
   name: string
   iso: string
   drcOffice?: string
@@ -12,7 +14,7 @@ export class OblastIndex {
     return oblastsByKoboKey[koboKey]
   }
   
-  static readonly findByIso = (iso: string): Oblast | undefined => {
+  static readonly findByIso = (iso: OblastISO): Oblast | undefined => {
     return Enum.values(oblastsByKoboKey).find(_ => _.iso === iso)
   }
 }
@@ -155,6 +157,7 @@ const oblastsByKoboKey: Record<string, Oblast> = {
     iso: 'UA-40'
   }
 }// export const oblastByKoboKey = {
+// export const oblastIso = Enum.values(oblastsByKoboKey).map(_ => _.iso)
 //   'vin': 'Vinnytska',
 //   'vol': 'Volynska',
 //   'dnip': 'Dnipropetrovska',
@@ -182,6 +185,9 @@ const oblastsByKoboKey: Record<string, Oblast> = {
 //   'cherni': 'Chernihivska',
 //   'sev': 'Sevastopilska',
 // }
+//
+//
+// export type OblastISO = keyof typeof oblastByIso
 //
 // export const oblastByIso = {
 //   'UA-71': 'Cherkaska',

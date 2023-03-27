@@ -21,7 +21,7 @@ const generalStyles = <GlobalStyles
 const PdfContext = React.createContext({
   pdfTheme: {
     slidePadding: 2,
-    slideRadius: 4,
+    slideRadius: 2,
     fontSize: 15,
   }
 })
@@ -35,7 +35,7 @@ export const Pdf = ({children, ...props}: BoxProps) => {
       <Box sx={{
         fontSize: 15,
         '@media screen': {
-          background: '#f6f7f9',
+          background: t => t.palette.background.paper,//'#f6f7f9',
           padding: 2,
         }
       }}>

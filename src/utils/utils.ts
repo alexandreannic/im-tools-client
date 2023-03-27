@@ -1,4 +1,4 @@
-import {Enum} from '@alexandreannic/ts-utils'
+import {Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 
 export const generateId = () => ('' + Math.random()).split('.')[1]
 
@@ -37,6 +37,7 @@ export const sortObject = <T extends Record<any, any>>(
   predicate: (a: [keyof T, T[keyof T]], b: [keyof T, T[keyof T]]) => number
 ): T => {
   return Enum.entries(obj).sort(predicate).reduce<T>((acc, [k, v]) => {
+    // @ts-ignore
     acc[k] = v
     return acc
   }, {} as T)
@@ -57,7 +58,7 @@ class Chain<T> {
   }
 
   readonly get: T = this.value as T
-  
+
   get val() {
     return this.value
   }
@@ -69,3 +70,14 @@ class Chain<T> {
 }
 
 export const chain = <T>(value?: T) => new Chain(value)
+
+export const getAvgAgeAndSex = (data: any[]) => {
+  const avgMember = Arr(data.flatMap(_ => mapFor(6, i => _[`_8_${i + 2}_1_For_household_${i + 2}_what_is_their_age`]))).filter(_ => !!_)
+  const sexMember = Arr(data.flatMap(_ => mapFor(6, i => _[`_8_${i + 2}_2_For_household_${i + 2}_what_is_their_sex`]))).filter(_ => !!_)
+  const avgHoHH = Arr(data.flatMap(_ => _[`_8_1_1_For_household_member_1_`])).filter(_ => !!_)
+  const sexHoHH = Arr(data.flatMap(_ => _[`_8_1_2_For_household_member_1_`])).filter(_ => !!_)
+  console.info('avgMember', avgMember.sum(_ => +_) / avgMember.length)
+  console.info('avgHoHH', avgHoHH.sum(_ => +_) / avgHoHH.length)
+  console.info('sexMember', sexMember.filter(_ => _ === 'female').length / sexMember.length)
+  console.info('sexHoHH', sexHoHH.filter(_ => _ === 'female').length / sexHoHH.length)
+}

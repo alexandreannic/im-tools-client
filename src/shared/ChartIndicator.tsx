@@ -20,15 +20,15 @@ export const ChartIndicator = ({
 } & Omit<BoxProps, 'children'>) => {
   return (
     <Box {...props}>
-      {title && <Txt block size="big" bold>{title}</Txt>}
-      <Txt size="big" sx={{display: 'inline-flex', alignItems: 'center'}}>
+      {title && <Txt block size="big" bold sx={{mb: .5}}>{title}</Txt>}
+      <Txt sx={{fontSize: '1.4em', display: 'inline-flex', alignItems: 'center'}}>
         <Txt bold>{renderPercent(value, percent)}</Txt>
         {evolution && (
           <Txt sx={{
             color: t => evolution > 0 ? t.palette.success.main : t.palette.error.main,
             display: 'inline-flex', alignItems: 'center'
           }}>
-            <Icon sx={{ml: 1}} fontSize="inherit">{evolution > 0 ? 'north' : 'south'}</Icon>
+            <Icon sx={{ml: 2}} fontSize="inherit">{evolution > 0 ? 'north' : 'south'}</Icon>
             <Box sx={{ml: .25}}>
               {renderPercent(evolution, percent)}
             </Box>

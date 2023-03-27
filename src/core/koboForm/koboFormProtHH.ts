@@ -1,5 +1,8 @@
 import {KoboAnswer, KoboAnswerMetaData} from '../sdk/kobo/KoboType'
-import {map, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
+import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
+import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
+import {Messages} from '../i18n/localization/en'
 
 export namespace KoboFormProtHH {
 
@@ -29,17 +32,6 @@ export namespace KoboFormProtHH {
     age?: number
     gender?: G
   }
-
-  export type FactorsToReturn =
-    'shelter_is_repaired'
-    | 'improvement_in_security_situat'
-    | 'increased_service_availability'
-    | 'infrastructure__including_heat'
-    | 'cessation_of_hostilities'
-    | 'health_facilties_are_accessibl'
-    | 'government_regains_territory_f'
-    | 'other219'
-    | 'education_facilities__schools_'
 
   export enum Information {
     livelihoods = 'livelihoods',
@@ -99,50 +91,6 @@ export namespace KoboFormProtHH {
     idp_returnee = 'idp_returnee',
   }
 
-  export enum CopingMechanisms {
-    spent_savings = 'spent_savings',
-    depending_on_support_from_family_host_fm = 'depending_on_support_from_family_host_fm',
-    skipping = 'skipping',
-    reduced_expenses_on_food__health_and_edu = 'reduced_expenses_on_food__health_and_edu',
-    borrowing_food = 'borrowing_food',
-    sent_household_members_to_eat_elsewhere = 'sent_household_members_to_eat_elsewhere',
-    planning_to_relocate_abroad = 'planning_to_relocate_abroad',
-    borrowed_money__from_a_formal_lender_ban = 'borrowed_money__from_a_formal_lender_ban',
-    unknown_no_answer341 = 'unknown_no_answer341',
-    sold_household_assets_goods = 'sold_household_assets_goods',
-    other_specify341 = 'other_specify341',
-    asking_strangers_for_money_begging = 'asking_strangers_for_money_begging',
-    sold_productive_assets = 'sold_productive_assets',
-  }
-
-  export enum NFI {
-    infant_clothing = 'infant_clothing',
-    hygiene_items = 'hygiene_items',
-    do_not_require41 = 'do_not_require41',
-    other_household_items = 'other_household_items',
-    blankets = 'blankets',
-    towels_bed_linen = 'towels_bed_linen',
-    winter_clothes = 'winter_clothes',
-    kitchen_items = 'kitchen_items',
-    clothes_and_shoes = 'clothes_and_shoes',
-  }
-
-  export enum BasicNeeds {
-    gas = 'gas',
-    electricity = 'electricity',
-    drinking_water = 'drinking_water',
-    toilets = 'toilets',
-    shower = 'shower',
-    heating_system = 'heating_system',
-    hot_water = 'hot_water',
-    usage_water = 'usage_water',
-    none_of_the_above40 = 'none_of_the_above40',
-  }
-
-  export type T_27_Has_your_house_apartment_been_ = 'no39' | 'yes39' | 'don_t_know39' | 'prefer_not_to_answer39'
-
-  export type T_12_7_1_Do_you_plan_to_return_to_your_ = 'yes21' | 'don_t21' | 'don_t_know21' | 'yes_but_no_clear_timeframe' | 'prefer_not_to_answer21'
-
   export type Answer = ReturnType<typeof mapAnswers>
 
   const mapGender = (g?: any): Gender | undefined => {
@@ -150,16 +98,28 @@ export namespace KoboFormProtHH {
   }
 
   const mapPerson = (a: KoboAnswer) => {
-    const ageFields: [string, string][] = [
-      ['_8_1_1_For_household_member_1_', '_8_1_2_For_household_member_1_'],
-      ...mapFor(6, i => [`_8_2_1_For_household_${i + 2}_what_is_their_age`, `_8_2_2_For_household_${i + 2}_what_is_their_sex`] as [string, string]),
+    const fields: [string, string, string, string][] = [
+      [
+        '_8_1_1_For_household_member_1_',
+        '_8_1_2_For_household_member_1_',
+        '14.1.1. What type of personal identity documents do you have?',
+        '_14_2_1_Do_you_or_your_househo',
+      ],
+      ...mapFor(6, i => [
+        `_8_${i + 2}_1_For_household_${i + 2}_what_is_their_age`,
+        `_8_${i + 2}_2_For_household_${i + 2}_what_is_their_sex`,
+        `_14_1_${i + 2}_What_type_of_sehold_member_${i + 2}_have`,
+        `_14_2_${i + 2}_Do_you_or_your_househo_00${i + 1}`,
+      ] as [string, string, string, string]),
     ]
-    return ageFields
-      .map(([ageCol, sexCol]) => ({
+    return Arr(fields)
+      .map(([ageCol, sexCol, personalDoc, statusDoc]) => ({
         age: a[ageCol] as number | undefined,
-        gender: mapGender(a[sexCol])
+        gender: mapGender(a[sexCol]),
+        personalDoc: a[personalDoc]?.split(' ') as GetType<'_14_1_1_What_type_of_ocuments_do_you_have'>[] | undefined,
+        statusDoc: a[statusDoc]?.split(' ') as GetType<'_14_2_1_Do_you_or_your_househo'>[] | undefined
       }))
-      .filter(x => x.gender !== undefined || x.age !== undefined)
+      .filter(x => x.gender !== undefined || x.age !== undefined || x.personalDoc !== undefined)
   }
 
   export const filterByHoHH60 = (row: Answer): boolean => {
@@ -171,36 +131,98 @@ export namespace KoboFormProtHH {
   }
 
   export const filterWithDisability = (row: Answer): boolean => {
-    return !!row.C_Vulnerability_catergories_that?.includes(Vulnerability.person_with_a_disability)
+    return !!row.C_Vulnerability_catergories_that?.includes('person_with_a_disability')
   }
 
   export const filterByIDP = (row: Answer): boolean => {
     return row._12_Do_you_identify_as_any_of === Status.idp
   }
 
+  // const Dico = {
+  //   multiple: <T>(): T[] | undefined => {
+  //
+  //   }
+  // }
+  //
+  // const dictionnaire = {
+  //   _29_Which_NFI_do_you_need: Dico.multiple<'infant_clothing' | 'hygiene_items' | 'do_not_require41' | 'other_household_items' | 'blankets' | 'towels_bed_linen' | 'winter_clothes' | 'kitchen_items' | 'clothes_and_shoes'>()
+  // }
+
+  export type GetType<T extends keyof Messages['protHHSnapshot']['enum']> = keyof Messages['protHHSnapshot']['enum'][T]
+
   export const mapAnswers = (a: KoboAnswerMetaData & Record<string, string | undefined>) => {
     return {
       ...a,
-      _29_Which_NFI_do_you_need: a._29_Which_NFI_do_you_need?.split(' ') as NFI[] | undefined,
-      _28_Do_you_have_acce_current_accomodation: a._28_Do_you_have_acce_current_accomodation?.split(' ') as BasicNeeds[] | undefined,
-      _25_1_1_During_the_last_30_day: a._25_1_1_During_the_last_30_day?.split(' ') as CopingMechanisms[] | undefined,
-      C_Vulnerability_catergories_that: a.C_Vulnerability_catergories_that?.split(' ') as Vulnerability[] | undefined,
+      _29_Which_NFI_do_you_need: a._29_Which_NFI_do_you_need?.split(' ') as GetType<'nfi'>[] | undefined,
+      _28_Do_you_have_acce_current_accomodation: a._28_Do_you_have_acce_current_accomodation?.split(' ') as GetType<'basicNeeds'>[] | undefined,
+      _25_1_1_During_the_last_30_day: a._25_1_1_During_the_last_30_day?.split(' ') as GetType<'copingMechanisms'>[] | undefined,
+      C_Vulnerability_catergories_that: a.C_Vulnerability_catergories_that?.split(' ') as GetType<'vulnerability'>[] | undefined,
       _12_Do_you_identify_as_any_of: a._12_Do_you_identify_as_any_of as Status | undefined,
       _39_What_type_of_information_would: a._39_What_type_of_information_would as Information | undefined,
-      _40_1_What_is_your_first_priorty: a['_40_What_are_your_priority_needs/_40_1_What_is_your_first_priorty'] as PriorityNeed | undefined,
-      _40_2_What_is_your_second_priority: a['_40_What_are_your_priority_needs/_40_2_What_is_your_second_priority'] as PriorityNeed | undefined,
-      _40_3_What_is_your_third_priority: a['_40_What_are_your_priority_needs/_40_3_What_is_your_third_priority'] as PriorityNeed | undefined,
+      _40_1_What_is_your_first_priorty: a['_40_What_are_your_priority_needs/_40_1_What_is_your_first_priorty'] as GetType<'priorityNeeds'> | undefined,
+      _40_2_What_is_your_second_priority: a['_40_What_are_your_priority_needs/_40_2_What_is_your_second_priority'] as GetType<'priorityNeeds'> | undefined,
+      _40_3_What_is_your_third_priority: a['_40_What_are_your_priority_needs/_40_3_What_is_your_third_priority'] as GetType<'priorityNeeds'> | undefined,
       _27_1_If_yes_what_is_level_of_the_damage: a._27_1_If_yes_what_is_level_of_the_damage as PropertyDamage | undefined,
-      _27_Has_your_house_apartment_been_: a._27_Has_your_house_apartment_been_ as T_27_Has_your_house_apartment_been_,
+      _27_Has_your_house_apartment_been_: fnSwitch(a._27_Has_your_house_apartment_been_!, {
+        'yes39': true,
+        'no39': false,
+      }, () => undefined),
       B_Interviewer_to_in_ert_their_DRC_office: a.B_Interviewer_to_in_ert_their_DRC_office,
       _8_What_is_your_household_size: map(a._8_What_is_your_household_size, _ => +_),
-      _12_1_What_oblast_are_you_from_001: a._12_1_What_oblast_are_you_from_001,
-      _4_What_oblast_are_you_from: a._4_What_oblast_are_you_from,
-      _12_8_1_What_would_be_the_deciding_fac: (a._12_8_1_What_would_be_the_deciding_fac?.split(' ') as FactorsToReturn[] | undefined)
-        ?.map(_ => _ === 'government_regains_territory_f' ? 'improvement_in_security_situat' : _),
-      _12_7_1_Do_you_plan_to_return_to_your_: a._12_7_1_Do_you_plan_to_return_to_your_ as T_12_7_1_Do_you_plan_to_return_to_your_ | undefined,
+      _4_What_oblast_are_you_from: a._4_What_oblast_are_you_from as GetType<'oblast'> | undefined,
+      _4_What_oblast_are_you_from_iso: OblastIndex.findByKoboKey(a._4_What_oblast_are_you_from!)?.iso as OblastISO | undefined,
+      _12_1_What_oblast_are_you_from_001: a._12_1_What_oblast_are_you_from_001 as undefined | GetType<'oblast'>,
+      _12_1_What_oblast_are_you_from_001_iso: OblastIndex.findByKoboKey(a._12_1_What_oblast_are_you_from_001!)?.iso as OblastISO | undefined,
+      _12_8_1_What_would_be_the_deciding_fac: (a._12_8_1_What_would_be_the_deciding_fac?.split(' ') as GetType<'factorsToReturn'>[] | undefined)
+        ?.map((_: any) => _ === 'government_regains_territory_f' ? 'improvement_in_security_situat' : _),
+      _12_7_1_Do_you_plan_to_return_to_your_: fnSwitch(a._12_7_1_Do_you_plan_to_return_to_your_!, {
+        'yes21': 'yes',
+        'don_t21': 'no',
+        'yes_but_no_clear_timeframe': 'yes_but_no_clear_timeframe',
+      }, () => undefined) as undefined | GetType<'_12_7_1_Do_you_plan_to_return_to_your_'>,
       _12_3_1_When_did_you_your_area_of_origin: a._12_3_1_When_did_you_your_area_of_origin,
       persons: mapPerson(a),
+      _33_What_is_the_aver_income_per_household: a._33_What_is_the_aver_income_per_household as GetType<'monthlyIncomes'> | undefined,
+      _32_What_is_the_main_source_of_inc: a._32_What_is_the_main_source_of_inc?.split(' ') as GetType<'incomeSource'>[] | undefined,
+      _31_2_What_type_of_work: a._31_2_What_type_of_work?.split(' ') as GetType<'employmentTypes'>[] | undefined,
+      _31_Is_anyone_from_the_household_: fnSwitch(a._31_Is_anyone_from_the_household_ as any, {
+        'yes43': true,
+        'no43': false,
+        'don_t_know43': undefined,
+        'prefer_not_to_answer4': undefined,
+      }, () => undefined),
+      _13_4_1_Are_you_separated_from_any_of_: fnSwitch(a._13_4_1_Are_you_separated_from_any_of_ as any, {
+        'yes22': true,
+        'no22': false,
+        'prefer_not_to_answer22': undefined,
+        'don_t_know22': false,
+      }, () => undefined),
+      _11_What_is_your_citizenship: a._11_What_is_your_citizenship as GetType<'citizenShip'> | undefined,
+      _16_1_1_Have_you_experienced_a: fnSwitch(a._16_1_1_Have_you_experienced_a as any, {
+        'yes25': true,
+        'no25': false,
+        'don_t_know25': undefined,
+        'prefer_not_to_answer2': undefined,
+      }, () => undefined),
+      _16_1_2_What_are_the_barriers_: a._16_1_2_What_are_the_barriers_?.split(' ') as GetType<'barriersToPersonalDocuments'>[] | undefined,
+      _24_2_Have_you_observed_pers: fnSwitch(a._24_2_Have_you_observed_pers!, {
+        'yes34': true,
+        'no34': false,
+        'don_t_know34': undefined,
+        'prefer_not_to_answer3': undefined,
+      }, () => undefined),
+      _19_1_1_Please_rate_your_relationship_: a._19_1_1_Please_rate_your_relationship_ as GetType<'_19_1_1_Please_rate_your_relationship_'> | undefined,
+      _18_1_1_Please_rate_your_sense_of_safe: fnSwitch(a._18_1_1_Please_rate_your_sense_of_safe!, {
+        prefer_not_to_answer27: undefined
+      }, _ => _) as GetType<'_18_1_1_Please_rate_your_sense_of_safe'> | undefined,
+      _18_1_2_What_are_the_factors_t: a._18_1_2_What_are_the_factors_t?.split(' ').map(_ => fnSwitch(_, {
+          other__specify: undefined,
+          don_t_know271: undefined,
+          don_t_want_to_say271: undefined,
+        }, _ => _)
+      ) as GetType<'_18_1_2_What_are_the_factors_t'>[] | undefined,
     }
   }
 }
+
+

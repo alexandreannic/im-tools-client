@@ -10,7 +10,7 @@ export const Slide = (props: BoxProps) => {
     <Box
       {...props}
       sx={{
-        background: 'white',
+        background: t => t.palette.background.default,
         overflow: 'hidden',
         '@media screen': {
           width: '29.7cm',
@@ -92,8 +92,12 @@ export const SlideHeader = ({children}: BoxProps) => {
 export const SlideBody = (props: BoxProps) => {
   const {pdfTheme} = usePdfContext()
   return (
-    <Box {...props} sx={{p: pdfTheme.slidePadding, ...props.sx}}/>
+    <Box {...props} sx={{p: pdfTheme.slidePadding, pb: 0, ...props.sx}}/>
   )
+}
+
+export const SlidePanelTitle = (props: TxtProps) => {
+  return <Txt block size="big" bold sx={{display: 'flex', alignItems: 'center', mb: .75, lineHeight: 1.15, mr: -1}} uppercase color="hint" {...props}/>
 }
 
 export const SlidePanel = ({children, title, sx, noBackground, ...props}: BoxProps & {noBackground?: boolean}) => {
@@ -104,12 +108,13 @@ export const SlidePanel = ({children, title, sx, noBackground, ...props}: BoxPro
       sx={{
         ...sx,
         mb: pdfTheme.slidePadding,
-        p: 1,
-        background: noBackground ? undefined : '#f8f9fa',
+        p: 1.5,
+        background: t =>  noBackground ? undefined : t.palette.background.paper,
         borderRadius: pdfTheme.slideRadius,
+        // border: t => `1px solid ${t.palette.divider}`
       }}
     >
-      {title && <Txt block bold sx={{fontSize: '1.15em', mb: .5}}>{title}</Txt>}
+      {title && <SlidePanelTitle>{title}</SlidePanelTitle>}
       {children}
     </Box>
   )
@@ -132,7 +137,7 @@ export const SlideCard = ({
       },
       p: 1,
       width: '100%',
-      background: '#f8f9fa',
+      background: t => t.palette.background.paper,
       borderRadius: pdfTheme.slideRadius,
       textAlign: 'center',
       ...sx,

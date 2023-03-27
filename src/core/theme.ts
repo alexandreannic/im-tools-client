@@ -97,6 +97,10 @@ export const muiTheme = (dark?: boolean): Theme => {
       secondary: colorSecondary,
       error: red,
       mode: dark ? 'dark' : 'light',
+      background: {
+        paper: dark ? '#1e1e22' : '#f8f9fa',
+        default: dark ? 'black' : 'white',
+      }
     },
     shape: {
       borderRadius: defaultRadius,

@@ -4,29 +4,32 @@ import {Period, UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {Box, FormControlLabel, Icon, Switch, useTheme} from '@mui/material'
 import {_Arr, Arr, Enum, map, sleep} from '@alexandreannic/ts-utils'
-import {Fender, IconBtn} from 'mui-extension'
+import {Fender, IconBtn, Txt} from 'mui-extension'
 import {Pdf} from 'shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
-import {ProtSnapshotHome} from './ProtSnapshotHome'
-import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
-import {KoboAnswer} from '../../core/sdk/kobo/KoboType'
 import {useI18n} from '../../core/i18n'
 import {AaSelect} from '../../shared/Select/Select'
-import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
-import {HorizontalBarChartGoogle, HorizontalBarChartGoogleData} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {Oblast, OblastIndex} from '../../shared/UkraineMap/oblastIndex'
+import {ProtSnapshotDocument} from './ProtSnapshotDocument'
+import {ProtSnapshotAA} from './ProtSnapshotAA'
 import LatLngLiteral = google.maps.LatLngLiteral
 import Answer = KoboFormProtHH.Answer
 import mapAnswers = KoboFormProtHH.mapAnswers
-import Status = KoboFormProtHH.Status
-import {ChartDataObjValue} from '../../core/chartTools'
+import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
+import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
+import {ProtSnapshotLivelihood} from './ProtSnapshotLivelihood'
+import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
+import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
+import {ProtSnapshotHome} from './ProtSnapshotHome'
 
 const initGoogleMaps = async (mapId: string, color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
+  return
   let trys = 0
   while (!google) {
     await sleep(200 + (100 * trys))
     trys++
-    if (trys > 40) break
+    if (trys > 140) break
   }
   const ukraineCenter: LatLngLiteral = {lat: 48.96008674231441, lng: 31.702957509661097}
   const map = new google.maps.Map(document.querySelector('#map') as HTMLElement, {
@@ -62,6 +65,7 @@ interface Data {
 export interface ProtSnapshotSlideProps {
   current: Data
   previous: Data
+  onFilterOblast: (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblast: OblastISO) => void
   filters: Partial<ProtSnapshotFilters>
   onFilter: Dispatch<SetStateAction<Partial<ProtSnapshotFilters>>>
 }
@@ -73,8 +77,8 @@ export type ProtSnapshotCustomFilters = {
 
 export type ProtSnapshotFilters = {
   _12_Do_you_identify_as_any_of: NonNullable<Answer['_12_Do_you_identify_as_any_of']>[]
-  _12_1_What_oblast_are_you_from_001: NonNullable<Answer['_12_1_What_oblast_are_you_from_001']>[]
-  _4_What_oblast_are_you_from: NonNullable<Answer['_4_What_oblast_are_you_from']>[]
+  _12_1_What_oblast_are_you_from_001_iso: NonNullable<Answer['_12_1_What_oblast_are_you_from_001_iso']>[]
+  _4_What_oblast_are_you_from_iso: NonNullable<Answer['_4_What_oblast_are_you_from_iso']>[]
   _12_7_1_Do_you_plan_to_return_to_your_: NonNullable<Answer['_12_7_1_Do_you_plan_to_return_to_your_']>[]
   _40_1_What_is_your_first_priorty: NonNullable<Answer['_40_1_What_is_your_first_priorty']>[]
   C_Vulnerability_catergories_that: Answer['C_Vulnerability_catergories_that']
@@ -83,7 +87,8 @@ export type ProtSnapshotFilters = {
 
 export const ProtSnapshot = ({
   formId,
-  // period = {start: new Date(2023, 1, 15), end: new Date()},
+  // period = {start: new Date(2023, 0, 1), end: new Date()},
+  // period = {start: new Date(2023, 0, 4), end: new Date(2023, 0, 5)},
   period = {start: new Date(2023, 0, 1), end: new Date(2023, 2, 1)},
   previousPeriod = {start: new Date(2022, 10, 1), end: new Date(2023, 0, 1)},
 }: {
@@ -91,22 +96,24 @@ export const ProtSnapshot = ({
   period?: Period
   previousPeriod?: Period
 }) => {
+
   const {m} = useI18n()
   const {api} = useConfig()
-  const _hhCurrent = useFetcher(() => api.kobo.getAnswers(formId, period))
-  const _hhPrevious = useFetcher(() => api.kobo.getAnswers(formId, previousPeriod))
+  const fetch = (period: Period) => () => api.kobo.getAnswers(formId, period).then(_ => Arr(_.data.map(mapAnswers)))
+  const _hhCurrent = useFetcher(fetch(period))
+  const _hhPrevious = useFetcher(fetch(previousPeriod))
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilters>>({})
   const [customFilters, setCustomFilters] = useState<Partial<ProtSnapshotCustomFilters>>({})
 
-  const filterValues = (data: KoboAnswer[]): _Arr<Answer> => {
-    return Arr(data).map(mapAnswers).filter(row => {
-      const filtered = Enum.keys(filters).every(k => {
-        const filterValues = filters[k] ?? []
+  const filterValues = (data: Answer[]): _Arr<Answer> => {
+    return Arr(data).filter(row => {
+      const filtered = Enum.keys(filters).every(filterProperty => {
+        const filterValues = filters[filterProperty] ?? []
         return filterValues.length === 0
-          || !!map(row[k], rowValue => [rowValue].flat().find(a => filterValues.find(b => a === b)))
+          || !!map(row[filterProperty], rowValue => [rowValue].flat().find(a => (filterValues as any).find((b: any) => a === b)))
       })
-      if (!filtered) return filtered
-      return Enum.entries<Record<keyof ProtSnapshotCustomFilters, (_: any) => boolean>>({
+      if (!filtered) return false
+      return Enum.entries({
         hohh60: (value: ProtSnapshotCustomFilters['hohh60']) => !value || KoboFormProtHH.filterByHoHH60(row),
         hohhFemale: (value: ProtSnapshotCustomFilters['hohhFemale']) => !value || KoboFormProtHH.filterByHoHHFemale(row),
       }).every(([k, condition]) => {
@@ -117,12 +124,12 @@ export const ProtSnapshot = ({
   }
 
   const currentFilteredData = useMemo(() => {
-    return map(_hhCurrent.entity?.data, filterValues)
-  }, [_hhCurrent.entity?.data, filters, customFilters])
+    return map(_hhCurrent.entity, filterValues)
+  }, [_hhCurrent.entity, filters, customFilters])
 
   const previousFilteredData = useMemo(() => {
-    return map(_hhPrevious.entity?.data, filterValues)
-  }, [_hhPrevious.entity?.data, filters, customFilters])
+    return map(_hhPrevious.entity, filterValues)
+  }, [_hhPrevious.entity, filters, customFilters])
 
   const currentComputedData = useProtectionSnapshotData(currentFilteredData ?? Arr(), period)
   const previousComputedData = useProtectionSnapshotData(previousFilteredData ?? Arr(), period)
@@ -132,47 +139,108 @@ export const ProtSnapshot = ({
     _hhPrevious.fetch({})
   }, [])
 
-  console.log(currentFilteredData)
+  const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblastISO: OblastISO) => {
+    setFilters(f => {
+      const value = f[key] as string[]
+      if (value?.includes(oblastISO)) {
+        return {
+          ...f,
+          [key]: value?.filter(_ => _ !== oblastISO)
+        }
+      }
+      if (!value) {
+        return {...f, [key]: [oblastISO]}
+      }
+      return {
+        ...f, [key]: [...value, oblastISO]
+      }
+    })
+  }
+
+  const _4_What_oblast_are_you_from_iso = useMemo(() => {
+    return _hhCurrent.entity?.map(_ => _._4_What_oblast_are_you_from_iso).distinct(_ => _).compact() ?? Arr([])
+  }, [_hhCurrent.entity])
+  
+  const selectedCurrentOblastISOs = useMemo(() => {
+    return _4_What_oblast_are_you_from_iso.distinct(_ => _).compact()
+  }, [_4_What_oblast_are_you_from_iso])
+
+  useEffect(() => {
+    // console.log('data', currentFilteredData?.map(_ => [_.persons, _._12_Do_you_identify_as_any_of]).get)
+    // console.log('here',
+    //   currentFilteredData
+    //     ?.filter(x => x._12_Do_you_identify_as_any_of === 'idp')
+    //     ?.filter(x => !!x.persons.flatMap(_ => _.age).find(_ => _ && _ >= 18))
+    //     ?.map(_ => _.persons.filter(_ => _.age && _.gender && _.age >= 18 && _.gender === 'female'))
+    //     .map(_ => _.map(_ => [_.age, _.gender, _.statusDoc?.join(',')].join(' - ')))
+    //     .get
+    // )
+  }, [currentFilteredData])
+  // console.log(currentFilteredData?.flatMap(_ => _.persons.map(_ => _.age)).filter(_ => _ && _ < 18))
 
   return (
     <Pdf>
       <Box className="noprint" sx={{margin: 'auto', maxWidth: '30cm', mb: 2}}>
-        <Box sx={{display: 'flex', alignItems: 'center',}}>
-          <AaSelect<KoboFormProtHH.Vulnerability>
-            multiple
-            label={m.vulnerabilities}
-            value={filters.C_Vulnerability_catergories_that ?? []}
-            onChange={_ => setFilters(prev => ({...prev, C_Vulnerability_catergories_that: _}))}
-            options={Enum.values(KoboFormProtHH.Vulnerability).map(v =>
-              ({value: v, children: m.protectionHHSnapshot.vulnerability[v]})
-            )}
-          />
-          <AaSelect<KoboFormProtHH.Status>
-            multiple
-            label={m.status}
-            value={filters._12_Do_you_identify_as_any_of ?? []}
-            onChange={_ => setFilters(prev => ({...prev, _12_Do_you_identify_as_any_of: _}))}
-            options={Enum.values(KoboFormProtHH.Status).map(v =>
-              ({value: v, children: m.statusType[v]})
-            )}
-          />
-          <div>
-            {period.start.toDateString()}<br/>
-            {period.end.toDateString()}
-          </div>
-          <FormControlLabel
-            control={<Switch/>}
-            label={m.hohhOlder}
-            checked={!!customFilters.hohh60}
-            onChange={(e: any) => setCustomFilters(prev => ({...prev, hohh60: e.target.checked}))}
-          />
-          <FormControlLabel
-            control={<Switch/>}
-            label={m.hohhFemale}
-            checked={!!customFilters.hohhFemale}
-            onChange={(e: any) => setCustomFilters(prev => ({...prev, hohhFemale: e.target.checked}))}
-          />
-          <IconBtn sx={{marginLeft: 'auto'}} color="primary" onClick={() => window.print()}><Icon>download</Icon></IconBtn>
+        <Box>
+          <Box sx={{display: 'flex', alignItems: 'center',}}>
+            <UkraineMap
+              data={currentComputedData.oblastCurrent}
+              onSelect={updateOblastFilters('_4_What_oblast_are_you_from_iso')}
+              legend={m.origin}
+              sx={{width: '200px'}}
+            />
+            {/*<AaSelect<OblastISO>*/}
+            {/*  multiple*/}
+            {/*  label={m.oblast}*/}
+            {/*  value={filters._4_What_oblast_are_you_from_iso ?? []}*/}
+            {/*  onChange={_ => setFilters(prev => ({...prev, _4_What_oblast_are_you_from_iso: _}))}*/}
+            {/*  options={selectedCurrentOblastISOs.map(iso => ({*/}
+            {/*    value: iso,*/}
+            {/*    children: map(OblastIndex.findByIso(iso!)?.koboKey, _ => m.protHHSnapshot.enum.oblast[_])*/}
+            {/*  }))}*/}
+            {/*/>*/}
+
+            <AaSelect<KoboFormProtHH.GetType<'vulnerability'>>
+              multiple
+              label={m.vulnerabilities}
+              value={filters.C_Vulnerability_catergories_that ?? []}
+              onChange={_ => setFilters(prev => ({...prev, C_Vulnerability_catergories_that: _}))}
+              options={Enum.values(KoboFormProtHH.Vulnerability).map(v =>
+                ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
+              )}
+            />
+            <AaSelect<KoboFormProtHH.Status>
+              multiple
+              label={m.status}
+              value={filters._12_Do_you_identify_as_any_of ?? []}
+              onChange={_ => setFilters(prev => ({...prev, _12_Do_you_identify_as_any_of: _}))}
+              options={Enum.values(KoboFormProtHH.Status).map(v =>
+                ({value: v, children: m.statusType[v]})
+              )}
+            />
+          </Box>
+          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+            <IconBtn sx={{marginLeft: 'auto'}} color="primary" onClick={() => window.print()}><Icon>download</Icon></IconBtn>
+            <FormControlLabel
+              control={<Switch/>}
+              label={m.hohhOlder}
+              checked={!!customFilters.hohh60}
+              onChange={(e: any) => setCustomFilters(prev => ({...prev, hohh60: e.target.checked}))}
+            />
+            <FormControlLabel
+              control={<Switch/>}
+              label={m.hohhFemale}
+              checked={!!customFilters.hohhFemale}
+              onChange={(e: any) => setCustomFilters(prev => ({...prev, hohhFemale: e.target.checked}))}
+            />
+            <Txt color="hint" sx={{ml: 2}}>
+              {period.start.toDateString()} - 
+              {period.end.toDateString()}
+            </Txt>
+            <Txt color="hint" bold sx={{ml: 2}}>
+              {currentFilteredData?.length ?? '-'}
+            </Txt>
+          </Box>
         </Box>
       </Box>
       {currentFilteredData && previousFilteredData ? (
@@ -188,7 +256,9 @@ export const ProtSnapshot = ({
             computed: previousComputedData
           }}
           filters={filters}
-          onFilter={setFilters}/>
+          onFilter={setFilters}
+          onFilterOblast={updateOblastFilters}
+        />
       ) : (_hhCurrent.loading || _hhPrevious.loading) && (
         <Fender type="loading"/>
       )}
@@ -199,52 +269,56 @@ export const ProtSnapshot = ({
 export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
   const theme = useTheme()
   const {conf} = useConfig()
-  
+
   // console.log(props.current.data)
   // console.log('>>', new Set(props.current.data.flatMap(_ => (_ as any)._29_Which_NFI_do_you_need?.split(' '))))
   // console.log('--')
   useEffect(() => {
-    // initGoogleMaps(
-    //   conf.google.mapId,
-    //   theme.palette.primary.main,
-    //   props.current.data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
-    // )
+    // console.log(new Set(props.current.data.flatMap((_: any) => _['_13_4_1_Are_you_separated_from_any_of_']?.split(' '))))
+    initGoogleMaps(
+      conf.google.mapId,
+      theme.palette.primary.main,
+      props.current.data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
+    )
   }, [])
   // console.log(props.current.data.map(_ => _._40_1_What_is_your_first_priorty))
 
 
   return (
     <>
-      <Box sx={{display: 'flex', mb: 1}}>
-        <Box sx={{flex: 1, mx: 3}}>
-          <HorizontalBarChartGoogle
-            base={props.current.data.length}
-            data={props.current.computed._28_Do_you_have_acce_current_accomodation}
-          />
-          <HorizontalBarChartGoogle
-            base={props.current.data.length}
-            data={props.current.computed.C_Vulnerability_catergories_that}
-          />
-        </Box>
-        <Box sx={{flex: 1, mx: 3}}>
-          1st<br/>
-          <HorizontalBarChartGoogle
-            base={props.current.data.length}
-            data={props.current.computed._40_1_What_is_your_first_priorty}
-          />
-        </Box>
-        <Box sx={{flex: 1, mx: 3}}>
-          2nd<br/>
-          <HorizontalBarChartGoogle
-            base={props.current.data.length}
-            data={props.current.computed._40_2_What_is_your_second_priority}
-          />
-        </Box>
-      </Box>
+      {/*<Box sx={{display: 'flex', mb: 1}}>*/}
+      {/*  <Box sx={{flex: 1, mx: 3}}>*/}
+      {/*    <HorizontalBarChartGoogle*/}
+      {/*      base={props.current.data.length}*/}
+      {/*      data={props.current.computed._28_Do_you_have_acce_current_accomodation}*/}
+      {/*    />*/}
+      {/*    <HorizontalBarChartGoogle*/}
+      {/*      base={props.current.data.length}*/}
+      {/*      data={props.current.computed.C_Vulnerability_catergories_that}*/}
+      {/*    />*/}
+      {/*  </Box>*/}
+      {/*  <Box sx={{flex: 1, mx: 3}}>*/}
+      {/*    1st<br/>*/}
+      {/*    <HorizontalBarChartGoogle*/}
+      {/*      base={props.current.data.length}*/}
+      {/*      data={props.current.computed._40_1_What_is_your_first_priorty}*/}
+      {/*    />*/}
+      {/*  </Box>*/}
+      {/*  <Box sx={{flex: 1, mx: 3}}>*/}
+      {/*    2nd<br/>*/}
+      {/*    <HorizontalBarChartGoogle*/}
+      {/*      base={props.current.data.length}*/}
+      {/*      data={props.current.computed._40_2_What_is_your_second_priority}*/}
+      {/*    />*/}
+      {/*  </Box>*/}
+      {/*</Box>*/}
 
-      <ProtSnapshotNeeds {...props}/>
+      <ProtSnapshotAA {...props}/>
       <ProtSnapshotHome {...props}/>
       <ProtSnapshotDisplacement {...props}/>
+      <ProtSnapshotDocument {...props}/>
+      <ProtSnapshotNeeds {...props}/>
+      <ProtSnapshotLivelihood {...props}/>
     </>
   )
 }

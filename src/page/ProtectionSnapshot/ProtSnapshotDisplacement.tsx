@@ -1,6 +1,6 @@
-import {map, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, map, mapFor} from '@alexandreannic/ts-utils'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
-import React from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {Box, Icon, useTheme} from '@mui/material'
@@ -12,6 +12,7 @@ import {Oblast} from '../../shared/UkraineMap/oblastIndex'
 import {format} from 'date-fns'
 import {Txt} from 'mui-extension'
 import {ChartIndicator} from '../../shared/ChartIndicator'
+import {sortObject} from '../../utils/utils'
 
 export const ProtSnapshotDisplacement = ({
   current: {
@@ -21,30 +22,16 @@ export const ProtSnapshotDisplacement = ({
   },
   previous,
   filters,
-  onFilter
+  onFilter,
+  onFilterOblast
 }: ProtSnapshotSlideProps) => {
   const {m, formatLargeNumber, formatDate} = useI18n()
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
 
-  const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001' | '_4_What_oblast_are_you_from') => (oblast: Oblast) => {
-    onFilter(f => {
-      const value = f[key]
-      if (value?.includes(oblast.koboKey)) {
-        return {
-          ...f,
-          [key]: value?.filter(_ => _ !== oblast.koboKey)
-        }
-      }
-      if (!value) {
-        return {...f, [key]: [oblast.koboKey]}
-      }
-      return {
-        ...f, [key]: [...value, oblast.koboKey]
-      }
-    })
-  }
-
+  const _12_3_1_dateDeparture = useMemo(() => {
+    return Arr(Object.values(computed._12_3_1_dateDeparture).map(_ => _.label!).sort((a, b) => a?.localeCompare(b)))
+  }, [computed])
   return (
     <Slide>
       <SlideHeader>{m.displacement}</SlideHeader>
@@ -56,15 +43,15 @@ export const ProtSnapshotDisplacement = ({
                 {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: computed._12_3_1_dateDeparture},
               ]}/>
               <Txt color="hint" size="small" sx={{display: 'flex', justifyContent: 'space-between'}}>
-                {map(computed._12_3_1_dateDeparture.head?.value, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
-                {map(computed._12_3_1_dateDeparture.last?.value, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
+                {map(_12_3_1_dateDeparture.head, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
+                {map(_12_3_1_dateDeparture.last, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
               </Txt>
             </SlidePanel>
             <div>
               <UkraineMap
-                total={data.length}
-                values={computed.oblastOrigins}
-                onSelect={updateOblastFilters('_12_1_What_oblast_are_you_from_001')}
+                base={data.length}
+                data={computed.oblastOrigins}
+                onSelect={onFilterOblast('_12_1_What_oblast_are_you_from_001_iso')}
                 legend={m.origin}
                 sx={{width: '100%'}}
               />
@@ -74,9 +61,9 @@ export const ProtSnapshotDisplacement = ({
                 ))}
               </Box>
               <UkraineMap
-                total={data.length}
-                values={computed.oblastCurrent}
-                onSelect={updateOblastFilters('_4_What_oblast_are_you_from')}
+                base={data.length}
+                data={computed.oblastCurrent}
+                onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
                 legend={m.current}
                 sx={{width: '100%'}}
               />
@@ -85,15 +72,15 @@ export const ProtSnapshotDisplacement = ({
 
           <SlideContainer flexDirection="column" sx={{flex: 5}}>
             <div>
-              <SlideTxt>{m.protectionHHSnapshot.displacement.desc}</SlideTxt>
+              <SlideTxt>{m.protHHSnapshot.displacement.desc}</SlideTxt>
             </div>
             <SlideContainer>
               <SlideContainer flexDirection="column">
                 <SlidePanel>
                   <ChartIndicator
                     title={m.intentionToReturn}
-                    value={computed._12_7_1_planToReturn}
-                    evolution={computed._12_7_1_planToReturn - previous.computed._12_7_1_planToReturn}
+                    value={computed._12_7_1_planToReturn.percent}
+                    evolution={computed._12_7_1_planToReturn.percent - previous.computed._12_7_1_planToReturn.percent}
                     percent
                   />
                   {/*<ChartIndicator*/}
@@ -110,12 +97,12 @@ export const ProtSnapshotDisplacement = ({
                 <SlidePanel>
                   <ChartIndicator
                     title={m.propertyDamaged}
-                    value={computed._27_Has_your_house_apartment_been_}
-                    evolution={computed._27_Has_your_house_apartment_been_ - previous.computed._27_Has_your_house_apartment_been_}
+                    value={computed._27_Has_your_house_apartment_been_.percent}
+                    evolution={previous.computed._27_Has_your_house_apartment_been_.percent}
                     percent
                   />
                 </SlidePanel>
-                <SlidePanel>
+                <SlidePanel title={m.levelOfPropertyDamaged}>
                   <HorizontalBarChartGoogle data={computed._27_1_If_yes_what_is_level_of_the_damage} base={data.length}/>
                 </SlidePanel>
               </SlideContainer>

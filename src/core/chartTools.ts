@@ -1,28 +1,25 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {objToArray, sortObject} from '../utils/utils'
+import {sortObject} from '../utils/utils'
 
-/** @deprecated*/
-export interface ChartData {
-  name: string
-  value: number
-}
-
-export interface ChartDataObjValue {
+export interface ChartDataVal {
   value: number
   base?: number
   label?: string
   desc?: string
 }
 
-export type ChartD<K extends string = string> = Record<K, ChartDataObjValue>
-
-export type ChartDataObj<T extends string> = Record<T, ChartDataObjValue>
+export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
 export namespace ChartTools {
 
   export const sortBy = {
-    percent: <T extends string>(obj: Record<T, ChartDataObjValue>): Record<T, ChartDataObjValue> => {
-      return sortObject(obj as Record<string, ChartDataObjValue>, ([aK, aV], [bK, bV]) => {
+    custom: <T extends string>(order: T[]) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+      return sortObject(obj as Record<T, ChartDataVal>, ([aK, aV], [bK, bV]) => {
+        return order.indexOf(aK) - order.indexOf(bK)
+      })
+    },
+    percent: <T extends string>(obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+      return sortObject(obj as Record<string, ChartDataVal>, ([aK, aV], [bK, bV]) => {
         try {
           return bV.value / (bV.base ?? 1) - aV.value / (aV.base ?? 1)
         } catch (e) {
@@ -30,9 +27,14 @@ export namespace ChartTools {
         }
       })
     },
-    value: <T extends string>(obj: Record<T, ChartDataObjValue>): Record<T, ChartDataObjValue> => {
-      return sortObject(obj as Record<string, ChartDataObjValue>, ([aK, aV], [bK, bV]) => {
+    value: <T extends string>(obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+      return sortObject(obj as Record<string, ChartDataVal>, ([aK, aV], [bK, bV]) => {
         return bV.value - aV.value
+      })
+    },
+    label: <T extends string>(obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+      return sortObject(obj as Record<string, ChartDataVal>, ([aK, aV], [bK, bV]) => {
+        return (bV.label ?? '').localeCompare(aV.label ?? '')
       })
     }
   }
@@ -40,17 +42,22 @@ export namespace ChartTools {
   export const multiple = <A extends string>({
     data,
     type,
+    filterValue,
+    map,
   }: {
-    data: A[][],
+    filterValue?: A[],
+    map?: (_: A) => A,
+    data: _Arr<A[] | undefined>,
     type?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
-  }): ChartD<A> => {
-    const all = data.flatMap(_ => _)
+  }): ChartData<A> => {
+    const flatData: A[] = data.flatMap(_ => _).compact()
+    const all = flatData.filter(_ => filterValue ? !filterValue.includes(_) : true).map(map ?? (_ => _))
     const obj = Arr(all).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
     const base = fnSwitch(type!, {
       percentOfTotalAnswers: data.length,
       percentOfTotalChoices: all.length,
     }, _ => undefined)
-    const res: ChartD = {}
+    const res: ChartData = {}
     Enum.keys(obj).forEach(k => {
       if (!res[k]) res[k] = {value: 0, base: 0}
       // res[k].value = obj[k]
@@ -67,18 +74,19 @@ export namespace ChartTools {
     groupBy
   }: {
     data: A[]
-    groupBy: (_: A) => any
+    groupBy: (_: A) => K | undefined
     filter: (_: A) => boolean
     filterBase?: (_: A) => boolean
-  }): ChartD => {
-    const res: ChartD<any> = {} as any
+  }): ChartData<K> => {
+    const res: ChartData<any> = {} as any
     data.forEach(x => {
-      const value = groupBy(x)
-      if (filterBase && !filterBase(x)) return
-      if (!res[value]) res[value] = {value: 0, base: 0} as ChartDataObjValue
-      res[value].base = res[value].base! + 1
+      const value = groupBy(x) ?? 'undefined'
+      if (!res[value]) res[value] = {value: 0} as ChartDataVal
+      if (filterBase && filterBase(x)) {
+        res[value].base = (res[value].base ?? 0) + 1
+      }
       if (filter(x)) {
-        res[value].value = res[value].base! + 1
+        res[value].value = res[value].value! + 1
       }
     })
     return res
@@ -94,7 +102,7 @@ export namespace ChartTools {
     filter: (_: A) => boolean
     filterBase?: (_: A) => boolean
     categories: Record<K, (_: A) => boolean>
-  }): Record<K, ChartDataObjValue> => {
+  }): Record<K, ChartDataVal> => {
     const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: {value: 0, base: 0}}), {} as Record<K, {value: number, base: number}>)
     data.forEach(x => {
       Enum.entries(categories).forEach(([category, isCategory]) => {
@@ -109,41 +117,78 @@ export namespace ChartTools {
     return res
   }
 
+  // export const reduceByCategory = <A extends Record<string, any>, K extends string, R>({
+  //   data,
+  //   reduce,
+  //   categories,
+  //   initialValue,
+  // }: {
+  //   data: A[]
+  //   reduce: (acc: R, _: A) => R
+  //   categories: Record<K, (_: A) => boolean>
+  //   initialValue: R,
+  // }): Record<K, R> => {
+  //   const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: undefined}), {} as Record<K, R>)
+  //   data.forEach(x => {
+  //     Enum.entries(categories).forEach(([category, isCategory]) => {
+  //       if (!isCategory(x)) return
+  //       res[category] = filter(res[category], x)
+  //     })
+  //   })
+  //   return res
+  // }
+
+  export const sumByCategory = <A extends Record<string, any>, K extends string>({
+    data,
+    filter,
+    categories,
+  }: {
+    data: A[]
+    filter: (_: A) => number
+    categories: Record<K, (_: A) => boolean>
+  }): Record<K, ChartDataVal> => {
+    const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: {value: 0, base: 0}}), {} as Record<K, {value: number, base: 0}>)
+    data.forEach(x => {
+      Enum.entries(categories).forEach(([category, isCategory]) => {
+        if (!isCategory(x)) return
+        res[category].base += 1
+        res[category].value += filter(x) ?? 0
+      })
+    })
+    return res
+  }
+
   export const single = <A extends string>({
     data,
     percent,
+    filterValue,
   }: {
     data: A[],
+    filterValue?: A[],
     percent?: boolean
-  }): ChartD<A> => {
-    const obj = Arr(data).reduceObject<Record<A, number>>((curr, acc) => {
+  }): ChartData<A> => {
+    const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
       return [curr, (acc[curr] ?? 0) + 1]
     })
-    const res: ChartD = {}
+    const res: ChartData = {}
     Enum.keys(obj).forEach(k => {
       res[k] = {value: obj[k] / (percent ? data.length : 1)}
     })
     return res
   }
 
-  export const setLabel = (m: Record<string, string>) => (data: ChartD): ChartD => {
-    Object.keys(data).forEach(k => {
+  export const setLabel = <A extends string>(m: Record<A, string>) => (data: ChartData<A>): ChartData<A> => {
+    Enum.keys(data).forEach(k => {
       data[k].label = m[k]
     })
     return data
   }
 
 
-  export const setDesc = (m: Record<string, string>) => (data: ChartD): ChartD => {
+  export const setDesc = (m: Record<string, string>) => (data: ChartData): ChartData => {
     Object.keys(data).forEach(k => {
       data[k].desc = m[k]
     })
-    return data
-  }
-
-  /** @deprecated */
-  export const translateOld = (m: Record<string, string>) => (data: ChartData): ChartData => {
-    data.name = m[data.name] ?? data.name
     return data
   }
 
@@ -155,10 +200,10 @@ export namespace ChartTools {
     data: A[],
     value: (a: A) => boolean,
     base?: (a: A) => boolean,
-  }) => {
+  }): ChartDataVal & {percent: number} => {
     const v = Arr(data).count(value)
     const b = base ? Arr(data).count(base) : data.length
-    return v / b
+    return {value: v, base: b, percent: v / b}
   }
 
   export const groupByDate = <F extends string>({
@@ -169,7 +214,7 @@ export namespace ChartTools {
     data: F[]
     getDate: (_: F) => string | undefined
     percentageOf?: (_: F) => boolean
-  }): ChartD<F> => {
+  }): ChartData<F> => {
     const obj = Arr(data).reduceObject<Record<string, {filter: number, total: number}>>((x, acc) => {
       const date = getDate(x) ?? 'undefined'
       let value = acc[date]
@@ -180,7 +225,7 @@ export namespace ChartTools {
       value.total += 1
       return [date, value]
     })
-    const res: ChartD = {}
+    const res: ChartData = {}
     Object.entries(obj).forEach(([k, v]) => {
       res[k] = {
         label: k,
