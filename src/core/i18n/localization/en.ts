@@ -83,13 +83,13 @@ export const en = Object.freeze({
     male: 'Male',
     female: 'Female',
     undefined: 'Unknown',
-    sample: 'Sample',
+    sample: 'Sample overview',
     propertyDamaged: 'Property damaged due to the conflict',
     intentionToReturn: 'Intention to return',
     hhCategoryType: {
       idp: 'IDP',
-      hohh60: 'HoHH 60+',
-      hohhFemale: 'HoHH Female',
+      hohh60: 'Elderly (60+) HoHH',
+      hohhFemale: 'Female HoHH',
       memberWithDisability: 'Member with disability',
     },
     statusType: {
@@ -110,7 +110,8 @@ export const en = Object.freeze({
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documentation',
     atLeastOneMemberWorking: 'HHs with at least one member working',
     protHHSnapshot: {
-      avgHhSize: (n: number) => `Avg HH size: ${n.toFixed(1)}`,
+      incomeUnder6000ByCategory: `HH category with income below 6,000 UAH`,
+      avgHhSize: (n: number) => `Average HH size: ${n.toFixed(1)}`,
       enum: {
         _18_1_2_What_are_the_factors_t: {
           armed_conflict: 'Armed conflict',
@@ -316,7 +317,20 @@ export const en = Object.freeze({
           other219: 'Other',
           education_facilities__schools_: 'Education facilities accessible',
         },
+        propertyDamageTitle: {
+          fully_damaged_needs_full_reconstruction: '⚫ Fully damaged',
+          partially_damaged__considerable_repair_i: '🔴 Heavily damaged',
+          partially_damage: '🟠 Medium damaged',
+          light_damage: '🟢 Light damaged',
+        },
+        propertyDamageDesc: {
+          fully_damaged_needs_full_reconstruction: 'Full rebuild needed',
+          partially_damaged__considerable_repair_i: 'Structural repair needed',
+          partially_damage: 'No structural repairs needed',
+          light_damage: 'No structural repair needed',
+        }
       },
+      senseOfSafetyByOblast: 'Bad or Very bad sense of safety by Oblast',
       elderlyWithoutPensionCertificate: 'Elderly without pensioner certificate',
       childWithoutBirthCertificate: 'Child without birth certificate',
       barriersToPersonalDocument: 'Barriers to obtain personal documents',
@@ -334,25 +348,12 @@ export const en = Object.freeze({
       _40_1_pn_health_byCategory: 'Health as 1st priority need by category',
       _40_1_pn_cash_byCategory: 'Cash as 1st priority need by category',
       _29_nfiNeededByCategory: 'Need for NFI by category',
-      propertyDamaged: {
-        title: {
-          fully_damaged_needs_full_reconstruction: '⚫ Fully damaged',
-          partially_damaged__considerable_repair_i: '🔴 Heavily damaged',
-          partially_damage: '🟠 Medium damaged',
-          light_damage: '🟢 Light damaged',
-        },
-        desc: {
-          fully_damaged_needs_full_reconstruction: 'Full rebuild needed',
-          partially_damaged__considerable_repair_i: 'Structural repair needed',
-          partially_damage: 'No structural repairs needed',
-          light_damage: 'No structural repair needed',
-        }
-      },
-      title: 'Protection Monitoring',
-      subTitle: 'Ukraine',
+      title: 'Protection Snapshot',
+      subTitle: 'Ukraine Response',
+      factorInfluencingSenseOfSafety: 'Factors influencing the sense of safety',
       disclaimer: `
         This snapshot summarizes the findings of Protection Monitoring conducted in the regions/oblasts of 
-        Chernihiv, Dnipro, Lviv, Chernivtsi, and Kharkiv, Ukraine. Protection monitoring has been mainly implemented 
+        <b>Chernihiv</b>, <b>Dnipro</b>, <b>Lviv</b>, <b>Chernivtsi</b>, and <b>Kharkiv</b>. Protection monitoring has been mainly implemented 
         through household interviews, complemented by focus group discussions, observation checklists, 
         and Rapid Protection Assessments. DRC protection monitoring targeted Internally Displaced Persons (IDPs)
          and people directly exposed to and affected by the current armed conflict. 

@@ -62,7 +62,7 @@ export const ProtSnapshotLivelihood = ({
                 }), {} as Record<keyof typeof computed._8_What_is_your_household_sizeByIncome, string>)}
               />
             </SlidePanel>
-            <SlidePanel title={m.employmentType}>
+            <SlidePanel title={m.protHHSnapshot.incomeUnder6000ByCategory}>
               <HorizontalBarChartGoogle data={computed._33_incomeByCategory} icons={categoryIcons}/>
             </SlidePanel>
           </SlideContainer>

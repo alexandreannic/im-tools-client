@@ -30,7 +30,7 @@ export const ChartIndicator = ({
           }}>
             <Icon sx={{ml: 2}} fontSize="inherit">{evolution > 0 ? 'north' : 'south'}</Icon>
             <Box sx={{ml: .25}}>
-              {renderPercent(evolution, percent)}
+              {(evolution * 100).toFixed(1)}
             </Box>
           </Txt>
         )}

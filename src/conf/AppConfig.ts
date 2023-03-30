@@ -4,7 +4,7 @@ const _ = env(process.env)
 
 export const appConfig = {
   apiURL: ``,
-  google: {
+  gooogle: {
     apiKey: _(required)('REACT_APP_GOOGLE_MAPS_API_KEY'),
     mapId: _(required)('REACT_APP_GOOGLE_MAPS_ID'),
   }

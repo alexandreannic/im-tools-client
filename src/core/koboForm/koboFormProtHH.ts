@@ -46,22 +46,7 @@ export namespace KoboFormProtHH {
     protection = 'protection',
     family_reunification = 'family_reunification',
   }
-
-  export enum Vulnerability {
-    person_with_a_disability = 'person_with_a_disability',
-    elderly_head_of_household__60__with_mino = 'elderly_head_of_household__60__with_mino',
-    woman_at_risk = 'woman_at_risk',
-    exterme_poverty_impacting_acce = 'exterme_poverty_impacting_acce',
-    person_with_a_serious_medical_ = 'person_with_a_serious_medical_',
-    child_at_risk = 'child_at_risk',
-    single_parent = 'single_parent',
-    other_specifyg = 'other_specifyg',
-    multiple_displacements = 'multiple_displacements',
-    gbv_risk = 'gbv_risk',
-    no_legal_documentation = 'no_legal_documentation',
-    unaccompanied_or_separated_chi = 'unaccompanied_or_separated_chi',
-  }
-
+  
   export enum PriorityNeed {
     health = 'health',
     shelter = 'shelter',
@@ -76,14 +61,7 @@ export namespace KoboFormProtHH {
     nfis = 'nfis',
     wash = 'wash',
   }
-
-  export enum PropertyDamage {
-    light_damage = 'light_damage',
-    partially_damage = 'partially_damage',
-    partially_damaged__considerable_repair_i = 'partially_damaged__considerable_repair_i',
-    fully_damaged_needs_full_reconstruction = 'fully_damaged_needs_full_reconstruction',
-  }
-
+  
   export enum Status {
     conflict_affected_person = 'conflict_affected_person',
     idp = 'idp',
@@ -150,6 +128,35 @@ export namespace KoboFormProtHH {
 
   export type GetType<T extends keyof Messages['protHHSnapshot']['enum']> = keyof Messages['protHHSnapshot']['enum'][T]
 
+  const raionsCols = [
+    '_4_1_What_raion_in_Ch_currently_living_in',
+    '_4_2_What_raion_in_Ch_currently_living_in',
+    '_4_3_What_raion_in_Ch_currently_living_in',
+    '_4_4_What_raion_in_Av_currently_living_in',
+    '_4_5_What_raion_in_Vo_currently_living_in',
+    '_4_6_What_raion_in_Dn_currently_living_in',
+    '_4_7_What_raion_in_Do_currently_living_in',
+    '_4_8_What_raion_in_Vi_currently_living_in',
+    '_4_9_What_raion_in_Se_currently_living_in',
+    '_4_10_What_raion_in_Z_currently_living_in',
+    '_4_11_What_raion_in_Z_currently_living_in',
+    '_4_12_What_raion_in_Z_currently_living_in',
+    '_4_13_What_raion_in_A_currenrtly_living_in',
+    '_4_14_What_raion_in_I_currently_living_in',
+    '_4_15_What_raion_in_K_currently_living_in',
+    '_4_16_What_raion_in_K_currently_living_in',
+    '_4_17_What_raion_in_K_currently_living_in',
+    '_4_18_What_raion_in_K_hradska_are_you_from',
+    '_4_19_What_raion_in_K_currently_living_in',
+    '_4_20_What_raion_in_L_currently_living_in',
+    '_4_21_What_raion_in_L_currently_living_in',
+    '_4_22_What_raion_in_M_currently_living_in',
+    '_4_23_What_raion_in_O_currently_living_in',
+    '_4_24_What_raion_in_P_currently_living_in',
+    '_4_25_What_raion_in_R_currently_living_in',
+    '_4_26_What_raion_in_S_currently_living_in',
+    '_4_27_What_raion_in_T_currently_living_in',
+  ]
   export const mapAnswers = (a: KoboAnswerMetaData & Record<string, string | undefined>) => {
     return {
       ...a,
@@ -162,7 +169,7 @@ export namespace KoboFormProtHH {
       _40_1_What_is_your_first_priorty: a['_40_What_are_your_priority_needs/_40_1_What_is_your_first_priorty'] as GetType<'priorityNeeds'> | undefined,
       _40_2_What_is_your_second_priority: a['_40_What_are_your_priority_needs/_40_2_What_is_your_second_priority'] as GetType<'priorityNeeds'> | undefined,
       _40_3_What_is_your_third_priority: a['_40_What_are_your_priority_needs/_40_3_What_is_your_third_priority'] as GetType<'priorityNeeds'> | undefined,
-      _27_1_If_yes_what_is_level_of_the_damage: a._27_1_If_yes_what_is_level_of_the_damage as PropertyDamage | undefined,
+      _27_1_If_yes_what_is_level_of_the_damage: a._27_1_If_yes_what_is_level_of_the_damage as GetType<'propertyDamageTitle'> | undefined,
       _27_Has_your_house_apartment_been_: fnSwitch(a._27_Has_your_house_apartment_been_!, {
         'yes39': true,
         'no39': false,
@@ -221,6 +228,7 @@ export namespace KoboFormProtHH {
           don_t_want_to_say271: undefined,
         }, _ => _)
       ) as GetType<'_18_1_2_What_are_the_factors_t'>[] | undefined,
+      _4_1_What_raion_currently_living_in: map(raionsCols.find(_ => a[_]), _ => a[_]),
     }
   }
 }

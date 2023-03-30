@@ -21,7 +21,7 @@ export const ProtSnapshotDocument = ({
 }: ProtSnapshotSlideProps) => {
   const {m, formatLargeNumber, formatDate} = useI18n()
   const theme = useTheme()
-  
+
   return (
     <Slide>
       <SlideHeader>{m.protHHSnapshot.titles.document}</SlideHeader>
@@ -52,12 +52,6 @@ export const ProtSnapshotDocument = ({
             </SlidePanel>
             <SlidePanel>
               <PieChartIndicator
-                title={m.hhBarriersToPersonalDocument}
-                value={computed._16_1_1_Have_you_experienced_a.percent}
-                evolution={computed._16_1_1_Have_you_experienced_a.percent - previous.computed._16_1_1_Have_you_experienced_a.percent}
-              />
-              <Divider sx={{my: 2}}/>
-              <PieChartIndicator
                 title={m.protHHSnapshot.childWithoutBirthCertificate}
                 value={computed._14_1_1_children_without_cert.percent}
                 evolution={computed._14_1_1_children_without_cert.percent - previous.computed._14_1_1_children_without_cert.percent}
@@ -87,7 +81,13 @@ export const ProtSnapshotDocument = ({
             </SlidePanel>
           </SlideContainer>
           <SlideContainer flexDirection="column" sx={{flex: 4}}>
-            <SlidePanel title={m.protHHSnapshot.barriersToPersonalDocument}>
+            <SlidePanel title={m.hhBarriersToPersonalDocument}>
+              <PieChartIndicator
+                value={computed._16_1_1_Have_you_experienced_a.percent}
+                evolution={computed._16_1_1_Have_you_experienced_a.percent - previous.computed._16_1_1_Have_you_experienced_a.percent}
+              />
+              <Divider sx={{my: 2}}/>
+              <SlidePanelTitle>{m.protHHSnapshot.barriersToPersonalDocument}</SlidePanelTitle>
               <HorizontalBarChartGoogle
                 data={computed._16_1_2_What_are_the_barriers_}
               />

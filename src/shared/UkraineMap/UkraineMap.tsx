@@ -10,7 +10,7 @@ import {Txt} from 'mui-extension'
 // height="408.0199"
 
 const minAlpha = .05
-const maxAlpha = .8
+const maxAlpha = .5
 const medianAlpha = minAlpha + (maxAlpha - minAlpha) / 2
 
 const computeFill = (value: number, max: number) => {
@@ -29,7 +29,7 @@ export const UkraineMap = ({
   onSelect?: (oblast: OblastISO) => void
   base?: number
   fillBaseOn?: 'percent' | 'value'
-  data?: { [key in keyof UkraineSvgPath]: {value: number, base?: number} }
+  data?: Partial<{ [key in keyof UkraineSvgPath]: {value: number, base?: number} }>
 } & Pick<BoxProps, 'sx'>) => {
   const theme = useTheme()
 
@@ -63,8 +63,8 @@ export const UkraineMap = ({
         <g stroke={theme.palette.background.paper} strokeWidth="1">
           {Enum.keys(ukraineSvgPath).map(iso => {
             const res = data[iso] ? (() => {
-              const value = data[iso].value
-              const _base = data[iso].base ?? base
+              const value = data[iso]!.value
+              const _base = data[iso]!.base ?? base
               const percent = _base ? 100 * value / _base : undefined
               const fill = percent && fillBaseOn && maxPercent ? computeFill(percent, maxPercent) : computeFill(value, max)
               return {value, base: _base, fill, percent}
@@ -98,7 +98,7 @@ export const UkraineMap = ({
           })}
         </g>
       </Box>
-      {legend && <Txt block sx={{mt: -1, textAlign: 'center'}} size="small" color="hint">{legend}</Txt>}
+      {legend && <Txt block sx={{mt: 0, textAlign: 'center'}} size="small" color="disabled">{legend}</Txt>}
     </Box>
   )
 }

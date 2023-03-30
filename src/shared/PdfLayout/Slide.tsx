@@ -1,9 +1,10 @@
 import {Box, BoxProps, Icon} from '@mui/material'
-import logo from '../../core/drc-logo.png'
+import logo from '../../core/img/drc-logo.png'
 import {Txt, TxtProps} from 'mui-extension'
 import React from 'react'
 import {usePdfContext} from './PdfLayout'
 import {Property} from 'csstype'
+import logoEu from '../../core/img/eu.png'
 
 export const Slide = (props: BoxProps) => {
   return (
@@ -21,6 +22,7 @@ export const Slide = (props: BoxProps) => {
           boxShadow: t => t.shadows[1],
         },
         pageBreakAfter: 'always',
+        ...props.sx,
       }}
     />
   )
@@ -43,6 +45,7 @@ export const SlideTxt = ({children, sx, textAlign = 'justify', ...props}: TxtPro
   return (
     <Txt {...props} textAlign={textAlign} sx={{
       lineHeight: 1.5,
+      ...sx,
     }}>
       {(typeof children === 'string') ? (
         <div dangerouslySetInnerHTML={{__html: children}}/>
@@ -77,14 +80,18 @@ export const SlideContainer = ({
 export const SlideHeader = ({children}: BoxProps) => {
   return (
     <Box sx={{
-      p: 2,
+      px: 2,
+      py: 1,
       borderBottom: t => `1px solid ${t.palette.divider}`,
       mb: 0,
       display: 'flex',
       alignItems: 'center'
     }}>
       <Box sx={{fontSize: '1.4em'}}>{children}</Box>
-      <Box component="img" src={logo} sx={{height: 22, marginLeft: 'auto'}}/>
+      <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
+        <Box component="img" src={logoEu} sx={{mr: 1, height: 30}}/>
+        <Box component="img" src={logo} sx={{height: 22}}/>
+      </Box>
     </Box>
   )
 }
@@ -109,7 +116,7 @@ export const SlidePanel = ({children, title, sx, noBackground, ...props}: BoxPro
         ...sx,
         mb: pdfTheme.slidePadding,
         p: 1.5,
-        background: t =>  noBackground ? undefined : t.palette.background.paper,
+        background: t => noBackground ? undefined : t.palette.background.paper,
         borderRadius: pdfTheme.slideRadius,
         // border: t => `1px solid ${t.palette.divider}`
       }}
@@ -135,7 +142,7 @@ export const SlideCard = ({
       '&:not(:last-of-type)': {
         mr: pdfTheme.slidePadding,
       },
-      p: 1,
+      p: 1.25,
       width: '100%',
       background: t => t.palette.background.paper,
       borderRadius: pdfTheme.slideRadius,

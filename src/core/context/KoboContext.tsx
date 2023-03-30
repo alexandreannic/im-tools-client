@@ -1,7 +1,7 @@
 import React, {ReactNode, useContext} from 'react'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from './ConfigContext'
-import {koboFormId} from '../img/koboFormId'
+import {koboFormId} from '../../koboFormId'
 import {AnswersFilters} from 'core/sdk/kobo/KoboClient'
 import {ApiPaginate} from '../type'
 import {KoboAnswer} from '../sdk/kobo/KoboType'

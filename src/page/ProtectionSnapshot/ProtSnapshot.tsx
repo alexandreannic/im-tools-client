@@ -13,47 +13,46 @@ import {AaSelect} from '../../shared/Select/Select'
 import {Oblast, OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {ProtSnapshotDocument} from './ProtSnapshotDocument'
 import {ProtSnapshotAA} from './ProtSnapshotAA'
-import LatLngLiteral = google.maps.LatLngLiteral
 import Answer = KoboFormProtHH.Answer
-import mapAnswers = KoboFormProtHH.mapAnswers
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ProtSnapshotLivelihood} from './ProtSnapshotLivelihood'
 import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
 import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
+import {ProtSnapshotSample} from './ProtSnapshotSample'
 import {ProtSnapshotHome} from './ProtSnapshotHome'
 
 const initGoogleMaps = async (mapId: string, color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
   return
-  let trys = 0
-  while (!google) {
-    await sleep(200 + (100 * trys))
-    trys++
-    if (trys > 140) break
-  }
-  const ukraineCenter: LatLngLiteral = {lat: 48.96008674231441, lng: 31.702957509661097}
-  const map = new google.maps.Map(document.querySelector('#map') as HTMLElement, {
-    mapId: mapId,
-    center: ukraineCenter,
-    zoom: 5.2,
-  })
-  bubbles.forEach(_ => {
-    if (!_.loc?.[0]) return
-    const circle = new google.maps.Circle({
-      clickable: true,
-      strokeColor: color,
-      strokeOpacity: 0.8,
-      strokeWeight: 1,
-      fillColor: color,
-      fillOpacity: 0.25,
-      map,
-      center: {lat: _.loc[0], lng: _.loc[1]},
-      radius: Math.sqrt(_.size ?? 1) * 5500,
-    })
-    google.maps.event.addListener(circle, 'mouseover', function () {
-      map.getDiv().setAttribute('title', _.size + '')
-    })
-  })
+  // let trys = 0
+  // while (!google) {
+  //   await sleep(200 + (100 * trys))
+  //   trys++
+  //   if (trys > 140) break
+  // }
+  // const ukraineCenter: google.maps.LatLngLiteral = {lat: 48.96008674231441, lng: 31.702957509661097}
+  // const map = new google.maps.Map(document.querySelector('#map') as HTMLElement, {
+  //   mapId: mapId,
+  //   center: ukraineCenter,
+  //   zoom: 5.2,
+  // })
+  // bubbles.forEach(_ => {
+  //   if (!_.loc?.[0]) return
+  //   const circle = new google.maps.Circle({
+  //     clickable: true,
+  //     strokeColor: color,
+  //     strokeOpacity: 0.8,
+  //     strokeWeight: 1,
+  //     fillColor: color,
+  //     fillOpacity: 0.25,
+  //     map,
+  //     center: {lat: _.loc[0], lng: _.loc[1]},
+  //     radius: Math.sqrt(_.size ?? 1) * 5500,
+  //   })
+  //   google.maps.event.addListener(circle, 'mouseover', function () {
+  //     map.getDiv().setAttribute('title', _.size + '')
+  //   })
+  // })
 }
 
 interface Data {
@@ -99,7 +98,7 @@ export const ProtSnapshot = ({
 
   const {m} = useI18n()
   const {api} = useConfig()
-  const fetch = (period: Period) => () => api.kobo.getAnswers(formId, period).then(_ => Arr(_.data.map(mapAnswers)))
+  const fetch = (period: Period) => () => api.kobo.getAnswers(formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
   const _hhCurrent = useFetcher(fetch(period))
   const _hhPrevious = useFetcher(fetch(previousPeriod))
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilters>>({})
@@ -205,7 +204,7 @@ export const ProtSnapshot = ({
               label={m.vulnerabilities}
               value={filters.C_Vulnerability_catergories_that ?? []}
               onChange={_ => setFilters(prev => ({...prev, C_Vulnerability_catergories_that: _}))}
-              options={Enum.values(KoboFormProtHH.Vulnerability).map(v =>
+              options={Enum.keys(m.protHHSnapshot.enum.vulnerability).map(v =>
                 ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
               )}
             />
@@ -276,7 +275,7 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
   useEffect(() => {
     // console.log(new Set(props.current.data.flatMap((_: any) => _['_13_4_1_Are_you_separated_from_any_of_']?.split(' '))))
     initGoogleMaps(
-      conf.google.mapId,
+      conf.gooogle.mapId,
       theme.palette.primary.main,
       props.current.data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
     )
@@ -313,8 +312,9 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
       {/*  </Box>*/}
       {/*</Box>*/}
 
+      {/*<ProtSnapshotHome {...props}/>*/}
       <ProtSnapshotAA {...props}/>
-      <ProtSnapshotHome {...props}/>
+      <ProtSnapshotSample {...props}/>
       <ProtSnapshotDisplacement {...props}/>
       <ProtSnapshotDocument {...props}/>
       <ProtSnapshotNeeds {...props}/>

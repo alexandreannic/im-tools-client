@@ -59,7 +59,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .map(ChartTools.setLabel(m.protHHSnapshot.enum._18_1_2_What_are_the_factors_t))
         .map(ChartTools.sortBy.value)
         .get,
-      
+
       _18_1_1_Please_rate_your_sense_of_safe_map: ChartTools.byCategory({
         data: data,
         categories: categoryCurrentOblasts,
@@ -132,6 +132,14 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
       _11_What_is_your_citizenship: ChartTools.percentage({
         data: data.map(_ => _._11_What_is_your_citizenship),
         value: _ => _ === 'ukrainian',
+      }),
+
+      _19_1_1_Please_rate_your_relationshipByOblast: ChartTools.byCategory({
+        data: data,
+        categories: categoryCurrentOblasts,
+        filter: _ => _._19_1_1_Please_rate_your_relationship_ === '1__very_bad'
+          || _._19_1_1_Please_rate_your_relationship_ === '2__bad'
+          // || _._19_1_1_Please_rate_your_relationship_ === '3__acceptable'
       }),
 
       _19_1_1_Please_rate_your_relationship_: chain(ChartTools.single({
@@ -224,6 +232,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         filter: _ => _._33_What_is_the_aver_income_per_household !== undefined && (_._33_What_is_the_aver_income_per_household === 'up_to_1_500_uah' || _._33_What_is_the_aver_income_per_household === 'between_1_501__3_000_uah'),
       }))
         .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType))
         .val,
 
       _29_nfiNeededByCategory: chain(ChartTools.byCategory({
@@ -298,8 +307,8 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           'partially_damage',
           'light_damage',
         ]))
-        .map(ChartTools.setLabel(m.protHHSnapshot.propertyDamaged.title))
-        .map(ChartTools.setDesc(m.protHHSnapshot.propertyDamaged.desc))
+        .map(ChartTools.setLabel(m.protHHSnapshot.enum.propertyDamageTitle))
+        .map(ChartTools.setDesc(m.protHHSnapshot.enum.propertyDamageDesc))
         .val,
 
       C_Vulnerability_catergories_that: chain(ChartTools.multiple({
