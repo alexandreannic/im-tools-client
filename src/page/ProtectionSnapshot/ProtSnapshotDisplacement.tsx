@@ -1,4 +1,4 @@
-import {Arr, map, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
@@ -29,9 +29,18 @@ export const ProtSnapshotDisplacement = ({
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
 
-  const _12_3_1_dateDeparture = useMemo(() => {
-    return Arr(Object.values(computed._12_3_1_dateDeparture).map(_ => _.label!).sort((a, b) => a?.localeCompare(b)))
+  console.log(computed.oblastCurrent)
+  const {_12_3_1_dateDeparture, maxPeopleByOblast} = useMemo(() => {
+    const oblastPopulations = Arr([...Enum.values(computed.oblastCurrent), ...Enum.values(computed.oblastOrigins)])
+      .map(_ => _.value)
+      .compact()
+    console.log(oblastPopulations)
+    return {
+      _12_3_1_dateDeparture: Arr(Object.values(computed._12_3_1_dateDeparture).map(_ => _.label!).sort((a, b) => a?.localeCompare(b))),
+      maxPeopleByOblast: Math.max(data.sum(_ => _.persons.length))
+    }
   }, [computed])
+
   return (
     <Slide>
       <SlideHeader>{m.displacement}</SlideHeader>
@@ -49,10 +58,12 @@ export const ProtSnapshotDisplacement = ({
             </SlidePanel>
             <div>
               <UkraineMap
-                base={data.length}
+                fillBaseOn="percent"
+                base={maxPeopleByOblast}
                 data={computed.oblastOrigins}
                 onSelect={onFilterOblast('_12_1_What_oblast_are_you_from_001_iso')}
-                legend={m.origin}
+                title={m.origin}
+                legend={false}
                 sx={{width: '100%'}}
               />
               <Box sx={{textAlign: 'center', my: 1}}>
@@ -61,10 +72,11 @@ export const ProtSnapshotDisplacement = ({
                 ))}
               </Box>
               <UkraineMap
-                base={data.length}
+                fillBaseOn="percent"
+                base={maxPeopleByOblast}
                 data={computed.oblastCurrent}
                 onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
-                legend={m.current}
+                title={m.current}
                 sx={{width: '100%'}}
               />
             </div>

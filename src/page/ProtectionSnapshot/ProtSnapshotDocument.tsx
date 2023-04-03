@@ -82,9 +82,16 @@ export const ProtSnapshotDocument = ({
                 data={computed.idpsWithoutCertByOblast}
                 fillBaseOn="percent"
                 onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
-                legend={m.protHHSnapshot.maleWithoutIDPCertByOblast}
+                title={m.protHHSnapshot.maleWithoutIDPCertByOblast}
                 sx={{width: 350, margin: 'auto'}}
               />
+              {/*<UkraineMap*/}
+              {/*  data={computed.idpsWithoutCertByOblast}*/}
+              {/*  fillBaseOn="percent"*/}
+              {/*  onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
+              {/*  legend={m.protHHSnapshot.maleWithoutIDPCertByOblast}*/}
+              {/*  sx={{width: 350, margin: 'auto'}}*/}
+              {/*/>*/}
             </SlidePanel>
           </SlideContainer>
           <SlideContainer flexDirection="column" sx={{minWidth: 445}}>

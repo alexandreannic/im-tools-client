@@ -53,7 +53,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
     return {
 
-      
+
       _18_1_2_What_are_the_factors_t: chain(ChartTools.multiple({
         data: data.map(_ => _._18_1_2_What_are_the_factors_t),
       }))
@@ -140,7 +140,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         categories: categoryCurrentOblasts,
         filter: _ => _._19_1_1_Please_rate_your_relationship_ === '1__very_bad'
           || _._19_1_1_Please_rate_your_relationship_ === '2__bad'
-          // || _._19_1_1_Please_rate_your_relationship_ === '3__acceptable'
+        // || _._19_1_1_Please_rate_your_relationship_ === '3__acceptable'
       }),
 
       _19_1_1_Please_rate_your_relationship_: chain(ChartTools.single({
@@ -189,14 +189,14 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           'more_than_11_000_uah',
         ]))
         .val,
-      
+
       _26_4_Do_you_have_fo_in_your_accomodation: chain(ChartTools.single({
         data: data.map(_ => _._26_4_Do_you_have_fo_in_your_accomodation).compact(),
       }))
         .map(ChartTools.setLabel(m.protHHSnapshot.enum._26_4_Do_you_have_fo_in_your_accomodation))
         .map(ChartTools.sortBy.value)
         .val,
-      
+
       B_Interviewer_to_in_ert_their_DRC_office: chain(ChartTools.single({
         data: data.map(_ => _.B_Interviewer_to_in_ert_their_DRC_office).compact(),
       }))
@@ -405,14 +405,25 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
 
       oblastOrigins: data
-        .map(_ => _._12_1_What_oblast_are_you_from_001_iso)
-        .compact()
-        .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => [_, {value: (acc[_]?.value ?? 0) + 1}]),
+        // .map(_ => _._12_1_What_oblast_are_you_from_001_iso)
+        // .compact()
+        .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => {
+          const oblast = _._12_1_What_oblast_are_you_from_001_iso
+          const peoples = _._8_What_is_your_household_size ?? 1
+          if (oblast)
+            return [oblast, {value: (acc[oblast]?.value ?? 0) + peoples}]
+        }),
 
       oblastCurrent: data
-        .map(_ => _._4_What_oblast_are_you_from_iso)
-        .compact()
-        .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => [_, {value: (acc[_]?.value ?? 0) + 1}]),
+        .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => {
+          const oblast = _._4_What_oblast_are_you_from_iso
+          const peoples = _._8_What_is_your_household_size ?? 1
+          if (oblast)
+            return [oblast, {value: (acc[oblast]?.value ?? 0) + peoples}]
+        }),
+        // .map(_ => _._4_What_oblast_are_you_from_iso)
+        // .compact()
+        // .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => [_, {value: (acc[_]?.value ?? 0) + 1}]),
 
       totalMembers: data.sum(_ => _._8_What_is_your_household_size ?? 0),
 

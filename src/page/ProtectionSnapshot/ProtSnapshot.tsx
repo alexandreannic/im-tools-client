@@ -182,12 +182,12 @@ export const ProtSnapshot = ({
       <Box className="noprint" sx={{margin: 'auto', maxWidth: '30cm', mb: 2}}>
         <Box>
           <Box sx={{display: 'flex', alignItems: 'center',}}>
-            <UkraineMap
-              data={currentComputedData.oblastCurrent}
-              onSelect={updateOblastFilters('_4_What_oblast_are_you_from_iso')}
-              legend={m.origin}
-              sx={{width: '200px'}}
-            />
+            {/*<UkraineMap*/}
+            {/*  data={currentComputedData.oblastCurrent}*/}
+            {/*  onSelect={updateOblastFilters('_4_What_oblast_are_you_from_iso')}*/}
+            {/*  legend={m.origin}*/}
+            {/*  sx={{width: '200px'}}*/}
+            {/*/>*/}
             {/*<AaSelect<OblastISO>*/}
             {/*  multiple*/}
             {/*  label={m.oblast}*/}
@@ -314,11 +314,11 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
 
       {/*<ProtSnapshotHome {...props}/>*/}
       {/*<ProtSnapshotAA {...props}/>*/}
-      {/*<ProtSnapshotSample {...props}/>*/}
-      {/*<ProtSnapshotDisplacement {...props}/>*/}
-      <ProtSnapshotDocument {...props}/>
-      <ProtSnapshotNeeds {...props}/>
-      <ProtSnapshotLivelihood {...props}/>
+      <ProtSnapshotSample {...props}/>
+      <ProtSnapshotDisplacement {...props}/>
+      {/*<ProtSnapshotDocument {...props}/>*/}
+      {/*<ProtSnapshotNeeds {...props}/>*/}
+      {/*<ProtSnapshotLivelihood {...props}/>*/}
     </>
   )
 }

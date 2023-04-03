@@ -37,7 +37,7 @@ export const ProtSnapshotAA = ({
             <UkraineMap
               sx={{mx: 1}}
               data={computed._19_1_1_Please_rate_your_relationshipByOblast}
-              legend={m.protHHSnapshot.senseOfSafetyByOblast}
+              title={m.protHHSnapshot.senseOfSafetyByOblast}
             />
             <SlidePanel>
               <HorizontalBarChartGoogle data={computed._19_1_1_Please_rate_your_relationship_}/>
@@ -49,7 +49,7 @@ export const ProtSnapshotAA = ({
             <UkraineMap
               sx={{mx: 1}}
               data={computed._18_1_1_Please_rate_your_sense_of_safe_map}
-              legend={m.protHHSnapshot.senseOfSafetyByOblast}
+              title={m.protHHSnapshot.senseOfSafetyByOblast}
             />
             <SlidePanel title={m.protHHSnapshot.factorInfluencingSenseOfSafety}>
               <HorizontalBarChartGoogle data={computed._18_1_2_What_are_the_factors_t}/>

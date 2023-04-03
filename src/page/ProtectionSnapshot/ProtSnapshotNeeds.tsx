@@ -65,7 +65,7 @@ export const ProtSnapshotNeeds = ({
               base={data.length}
               onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
               data={computed._29_nfiNeededByOblast}
-              legend={m.protHHSnapshot.nfiNeededByOblast}
+              title={m.protHHSnapshot.nfiNeededByOblast}
               sx={{width: '100%'}}
             />
             <SlidePanel title={m.protHHSnapshot._29_nfiNeededByCategory}>
