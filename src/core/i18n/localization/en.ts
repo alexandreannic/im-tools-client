@@ -107,12 +107,18 @@ export const en = Object.freeze({
     monthlyIncomePerHH: 'Monthly income per HH',
     lowIncome: 'HH',
     uaCitizenShip: 'Ukrainian citizenship',
-    hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documentation',
+    hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
     protHHSnapshot: {
       incomeUnder6000ByCategory: `HH category with income below 6,000 UAH`,
       avgHhSize: (n: number) => `Average HH size: ${n.toFixed(1)}`,
       enum: {
+        _26_4_Do_you_have_fo_in_your_accomodation: {
+          yes__i_have_a_rental_agreement: 'Yes, I have a rental agreement',
+          yes__i_have_state_assigned_shelter_with_: 'Yes, I have state assigned shelter with proving documents',
+          verbal_agreement: 'Verbal agreement',
+          no_formal_documents: 'No formal documents',
+        },
         _18_1_2_What_are_the_factors_t: {
           armed_conflict: 'Armed conflict',
           presence_of_armed_actors_and_or_military: 'Presence of armed actors and/or military',
@@ -333,8 +339,9 @@ export const en = Object.freeze({
       senseOfSafetyByOblast: 'Bad or Very bad sense of safety by Oblast',
       elderlyWithoutPensionCertificate: 'Elderly without pensioner certificate',
       childWithoutBirthCertificate: 'Child without birth certificate',
-      barriersToPersonalDocument: 'Barriers to obtain personal documents',
-      maleWithoutIDPCert: 'Male without IDP certificate',
+      barriersToPersonalDocument: 'Barriers',
+      maleWithoutIDPCertByOblast: 'Males IDP without IDP certificate by Oblast',
+      maleWithoutIDPCert: 'IDPs without IDP certificate',
       femaleWithoutIDPCert: 'Female without IDP certificate',
       titles: {
         document: 'Civil status and registration',
@@ -374,5 +381,6 @@ export const en = Object.freeze({
     },
     departureFromAreaOfOrigin: `Departure from area of origin`,
     dateOfDeparture: `Date of departure`,
+    pin: 'Pin',
   },
 })

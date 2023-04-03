@@ -1,4 +1,4 @@
-import {KoboAnswer, KoboAnswerMetaData} from '../sdk/kobo/KoboType'
+import {KoboAnswer, KoboAnswerMetaData} from '../sdk/server/kobo/Kobo'
 import {Arr, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
@@ -22,7 +22,7 @@ export namespace KoboFormProtHH {
     prefer_not_to_answer = 'prefer_not_to_answer',
     don_t_know = 'don_t_know',
   }
-
+  
   export enum Gender {
     female = 'female',
     male = 'male',
@@ -46,7 +46,7 @@ export namespace KoboFormProtHH {
     protection = 'protection',
     family_reunification = 'family_reunification',
   }
-  
+
   export enum PriorityNeed {
     health = 'health',
     shelter = 'shelter',
@@ -61,7 +61,7 @@ export namespace KoboFormProtHH {
     nfis = 'nfis',
     wash = 'wash',
   }
-  
+
   export enum Status {
     conflict_affected_person = 'conflict_affected_person',
     idp = 'idp',
@@ -229,6 +229,10 @@ export namespace KoboFormProtHH {
         }, _ => _)
       ) as GetType<'_18_1_2_What_are_the_factors_t'>[] | undefined,
       _4_1_What_raion_currently_living_in: map(raionsCols.find(_ => a[_]), _ => a[_]),
+      _26_4_Do_you_have_fo_in_your_accomodation: fnSwitch(a._26_4_Do_you_have_fo_in_your_accomodation!, {
+        prefer_not_to_answer38: undefined,
+        don_t_know38: undefined,
+      }, _ => _)
     }
   }
 }

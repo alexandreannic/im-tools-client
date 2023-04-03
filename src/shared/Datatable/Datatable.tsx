@@ -58,6 +58,7 @@ export interface DatatableColumnProps<T> {
   sx?: (_: T) => SxProps<Theme> | undefined
   style?: CSSProperties
   stickyEnd?: boolean
+  number?: boolean
 }
 
 const safeParseInt = (maybeInt: any, defaultValue: number): number => (isNaN(maybeInt) ? defaultValue : parseInt(maybeInt))
@@ -193,7 +194,7 @@ export const Datatable = <T extends any = any>({
                     border: 'none',
                   }}
                 >
-                  <LinearProgress />
+                  <LinearProgress/>
                 </TableCell>
               </TableRow>
             )}
@@ -213,7 +214,7 @@ export const Datatable = <T extends any = any>({
                   <TableCell
                     key={i}
                     sx={combineSx(_.sx?.(item), sxUtils.truncate, sxStickyEnd)}
-                    style={_.style}
+                    style={{..._.style, ..._.number && {textAlign: 'right'}}}
                     className={typeof _.className === 'function' ? _.className(item) : _.className}
                   >
                     {_.render(item)}
@@ -224,7 +225,7 @@ export const Datatable = <T extends any = any>({
             {!loading && (!data || data?.length === 0) && (
               <TableRow>
                 <TableCell colSpan={filteredColumns.length} sx={{p: 2, textAlign: 'center'}}>
-                  {renderEmptyState ? renderEmptyState : <Fender title={m.noDataAtm} icon="highlight_off" />}
+                  {renderEmptyState ? renderEmptyState : <Fender title={m.noDataAtm} icon="highlight_off"/>}
                 </TableCell>
               </TableRow>
             )}
@@ -233,36 +234,36 @@ export const Datatable = <T extends any = any>({
       </Box>
       {paginate && total && (!paginate.minRowsBeforeDisplay || total > paginate.minRowsBeforeDisplay)
         ? (() => {
-            const limit = safeParseInt(paginate.limit, 10)
-            const offset = safeParseInt(paginate.offset, 0)
-            return (
-              <TablePagination
-                rowsPerPageOptions={rowsPerPageOptions}
-                component="div"
-                count={total ?? 0}
-                rowsPerPage={limit}
-                page={offset / limit}
-                onPageChange={(event: unknown, newPage: number) => paginate.onPaginationChange({offset: newPage * limit})}
-                onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  paginate.onPaginationChange({limit: +event.target.value})
-                }
-              />
-            )
-          })()
+          const limit = safeParseInt(paginate.limit, 10)
+          const offset = safeParseInt(paginate.offset, 0)
+          return (
+            <TablePagination
+              rowsPerPageOptions={rowsPerPageOptions}
+              component="div"
+              count={total ?? 0}
+              rowsPerPage={limit}
+              page={offset / limit}
+              onPageChange={(event: unknown, newPage: number) => paginate.onPaginationChange({offset: newPage * limit})}
+              onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                paginate.onPaginationChange({limit: +event.target.value})
+              }
+            />
+          )
+        })()
         : data && (
-            <Box
-              sx={{
-                py: 0,
-                px: 2,
-                minHeight: 52,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-              }}
-            >
-              <span dangerouslySetInnerHTML={{__html: m.nLines(data.length)}} />
-            </Box>
-          )}
+        <Box
+          sx={{
+            py: 0,
+            px: 2,
+            minHeight: 52,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <span dangerouslySetInnerHTML={{__html: m.nLines(data.length)}}/>
+        </Box>
+      )}
     </>
   )
 }

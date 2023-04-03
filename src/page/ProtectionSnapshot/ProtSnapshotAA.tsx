@@ -32,6 +32,8 @@ export const ProtSnapshotAA = ({
       <SlideBody>
         <SlideContainer>
           <SlideContainer flexDirection="column" sx={{flex: 3}}>
+            <HorizontalBarChartGoogle data={computed.B_Interviewer_to_in_ert_their_DRC_office}/>
+            <HorizontalBarChartGoogle data={computed._26_4_Do_you_have_fo_in_your_accomodation}/>
             <UkraineMap
               sx={{mx: 1}}
               data={computed._19_1_1_Please_rate_your_relationshipByOblast}

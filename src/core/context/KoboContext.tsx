@@ -2,9 +2,9 @@ import React, {ReactNode, useContext} from 'react'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from './ConfigContext'
 import {koboFormId} from '../../koboFormId'
-import {AnswersFilters} from 'core/sdk/kobo/KoboClient'
+import {AnswersFilters} from 'core/sdk/server/kobo/KoboClient'
 import {ApiPaginate} from '../type'
-import {KoboAnswer} from '../sdk/kobo/KoboType'
+import {KoboAnswer} from '../sdk/server/kobo/Kobo'
 
 export interface KoboContext {
   hh: UseFetcher<(_: AnswersFilters) => Promise<ApiPaginate<KoboAnswer>>>
@@ -20,7 +20,7 @@ export const KoboProvider = ({
   children: ReactNode
 }) => {
   const {api} = useConfig()
-  const hh = useFetcher((_: AnswersFilters = {}) => api.kobo.getAnswers(koboFormId.prod.protectionHh, _))
+  const hh = useFetcher((_: AnswersFilters = {}) => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', koboFormId.prod.protectionHh, _))
 
   return (
     <_KoboContext.Provider value={{

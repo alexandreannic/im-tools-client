@@ -10,7 +10,7 @@ import {Txt} from 'mui-extension'
 // height="408.0199"
 
 const minAlpha = .05
-const maxAlpha = .5
+const maxAlpha = .8
 const medianAlpha = minAlpha + (maxAlpha - minAlpha) / 2
 
 const computeFill = (value: number, max: number) => {
@@ -33,12 +33,21 @@ export const UkraineMap = ({
 } & Pick<BoxProps, 'sx'>) => {
   const theme = useTheme()
 
-  const max = useMemo(() => {
-    return Math.max(...Enum.values(data).map(_ => _!.value ?? 0))
-  }, [data])
-
-  const maxPercent = useMemo(() => {
-    return Math.max(...Enum.values(data).map(_ => _ && _!.base ? _.value ?? 0 / _.base : 0)) || undefined
+  const {max, min, maxPercent, minPercent} = useMemo(() => {
+    const values = Enum.values(data).map(_ => _!.value ?? 0)
+    const percents = Enum.values(data).map(_ => {
+      if (_) {
+        const b = _.base ?? base
+        if (b) return _.value ?? 0 / b
+      }
+      return 0
+    })
+    return {
+      max: Math.max(...values),
+      min: Math.min(...values),
+      maxPercent: Math.max(...percents),
+      minPercent: Math.min(...percents),
+    }
   }, [data])
 
   const generateColor = (fill: number | undefined) => {
@@ -53,7 +62,7 @@ export const UkraineMap = ({
   }
 
   return (
-    <Box sx={{...sx, p: 1,}}>
+    <Box sx={{...sx, p: 1, position: 'relative'}}>
       <Box
         component="svg"
         preserveAspectRatio="xMidYMin slice"
@@ -97,6 +106,23 @@ export const UkraineMap = ({
             )
           })}
         </g>
+      </Box>
+      <Box sx={{width: 70, position: 'absolute', bottom: 40, left: theme.spacing(),}}>
+        <Box sx={{
+          height: 10,
+          borderRadius: '2px',
+          // boxShadow: t => t.shadows[1],
+          background: `linear-gradient(90deg, ${generateColor(minAlpha)} 0%, ${theme.palette.primary.main} 50%, ${generateColor(maxAlpha)} 100%)`
+        }}/>
+        ({maxPercent}-
+        {minPercent}: {base})
+        <Txt color="hint" size="small" sx={{display: 'flex', justifyContent: 'space-between',}}>
+          {(maxPercent && minPercent) ? (
+            <><Box>{minPercent}%</Box> <Box>{maxPercent}%</Box></>
+          ) : (
+            <><Box>{min}</Box> <Box>{max}</Box></>
+          )}
+        </Txt>
       </Box>
       {legend && <Txt block sx={{mt: 0, textAlign: 'center'}} size="small" color="disabled">{legend}</Txt>}
     </Box>

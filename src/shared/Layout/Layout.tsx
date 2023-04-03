@@ -1,46 +1,50 @@
-import {Box, BoxProps} from '@mui/material'
-import {Txt} from 'mui-extension'
-import React, {useEffect} from 'react'
+import * as React from 'react'
+import {ReactElement, ReactNode} from 'react'
+import {LayoutProvider, useLayoutContext} from './LayoutContext'
+import {Box} from '@mui/material'
+import {layoutConfig} from './index'
+import {defaultSpacing} from '../../core/theme'
 
-export const Layout = ({
-  width = 680,
-  children,
-  sx,
-  ...props
-}: BoxProps & {width?: number}) => {
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-  }, [])
+export const sidebarWith = 220
+
+export interface LayoutProps {
+  sidebar?: ReactElement<any>
+  header?: ReactElement<any>
+  title?: string
+  children?: ReactNode
+  mobileBreakpoint?: number
+}
+
+export const Layout = ({sidebar, header, title, mobileBreakpoint, children}: LayoutProps) => {
   return (
-    <Box sx={sx}>
-      <Box component="main" sx={{
-        mx: 'auto',
-        maxWidth: width,
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        pt: 3,
-        pb: 2,
-        px: 2,
-      }} {...props}>
-        <Box sx={{
-          flex: 1,
-        }}>
-          {children}
-        </Box>
+    <LayoutProvider title={title} mobileBreakpoint={mobileBreakpoint} showSidebarButton={!!sidebar}>
+      <LayoutUsingContext sidebar={sidebar} header={header}>
+        {children}
+      </LayoutUsingContext>
+    </LayoutProvider>
+  )
+}
 
-        <Box component="footer" sx={{
-          borderTop: t => `1px solid ${t.palette.divider}`,
-          pt: 1,
-          mt: 3,
-          color: t => t.palette.text.disabled
-        }}>
-          <Txt block>© 2023&nbsp;<b>DRC</b>&nbsp;Danish Refugee Council</Txt>
-        </Box>
+const LayoutUsingContext = ({sidebar, header, children}: Pick<LayoutProps, 'sidebar' | 'header' | 'children'>) => {
+  const {sidebarOpen, sidebarPinned, isMobileWidth} = useLayoutContext()
+  return (
+    <>
+      {header}
+      {sidebar}
+      <Box
+        component="main"
+        sx={{
+          transition: t => t.transitions.create('all'),
+          paddingLeft:
+            (sidebar && sidebarOpen && sidebarPinned && !isMobileWidth ? layoutConfig.sidebarWith + defaultSpacing : 0) + 'px',
+          overflow: 'hidden',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {children}
       </Box>
-    </Box>
+    </>
   )
 }

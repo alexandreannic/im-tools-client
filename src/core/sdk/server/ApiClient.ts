@@ -1,6 +1,6 @@
 import axios, {AxiosError, AxiosResponse, ResponseType} from 'axios'
 import * as qs from 'qs'
-import {objectToQueryString} from '../../utils/utils'
+import {objectToQueryString} from '../../../utils/utils'
 
 export interface RequestOption {
   readonly qs?: any

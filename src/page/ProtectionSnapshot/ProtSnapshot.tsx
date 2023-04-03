@@ -98,7 +98,7 @@ export const ProtSnapshot = ({
 
   const {m} = useI18n()
   const {api} = useConfig()
-  const fetch = (period: Period) => () => api.kobo.getAnswers(formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  const fetch = (period: Period) => () => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
   const _hhCurrent = useFetcher(fetch(period))
   const _hhPrevious = useFetcher(fetch(previousPeriod))
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilters>>({})
@@ -313,9 +313,9 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
       {/*</Box>*/}
 
       {/*<ProtSnapshotHome {...props}/>*/}
-      <ProtSnapshotAA {...props}/>
-      <ProtSnapshotSample {...props}/>
-      <ProtSnapshotDisplacement {...props}/>
+      {/*<ProtSnapshotAA {...props}/>*/}
+      {/*<ProtSnapshotSample {...props}/>*/}
+      {/*<ProtSnapshotDisplacement {...props}/>*/}
       <ProtSnapshotDocument {...props}/>
       <ProtSnapshotNeeds {...props}/>
       <ProtSnapshotLivelihood {...props}/>

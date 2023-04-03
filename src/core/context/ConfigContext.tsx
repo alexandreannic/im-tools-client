@@ -1,5 +1,5 @@
 import React, {ReactNode, useContext} from 'react'
-import {ApiSdk} from '../sdk/ApiSdk'
+import {ApiSdk} from '../sdk/server/ApiSdk'
 import {appConfig, AppConfig} from '../../conf/AppConfig'
 
 export interface ConfigContext {

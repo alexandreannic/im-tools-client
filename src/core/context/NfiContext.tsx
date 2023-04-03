@@ -1,7 +1,7 @@
 import React, {ReactNode, useContext} from 'react'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from './ConfigContext'
-import {ApiSdk} from '../sdk/ApiSdk'
+import {ApiSdk} from '../sdk/server/ApiSdk'
 
 export interface NfiContext {
   index: UseFetcher<ApiSdk['nfi']['index']>

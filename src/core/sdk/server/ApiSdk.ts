@@ -1,6 +1,7 @@
 import {ApiClient} from './ApiClient'
-import {NfiMPcaClient} from './NfiMPcaClient'
-import {KoboClient} from './kobo/KoboClient'
+import {NfiMPcaClient} from './nfi/NfiMPcaClient'
+import {KoboFormClient} from './kobo/KoboClient'
+import {KoboClient} from './kobo/KoboFormClient'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -8,5 +9,6 @@ export class ApiSdk {
   }
 
   readonly nfi = new NfiMPcaClient(this.client)
+  readonly koboForm = new KoboFormClient(this.client)
   readonly kobo = new KoboClient(this.client)
 }

@@ -53,6 +53,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
     return {
 
+      
       _18_1_2_What_are_the_factors_t: chain(ChartTools.multiple({
         data: data.map(_ => _._18_1_2_What_are_the_factors_t),
       }))
@@ -187,6 +188,19 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           'between_7_001__11_000_uah',
           'more_than_11_000_uah',
         ]))
+        .val,
+      
+      _26_4_Do_you_have_fo_in_your_accomodation: chain(ChartTools.single({
+        data: data.map(_ => _._26_4_Do_you_have_fo_in_your_accomodation).compact(),
+      }))
+        .map(ChartTools.setLabel(m.protHHSnapshot.enum._26_4_Do_you_have_fo_in_your_accomodation))
+        .map(ChartTools.sortBy.value)
+        .val,
+      
+      B_Interviewer_to_in_ert_their_DRC_office: chain(ChartTools.single({
+        data: data.map(_ => _.B_Interviewer_to_in_ert_their_DRC_office).compact(),
+      }))
+        .map(ChartTools.sortBy.value)
         .val,
 
       _32_What_is_the_main_source_of_inc: chain(ChartTools.multiple({

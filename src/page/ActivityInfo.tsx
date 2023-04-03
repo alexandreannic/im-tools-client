@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {ApiClient} from '../core/sdk/ApiClient'
+import {ApiClient} from '../core/sdk/server/ApiClient'
 
 const api = new ApiClient({
   baseUrl: 'https://www.activityinfo.org',
