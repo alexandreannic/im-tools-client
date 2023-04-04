@@ -8,6 +8,10 @@ export const capitalize = (_: string) => {
   return _.charAt(0).toUpperCase() + _.slice(1)
 }
 
+export const toPercent = <T extends number | undefined>(value: T, fractionDigits = 1): T extends undefined ? string | undefined : string => {
+  return value !== undefined ? (value * 100).toFixed(fractionDigits) + '%' : undefined as any
+}
+
 export const objectToQueryString = (obj: {[key: string]: any} = {}): string => {
   const params = new URLSearchParams()
   for (const [key, value] of Object.entries(obj)) {

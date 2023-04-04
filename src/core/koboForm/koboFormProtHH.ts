@@ -22,7 +22,7 @@ export namespace KoboFormProtHH {
     prefer_not_to_answer = 'prefer_not_to_answer',
     don_t_know = 'don_t_know',
   }
-  
+
   export enum Gender {
     female = 'female',
     male = 'male',
@@ -114,6 +114,10 @@ export namespace KoboFormProtHH {
 
   export const filterByIDP = (row: Answer): boolean => {
     return row._12_Do_you_identify_as_any_of === Status.idp
+  }
+
+  export const filterByNoIDP = (row: Answer): boolean => {
+    return row._12_Do_you_identify_as_any_of !== Status.idp
   }
 
   // const Dico = {
@@ -232,7 +236,11 @@ export namespace KoboFormProtHH {
       _26_4_Do_you_have_fo_in_your_accomodation: fnSwitch(a._26_4_Do_you_have_fo_in_your_accomodation!, {
         prefer_not_to_answer38: undefined,
         don_t_know38: undefined,
-      }, _ => _)
+      }, _ => _) as GetType<'_26_4_Do_you_have_fo_in_your_accomodation'> | undefined,
+      _32_1_What_type_of_allowances_do_you: a._32_1_What_type_of_allowances_do_you?.split(' ').map(_ => fnSwitch(_, {
+        nonec: undefined,
+        otherc: undefined,
+      }, _ => _)) as GetType<'_32_1_What_type_of_allowances_do_you'>[] | undefined,
     }
   }
 }

@@ -31,10 +31,10 @@ export const PieChartIndicator = ({
       }}
     >
       <AaPieChart
-        outerRadius={28}
-        innerRadius={18}
-        height={68}
-        width={68}
+        outerRadius={26}
+        innerRadius={16}
+        height={60}
+        width={60}
         hideLabel
         data={{
           value: value,

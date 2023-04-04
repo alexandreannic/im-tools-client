@@ -4,6 +4,7 @@ import {alpha, Box, BoxProps, darken, useTheme} from '@mui/material'
 import {useMemo} from 'react'
 import {Oblast, OblastIndex} from './oblastIndex'
 import {Txt} from 'mui-extension'
+import {toPercent} from '../../utils/utils'
 
 // viewBox="22.138577 52.380834 40.220623 44.387017"
 // width="612.47321"
@@ -16,8 +17,6 @@ const medianAlpha = minAlpha + (maxAlpha - minAlpha) / 2
 const computeFill = (value: number, max: number) => {
   return value > 0 ? (maxAlpha - minAlpha) * value / max + minAlpha : undefined
 }
-
-const toPercent = (value?: number, fractionDigits = 1) => value !== undefined ? (value * 100).toFixed(fractionDigits) + '%' : undefined
 
 export const UkraineMap = ({
   data = {} as any,
@@ -40,7 +39,8 @@ export const UkraineMap = ({
   const {max, min, maxPercent, minPercent} = useMemo(() => {
     const _data = Arr(Enum.values(data)).compact()
     const values = _data.map(_ => _!.value ?? 0)
-    const percents = (_data[0]?.base !== undefined || base !== undefined) ? _data.map(_ => {
+    console.log('_data', _data)
+    const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.map(_ => {
       const b = (base ?? _.base) || 1
       if (!b) {
         console.error(`No base found for`, data)

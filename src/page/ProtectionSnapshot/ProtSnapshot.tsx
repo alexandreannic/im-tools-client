@@ -3,17 +3,15 @@ import {useConfig} from '../../core/context/ConfigContext'
 import {Period, UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {Box, FormControlLabel, Icon, Switch, useTheme} from '@mui/material'
-import {_Arr, Arr, Enum, map, sleep} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {Fender, IconBtn, Txt} from 'mui-extension'
 import {Pdf} from 'shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {useI18n} from '../../core/i18n'
 import {AaSelect} from '../../shared/Select/Select'
-import {Oblast, OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {ProtSnapshotDocument} from './ProtSnapshotDocument'
 import {ProtSnapshotAA} from './ProtSnapshotAA'
-import Answer = KoboFormProtHH.Answer
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ProtSnapshotLivelihood} from './ProtSnapshotLivelihood'
@@ -21,6 +19,7 @@ import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
 import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
 import {ProtSnapshotSample} from './ProtSnapshotSample'
 import {ProtSnapshotHome} from './ProtSnapshotHome'
+import Answer = KoboFormProtHH.Answer
 
 const initGoogleMaps = async (mapId: string, color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
   return
@@ -98,9 +97,10 @@ export const ProtSnapshot = ({
 
   const {m} = useI18n()
   const {api} = useConfig()
-  const fetch = (period: Period) => () => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  const fetch = (period?: Period) => () => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
   const _hhCurrent = useFetcher(fetch(period))
   const _hhPrevious = useFetcher(fetch(previousPeriod))
+  const _hhAll = useFetcher(fetch())
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilters>>({})
   const [customFilters, setCustomFilters] = useState<Partial<ProtSnapshotCustomFilters>>({})
 
@@ -159,7 +159,7 @@ export const ProtSnapshot = ({
   const _4_What_oblast_are_you_from_iso = useMemo(() => {
     return _hhCurrent.entity?.map(_ => _._4_What_oblast_are_you_from_iso).distinct(_ => _).compact() ?? Arr([])
   }, [_hhCurrent.entity])
-  
+
   const selectedCurrentOblastISOs = useMemo(() => {
     return _4_What_oblast_are_you_from_iso.distinct(_ => _).compact()
   }, [_4_What_oblast_are_you_from_iso])
@@ -182,64 +182,67 @@ export const ProtSnapshot = ({
       <Box className="noprint" sx={{margin: 'auto', maxWidth: '30cm', mb: 2}}>
         <Box>
           <Box sx={{display: 'flex', alignItems: 'center',}}>
-            {/*<UkraineMap*/}
-            {/*  data={currentComputedData.oblastCurrent}*/}
-            {/*  onSelect={updateOblastFilters('_4_What_oblast_are_you_from_iso')}*/}
-            {/*  legend={m.origin}*/}
-            {/*  sx={{width: '200px'}}*/}
-            {/*/>*/}
-            {/*<AaSelect<OblastISO>*/}
-            {/*  multiple*/}
-            {/*  label={m.oblast}*/}
-            {/*  value={filters._4_What_oblast_are_you_from_iso ?? []}*/}
-            {/*  onChange={_ => setFilters(prev => ({...prev, _4_What_oblast_are_you_from_iso: _}))}*/}
-            {/*  options={selectedCurrentOblastISOs.map(iso => ({*/}
-            {/*    value: iso,*/}
-            {/*    children: map(OblastIndex.findByIso(iso!)?.koboKey, _ => m.protHHSnapshot.enum.oblast[_])*/}
-            {/*  }))}*/}
-            {/*/>*/}
-
-            <AaSelect<KoboFormProtHH.GetType<'vulnerability'>>
-              multiple
-              label={m.vulnerabilities}
-              value={filters.C_Vulnerability_catergories_that ?? []}
-              onChange={_ => setFilters(prev => ({...prev, C_Vulnerability_catergories_that: _}))}
-              options={Enum.keys(m.protHHSnapshot.enum.vulnerability).map(v =>
-                ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
-              )}
+            <UkraineMap
+              data={currentComputedData.oblastCurrent}
+              onSelect={updateOblastFilters('_4_What_oblast_are_you_from_iso')}
+              title={m.origin}
+              sx={{width: '200px'}}
             />
-            <AaSelect<KoboFormProtHH.Status>
-              multiple
-              label={m.status}
-              value={filters._12_Do_you_identify_as_any_of ?? []}
-              onChange={_ => setFilters(prev => ({...prev, _12_Do_you_identify_as_any_of: _}))}
-              options={Enum.values(KoboFormProtHH.Status).map(v =>
-                ({value: v, children: m.statusType[v]})
-              )}
-            />
+            <Box>
+              <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <AaSelect<KoboFormProtHH.GetType<'vulnerability'>>
+                  multiple
+                  label={m.vulnerabilities}
+                  value={filters.C_Vulnerability_catergories_that ?? []}
+                  onChange={_ => setFilters(prev => ({...prev, C_Vulnerability_catergories_that: _}))}
+                  options={Enum.keys(m.protHHSnapshot.enum.vulnerability).map(v =>
+                    ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
+                  )}
+                />
+                <AaSelect<KoboFormProtHH.Status>
+                  multiple
+                  label={m.status}
+                  value={filters._12_Do_you_identify_as_any_of ?? []}
+                  onChange={_ => setFilters(prev => ({...prev, _12_Do_you_identify_as_any_of: _}))}
+                  options={Enum.values(KoboFormProtHH.Status).map(v =>
+                    ({value: v, children: m.statusType[v]})
+                  )}
+                />
+              </Box>
+              <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+                <IconBtn sx={{marginLeft: 'auto'}} color="primary" onClick={() => window.print()}><Icon>download</Icon></IconBtn>
+                <FormControlLabel
+                  control={<Switch/>}
+                  label={m.hohhOlder}
+                  checked={!!customFilters.hohh60}
+                  onChange={(e: any) => setCustomFilters(prev => ({...prev, hohh60: e.target.checked}))}
+                />
+                <FormControlLabel
+                  control={<Switch/>}
+                  label={m.hohhFemale}
+                  checked={!!customFilters.hohhFemale}
+                  onChange={(e: any) => setCustomFilters(prev => ({...prev, hohhFemale: e.target.checked}))}
+                />
+                <Txt color="hint" sx={{ml: 2}}>
+                  {period.start.toDateString()} -
+                  {period.end.toDateString()}
+                </Txt>
+                <Txt color="hint" bold sx={{ml: 2}}>
+                  {currentFilteredData?.length ?? '-'}
+                </Txt>
+              </Box>
+            </Box>
           </Box>
-          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
-            <IconBtn sx={{marginLeft: 'auto'}} color="primary" onClick={() => window.print()}><Icon>download</Icon></IconBtn>
-            <FormControlLabel
-              control={<Switch/>}
-              label={m.hohhOlder}
-              checked={!!customFilters.hohh60}
-              onChange={(e: any) => setCustomFilters(prev => ({...prev, hohh60: e.target.checked}))}
-            />
-            <FormControlLabel
-              control={<Switch/>}
-              label={m.hohhFemale}
-              checked={!!customFilters.hohhFemale}
-              onChange={(e: any) => setCustomFilters(prev => ({...prev, hohhFemale: e.target.checked}))}
-            />
-            <Txt color="hint" sx={{ml: 2}}>
-              {period.start.toDateString()} - 
-              {period.end.toDateString()}
-            </Txt>
-            <Txt color="hint" bold sx={{ml: 2}}>
-              {currentFilteredData?.length ?? '-'}
-            </Txt>
-          </Box>
+          {/*<AaSelect<OblastISO>*/}
+          {/*  multiple*/}
+          {/*  label={m.oblast}*/}
+          {/*  value={filters._4_What_oblast_are_you_from_iso ?? []}*/}
+          {/*  onChange={_ => setFilters(prev => ({...prev, _4_What_oblast_are_you_from_iso: _}))}*/}
+          {/*  options={selectedCurrentOblastISOs.map(iso => ({*/}
+          {/*    value: iso,*/}
+          {/*    children: map(OblastIndex.findByIso(iso!)?.koboKey, _ => m.protHHSnapshot.enum.oblast[_])*/}
+          {/*  }))}*/}
+          {/*/>*/}
         </Box>
       </Box>
       {currentFilteredData && previousFilteredData ? (
@@ -312,13 +315,13 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
       {/*  </Box>*/}
       {/*</Box>*/}
 
-      {/*<ProtSnapshotHome {...props}/>*/}
-      {/*<ProtSnapshotAA {...props}/>*/}
-      <ProtSnapshotSample {...props}/>
+      <ProtSnapshotDocument {...props}/>
       <ProtSnapshotDisplacement {...props}/>
-      {/*<ProtSnapshotDocument {...props}/>*/}
-      {/*<ProtSnapshotNeeds {...props}/>*/}
-      {/*<ProtSnapshotLivelihood {...props}/>*/}
+      <ProtSnapshotLivelihood {...props}/>
+      <ProtSnapshotHome {...props}/>
+      <ProtSnapshotAA {...props}/>
+      <ProtSnapshotSample {...props}/>
+      <ProtSnapshotNeeds {...props}/>
     </>
   )
 }

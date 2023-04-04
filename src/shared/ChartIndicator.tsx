@@ -1,6 +1,7 @@
 import {Box, BoxProps, Icon} from '@mui/material'
 import React from 'react'
 import {Txt} from 'mui-extension'
+import {SlidePanelTitle} from './PdfLayout/Slide'
 
 const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
   return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value
@@ -20,7 +21,8 @@ export const ChartIndicator = ({
 } & Omit<BoxProps, 'children'>) => {
   return (
     <Box {...props}>
-      {title && <Txt block size="big" bold sx={{mb: .5}}>{title}</Txt>}
+      <SlidePanelTitle>{title}</SlidePanelTitle>
+      {/*{title && <Txt block size="big" bold sx={{mb: .5}}>{title}</Txt>}*/}
       <Txt sx={{fontSize: '1.4em', display: 'inline-flex', alignItems: 'center'}}>
         <Txt bold>{renderPercent(value, percent)}</Txt>
         {evolution && (

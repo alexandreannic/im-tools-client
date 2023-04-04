@@ -1,6 +1,11 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {sortObject} from '../utils/utils'
 
+export interface ChartDataValPercent extends ChartDataVal {
+  base: number
+  percent: number
+}
+
 export interface ChartDataVal {
   value: number
   base?: number
@@ -102,15 +107,17 @@ export namespace ChartTools {
     filter: (_: A) => boolean
     filterBase?: (_: A) => boolean
     categories: Record<K, (_: A) => boolean>
-  }): Record<K, ChartDataVal> => {
-    const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: {value: 0, base: 0}}), {} as Record<K, {value: number, base: number}>)
+  }): Record<K, ChartDataValPercent> => {
+    const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: {value: 0, base: 0, percent: 0}}), {} as Record<K, ChartDataValPercent>)
     data.forEach(x => {
       Enum.entries(categories).forEach(([category, isCategory]) => {
         if (!isCategory(x)) return
         if (filterBase && !filterBase(x)) return
-        res[category].base += 1
+        const r = res[category]
+        r.base += 1
         if (filter(x)) {
-          res[category].value += 1
+          r.value += 1
+          r.percent = r.value / r.base
         }
       })
     })

@@ -1,6 +1,6 @@
 import {Slide, SlideBody, SlideCard, SlideContainer, SlideH1, SlideHeader, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {format} from 'date-fns'
-import {Box, useTheme} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import {AaPieChart} from '../../shared/Chart/AaPieChart'
 import {Legend} from 'recharts'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
@@ -8,6 +8,7 @@ import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
+import {PieChartIndicator} from '../../shared/PieChartIndicator'
 
 export const ProtSnapshotSample = ({
   current: {
@@ -22,14 +23,15 @@ export const ProtSnapshotSample = ({
   const {m, formatLargeNumber} = useI18n()
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
+  console.log('categoriesRatio,', computed.categoriesRatio)
   return (
     <Slide>
       <SlideHeader>{m.sample}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 4}}>
-            <SlideTxt size="big" color="hint">
-              {format(period.start, 'LLLL yyyy')} - {format(period.end, 'LLLL yyyy')}
+          <SlideContainer column sx={{flex: 4}}>
+            <SlideTxt size="big" color="hint" sx={{display: 'flex', alignItems: 'center'}}>
+              <Icon sx={{mr: 1}}>date_range</Icon> {format(period.start, 'LLLL yyyy')} - {format(period.end, 'LLLL yyyy')}
             </SlideTxt>
 
             <SlideTxt>{m.protHHSnapshot.sample.desc}</SlideTxt>
@@ -37,7 +39,7 @@ export const ProtSnapshotSample = ({
             <Box id="map" sx={{height: 400, borderRadius: pdfTheme.slideRadius}}/>
           </SlideContainer>
 
-          <SlideContainer flexDirection="column" sx={{flex: 5}}>
+          <SlideContainer column sx={{flex: 6}}>
             <Box sx={{display: 'flex'}}>
               <SlideCard title={m.hhs} icon="home">
                 {formatLargeNumber(data.length)}
@@ -50,8 +52,8 @@ export const ProtSnapshotSample = ({
               </SlideCard>
             </Box>
 
-            <SlideContainer sx={{alignItems: 'flex-start'}}>
-              <SlideContainer flexDirection="column">
+            <SlideContainer>
+              <SlideContainer column>
                 <SlidePanel>
                   <AaPieChart
                     outerRadius={60}
@@ -76,12 +78,44 @@ export const ProtSnapshotSample = ({
                   <HorizontalBarChartGoogle hideValue data={computed._12_Do_you_identify_as_any_of}/>
                 </SlidePanel>
               </SlideContainer>
-              <SlidePanel sx={{flex: 1}} title={m.ageGroup}>
-                <HorizontalBarChartGoogle
-                  hideValue
-                  data={computed._8_individuals.byAgeGroup}
-                />
-              </SlidePanel>
+              <SlideContainer>
+                <SlidePanel sx={{flex: 1, height: '100%'}} title={m.ageGroup}>
+                  <HorizontalBarChartGoogle
+                    hideValue
+                    data={computed._8_individuals.byAgeGroup}
+                  />
+                </SlidePanel>
+              </SlideContainer>
+            </SlideContainer>
+            <SlideContainer>
+              <SlideContainer column>
+                <SlidePanel>
+                  <PieChartIndicator
+                    title={m.protHHSnapshot.numberOfIdp}
+                    value={computed.categoriesRatio.idp.value / data.length}
+                  />
+                </SlidePanel>
+                <SlidePanel>
+                  <PieChartIndicator
+                    title={m.protHHSnapshot.numberOfMemberWithDisability}
+                    value={computed.categoriesRatio.memberWithDisability.value / data.length}
+                  />
+                </SlidePanel>
+              </SlideContainer>
+              <SlideContainer column>
+                <SlidePanel>
+                  <PieChartIndicator
+                    title={m.protHHSnapshot.numberOfHohhFemale}
+                    value={computed.categoriesRatio.hohhFemale.value / data.length}
+                  />
+                </SlidePanel>
+                <SlidePanel>
+                  <PieChartIndicator
+                    title={m.protHHSnapshot.numberOfHohh60}
+                    value={computed.categoriesRatio.hohh60.value / data.length}
+                  />
+                </SlidePanel>
+              </SlideContainer>
             </SlideContainer>
           </SlideContainer>
         </SlideContainer>

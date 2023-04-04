@@ -1,11 +1,12 @@
 import {useMemo} from 'react'
 import {ChartDataVal, ChartTools} from '../../core/chartTools'
 import {format} from 'date-fns'
-import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {chain} from '../../utils/utils'
 import {OblastISO, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
+import {omit, pick} from 'lodash'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
@@ -22,13 +23,10 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
   start: Date
   end: Date
 }) => {
-
   const {m} = useI18n()
   // TODO Relation IDP host community entre west and ouest
 
-
   // TODO Durable solution - factors to return, checker by area: nord/sud/east GCA/east NGCA (Gov contorl area)
-
   return useMemo(() => {
     const categoryCurrentOblasts = Enum.keys(ukraineSvgPath).reduce(
       (acc, k) => ({...acc, [k]: (_: Answer): boolean => _._4_What_oblast_are_you_from_iso === k}),
@@ -36,11 +34,12 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
     )
 
     const categoryFilters = {
+      notIdp: KoboFormProtHH.filterByNoIDP,
       idp: KoboFormProtHH.filterByIDP,
       hohh60: KoboFormProtHH.filterByHoHH60,
       hohhFemale: KoboFormProtHH.filterByHoHHFemale,
       memberWithDisability: KoboFormProtHH.filterWithDisability,
-      // all: _ => true,
+      all: (_: Answer) => true,
     }
 
     const initOblastIndex = <T>(initialValue: T): Record<OblastISO, T> => {
@@ -52,7 +51,45 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
     }
 
     return {
+      idpsCount: data.count(KoboFormProtHH.filterByIDP),
+      noIdpsCount: data.count(KoboFormProtHH.filterByNoIDP),
 
+      categoriesRatio: ChartTools.byCategory({
+        data: data,
+        filter: _ => true,
+        categories: categoryFilters,
+      }),
+      
+      _33_incomeByIndividualsBelow3000: data
+        .filter(_ => !!_._33_What_is_the_aver_income_per_household && _._33_What_is_the_aver_income_per_household !== 'more_than_11_000_uah')
+        .map(d => {
+          const maxIncome = fnSwitch(d._33_What_is_the_aver_income_per_household!, {
+            up_to_1_500_uah: 3000,
+            between_1_501__3_000_uah: 6000,
+            between_3_001__5_000_uah: 9000,
+            between_5_001__7_000_uah: 12000,
+            between_7_001__11_000_uah: 15000,
+          }, _ => {
+            throw new Error(`Should not happend`)
+          })
+          return maxIncome / d.persons.length
+        }).groupBy(_ => _ <= 3000) as {true: _Arr<number>, false: _Arr<number>},
+
+      _33_incomeByIndividualsBelow3000Max: data
+        .filter(_ => !!_._33_What_is_the_aver_income_per_household)
+        .map(d => {
+          const maxIncome = fnSwitch(d._33_What_is_the_aver_income_per_household!, {
+            up_to_1_500_uah: 3000,
+            between_1_501__3_000_uah: 3000,
+            between_3_001__5_000_uah: 6000,
+            between_5_001__7_000_uah: 9000,
+            between_7_001__11_000_uah: 12000,
+            more_than_11_000_uah: 15000,
+          }, _ => {
+            throw new Error(`Should not happend`)
+          })
+          return maxIncome / d.persons.length
+        }).groupBy(_ => _ <= 3000) as {true: _Arr<number>, false: _Arr<number>},
 
       _18_1_2_What_are_the_factors_t: chain(ChartTools.multiple({
         data: data.map(_ => _._18_1_2_What_are_the_factors_t),
@@ -190,6 +227,11 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         ]))
         .val,
 
+      _26_4_noHouseFormalDocPercent: ChartTools.percentage({
+        data: data.map(_ => _._26_4_Do_you_have_fo_in_your_accomodation).compact(),
+        value: _ => _ === 'no_formal_documents' || _ === 'verbal_agreement' 
+      }),
+      
       _26_4_Do_you_have_fo_in_your_accomodation: chain(ChartTools.single({
         data: data.map(_ => _._26_4_Do_you_have_fo_in_your_accomodation).compact(),
       }))
@@ -235,14 +277,53 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           filter: _ => _._40_1_What_is_your_first_priorty !== undefined && _._40_1_What_is_your_first_priorty.includes(KoboFormProtHH.PriorityNeed.cash)
         })).val,
 
-      _31_Is_anyone_from_the_household_percent: ChartTools.percentage({
-        data: data.map(_ => _._31_Is_anyone_from_the_household_),
-        value: _ => _ === true,
+      _31_Is_anyone_from_the_household_percent: ChartTools.byCategory({
+        categories: pick(categoryFilters, ['idp', 'notIdp', 'all']),
+        data,
+        filter: _ => _._31_Is_anyone_from_the_household_ === true,
       }),
+
+      _32_1_What_type_of_allowances_byElderly: ChartTools.percentage({
+        data: data.filter(_ => !!_.persons.find(_ => _.age && _.age >= 60)),
+        value: _ => !!_._32_1_What_type_of_allowances_do_you?.includes('pension'),
+      }),
+
+      _32_1_What_type_of_allowances_byChildrens: ChartTools.percentage({
+        data: data.filter(_ => _.persons.filter(_ => _.age && _.age < 18).length >= 3),
+        value: _ => !!_._32_1_What_type_of_allowances_do_you?.includes('pension_for_three_or_more_chil'),
+      }),
+
+      _32_1_What_type_of_allowances_byIdp: ChartTools.percentage({
+        data: data.filter(_ => _._12_Do_you_identify_as_any_of === 'idp'),
+        value: _ => !!_._32_1_What_type_of_allowances_do_you?.includes('idp_allowance_from_the_governm'),
+      }),
+
+      _32_dependingOnAllowancePercent: ChartTools.byCategory({
+        data,
+        categories: pick(categoryFilters, ['idp', 'all', 'notIdp']),
+        filter: (_: Answer) => {
+          return (!!_._32_What_is_the_main_source_of_inc?.includes('allowance__state')
+              || !!_._32_What_is_the_main_source_of_inc?.includes('humanitarian_assistance'))
+            && !_._32_What_is_the_main_source_of_inc?.includes('employment')
+            && !_._32_What_is_the_main_source_of_inc?.includes('other43')
+        }
+      }),
+
+      _32_dependingOnAllowance: chain(ChartTools.byCategory({
+        data,
+        categories: omit(categoryFilters, 'notIdp'),
+        filter: _ => (!!_._32_What_is_the_main_source_of_inc?.includes('allowance__state')
+            || !!_._32_What_is_the_main_source_of_inc?.includes('humanitarian_assistance'))
+          && !_._32_What_is_the_main_source_of_inc?.includes('employment')
+          && !_._32_What_is_the_main_source_of_inc?.includes('other43'),
+      }))
+        .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType))
+        .val,
 
       _33_incomeByCategory: chain(ChartTools.byCategory({
         data,
-        categories: categoryFilters,
+        categories: omit(categoryFilters, 'notIdp'),
         filter: _ => _._33_What_is_the_aver_income_per_household !== undefined && (_._33_What_is_the_aver_income_per_household === 'up_to_1_500_uah' || _._33_What_is_the_aver_income_per_household === 'between_1_501__3_000_uah'),
       }))
         .map(ChartTools.sortBy.percent)
@@ -251,7 +332,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _29_nfiNeededByCategory: chain(ChartTools.byCategory({
         data,
-        categories: categoryFilters,
+        categories: omit(categoryFilters, 'notIdp'),
         filter: _ => _._29_Which_NFI_do_you_need !== undefined && !_._29_Which_NFI_do_you_need.includes('do_not_require41')
       }))
         .map(ChartTools.sortBy.percent)
@@ -260,7 +341,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _40_1_pn_cash_byCategory: chain(ChartTools.byCategory({
         data,
-        categories: categoryFilters,
+        categories: omit(categoryFilters, 'notIdp'),
         filter: _ => !!_._40_1_What_is_your_first_priorty?.includes('cash')
       }))
         .map(ChartTools.sortBy.percent)
@@ -269,7 +350,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _40_1_pn_shelter_byCategory: chain(ChartTools.byCategory({
         data,
-        categories: categoryFilters,
+        categories: omit(categoryFilters, 'notIdp'),
         filter: _ => !!_._40_1_What_is_your_first_priorty?.includes('shelter')
       }))
         .map(ChartTools.sortBy.percent)
@@ -278,10 +359,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _40_1_pn_health_byCategory: chain(ChartTools.byCategory({
         data,
-        categories: categoryFilters,
+        categories: omit(categoryFilters, 'notIdp'),
         filter: _ => !!_._40_1_What_is_your_first_priorty?.includes('health')
       }))
-        .map(x => x)
         .map(ChartTools.sortBy.percent)
         .map(ChartTools.setLabel(m.hhCategoryType))
         .val,
@@ -345,7 +425,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .val,
 
       _12_7_1_planToReturn: ChartTools.percentage({
-        data: data.map(_ => _._12_7_1_Do_you_plan_to_return_to_your_),
+        data: data.filter(_ => _._12_Do_you_identify_as_any_of === 'idp').map(_ => _._12_7_1_Do_you_plan_to_return_to_your_),
         value: _ => _ === 'yes' || _ === 'yes_but_no_clear_timeframe'
       }),
       // _12_7_1_planToReturn: (() => {
@@ -421,9 +501,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           if (oblast)
             return [oblast, {value: (acc[oblast]?.value ?? 0) + peoples}]
         }),
-        // .map(_ => _._4_What_oblast_are_you_from_iso)
-        // .compact()
-        // .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => [_, {value: (acc[_]?.value ?? 0) + 1}]),
+      // .map(_ => _._4_What_oblast_are_you_from_iso)
+      // .compact()
+      // .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => [_, {value: (acc[_]?.value ?? 0) + 1}]),
 
       totalMembers: data.sum(_ => _._8_What_is_your_household_size ?? 0),
 

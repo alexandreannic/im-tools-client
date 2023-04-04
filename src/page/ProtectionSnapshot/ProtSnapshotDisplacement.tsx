@@ -3,8 +3,8 @@ import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
-import {Box, Icon, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {Box, Divider, Icon, useTheme} from '@mui/material'
+import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ScLineChart} from '../../shared/Chart/ScLineChart'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
@@ -13,6 +13,7 @@ import {format} from 'date-fns'
 import {Txt} from 'mui-extension'
 import {ChartIndicator} from '../../shared/ChartIndicator'
 import {sortObject} from '../../utils/utils'
+import {PieChartIndicator} from '../../shared/PieChartIndicator'
 
 export const ProtSnapshotDisplacement = ({
   current: {
@@ -46,7 +47,7 @@ export const ProtSnapshotDisplacement = ({
       <SlideHeader>{m.displacement}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer sx={{flex: 2}} flexDirection="column">
+          <SlideContainer sx={{flex: 2}} column>
             <SlidePanel title={m.departureFromAreaOfOrigin}>
               <ScLineChart hideYTicks hideXTicks height={140} hideLabelToggle curves={[
                 {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: computed._12_3_1_dateDeparture},
@@ -56,7 +57,8 @@ export const ProtSnapshotDisplacement = ({
                 {map(_12_3_1_dateDeparture.last, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
               </Txt>
             </SlidePanel>
-            <div>
+            <SlidePanelTitle>{m.protHHSnapshot.percentagePopulationByOblast}</SlidePanelTitle>
+            <Box sx={{px: 1}}>
               <UkraineMap
                 fillBaseOn="percent"
                 base={maxPeopleByOblast}
@@ -66,7 +68,7 @@ export const ProtSnapshotDisplacement = ({
                 legend={false}
                 sx={{width: '100%'}}
               />
-              <Box sx={{textAlign: 'center', my: 1}}>
+              <Box sx={{textAlign: 'center', my: .25}}>
                 {mapFor(3, i => (
                   <Icon key={i} color="disabled" fontSize="large">arrow_downward</Icon>
                 ))}
@@ -79,44 +81,48 @@ export const ProtSnapshotDisplacement = ({
                 title={m.current}
                 sx={{width: '100%'}}
               />
-            </div>
+            </Box>
           </SlideContainer>
 
-          <SlideContainer flexDirection="column" sx={{flex: 5}}>
+          <SlideContainer column sx={{flex: 5}}>
             <div>
               <SlideTxt>{m.protHHSnapshot.displacement.desc}</SlideTxt>
             </div>
             <SlideContainer>
-              <SlideContainer flexDirection="column">
-                <SlidePanel>
-                  <ChartIndicator
-                    title={m.intentionToReturn}
+              <SlideContainer column>
+                <SlidePanel title={m.intentionToReturn}>
+                  <PieChartIndicator
                     value={computed._12_7_1_planToReturn.percent}
                     evolution={computed._12_7_1_planToReturn.percent - previous.computed._12_7_1_planToReturn.percent}
-                    percent
                   />
-                  {/*<ChartIndicator*/}
-                  {/*  percent*/}
-                  {/*  value={+computed._12_7_1_planToReturn.toFixed(1)}*/}
-                  {/*  sx={{fontSize: '1.4rem'}}*/}
-                  {/*/>*/}
-                </SlidePanel>
-                <SlidePanel title={m.decidingFactorsToReturn}>
+                  <Divider sx={{my: 2}}/>
+                  <SlidePanelTitle>{m.decidingFactorsToReturn}</SlidePanelTitle>
                   <HorizontalBarChartGoogle data={computed._12_8_1_What_would_be_the_deciding_fac} base={data.length}/>
                 </SlidePanel>
               </SlideContainer>
-              <SlideContainer flexDirection="column">
-                <SlidePanel>
-                  <ChartIndicator
-                    title={m.propertyDamaged}
-                    value={computed._27_Has_your_house_apartment_been_.percent}
-                    evolution={previous.computed._27_Has_your_house_apartment_been_.percent}
-                    percent
+              <SlideContainer column>
+                <SlidePanelTitle>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
+                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                  <PieChartIndicator
+                    titleIcon="male"
+                    title={m.male}
+                    value={computed._14_1_1_idp_male_without_cert.percent}
+                    evolution={computed._14_1_1_idp_male_without_cert.percent - previous.computed._14_1_1_idp_male_without_cert.percent}
                   />
-                </SlidePanel>
-                <SlidePanel title={m.levelOfPropertyDamaged}>
-                  <HorizontalBarChartGoogle data={computed._27_1_If_yes_what_is_level_of_the_damage} base={data.length}/>
-                </SlidePanel>
+                  <PieChartIndicator
+                    titleIcon="female"
+                    title={m.female}
+                    value={computed._14_1_1_idp_female_without_cert.percent}
+                    evolution={computed._14_1_1_idp_female_without_cert.percent - previous.computed._14_1_1_idp_female_without_cert.percent}
+                  />
+                </Box>
+                <UkraineMap
+                  data={computed.idpsWithoutCertByOblast}
+                  fillBaseOn="percent"
+                  onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
+                  title={m.protHHSnapshot.maleWithoutIDPCertByOblast}
+                  sx={{width: 350, margin: 'auto'}}
+                />
               </SlideContainer>
             </SlideContainer>
           </SlideContainer>

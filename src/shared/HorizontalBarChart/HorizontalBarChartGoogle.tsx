@@ -63,7 +63,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
   icons,
   labels,
   descs,
-  barHeight = 3,
+  barHeight = 2,
   hideValue,
 }: Omit<Props<K>, 'data'> & {data: NonNullable<Props<K>['data']>}) => {
   const values: HorizontalBarChartGoogleData[] = useMemo(() => Enum.values(data), [data])

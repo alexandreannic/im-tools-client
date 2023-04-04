@@ -1,8 +1,18 @@
 import {Box, BoxProps, GlobalStyles} from '@mui/material'
 import React, {ReactNode, useContext} from 'react'
+import {defaultSpacing} from '../../core/theme'
 
 const generalStyles = <GlobalStyles
   styles={{
+    p: {
+      fontSize: 'inherit',
+      lineHeight: 1.6,
+      marginTop: 0,
+      marginBottom: 0,
+      '&:not(:last-of-type)': {
+        marginBottom: defaultSpacing,
+      }
+    },
     '@media print': {
       '.gm-fullscreen-control': {
         display: 'none',

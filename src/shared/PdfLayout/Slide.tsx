@@ -43,7 +43,9 @@ export const SlideH1 = ({children, sx, ...props}: BoxProps) => {
 
 export const SlideTxt = ({children, sx, textAlign = 'justify', ...props}: TxtProps) => {
   return (
-    <Txt {...props} textAlign={textAlign} sx={{
+    <Txt {...props} size="big" textAlign={textAlign} sx={{
+      // borderLeft: t => `2px solid ${t.palette.divider}`,
+      // pl: 1,
       lineHeight: 1.5,
       ...sx,
     }}>
@@ -55,21 +57,21 @@ export const SlideTxt = ({children, sx, textAlign = 'justify', ...props}: TxtPro
 }
 
 export const SlideContainer = ({
-  flexDirection,
   children,
   sx,
+  column,
   title,
   ...props
 }: BoxProps & {
-  flexDirection?: Property.FlexDirection,
+  column?: boolean
 }) => {
   const {pdfTheme: t} = usePdfContext()
   return (
     <Box {...props} sx={{
       display: 'flex',
       flex: 1,
-      flexDirection,
-      '& > :not(:last-child)': flexDirection === 'column' ? {mb: t.slidePadding} : {mr: t.slidePadding},
+      ...column && {flexDirection: 'column',},
+      '& > :not(:last-child)': (column) ? {mb: t.slidePadding} : {mr: t.slidePadding},
       ...sx,
     }}>
       {children}
@@ -87,7 +89,7 @@ export const SlideHeader = ({children}: BoxProps) => {
       display: 'flex',
       alignItems: 'center'
     }}>
-      <Box sx={{fontSize: '1.4em'}}>{children}</Box>
+      <Txt bold sx={{fontSize: '1.42em'}}>{children}</Txt>
       <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
         <Box component="img" src={logoEu} sx={{mr: 1, height: 30}}/>
         <Box component="img" src={logo} sx={{height: 22}}/>
@@ -104,7 +106,15 @@ export const SlideBody = (props: BoxProps) => {
 }
 
 export const SlidePanelTitle = (props: TxtProps) => {
-  return <Txt block size="big" bold sx={{display: 'flex', alignItems: 'center', mb: .75, lineHeight: 1.15, mr: -1}} uppercase color="hint" {...props}/>
+  return <Txt
+    block
+    size="big"
+    bold
+    sx={{display: 'flex', alignItems: 'center', mb: .5, lineHeight: 1.15, mr: -1}}
+    uppercase
+    color="hint"
+    {...props}
+  />
 }
 
 export const SlidePanel = ({children, title, sx, noBackground, ...props}: BoxProps & {noBackground?: boolean}) => {
@@ -114,11 +124,13 @@ export const SlidePanel = ({children, title, sx, noBackground, ...props}: BoxPro
       {...props}
       sx={{
         ...sx,
-        mb: pdfTheme.slidePadding,
         p: 1.5,
         background: t => noBackground ? undefined : t.palette.background.paper,
         borderRadius: pdfTheme.slideRadius,
         // border: t => `1px solid ${t.palette.divider}`
+        '&:not(:last-child)': {
+          mb: pdfTheme.slidePadding
+        },
       }}
     >
       {title && <SlidePanelTitle>{title}</SlidePanelTitle>}

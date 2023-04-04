@@ -91,6 +91,7 @@ export const en = Object.freeze({
       hohh60: 'Elderly (60+) HoHH',
       hohhFemale: 'Female HoHH',
       memberWithDisability: 'Member with disability',
+      all: 'Average'
     },
     statusType: {
       conflict_affected_person: 'Conflict affected person',
@@ -106,13 +107,87 @@ export const en = Object.freeze({
     employmentType: 'Type of employment',
     monthlyIncomePerHH: 'Monthly income per HH',
     lowIncome: 'HH',
+    idp: 'IDP',
+    noIdp: 'Non-IDP',
+    idps: 'IDPs',
+    noIdps: 'Non-IDPs',
     uaCitizenShip: 'Ukrainian citizenship',
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
     protHHSnapshot: {
+      numberOfIdp: '# IDPs',
+      numberOfHohh60: '# Elderly (60+) HoHH',
+      numberOfHohhFemale: '# Female HoHH',
+      numberOfMemberWithDisability: '# Member with disability',
+      livelihoodAbout: ({
+        workingIdp,
+        workingNoIdp,
+        dependOfAidIdp,
+        dependOfAidNotIdp,
+      }: {
+        workingIdp: string,
+        workingNoIdp: string,
+        dependOfAidIdp: string,
+        dependOfAidNotIdp: string,
+      }) => `
+        <p>
+          The conflict has made it difficult for people to earn a living, especially for those who have been displaced. 
+          Many IDPs rely on state benefits and aid to get by, as only <b>${workingIdp}</b> of IDP households have at least one employed member, 
+          compared to <b>${workingNoIdp}</b> for non-displaced households.
+        </p>
+        <p>
+          A significant majority of IDP households (<b>${dependOfAidIdp}</b>) receive aid without any employed members, 
+          compared to <b>${dependOfAidNotIdp}</b> for non-displaced households.
+        </p>
+      `,
+      livelihoodAbout2: ({
+        hhIncomeBelow3000,
+        avgHHIncomeBelow3000,
+        avgHHIncomeBelow3000Max,
+      }: {
+        hhIncomeBelow3000: string
+        avgHHIncomeBelow3000: string
+        avgHHIncomeBelow3000Max: string
+      }) => `
+        <p>
+          <b>${hhIncomeBelow3000}</b> of the households being monitored are in poverty<sup>(1)</sup>, 
+          and between <b>${avgHHIncomeBelow3000}</b> to <b>${avgHHIncomeBelow3000Max}</b> of all households are estimated to be in poverty based on household size.
+        </p>
+      `,
+      // <b>${hhIncomeBelow3000}</b> of the monitored HHs are in the poverty range<sup>(1)</sup>.
+      // If we consider the number of members by HH, we can estimate that between <b>${avgHHIncomeBelow3000}</b> and <b>${avgHHIncomeBelow3000Max}</b> of HHs are in the poverty range.
+      livelihoodAboutNotes: `
+        <sup>(1)</sup> The range for social protection is calculated by the Ministry of Finance.
+        In January 2023, the living wage is <b>${formatLargeNumber(2589)}</b> UAH average and <b>${formatLargeNumber(2833)} UAH</b> for children (6-18 years old). <br/><u>https://index.minfin.com.ua</u>.`,
+      allowanceStateOrHumanitarianAsMainSourceOfIncome: 'HHs Depending on state/humanitarian assistance',
+      percentagePopulationByOblast: 'Percentage of peoples by oblast',
       incomeUnder6000ByCategory: `HH category with income below 6,000 UAH`,
       avgHhSize: (n: number) => `Average HH size: ${n.toFixed(1)}`,
+      elderlyWithPension: 'Elderly with pension',
+      idpWithAllowance: 'IDPs with allowance',
+      hhWith3childrenWithPension: 'HHs with 3+ children and pension',
+      noAccommodationDocument: 'HHs without accommodation document',
+      documentationAboutIdp: ({
+        maleWithoutIdpCert,
+        femaleWithoutIdpCert,
+      }: {
+        maleWithoutIdpCert: string
+        femaleWithoutIdpCert: string
+      }) => `
+        The monitoring indicated that most IDPs are registered. Registration is highly facilitated by the digital application Diya.
+        However, a significantly higher percentage of men (<b>${maleWithoutIdpCert}</b>) than women (<b>${femaleWithoutIdpCert}</b>) have not registered.
+        This gender gap can be attributed to the <b>fear of conscription</b>.
+      `,
       enum: {
+        _32_1_What_type_of_allowances_do_you: {
+          idp_allowance_from_the_governm: 'IDP allowance from the government',
+          pension: 'Pension',
+          pension_for_disability: 'Pension for disability',
+          pension_for_three_or_more_chil: 'Pension for three or more children in the household',
+          compensation_for_the_lost_dama: 'Compensation for the lost/damaged house',
+          cash__mpca__from_humanitarians: 'Cash (MPCA) from humanitarians',
+          evacuation_compensation: 'Evacuation compensation',
+        },
         _26_4_Do_you_have_fo_in_your_accomodation: {
           yes__i_have_a_rental_agreement: 'Yes, I have a rental agreement',
           yes__i_have_state_assigned_shelter_with_: 'Yes, I have state assigned shelter with proving documents',

@@ -3,8 +3,8 @@ import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
-import {Box, Icon, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {Box, Divider, Icon, useTheme} from '@mui/material'
+import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ScLineChart} from '../../shared/Chart/ScLineChart'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
@@ -12,7 +12,7 @@ import {Oblast} from '../../shared/UkraineMap/oblastIndex'
 import {format} from 'date-fns'
 import {Txt} from 'mui-extension'
 import {ChartIndicator} from '../../shared/ChartIndicator'
-import {sortObject} from '../../utils/utils'
+import {sortObject, toPercent} from '../../utils/utils'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 import {categoryIcons} from './ProtSnapshotNeeds'
 
@@ -36,23 +36,83 @@ export const ProtSnapshotLivelihood = ({
       <SlideHeader>{m.protHHSnapshot.titles.livelihood}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer sx={{flex: 3}} flexDirection="column">
+          <SlideContainer sx={{flex: 4}} column>
+            <SlideTxt dangerouslySetInnerHTML={{
+              __html: m.protHHSnapshot.livelihoodAbout({
+                workingIdp: toPercent(computed._31_Is_anyone_from_the_household_percent.idp.percent, 0),
+                workingNoIdp: toPercent(computed._31_Is_anyone_from_the_household_percent.notIdp.percent, 0),
+                dependOfAidIdp: toPercent(computed._32_dependingOnAllowancePercent.idp.percent, 0),
+                dependOfAidNotIdp: toPercent(computed._32_dependingOnAllowancePercent.notIdp.percent, 0),
+              })
+            }}/>
             <SlidePanel>
               <PieChartIndicator
                 title={m.atLeastOneMemberWorking}
-                value={computed._31_Is_anyone_from_the_household_percent.percent}
-                evolution={previous.computed._31_Is_anyone_from_the_household_percent.percent}
+                value={computed._31_Is_anyone_from_the_household_percent.all.percent}
+                evolution={computed._31_Is_anyone_from_the_household_percent.all.percent - previous.computed._31_Is_anyone_from_the_household_percent.all.percent}
               />
-            </SlidePanel>
-            <SlidePanel title={m.employmentType}>
+              {/*<PieChartIndicator*/}
+              {/*  title={m.atLeastOneMemberWorking}*/}
+              {/*  value={computed._31_Is_anyone_from_the_household_percent.notIdp.percent}*/}
+              {/*  evolution={computed._31_Is_anyone_from_the_household_percent.notIdp.percent - previous.computed._31_Is_anyone_from_the_household_percent.notIdp.percent}*/}
+              {/*/>*/}
+              <Divider sx={{my: 2}}/>
+              <SlidePanelTitle>{m.employmentType}</SlidePanelTitle>
               <HorizontalBarChartGoogle data={computed._31_2_What_type_of_work}/>
             </SlidePanel>
-            <SlidePanel title={m.mainSourceOfIncome}>
-              <HorizontalBarChartGoogle data={computed._32_What_is_the_main_source_of_inc}/>
+            {/*<SlidePanel>*/}
+            {/*  /!*<HorizontalBarChartGoogle data={computed._32_What_is_the_main_source_of_inc}/>*!/*/}
+            {/*<HorizontalBarChartGoogle data={computed._32_dependingOnAllowance} icons={categoryIcons}/>*/}
+            {/*</SlidePanel>*/}
+
+            <SlidePanel title={m.protHHSnapshot.allowanceStateOrHumanitarianAsMainSourceOfIncome}>
+              <SlideContainer
+                sx={{justifyContent: 'space-between'}}
+              >
+                <PieChartIndicator
+                  sx={{flex: 1}}
+                  title={<Txt size="small">{m.idps}&nbsp;<Txt fontWeight="lighter">({computed.idpsCount})</Txt></Txt>}
+                  value={computed._32_dependingOnAllowancePercent.idp.percent}
+                  evolution={computed._32_dependingOnAllowancePercent.idp.percent - previous.computed._32_dependingOnAllowancePercent.idp.percent}
+                />
+                <PieChartIndicator
+                  sx={{flex: 1}}
+                  title={<Txt size="small">{m.noIdps}&nbsp;<Txt fontWeight="lighter">({computed.noIdpsCount})</Txt></Txt>}
+                  value={computed._32_dependingOnAllowancePercent.notIdp.percent}
+                  evolution={computed._32_dependingOnAllowancePercent.notIdp.percent - previous.computed._32_dependingOnAllowancePercent.notIdp.percent}
+                />
+              </SlideContainer>
+              {/*<PieChartIndicator*/}
+              {/*  sx={{flex: 1}}*/}
+              {/*  title={m.protHHSnapshot.elderlyWithPension}*/}
+              {/*  value={computed._32_1_What_type_of_allowances_byElderly.percent}*/}
+              {/*  evolution={computed._32_1_What_type_of_allowances_byElderly.percent - previous.computed._32_1_What_type_of_allowances_byElderly.percent}*/}
+              {/*/>*/}
+              <Divider sx={{my: 2}}/>
+              <PieChartIndicator
+                title={m.protHHSnapshot.idpWithAllowance}
+                value={computed._32_1_What_type_of_allowances_byIdp.percent}
+                evolution={computed._32_1_What_type_of_allowances_byIdp.percent - previous.computed._32_1_What_type_of_allowances_byIdp.percent}
+              />
+              {/*<PieChartIndicator*/}
+              {/*  sx={{flex: 1}}*/}
+              {/*  title={m.protHHSnapshot.hhWith3childrenWithPension}*/}
+              {/*  value={computed._32_1_What_type_of_allowances_byChildrens.percent}*/}
+              {/*  evolution={computed._32_1_What_type_of_allowances_byChildrens.percent - previous.computed._32_1_What_type_of_allowances_byChildrens.percent}*/}
+              {/*/>*/}
             </SlidePanel>
           </SlideContainer>
-
-          <SlideContainer flexDirection="column" sx={{flex: 3}}>
+          <SlideContainer column sx={{flex: 4}}>
+            <SlideTxt dangerouslySetInnerHTML={{
+              __html: m.protHHSnapshot.livelihoodAbout2({
+                hhIncomeBelow3000: toPercent(
+                  computed._33_What_is_the_aver_income_per_household!.up_to_1_500_uah.value / Arr(Object.values(computed._33_What_is_the_aver_income_per_household!)).sum(_ => _.value),
+                  0
+                ),
+                avgHHIncomeBelow3000: map(computed._33_incomeByIndividualsBelow3000, _ => toPercent(_.true.length / (_.false.length + _.true.length)))!,
+                avgHHIncomeBelow3000Max: map(computed._33_incomeByIndividualsBelow3000Max, _ => toPercent(_.true.length / (_.false.length + _.true.length)))!,
+              })
+            }}/>
             <SlidePanel title={m.monthlyIncomePerHH}>
               <HorizontalBarChartGoogle
                 data={computed._33_What_is_the_aver_income_per_household}
@@ -62,9 +122,13 @@ export const ProtSnapshotLivelihood = ({
                 }), {} as Record<keyof typeof computed._8_What_is_your_household_sizeByIncome, string>)}
               />
             </SlidePanel>
-            <SlidePanel title={m.protHHSnapshot.incomeUnder6000ByCategory}>
-              <HorizontalBarChartGoogle data={computed._33_incomeByCategory} icons={categoryIcons}/>
-            </SlidePanel>
+            <Divider/>
+            <Txt sx={{mt: -1}} size="small" color="hint" dangerouslySetInnerHTML={{
+              __html: m.protHHSnapshot.livelihoodAboutNotes
+            }}/>
+            {/*<SlidePanel title={m.protHHSnapshot.incomeUnder6000ByCategory}>*/}
+            {/*  <HorizontalBarChartGoogle data={computed._33_incomeByCategory} icons={categoryIcons}/>*/}
+            {/*</SlidePanel>*/}
           </SlideContainer>
         </SlideContainer>
       </SlideBody>

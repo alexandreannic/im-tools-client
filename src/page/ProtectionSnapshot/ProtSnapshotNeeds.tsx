@@ -12,6 +12,7 @@ export const categoryIcons = {
   hohh60: 'elderly',
   hohhFemale: 'woman',
   memberWithDisability: 'assist_walker',
+  all: 'vertical_align_center',
 }
 
 export const ProtSnapshotNeeds = ({
@@ -34,14 +35,14 @@ export const ProtSnapshotNeeds = ({
       <SlideHeader>{m.protHHSnapshot.titles.needs}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 3}}>
+          <SlideContainer column sx={{flex: 3}}>
             <SlidePanel title={m.protHHSnapshot.first_priorty}>
               <HorizontalBarChartGoogle
                 data={computed._40_1_What_is_your_first_priorty}
               />
             </SlidePanel>
           </SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 3}}>
+          <SlideContainer column sx={{flex: 3}}>
             {/*<SlidePanel title={m.protectionHHSnapshot._40_1_pn_shelter_byCategory}>*/}
             {/*  <HorizontalBarChartGoogle*/}
             {/*    data={computed._40_1_pn_shelter_byCategory}*/}
@@ -60,7 +61,7 @@ export const ProtSnapshotNeeds = ({
               />
             </SlidePanel>
           </SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 3}}>
+          <SlideContainer column sx={{flex: 3}}>
             <UkraineMap
               base={data.length}
               onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}

@@ -7,6 +7,7 @@ import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/Horizont
 import {AaPieChart} from '../../shared/Chart/AaPieChart'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
+import {ChartIndicator} from '../../shared/ChartIndicator'
 
 export const ProtSnapshotAA = ({
   current: {
@@ -31,7 +32,7 @@ export const ProtSnapshotAA = ({
       <SlideHeader>{m.protHHSnapshot.titles.document}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 3}}>
+          <SlideContainer column sx={{flex: 3}}>
             <HorizontalBarChartGoogle data={computed.B_Interviewer_to_in_ert_their_DRC_office}/>
             <HorizontalBarChartGoogle data={computed._26_4_Do_you_have_fo_in_your_accomodation}/>
             <UkraineMap
@@ -42,10 +43,21 @@ export const ProtSnapshotAA = ({
             <SlidePanel>
               <HorizontalBarChartGoogle data={computed._19_1_1_Please_rate_your_relationship_}/>
             </SlidePanel>
+            <SlidePanel>
+              <ChartIndicator
+                title={m.propertyDamaged}
+                value={computed._27_Has_your_house_apartment_been_.percent}
+                evolution={previous.computed._27_Has_your_house_apartment_been_.percent}
+                percent
+              />
+            </SlidePanel>
+            <SlidePanel title={m.levelOfPropertyDamaged}>
+              <HorizontalBarChartGoogle data={computed._27_1_If_yes_what_is_level_of_the_damage} base={data.length}/>
+            </SlidePanel>
           </SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 2}}>
+          <SlideContainer column sx={{flex: 2}}>
           </SlideContainer>
-          <SlideContainer flexDirection="column" sx={{flex: 3}}>
+          <SlideContainer column sx={{flex: 3}}>
             <UkraineMap
               sx={{mx: 1}}
               data={computed._18_1_1_Please_rate_your_sense_of_safe_map}
