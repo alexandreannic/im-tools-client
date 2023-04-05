@@ -30,12 +30,10 @@ export const ProtSnapshotDisplacement = ({
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
 
-  console.log(computed.oblastCurrent)
   const {_12_3_1_dateDeparture, maxPeopleByOblast} = useMemo(() => {
     const oblastPopulations = Arr([...Enum.values(computed.oblastCurrent), ...Enum.values(computed.oblastOrigins)])
       .map(_ => _.value)
       .compact()
-    console.log(oblastPopulations)
     return {
       _12_3_1_dateDeparture: Arr(Object.values(computed._12_3_1_dateDeparture).map(_ => _.label!).sort((a, b) => a?.localeCompare(b))),
       maxPeopleByOblast: Math.max(data.sum(_ => _.persons.length))
@@ -101,28 +99,21 @@ export const ProtSnapshotDisplacement = ({
                 </SlidePanel>
               </SlideContainer>
               <SlideContainer column>
-                <SlidePanelTitle>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <SlidePanel title={<Txt noWrap>{m.protHHSnapshot.experiencedShellingDuringDisplacement}</Txt>}>
                   <PieChartIndicator
-                    titleIcon="male"
-                    title={m.male}
-                    value={computed._14_1_1_idp_male_without_cert.percent}
-                    evolution={computed._14_1_1_idp_male_without_cert.percent - previous.computed._14_1_1_idp_male_without_cert.percent}
+                    value={computed._12_5_1_During_your_displacement_journPercent.percent}
+                    evolution={computed._12_5_1_During_your_displacement_journPercent.percent - previous.computed._12_5_1_During_your_displacement_journPercent.percent}
                   />
+                </SlidePanel>
+                <SlidePanel title={m.propertyDamaged}>
                   <PieChartIndicator
-                    titleIcon="female"
-                    title={m.female}
-                    value={computed._14_1_1_idp_female_without_cert.percent}
-                    evolution={computed._14_1_1_idp_female_without_cert.percent - previous.computed._14_1_1_idp_female_without_cert.percent}
+                    value={computed._27_Has_your_house_apartment_been_.percent}
+                    evolution={computed._27_Has_your_house_apartment_been_.percent - previous.computed._27_Has_your_house_apartment_been_.percent}
                   />
-                </Box>
-                <UkraineMap
-                  data={computed.idpsWithoutCertByOblast}
-                  fillBaseOn="percent"
-                  onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
-                  title={m.protHHSnapshot.maleWithoutIDPCertByOblast}
-                  sx={{width: 350, margin: 'auto'}}
-                />
+                  <Divider sx={{my: 2}}/>
+                  <SlidePanelTitle>{m.levelOfPropertyDamaged}</SlidePanelTitle>
+                  <HorizontalBarChartGoogle data={computed._27_1_If_yes_what_is_level_of_the_damage} base={data.length}/>
+                </SlidePanel>
               </SlideContainer>
             </SlideContainer>
           </SlideContainer>

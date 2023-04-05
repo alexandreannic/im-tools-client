@@ -4,7 +4,6 @@ import {useI18n} from '../../core/i18n'
 import {Box, Divider, useTheme} from '@mui/material'
 import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {AaPieChart} from '../../shared/Chart/AaPieChart'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {toPercent} from '../../utils/utils'
@@ -51,33 +50,37 @@ export const ProtSnapshotDocument = ({
             {/*    }}*/}
             {/*  />*/}
             {/*</SlidePanel>*/}
-            <SlidePanel>
-              <PieChartIndicator
-                title={m.protHHSnapshot.noAccommodationDocument}
-                value={computed._26_4_noHouseFormalDocPercent.percent}
-              />
-            </SlidePanel>
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.documentationAboutIdp({
                 maleWithoutIdpCert: toPercent(computed._14_1_1_idp_male_without_cert.percent, 0),
                 femaleWithoutIdpCert: toPercent(computed._14_1_1_idp_female_without_cert.percent, 0),
+                withoutDocuments: toPercent(computed._26_4_noHouseFormalDocPercent.percent, 0),
               })
             }}
             />
             <SlidePanel>
-              {/*<PieChartIndicator*/}
-              {/*  title={m.protHHSnapshot.childWithoutBirthCertificate}*/}
-              {/*  value={computed._14_1_1_children_without_cert.percent}*/}
-              {/*  evolution={computed._14_1_1_children_without_cert.percent - previous.computed._14_1_1_children_without_cert.percent}*/}
-              {/*/>*/}
-              {/*<Divider sx={{my: 2}}/>*/}
-              {/*<PieChartIndicator*/}
-              {/*  title={m.protHHSnapshot.elderlyWithoutPensionCertificate}*/}
-              {/*  value={computed._14_1_1_elderly_without_cert.percent}*/}
-              {/*  evolution={computed._14_1_1_elderly_without_cert.percent - previous.computed._14_1_1_elderly_without_cert.percent}*/}
-              {/*/>*/}
-              {/*<Divider sx={{my: 2}}/>*/}
-              
+              <SlidePanelTitle>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
+              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <PieChartIndicator
+                  titleIcon="male"
+                  title={m.male}
+                  value={computed._14_1_1_idp_male_without_cert.percent}
+                  evolution={computed._14_1_1_idp_male_without_cert.percent - previous.computed._14_1_1_idp_male_without_cert.percent}
+                />
+                <PieChartIndicator
+                  titleIcon="female"
+                  title={m.female}
+                  value={computed._14_1_1_idp_female_without_cert.percent}
+                  evolution={computed._14_1_1_idp_female_without_cert.percent - previous.computed._14_1_1_idp_female_without_cert.percent}
+                />
+              </Box>
+              <UkraineMap
+                data={computed.idpsWithoutCertByOblast}
+                fillBaseOn="percent"
+                onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
+                title={m.protHHSnapshot.maleWithoutIDPCertByOblast}
+                sx={{width: 350, margin: 'auto'}}
+              />
               {/*<UkraineMap*/}
               {/*  data={computed.idpsWithoutCertByOblast}*/}
               {/*  fillBaseOn="percent"*/}
@@ -87,13 +90,31 @@ export const ProtSnapshotDocument = ({
               {/*/>*/}
             </SlidePanel>
           </SlideContainer>
-          <SlideContainer column sx={{minWidth: 445}}>
+          <SlideContainer column sx={{flex: 2.4}}>
             <SlidePanel>
               <PieChartIndicator
-                title={m.uaCitizenShip}
-                value={computed._11_What_is_your_citizenship.percent}
+                title={m.protHHSnapshot.noAccommodationDocument}
+                value={computed._26_4_noHouseFormalDocPercent.percent}
+              />
+              <Divider sx={{my: 2}}/>
+              <PieChartIndicator
+                title={m.protHHSnapshot.childWithoutBirthCertificate}
+                value={computed._14_1_1_children_without_cert.percent}
+                evolution={computed._14_1_1_children_without_cert.percent - previous.computed._14_1_1_children_without_cert.percent}
+              />
+              <Divider sx={{my: 2}}/>
+              <PieChartIndicator
+                title={m.protHHSnapshot.elderlyWithoutPensionCertificate}
+                value={computed._14_1_1_elderly_without_cert.percent}
+                evolution={computed._14_1_1_elderly_without_cert.percent - previous.computed._14_1_1_elderly_without_cert.percent}
               />
             </SlidePanel>
+            {/*<SlidePanel>*/}
+            {/*  <PieChartIndicator*/}
+            {/*    title={m.uaCitizenShip}*/}
+            {/*    value={computed._11_What_is_your_citizenship.percent}*/}
+            {/*  />*/}
+            {/*</SlidePanel>*/}
             <SlidePanel title={m.hhBarriersToPersonalDocument}>
               <PieChartIndicator
                 value={computed._16_1_1_Have_you_experienced_a.percent}

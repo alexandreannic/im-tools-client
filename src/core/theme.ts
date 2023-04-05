@@ -98,8 +98,8 @@ export const muiTheme = (dark?: boolean): Theme => {
       error: red,
       mode: dark ? 'dark' : 'light',
       background: {
-        paper: dark ? '#1e1e22' : '#f8f9fa',
-        default: dark ? 'black' : 'white',
+        default: dark ? '#1e1e22' : '#f8f9fa',
+        paper: dark ? 'black' : 'white',
       }
     },
     shape: {
@@ -135,7 +135,7 @@ export const muiTheme = (dark?: boolean): Theme => {
             color: baseTheme.palette.text.primary,
             fontSize: '1rem',
             lineHeight: '1.5',
-            background: baseTheme.palette.background.paper,
+            background: baseTheme.palette.background.default,
             margin: 0,
             boxSizing: 'border-box',
           },

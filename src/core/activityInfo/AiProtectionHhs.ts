@@ -1,9 +1,10 @@
 import {oblasts} from '../uaLocation/oblasts'
 import {raions} from '../uaLocation/raions'
-import {hromada} from '../uaLocation/hromada'
+import {hromadas} from '../uaLocation/hromadas'
+import {makeid} from '../../utils/utils'
+import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 
 export namespace AiProtectionHhs {
-// type Inputs = Record<keyof typeof inputs, any>
 
   export const inputs = {
     ID: {id: 'ci8ugsnldt0vh8z1c'},
@@ -107,7 +108,7 @@ export namespace AiProtectionHhs {
     },
     Oblast: oblasts,
     Raion: raions,
-    Hromada: hromada,
+    Hromada: hromadas,
   }
 
   type GET<T extends keyof typeof inputsOptions> = keyof typeof inputsOptions[T]
@@ -120,7 +121,7 @@ export namespace AiProtectionHhs {
     'Partner Organization'?: GET<'Partner Organization'>
     'Plan Code': GET<'Plan Code'>
     'Oblast': GET<'Oblast'>
-    'Raion': GET<'Oblast'>
+    'Raion': GET<'Raion'>
     'Hromada': GET<'Hromada'>
     'Settlement'?: string
     'Collective Centre'?: string
@@ -225,4 +226,81 @@ export namespace AiProtectionHhs {
 
 // ID des indicators avec sublist from c79be77ldswj831t
 // c3vbxtgldsw1as42 : ck5orstldsw7jfn5
+
+
+  export const makeForm = (params: FormParams): any => {
+    const getKeyId = (id: keyof typeof inputs) => inputs[id].id
+    // const buildOption = <T extends keyof typeof inputsOptions>(t: T, defaultValue?: keyof (typeof inputsOptions)[T]) => {
+    //   return {
+    //     [inputs[t].id]: (inputs[t] as any).optionsId + ':' + ((inputsOptions as any)[t][(params as any)[t] ?? defaultValue])
+    //   }
+    // }
+    // const buildValue = <T extends keyof FormParams>(t: T) => {
+    //   return {[inputs[t].id]: params[t]}
+    // }
+
+    // @ts-ignore
+    const buildOption = <T extends Partial<Record<keyof typeof inputs, any>>, K extends keyof T>(obj: T, k: K, defaultValue?: keyof (typeof inputsOptions)[K]) => {
+      const input = (inputs as any)[k]
+      const value = (obj as any)[k] ?? defaultValue
+      if (value !== undefined)
+        return {[input.id]: input.optionsId + ':' + (inputsOptions as any)[k][value]}
+    }
+
+    const buildValue = <T extends Partial<Record<keyof typeof inputs, any>>, K extends keyof T>(obj: T, k: K) => {
+      const input = (inputs as any)[k]
+      const value = obj[k]
+      if (value !== undefined)
+        return {[input.id]: value}
+    }
+    const recordId = 'alexdrc' + makeid(9)
+    return {
+      'changes': [
+        {
+          formId: 'cas3n26ldsu5aea5',
+          recordId,
+          parentRecordId: null,
+          fields: {
+            ...buildOption(params, 'Partner Organization', 'DRC - Danish Demining Group (DRC-DDG)'),
+            ...buildOption(params, 'Plan Code'),
+            ...buildOption(params, 'Oblast'),
+            ...buildOption(params, 'Raion'),
+            ...buildOption(params, 'Hromada'),
+            ...buildValue(params, 'Settlement'),
+            ...buildValue(params, 'Collective Centre'),
+            // 'Response Theme': '',
+          },
+        },
+        ...params.subActivities.map(x => {
+          return {
+            formId: 'cy3vehlldsu5aeb6',
+            recordId: 'alexdrc' + makeid(7),
+            parentRecordId: recordId,
+            fields: {
+              ...buildValue(x, 'Reporting Month'),
+              ...buildOption(x, 'Population Group'),
+              ...buildOption(x, 'Protection Indicators', '# of persons reached through protection monitoring'),
+              // ...buildOption(x, 'Protection Sub-Indicators', '# of persons reached through protection monitoring'),
+              ...buildValue(x, 'Total Individuals Reached'),
+              ...buildValue(x, 'Girls'),
+              ...buildValue(x, 'Boys'),
+              ...buildValue(x, 'Adult Women'),
+              ...buildValue(x, 'Adult Men'),
+              ...buildValue(x, 'Elderly Women'),
+              ...buildValue(x, 'Elderly Men'),
+              ...buildValue(x, 'People with disability'),
+            }
+          }
+        }),
+      ]
+    }
+  }
+
+  export const findLocation = <K extends string>(loc: Record<K, string>, a: string): K => {
+    const mapped = Enum.keys(loc).find(_ => _.includes(a))
+    if (!mapped) {
+      throw new Error(`Cannot find location ${a}`)
+    }
+    return mapped
+  }
 }

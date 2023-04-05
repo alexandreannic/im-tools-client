@@ -23,7 +23,6 @@ export const ProtSnapshotSample = ({
   const {m, formatLargeNumber} = useI18n()
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
-  console.log('categoriesRatio,', computed.categoriesRatio)
   return (
     <Slide>
       <SlideHeader>{m.sample}</SlideHeader>

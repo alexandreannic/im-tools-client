@@ -1,7 +1,7 @@
 import {Box, BoxProps, Icon} from '@mui/material'
 import logo from '../../core/img/drc-logo.png'
 import {Txt, TxtProps} from 'mui-extension'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {usePdfContext} from './PdfLayout'
 import {Property} from 'csstype'
 import logoEu from '../../core/img/eu.png'
@@ -117,7 +117,10 @@ export const SlidePanelTitle = (props: TxtProps) => {
   />
 }
 
-export const SlidePanel = ({children, title, sx, noBackground, ...props}: BoxProps & {noBackground?: boolean}) => {
+export const SlidePanel = ({children, title, sx, noBackground, ...props}: Omit<BoxProps, 'title'> & {
+  title?: ReactNode,
+  noBackground?: boolean
+}) => {
   const {pdfTheme} = usePdfContext()
   return (
     <Box

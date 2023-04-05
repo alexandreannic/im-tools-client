@@ -184,8 +184,10 @@ export namespace KoboFormProtHH {
       _4_What_oblast_are_you_from_iso: OblastIndex.findByKoboKey(a._4_What_oblast_are_you_from!)?.iso as OblastISO | undefined,
       _12_1_What_oblast_are_you_from_001: a._12_1_What_oblast_are_you_from_001 as undefined | GetType<'oblast'>,
       _12_1_What_oblast_are_you_from_001_iso: OblastIndex.findByKoboKey(a._12_1_What_oblast_are_you_from_001!)?.iso as OblastISO | undefined,
-      _12_8_1_What_would_be_the_deciding_fac: (a._12_8_1_What_would_be_the_deciding_fac?.split(' ') as GetType<'factorsToReturn'>[] | undefined)
-        ?.map((_: any) => _ === 'government_regains_territory_f' ? 'improvement_in_security_situat' : _),
+      _12_8_1_What_would_be_the_deciding_fac: (a._12_8_1_What_would_be_the_deciding_fac?.split(' ').map(_ => fnSwitch(_, {
+        cessation_of_hostilities: 'improvement_in_security_situat',
+        government_regains_territory_f: 'improvement_in_security_situat',
+      }, _ => _)) as GetType<'factorsToReturn'>[] | undefined),
       _12_7_1_Do_you_plan_to_return_to_your_: fnSwitch(a._12_7_1_Do_you_plan_to_return_to_your_!, {
         'yes21': 'yes',
         'don_t21': 'no',
@@ -241,6 +243,21 @@ export namespace KoboFormProtHH {
         nonec: undefined,
         otherc: undefined,
       }, _ => _)) as GetType<'_32_1_What_type_of_allowances_do_you'>[] | undefined,
+      _12_5_1_During_your_displacement_journ: a._12_5_1_During_your_displacement_journ?.split(' ').map(_ => fnSwitch(_, {
+        none215: undefined,
+        prefer_not_to_answer: undefined,
+      }, _ => _)) as GetType<'_12_5_1_During_your_displacement_journ'>[] | undefined,
+      _17_1_1_Does_any_of_them_recieve_state: fnSwitch(a._17_1_1_Does_any_of_them_recieve_state!, {
+        yes26: true,
+        no26: false,
+      }, _ => undefined),
+      _16_2_1_Do_you_have_a_household_member: a._16_2_1_Do_you_have_a_household_member?.split(' ').map(_ => fnSwitch(_, {
+        prefer_not_to_answer: undefined
+      }, _ => _)),
+      _19_1_2_What_factors_are_influencing_t: a._19_1_2_What_factors_are_influencing_t?.split(' ') as GetType<'_19_1_2_What_factors_are_influencing_t'>[] | undefined,
+      _13_4_3_If_separated_from_a_household_: fnSwitch(a._13_4_3_If_separated_from_a_household_!, {
+        prefer_not_to_answer: undefined,
+      }, _ => _) as GetType<'_13_4_3_If_separated_from_a_household_'> | undefined
     }
   }
 }

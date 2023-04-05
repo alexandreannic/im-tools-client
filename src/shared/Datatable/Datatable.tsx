@@ -27,7 +27,7 @@ export interface DatatableProps<T> {
   loading?: boolean
   total?: number
   data?: T[]
-  getRenderRowKey?: (_: T) => string
+  getRenderRowKey?: (_: T, index: number) => string
   onClickRows?: (_: T, event: React.MouseEvent<HTMLTableRowElement>) => void
   columns: DatatableColumnProps<T>[]
   showColumnsToggle?: boolean
@@ -155,6 +155,7 @@ export const Datatable = <T extends any = any>({
                   <TableCell
                     key={i}
                     sx={{
+                      ..._.number && {textAlign: 'right'},
                       color: t => t.palette.text.secondary,
                       ...(_.stickyEnd && sxStickyEnd),
                     }}
@@ -200,7 +201,7 @@ export const Datatable = <T extends any = any>({
             )}
             {data?.map((item, i) => (
               <TableRow
-                key={getRenderRowKey ? getRenderRowKey(item) : i}
+                key={getRenderRowKey ? getRenderRowKey(item, i) : i}
                 onClick={e => onClickRows?.(item, e)}
                 sx={{
                   ...(onClickRows && {

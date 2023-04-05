@@ -12,6 +12,11 @@ export class KoboFormClient {
   constructor(private client: ApiClient) {
   }
 
+  readonly getLocalFormAnswers = (filters: AnswersFilters = {}) => {
+    return this.client.get<KoboAnswer[]>(`/kobo/local-form`, {qs: filters})
+      .then(_ => _.map(Kobo.mapAnswerMetaData))
+  }
+
   readonly getAnswers = (serverId: UUID, formId: UUID, filters: AnswersFilters = {}) => {
     return this.client.get<ApiPaginate<KoboAnswer>>(`/kobo/${serverId}/${formId}/answers`, {qs: filters})
       .then(_ => ({..._, data: _.data.map(Kobo.mapAnswerMetaData)}))

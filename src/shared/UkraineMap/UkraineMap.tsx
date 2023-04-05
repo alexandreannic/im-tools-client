@@ -39,7 +39,6 @@ export const UkraineMap = ({
   const {max, min, maxPercent, minPercent} = useMemo(() => {
     const _data = Arr(Enum.values(data)).compact()
     const values = _data.map(_ => _!.value ?? 0)
-    console.log('_data', _data)
     const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.map(_ => {
       const b = (base ?? _.base) || 1
       if (!b) {

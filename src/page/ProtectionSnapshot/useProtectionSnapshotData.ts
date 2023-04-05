@@ -59,7 +59,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         filter: _ => true,
         categories: categoryFilters,
       }),
-      
+
       _33_incomeByIndividualsBelow3000: data
         .filter(_ => !!_._33_What_is_the_aver_income_per_household && _._33_What_is_the_aver_income_per_household !== 'more_than_11_000_uah')
         .map(d => {
@@ -146,6 +146,19 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         value: _ => !_ || !_.includes('birth_certificate7'),
       }),
 
+      _13_4_1_Are_you_separated_from_any_of_percent: ChartTools.percentage({
+        data: data.map(_ => _._13_4_1_Are_you_separated_from_any_of_),
+        value: _ => !!_
+      }),
+
+      _19_1_2_What_factors_are_influencing_t: chain(ChartTools.multiple({
+        data: data.map(_ => _._19_1_2_What_factors_are_influencing_t).compact(),
+        filterValue: ['other_please_specify28']
+      }))
+        .map(ChartTools.setLabel(m.protHHSnapshot.enum._19_1_2_What_factors_are_influencing_t))
+        .map(ChartTools.sortBy.value)
+        .val,
+
       _14_1_1_What_type_of_ocuments_do_you_have: chain(ChartTools.multiple({
         data: data.flatMap(_ => _.persons).map(_ => _.personalDoc).compact(),
         map: _ => _ === 'national_passport_diia_app7' || _ === 'national_passport_book7' || _ === 'national_passport_card7' ? 'national_passport' : _
@@ -172,6 +185,13 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         value: _ => _ === 'ukrainian',
       }),
 
+      _13_4_3_If_separated_from_a_household_: chain(ChartTools.single({
+        data: data.map(_ => _._13_4_3_If_separated_from_a_household_).compact(),
+      }))
+        .map(ChartTools.setLabel(m.protHHSnapshot.enum._13_4_3_If_separated_from_a_household_))
+        .map(ChartTools.sortBy.value)
+        .val,
+      
       _19_1_1_Please_rate_your_relationshipByOblast: ChartTools.byCategory({
         data: data,
         categories: categoryCurrentOblasts,
@@ -187,10 +207,6 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           .compact(),
       }))
         .map(ChartTools.setLabel(m.protHHSnapshot.enum._19_1_1_Please_rate_your_relationship_))
-        .map(x => {
-          console.log('???', x)
-          return x
-        })
         .map(ChartTools.sortBy.custom([
           '1__very_bad',
           '2__bad',
@@ -229,9 +245,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _26_4_noHouseFormalDocPercent: ChartTools.percentage({
         data: data.map(_ => _._26_4_Do_you_have_fo_in_your_accomodation).compact(),
-        value: _ => _ === 'no_formal_documents' || _ === 'verbal_agreement' 
+        value: _ => _ === 'no_formal_documents' || _ === 'verbal_agreement'
       }),
-      
+
       _26_4_Do_you_have_fo_in_your_accomodation: chain(ChartTools.single({
         data: data.map(_ => _._26_4_Do_you_have_fo_in_your_accomodation).compact(),
       }))
@@ -404,6 +420,11 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .map(ChartTools.setLabel(m.protHHSnapshot.enum.propertyDamageTitle))
         .map(ChartTools.setDesc(m.protHHSnapshot.enum.propertyDamageDesc))
         .val,
+
+      _12_5_1_During_your_displacement_journPercent: ChartTools.percentage({
+        data: data.flatMap(_ => _._12_5_1_During_your_displacement_journ).compact(),
+        value: _ => _ === 'shelling_or_missile_attacks_an',
+      }),
 
       C_Vulnerability_catergories_that: chain(ChartTools.multiple({
         data: data.map(_ => _.C_Vulnerability_catergories_that).compact(),

@@ -12,9 +12,9 @@ export interface PageProps extends BoxProps {
   children: ReactNode
 }
 
-export const Page = ({loading, children, ...props}: PageProps) => {
+export const Page = ({loading, children, sx, ...props}: PageProps) => {
   return (
-    <MxPage {...props}>
+    <MxPage {...props} sx={{...sx, my: 2}}>
       {loading && (
         <LinearProgress/>
       )}

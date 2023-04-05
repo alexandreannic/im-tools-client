@@ -102,7 +102,7 @@ export const en = Object.freeze({
     shelter: 'Shelter',
     health: 'Health',
     cash: 'Cash',
-    levelOfPropertyDamaged: 'Level of property damaged',
+    levelOfPropertyDamaged: 'Level of damaged',
     mainSourceOfIncome: 'Main source of income',
     employmentType: 'Type of employment',
     monthlyIncomePerHH: 'Monthly income per HH',
@@ -115,6 +115,7 @@ export const en = Object.freeze({
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
     protHHSnapshot: {
+      experiencedShellingDuringDisplacement: `Experienced shelling during displacement`,
       numberOfIdp: '# IDPs',
       numberOfHohh60: '# Elderly (60+) HoHH',
       numberOfHohhFemale: '# Female HoHH',
@@ -160,7 +161,7 @@ export const en = Object.freeze({
         <sup>(1)</sup> The range for social protection is calculated by the Ministry of Finance.
         In January 2023, the living wage is <b>${formatLargeNumber(2589)}</b> UAH average and <b>${formatLargeNumber(2833)} UAH</b> for children (6-18 years old). <br/><u>https://index.minfin.com.ua</u>.`,
       allowanceStateOrHumanitarianAsMainSourceOfIncome: 'HHs Depending on state/humanitarian assistance',
-      percentagePopulationByOblast: 'Percentage of peoples by oblast',
+      percentagePopulationByOblast: 'Population by oblast',
       incomeUnder6000ByCategory: `HH category with income below 6,000 UAH`,
       avgHhSize: (n: number) => `Average HH size: ${n.toFixed(1)}`,
       elderlyWithPension: 'Elderly with pension',
@@ -170,15 +171,61 @@ export const en = Object.freeze({
       documentationAboutIdp: ({
         maleWithoutIdpCert,
         femaleWithoutIdpCert,
+        withoutDocuments,
       }: {
         maleWithoutIdpCert: string
         femaleWithoutIdpCert: string
+        withoutDocuments: string
       }) => `
-        The monitoring indicated that most IDPs are registered. Registration is highly facilitated by the digital application Diya.
-        However, a significantly higher percentage of men (<b>${maleWithoutIdpCert}</b>) than women (<b>${femaleWithoutIdpCert}</b>) have not registered.
-        This gender gap can be attributed to the <b>fear of conscription</b>.
+        <p>
+          The monitoring indicated that most IDPs are registered. Registration is highly facilitated by the digital application Diya.
+          However, a significantly higher percentage of men (<b>${maleWithoutIdpCert}</b>) than women (<b>${femaleWithoutIdpCert}</b>) have not registered.
+          This gender gap can be attributed to the <b>fear of conscription</b>.
+        </p>
+        <p>
+          <b>${withoutDocuments}</b> of monitored HHs don't have formal document and relay on verbal agreement
+          making them exposed to risks of eviction.
+        </p>
       `,
       enum: {
+        _13_4_3_If_separated_from_a_household_: {
+          remained_behind_in_the_area_of: 'Remained behind in the area of origin',
+          do_not_know_their_whereabouts: 'Do not know their whereabouts',
+          serving_in_the_military: 'Serving in the military',
+          displaced_to_another_location_: 'Displaced to another location in Ukraine',
+          other223: 'Other',
+          displaced_to_another_country_o: 'Displaced to another country outside Ukraine',
+        },
+        _19_1_2_What_factors_are_influencing_t: {
+          language_differrence: 'Language differrence',
+          threats_recieved: 'Threats recieved',
+          bullying: 'Bullying',
+          discrimination: 'Discrimination',
+          tension_over_humanitarian_assi: 'Tension over humanitarian assistance',
+          tension_over_access_to_service: 'Tension over access to services and/or employment opporunties',
+          other_please_specify28: 'Other',
+        },
+        _16_2_1_Do_you_have_a_household_member: {
+          seeing__even_if_wearing_glasses: 'Seeing, even if wearing glasses',
+          hearing__even_if_using_a_hearing_aid: 'Hearing, even if using a hearing aid',
+          walking_or_climbing_steps: 'Walking or climbing steps',
+          remembering_or_concentration: 'Remembering or concentration',
+          self_care__such_as_washing_all_over_or_d: 'Self-care, such as washing all over or dressing',
+          using_your_usual__customary__language__h: 'Using your usual (customary) language, have difficulty communicating, for example understanding or being understood',
+          no: 'No',
+        },
+        _12_5_1_During_your_displacement_journ: {
+          looting_robbery: 'Looting/robbery',
+          physical_attacks: 'Physical attacks',
+          shelling_or_missile_attacks_an: 'Shelling or missile attacks and/or fear of such attacks',
+          harassment_at_checkpoints: 'Harassment at checkpoints',
+          movement_restrictions: 'Movement restrictions',
+          incident_of_gbv: 'Incident of GBV',
+          extortion: 'Extortion',
+          destruction_of_personal_proper: 'Destruction of personal property',
+          hate_speech: 'Hate speech',
+          other_please_explain215: 'Other',
+        },
         _32_1_What_type_of_allowances_do_you: {
           idp_allowance_from_the_governm: 'IDP allowance from the government',
           pension: 'Pension',
@@ -389,11 +436,11 @@ export const en = Object.freeze({
         },
         factorsToReturn: {
           shelter_is_repaired: 'Shelter is repaired',
-          improvement_in_security_situat: 'Improvement in security situation',
+          improvement_in_security_situat: 'Security situation improvement',
           increased_service_availability: 'Increased service availability',
           infrastructure__including_heat: 'Infrastructure is repaired',
-          cessation_of_hostilities: 'Cessation of hostilities',
           health_facilties_are_accessibl: 'Health facilities accessible',
+          // cessation_of_hostilities: 'Cessation of hostilities',
           // government_regains_territory_f: 'Government regains territory from NGCA',
           other219: 'Other',
           education_facilities__schools_: 'Education facilities accessible',

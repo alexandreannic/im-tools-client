@@ -22,10 +22,6 @@ export const ProtSnapshotHome = ({
   const {m, formatLargeNumber, formatDate} = useI18n()
   const theme = useTheme()
 
-  useEffect(() => {
-    console.log(computed._18_1_1_Please_rate_your_sense_of_safe_map)
-  }, [])
-
   return (
     <Slide sx={{height: '100%', weight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <Box sx={{maxWidth: '50%'}}>

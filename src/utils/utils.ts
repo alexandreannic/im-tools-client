@@ -85,3 +85,16 @@ export const getAvgAgeAndSex = (data: any[]) => {
   console.info('sexMember', sexMember.filter(_ => _ === 'female').length / sexMember.length)
   console.info('sexHoHH', sexHoHH.filter(_ => _ === 'female').length / sexHoHH.length)
 }
+
+export const makeid = (length = 14) => {
+  let result = ''
+  const letters = 'abcdefghijklmnopqrstuvwxyz'
+  const numbers = '0123456789'
+  const characters = letters + numbers
+  const charactersLength = characters.length
+  for (let i = 0; i < length - 1; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+
+}

@@ -30,6 +30,7 @@ export const Panel = forwardRef(({
       ref={ref}
       elevation={elevation}
       sx={{
+        background: t => t.palette.background.paper,
         ...expended ? {
           zIndex: 1,
           position: 'fixed',
