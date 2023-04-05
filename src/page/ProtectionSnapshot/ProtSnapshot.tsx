@@ -9,7 +9,7 @@ import {Pdf} from 'shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {useI18n} from '../../core/i18n'
-import {AaSelect} from '../../shared/Select/Select'
+import {ItSelect} from '../../shared/Select/Select'
 import {ProtSnapshotDocument} from './ProtSnapshotDocument'
 import {ProtSnapshotAA} from './ProtSnapshotAA'
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
@@ -190,7 +190,7 @@ export const ProtSnapshot = ({
             />
             <Box>
               <Box sx={{display: 'flex', alignItems: 'center'}}>
-                <AaSelect<KoboFormProtHH.GetType<'vulnerability'>>
+                <ItSelect<KoboFormProtHH.GetType<'vulnerability'>>
                   multiple
                   label={m.vulnerabilities}
                   value={filters.C_Vulnerability_catergories_that ?? []}
@@ -199,7 +199,7 @@ export const ProtSnapshot = ({
                     ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
                   )}
                 />
-                <AaSelect<KoboFormProtHH.Status>
+                <ItSelect<KoboFormProtHH.Status>
                   multiple
                   label={m.status}
                   value={filters._12_Do_you_identify_as_any_of ?? []}

@@ -1,4 +1,4 @@
-export const hromada = {
+export const hromadaRefs = {
   UA0102003: {
     parent: 'UA0102',
     ua: 'Ароматненська',

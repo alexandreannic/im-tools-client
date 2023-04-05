@@ -21,7 +21,7 @@ interface AaSelectSimple<T, V> extends AaSelectBase<T, V> {
 
 type AaSelect<T, V> = AaSelectSimple<T, V> | AaSelectMultiple<T, V>
 
-export const AaSelect = <T extends string, V extends string = string>({
+export const ItSelect = <T extends string, V extends string = string>({
   value,
   multiple,
   label,

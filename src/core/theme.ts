@@ -139,6 +139,15 @@ export const muiTheme = (dark?: boolean): Theme => {
             margin: 0,
             boxSizing: 'border-box',
           },
+          'table.sheet': {
+            borderCollapse: 'collapse',
+            borderSpacing: 0,
+          },
+          '.sheet td': {
+            padding: '2px',
+            border: `1px solid ${baseTheme.palette.divider}`
+            // background: 'red',
+          },
           ul: {
             marginTop: '.5em',            
           },

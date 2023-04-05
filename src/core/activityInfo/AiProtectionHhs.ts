@@ -3,6 +3,8 @@ import {raions} from '../uaLocation/raions'
 import {hromadas} from '../uaLocation/hromadas'
 import {makeid} from '../../utils/utils'
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {hromadaRefs} from '../uaLocation/hromadaRef'
+import {raionRefs} from '../uaLocation/raionRef'
 
 export namespace AiProtectionHhs {
 
@@ -296,11 +298,25 @@ export namespace AiProtectionHhs {
     }
   }
 
-  export const findLocation = <K extends string>(loc: Record<K, string>, a: string): K => {
-    const mapped = Enum.keys(loc).find(_ => _.includes(a))
-    if (!mapped) {
-      throw new Error(`Cannot find location ${a}`)
-    }
+  export const findLocation = <K extends string>(loc: Record<K, string>, name: string): K | undefined => {
+    const harmonizedName = fnSwitch(name, {
+      Cnernivetskyi: 'Chernivetska',
+    }, _ => _)
+    const mapped = Enum.keys(loc).find(_ => _.includes(harmonizedName))
+    // if (!mapped) {
+    //   throw new Error(`Cannot find location ${a}`)
+    // }
     return mapped
   }
+
+  export const searchRaion = (name: string): string | undefined => {
+    const parent = Enum.values(hromadaRefs).find(_ => _.en === name)?.parent as keyof typeof raionRefs | undefined
+    if (parent) {
+      const enLabel = raionRefs[parent]?.en
+      return Enum.keys(raions).find(_ => _.includes(enLabel))
+    }
+  }
 }
+
+//^(\d+)\t([^\t]+)\t([^\t\n]+)$\n
+//$1: {hromada: '$2', settlement: '$3'},\n

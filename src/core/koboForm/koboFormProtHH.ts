@@ -6,6 +6,9 @@ import {Messages} from '../i18n/localization/en'
 
 export namespace KoboFormProtHH {
 
+  export const elderlyLimitIncluded = 60
+  export const isElderly = (age: number) => age >= elderlyLimitIncluded
+  
   export const ageGroup = Object.freeze({
     '0 - 4': [0, 4],
     '5 - 11': [5, 11],
@@ -13,7 +16,7 @@ export namespace KoboFormProtHH {
     '18 - 24': [18, 24],
     '25 - 49': [25, 49],
     '50 - 59': [50, 59],
-    '60+': [60, Infinity],
+    '60+': [elderlyLimitIncluded, Infinity],
   })
 
   enum KoboGender {
@@ -91,17 +94,19 @@ export namespace KoboFormProtHH {
       ] as [string, string, string, string]),
     ]
     return Arr(fields)
-      .map(([ageCol, sexCol, personalDoc, statusDoc]) => ({
-        age: a[ageCol] as number | undefined,
-        gender: mapGender(a[sexCol]),
-        personalDoc: a[personalDoc]?.split(' ') as GetType<'_14_1_1_What_type_of_ocuments_do_you_have'>[] | undefined,
-        statusDoc: a[statusDoc]?.split(' ') as GetType<'_14_2_1_Do_you_or_your_househo'>[] | undefined
-      }))
+      .map(([ageCol, sexCol, personalDoc, statusDoc]) => {
+        return ({
+          age: isNaN(a[ageCol]) ? undefined : a[ageCol],
+          gender: mapGender(a[sexCol]),
+          personalDoc: a[personalDoc]?.split(' ') as GetType<'_14_1_1_What_type_of_ocuments_do_you_have'>[] | undefined,
+          statusDoc: a[statusDoc]?.split(' ') as GetType<'_14_2_1_Do_you_or_your_househo'>[] | undefined
+        })
+      })
       .filter(x => x.gender !== undefined || x.age !== undefined || x.personalDoc !== undefined)
   }
 
   export const filterByHoHH60 = (row: Answer): boolean => {
-    return row.persons[0]?.age !== undefined && row.persons[0].age >= 60
+    return row.persons[0]?.age !== undefined && isElderly(row.persons[0].age)
   }
 
   export const filterByHoHHFemale = (row: Answer): boolean => {
