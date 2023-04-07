@@ -11,11 +11,11 @@ export const Slide = (props: BoxProps) => {
     <Box
       {...props}
       sx={{
-        background: t => t.palette.background.default,
+        background: t => t.palette.background.paper,
         overflow: 'hidden',
+        width: '29.7cm',
+        height: '21.0cm',
         '@media screen': {
-          width: '29.7cm',
-          height: '21.0cm',
           // aspectRatio: (297 / 210) + '',
           mb: 2,
           borderRadius: '6px',
@@ -71,7 +71,7 @@ export const SlideContainer = ({
       display: 'flex',
       flex: 1,
       ...column && {flexDirection: 'column',},
-      '& > :not(:last-child)': (column) ? {mb: t.slidePadding} : {mr: t.slidePadding},
+      '& > :not(:last-child)': column ? {mb: t.slidePadding} : {mr: t.slidePadding},
       ...sx,
     }}>
       {children}
@@ -128,7 +128,7 @@ export const SlidePanel = ({children, title, sx, noBackground, ...props}: Omit<B
       sx={{
         ...sx,
         p: 1.5,
-        background: t => noBackground ? undefined : t.palette.background.paper,
+        background: t => noBackground ? undefined : t.palette.background.default,
         borderRadius: pdfTheme.slideRadius,
         // border: t => `1px solid ${t.palette.divider}`
         '&:not(:last-child)': {
@@ -159,7 +159,7 @@ export const SlideCard = ({
       },
       p: 1.25,
       width: '100%',
-      background: t => t.palette.background.paper,
+      background: t => t.palette.background.default,
       borderRadius: pdfTheme.slideRadius,
       textAlign: 'center',
       ...sx,

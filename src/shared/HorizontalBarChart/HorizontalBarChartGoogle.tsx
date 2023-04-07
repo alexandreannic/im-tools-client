@@ -103,7 +103,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
                   }
                 }}>
                   <Box sx={{mt: .5, pt: .5, pb: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', mb: barHeight + 'px',}}>
-                    <Txt sx={{p: 0, pr: 2, flex: 1}} truncate>
+                    <Txt sx={{p: 0, pr: 1, flex: 1}} truncate>
                       <Txt block truncate>
                         {item.label ?? k}&nbsp;
                         {(labels && labels[k]) ?? ''}
@@ -116,7 +116,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
                     {!item.disabled && (
                       <Box sx={{display: 'flex', textAlign: 'right',}}>
                         {!hideValue && (
-                          <Txt color="hint" sx={{flex: 1, ml: 2}}>{formatLargeNumber(item.value)}</Txt>
+                          <Txt color="hint" sx={{flex: 1}}>{formatLargeNumber(item.value)}</Txt>
                         )}
                         <Txt sx={{
                           flex: 1,

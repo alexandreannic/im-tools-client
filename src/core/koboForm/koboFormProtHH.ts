@@ -8,7 +8,7 @@ export namespace KoboFormProtHH {
 
   export const elderlyLimitIncluded = 60
   export const isElderly = (age: number) => age >= elderlyLimitIncluded
-  
+
   export const ageGroup = Object.freeze({
     '0 - 4': [0, 4],
     '5 - 11': [5, 11],
@@ -258,13 +258,17 @@ export namespace KoboFormProtHH {
       }, _ => undefined),
       _16_2_1_Do_you_have_a_household_member: a._16_2_1_Do_you_have_a_household_member?.split(' ').map(_ => fnSwitch(_, {
         prefer_not_to_answer: undefined
-      }, _ => _)),
+      }, _ => _)) as GetType<'_16_2_1_Do_you_have_a_household_member'>[] | undefined,
       _19_1_2_What_factors_are_influencing_t: a._19_1_2_What_factors_are_influencing_t?.split(' ') as GetType<'_19_1_2_What_factors_are_influencing_t'>[] | undefined,
       _13_4_3_If_separated_from_a_household_: fnSwitch(a._13_4_3_If_separated_from_a_household_!, {
         prefer_not_to_answer: undefined,
-      }, _ => _) as GetType<'_13_4_3_If_separated_from_a_household_'> | undefined
+        do_not_know_their_whereabouts: undefined,
+      }, _ => _) as GetType<'_13_4_3_If_separated_from_a_household_'> | undefined,
+      _15_1_1_What_housing_land_and: a._15_1_1_What_housing_land_and?.split(' ').map(_ => fnSwitch(_, {
+        prefer_not_to_answer24: undefined
+      }, _ => _)) as GetType<'_15_1_1_What_housing_land_and'>[] | undefined,
+      _26_1_1_Where_do_you_live_now: a._26_1_1_Where_do_you_live_now?.split(' ') as GetType<'_26_1_1_Where_do_you_live_now'>[] | undefined,
+      _17_1_2_If_not_why: a._17_1_2_If_not_why?.split(' ') as GetType<'_17_1_2_If_not_why'> | undefined
     }
   }
 }
-
-

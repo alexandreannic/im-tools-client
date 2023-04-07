@@ -23,25 +23,26 @@ export const ProtSnapshotHome = ({
   const theme = useTheme()
 
   return (
-    <Slide sx={{height: '100%', weight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      <Box sx={{maxWidth: '50%'}}>
-        <Box sx={{fontSize: '3em'}}>{m.protHHSnapshot.title}</Box>
-        <Txt block color="hint" sx={{fontSize: '1.6em', mb: 2}}>{m.protHHSnapshot.subTitle}</Txt>
-        <SlideTxt size="big" color="hint" sx={{display: 'block', mb: 2}}>
-          {format(period.start, 'LLLL yyyy')} - {format(period.end, 'LLLL yyyy')}
-        </SlideTxt>
-        <SlideTxt sx={{display: 'block'}}>{m.protHHSnapshot.disclaimer}</SlideTxt>
-        
-        <Box sx={{
-          mt: 5,
-          display: 'flex', 
-          alignItems: 'center',
-          // justifyContent: 'flex-end'
-        }}>
-          <Box component="img" src={logoDrc} sx={{height: 24}}/>
-          <Box component="img" src={logoEu} sx={{height: 30, ml: 2}}/>
-        </Box>
+    <Slide>
+      <Box sx={{height: '100%', weight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <Box sx={{maxWidth: '50%'}}>
+          <Box sx={{fontSize: '3em'}}>{m.protHHSnapshot.title}</Box>
+          <Txt block color="hint" sx={{fontSize: '1.6em', mb: 2}}>{m.protHHSnapshot.subTitle}</Txt>
+          <SlideTxt size="big" color="hint" sx={{display: 'block', mb: 2}}>
+            {format(period.start, 'LLLL yyyy')} - {format(period.end, 'LLLL yyyy')}
+          </SlideTxt>
+          <SlideTxt sx={{display: 'block'}}>{m.protHHSnapshot.disclaimer}</SlideTxt>
 
+          <Box sx={{
+            mt: 5,
+            display: 'flex',
+            alignItems: 'center',
+            // justifyContent: 'flex-end'
+          }}>
+            <Box component="img" src={logoDrc} sx={{height: 24}}/>
+            <Box component="img" src={logoEu} sx={{height: 30, ml: 2}}/>
+          </Box>
+        </Box>
       </Box>
     </Slide>
   )

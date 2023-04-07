@@ -13,13 +13,14 @@ import {ApiClient} from './core/sdk/server/ApiClient'
 import {ConfigContextProvider} from './core/context/ConfigContext'
 import {NfiProvider} from './core/context/NfiContext'
 import {KoboProvider} from './core/context/KoboContext'
+import {appConfig} from './conf/AppConfig'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
 
 const api = new ApiSdk(new ApiClient({
-  baseUrl: `http://localhost:5001`,
+  baseUrl: appConfig.apiURL,
 }))
 
 root.render(

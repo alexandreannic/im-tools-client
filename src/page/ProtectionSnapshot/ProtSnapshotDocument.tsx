@@ -93,21 +93,20 @@ export const ProtSnapshotDocument = ({
           <SlideContainer column sx={{flex: 2.4}}>
             <SlidePanel>
               <PieChartIndicator
+                title={m.protHHSnapshot.hhWDisabilityWoAllowance}
+                value={computed.disabilityWithoutAllowance.percent}
+                evolution={computed.disabilityWithoutAllowance.percent - previous.computed.disabilityWithoutAllowance.percent}
+              />
+              <Divider sx={{my: 2}}/>
+              <PieChartIndicator
                 title={m.protHHSnapshot.noAccommodationDocument}
                 value={computed._26_4_noHouseFormalDocPercent.percent}
+                evolution={computed._26_4_noHouseFormalDocPercent.percent - previous.computed._26_4_noHouseFormalDocPercent.percent}
               />
-              <Divider sx={{my: 2}}/>
-              <PieChartIndicator
-                title={m.protHHSnapshot.childWithoutBirthCertificate}
-                value={computed._14_1_1_children_without_cert.percent}
-                evolution={computed._14_1_1_children_without_cert.percent - previous.computed._14_1_1_children_without_cert.percent}
-              />
-              <Divider sx={{my: 2}}/>
-              <PieChartIndicator
-                title={m.protHHSnapshot.elderlyWithoutPensionCertificate}
-                value={computed._14_1_1_elderly_without_cert.percent}
-                evolution={computed._14_1_1_elderly_without_cert.percent - previous.computed._14_1_1_elderly_without_cert.percent}
-              />
+              {/*<PieChartIndicator*/}
+              {/*  title={m.protHHSnapshot.childWithoutBirthCertificate}*/}
+              {/*  value={computed._15_1_1_What_housing_land_and.percent}*/}
+              {/*/>*/}
             </SlidePanel>
             {/*<SlidePanel>*/}
             {/*  <PieChartIndicator*/}

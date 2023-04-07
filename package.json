@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@alexandreannic/react-hooks-lib": "^1.11.19",
+    "@alexandreannic/react-hooks-lib": "^1.11.20",
     "@alexandreannic/ts-utils": "1.7.38",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",

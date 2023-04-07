@@ -98,3 +98,16 @@ export const makeid = (length = 14) => {
   return result
 
 }
+
+export function groupByKeys<T>(arr: T[], keys: Array<keyof T>): Record<string, T[]> {
+  const result: Record<string, T[]> = {}
+  arr.forEach((item) => {
+    const groupKeys = keys.map((key) => item[key])
+    const groupName = groupKeys.join(',')
+    if (!result[groupName]) {
+      result[groupName] = []
+    }
+    result[groupName].push(item)
+  })
+  return result
+}

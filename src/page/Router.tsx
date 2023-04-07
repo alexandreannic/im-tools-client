@@ -19,7 +19,7 @@ export const Router = () => {
         </Route>
         <Route
           path="/"
-          element={<Navigate to={koboModule.basePath} replace/>}
+          element={<Navigate to="/activity-info" replace/>}
         />
       </Routes>
     </div>

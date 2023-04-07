@@ -20,6 +20,8 @@ import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
 import {ProtSnapshotSample} from './ProtSnapshotSample'
 import {ProtSnapshotHome} from './ProtSnapshotHome'
 import Answer = KoboFormProtHH.Answer
+import {format} from 'date-fns'
+import {sortObject} from '../../utils/utils'
 
 const initGoogleMaps = async (mapId: string, color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
   return
@@ -87,7 +89,7 @@ export const ProtSnapshot = ({
   formId,
   // period = {start: new Date(2023, 0, 1), end: new Date()},
   // period = {start: new Date(2023, 0, 4), end: new Date(2023, 0, 5)},
-  period = {start: new Date(2023, 0, 1), end: new Date(2023, 2, 1)},
+  period = {start: new Date(2022, 0, 1), end: new Date(2024, 2, 1)},
   previousPeriod = {start: new Date(2022, 10, 1), end: new Date(2023, 0, 1)},
 }: {
   formId: UUID,
@@ -283,9 +285,6 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
       props.current.data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
     )
   }, [])
-  // console.log(props.current.data.map(_ => _._40_1_What_is_your_first_priorty))
-
-
   return (
     <>
       {/*<Box sx={{display: 'flex', mb: 1}}>*/}
@@ -316,12 +315,13 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
       {/*</Box>*/}
 
       <ProtSnapshotAA {...props}/>
+      <ProtSnapshotDocument {...props}/>
       <ProtSnapshotHome {...props}/>
       <ProtSnapshotSample {...props}/>
-      <ProtSnapshotDocument {...props}/>
       <ProtSnapshotDisplacement {...props}/>
       <ProtSnapshotLivelihood {...props}/>
       <ProtSnapshotNeeds {...props}/>
     </>
   )
 }
+

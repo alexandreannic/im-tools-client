@@ -276,7 +276,7 @@ export namespace AiProtectionHhs {
         ...params.subActivities.map(x => {
           return {
             formId: 'cy3vehlldsu5aeb6',
-            recordId: 'alexdrc' + makeid(7),
+            recordId: 'alexdrc' + makeid(9),
             parentRecordId: recordId,
             fields: {
               ...buildValue(x, 'Reporting Month'),

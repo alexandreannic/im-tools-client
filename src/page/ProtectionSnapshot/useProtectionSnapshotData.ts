@@ -6,7 +6,7 @@ import {useI18n} from '../../core/i18n'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {chain} from '../../utils/utils'
 import {OblastISO, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
-import {omit, pick} from 'lodash'
+import {isEqual, omit, pick} from 'lodash'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
@@ -28,8 +28,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
   // TODO Durable solution - factors to return, checker by area: nord/sud/east GCA/east NGCA (Gov contorl area)
   return useMemo(() => {
-    const categoryCurrentOblasts = Enum.keys(ukraineSvgPath).reduce(
-      (acc, k) => ({...acc, [k]: (_: Answer): boolean => _._4_What_oblast_are_you_from_iso === k}),
+    const categoryCurrentOblasts = (column: '_4_What_oblast_are_you_from_iso' | '_12_1_What_oblast_are_you_from_001_iso' = '_4_What_oblast_are_you_from_iso') => Enum.keys(
+      ukraineSvgPath).reduce(
+      (acc, k) => ({...acc, [k]: (_: Answer): boolean => _[column] === k}),
       {} as Record<OblastISO, (_: Answer) => boolean>
     )
 
@@ -53,6 +54,24 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
     return {
       idpsCount: data.count(KoboFormProtHH.filterByIDP),
       noIdpsCount: data.count(KoboFormProtHH.filterByNoIDP),
+
+      _13_4_1_Are_you_separated_fromByOblast: ChartTools.byCategory({
+        data: data,
+        categories: categoryCurrentOblasts(),
+        filter: _ => !!_._13_4_1_Are_you_separated_from_any_of_,
+      }),
+
+      numberByOfficeByDate: () => {
+        const byDate = data.groupBy(_ => format(_.start, 'yyyy-MM'))
+        const res = {} as any
+        Enum.keys(byDate).forEach((k) => {
+          res[k] = Enum.entries(byDate[k].groupBy(_ => _.B_Interviewer_to_in_ert_their_DRC_office)).reduce((acc, [k, v]) => ({
+            ...acc,
+            [k]: v.sum(_ => _._8_What_is_your_household_size ?? 0)
+          }), {} as any)
+          res[k] = {...res[k], total: byDate[k].sum(_ => _._8_What_is_your_household_size ?? 0)}
+        })
+      },
 
       categoriesRatio: ChartTools.byCategory({
         data: data,
@@ -100,7 +119,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _18_1_1_Please_rate_your_sense_of_safe_map: ChartTools.byCategory({
         data: data,
-        categories: categoryCurrentOblasts,
+        categories: categoryCurrentOblasts(),
         filter: _ => _._18_1_1_Please_rate_your_sense_of_safe === '2__unsafe' || _._18_1_1_Please_rate_your_sense_of_safe === '1__very_unsafe'
       }),
 
@@ -108,6 +127,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         data: data.filter(_ => _._12_1_What_oblast_are_you_from_001 === 'dnip').map(_ => _._24_2_Have_you_observed_pers),
         value: _ => _ === true
       }),
+
       zapPssRomane: ChartTools.percentage({
         data: data.filter(_ => _._12_1_What_oblast_are_you_from_001 === 'zap').map(_ => _._24_2_Have_you_observed_pers),
         value: _ => _ === true
@@ -191,10 +211,10 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .map(ChartTools.setLabel(m.protHHSnapshot.enum._13_4_3_If_separated_from_a_household_))
         .map(ChartTools.sortBy.value)
         .val,
-      
+
       _19_1_1_Please_rate_your_relationshipByOblast: ChartTools.byCategory({
         data: data,
-        categories: categoryCurrentOblasts,
+        categories: categoryCurrentOblasts(),
         filter: _ => _._19_1_1_Please_rate_your_relationship_ === '1__very_bad'
           || _._19_1_1_Please_rate_your_relationship_ === '2__bad'
         // || _._19_1_1_Please_rate_your_relationship_ === '3__acceptable'
@@ -243,9 +263,36 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         ]))
         .val,
 
+      // Wrong way to count, use 26.4
+      // _15_1_1_What_housing_land_and: ChartTools.percentage({
+      //   data: data.filter(_ => {
+      //     const hasHouse: KoboFormProtHH.GetType<'_26_1_1_Where_do_you_live_now'>[] = [
+      //       'owned_apartment_or_house',
+      //       'rented_house_or_apartment__wit',
+      //       'modular_houses',
+      //       'rented_accomodation__cash_for_',
+      //     ]
+      //     return _._26_1_1_Where_do_you_live_now?.find(_ => hasHouse.includes(_)) && _._15_1_1_What_housing_land_and !== undefined
+      //   }),
+      //   value: _ => isEqual(_._15_1_1_What_housing_land_and ?? [], ['none_of_the_above24'])
+      // }),
+
+      disabilityWithoutAllowance: ChartTools.percentage({
+        data: data.filter(_ => _._16_2_1_Do_you_have_a_household_member?.filter(_ => _ !== 'no').length ?? -1 > 0),
+        value: _ => _._17_1_1_Does_any_of_them_recieve_state !== true && !_._17_1_2_If_not_why?.includes('registered_for_assistance_but_'),
+      }),
+
       _26_4_noHouseFormalDocPercent: ChartTools.percentage({
-        data: data.map(_ => _._26_4_Do_you_have_fo_in_your_accomodation).compact(),
-        value: _ => _ === 'no_formal_documents' || _ === 'verbal_agreement'
+        data: data.filter(_ => {
+          const hasHouse: KoboFormProtHH.GetType<'_26_1_1_Where_do_you_live_now'>[] = [
+            'owned_apartment_or_house',
+            'rented_house_or_apartment__wit',
+            'modular_houses',
+            'rented_accomodation__cash_for_',
+          ]
+          return _._26_1_1_Where_do_you_live_now?.find(_ => hasHouse.includes(_)) && _._26_4_Do_you_have_fo_in_your_accomodation !== undefined
+        }),
+        value: _ => _._26_4_Do_you_have_fo_in_your_accomodation && _._26_4_Do_you_have_fo_in_your_accomodation === 'no_formal_documents' || _._26_4_Do_you_have_fo_in_your_accomodation === 'verbal_agreement'
       }),
 
       _26_4_Do_you_have_fo_in_your_accomodation: chain(ChartTools.single({
@@ -504,6 +551,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         }, initOblastIndex({value: 0, base: 0}))
       ).get,
 
+      disabilityWithoutCertificate: 1,
 
       oblastOrigins: data
         // .map(_ => _._12_1_What_oblast_are_you_from_001_iso)

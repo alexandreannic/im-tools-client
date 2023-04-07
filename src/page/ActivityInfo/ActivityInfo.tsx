@@ -1,4 +1,4 @@
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {useConfig} from '../../core/context/ConfigContext'
@@ -9,10 +9,10 @@ import {koboHromadaMapping} from './koboHromadaMapping'
 import {chain} from '../../utils/utils'
 import {Page} from '../../shared/Page'
 import {Datatable} from '../../shared/Datatable/Datatable'
-import {IconBtn, Txt} from 'mui-extension'
+import {IconBtn, Txt, useToast} from 'mui-extension'
 import {Panel} from '../../shared/Panel'
 import {ItInput} from '../../shared/ItInput/ItInput'
-import {Box, Icon, Tooltip} from '@mui/material'
+import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {Btn} from '../../shared/Btn/Btn'
 import {oblasts} from '../../core/uaLocation/oblasts'
@@ -21,6 +21,7 @@ import {hromadas} from '../../core/uaLocation/hromadas'
 import {ItSelect} from 'shared/Select/Select'
 import {AnswerTable} from './AnswerTable'
 import Answer = KoboFormProtHH.Answer
+import {useItToast} from '../../core/useToast'
 
 // const fillMissingSexOrGender = (data: _Arr<KoboFormProtHH.Answer>) => {
 //   const persons = data.flatMap(_ => _.persons).filter(_ => !!_.age && !!_.gender) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
@@ -100,13 +101,13 @@ export const ActivityInfo = ({
   }, [period])
 
   return (
-    <div>
+    <Page width={1200} loading={_hhCurrent.loading}>
       {map(_hhCurrent.entity, _ => <_ActivityInfo
         data={_}
         period={period}
         setPeriod={setPeriod}
       />)}
-    </div>
+    </Page>
   )
 }
 
@@ -128,16 +129,24 @@ const _ActivityInfo = ({
       .get
   }, [data])
 
+  const {api} = useConfig()
+  const _submit = useAsync((i: number, p: AiProtectionHhs.FormParams[]) => api.activityInfo.submitActivity(p), {
+    requestKey: ([i]) => i
+  })
+
   const formParams = useMemo(() => {
     const activities: {rows: Answer[], activity: AiProtectionHhs.FormParams}[] = []
     Enum.entries(enrichedData.groupBy(_ => _._4_What_oblast_are_you_from)).forEach(([oblast, byOblast]) => {
       const middle = Math.ceil(byOblast.length / 2)
       Enum.entries({
         'GP-DRC-00001': Arr([...byOblast].splice(0, Math.ceil(middle))),
-        'GP-DRC-00002': Arr([...byOblast].splice(Math.ceil(middle), Math.ceil(byOblast.length))),
+        'GP-DRC-00003': Arr([...byOblast].splice(Math.ceil(middle), Math.ceil(byOblast.length))),
       }).forEach(([planCode, byPlanCode]) => {
         Enum.entries(byPlanCode.groupBy(_ => _._4_1_What_raion_currently_living_in)).forEach(([raion, byRaion]) => {
           Enum.entries(byRaion.groupBy(_ => _.hromada)).forEach(([hromada, byHromada]) => {
+            if ([oblast, raion, hromada].every(_ => _ === 'undefined')) {
+              return
+            }
             activities.push({
               rows: byHromada,
               activity: {
@@ -178,26 +187,21 @@ const _ActivityInfo = ({
     return activities
   }, [data])
 
-  const tableData: _Arr<{rows: Answer[], activity: Omit<AiProtectionHhs.FormParams, 'subActivities'> & AiProtectionHhs.FormParams['subActivities'][0]}> = useMemo(() => {
-    return Arr(formParams.flatMap(({activity: {subActivities, ...rest}, rows}) => subActivities.map(a => ({
-      rows,
-      activity: {
-        ...rest,
-        ...a
-      }
-    }))))
-  }, [formParams])
+  // const tableData: _Arr<{rows: Answer[], activity: Omit<AiProtectionHhs.FormParams, 'subActivities'> & AiProtectionHhs.FormParams['subActivities'][0]}> = useMemo(() => {
+  //   return Arr(formParams.flatMap(({activity: {subActivities, ...rest}, rows}) => subActivities.map(a => ({
+  //     rows,
+  //     activity: {
+  //       ...rest,
+  //       ...a
+  //     }
+  //   }))))
+  // }, [formParams])
 
   const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
-  // console.log(groupedByLocation)
-  // const xx = useMemo(() => {
-  //   return Enum.entries(groupedByLocation).map(([k, v]) => {
-  //     v.map(_ => _)
-  //   })
-  // }, [groupedByLocation])
+  const {toastError} = useItToast()
 
   return (
-    <Page width={1200}>
+    <div>
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
         <Box>
           <ItInput type="month" value={period} onChange={_ => setPeriod(_.target.value)}/>
@@ -208,123 +212,101 @@ const _ActivityInfo = ({
             options={Object.keys(oblasts).map(_ => ({value: _, children: _.split('_')[0]}))}
           />
         </Box>
-        <Confirm title="Sent" content={
-          <>
-            
-          </>
-        }>
-          <IconBtn sx={{marginLeft: 'auto', mr: 1}}>
-            <Icon>settings</Icon>
-          </IconBtn>
-        </Confirm>
-        <Btn icon="send" color="primary" variant="contained">Send all</Btn>
+        <Btn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+          _submit.call(-1, formParams.map(_ => _.activity)).catch(toastError)
+        }}>
+          Submit all
+        </Btn>
       </Box>
       <Panel>
-        <Datatable
-          columns={[
-            {id: 'Oblast', head: 'Oblast', render: _ => _.activity.Oblast.split('_')[0] ?? _.activity.Oblast},
-            {id: 'Raion', head: 'Raion', render: _ => _.activity.Raion.split('_')[0] ?? _.activity.Raion},
-            {id: 'Hromada', head: 'Hromada', render: _ => _.activity.Hromada.split('_')[0] ?? _.activity.Hromada},
-            {id: 'Plan Code', head: 'Plan Code', render: _ => _.activity['Plan Code']},
-            {id: 'Population Group', head: 'Population Group', render: _ => _.activity['Population Group']},
-            {id: 'Boys', number: true, head: 'Boys', render: _ => _.activity.Boys},
-            {id: 'Girls', number: true, head: 'Girls', render: _ => _.activity.Girls},
-            {id: 'Adult Women', number: true, head: 'Adult Women', render: _ => _.activity['Adult Women']},
-            {id: 'Adult Men', number: true, head: 'Adult Men', render: _ => _.activity['Adult Men']},
-            {id: 'Elderly Women', number: true, head: 'Elderly Women', render: _ => _.activity['Elderly Women']},
-            {id: 'Elderly Men', number: true, head: 'Elderly Men', render: _ => _.activity['Elderly Men']},
-            {
-              id: 'Total Individuals Reached', number: true, head: 'Total Individuals Reached', render: _ => (
-                <Txt bold>{_.activity['Total Individuals Reached']}</Txt>
-              )
-            },
-            {
-              id: 'actions', head: '', render: row => {
-                const request = formParams.find(f =>
-                  f.activity['Plan Code'] === row.activity['Plan Code'] &&
-                  f.activity['Oblast'] === row.activity['Oblast'] &&
-                  f.activity['Raion'] === row.activity['Raion'] &&
-                  f.activity['Hromada'] === row.activity['Hromada']
-                )!
-                return (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Location</TableCell>
+              <TableCell>Plan Code</TableCell>
+              <TableCell>Population Group</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Boys</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Girls</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Adult Women</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Adult Men</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Elderly Women</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Elderly Men</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Total Individuals Reached</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {formParams.filter(_ => !selectedOblast || _.activity.Oblast === selectedOblast).map(a => a.activity.subActivities.map((sa, i) =>
+              <TableRow>
+                {i === 0 && (
                   <>
-                    <Confirm title="Preview activity" content={
-                      <pre>{JSON.stringify(request.activity, null, 2)}</pre>
-                    }>
-                      <Tooltip title="Preview parsed data">
-                        <IconBtn color="primary">
-                          <Icon>preview</Icon>
-                        </IconBtn>
+                    <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
+                      <Tooltip title="Submit!!">
+                        <Btn
+                          loading={_submit.getLoading(i)}
+                          variant="contained"
+                          size="small"
+                          sx={{minWidth: 50, mr: .5}}
+                          onClick={() => {
+                            _submit.call(i, [a.activity]).catch(toastError)
+                          }}
+                        >
+                          <Icon>send</Icon>
+                        </Btn>
                       </Tooltip>
-                    </Confirm>
-                    <Confirm title="Preview request body code" content={
-                      <pre>{JSON.stringify(AiProtectionHhs.makeForm(request.activity), null, 2)}</pre>
-                    }>
-                      <Tooltip title="Preview request body code">
-                        <IconBtn color="primary">
-                          <Icon>data_object</Icon>
-                        </IconBtn>
-                      </Tooltip>
-                    </Confirm>
-                    <Confirm
-                      maxWidth={'lg'}
-                      title="Kobo data"
-                      PaperProps={{}}
-                      content={
-                        <AnswerTable answers={request.rows.filter(_ =>
-                          _._12_Do_you_identify_as_any_of && mapPopulationGroup(_._12_Do_you_identify_as_any_of) === row.activity['Population Group']
-                        )}
-                        />
+                      <Confirm
+                        maxWidth={'lg'}
+                        title="Kobo data"
+                        PaperProps={{}}
+                        content={<AnswerTable answers={a.rows}/>}>
+                        <Tooltip title="Kobo data">
+                          <Btn icon="table_view" variant="outlined" size="small">View data</Btn>
+                        </Tooltip>
+                      </Confirm>
+                      <Confirm title="Preview activity" content={
+                        <pre>{JSON.stringify(a.activity, null, 2)}</pre>
                       }>
-                      <Tooltip title="Kobo data">
-                        <Btn icon="table_view" variant="outlined" size="small">View data</Btn>
-                      </Tooltip>
-                    </Confirm>
+                        <Tooltip title="Preview parsed data">
+                          <IconBtn color="primary">
+                            <Icon>preview</Icon>
+                          </IconBtn>
+                        </Tooltip>
+                      </Confirm>
+                      <Confirm title="Preview request body code" content={
+                        <pre>{JSON.stringify(AiProtectionHhs.makeForm(a.activity), null, 2)}</pre>
+                      }>
+                        <Tooltip title="Preview request body code">
+                          <IconBtn color="primary">
+                            <Icon>data_object</Icon>
+                          </IconBtn>
+                        </Tooltip>
+                      </Confirm>
+                    </TableCell>
+                    <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
+                      {a.activity.Oblast.split('_')[0] ?? a.activity.Oblast}
+                      <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
+                      {a.activity.Raion.split('_')[0] ?? a.activity.Raion}
+                      <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
+                      {a.activity.Hromada.split('_')[0] ?? a.activity.Hromada}
+                    </TableCell>
+                    <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
+                      {a.activity['Plan Code']}
+                    </TableCell>
                   </>
-                )
-              }
-            }
-          ]} data={tableData.filter(_ => !selectedOblast || _.activity.Oblast === selectedOblast)}/>
-        {/*<Table>*/}
-        {/*  <TableBody>*/}
-        {/*    {formParams.map(form => form.subActivities.map(activity => (*/}
-        {/*      <TableRow>*/}
-        {/*        <TableCell>{form.Oblast}</TableCell>*/}
-        {/*        <TableCell>{form.Raion}</TableCell>*/}
-        {/*        <TableCell>{form.Hromada}</TableCell>*/}
-        {/*        <TableCell>{form['Plan Code']}</TableCell>*/}
-        {/*        <TableCell>{activity['Total Individuals Reached']}</TableCell>*/}
-        {/*        <TableCell>{activity.Boys}</TableCell>*/}
-        {/*        <TableCell>{activity.Girls}</TableCell>*/}
-        {/*      </TableRow>*/}
-        {/*    )))}*/}
-        {/*  </TableBody>*/}
-        {/*</Table>*/}
-        {/*<table>*/}
-        {/*  <thead>*/}
-        {/*  <tr>*/}
-        {/*    <td>Oblast</td>*/}
-        {/*    <td>Raion</td>*/}
-        {/*    <td>Hromada</td>*/}
-        {/*    <td>Settlement</td>*/}
-        {/*    <td>Collective Centre</td>*/}
-        {/*  </tr>*/}
-        {/*  </thead>*/}
-        {/*  <tbody>*/}
-        {/*  {Enum.entries(groupedByLocation).map(([path, value]) => {*/}
-        {/*    const groups = parsePath(path)*/}
-
-        {/*    return (*/}
-        {/*      <tr>*/}
-        {/*        <td>{groups.oblast}</td>*/}
-        {/*        <td>{groups.raion}</td>*/}
-        {/*        <td>{groups.population_group}</td>*/}
-        {/*      </tr>*/}
-        {/*    )*/}
-        {/*  })}*/}
-        {/*  </tbody>*/}
-        {/*</table>*/}
+                )}
+                <TableCell>{sa['Population Group']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa.Boys}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa.Girls}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Adult Women']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Adult Men']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Elderly Women']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Elderly Men']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}><Txt bold>{sa['Total Individuals Reached']}</Txt></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </Panel>
-    </Page>
+    </div>
   )
 }
