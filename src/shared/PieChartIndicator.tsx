@@ -56,7 +56,7 @@ export const PieChartIndicator = ({
           rest: 'other',
         }}
       />
-      <Box sx={{ml: dense ? .5 : 1.5}}>
+      <Box sx={{ml: dense ? .75 : 1.5}}>
         <SlidePanelTitle noWrap={noWrap}>
           {title && (
             <>

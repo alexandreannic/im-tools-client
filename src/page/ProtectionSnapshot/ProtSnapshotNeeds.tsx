@@ -46,95 +46,61 @@ export const ProtSnapshotNeeds = ({
       <SlideHeader>{m.protHHSnapshot.titles.needs}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-
-          <SlideContainer column sx={{flex: 4.2}}>
-            {/*<HorizontalBarChartGoogle data={computed._31_Is_anyone_from_the_household_percent}/>*/}
-            <SlideTxt dangerouslySetInnerHTML={{
-              __html: m.protHHSnapshot.desc.needs({
-                percentLvivWithoutHot: map(computed._28_accessToHotByOblast['UA-77'], _ => toPercent(_.value / _.base, 0))!,
-                percentZapoWithoutHot: map(computed._28_accessToHotByOblast['UA-12'], _ => toPercent(_.value / _.base, 0))!,
-                percentChernihivWithoutHot: map(computed._28_accessToHotByOblastForIDPs['UA-74'], _ => toPercent(_.value / _.base, 0))!,
-              })
-            }}/>
+          <SlideContainer column sx={{flex: 8}}>
             <SlidePanel title={m.protHHSnapshot.lackOfInformationNeeded}>
-              <Txt></Txt>
-              <HorizontalBarChartGoogle
-                icons={categoryIcons as any}
-                data={computed._39_What_type_of_information_wouldbyCat}
-              />
-              <Divider sx={{my: 2}}/>
-              <SlidePanelTitle>{m.protHHSnapshot.mostNeededInformation}</SlidePanelTitle>
-              <Box sx={{display: 'flex', mt: 1, justifyContent: 'space-between'}}>
-                {Enum.entries(computed._39_What_type_of_information_would!).splice(0, 3).map(([k, v]) =>
-                  <PieChartIndicator fractionDigits={0} dense title={v.label} value={v.value / data.length}/>
+              <Box sx={{display: 'flex', mt: 1.5, alignItems: 'center', justifyContent: 'space-between'}}>
+                {Enum.values(computed._39_What_type_of_information_wouldbyCat!).map(v =>
+                  <PieChartIndicator dense value={v.value / (v.base ?? 1)} sx={{flex: 1}} fractionDigits={1} title={v.label}/>
                 )}
               </Box>
-              {/*<HorizontalBarChartGoogle data={computed._39_What_type_of_information_would}/>*/}
             </SlidePanel>
-            {/*<Box sx={{display: 'flex'}}>*/}
-            {/*  <UkraineMap*/}
-            {/*    fillBaseOn="percent"*/}
-            {/*    // base={data.length}*/}
-            {/*    onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
-            {/*    data={computed._28_accessToHotByOblast}*/}
-            {/*    title={m.global}*/}
-            {/*    sx={{flex: 1, mr: 1}}*/}
-            {/*  />*/}
-            {/*  <UkraineMap*/}
-            {/*    fillBaseOn="percent"*/}
-            {/*    // base={data.length - computed.idpsCount}*/}
-            {/*    onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
-            {/*    data={computed._28_accessToHotByOblastForIDPs}*/}
-            {/*    title={m.noIdpsOnly}*/}
-            {/*    sx={{flex: 1, ml: 1}}*/}
-            {/*  />*/}
-            {/*</Box>*/}
-            {/*<UkraineMap*/}
-            {/*  fillBaseOn="percent"*/}
-            {/*  base={data.length}*/}
-            {/*  onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
-            {/*  data={computed._29_nfiNeededByOblast}*/}
-            {/*  title={m.protHHSnapshot.nfiNeededByOblast}*/}
-            {/*  sx={{mx: 2}}*/}
-            {/*/>*/}
+            <SlideContainer>
+              <SlideContainer column sx={{flex: 3.5}}>
+                <SlideTxt dangerouslySetInnerHTML={{
+                  __html: m.protHHSnapshot.desc.needs({
+                    percentLvivWithoutHot: map(computed._28_accessToHotByOblast['UA-77'], _ => toPercent(_.value / _.base, 0))!,
+                    percentZapoWithoutHot: map(computed._28_accessToHotByOblast['UA-12'], _ => toPercent(_.value / _.base, 0))!,
+                    percentChernihivWithoutHot: map(computed._28_accessToHotByOblastForIDPs['UA-74'], _ => toPercent(_.value / _.base, 0))!,
+                  })
+                }}/>
+              </SlideContainer>
+              <SlideContainer column sx={{flex: 3}}>
+                <SlidePanel title={m.protHHSnapshot.first_priorty}>
+                  <HorizontalBarChartGoogle data={computed._40_1_What_is_your_first_priorty}/>
+                </SlidePanel>
+              </SlideContainer>
+            </SlideContainer>
           </SlideContainer>
           <SlideContainer column sx={{flex: 3, minWidth: 318}}>
-            {/*<SlidePanel title={m.protectionHHSnapshot._40_1_pn_shelter_byCategory}>*/}
-            {/*  <HorizontalBarChartGoogle*/}
-            {/*    data={computed._40_1_pn_shelter_byCategory}*/}
-            {/*  />*/}
-            {/*</SlidePanel>*/}
-            <SlidePanel>
-              <SlidePanelTitle dangerouslySetInnerHTML={{__html: m.protHHSnapshot._40_1_pn_health_byCategory}}/>
-              <HorizontalBarChartGoogle
-                data={computed._40_1_first_priortyBy.hohh60}
-              />
-              {/*<HorizontalBarChartGoogle*/}
-              {/*  icons={categoryIcons}*/}
-              {/*  data={computed._40_1_pn_health_byCategory}*/}
-              {/*/>*/}
-              <Divider sx={{my: 2.5}}/>
-              <SlidePanelTitle dangerouslySetInnerHTML={{__html: m.protHHSnapshot._40_1_pn_cash_byCategory}}/>
-              <HorizontalBarChartGoogle
-                data={computed._40_1_first_priortyBy.idp}
-              />
-              <Divider sx={{my: 2.5}}/>
-              <SlidePanelTitle>{m.protHHSnapshot._29_nfiNeededByCategory}</SlidePanelTitle>
-              <HorizontalBarChartGoogle
-                data={computed._40_1_first_priortyBy.memberWithDisability}
-              />
-              <Divider sx={{my: 2.5}}/>
-              <SlidePanelTitle>{m.protHHSnapshot._29_nfiNeededByCategory}</SlidePanelTitle>
-              <HorizontalBarChartGoogle
-                data={computed._40_1_first_priortyBy.hohhFemale}
-              />
-            </SlidePanel>
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 3}}>
             <SlidePanel title={m.protHHSnapshot.first_priorty}>
-              <HorizontalBarChartGoogle
-                data={computed._40_1_What_is_your_first_priorty}
-              />
+              <>
+                <SlidePanelTitle icon={categoryIcons.hohh60} sx={{mt: 2}} uppercase={false} dangerouslySetInnerHTML={{__html: m.protHHSnapshot.firstPrioritiesHohh60}}/>
+                <HorizontalBarChartGoogle
+                  showLastBorder
+                  data={computed._40_1_first_priortyBy.hohh60}
+                />
+              </>
+              <>
+                <SlidePanelTitle icon={categoryIcons.memberWithDisability} sx={{mt: 3}} uppercase={false}
+                                 dangerouslySetInnerHTML={{__html: m.protHHSnapshot.firstPrioritiesMemberWithDisability}}/>
+                <HorizontalBarChartGoogle
+                  showLastBorder
+                  data={computed._40_1_first_priortyBy.memberWithDisability}
+                />
+              </>
+              <>
+                <SlidePanelTitle icon={categoryIcons.idp} sx={{mt: 3}} uppercase={false} dangerouslySetInnerHTML={{__html: m.protHHSnapshot.firstPrioritiesIdp}}/>
+                <HorizontalBarChartGoogle
+                  showLastBorder
+                  data={computed._40_1_first_priortyBy.idp}
+                />
+              </>
+              <>
+                <SlidePanelTitle icon={categoryIcons.hohhFemale} sx={{mt: 3}} uppercase={false} dangerouslySetInnerHTML={{__html: m.protHHSnapshot.firstPrioritiesHohhFemale}}/>
+                <HorizontalBarChartGoogle
+                  data={computed._40_1_first_priortyBy.hohhFemale}
+                />
+              </>
             </SlidePanel>
           </SlideContainer>
         </SlideContainer>

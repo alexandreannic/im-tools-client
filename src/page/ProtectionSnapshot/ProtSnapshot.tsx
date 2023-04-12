@@ -291,12 +291,12 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
       {/*  </Box>*/}
       {/*</Box>*/}
 
-      {/*<ProtSnapshotHome {...props}/>*/}
-      {/*<ProtSnapshotSample {...props}/>*/}
-      {/*<ProtSnapshotDisplacement {...props}/>*/}
-      {/*<ProtSnapshotSafety {...props}/>*/}
-      {/*<ProtSnapshotDocument {...props}/>*/}
-      {/*<ProtSnapshotLivelihood {...props}/>*/}
+      <ProtSnapshotHome {...props}/>
+      <ProtSnapshotSample {...props}/>
+      <ProtSnapshotDisplacement {...props}/>
+      <ProtSnapshotSafety {...props}/>
+      <ProtSnapshotDocument {...props}/>
+      <ProtSnapshotLivelihood {...props}/>
       <ProtSnapshotNeeds {...props}/>
     </>
   )

@@ -91,7 +91,7 @@ export const en = Object.freeze({
     intentionToReturn: 'Intention to return',
     hhCategoryType: {
       idp: 'IDP',
-      hohh60: 'Elderly (60+) HoHH',
+      hohh60: 'Elderly HoHH',
       hohhFemale: 'Female HoHH',
       memberWithDisability: 'HH with PwD',
       all: 'Average'
@@ -557,13 +557,14 @@ export const en = Object.freeze({
         <p>
           PM highlights disparities between groups and areas.
           HHs with PwDs, elderly or female-headed HHs and IDPs face greater challenges 
-          in fulfilling their basic needs. For instance, IDPs need more NFIs than non-displaced 
+          in fulfilling their basic needs. For instance, <b>IDPs need more NFIs</b> than non-displaced 
           communities, including hygiene kits and linens, due to leaving their belongings behind.
         </p>
         <p>
           Access to information on humanitarian assistance and social services provided is 
-          still challenging especially for PwDs and elderly who face
-          barriers in accessing online information and registration procedures.
+          still challenging especially for those residing in remote/rural, and hard-to-reach areas
+          and for <b>PwDs and elderly who face
+          barriers in accessing online information</b> and registration procedures.
           Limited information has reported to be the main barrier to accessing cash assistance.
         </p>
        `,
