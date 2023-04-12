@@ -18,13 +18,10 @@ export const Kobo = () => {
   }, [])
 
   return (
-    <div>
-      <Layout
-        sidebar={<KoboSidebar/>}
-        header={<Header/>}
-      >
-        <Outlet/>
-      </Layout>
-    </div>
+    <Layout
+      sidebar={<KoboSidebar/>}
+    >
+      <Outlet/>
+    </Layout>
   )
 }

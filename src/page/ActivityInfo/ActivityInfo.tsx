@@ -6,10 +6,9 @@ import {Period, UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '../../core/activityInfo/AiProtectionHhs'
 import {koboHromadaMapping} from './koboHromadaMapping'
-import {chain} from '../../utils/utils'
+import {chain, groupByAndTransform} from '../../utils/utils'
 import {Page} from '../../shared/Page'
-import {Datatable} from '../../shared/Datatable/Datatable'
-import {IconBtn, Txt, useToast} from 'mui-extension'
+import {IconBtn, Txt} from 'mui-extension'
 import {Panel} from '../../shared/Panel'
 import {ItInput} from '../../shared/ItInput/ItInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
@@ -20,47 +19,10 @@ import {raions} from '../../core/uaLocation/raions'
 import {hromadas} from '../../core/uaLocation/hromadas'
 import {ItSelect} from 'shared/Select/Select'
 import {AnswerTable} from './AnswerTable'
-import Answer = KoboFormProtHH.Answer
 import {useItToast} from '../../core/useToast'
-
-// const fillMissingSexOrGender = (data: _Arr<KoboFormProtHH.Answer>) => {
-//   const persons = data.flatMap(_ => _.persons).filter(_ => !!_.age && !!_.gender) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
-//
-//   const avgAgeByGender = lazy((g: KoboFormProtHH.Gender) => {
-//     const byGender = persons.filter(_ => _.gender === g && !!_.age)
-//     return byGender.sum(_ => _.age!) / byGender.length
-//   })
-//
-//   const ratioFemaleByAge = lazy((adult: boolean) => {
-//     const byGender = persons.filter(_ => !!_.age && _.gender === 'female' && (adult ? _.age >= 18 : _.age < 18))
-//     return byGender.sum(_ => _.age!) / byGender.length
-//   })
-//
-//   const ratioFemale = persons.count(_ => _.gender === 'female') / persons.length
-//
-//   const avgAge = persons.sum(_ => _.age) / persons.length
-//
-//   const fillMissingSexOrGender = <T extends KoboFormProtHH.Person>(p: T): T => {
-//     if (!p.age && !p.gender) {
-//       p.gender = Math.random() < ratioFemale ? KoboFormProtHH.Gender.female : KoboFormProtHH.Gender.male
-//       p.age = avgAge
-//     } else if (!p.age) {
-//       p.age = avgAgeByGender(p.gender!)
-//     } else if (!p.gender) {
-//       p.gender = Math.random() < ratioFemaleByAge(p.age >= 18) ? KoboFormProtHH.Gender.female : KoboFormProtHH.Gender.male
-//     }
-//     return p
-//   }
-//   data.forEach(d => {
-//     try {
-//       d.persons = d.persons.map(fillMissingSexOrGender)
-//     } catch (e: unknown) {
-//       console.error(d)
-//       throw new Error(d._id + ' ' + (e as Error).message)
-//     }
-//   })
-//   return data
-// }
+import {format} from 'date-fns'
+import Answer = KoboFormProtHH.Answer
+import {Layout} from '../../shared/Layout'
 
 const mapPopulationGroup = (s: KoboFormProtHH.Status): any => fnSwitch(s, {
   idp: 'IDPs',
@@ -79,12 +41,15 @@ export const ActivityInfo = ({
 }) => {
   const [period, setPeriod] = useState('2023-03')
   const {api} = useConfig()
-  const request = (period: string) => {
-    const [year, month] = period.split('-')
-    return api.koboForm.getLocalFormAnswers({
-      start: new Date(parseInt(year), parseInt(month) - 1),
-      end: new Date(parseInt(year), parseInt(month)),
-    }).then(_ => Arr(_.map(KoboFormProtHH.mapAnswers)))
+  const request = (period?: string) => {
+    const filters = period ? (() => {
+      const [year, month] = period.split('-')
+      return {
+        start: new Date(parseInt(year), parseInt(month) - 1),
+        end: new Date(parseInt(year), parseInt(month)),
+      }
+    })() : undefined
+    return api.koboForm.getLocalFormAnswers(filters).then(_ => Arr(_.map(KoboFormProtHH.mapAnswers)))
   }
   // const request = (period: string) => {
   //   const [year, month] = period.split('-')
@@ -96,18 +61,19 @@ export const ActivityInfo = ({
   const _hhCurrent = useFetcher(request)
 
   useEffect(() => {
-    console.log('SEARCH Zaporizka', AiProtectionHhs.searchRaion('Zaporizka'))
     _hhCurrent.fetch({clean: false}, period)
   }, [period])
 
   return (
-    <Page width={1200} loading={_hhCurrent.loading}>
-      {map(_hhCurrent.entity, _ => <_ActivityInfo
-        data={_}
-        period={period}
-        setPeriod={setPeriod}
-      />)}
-    </Page>
+    <Layout>
+      <Page width={1200} loading={_hhCurrent.loading}>
+        {map(_hhCurrent.entity, _ => <_ActivityInfo
+          data={_}
+          period={period}
+          setPeriod={setPeriod}
+        />)}
+      </Page>
+    </Layout>
   )
 }
 
@@ -120,6 +86,20 @@ const _ActivityInfo = ({
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {
+  const flattedData = data.flatMap(row => {
+    return row.persons.map(_ => ({
+      ...row,
+      ..._,
+    }))
+  })
+  const res = groupByAndTransform(flattedData, [
+      _ => _.B_Interviewer_to_in_ert_their_DRC_office ?? 'undef',
+      _ => format(_.end, 'yyyy-MM'),
+      // _ => _.gender,
+      // _ => KoboFormProtHH.groupByAgeGroup(_) ?? 'undef',
+    ],
+    (_: any[]) => _.length
+  )
 
   const enrichedData = useMemo(() => {
     return chain(Arr(data))

@@ -4,6 +4,8 @@ import {LayoutProvider, useLayoutContext} from './LayoutContext'
 import {Box} from '@mui/material'
 import {layoutConfig} from './index'
 import {defaultSpacing} from '../../core/theme'
+import {Sidebar} from './Sidebar'
+import {Header} from './Header/Header'
 
 export const sidebarWith = 220
 
@@ -15,7 +17,13 @@ export interface LayoutProps {
   mobileBreakpoint?: number
 }
 
-export const Layout = ({sidebar, header, title, mobileBreakpoint, children}: LayoutProps) => {
+export const Layout = ({
+  sidebar,
+  header = <Header/>,
+  title,
+  mobileBreakpoint,
+  children
+}: LayoutProps) => {
   return (
     <LayoutProvider title={title} mobileBreakpoint={mobileBreakpoint} showSidebarButton={!!sidebar}>
       <LayoutUsingContext sidebar={sidebar} header={header}>

@@ -5,6 +5,7 @@ import {useMemo} from 'react'
 import {Oblast, OblastIndex} from './oblastIndex'
 import {Txt} from 'mui-extension'
 import {toPercent} from '../../utils/utils'
+import {omitBy} from 'lodash'
 
 // viewBox="22.138577 52.380834 40.220623 44.387017"
 // width="612.47321"
@@ -14,12 +15,13 @@ const minAlpha = .05
 const maxAlpha = .8
 const medianAlpha = minAlpha + (maxAlpha - minAlpha) / 2
 
-const computeFill = (value: number, max: number) => {
-  return value > 0 ? (maxAlpha - minAlpha) * value / max + minAlpha : undefined
+const computeFill = (value: number, min: number, max: number) => {
+  return value > 0 ? (maxAlpha - minAlpha) * (value - min) / (max - min) + minAlpha : undefined
 }
 
 export const UkraineMap = ({
   data = {} as any,
+  omitValueLt = 5,
   base,
   fillBaseOn,
   onSelect,
@@ -27,6 +29,7 @@ export const UkraineMap = ({
   title,
   sx,
 }: {
+  omitValueLt?: number
   legend?: boolean
   title?: string
   onSelect?: (oblast: OblastISO) => void
@@ -36,8 +39,13 @@ export const UkraineMap = ({
 } & Pick<BoxProps, 'sx'>) => {
   const theme = useTheme()
 
+  const filteredData = useMemo(() => {
+    return omitValueLt ? omitBy(data, _ => (_.base ?? _.value) <= omitValueLt) : data
+  }, [data])
+
   const {max, min, maxPercent, minPercent} = useMemo(() => {
-    const _data = Arr(Enum.values(data)).compact()
+    const _data = Arr(Enum.values(filteredData)).compact()
+    // .filter(_ => _.value !== 0)
     const values = _data.map(_ => _!.value ?? 0)
     const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.map(_ => {
       const b = (base ?? _.base) || 1
@@ -51,12 +59,14 @@ export const UkraineMap = ({
     return {
       max: Math.max(...values),
       min: Math.min(...values),
+      // maxPercent: 1,
+      // minPercent: 0,
       ...percents && {
         maxPercent: Math.max(...percents),
         minPercent: Math.min(...percents),
       }
     }
-  }, [data])
+  }, [filteredData])
 
   const generateColor = (fill: number | undefined) => {
     if (fill) {
@@ -70,7 +80,7 @@ export const UkraineMap = ({
   }
 
   return (
-    <Box sx={{...sx, p: 1, position: 'relative'}}>
+    <Box sx={{...sx, position: 'relative'}}>
       <Box
         component="svg"
         preserveAspectRatio="xMidYMin slice"
@@ -79,13 +89,13 @@ export const UkraineMap = ({
       >
         <g stroke={theme.palette.background.paper} strokeWidth="1">
           {Enum.keys(ukraineSvgPath).map(iso => {
-            const res = data[iso] ? (() => {
-              const value = data[iso]!.value
-              const _base = base ?? data[iso]!.base
+            const res = filteredData[iso] ? (() => {
+              const value = filteredData[iso]!.value
+              const _base = base ?? filteredData[iso]!.base
               const percent = _base ? value / _base : undefined
-              const fill = (percent && fillBaseOn === 'percent' && maxPercent)
-                ? computeFill(percent, maxPercent)
-                : computeFill(value, max)
+              const fill = (percent && fillBaseOn === 'percent' && maxPercent && minPercent !== undefined)
+                ? computeFill(percent, minPercent, maxPercent)
+                : computeFill(value, min, max)
               return {value, base: _base, fill, percent}
             })() : undefined
             return (
@@ -125,7 +135,7 @@ export const UkraineMap = ({
             // boxShadow: t => t.shadows[1],
             background: `linear-gradient(90deg, ${generateColor(minAlpha)} 0%, ${theme.palette.primary.main} 50%, ${generateColor(maxAlpha)} 100%)`
           }}/>
-          <Txt color="hint" size="small" sx={{display: 'flex', justifyContent: 'space-between',}}>
+          <Txt color="hint" sx={{fontSize: '.75em', display: 'flex', justifyContent: 'space-between',}}>
             {fillBaseOn === 'percent' ? (
               <><Box>{toPercent(minPercent, 0)}</Box> <Box>{toPercent(maxPercent, 0)}</Box></>
             ) : (
@@ -134,7 +144,11 @@ export const UkraineMap = ({
           </Txt>
         </Box>
       )}
-      {title && <Txt block sx={{mt: 0, textAlign: 'center'}} size="small" color="disabled">{title}</Txt>}
+      {title && (
+        <Txt block sx={{mt: 0, mr: '-16px', ml: '-16px', width: 'calc(100% + 32px)', textAlign: 'center'}} size="small" color="disabled">
+          {title}
+        </Txt>
+      )}
     </Box>
   )
 }

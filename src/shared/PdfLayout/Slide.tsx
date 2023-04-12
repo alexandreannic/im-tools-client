@@ -1,7 +1,7 @@
 import {Box, BoxProps, Icon} from '@mui/material'
 import logo from '../../core/img/drc-logo.png'
 import {Txt, TxtProps} from 'mui-extension'
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useEffect, useRef} from 'react'
 import {usePdfContext} from './PdfLayout'
 import {Property} from 'csstype'
 import logoEu from '../../core/img/eu.png'
@@ -105,16 +105,44 @@ export const SlideBody = (props: BoxProps) => {
   )
 }
 
-export const SlidePanelTitle = (props: TxtProps) => {
+const preventOverCapitalization = (text: string): string => {
+  const acronyms = [
+    'HoHH',
+    'IDPs',
+    'PwD',
+    'HHs',
+    'PoC',
+    'NFIs',
+  ]
+  acronyms.forEach(_ => {
+    text = text.replaceAll(' ' + _ + ' ', `<span style="text-transform: none">&nbsp;${_}&nbsp;</span>`)
+    text = text.replaceAll(' ' + _, `<span style="text-transform: none">&nbsp;${_}</span>`)
+    text = text.replaceAll(_ + ' ', `<span style="text-transform: none">${_}&nbsp;</span>`)
+    text = text.replaceAll(_, `<span style="text-transform: none">${_}</span>`)
+  })
+  return text
+}
+export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML, sx, children, ... props}: {icon?: string} & TxtProps) => {
+  const ref = useRef<HTMLDivElement>()
+
+  useEffect(() => {
+    if (ref.current)
+      ref.current.innerHTML = preventOverCapitalization(ref.current.innerHTML)
+  }, [children])
+
   return <Txt
+    ref={ref}
     block
-    size="big"
+    // size="big"
     bold
-    sx={{display: 'flex', alignItems: 'center', mb: .5, lineHeight: 1.15, mr: -1}}
-    uppercase
+    sx={{display: 'flex', alignItems: 'center', mb: .5, fontSize: '1.05em', lineHeight: 1.15, mr: -1, ...sx}}
     color="hint"
+    uppercase={uppercase}
     {...props}
-  />
+  >
+    {icon && <Icon color="disabled" sx={{mr: 1}}>{icon}</Icon>}
+    {dangerouslySetInnerHTML ? <div dangerouslySetInnerHTML={dangerouslySetInnerHTML}/> : children}
+  </Txt>
 }
 
 export const SlidePanel = ({children, title, sx, noBackground, ...props}: Omit<BoxProps, 'title'> & {
@@ -136,7 +164,11 @@ export const SlidePanel = ({children, title, sx, noBackground, ...props}: Omit<B
         },
       }}
     >
-      {title && <SlidePanelTitle>{title}</SlidePanelTitle>}
+      {title && (typeof title === 'string' ? (
+        <SlidePanelTitle dangerouslySetInnerHTML={{__html: title}}/>
+      ) : (
+        <SlidePanelTitle>{title}</SlidePanelTitle>
+      ))}
       {children}
     </Box>
   )

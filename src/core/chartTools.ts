@@ -17,6 +17,10 @@ export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
 export namespace ChartTools {
 
+  export const take = <T extends string>(n: number) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+    return Arr(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
+  }
+
   export const sortBy = {
     custom: <T extends string>(order: T[]) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
       return sortObject(obj as Record<T, ChartDataVal>, ([aK, aV], [bK, bV]) => {
@@ -66,7 +70,6 @@ export namespace ChartTools {
     Enum.keys(obj).forEach(k => {
       if (!res[k]) res[k] = {value: 0, base: 0}
       // res[k].value = obj[k]
-      res[k].value = obj[k]
       res[k].value = obj[k] / (base ?? 1)
     })
     return res
@@ -101,11 +104,13 @@ export namespace ChartTools {
     data,
     filter,
     categories,
-    filterBase
+    filterBase,
+    filterZeroCategory
   }: {
     data: A[]
-    filter: (_: A) => boolean
-    filterBase?: (_: A) => boolean
+    filter: (_: A) => boolean | undefined
+    filterBase?: (_: A) => boolean | undefined
+    filterZeroCategory?: boolean
     categories: Record<K, (_: A) => boolean>
   }): Record<K, ChartDataValPercent> => {
     const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: {value: 0, base: 0, percent: 0}}), {} as Record<K, ChartDataValPercent>)
@@ -121,6 +126,11 @@ export namespace ChartTools {
         }
       })
     })
+    if (filterZeroCategory) {
+      Enum.keys(res).forEach(k => {
+        if (res[k].value === 0) delete res[k]
+      })
+    }
     return res
   }
 
@@ -148,18 +158,23 @@ export namespace ChartTools {
   export const sumByCategory = <A extends Record<string, any>, K extends string>({
     data,
     filter,
+    sumBase,
     categories,
   }: {
     data: A[]
     filter: (_: A) => number
+    sumBase?: (_: A) => number
     categories: Record<K, (_: A) => boolean>
   }): Record<K, ChartDataVal> => {
     const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: {value: 0, base: 0}}), {} as Record<K, {value: number, base: 0}>)
     data.forEach(x => {
       Enum.entries(categories).forEach(([category, isCategory]) => {
         if (!isCategory(x)) return
-        res[category].base += 1
-        res[category].value += filter(x) ?? 0
+        const base = sumBase ? sumBase(x) : 1
+        if (base) {
+          res[category].base += base
+          res[category].value += filter(x) ?? 0
+        }
       })
     })
     return res

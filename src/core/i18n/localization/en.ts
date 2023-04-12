@@ -1,7 +1,8 @@
-import {formatDistance, formatDuration as formatDurationFns} from 'date-fns'
+import {format, formatDistance, formatDuration as formatDurationFns, sub} from 'date-fns'
 import {externalLinks} from '../../externalLinks'
 import {KoboFormProtHH} from '../../koboForm/koboFormProtHH'
 import Status = KoboFormProtHH.Status
+import {Period} from '../../type'
 
 const invalidDate = '-'
 
@@ -44,6 +45,8 @@ export const en = Object.freeze({
   formatDuration,
   formatLargeNumber,
   messages: {
+    others: 'Others',
+    other: 'Other',
     area: 'Area',
     answers: 'Answers',
     noDataAtm: 'No data at the moment',
@@ -70,31 +73,31 @@ export const en = Object.freeze({
     decidingFactorsToReturn: 'Deciding factors to return',
     displacement: 'Displacement',
     origin: 'Oblast of origin',
-    current: 'Current Oblast',
+    current: 'Oblast of displacement',
     socialCohesion: 'Safety & Social cohesion',
     age: 'Age',
     hohhOlder: 'HoHH 60+',
     hohhFemale: 'HoHH female',
     vulnerabilities: 'Vulnerabilities',
     selectAll: 'Select all',
-    ageGroup: 'Age group',
+    ageGroup: 'Age groups',
     sex: 'Sex',
     status: 'Current status',
     male: 'Male',
     female: 'Female',
     undefined: 'Unknown',
     sample: 'Sample overview',
-    propertyDamaged: 'Property damaged due to the conflict',
+    propertyDamaged: 'Properties damaged due to conflict',
     intentionToReturn: 'Intention to return',
     hhCategoryType: {
       idp: 'IDP',
       hohh60: 'Elderly (60+) HoHH',
       hohhFemale: 'Female HoHH',
-      memberWithDisability: 'Member with disability',
+      memberWithDisability: 'HH with PwD',
       all: 'Average'
     },
     statusType: {
-      conflict_affected_person: 'Conflict affected person',
+      conflict_affected_person: 'Conflict-affected person',
       idp: 'IDP',
       host_community_member: 'Host community member',
       idp_returnee: 'IDP returnee',
@@ -110,84 +113,38 @@ export const en = Object.freeze({
     idp: 'IDP',
     noIdp: 'Non-IDP',
     idps: 'IDPs',
+    global: 'Global',
     noIdps: 'Non-IDPs',
+    noIdpsOnly: 'Non-IDPs only',
     uaCitizenShip: 'Ukrainian citizenship',
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
     protHHSnapshot: {
+      male1860: `Males 18-60 years old`,
       experiencedShellingDuringDisplacement: `Experienced shelling during displacement`,
       numberOfIdp: '# IDPs',
       numberOfHohh60: '# Elderly (60+) HoHH',
       numberOfHohhFemale: '# Female HoHH',
-      numberOfMemberWithDisability: '# Member with disability',
-      livelihoodAbout: ({
-        workingIdp,
-        workingNoIdp,
-        dependOfAidIdp,
-        dependOfAidNotIdp,
-      }: {
-        workingIdp: string,
-        workingNoIdp: string,
-        dependOfAidIdp: string,
-        dependOfAidNotIdp: string,
-      }) => `
-        <p>
-          The conflict has made it difficult for people to earn a living, especially for those who have been displaced. 
-          Many IDPs rely on state benefits and aid to get by, as only <b>${workingIdp}</b> of IDP households have at least one employed member, 
-          compared to <b>${workingNoIdp}</b> for non-displaced households.
-        </p>
-        <p>
-          A significant majority of IDP households (<b>${dependOfAidIdp}</b>) receive aid without any employed members, 
-          compared to <b>${dependOfAidNotIdp}</b> for non-displaced households.
-        </p>
-      `,
-      livelihoodAbout2: ({
-        hhIncomeBelow3000,
-        avgHHIncomeBelow3000,
-        avgHHIncomeBelow3000Max,
-      }: {
-        hhIncomeBelow3000: string
-        avgHHIncomeBelow3000: string
-        avgHHIncomeBelow3000Max: string
-      }) => `
-        <p>
-          <b>${hhIncomeBelow3000}</b> of the households being monitored are in poverty<sup>(1)</sup>, 
-          and between <b>${avgHHIncomeBelow3000}</b> to <b>${avgHHIncomeBelow3000Max}</b> of all households are estimated to be in poverty based on household size.
-        </p>
-      `,
+      numberOfMemberWithDisability: '# HHs with PwD',
       // <b>${hhIncomeBelow3000}</b> of the monitored HHs are in the poverty range<sup>(1)</sup>.
       // If we consider the number of members by HH, we can estimate that between <b>${avgHHIncomeBelow3000}</b> and <b>${avgHHIncomeBelow3000Max}</b> of HHs are in the poverty range.
       livelihoodAboutNotes: `
         <sup>(1)</sup> The range for social protection is calculated by the Ministry of Finance.
-        In January 2023, the living wage is <b>${formatLargeNumber(2589)}</b> UAH average and <b>${formatLargeNumber(2833)} UAH</b> for children (6-18 years old). <br/><u>https://index.minfin.com.ua</u>.`,
+        In January 2023, the living wage is <b>${formatLargeNumber(2589)}</b> UAH average and <b>${formatLargeNumber(2833)} UAH</b> for children (6-18 years old) <u>https://index.minfin.com.ua</u>.`,
       allowanceStateOrHumanitarianAsMainSourceOfIncome: 'HHs Depending on state/humanitarian assistance',
-      percentagePopulationByOblast: 'Population by oblast',
+      percentagePopulationByOblast: 'Monitored IDP population by oblast',
+      hhSeparatedByOblast: `HHs separated by oblast`,
+      senseOfSafety: `Sense of safety`,
+      factorsInfluencingSenseOfSafety: `Factors for safety perception`,
       incomeUnder6000ByCategory: `HH category with income below 6,000 UAH`,
       avgHhSize: (n: number) => `Average HH size: ${n.toFixed(1)}`,
       elderlyWithPension: 'Elderly with pension',
       idpWithAllowance: 'IDPs with allowance',
       hhWith3childrenWithPension: 'HHs with 3+ children and pension',
-      noAccommodationDocument: 'HHs without accommodation document',
-      documentationAboutIdp: ({
-        maleWithoutIdpCert,
-        femaleWithoutIdpCert,
-        withoutDocuments,
-      }: {
-        maleWithoutIdpCert: string
-        femaleWithoutIdpCert: string
-        withoutDocuments: string
-      }) => `
-        <p>
-          The monitoring indicated that most IDPs are registered. Registration is highly facilitated by the digital application Diya.
-          However, a significantly higher percentage of men (<b>${maleWithoutIdpCert}</b>) than women (<b>${femaleWithoutIdpCert}</b>) have not registered.
-          This gender gap can be attributed to the <b>fear of conscription</b>.
-        </p>
-        <p>
-          <b>${withoutDocuments}</b> of monitored HHs don't have formal document and relay on verbal agreement
-          making them exposed to risks of eviction.
-        </p>
-      `,
-      hhWDisabilityWoAllowance: `HHs with PwD registered for assistance`,
+      noAccommodationDocument: 'HHs without formal lease agreement',
+      hhSeparatedDueToConflict: `Family separation due to conflict`,
+      locationOfSeparated: `Location of separated members`,
+      hhWDisabilityWoAllowance: `HHs with PwD registered`,
       enum: {
         _17_1_2_If_not_why: {
           not_entitled_to_the_allowance: 'Not entitled to the allowance',
@@ -230,7 +187,7 @@ export const en = Object.freeze({
           other_specify24: `Other`,
         },
         _13_4_3_If_separated_from_a_household_: {
-          remained_behind_in_the_area_of: 'Remained behind in area of origin',
+          remained_behind_in_the_area_of: 'Remained in area of origin',
           do_not_know_their_whereabouts: 'Do not know their whereabouts',
           serving_in_the_military: 'Serving in the military',
           displaced_to_another_location_: 'Displaced to another area in Ukraine',
@@ -256,13 +213,14 @@ export const en = Object.freeze({
           no: 'No',
         },
         _12_5_1_During_your_displacement_journ: {
-          looting_robbery: 'Looting/robbery',
+          none215: 'None',
+          looting_robbery: 'Extortion/looting/robbery',
           physical_attacks: 'Physical attacks',
-          shelling_or_missile_attacks_an: 'Shelling or missile attacks and/or fear of such attacks',
+          shelling_or_missile_attacks_an: 'Shelling or fear of such attacks',
           harassment_at_checkpoints: 'Harassment at checkpoints',
           movement_restrictions: 'Movement restrictions',
           incident_of_gbv: 'Incident of GBV',
-          extortion: 'Extortion',
+          // extortion: 'Extortion',
           destruction_of_personal_proper: 'Destruction of personal property',
           hate_speech: 'Hate speech',
           other_please_explain215: 'Other',
@@ -456,6 +414,34 @@ export const en = Object.freeze({
           no_legal_documentation: 'No legal documentation',
           unaccompanied_or_separated_chi: 'Unaccompanied or separated child',
         },
+        _39_What_type_of_information_would: {
+          health1: 'Health',
+          legal_aid: 'Legal aid',
+          food: 'Food',
+          livelihoods: 'Livelihoods',
+          shelter: 'Shelter',
+          return: 'Return',
+          protection: 'Protection',
+          cash: 'Cash',
+          family_reunification: 'Family reunification',
+          compensation_regarding_the_mec: 'Compensation for destroyed houses',
+          otheri: 'Other',
+        },
+        _38_Have_you_recveived_information: {
+          health2: 'Health',
+          legal_aid: 'Legal aid',
+          food: 'Food',
+          cash: 'Cash',
+          education: 'Education',
+          shelter: 'Shelter',
+          employment: 'Employment',
+          return: 'Return',
+          family_reunification: 'Family reunification',
+          specialised_services: 'Specialised services',
+          othere: 'Other',
+          none_of_the_abovee: 'None of the above',
+          protection: 'Protection',
+        },
         _12_7_1_Do_you_plan_to_return_to_your_: {
           yes: 'Yes',
           no: 'No',
@@ -470,9 +456,9 @@ export const en = Object.freeze({
           winter_items: 'Winter items',
           cash: 'Cash',
           civil_documentation: 'Civil documentation',
-          university_or_teritary_eduction: 'University or teritary eduction',
+          university_or_teritary_eduction: 'University or tertiary education',
           education_for_children: 'Education for children',
-          nfis: 'NFIS',
+          nfis: 'NFIs',
           wash: 'Wash',
         },
         factorsToReturn: {
@@ -499,48 +485,198 @@ export const en = Object.freeze({
           light_damage: 'No structural repair needed',
         }
       },
-      senseOfSafetyByOblast: 'Bad or Very bad sense of safety by Oblast',
+      requiredLegalAidInformation: `Need for information on legal aid services`,
+      // senseOfSafetyByOblast: 'Bad or Very bad sense of safety by Oblast',
+      senseOfSafetyByOblast: 'Poor sense of safety by oblasts',
       elderlyWithoutPensionCertificate: 'Elderly without pensioner certificate',
       childWithoutBirthCertificate: 'Child without birth certificate',
       barriersToPersonalDocument: 'Barriers',
-      maleWithoutIDPCertByOblast: 'Males IDP without IDP certificate by Oblast',
+      maleWithoutIDPCertByOblast: 'IDP men 18 to 60 years old without IDP certificate',
       maleWithoutIDPCert: 'IDPs without IDP certificate',
       femaleWithoutIDPCert: 'Female without IDP certificate',
+      safetyConcernsDuringDisplacement: `Safety/Security on Displacement`,
+      threatsOrConcernsDuringDisplacement: `Experienced threats`,
+      threatsOrConcernsDuringDisplacementByOblast: `Experienced shelling threat by oblast of origin`,
       titles: {
-        document: 'Civil status and registration',
+        document: 'Registration & Documentation',
         livelihood: 'Livelihood',
         needs: 'Specific needs and priorities',
+        safety: `Safety & Security`
       },
-      first_priorty: '1st priority need',
+      desc: {
+        livelihoodAbout: ({
+          workingIdp,
+          workingNoIdp,
+          dependOfAidIdp,
+          dependOfAidNotIdp,
+        }: {
+          workingIdp: string,
+          workingNoIdp: string,
+          dependOfAidIdp: string,
+          dependOfAidNotIdp: string,
+        }) => `
+        <p>
+          The conflict has significantly impacted the livelihood opportunities of both IDPs 
+          and individuals affected by the conflict, leaving them highly dependent on State and humanitarian aid.
+          Only <b>${workingIdp}</b> of IDP HHs have at least one member employed, 
+          compared to <b>${workingNoIdp}</b> for non-displaced HHs.
+         
+        </p>
+        <p>
+          A considerable majority of IDP HHs without any employed members (<b>${dependOfAidIdp}</b>) receive aid, 
+          compared to <b>${dependOfAidNotIdp}</b> for surveyed non-displaced and returnee HHs.
+        </p>
+      `,
+        livelihoodAbout2: ({
+          hhIncomeBelow3000,
+          avgHHIncomeBelow3000,
+          avgHHIncomeBelow3000Max,
+        }: {
+          hhIncomeBelow3000: string
+          avgHHIncomeBelow3000: string
+          avgHHIncomeBelow3000Max: string
+        }) => `
+        <p>
+          According to PM data, <b>${hhIncomeBelow3000}</b> of HHs earn less than 3,000 UAH (80 USD) per month, 
+          which is below the individual poverty range<sup>(1)</sup> in Ukraine.
+        </p>
+        <p>
+          Dividing each HH income by the number of HH members, 
+          we can estimate that between <b>${avgHHIncomeBelow3000}</b> to <b>${avgHHIncomeBelow3000Max}</b> of monitored HHs are living below the poverty range.
+        </p>
+      `,
+        needs: ({
+          percentLvivWithoutHot,
+          percentZapoWithoutHot,
+          percentChernihivWithoutHot,
+        }: {
+          percentLvivWithoutHot: string
+          percentZapoWithoutHot: string
+          percentChernihivWithoutHot: string
+        }) => `
+        <p>
+          PM highlights disparities between groups and areas.
+          HHs with PwDs, elderly or female-headed HHs and IDPs face greater challenges 
+          in fulfilling their basic needs. For instance, IDPs need more NFIs than non-displaced 
+          communities, including hygiene kits and linens, due to leaving their belongings behind.
+        </p>
+        <p>
+          Access to information on humanitarian assistance and social services provided is 
+          still challenging especially for PwDs and elderly who face
+          barriers in accessing online information and registration procedures.
+          Limited information has reported to be the main barrier to accessing cash assistance.
+        </p>
+       `,
+        documentationAboutIdp: ({
+          maleWithoutIdpCert,
+          _14_1_1_idp_nomale_without_cert,
+          withoutDocuments,
+        }: {
+          maleWithoutIdpCert: string
+          _14_1_1_idp_nomale_without_cert: string
+          withoutDocuments: string
+        }) => `
+        <p>
+          PM indicate that most IDPs are registered, while registration being facilitated by Diya digital application.
+          However, a significantly higher percentage of men from 18 to 60 years old (<b>${maleWithoutIdpCert}</b>) 
+          compared to others gender/age groups (<b>${_14_1_1_idp_nomale_without_cert}</b>) have not registered due to <b>fear of conscription</b>
+          particularly in Chernihivska and Kharkivska oblasts.
+        </p>
+        <p>
+          <b>${withoutDocuments}</b> of surveyed HHs reported not having any formal lease agreement, 
+          mainly relying on verbal agreement, exposing them to risks of eviction.
+        </p>
+        `,
+        safety: ({
+          safetyDuringDisplacement,
+          sosKharkiv,
+          sosChernihiv,
+        }: {
+          safetyDuringDisplacement: string
+          sosKharkiv: string
+          sosChernihiv: string
+        }) => `
+          <p>
+            According to PM data, safety and security threats were experienced by <b>${safetyDuringDisplacement}</b> of 
+            IDPs during their displacement, with shelling being the primary safety concern. 
+          </p>
+          <p>
+            The data shows that Kharkivska and Luhanska oblasts have been particularly affected, 
+            with almost <b>80%</b> of IDPs originating from those areas having experienced shelling during their displacement. 
+            However, Chernihivska oblast stands out as an area where the sense of safety is particularly poor, 
+            with <b>${sosChernihiv}</b> of monitored HHs reporting feeling unsafe, compared to <b>${sosKharkiv}</b> in Kharkivska 
+            oblast although closer to the frontline.
+          </p>
+        `,
+        displacement: ({
+          intentionToReturn,
+          dnipIdps,
+          cherniIdps,
+          lvivIdps,
+          chernivIdps,
+        }: {
+          intentionToReturn: string,
+          dnipIdps: string,
+          cherniIdps: string
+          lvivIdps: string
+          chernivIdps: string
+        }) => `
+          <p>
+            Significant population movements were observed at the beginning of the crisis reaching over 8 million IDPs in May 2022 according to the
+            <a href="${externalLinks.iomDtm}" class="link">IOM's Displacement Tracking Matrix</a>.
+            Displacement is widely associated with conflict and direct threats to life, 
+            security, and safety.
+          </p>
+          <p>
+            Certain areas have seen a significant influx of IDPs, even though they are still experiencing active conflict.
+            This has been observed in Dnipropetrovska oblast hosting <b>${dnipIdps}</b> of the <b>monitored</b> IDP population,
+            mainly originating from Donetsk oblast and other NGCAs.
+            Lvivska and Chernivetska oblasts, which are less affected by shellings, respectively accommodate 
+            <b>${lvivIdps}</b> and <b>${chernivIdps}</b> of the <b>monitored</b> IDPs.   
+          </p>
+        `,
+        sample: `The conflict in Ukraine has generated various protection risks for IDPs and conflict-affected populations.
+          While all areas where PM took place were directly or indirectly affected by the conflict,
+          needs and protection risks vary in each monitored area and are different according to the
+          monitored population group: internally displaced persons, communities directly exposed and 
+          affected by the current armed conflict and host communities.`,
+        disclaimer: `
+          This snapshot summarizes the findings of Protection Monitoring (PM) implemented 
+          through household interviews in Ukraine. 
+          DRC protection monitoring targeted Internally Displaced Persons (IDPs)
+          and people directly exposed to and affected by the current armed conflict.
+          PM has been conducted in the following oblasts: 
+          <ul>
+            <li>Chernihivska</li>
+            <li>Chernivetska</li>
+            <li>Dnipropetrovska</li>
+            <li>Kharkivska</li>
+            <li>Lvivska</li>
+            <li>Zaporizska</li>
+          </ul>
+        `,
+        previousPeriodNote: (period: Period) => `<sup>(1)</sup> Compared to the previous period of ${format(period.start, 'LLL yyyy')} - ${format(sub(period.end, {days: 1}), 'LLL yyyy')}`,
+        dataAccuracy: `<sup>(1)</sup> Due to uneven monitoring across the oblasts, values does not reflect the exact proportions; however, they reveal trend insights.`,
+      },
+      mostNeededInformation: `Most needed information (% of HHs)`,
+      lackOfInformationNeeded: 'Lack of access to information',
+      first_priorty: `Firsts priority needs`,
+      firstPrioritiesIdp: `For IDPs`,
+      firstPrioritiesHohh60: `For 60+ HoHH`,
+      firstPrioritiesHohhFemale: `For female HoHH`,
+      firstPrioritiesMemberWithDisability: `For HoHH w/ PwD`,
       nfiNeededByOblast: 'NFIs needed by oblast',
       firstPriorityNeed: '1st priority need by category',
-      _40_1_pn_shelter_byCategory: 'Shelter as 1st priority need by category',
-      _40_1_pn_health_byCategory: 'Health as 1st priority need by category',
-      _40_1_pn_cash_byCategory: 'Cash as 1st priority need by category',
-      _29_nfiNeededByCategory: 'Need for NFI by category',
+      _40_1_pn_shelter_byCategory: 'Prioritizing Shelter need by PoC',
+      _40_1_pn_health_byCategory: '1<sup>st</sup>&nbsp;Priority need: Health',
+      _40_1_pn_cash_byCategory: '1<sup>st</sup>&nbsp;Priority need: Cash',
+      // _40_1_pn_shelter_byCategory: 'Shelter as 1st priority need by category',
+      // _40_1_pn_health_byCategory: 'Health as 1st priority need by category',
+      // _40_1_pn_cash_byCategory: 'Cash as 1st priority need by category',
+      _29_nfiNeededByCategory: 'Reported needs of NFIs',
       title: 'Protection Snapshot',
       subTitle: 'Ukraine Response',
       factorInfluencingSenseOfSafety: 'Factors influencing the sense of safety',
-      disclaimer: `
-        This snapshot summarizes the findings of Protection Monitoring conducted in the regions/oblasts of 
-        <b>Chernihiv</b>, <b>Dnipro</b>, <b>Lviv</b>, <b>Chernivtsi</b>, and <b>Kharkiv</b>. Protection monitoring has been mainly implemented 
-        through household interviews, complemented by focus group discussions, observation checklists, 
-        and Rapid Protection Assessments. DRC protection monitoring targeted Internally Displaced Persons (IDPs)
-         and people directly exposed to and affected by the current armed conflict. 
-      `,
-      sample: {
-        desc: `The conflict in Ukraine has generated various protection risks for IDPs and conflict-affected populations.
-          While all areas where PM took place were directly or indirectly affected by the conflict,
-          needs and protection risks vary in each monitored region and are different according to the
-          monitored population group: internally displaced persons, communities directly exposed and 
-          affected by the current armed conflict (from now on referred to as conflict-affected), and host communities.`
-      },
-      displacement: {
-        desc: `Significant population movements were observed at the beginning of the crisisn reaching over 8 million IDPs in May 2022 according to the
-          <a href="${externalLinks.iomDtm}" class="link">IOM's Displacement Tracking Matrix</a>.
-          Displacement is widely associated with conflict and direct threats to life, 
-          security, and safety.`,
-      }
     },
     departureFromAreaOfOrigin: `Departure from area of origin`,
     dateOfDeparture: `Date of departure`,

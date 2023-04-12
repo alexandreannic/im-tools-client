@@ -4,7 +4,7 @@ import {useI18n} from '../../core/i18n'
 import {Box, useTheme} from '@mui/material'
 import {Slide, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {Txt} from 'mui-extension'
-import {format} from 'date-fns'
+import {format, sub} from 'date-fns'
 import logoDrc from '../../core/img/drc-logo.png'
 import logoEu from '../../core/img/eu.png'
 
@@ -29,9 +29,9 @@ export const ProtSnapshotHome = ({
           <Box sx={{fontSize: '3em'}}>{m.protHHSnapshot.title}</Box>
           <Txt block color="hint" sx={{fontSize: '1.6em', mb: 2}}>{m.protHHSnapshot.subTitle}</Txt>
           <SlideTxt size="big" color="hint" sx={{display: 'block', mb: 2}}>
-            {format(period.start, 'LLLL yyyy')} - {format(period.end, 'LLLL yyyy')}
+            {format(period.start, 'LLLL yyyy')} - {format(sub(period.end, {days: 1}), 'LLLL yyyy')}
           </SlideTxt>
-          <SlideTxt sx={{display: 'block'}}>{m.protHHSnapshot.disclaimer}</SlideTxt>
+          <SlideTxt sx={{display: 'block'}}>{m.protHHSnapshot.desc.disclaimer}</SlideTxt>
 
           <Box sx={{
             mt: 5,

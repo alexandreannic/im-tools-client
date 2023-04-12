@@ -1,5 +1,5 @@
-import {Slide, SlideBody, SlideCard, SlideContainer, SlideH1, SlideHeader, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
-import {format} from 'date-fns'
+import {Slide, SlideBody, SlideCard, SlideContainer, SlideHeader, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {format, sub} from 'date-fns'
 import {Box, Icon, useTheme} from '@mui/material'
 import {AaPieChart} from '../../shared/Chart/AaPieChart'
 import {Legend} from 'recharts'
@@ -28,12 +28,12 @@ export const ProtSnapshotSample = ({
       <SlideHeader>{m.sample}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer column sx={{flex: 4}}>
+          <SlideContainer column sx={{flex: 4.5}}>
             <SlideTxt size="big" color="hint" sx={{display: 'flex', alignItems: 'center'}}>
-              <Icon sx={{mr: 1}}>date_range</Icon> {format(period.start, 'LLLL yyyy')} - {format(period.end, 'LLLL yyyy')}
+              <Icon sx={{mr: 1}}>date_range</Icon> {format(period.start, 'LLLL yyyy')} - {format(sub(period.end, {days: 1}), 'LLLL yyyy')}
             </SlideTxt>
 
-            <SlideTxt>{m.protHHSnapshot.sample.desc}</SlideTxt>
+            <SlideTxt>{m.protHHSnapshot.desc.sample}</SlideTxt>
 
             <Box id="map" sx={{height: 400, borderRadius: pdfTheme.slideRadius}}/>
           </SlideContainer>
@@ -61,7 +61,7 @@ export const ProtSnapshotSample = ({
                     m={{
                       male: m.male,
                       female: m.female,
-                      undefined: m.undefined,
+                      undefined: m.other,
                     }}
                     data={computed._8_individuals.byGender}
                     colors={{
@@ -74,13 +74,12 @@ export const ProtSnapshotSample = ({
                   </AaPieChart>
                 </SlidePanel>
                 <SlidePanel title={m.status}>
-                  <HorizontalBarChartGoogle hideValue data={computed._12_Do_you_identify_as_any_of}/>
+                  <HorizontalBarChartGoogle data={computed._12_Do_you_identify_as_any_of}/>
                 </SlidePanel>
               </SlideContainer>
               <SlideContainer>
                 <SlidePanel sx={{flex: 1, height: '100%'}} title={m.ageGroup}>
                   <HorizontalBarChartGoogle
-                    hideValue
                     data={computed._8_individuals.byAgeGroup}
                   />
                 </SlidePanel>
@@ -90,28 +89,32 @@ export const ProtSnapshotSample = ({
               <SlideContainer column>
                 <SlidePanel>
                   <PieChartIndicator
+                    noWrap
                     title={m.protHHSnapshot.numberOfIdp}
-                    value={computed.categoriesRatio.idp.value / data.length}
+                    value={computed.categoriesTotal.idp.value / computed.currentStatusAnswered}
                   />
                 </SlidePanel>
                 <SlidePanel>
                   <PieChartIndicator
+                    noWrap
                     title={m.protHHSnapshot.numberOfMemberWithDisability}
-                    value={computed.categoriesRatio.memberWithDisability.value / data.length}
+                    value={computed.categoriesTotal.memberWithDisability.value / data.length}
                   />
                 </SlidePanel>
               </SlideContainer>
               <SlideContainer column>
                 <SlidePanel>
                   <PieChartIndicator
+                    noWrap
                     title={m.protHHSnapshot.numberOfHohhFemale}
-                    value={computed.categoriesRatio.hohhFemale.value / data.length}
+                    value={computed.categoriesTotal.hohhFemale.value / data.length}
                   />
                 </SlidePanel>
                 <SlidePanel>
                   <PieChartIndicator
+                    noWrap
                     title={m.protHHSnapshot.numberOfHohh60}
-                    value={computed.categoriesRatio.hohh60.value / data.length}
+                    value={computed.categoriesTotal.hohh60.value / data.length}
                   />
                 </SlidePanel>
               </SlideContainer>

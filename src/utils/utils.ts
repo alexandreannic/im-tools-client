@@ -99,15 +99,60 @@ export const makeid = (length = 14) => {
 
 }
 
-export function groupByKeys<T>(arr: T[], keys: Array<keyof T>): Record<string, T[]> {
-  const result: Record<string, T[]> = {}
+
+export function groupByPredicates<T>(arr: T[], groupingFunctions: Array<(item: T) => string>): Record<string, any> {
+  const result: Record<string, any> = {}
+
   arr.forEach((item) => {
-    const groupKeys = keys.map((key) => item[key])
-    const groupName = groupKeys.join(',')
-    if (!result[groupName]) {
-      result[groupName] = []
-    }
-    result[groupName].push(item)
+    let current = result
+
+    groupingFunctions.forEach((groupingFunction, index) => {
+      const group = groupingFunction(item)
+      const isLastFunction = index === groupingFunctions.length - 1
+
+      if (!current[group]) {
+        current[group] = isLastFunction ? [item] : {}
+      } else if (isLastFunction) {
+        current[group].push(item)
+      }
+
+      current = current[group]
+    })
   })
+
   return result
+}
+
+export function groupByAndTransform<T>(arr: T[], predicates: ((item: T) => any)[], transformFn?: (value: T[]) => any): {[key: string]: any} {
+  const result: {[key: string]: any} = {}
+
+  arr.forEach((item) => {
+    let currentLevel = result
+    predicates.forEach((predicate, index) => {
+      const key = predicate(item)
+      if (!currentLevel[key]) {
+        currentLevel[key] = index === predicates.length - 1 ? [] : {}
+      }
+      currentLevel = currentLevel[key]
+    })
+    currentLevel.push(item)
+  })
+
+  if (transformFn) {
+    transform(result)
+  }
+
+  return result
+
+  function transform(obj: any) {
+    Object.keys(obj).forEach((key) => {
+      if (Array.isArray(obj[key])) {
+        if (predicates.length === 1 || Object.keys(obj[key][0]).length === predicates.length) {
+          obj[key] = transformFn!(obj[key])
+        }
+      } else {
+        transform(obj[key])
+      }
+    })
+  }
 }

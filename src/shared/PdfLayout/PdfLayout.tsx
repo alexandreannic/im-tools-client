@@ -4,6 +4,10 @@ import {defaultSpacing} from '../../core/theme'
 
 const generalStyles = <GlobalStyles
   styles={{
+    sup: {
+      verticalAlign: 'top',
+      fontSize: '0.75em',
+    },
     p: {
       fontSize: 'inherit',
       lineHeight: 1.6,

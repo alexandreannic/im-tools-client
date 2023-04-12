@@ -8,7 +8,7 @@ import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTit
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ScLineChart} from '../../shared/Chart/ScLineChart'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {Oblast} from '../../shared/UkraineMap/oblastIndex'
+import {Oblast, OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {format} from 'date-fns'
 import {Txt} from 'mui-extension'
 import {ChartIndicator} from '../../shared/ChartIndicator'
@@ -31,14 +31,16 @@ export const ProtSnapshotLivelihood = ({
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
 
+  console.log('OFFICES', data.groupBy(_ => OblastIndex.findByKoboKey(_._4_What_oblast_are_you_from!)?.name))
+
   return (
     <Slide>
       <SlideHeader>{m.protHHSnapshot.titles.livelihood}</SlideHeader>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer sx={{flex: 4}} column>
+          <SlideContainer sx={{flex: 4.3}} column>
             <SlideTxt dangerouslySetInnerHTML={{
-              __html: m.protHHSnapshot.livelihoodAbout({
+              __html: m.protHHSnapshot.desc.livelihoodAbout({
                 workingIdp: toPercent(computed._31_Is_anyone_from_the_household_percent.idp.percent, 0),
                 workingNoIdp: toPercent(computed._31_Is_anyone_from_the_household_percent.notIdp.percent, 0),
                 dependOfAidIdp: toPercent(computed._32_dependingOnAllowancePercent.idp.percent, 0),
@@ -56,7 +58,7 @@ export const ProtSnapshotLivelihood = ({
               {/*  value={computed._31_Is_anyone_from_the_household_percent.notIdp.percent}*/}
               {/*  evolution={computed._31_Is_anyone_from_the_household_percent.notIdp.percent - previous.computed._31_Is_anyone_from_the_household_percent.notIdp.percent}*/}
               {/*/>*/}
-              <Divider sx={{my: 2}}/>
+              <Divider sx={{my: 1.5}}/>
               <SlidePanelTitle>{m.employmentType}</SlidePanelTitle>
               <HorizontalBarChartGoogle data={computed._31_2_What_type_of_work}/>
             </SlidePanel>
@@ -88,7 +90,7 @@ export const ProtSnapshotLivelihood = ({
               {/*  value={computed._32_1_What_type_of_allowances_byElderly.percent}*/}
               {/*  evolution={computed._32_1_What_type_of_allowances_byElderly.percent - previous.computed._32_1_What_type_of_allowances_byElderly.percent}*/}
               {/*/>*/}
-              <Divider sx={{my: 2}}/>
+              <Divider sx={{my: 1.5}}/>
               <PieChartIndicator
                 title={m.protHHSnapshot.idpWithAllowance}
                 value={computed._32_1_What_type_of_allowances_byIdp.percent}
@@ -104,13 +106,13 @@ export const ProtSnapshotLivelihood = ({
           </SlideContainer>
           <SlideContainer column sx={{flex: 4}}>
             <SlideTxt dangerouslySetInnerHTML={{
-              __html: m.protHHSnapshot.livelihoodAbout2({
+              __html: m.protHHSnapshot.desc.livelihoodAbout2({
                 hhIncomeBelow3000: toPercent(
                   computed._33_What_is_the_aver_income_per_household!.up_to_1_500_uah.value / Arr(Object.values(computed._33_What_is_the_aver_income_per_household!)).sum(_ => _.value),
                   0
                 ),
-                avgHHIncomeBelow3000: map(computed._33_incomeByIndividualsBelow3000, _ => toPercent(_.true.length / (_.false.length + _.true.length)))!,
-                avgHHIncomeBelow3000Max: map(computed._33_incomeByIndividualsBelow3000Max, _ => toPercent(_.true.length / (_.false.length + _.true.length)))!,
+                avgHHIncomeBelow3000: map(computed._33_incomeByIndividualsBelow3000, _ => toPercent(_.true.length / (_.false.length + _.true.length), 0))!,
+                avgHHIncomeBelow3000Max: map(computed._33_incomeByIndividualsBelow3000Max, _ => toPercent(_.true.length / (_.false.length + _.true.length), 0))!,
               })
             }}/>
             <SlidePanel title={m.monthlyIncomePerHH}>
@@ -123,7 +125,7 @@ export const ProtSnapshotLivelihood = ({
               />
             </SlidePanel>
             <Divider/>
-            <Txt sx={{mt: -1}} size="small" color="hint" dangerouslySetInnerHTML={{
+            <Txt sx={{mt: -1}} size="small" color="hint" textAlign="justify" dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.livelihoodAboutNotes
             }}/>
             {/*<SlidePanel title={m.protHHSnapshot.incomeUnder6000ByCategory}>*/}

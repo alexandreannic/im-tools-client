@@ -13,13 +13,20 @@ export const PieChartIndicator = ({
   title,
   value,
   evolution,
+  noWrap,
+  children,
+  dense,
+  fractionDigits = 0,
   ...props
 }: {
+  fractionDigits?: number
+  dense?: boolean
+  noWrap?: boolean
   titleIcon?: string
   title?: ReactNode
   value: number
   evolution?: number
-} & Omit<BoxProps, 'children' | 'title'>) => {
+} & Omit<BoxProps, 'title'>) => {
   const theme = useTheme()
   return (
     <Box
@@ -31,10 +38,10 @@ export const PieChartIndicator = ({
       }}
     >
       <AaPieChart
-        outerRadius={26}
-        innerRadius={16}
-        height={60}
-        width={60}
+        outerRadius={24}
+        innerRadius={14}
+        height={55}
+        width={55}
         hideLabel
         data={{
           value: value,
@@ -49,8 +56,8 @@ export const PieChartIndicator = ({
           rest: 'other',
         }}
       />
-      <Box sx={{ml: 2}}>
-        <SlidePanelTitle>
+      <Box sx={{ml: dense ? .5 : 1.5}}>
+        <SlidePanelTitle noWrap={noWrap}>
           {title && (
             <>
               {title}
@@ -58,8 +65,8 @@ export const PieChartIndicator = ({
             </>
           )}
         </SlidePanelTitle>
-        <Txt sx={{fontSize: '1.4em', display: 'inline-flex', alignItems: 'center'}}>
-          <Txt bold>{renderPercent(value, true)}</Txt>
+        <Txt sx={{fontSize: '1.4em', display: 'inline-flex', lineHeight: 1, alignItems: 'center'}}>
+          <Txt bold>{renderPercent(value, true, fractionDigits)}</Txt>
           {evolution && (
             <Txt sx={{
               color: t => evolution > 0 ? t.palette.success.main : t.palette.error.main,
@@ -67,8 +74,9 @@ export const PieChartIndicator = ({
             }}>
               <Icon sx={{ml: 2}} fontSize="inherit">{evolution > 0 ? 'north' : 'south'}</Icon>
               <Box sx={{ml: .25}}>
-                {renderPercent(evolution, true)}
+                {renderPercent(evolution, true, evolution > 10 ? fractionDigits : 1)}
               </Box>
+              {children}
             </Txt>
           )}
         </Txt>

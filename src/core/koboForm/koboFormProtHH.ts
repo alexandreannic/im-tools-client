@@ -1,5 +1,5 @@
 import {KoboAnswer, KoboAnswerMetaData} from '../sdk/server/kobo/Kobo'
-import {Arr, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, Enum, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
 import {Messages} from '../i18n/localization/en'
@@ -9,6 +9,15 @@ export namespace KoboFormProtHH {
   export const elderlyLimitIncluded = 60
   export const isElderly = (age: number) => age >= elderlyLimitIncluded
 
+  export const ageGroupBHA = Object.freeze({
+    '0 - 4': [0, 4],
+    '5 - 9': [5, 9],
+    '10 - 14': [10, 14],
+    '15 - 18': [15, 18],
+    '19 - 29': [19, 29],
+    '30 - 59': [30, 59],
+    '60+': [elderlyLimitIncluded, Infinity],
+  })
   export const ageGroup = Object.freeze({
     '0 - 4': [0, 4],
     '5 - 11': [5, 11],
@@ -18,6 +27,12 @@ export namespace KoboFormProtHH {
     '50 - 59': [50, 59],
     '60+': [elderlyLimitIncluded, Infinity],
   })
+
+  export const groupByAgeGroup = <T extends {age?: number}>(p: T): keyof typeof ageGroupBHA | undefined => {
+    for (const [k, [min, max]] of Enum.entries(ageGroupBHA)) {
+      if (p.age && p.age >= min && p.age <= max) return k
+    }
+  }
 
   enum KoboGender {
     female = 'female',
@@ -35,21 +50,7 @@ export namespace KoboFormProtHH {
     age?: number
     gender?: G
   }
-
-  export enum Information {
-    livelihoods = 'livelihoods',
-    legal_aid = 'legal_aid',
-    health1 = 'health1',
-    otheri = 'otheri',
-    food = 'food',
-    cash = 'cash',
-    compensation_regarding_the_mec = 'compensation_regarding_the_mec',
-    return = 'return',
-    shelter = 'shelter',
-    protection = 'protection',
-    family_reunification = 'family_reunification',
-  }
-
+  
   export enum PriorityNeed {
     health = 'health',
     shelter = 'shelter',
@@ -174,7 +175,8 @@ export namespace KoboFormProtHH {
       _25_1_1_During_the_last_30_day: a._25_1_1_During_the_last_30_day?.split(' ') as GetType<'copingMechanisms'>[] | undefined,
       C_Vulnerability_catergories_that: a.C_Vulnerability_catergories_that?.split(' ') as GetType<'vulnerability'>[] | undefined,
       _12_Do_you_identify_as_any_of: a._12_Do_you_identify_as_any_of as Status | undefined,
-      _39_What_type_of_information_would: a._39_What_type_of_information_would as Information | undefined,
+      _38_Have_you_recveived_information: a._38_Have_you_recveived_information?.split(' ') as GetType<'_38_Have_you_recveived_information'>[] | undefined,
+      _39_What_type_of_information_would: a._39_What_type_of_information_would?.split(' ') as GetType<'_39_What_type_of_information_would'>[] | undefined,
       _40_1_What_is_your_first_priorty: a['_40_What_are_your_priority_needs/_40_1_What_is_your_first_priorty'] as GetType<'priorityNeeds'> | undefined,
       _40_2_What_is_your_second_priority: a['_40_What_are_your_priority_needs/_40_2_What_is_your_second_priority'] as GetType<'priorityNeeds'> | undefined,
       _40_3_What_is_your_third_priority: a['_40_What_are_your_priority_needs/_40_3_What_is_your_third_priority'] as GetType<'priorityNeeds'> | undefined,
@@ -249,8 +251,8 @@ export namespace KoboFormProtHH {
         otherc: undefined,
       }, _ => _)) as GetType<'_32_1_What_type_of_allowances_do_you'>[] | undefined,
       _12_5_1_During_your_displacement_journ: a._12_5_1_During_your_displacement_journ?.split(' ').map(_ => fnSwitch(_, {
-        none215: undefined,
         prefer_not_to_answer: undefined,
+        extortion: 'looting_robbery',
       }, _ => _)) as GetType<'_12_5_1_During_your_displacement_journ'>[] | undefined,
       _17_1_1_Does_any_of_them_recieve_state: fnSwitch(a._17_1_1_Does_any_of_them_recieve_state!, {
         yes26: true,
@@ -268,7 +270,9 @@ export namespace KoboFormProtHH {
         prefer_not_to_answer24: undefined
       }, _ => _)) as GetType<'_15_1_1_What_housing_land_and'>[] | undefined,
       _26_1_1_Where_do_you_live_now: a._26_1_1_Where_do_you_live_now?.split(' ') as GetType<'_26_1_1_Where_do_you_live_now'>[] | undefined,
-      _17_1_2_If_not_why: a._17_1_2_If_not_why?.split(' ') as GetType<'_17_1_2_If_not_why'> | undefined
+      _17_1_2_If_not_why: a._17_1_2_If_not_why?.split(' ') as GetType<'_17_1_2_If_not_why'> | undefined,
+      // _13_1_2_If_refugee_I_your_area_of_origin: map(a._13_1_2_If_refugee_I_your_area_of_origin, _ => new Date(_)),
+      _13_1_2_If_refugee_I_your_area_of_origin: a._13_1_2_If_refugee_I_your_area_of_origin,
     }
   }
 }

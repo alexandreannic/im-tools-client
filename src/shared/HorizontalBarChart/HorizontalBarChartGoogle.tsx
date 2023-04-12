@@ -16,6 +16,7 @@ export interface HorizontalBarChartGoogleData {
 }
 
 interface Props<K extends string> {
+  showLastBorder?: boolean
   hideValue?: boolean
   dense?: boolean
   base?: number
@@ -65,11 +66,12 @@ export const _HorizontalBarChartGoogle = <K extends string>({
   descs,
   barHeight = 2,
   hideValue,
+  showLastBorder,
 }: Omit<Props<K>, 'data'> & {data: NonNullable<Props<K>['data']>}) => {
   const values: HorizontalBarChartGoogleData[] = useMemo(() => Enum.values(data), [data])
   const maxValue = useMemo(() => Math.max(...values.map(_ => _.value)), [data])
   const sumValue = useMemo(() => values.reduce((sum, _) => _.value + sum, 0), [data])
-  const percents = useMemo(() => values.map(_ => _.value / (_.base ? _.base : base ?? sumValue) * 100), [data])
+  const percents = useMemo(() => values.map(_ => _.value / ((base ?? _.base) || sumValue) * 100), [data])
   const maxPercent = useMemo(() => Math.max(...percents), [percents])
 
   const [appeared, setAppeared] = useState<boolean>(false)
@@ -95,7 +97,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
                     mt: 2,
                   } : {
                     mb: (i === values.length - 1) ? 0 : 1,
-                    borderBottom: i === values.length - 1 ? 'none' : t => `1px solid ${t.palette.divider}`,
+                    borderBottom: i === values.length - 1 && !showLastBorder ? 'none' : t => `1px solid ${t.palette.divider}`,
                     transition: t => t.transitions.create('background'),
                     '&:hover': {
                       background: t => alpha(item.color ?? t.palette.primary.main, 0.10),
@@ -103,7 +105,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
                   }
                 }}>
                   <Box sx={{mt: .5, pt: .5, pb: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', mb: barHeight + 'px',}}>
-                    <Txt sx={{p: 0, pr: 1, flex: 1}} truncate>
+                    <Txt sx={{p: 0, pr: .5, flex: 1}} truncate>
                       <Txt block truncate>
                         {item.label ?? k}&nbsp;
                         {(labels && labels[k]) ?? ''}
@@ -116,11 +118,10 @@ export const _HorizontalBarChartGoogle = <K extends string>({
                     {!item.disabled && (
                       <Box sx={{display: 'flex', textAlign: 'right',}}>
                         {!hideValue && (
-                          <Txt color="hint" sx={{flex: 1}}>{formatLargeNumber(item.value)}</Txt>
+                          <Txt color="hint" sx={{flex: 1, mr: 2,}}>{formatLargeNumber(item.value)}</Txt>
                         )}
                         <Txt sx={{
                           flex: 1,
-                          ml: 2,
                           minWidth: 52,
                           color: t => t.palette.primary.main,
                           fontWeight: t => t.typography.fontWeightBold,
@@ -149,56 +150,56 @@ export const _HorizontalBarChartGoogle = <K extends string>({
   )
 }
 
-  const TooltipWrapper = ({
-      children,
-      item,
-      percentOfAll,
-      percentOfBase,
-      ...props
-    }: {
-      percentOfBase: number
-      percentOfAll: number
-      item: HorizontalBarChartGoogleData
-    } & Omit<TooltipProps, 'title'>
-  ) => {
-    const {formatLargeNumber} = useI18n()
-    if (item.disabled) return children
-    return (
-      <LightTooltip
-        {...props}
-        open={item.disabled ? false : undefined}
-        title={
-          <>
-            <Txt size="big" block bold>
-              {item.label}
+const TooltipWrapper = ({
+    children,
+    item,
+    percentOfAll,
+    percentOfBase,
+    ...props
+  }: {
+    percentOfBase: number
+    percentOfAll: number
+    item: HorizontalBarChartGoogleData
+  } & Omit<TooltipProps, 'title'>
+) => {
+  const {formatLargeNumber} = useI18n()
+  if (item.disabled) return children
+  return (
+    <LightTooltip
+      {...props}
+      open={item.disabled ? false : undefined}
+      title={
+        <>
+          <Txt size="big" block bold>
+            {item.label}
+          </Txt>
+          {item.desc && (
+            <Txt block color="hint">
+              {item.desc}
             </Txt>
-            {item.desc && (
-              <Txt block color="hint">
-                {item.desc}
-              </Txt>
+          )}
+          <Box sx={{mt: .5}}>
+            <TooltipRow label="Total" value={formatLargeNumber(item.value)}/>
+            <TooltipRow label="% of answers" value={Math.ceil(percentOfAll) + ' %'}/>
+            {percentOfAll !== percentOfBase && (
+              <TooltipRow label="% of peoples" value={Math.ceil(percentOfBase) + ' %'}/>
             )}
-            <Box sx={{mt: .5}}>
-              <TooltipRow label="Total" value={formatLargeNumber(item.value)}/>
-              <TooltipRow label="% of answers" value={Math.ceil(percentOfAll) + ' %'}/>
-              {percentOfAll !== percentOfBase && (
-                <TooltipRow label="% of peoples" value={Math.ceil(percentOfBase) + ' %'}/>
-              )}
-            </Box>
-          </>
-        }
-      >
-        {children}
-      </LightTooltip>
-    )
-  }
+          </Box>
+        </>
+      }
+    >
+      {children}
+    </LightTooltip>
+  )
+}
 
-  const LightTooltip = styled(({className, ...props}: TooltipProps) => (
-    <Tooltip {...props} classes={{popper: className}}/>
-  ))(({theme}) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: theme.palette.common.white,
-      color: 'rgba(0, 0, 0, 0.87)',
-      boxShadow: theme.shadows[3],
-      fontSize: 11,
-    },
-  }))
+const LightTooltip = styled(({className, ...props}: TooltipProps) => (
+  <Tooltip {...props} classes={{popper: className}}/>
+))(({theme}) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[3],
+    fontSize: 11,
+  },
+}))

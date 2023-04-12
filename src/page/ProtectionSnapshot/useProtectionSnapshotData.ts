@@ -6,7 +6,7 @@ import {useI18n} from '../../core/i18n'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {chain} from '../../utils/utils'
 import {OblastISO, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
-import {isEqual, omit, pick} from 'lodash'
+import {omit, pick} from 'lodash'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
@@ -28,11 +28,12 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
   // TODO Durable solution - factors to return, checker by area: nord/sud/east GCA/east NGCA (Gov contorl area)
   return useMemo(() => {
-    const categoryCurrentOblasts = (column: '_4_What_oblast_are_you_from_iso' | '_12_1_What_oblast_are_you_from_001_iso' = '_4_What_oblast_are_you_from_iso') => Enum.keys(
-      ukraineSvgPath).reduce(
-      (acc, k) => ({...acc, [k]: (_: Answer): boolean => _[column] === k}),
-      {} as Record<OblastISO, (_: Answer) => boolean>
-    )
+
+    const categoryOblasts = (column: '_4_What_oblast_are_you_from_iso' | '_12_1_What_oblast_are_you_from_001_iso' = '_4_What_oblast_are_you_from_iso') => Enum.keys(ukraineSvgPath)
+      .reduce(
+        (acc, k) => ({...acc, [k]: (_: Answer): boolean => _[column] === k}),
+        {} as Record<OblastISO, (_: Answer) => boolean>
+      )
 
     const categoryFilters = {
       notIdp: KoboFormProtHH.filterByNoIDP,
@@ -51,13 +52,45 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
       return oblastIndex
     }
 
+    const totalMember = data.sum(_ => _._8_What_is_your_household_size ?? 1)
+    const idps = data.filter(KoboFormProtHH.filterByIDP)
+    const idpsCount = idps.length
+    const noIdpsCount = data.count(KoboFormProtHH.filterByNoIDP)
+    const flattedData = data.flatMap(_ => _.persons.map(p => ({...p, ..._})))
     return {
-      idpsCount: data.count(KoboFormProtHH.filterByIDP),
-      noIdpsCount: data.count(KoboFormProtHH.filterByNoIDP),
+      totalMember,
+      totalIdpsMember: idps.sum(_ => _._8_What_is_your_household_size ?? 1),
+      idps,
+      idpsCount,
+      noIdpsCount,
+      currentStatusAnswered: data.filter(_ => _._12_Do_you_identify_as_any_of !== undefined).length,
+
+      _28_accessToHotByOblast: ChartTools.byCategory({
+        categories: categoryOblasts(),
+        data: data,
+        filter: _ => !_._28_Do_you_have_acce_current_accomodation?.find(_ => _ === 'hot_water' || _ === 'heating_system'),
+        filterBase: _ => _._28_Do_you_have_acce_current_accomodation !== undefined
+      }),
+
+      _28_planToReturnByOblast: ChartTools.byCategory({
+        categories: categoryOblasts('_12_1_What_oblast_are_you_from_001_iso'),
+        // data: data,
+        data: data.filter(_ => _._12_Do_you_identify_as_any_of === 'idp'),
+        filter: _ => _._12_7_1_Do_you_plan_to_return_to_your_ === 'yes' || _._12_7_1_Do_you_plan_to_return_to_your_ === 'yes_but_no_clear_timeframe',
+        // filterBase: _ => _._28_Do_you_have_acce_current_accomodation !== undefined
+      }),
+
+      _28_accessToHotByOblastForIDPs: ChartTools.byCategory({
+        categories: categoryOblasts(),
+        // filterZeroCategory: true,
+        data: data.filter(_ => _._12_Do_you_identify_as_any_of !== 'idp'),
+        filter: _ => !_._28_Do_you_have_acce_current_accomodation?.find(_ => _ === 'hot_water' || _ === 'heating_system'),
+        filterBase: _ => _._28_Do_you_have_acce_current_accomodation !== undefined
+      }),
 
       _13_4_1_Are_you_separated_fromByOblast: ChartTools.byCategory({
+        categories: categoryOblasts(),
         data: data,
-        categories: categoryCurrentOblasts(),
         filter: _ => !!_._13_4_1_Are_you_separated_from_any_of_,
       }),
 
@@ -73,7 +106,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         })
       },
 
-      categoriesRatio: ChartTools.byCategory({
+      categoriesTotal: ChartTools.byCategory({
         data: data,
         filter: _ => true,
         categories: categoryFilters,
@@ -119,8 +152,37 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _18_1_1_Please_rate_your_sense_of_safe_map: ChartTools.byCategory({
         data: data,
-        categories: categoryCurrentOblasts(),
+        categories: categoryOblasts(),
         filter: _ => _._18_1_1_Please_rate_your_sense_of_safe === '2__unsafe' || _._18_1_1_Please_rate_your_sense_of_safe === '1__very_unsafe'
+      }),
+
+      _12_5_1_shellingDuringDisplacementMap: ChartTools.byCategory({
+        data: idps,
+        categories: categoryOblasts('_12_1_What_oblast_are_you_from_001_iso'),
+        filter: _ => !!_._12_5_1_During_your_displacement_journ?.includes('shelling_or_missile_attacks_an')
+      }),
+
+      _12_5_1_During_your_displacement_journPercent: ChartTools.percentage({
+        data: data.map(_ => _._12_5_1_During_your_displacement_journ).compact(),
+        value: _ => !_.includes('none215')
+      }),
+
+      _12_5_1_During_your_displacement_journ: chain(ChartTools.multiple({
+        data: idps.map(_ => _._12_5_1_During_your_displacement_journ).compact().filter(_ => !_.includes('other_please_explain215') && !_.includes('none215')),
+      }))
+        .map(ChartTools.setLabel(m.protHHSnapshot.enum._12_5_1_During_your_displacement_journ))
+        .map(ChartTools.sortBy.value)
+        .get,
+
+      _27_Has_your_house_apartmentByOblast: ChartTools.byCategory({
+        data: data,
+        categories: categoryOblasts('_12_1_What_oblast_are_you_from_001_iso'),
+        filter: _ => !!_._27_Has_your_house_apartment_been_
+      }),
+      _27_1_If_yes_what_is_level_of_the_damageByOblast: ChartTools.byCategory({
+        data: data,
+        categories: categoryOblasts('_12_1_What_oblast_are_you_from_001_iso'),
+        filter: _ => _._27_1_If_yes_what_is_level_of_the_damage === 'fully_damaged_needs_full_reconstruction'
       }),
 
       dnipPssRomane: ChartTools.percentage({
@@ -138,11 +200,11 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         value: _ => _ === true
       }),
 
-      _14_1_1_idp_female_without_cert: ChartTools.percentage({
+      _14_1_1_idp_nomale_without_cert: ChartTools.percentage({
         data: data
           .filter(KoboFormProtHH.filterByIDP)
           .flatMap(_ => _.persons)
-          .filter(_ => _.age && _.age >= 18 && _.gender && _.gender === 'female')
+          .filter(_ => !(_.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male'))
           .map(_ => _.statusDoc),
         value: hasntIdpCertificate,
       }),
@@ -151,7 +213,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         data: data
           .filter(KoboFormProtHH.filterByIDP)
           .flatMap(_ => _.persons)
-          .filter(_ => _.age && _.age >= 18 && _.gender && _.gender === 'male')
+          .filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male')
           .map(_ => _.statusDoc),
         value: hasntIdpCertificate,
       }),
@@ -170,6 +232,46 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         data: data.map(_ => _._13_4_1_Are_you_separated_from_any_of_),
         value: _ => !!_
       }),
+
+      _39_What_type_of_information_wouldPercent: ChartTools.percentage({
+        data: data.map(_ => _._39_What_type_of_information_would).compact(),
+        value: _ => _.includes('legal_aid')
+      }),
+
+      _39_What_type_of_information_wouldbyCat: chain(ChartTools.byCategory({
+        data,
+        categories: omit(categoryFilters, ['all', 'notIdp']),
+        filter: _ => _._39_What_type_of_information_would !== undefined
+      }))
+        .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType as any))
+        .val,
+
+      _38_Have_you_recveived_informationbyCat: chain(ChartTools.byCategory({
+        data,
+        categories: omit(categoryFilters, ['notIdp', 'all']),
+        filter: row => {
+          const neededInfo: any[] = row._39_What_type_of_information_would?.filter(_ => _ !== 'otheri').map(_ => _.replaceAll(/\d/g, '')) ?? []
+          const receivedInfo: any[] = row._38_Have_you_recveived_information?.filter(_ => _ !== 'othere').map(_ => _.replaceAll(/\d/g, '')) ?? []
+          return !!neededInfo.find(_ => receivedInfo.includes(_))
+          // return true
+          // return info
+          // _._38_Have_you_recveived_information?.includes('none_of_the_abovee')
+          // && _._39_What_type_of_information_would !== undefined,
+        }
+      }))
+        .map(ChartTools.sortBy.percent)
+        .map(ChartTools.setLabel(m.hhCategoryType as any))
+        .val,
+
+      _39_What_type_of_information_would: chain(ChartTools.multiple({
+        data: data.map(_ => _._39_What_type_of_information_would).compact(),
+        filterValue: ['otheri']
+      }))
+        .map(ChartTools.setLabel(m.protHHSnapshot.enum._39_What_type_of_information_would))
+        .map(ChartTools.sortBy.value)
+        // .map(x => Enum.entries(x).splice(0, 3).reduce((acc, [k, v]) => ({...acc, [k]: v}), {}))
+        .val,
 
       _19_1_2_What_factors_are_influencing_t: chain(ChartTools.multiple({
         data: data.map(_ => _._19_1_2_What_factors_are_influencing_t).compact(),
@@ -214,7 +316,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _19_1_1_Please_rate_your_relationshipByOblast: ChartTools.byCategory({
         data: data,
-        categories: categoryCurrentOblasts(),
+        categories: categoryOblasts(),
         filter: _ => _._19_1_1_Please_rate_your_relationship_ === '1__very_bad'
           || _._19_1_1_Please_rate_your_relationship_ === '2__bad'
         // || _._19_1_1_Please_rate_your_relationship_ === '3__acceptable'
@@ -285,14 +387,15 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
       _26_4_noHouseFormalDocPercent: ChartTools.percentage({
         data: data.filter(_ => {
           const hasHouse: KoboFormProtHH.GetType<'_26_1_1_Where_do_you_live_now'>[] = [
-            'owned_apartment_or_house',
             'rented_house_or_apartment__wit',
             'modular_houses',
+            'temporary_shelter',
+            'public_or_communal_building__e',
             'rented_accomodation__cash_for_',
           ]
           return _._26_1_1_Where_do_you_live_now?.find(_ => hasHouse.includes(_)) && _._26_4_Do_you_have_fo_in_your_accomodation !== undefined
         }),
-        value: _ => _._26_4_Do_you_have_fo_in_your_accomodation && _._26_4_Do_you_have_fo_in_your_accomodation === 'no_formal_documents' || _._26_4_Do_you_have_fo_in_your_accomodation === 'verbal_agreement'
+        value: _ => !!_._26_4_Do_you_have_fo_in_your_accomodation && (_._26_4_Do_you_have_fo_in_your_accomodation === 'no_formal_documents' || _._26_4_Do_you_have_fo_in_your_accomodation === 'verbal_agreement')
       }),
 
       _26_4_Do_you_have_fo_in_your_accomodation: chain(ChartTools.single({
@@ -332,16 +435,8 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           filter: _ => _._29_Which_NFI_do_you_need !== undefined && !_._29_Which_NFI_do_you_need.includes('do_not_require41')
         })).val,
 
-      _40_1_firstPriorityByOblast: chain(
-        ChartTools.groupBy({
-          data,
-          groupBy: _ => _._4_What_oblast_are_you_from_iso,
-          filterBase: _ => true,
-          filter: _ => _._40_1_What_is_your_first_priorty !== undefined && _._40_1_What_is_your_first_priorty.includes(KoboFormProtHH.PriorityNeed.cash)
-        })).val,
-
       _31_Is_anyone_from_the_household_percent: ChartTools.byCategory({
-        categories: pick(categoryFilters, ['idp', 'notIdp', 'all']),
+        categories: pick(categoryFilters, ['hohhFemale', 'idp', 'notIdp', 'all']),
         data,
         filter: _ => _._31_Is_anyone_from_the_household_ === true,
       }),
@@ -395,20 +490,20 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _29_nfiNeededByCategory: chain(ChartTools.byCategory({
         data,
-        categories: omit(categoryFilters, 'notIdp'),
+        categories: omit(categoryFilters, ['all', 'notIdp']),
         filter: _ => _._29_Which_NFI_do_you_need !== undefined && !_._29_Which_NFI_do_you_need.includes('do_not_require41')
       }))
         .map(ChartTools.sortBy.percent)
-        .map(ChartTools.setLabel(m.hhCategoryType))
+        .map(ChartTools.setLabel(m.hhCategoryType as any))
         .val,
 
       _40_1_pn_cash_byCategory: chain(ChartTools.byCategory({
         data,
-        categories: omit(categoryFilters, 'notIdp'),
+        categories: omit(categoryFilters, ['all', 'notIdp']),
         filter: _ => !!_._40_1_What_is_your_first_priorty?.includes('cash')
       }))
         .map(ChartTools.sortBy.percent)
-        .map(ChartTools.setLabel(m.hhCategoryType))
+        .map(ChartTools.setLabel(m.hhCategoryType as any))
         .val,
 
       _40_1_pn_shelter_byCategory: chain(ChartTools.byCategory({
@@ -429,6 +524,22 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .map(ChartTools.setLabel(m.hhCategoryType))
         .val,
 
+      _40_1_first_priortyBy: (() => {
+        const compute = (filter: (_: Answer) => boolean) => chain(ChartTools.single({
+          data: data.filter(filter).map(_ => _._40_1_What_is_your_first_priorty).compact(),
+        }))
+          .map(ChartTools.sortBy.value)
+          .map(ChartTools.take(3))
+          .map(ChartTools.setLabel(m.protHHSnapshot.enum.priorityNeeds))
+          .val
+        return {
+          idp: compute(categoryFilters.idp),
+          hohh60: compute(categoryFilters.hohh60),
+          hohhFemale: compute(categoryFilters.hohhFemale),
+          memberWithDisability: compute(categoryFilters.memberWithDisability),
+        }
+      })(),
+      
       _40_1_What_is_your_first_priorty: chain(ChartTools.single({
         data: data.map(_ => _._40_1_What_is_your_first_priorty).compact(),
       }))
@@ -467,11 +578,6 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .map(ChartTools.setLabel(m.protHHSnapshot.enum.propertyDamageTitle))
         .map(ChartTools.setDesc(m.protHHSnapshot.enum.propertyDamageDesc))
         .val,
-
-      _12_5_1_During_your_displacement_journPercent: ChartTools.percentage({
-        data: data.flatMap(_ => _._12_5_1_During_your_displacement_journ).compact(),
-        value: _ => _ === 'shelling_or_missile_attacks_an',
-      }),
 
       C_Vulnerability_catergories_that: chain(ChartTools.multiple({
         data: data.map(_ => _.C_Vulnerability_catergories_that).compact(),
@@ -514,48 +620,21 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         getDate: _ => _.replace(/-\d{2}$/, ''),
       }),
 
-      // idpsWithoutCertByOblast: data
-      //   .filter(_ => _._12_Do_you_identify_as_any_of === 'idp')
-      //   .map(_ => _.persons.filter(_ => _.age && _.gender && _.age >= 18 && _.gender === 'male'))
-      //   .map(_ => _._4_What_oblast_are_you_from_iso),
+      ...(() => {
+        const idpsWithoutCertByOblast = (sex: 'male' | 'female') => ChartTools.sumByCategory({
+          data: data.filter(_ => _._12_Do_you_identify_as_any_of === 'idp'),
+          categories: categoryOblasts(),
+          filter: _ => _.persons.filter(_ => _.gender === sex && _.age && _.age >= 18 && _.age <= 60 && hasntIdpCertificate(_.statusDoc)).length,
+          sumBase: _ => _.persons.filter(_ => _.gender === sex && _.age && _.age >= 18 && _.age <= 60).length,
+        })
+        return {
+          idpsWithoutCertByOblast: idpsWithoutCertByOblast('male'),
+          femaleIdpsWithoutCertByOblast: idpsWithoutCertByOblast('female'),
+        }
+      })(),
 
-      idpsWithoutCertByOblast: chain(
-        data.reduce((acc, row) => {
-          if (row._12_Do_you_identify_as_any_of !== 'idp') return acc
-          const k = row._4_What_oblast_are_you_from_iso
-          if (!k) return acc
-          const adults = row.persons.filter(_ => _.gender === 'male' && _.age && _.age >= 18)
-          const adultsWithCert = adults.map(_ => _.statusDoc).filter(hasntIdpCertificate)
-          return {
-            ...acc, [k]: {
-              value: acc[k].value + adultsWithCert.length,
-              base: acc[k].base + adults.length,
-            }
-          }
-        }, initOblastIndex({value: 0, base: 0}))
-      ).get,
-
-      femaleIdpsWithoutCertByOblast: chain(
-        data.reduce((acc, row) => {
-          if (row._12_Do_you_identify_as_any_of !== 'idp') return acc
-          const k = row._4_What_oblast_are_you_from_iso
-          if (!k) return acc
-          const adults = row.persons.filter(_ => _.gender === 'female' && _.age && _.age >= 18)
-          const adultsWithCert = adults.map(_ => _.statusDoc).filter(hasntIdpCertificate)
-          return {
-            ...acc, [k]: {
-              value: acc[k].value + adultsWithCert.length,
-              base: acc[k].base + adults.length,
-            }
-          }
-        }, initOblastIndex({value: 0, base: 0}))
-      ).get,
-
-      disabilityWithoutCertificate: 1,
-
-      oblastOrigins: data
-        // .map(_ => _._12_1_What_oblast_are_you_from_001_iso)
-        // .compact()
+      oblastOrigins: idps
+        // .filter(_ => _._4_What_oblast_are_you_from === 'dnip')
         .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => {
           const oblast = _._12_1_What_oblast_are_you_from_001_iso
           const peoples = _._8_What_is_your_household_size ?? 1
@@ -563,16 +642,19 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
             return [oblast, {value: (acc[oblast]?.value ?? 0) + peoples}]
         }),
 
-      oblastCurrent: data
-        .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => {
-          const oblast = _._4_What_oblast_are_you_from_iso
-          const peoples = _._8_What_is_your_household_size ?? 1
-          if (oblast)
-            return [oblast, {value: (acc[oblast]?.value ?? 0) + peoples}]
-        }),
-      // .map(_ => _._4_What_oblast_are_you_from_iso)
-      // .compact()
-      // .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => [_, {value: (acc[_]?.value ?? 0) + 1}]),
+      oblastCurrent: ChartTools.byCategory({
+        data: flattedData,
+        categories: categoryOblasts(),
+        filter: _ => _._12_Do_you_identify_as_any_of === 'idp',
+      }),
+
+      // oblastCurrent: idps
+      //   .reduceObject<Record<OblastISO, ChartDataVal>>((_, acc) => {
+      //     const oblast = _._4_What_oblast_are_you_from_iso
+      //     const peoples = _._8_What_is_your_household_size ?? 1
+      //     if (oblast)
+      //       return [oblast, {value: (acc[oblast]?.value ?? 0) + peoples}]
+      //   }),
 
       totalMembers: data.sum(_ => _._8_What_is_your_household_size ?? 0),
 
@@ -588,6 +670,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         },
         filter: _ => _._8_What_is_your_household_size ?? 0,
       }),
+
 
       _8_individuals: (() => {
         const persons = data.flatMap(_ => _.persons)

@@ -2,16 +2,16 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from '../../core/context/ConfigContext'
 import {Period, UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {Box, FormControlLabel, Icon, Switch, useTheme} from '@mui/material'
-import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
-import {Fender, IconBtn, Txt} from 'mui-extension'
+import {Box, FormControlLabel, Switch, useTheme} from '@mui/material'
+import {_Arr, Arr, Enum, map, sleep} from '@alexandreannic/ts-utils'
+import {Fender, Txt} from 'mui-extension'
 import {Pdf} from 'shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {useI18n} from '../../core/i18n'
 import {ItSelect} from '../../shared/Select/Select'
 import {ProtSnapshotDocument} from './ProtSnapshotDocument'
-import {ProtSnapshotAA} from './ProtSnapshotAA'
+import {ProtSnapshotSafety} from './ProtSnapshotSafety'
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ProtSnapshotLivelihood} from './ProtSnapshotLivelihood'
@@ -19,42 +19,10 @@ import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
 import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
 import {ProtSnapshotSample} from './ProtSnapshotSample'
 import {ProtSnapshotHome} from './ProtSnapshotHome'
+import {Btn} from '../../shared/Btn/Btn'
 import Answer = KoboFormProtHH.Answer
-import {format} from 'date-fns'
-import {sortObject} from '../../utils/utils'
-
-const initGoogleMaps = async (mapId: string, color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
-  return
-  // let trys = 0
-  // while (!google) {
-  //   await sleep(200 + (100 * trys))
-  //   trys++
-  //   if (trys > 140) break
-  // }
-  // const ukraineCenter: google.maps.LatLngLiteral = {lat: 48.96008674231441, lng: 31.702957509661097}
-  // const map = new google.maps.Map(document.querySelector('#map') as HTMLElement, {
-  //   mapId: mapId,
-  //   center: ukraineCenter,
-  //   zoom: 5.2,
-  // })
-  // bubbles.forEach(_ => {
-  //   if (!_.loc?.[0]) return
-  //   const circle = new google.maps.Circle({
-  //     clickable: true,
-  //     strokeColor: color,
-  //     strokeOpacity: 0.8,
-  //     strokeWeight: 1,
-  //     fillColor: color,
-  //     fillOpacity: 0.25,
-  //     map,
-  //     center: {lat: _.loc[0], lng: _.loc[1]},
-  //     radius: Math.sqrt(_.size ?? 1) * 5500,
-  //   })
-  //   google.maps.event.addListener(circle, 'mouseover', function () {
-  //     map.getDiv().setAttribute('title', _.size + '')
-  //   })
-  // })
-}
+import {initGoogleMaps} from './initGoogleMaps'
+import {SlidePanelTitle} from '../../shared/PdfLayout/Slide'
 
 interface Data {
   data: _Arr<Answer>
@@ -89,8 +57,8 @@ export const ProtSnapshot = ({
   formId,
   // period = {start: new Date(2023, 0, 1), end: new Date()},
   // period = {start: new Date(2023, 0, 4), end: new Date(2023, 0, 5)},
-  period = {start: new Date(2022, 0, 1), end: new Date(2024, 2, 1)},
-  previousPeriod = {start: new Date(2022, 10, 1), end: new Date(2023, 0, 1)},
+  period = {start: new Date(2023, 0, 1), end: new Date(2023, 3, 1)},
+  previousPeriod = {start: new Date(2022, 9, 1), end: new Date(2023, 0, 1)},
 }: {
   formId: UUID,
   period?: Period
@@ -102,7 +70,6 @@ export const ProtSnapshot = ({
   const fetch = (period?: Period) => () => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
   const _hhCurrent = useFetcher(fetch(period))
   const _hhPrevious = useFetcher(fetch(previousPeriod))
-  const _hhAll = useFetcher(fetch())
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilters>>({})
   const [customFilters, setCustomFilters] = useState<Partial<ProtSnapshotCustomFilters>>({})
 
@@ -167,6 +134,7 @@ export const ProtSnapshot = ({
   }, [_4_What_oblast_are_you_from_iso])
 
   useEffect(() => {
+    document.title = 'DRC-UA-PM_Snapshot-2023_Jan_Mar'
     // console.log('data', currentFilteredData?.map(_ => [_.persons, _._12_Do_you_identify_as_any_of]).get)
     // console.log('here',
     //   currentFilteredData
@@ -179,19 +147,22 @@ export const ProtSnapshot = ({
   }, [currentFilteredData])
   // console.log(currentFilteredData?.flatMap(_ => _.persons.map(_ => _.age)).filter(_ => _ && _ < 18))
 
+  // return (
+  //   <SlidePanelTitle>IDPs</SlidePanelTitle>
+  // )
   return (
     <Pdf>
       <Box className="noprint" sx={{margin: 'auto', maxWidth: '30cm', mb: 2}}>
         <Box>
-          <Box sx={{display: 'flex', alignItems: 'center',}}>
+          <Box sx={{display: 'flex'}}>
             <UkraineMap
+              legend={false}
               data={currentComputedData.oblastCurrent}
               onSelect={updateOblastFilters('_4_What_oblast_are_you_from_iso')}
-              title={m.origin}
-              sx={{width: '200px'}}
+              sx={{width: '150px', mr: 2,}}
             />
             <Box>
-              <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <Box sx={{display: 'flex', alignItems: 'center', flex: 1}}>
                 <ItSelect<KoboFormProtHH.GetType<'vulnerability'>>
                   multiple
                   label={m.vulnerabilities}
@@ -210,9 +181,6 @@ export const ProtSnapshot = ({
                     ({value: v, children: m.statusType[v]})
                   )}
                 />
-              </Box>
-              <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
-                <IconBtn sx={{marginLeft: 'auto'}} color="primary" onClick={() => window.print()}><Icon>download</Icon></IconBtn>
                 <FormControlLabel
                   control={<Switch/>}
                   label={m.hohhOlder}
@@ -225,13 +193,25 @@ export const ProtSnapshot = ({
                   checked={!!customFilters.hohhFemale}
                   onChange={(e: any) => setCustomFilters(prev => ({...prev, hohhFemale: e.target.checked}))}
                 />
+              </Box>
+              {/*<Divider/>*/}
+              <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
                 <Txt color="hint" sx={{ml: 2}}>
-                  {period.start.toDateString()} -
+                  {period.start.toDateString()}{' - '}
                   {period.end.toDateString()}
                 </Txt>
                 <Txt color="hint" bold sx={{ml: 2}}>
                   {currentFilteredData?.length ?? '-'}
                 </Txt>
+                <Btn
+                  sx={{marginLeft: 'auto', mr: 2}}
+                  color="primary"
+                  variant="contained"
+                  icon="download"
+                  onClick={() => window.print()}
+                >
+                  Download PDF
+                </Btn>
               </Box>
             </Box>
           </Box>
@@ -274,17 +254,14 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
   const theme = useTheme()
   const {conf} = useConfig()
 
-  // console.log(props.current.data)
-  // console.log('>>', new Set(props.current.data.flatMap(_ => (_ as any)._29_Which_NFI_do_you_need?.split(' '))))
-  // console.log('--')
   useEffect(() => {
-    // console.log(new Set(props.current.data.flatMap((_: any) => _['_13_4_1_Are_you_separated_from_any_of_']?.split(' '))))
     initGoogleMaps(
       conf.gooogle.mapId,
       theme.palette.primary.main,
       props.current.data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
     )
   }, [])
+
   return (
     <>
       {/*<Box sx={{display: 'flex', mb: 1}}>*/}
@@ -314,12 +291,12 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
       {/*  </Box>*/}
       {/*</Box>*/}
 
-      <ProtSnapshotAA {...props}/>
-      <ProtSnapshotDocument {...props}/>
-      <ProtSnapshotHome {...props}/>
-      <ProtSnapshotSample {...props}/>
-      <ProtSnapshotDisplacement {...props}/>
-      <ProtSnapshotLivelihood {...props}/>
+      {/*<ProtSnapshotHome {...props}/>*/}
+      {/*<ProtSnapshotSample {...props}/>*/}
+      {/*<ProtSnapshotDisplacement {...props}/>*/}
+      {/*<ProtSnapshotSafety {...props}/>*/}
+      {/*<ProtSnapshotDocument {...props}/>*/}
+      {/*<ProtSnapshotLivelihood {...props}/>*/}
       <ProtSnapshotNeeds {...props}/>
     </>
   )

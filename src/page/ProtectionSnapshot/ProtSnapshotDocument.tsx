@@ -51,46 +51,33 @@ export const ProtSnapshotDocument = ({
             {/*  />*/}
             {/*</SlidePanel>*/}
             <SlideTxt dangerouslySetInnerHTML={{
-              __html: m.protHHSnapshot.documentationAboutIdp({
+              __html: m.protHHSnapshot.desc.documentationAboutIdp({
                 maleWithoutIdpCert: toPercent(computed._14_1_1_idp_male_without_cert.percent, 0),
-                femaleWithoutIdpCert: toPercent(computed._14_1_1_idp_female_without_cert.percent, 0),
+                _14_1_1_idp_nomale_without_cert: toPercent(computed._14_1_1_idp_nomale_without_cert.percent, 0),
                 withoutDocuments: toPercent(computed._26_4_noHouseFormalDocPercent.percent, 0),
               })
             }}
             />
             <SlidePanel>
-              <SlidePanelTitle>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
-              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                <PieChartIndicator
-                  titleIcon="male"
-                  title={m.male}
-                  value={computed._14_1_1_idp_male_without_cert.percent}
-                  evolution={computed._14_1_1_idp_male_without_cert.percent - previous.computed._14_1_1_idp_male_without_cert.percent}
-                />
-                <PieChartIndicator
-                  titleIcon="female"
-                  title={m.female}
-                  value={computed._14_1_1_idp_female_without_cert.percent}
-                  evolution={computed._14_1_1_idp_female_without_cert.percent - previous.computed._14_1_1_idp_female_without_cert.percent}
-                />
-              </Box>
-              <UkraineMap
-                data={computed.idpsWithoutCertByOblast}
-                fillBaseOn="percent"
-                onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
-                title={m.protHHSnapshot.maleWithoutIDPCertByOblast}
-                sx={{width: 350, margin: 'auto'}}
+              <PieChartIndicator
+                title={m.protHHSnapshot.requiredLegalAidInformation}
+                value={computed._39_What_type_of_information_wouldPercent.percent}
+                evolution={computed._39_What_type_of_information_wouldPercent.percent - previous.computed._39_What_type_of_information_wouldPercent.percent}
               />
-              {/*<UkraineMap*/}
-              {/*  data={computed.idpsWithoutCertByOblast}*/}
-              {/*  fillBaseOn="percent"*/}
-              {/*  onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
-              {/*  legend={m.protHHSnapshot.maleWithoutIDPCertByOblast}*/}
-              {/*  sx={{width: 350, margin: 'auto'}}*/}
-              {/*/>*/}
+              <Divider sx={{my: 2}}/>
+              <PieChartIndicator
+                title={m.hhBarriersToPersonalDocument}
+                value={computed._16_1_1_Have_you_experienced_a.percent}
+                evolution={computed._16_1_1_Have_you_experienced_a.percent - previous.computed._16_1_1_Have_you_experienced_a.percent}
+              />
+              <Divider sx={{my: 2}}/>
+              <SlidePanelTitle>{m.protHHSnapshot.barriersToPersonalDocument}</SlidePanelTitle>
+              <HorizontalBarChartGoogle
+                data={computed._16_1_2_What_are_the_barriers_}
+              />
             </SlidePanel>
           </SlideContainer>
-          <SlideContainer column sx={{flex: 2.4}}>
+          <SlideContainer column sx={{flex: 2.8}}>
             <SlidePanel>
               <PieChartIndicator
                 title={m.protHHSnapshot.hhWDisabilityWoAllowance}
@@ -108,36 +95,34 @@ export const ProtSnapshotDocument = ({
               {/*  value={computed._15_1_1_What_housing_land_and.percent}*/}
               {/*/>*/}
             </SlidePanel>
+            <SlidePanel>
+              <SlidePanelTitle>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
+              <Box sx={{display: 'flex', mt: 2.5, mb: 5, justifyContent: 'space-between'}}>
+                <PieChartIndicator
+                  title={m.protHHSnapshot.male1860}
+                  value={computed._14_1_1_idp_male_without_cert.percent}
+                  evolution={computed._14_1_1_idp_male_without_cert.percent - previous.computed._14_1_1_idp_male_without_cert.percent}
+                />
+                <PieChartIndicator
+                  title={m.others}
+                  value={computed._14_1_1_idp_nomale_without_cert.percent}
+                  evolution={computed._14_1_1_idp_nomale_without_cert.percent - previous.computed._14_1_1_idp_nomale_without_cert.percent}
+                />
+              </Box>
+              <UkraineMap
+                data={computed.idpsWithoutCertByOblast}
+                fillBaseOn="percent"
+                onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
+                title={m.protHHSnapshot.maleWithoutIDPCertByOblast}
+                sx={{width: 350, margin: 'auto'}}
+              />
+            </SlidePanel>
             {/*<SlidePanel>*/}
             {/*  <PieChartIndicator*/}
             {/*    title={m.uaCitizenShip}*/}
             {/*    value={computed._11_What_is_your_citizenship.percent}*/}
             {/*  />*/}
             {/*</SlidePanel>*/}
-            <SlidePanel title={m.hhBarriersToPersonalDocument}>
-              <PieChartIndicator
-                value={computed._16_1_1_Have_you_experienced_a.percent}
-                evolution={computed._16_1_1_Have_you_experienced_a.percent - previous.computed._16_1_1_Have_you_experienced_a.percent}
-              />
-              <Divider sx={{my: 2}}/>
-              <SlidePanelTitle>{m.protHHSnapshot.barriersToPersonalDocument}</SlidePanelTitle>
-              <HorizontalBarChartGoogle
-                data={computed._16_1_2_What_are_the_barriers_}
-              />
-            </SlidePanel>
-            <SlideContainer>
-
-              {/*<SlideContainer>*/}
-              {/*  <UkraineMap*/}
-              {/*    data={computed.femaleIdpsWithoutCertByOblast}*/}
-              {/*    fillBaseOn="percent"*/}
-              {/*    onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
-              {/*    legend="Women"*/}
-              {/*    sx={{width: '100%'}}*/}
-              {/*  />*/}
-              {/*</SlideContainer>*/}
-
-            </SlideContainer>
           </SlideContainer>
         </SlideContainer>
 

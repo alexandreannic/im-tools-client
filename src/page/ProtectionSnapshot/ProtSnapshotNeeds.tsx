@@ -1,11 +1,16 @@
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
-import React from 'react'
+import React, {useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
-import {useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel} from '../../shared/PdfLayout/Slide'
+import {Box, Divider, useTheme} from '@mui/material'
+import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
+import {Txt} from 'mui-extension'
+import {Enum, map} from '@alexandreannic/ts-utils'
+import {toPercent} from '../../utils/utils'
+import {omitBy} from 'lodash'
+import {PieChartIndicator} from '../../shared/PieChartIndicator'
 
 export const categoryIcons = {
   idp: 'directions_run',
@@ -30,58 +35,107 @@ export const ProtSnapshotNeeds = ({
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
 
+  // const max = useMemo(() => {
+  //   return Math.max(...Enum.values({
+  //     ...computed._28_Do_you_have_acce_current_accomodationByOblast,
+  //     ...computed._28_Do_you_have_acce_current_accomodationByOblast2,
+  //   }).map(_ => _.value))
+  // }, [computed])
   return (
     <Slide>
       <SlideHeader>{m.protHHSnapshot.titles.needs}</SlideHeader>
       <SlideBody>
         <SlideContainer>
+
+          <SlideContainer column sx={{flex: 4.2}}>
+            {/*<HorizontalBarChartGoogle data={computed._31_Is_anyone_from_the_household_percent}/>*/}
+            <SlideTxt dangerouslySetInnerHTML={{
+              __html: m.protHHSnapshot.desc.needs({
+                percentLvivWithoutHot: map(computed._28_accessToHotByOblast['UA-77'], _ => toPercent(_.value / _.base, 0))!,
+                percentZapoWithoutHot: map(computed._28_accessToHotByOblast['UA-12'], _ => toPercent(_.value / _.base, 0))!,
+                percentChernihivWithoutHot: map(computed._28_accessToHotByOblastForIDPs['UA-74'], _ => toPercent(_.value / _.base, 0))!,
+              })
+            }}/>
+            <SlidePanel title={m.protHHSnapshot.lackOfInformationNeeded}>
+              <Txt></Txt>
+              <HorizontalBarChartGoogle
+                icons={categoryIcons as any}
+                data={computed._39_What_type_of_information_wouldbyCat}
+              />
+              <Divider sx={{my: 2}}/>
+              <SlidePanelTitle>{m.protHHSnapshot.mostNeededInformation}</SlidePanelTitle>
+              <Box sx={{display: 'flex', mt: 1, justifyContent: 'space-between'}}>
+                {Enum.entries(computed._39_What_type_of_information_would!).splice(0, 3).map(([k, v]) =>
+                  <PieChartIndicator fractionDigits={0} dense title={v.label} value={v.value / data.length}/>
+                )}
+              </Box>
+              {/*<HorizontalBarChartGoogle data={computed._39_What_type_of_information_would}/>*/}
+            </SlidePanel>
+            {/*<Box sx={{display: 'flex'}}>*/}
+            {/*  <UkraineMap*/}
+            {/*    fillBaseOn="percent"*/}
+            {/*    // base={data.length}*/}
+            {/*    onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
+            {/*    data={computed._28_accessToHotByOblast}*/}
+            {/*    title={m.global}*/}
+            {/*    sx={{flex: 1, mr: 1}}*/}
+            {/*  />*/}
+            {/*  <UkraineMap*/}
+            {/*    fillBaseOn="percent"*/}
+            {/*    // base={data.length - computed.idpsCount}*/}
+            {/*    onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
+            {/*    data={computed._28_accessToHotByOblastForIDPs}*/}
+            {/*    title={m.noIdpsOnly}*/}
+            {/*    sx={{flex: 1, ml: 1}}*/}
+            {/*  />*/}
+            {/*</Box>*/}
+            {/*<UkraineMap*/}
+            {/*  fillBaseOn="percent"*/}
+            {/*  base={data.length}*/}
+            {/*  onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}*/}
+            {/*  data={computed._29_nfiNeededByOblast}*/}
+            {/*  title={m.protHHSnapshot.nfiNeededByOblast}*/}
+            {/*  sx={{mx: 2}}*/}
+            {/*/>*/}
+          </SlideContainer>
+          <SlideContainer column sx={{flex: 3, minWidth: 318}}>
+            {/*<SlidePanel title={m.protectionHHSnapshot._40_1_pn_shelter_byCategory}>*/}
+            {/*  <HorizontalBarChartGoogle*/}
+            {/*    data={computed._40_1_pn_shelter_byCategory}*/}
+            {/*  />*/}
+            {/*</SlidePanel>*/}
+            <SlidePanel>
+              <SlidePanelTitle dangerouslySetInnerHTML={{__html: m.protHHSnapshot._40_1_pn_health_byCategory}}/>
+              <HorizontalBarChartGoogle
+                data={computed._40_1_first_priortyBy.hohh60}
+              />
+              {/*<HorizontalBarChartGoogle*/}
+              {/*  icons={categoryIcons}*/}
+              {/*  data={computed._40_1_pn_health_byCategory}*/}
+              {/*/>*/}
+              <Divider sx={{my: 2.5}}/>
+              <SlidePanelTitle dangerouslySetInnerHTML={{__html: m.protHHSnapshot._40_1_pn_cash_byCategory}}/>
+              <HorizontalBarChartGoogle
+                data={computed._40_1_first_priortyBy.idp}
+              />
+              <Divider sx={{my: 2.5}}/>
+              <SlidePanelTitle>{m.protHHSnapshot._29_nfiNeededByCategory}</SlidePanelTitle>
+              <HorizontalBarChartGoogle
+                data={computed._40_1_first_priortyBy.memberWithDisability}
+              />
+              <Divider sx={{my: 2.5}}/>
+              <SlidePanelTitle>{m.protHHSnapshot._29_nfiNeededByCategory}</SlidePanelTitle>
+              <HorizontalBarChartGoogle
+                data={computed._40_1_first_priortyBy.hohhFemale}
+              />
+            </SlidePanel>
+          </SlideContainer>
           <SlideContainer column sx={{flex: 3}}>
             <SlidePanel title={m.protHHSnapshot.first_priorty}>
               <HorizontalBarChartGoogle
                 data={computed._40_1_What_is_your_first_priorty}
               />
             </SlidePanel>
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 3}}>
-            {/*<SlidePanel title={m.protectionHHSnapshot._40_1_pn_shelter_byCategory}>*/}
-            {/*  <HorizontalBarChartGoogle*/}
-            {/*    data={computed._40_1_pn_shelter_byCategory}*/}
-            {/*  />*/}
-            {/*</SlidePanel>*/}
-            <SlidePanel title={m.protHHSnapshot._40_1_pn_health_byCategory}>
-              <HorizontalBarChartGoogle
-                icons={categoryIcons}
-                data={computed._40_1_pn_health_byCategory}
-              />
-            </SlidePanel>
-            <SlidePanel title={m.protHHSnapshot._40_1_pn_cash_byCategory}>
-              <HorizontalBarChartGoogle
-                icons={categoryIcons}
-                data={computed._40_1_pn_cash_byCategory}
-              />
-            </SlidePanel>
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 3}}>
-            <UkraineMap
-              base={data.length}
-              onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
-              data={computed._29_nfiNeededByOblast}
-              title={m.protHHSnapshot.nfiNeededByOblast}
-              sx={{width: '100%'}}
-            />
-            <SlidePanel title={m.protHHSnapshot._29_nfiNeededByCategory}>
-              <HorizontalBarChartGoogle
-                icons={categoryIcons}
-                data={computed._29_nfiNeededByCategory}
-              />
-            </SlidePanel>
-            {/*<UkraineMap*/}
-            {/*  base={data.length}*/}
-            {/*  onSelect={onFilterOblast('_4_What_oblast_are_you_from')}*/}
-            {/*  data={computed._40_1_firstPriorityByOblast}*/}
-            {/*  legend={m.protHHSnapshot.nfiNeededByOblast}*/}
-            {/*  sx={{width: '100%'}}*/}
-            {/*/>*/}
           </SlideContainer>
         </SlideContainer>
       </SlideBody>

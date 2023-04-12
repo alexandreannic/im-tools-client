@@ -14,11 +14,13 @@ export interface PageProps extends BoxProps {
 
 export const Page = ({loading, children, sx, ...props}: PageProps) => {
   return (
-    <MxPage {...props} sx={{...sx, my: 2, px: 2}}>
+    <>
       {loading && (
         <LinearProgress/>
       )}
-      {children}
-    </MxPage>
+      <MxPage {...props} sx={{...sx, my: 2, px: 2}}>
+        {children}
+      </MxPage>
+    </>
   )
 }
