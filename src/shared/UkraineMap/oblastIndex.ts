@@ -11,152 +11,154 @@ export interface Oblast {
 
 export class OblastIndex {
   static readonly findByKoboKey = (koboKey: string): Oblast | undefined => {
-    return oblastsByKoboKey[koboKey]
+    return OblastIndex.list[koboKey]
   }
   
   static readonly findByIso = (iso: OblastISO): Oblast | undefined => {
-    return Enum.values(oblastsByKoboKey).find(_ => _.iso === iso)
+    return Enum.values(OblastIndex.list).find(_ => _.iso === iso)
+  }
+  
+  static readonly list: Record<string, Oblast> = {
+    vin: {
+      koboKey: 'vin',
+      name: 'Vinnytska',
+      iso: 'UA-05'
+    },
+    vol: {
+      koboKey: 'vol',
+      name: 'Volynska',
+      iso: 'UA-07'
+    },
+    dnip: {
+      koboKey: 'dnip',
+      name: 'Dnipropetrovska',
+      iso: 'UA-12'
+    },
+    don: {
+      koboKey: 'don',
+      name: 'Donetska',
+      iso: 'UA-14'
+    },
+    zhy: {
+      koboKey: 'zhy',
+      name: 'Zhytomyrska',
+      iso: 'UA-18'
+    },
+    zak: {
+      koboKey: 'zak',
+      name: 'Zakarpatska',
+      iso: 'UA-21'
+    },
+    zap: {
+      koboKey: 'zap',
+      name: 'Zaporizka',
+      iso: 'UA-23'
+    },
+    ivan: {
+      koboKey: 'ivan',
+      name: 'Ivano-Frankivska',
+      iso: 'UA-26'
+    },
+    kyi: {
+      koboKey: 'kyi',
+      name: 'Kyivska',
+      iso: 'UA-32'
+    },
+    avt: {
+      koboKey: 'avt',
+      name: 'Avtonomna Respublika Krym',
+      iso: 'UA-43'
+    },
+    kir: {
+      koboKey: 'kir',
+      name: 'Kirovonhradska',
+      iso: 'UA-35'
+    },
+    luh: {
+      koboKey: 'luh',
+      name: 'Luhanska',
+      iso: 'UA-09'
+    },
+    lvi: {
+      koboKey: 'lvi',
+      name: 'Lvivska',
+      iso: 'UA-46'
+    },
+    myk: {
+      koboKey: 'myk',
+      name: 'Mykolaivska',
+      iso: 'UA-48'
+    },
+    ode: {
+      koboKey: 'ode',
+      name: 'Odeska',
+      iso: 'UA-51'
+    },
+    pol: {
+      koboKey: 'pol',
+      name: 'Poltavska',
+      iso: 'UA-53',
+      drcOffice: 'poltava'
+    },
+    riv: {
+      koboKey: 'riv',
+      name: 'Rivenska',
+      iso: 'UA-56'
+    },
+    sum: {
+      koboKey: 'sum',
+      name: 'Sumska',
+      iso: 'UA-59'
+    },
+    ter: {
+      koboKey: 'ter',
+      name: 'Ternopilska',
+      iso: 'UA-61'
+    },
+    kha: {
+      koboKey: 'kha',
+      name: 'Kharkivska',
+      iso: 'UA-63'
+    },
+    khe: {
+      koboKey: 'khe',
+      name: 'Khersonska',
+      iso: 'UA-65'
+    },
+    khm: {
+      koboKey: 'khm',
+      name: 'Khmelnytska',
+      iso: 'UA-68'
+    },
+    che: {
+      koboKey: 'che',
+      name: 'Cherkaska',
+      iso: 'UA-71'
+    },
+    chern: {
+      koboKey: 'chern',
+      name: 'Chernivetska',
+      iso: 'UA-77'
+    },
+    cherni: {
+      koboKey: 'cherni',
+      name: 'Chernihivska',
+      iso: 'UA-74',
+      // drcOffice: 'chernivsti'
+    },
+    sev: {
+      koboKey: 'sev',
+      name: 'Sevastopilska',
+      iso: 'UA-40'
+    }
   }
 }
 
 // "dnipro"
 // "chernihiv"
 // "lviv"
+// export const oblastByKoboKey = {
 // "chernivsti"
-const oblastsByKoboKey: Record<string, Oblast> = {
-  vin: {
-    koboKey: 'vin',
-    name: 'Vinnytska',
-    iso: 'UA-05'
-  },
-  vol: {
-    koboKey: 'vol',
-    name: 'Volynska',
-    iso: 'UA-07'
-  },
-  dnip: {
-    koboKey: 'dnip',
-    name: 'Dnipropetrovska',
-    iso: 'UA-12'
-  },
-  don: {
-    koboKey: 'don',
-    name: 'Donetska',
-    iso: 'UA-14'
-  },
-  zhy: {
-    koboKey: 'zhy',
-    name: 'Zhytomyrska',
-    iso: 'UA-18'
-  },
-  zak: {
-    koboKey: 'zak',
-    name: 'Zakarpatska',
-    iso: 'UA-21'
-  },
-  zap: {
-    koboKey: 'zap',
-    name: 'Zaporizka',
-    iso: 'UA-23'
-  },
-  ivan: {
-    koboKey: 'ivan',
-    name: 'Ivano-Frankivska',
-    iso: 'UA-26'
-  },
-  kyi: {
-    koboKey: 'kyi',
-    name: 'Kyivska',
-    iso: 'UA-32'
-  },
-  avt: {
-    koboKey: 'avt',
-    name: 'Avtonomna Respublika Krym',
-    iso: 'UA-43'
-  },
-  kir: {
-    koboKey: 'kir',
-    name: 'Kirovonhradska',
-    iso: 'UA-35'
-  },
-  luh: {
-    koboKey: 'luh',
-    name: 'Luhanska',
-    iso: 'UA-09'
-  },
-  lvi: {
-    koboKey: 'lvi',
-    name: 'Lvivska',
-    iso: 'UA-46'
-  },
-  myk: {
-    koboKey: 'myk',
-    name: 'Mykolaivska',
-    iso: 'UA-48'
-  },
-  ode: {
-    koboKey: 'ode',
-    name: 'Odeska',
-    iso: 'UA-51'
-  },
-  pol: {
-    koboKey: 'pol',
-    name: 'Poltavska',
-    iso: 'UA-53',
-    drcOffice: 'poltava'
-  },
-  riv: {
-    koboKey: 'riv',
-    name: 'Rivenska',
-    iso: 'UA-56'
-  },
-  sum: {
-    koboKey: 'sum',
-    name: 'Sumska',
-    iso: 'UA-59'
-  },
-  ter: {
-    koboKey: 'ter',
-    name: 'Ternopilska',
-    iso: 'UA-61'
-  },
-  kha: {
-    koboKey: 'kha',
-    name: 'Kharkivska',
-    iso: 'UA-63'
-  },
-  khe: {
-    koboKey: 'khe',
-    name: 'Khersonska',
-    iso: 'UA-65'
-  },
-  khm: {
-    koboKey: 'khm',
-    name: 'Khmelnytska',
-    iso: 'UA-68'
-  },
-  che: {
-    koboKey: 'che',
-    name: 'Cherkaska',
-    iso: 'UA-71'
-  },
-  chern: {
-    koboKey: 'chern',
-    name: 'Chernivetska',
-    iso: 'UA-77'
-  },
-  cherni: {
-    koboKey: 'cherni',
-    name: 'Chernihivska',
-    iso: 'UA-74',
-    // drcOffice: 'chernivsti'
-  },
-  sev: {
-    koboKey: 'sev',
-    name: 'Sevastopilska',
-    iso: 'UA-40'
-  }
-}// export const oblastByKoboKey = {
 // export const oblastIso = Enum.values(oblastsByKoboKey).map(_ => _.iso)
 //   'vin': 'Vinnytska',
 //   'vol': 'Volynska',

@@ -110,8 +110,10 @@ const preventOverCapitalization = (text: string): string => {
     'HoHH',
     'IDPs',
     'PwD',
+    'PwDs',
     'HHs',
     'PoC',
+    'PoCs',
     'NFIs',
   ]
   acronyms.forEach(_ => {
@@ -201,7 +203,7 @@ export const SlideCard = ({
         display: 'inline-flex',
         alignItems: 'center'
       }}>
-        {icon && <Icon color="disabled" sx={{mr: 1}}>{icon}</Icon>}
+        {icon && <Icon color="disabled" sx={{mr: 1}} fontSize="large">{icon}</Icon>}
         {children}
       </Box>
       <Txt block color="hint">

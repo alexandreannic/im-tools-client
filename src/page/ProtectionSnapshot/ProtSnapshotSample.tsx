@@ -9,6 +9,9 @@ import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
+import {Txt} from 'mui-extension'
+import logoEu from '../../core/img/eu.png'
+import logo from '../../core/img/drc-logo.png'
 
 export const ProtSnapshotSample = ({
   current: {
@@ -25,17 +28,37 @@ export const ProtSnapshotSample = ({
   const theme = useTheme()
   return (
     <Slide>
-      <SlideHeader>{m.sample}</SlideHeader>
+      <Box sx={{
+        px: 2,
+        py: 1,
+        borderBottom: t => `1px solid ${t.palette.divider}`,
+        mb: 0,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <Box>
+          <Txt bold sx={{fontSize: '1.65em', fontWeight: '700'}} color="primary">
+            {m.protHHSnapshot.title}&nbsp;
+            <Box sx={{display: 'inline', fontWeight: 'lighter'}}>- {m.protHHSnapshot.title2}</Box>
+          </Txt>
+          <Txt color="hint" sx={{fontSize: '1.1em', display: 'flex', alignItems: 'center'}}>
+            <Icon sx={{mr: 1}}>date_range</Icon> {format(period.start, 'LLLL yyyy')} - {format(sub(period.end, {days: 1}), 'LLLL yyyy')}
+          </Txt>
+        </Box>
+        <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
+          <Box component="img" src={logoEu} sx={{mr: 1.5, height: 38}}/>
+          <Box component="img" src={logo} sx={{height: 26}}/>
+        </Box>
+      </Box>
       <SlideBody>
         <SlideContainer>
-          <SlideContainer column sx={{flex: 4.5}}>
-            <SlideTxt size="big" color="hint" sx={{display: 'flex', alignItems: 'center'}}>
-              <Icon sx={{mr: 1}}>date_range</Icon> {format(period.start, 'LLLL yyyy')} - {format(sub(period.end, {days: 1}), 'LLLL yyyy')}
+          <SlideContainer column sx={{flex: 4.7}}>
+            <SlideTxt>
+              <p dangerouslySetInnerHTML={{__html: m.protHHSnapshot.desc.disclaimer}}/>
+              <p dangerouslySetInnerHTML={{__html: m.protHHSnapshot.desc.sample}}/>
             </SlideTxt>
-
-            <SlideTxt>{m.protHHSnapshot.desc.sample}</SlideTxt>
-
-            <Box id="map" sx={{height: 400, borderRadius: pdfTheme.slideRadius}}/>
+            <Box id="map" sx={{height: 316, borderRadius: pdfTheme.slideRadius}}/>
+            <Box sx={{color: 'white'}}>Fix google map print issue</Box>
           </SlideContainer>
 
           <SlideContainer column sx={{flex: 6}}>

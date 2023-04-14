@@ -240,7 +240,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _39_What_type_of_information_wouldbyCat: chain(ChartTools.byCategory({
         data,
-        categories: omit(categoryFilters, ['all', 'notIdp']),
+        categories: omit(categoryFilters, ['notIdp']),
         filter: _ => _._39_What_type_of_information_would !== undefined
       }))
         .map(ChartTools.sortBy.percent)
@@ -490,7 +490,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _29_nfiNeededByCategory: chain(ChartTools.byCategory({
         data,
-        categories: omit(categoryFilters, ['all', 'notIdp']),
+        categories: omit(categoryFilters, ['notIdp']),
         filter: _ => _._29_Which_NFI_do_you_need !== undefined && !_._29_Which_NFI_do_you_need.includes('do_not_require41')
       }))
         .map(ChartTools.sortBy.percent)

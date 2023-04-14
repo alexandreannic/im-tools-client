@@ -64,6 +64,11 @@ export const Header = ({children}: Props) => {
               kobo
             </NavLink>
           </HeaderItem>
+          <HeaderItem>
+            <NavLink to="/map">
+              Map
+            </NavLink>
+          </HeaderItem>
 
           {children}
         </div>

@@ -562,7 +562,7 @@ export const en = Object.freeze({
         </p>
         <p>
           Access to information on humanitarian assistance and social services provided is 
-          still challenging especially for those residing in remote/rural, and hard-to-reach areas
+          still challenging especially for those residing in remote/rural, hard-to-reach areas
           and for <b>PwDs and elderly who face
           barriers in accessing online information</b> and registration procedures.
           Limited information has reported to be the main barrier to accessing cash assistance.
@@ -636,46 +636,46 @@ export const en = Object.freeze({
             <b>${lvivIdps}</b> and <b>${chernivIdps}</b> of the <b>monitored</b> IDPs.   
           </p>
         `,
-        sample: `The conflict in Ukraine has generated various protection risks for IDPs and conflict-affected populations.
-          While all areas where PM took place were directly or indirectly affected by the conflict,
-          needs and protection risks vary in each monitored area and are different according to the
-          monitored population group: internally displaced persons, communities directly exposed and 
-          affected by the current armed conflict and host communities.`,
+        sample: `
+          The conflict generated various protection risks for the population. Although all areas where PM took place were directly
+          or indirectly after by the conflict, the needs and protection risks vary in each area and are different depending to 
+          the monitored population group such as  HHs with PwDs, elderly or female-headed HHs and IDPs.
+        `,
         disclaimer: `
           This snapshot summarizes the findings of Protection Monitoring (PM) implemented 
-          through household interviews in Ukraine. 
+          through household interviews in Ukraine and has been conducted in 
+            <b>Chernihivska</b>,
+            <b>Chernivetska</b>,
+            <b>Dnipropetrovska</b>,
+            <b>Kharkivska</b>,
+            <b>Lvivska</b>,
+            <b>Zaporizska</b>
+            oblasts. 
           DRC protection monitoring targeted Internally Displaced Persons (IDPs)
           and people directly exposed to and affected by the current armed conflict.
-          PM has been conducted in the following oblasts: 
-          <ul>
-            <li>Chernihivska</li>
-            <li>Chernivetska</li>
-            <li>Dnipropetrovska</li>
-            <li>Kharkivska</li>
-            <li>Lvivska</li>
-            <li>Zaporizska</li>
-          </ul>
         `,
-        previousPeriodNote: (period: Period) => `<sup>(1)</sup> Compared to the previous period of ${format(period.start, 'LLL yyyy')} - ${format(sub(period.end, {days: 1}), 'LLL yyyy')}`,
+        previousPeriodNote: (period: Period) => `<sup>(1)</sup> Compared to the previous period of ${format(period.start, 'LLL yyyy')} - ${format(sub(period.end, {days: 1}),
+          'LLL yyyy')}`,
         dataAccuracy: `<sup>(1)</sup> Due to uneven monitoring across the oblasts, values does not reflect the exact proportions; however, they reveal trend insights.`,
       },
       mostNeededInformation: `Most needed information (% of HHs)`,
       lackOfInformationNeeded: 'Lack of access to information',
-      first_priorty: `Firsts priority needs`,
+      first_priorty: `Firsts priority needs (% of HHs)`,
       firstPrioritiesIdp: `For IDPs`,
       firstPrioritiesHohh60: `For 60+ HoHH`,
       firstPrioritiesHohhFemale: `For female HoHH`,
       firstPrioritiesMemberWithDisability: `For HoHH w/ PwD`,
       nfiNeededByOblast: 'NFIs needed by oblast',
-      firstPriorityNeed: '1st priority need by category',
+      firstPriorityNeed: '1st priority needs',
       _40_1_pn_shelter_byCategory: 'Prioritizing Shelter need by PoC',
-      _40_1_pn_health_byCategory: '1<sup>st</sup>&nbsp;Priority need: Health',
-      _40_1_pn_cash_byCategory: '1<sup>st</sup>&nbsp;Priority need: Cash',
+      _40_1_pn_health_byCategory: 'Health by PoCs',
+      _40_1_pn_cash_byCategory: 'Cash',
       // _40_1_pn_shelter_byCategory: 'Shelter as 1st priority need by category',
       // _40_1_pn_health_byCategory: 'Health as 1st priority need by category',
       // _40_1_pn_cash_byCategory: 'Cash as 1st priority need by category',
       _29_nfiNeededByCategory: 'Reported needs of NFIs',
       title: 'Protection Snapshot',
+      title2: 'Ukraine',
       subTitle: 'Ukraine Response',
       factorInfluencingSenseOfSafety: 'Factors influencing the sense of safety',
     },
