@@ -20,7 +20,7 @@ export const KoboProvider = ({
   children: ReactNode
 }) => {
   const {api} = useConfig()
-  const hh = useFetcher((_: AnswersFilters = {}) => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', koboFormId.prod.protectionHh, _))
+  const hh = useFetcher((_: AnswersFilters = {}) => api.koboForm.getAnswers(koboFormId.prod.protectionHh, _))
 
   return (
     <_KoboContext.Provider value={{

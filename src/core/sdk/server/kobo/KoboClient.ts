@@ -17,7 +17,12 @@ export class KoboFormClient {
       .then(_ => _.map(Kobo.mapAnswerMetaData))
   }
 
-  readonly getAnswers = (serverId: UUID, formId: UUID, filters: AnswersFilters = {}) => {
+  readonly getAnswers = (formId: UUID, filters: AnswersFilters = {}) => {
+    return this.client.get<ApiPaginate<KoboAnswer>>(`/kobo/${formId}/answers`, {qs: filters})
+      .then(_ => ({..._, data: _.data.map(Kobo.mapAnswerMetaData)}))
+  }
+
+  readonly getAnswersFromKobo = (serverId: UUID, formId: UUID, filters: AnswersFilters = {}) => {
     return this.client.get<ApiPaginate<KoboAnswer>>(`/kobo/${serverId}/${formId}/answers`, {qs: filters})
       .then(_ => ({..._, data: _.data.map(Kobo.mapAnswerMetaData)}))
   }

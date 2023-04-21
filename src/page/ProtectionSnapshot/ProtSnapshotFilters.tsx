@@ -7,7 +7,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {IconBtn, Txt} from 'mui-extension'
 import {Btn} from '../../shared/Btn/Btn'
 import {useI18n} from '../../core/i18n'
-import {ProtSnapshotCustomFilters, ProtSnapshotFilter, ProtSnapshotSlideProps, ProtSSData} from './ProtSnapshot'
+import {ProtSnapshotCustomFilters, ProtSnapshotFilter, protSnapshotInitialFilters, ProtSnapshotSlideProps, ProtSSData} from './ProtSnapshot'
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
 import {PeriodPicker} from '../../shared/PeriodPicker/PeriodPicker'
 import {NavLink} from 'react-router-dom'
@@ -49,6 +49,13 @@ export const ProtSnapshotFilters = ({
         </Btn>
       </Box>
       <Divider sx={{mb: 3}}/>
+      <Btn
+        icon="clear"
+        color="primary"
+        onClick={() => onCustomFilters(protSnapshotInitialFilters)}
+      >
+        Clear filters
+      </Btn>
       <UkraineMap
         legend={false}
         data={current.computed.oblastCurrent}

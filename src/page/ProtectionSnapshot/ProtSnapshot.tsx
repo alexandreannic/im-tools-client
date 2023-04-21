@@ -52,6 +52,12 @@ export type ProtSnapshotFilter = {
   C_Vulnerability_catergories_that: Answer['C_Vulnerability_catergories_that']
 }
 
+export const protSnapshotInitialFilters = {
+  start: new Date(2023, 0, 1),
+  end: new Date(2023, 3, 1),
+  previousPeriodStart: new Date(2022, 9, 1),
+  previousPeriodEnd: new Date(2023, 0, 1)
+}
 
 export const ProtSnapshot = ({
   formId,
@@ -65,16 +71,11 @@ export const ProtSnapshot = ({
   // previousPeriod?: Period
 }) => {
   const {api} = useConfig()
-  const fetch = (period: Period) => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  const fetch = (period: Period) => api.koboForm.getAnswers(formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
   const _hhCurrent = useFetcher(fetch)
   const _hhPrevious = useFetcher(fetch)
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilter>>({})
-  const [customFilters, setCustomFilters] = useState<ProtSnapshotCustomFilters>({
-    start: new Date(2023, 0, 1),
-    end: new Date(2023, 3, 1),
-    previousPeriodStart: new Date(2022, 9, 1),
-    previousPeriodEnd: new Date(2023, 0, 1)
-  })
+  const [customFilters, setCustomFilters] = useState<ProtSnapshotCustomFilters>(protSnapshotInitialFilters)
 
   const filterValues = (data: Answer[]): _Arr<Answer> => {
     return Arr(data).filter(row => {
