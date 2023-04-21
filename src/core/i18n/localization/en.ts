@@ -67,6 +67,8 @@ export const en = Object.freeze({
       south: 'South',
       west: 'West'
     },
+    start: 'Start',
+    end: 'End',
     hhs: 'Households',
     individuals: 'Individuals',
     hhSize: 'Household size',

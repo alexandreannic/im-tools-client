@@ -47,10 +47,10 @@ export const UkraineMap = ({
     const _data = Arr(Enum.values(filteredData)).compact()
     // .filter(_ => _.value !== 0)
     const values = _data.map(_ => _!.value ?? 0)
-    const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.map(_ => {
+    // TODO _data.map create invalid array length
+    const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.get.map(_ => {
       const b = (base ?? _.base) || 1
       if (!b) {
-        console.error(`No base found for`, data)
         return 0
       } else {
         return (_.value ?? 0) / b

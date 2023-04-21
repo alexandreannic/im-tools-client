@@ -16,6 +16,7 @@ const hasntIdpCertificate = (_: (KoboFormProtHH.GetType<'_14_2_1_Do_you_or_your_
 }
 
 export type UseProtectionSnapshotData = ReturnType<typeof useProtectionSnapshotData>
+
 export const useProtectionSnapshotData = (data: _Arr<Answer>, {
   start,
   end,

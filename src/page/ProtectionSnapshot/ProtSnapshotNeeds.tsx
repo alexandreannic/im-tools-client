@@ -23,7 +23,6 @@ export const categoryIcons = {
 export const ProtSnapshotNeeds = ({
   current: {
     data,
-    period,
     computed
   },
   previous,

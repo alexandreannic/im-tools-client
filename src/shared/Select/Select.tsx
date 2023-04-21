@@ -1,10 +1,11 @@
-import {Checkbox, FormControl, InputLabel, MenuItem, OutlinedInput, Select} from '@mui/material'
+import {Checkbox, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SxProps, Theme} from '@mui/material'
 import React, {ReactNode, useEffect, useState} from 'react'
 import {useI18n} from '../../core/i18n'
 
 interface AaSelectBase<T, V> {
   label?: ReactNode
   options: {value: T, children: ReactNode, key?: string}[]
+  sx?: SxProps<Theme>
 }
 
 interface AaSelectMultiple<T, V> extends AaSelectBase<T, V> {
@@ -27,6 +28,7 @@ export const ItSelect = <T extends string, V extends string = string>({
   label,
   onChange,
   options,
+  sx,
   ...props
 }: AaSelect<T, V>) => {
   const {m} = useI18n()
@@ -49,7 +51,7 @@ export const ItSelect = <T extends string, V extends string = string>({
   }
 
   return (
-    <FormControl size="small" sx={{m: 1, width: 300}}>
+    <FormControl size="small" sx={{width: '100%', ...sx}}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <Select
         label={label}

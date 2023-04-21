@@ -16,11 +16,11 @@ import {toPercent} from '../../utils/utils'
 export const ProtSnapshotDisplacement = ({
   current: {
     data,
-    period,
     computed
   },
   previous,
   filters,
+  customFilters,
   onFilter,
   onFilterOblast
 }: ProtSnapshotSlideProps) => {
@@ -141,7 +141,7 @@ export const ProtSnapshotDisplacement = ({
                 <Divider/>
                 <Txt sx={{mt: -1}} size="small" color="hint">
                   <Txt block dangerouslySetInnerHTML={{
-                    __html: m.protHHSnapshot.desc.previousPeriodNote(previous.period)
+                    __html: m.protHHSnapshot.desc.previousPeriodNote({start: customFilters.start, end: customFilters.end})
                   }}/>
                   {/*<Txt dangerouslySetInnerHTML={{*/}
                   {/*  __html: m.protHHSnapshot.desc.dataAccuracy*/}

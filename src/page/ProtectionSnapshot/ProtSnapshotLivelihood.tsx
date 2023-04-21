@@ -1,25 +1,19 @@
-import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
-import React, {useEffect, useMemo} from 'react'
+import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
-import {Box, Divider, Icon, useTheme} from '@mui/material'
+import {Divider, useTheme} from '@mui/material'
 import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
-import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
-import {ScLineChart} from '../../shared/Chart/ScLineChart'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {Oblast, OblastIndex} from '../../shared/UkraineMap/oblastIndex'
-import {format} from 'date-fns'
+import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {Txt} from 'mui-extension'
-import {ChartIndicator} from '../../shared/ChartIndicator'
-import {sortObject, toPercent} from '../../utils/utils'
+import {toPercent} from '../../utils/utils'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
-import {categoryIcons} from './ProtSnapshotNeeds'
 
 export const ProtSnapshotLivelihood = ({
   current: {
     data,
-    period,
     computed
   },
   previous,

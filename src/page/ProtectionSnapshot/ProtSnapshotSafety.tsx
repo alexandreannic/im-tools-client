@@ -12,7 +12,6 @@ import {map} from '@alexandreannic/ts-utils'
 export const ProtSnapshotSafety = ({
   current: {
     data,
-    period,
     computed
   },
   previous,

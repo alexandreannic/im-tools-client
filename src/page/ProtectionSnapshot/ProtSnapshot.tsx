@@ -2,48 +2,48 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from '../../core/context/ConfigContext'
 import {Period, UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {Box, FormControlLabel, Switch, useTheme} from '@mui/material'
-import {_Arr, Arr, Enum, map, sleep} from '@alexandreannic/ts-utils'
-import {Fender, Txt} from 'mui-extension'
+import {Box, useTheme} from '@mui/material'
+import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Fender} from 'mui-extension'
 import {Pdf} from 'shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
-import {useI18n} from '../../core/i18n'
-import {ItSelect} from '../../shared/Select/Select'
 import {ProtSnapshotDocument} from './ProtSnapshotDocument'
 import {ProtSnapshotSafety} from './ProtSnapshotSafety'
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
-import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
-import {ProtSnapshotLivelihood} from './ProtSnapshotLivelihood'
 import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
 import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
 import {ProtSnapshotSample} from './ProtSnapshotSample'
-import {ProtSnapshotHome} from './ProtSnapshotHome'
-import {Btn} from '../../shared/Btn/Btn'
-import Answer = KoboFormProtHH.Answer
 import {initGoogleMaps} from './initGoogleMaps'
-import {SlidePanelTitle} from '../../shared/PdfLayout/Slide'
+import {ProtSnapshotFilters} from './ProtSnapshotFilters'
+import {ProtSnapshotLivelihood} from './ProtSnapshotLivelihood'
+import Answer = KoboFormProtHH.Answer
 
-interface Data {
+export interface ProtSSData {
   data: _Arr<Answer>
   computed: UseProtectionSnapshotData
-  period: Period
 }
 
 export interface ProtSnapshotSlideProps {
-  current: Data
-  previous: Data
+  current: ProtSSData
+  previous: ProtSSData
+  filters: Partial<ProtSnapshotFilter>
+  onFilter: Dispatch<SetStateAction<Partial<ProtSnapshotFilter>>>
+  customFilters: ProtSnapshotCustomFilters
+  onCustomFilters: Dispatch<SetStateAction<ProtSnapshotCustomFilters>>
   onFilterOblast: (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblast: OblastISO) => void
-  filters: Partial<ProtSnapshotFilters>
-  onFilter: Dispatch<SetStateAction<Partial<ProtSnapshotFilters>>>
 }
 
 export type ProtSnapshotCustomFilters = {
   hohh60?: boolean
   hohhFemale?: boolean
+  start: Date
+  end: Date
+  previousPeriodStart: Date
+  previousPeriodEnd: Date
 }
 
-export type ProtSnapshotFilters = {
+export type ProtSnapshotFilter = {
   _12_Do_you_identify_as_any_of: NonNullable<Answer['_12_Do_you_identify_as_any_of']>[]
   _12_1_What_oblast_are_you_from_001_iso: NonNullable<Answer['_12_1_What_oblast_are_you_from_001_iso']>[]
   _4_What_oblast_are_you_from_iso: NonNullable<Answer['_4_What_oblast_are_you_from_iso']>[]
@@ -57,21 +57,24 @@ export const ProtSnapshot = ({
   formId,
   // period = {start: new Date(2023, 0, 1), end: new Date()},
   // period = {start: new Date(2023, 0, 4), end: new Date(2023, 0, 5)},
-  period = {start: new Date(2023, 0, 1), end: new Date(2023, 3, 1)},
-  previousPeriod = {start: new Date(2022, 9, 1), end: new Date(2023, 0, 1)},
+  // period = {start: new Date(2023, 0, 1), end: new Date(2023, 3, 1)},
+  // previousPeriod = {start: new Date(2022, 9, 1), end: new Date(2023, 0, 1)},
 }: {
   formId: UUID,
-  period?: Period
-  previousPeriod?: Period
+  // period?: Period
+  // previousPeriod?: Period
 }) => {
-
-  const {m} = useI18n()
   const {api} = useConfig()
-  const fetch = (period?: Period) => () => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
-  const _hhCurrent = useFetcher(fetch(period))
-  const _hhPrevious = useFetcher(fetch(previousPeriod))
-  const [filters, setFilters] = useState<Partial<ProtSnapshotFilters>>({})
-  const [customFilters, setCustomFilters] = useState<Partial<ProtSnapshotCustomFilters>>({})
+  const fetch = (period: Period) => api.koboForm.getAnswers('746f2270-d15a-11ed-afa1-0242ac120002', formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  const _hhCurrent = useFetcher(fetch)
+  const _hhPrevious = useFetcher(fetch)
+  const [filters, setFilters] = useState<Partial<ProtSnapshotFilter>>({})
+  const [customFilters, setCustomFilters] = useState<ProtSnapshotCustomFilters>({
+    start: new Date(2023, 0, 1),
+    end: new Date(2023, 3, 1),
+    previousPeriodStart: new Date(2022, 9, 1),
+    previousPeriodEnd: new Date(2023, 0, 1)
+  })
 
   const filterValues = (data: Answer[]): _Arr<Answer> => {
     return Arr(data).filter(row => {
@@ -91,6 +94,26 @@ export const ProtSnapshot = ({
     })
   }
 
+  useEffect(() => {
+    _hhCurrent.fetch({}, {
+      start: customFilters.start,
+      end: customFilters.end,
+    })
+  }, [
+    customFilters.start,
+    customFilters.end,
+  ])
+
+  useEffect(() => {
+    _hhPrevious.fetch({}, {
+      start: customFilters.previousPeriodStart,
+      end: customFilters.previousPeriodEnd,
+    })
+  }, [
+    customFilters.previousPeriodStart,
+    customFilters.previousPeriodEnd,
+  ])
+
   const currentFilteredData = useMemo(() => {
     return map(_hhCurrent.entity, filterValues)
   }, [_hhCurrent.entity, filters, customFilters])
@@ -99,13 +122,14 @@ export const ProtSnapshot = ({
     return map(_hhPrevious.entity, filterValues)
   }, [_hhPrevious.entity, filters, customFilters])
 
-  const currentComputedData = useProtectionSnapshotData(currentFilteredData ?? Arr(), period)
-  const previousComputedData = useProtectionSnapshotData(previousFilteredData ?? Arr(), period)
-
-  useEffect(() => {
-    _hhCurrent.fetch({})
-    _hhPrevious.fetch({})
-  }, [])
+  const currentComputedData = useProtectionSnapshotData(currentFilteredData ?? Arr(), {
+    start: customFilters.previousPeriodStart,
+    end: customFilters.previousPeriodEnd,
+  })
+  const previousComputedData = useProtectionSnapshotData(previousFilteredData ?? Arr(), {
+    start: customFilters.previousPeriodStart,
+    end: customFilters.previousPeriodEnd,
+  })
 
   const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblastISO: OblastISO) => {
     setFilters(f => {
@@ -151,102 +175,49 @@ export const ProtSnapshot = ({
   //   <SlidePanelTitle>IDPs</SlidePanelTitle>
   // )
   return (
-    <Pdf>
-      <Box className="noprint" sx={{margin: 'auto', maxWidth: '30cm', mb: 2}}>
-        <Box>
-          <Box sx={{display: 'flex'}}>
-            <UkraineMap
-              legend={false}
-              data={currentComputedData.oblastCurrent}
-              onSelect={updateOblastFilters('_4_What_oblast_are_you_from_iso')}
-              sx={{width: '150px', mr: 2,}}
-            />
-            <Box>
-              <Box sx={{display: 'flex', alignItems: 'center', flex: 1}}>
-                <ItSelect<KoboFormProtHH.GetType<'vulnerability'>>
-                  multiple
-                  label={m.vulnerabilities}
-                  value={filters.C_Vulnerability_catergories_that ?? []}
-                  onChange={_ => setFilters(prev => ({...prev, C_Vulnerability_catergories_that: _}))}
-                  options={Enum.keys(m.protHHSnapshot.enum.vulnerability).map(v =>
-                    ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
-                  )}
-                />
-                <ItSelect<KoboFormProtHH.Status>
-                  multiple
-                  label={m.status}
-                  value={filters._12_Do_you_identify_as_any_of ?? []}
-                  onChange={_ => setFilters(prev => ({...prev, _12_Do_you_identify_as_any_of: _}))}
-                  options={Enum.values(KoboFormProtHH.Status).map(v =>
-                    ({value: v, children: m.statusType[v]})
-                  )}
-                />
-                <FormControlLabel
-                  control={<Switch/>}
-                  label={m.hohhOlder}
-                  checked={!!customFilters.hohh60}
-                  onChange={(e: any) => setCustomFilters(prev => ({...prev, hohh60: e.target.checked}))}
-                />
-                <FormControlLabel
-                  control={<Switch/>}
-                  label={m.hohhFemale}
-                  checked={!!customFilters.hohhFemale}
-                  onChange={(e: any) => setCustomFilters(prev => ({...prev, hohhFemale: e.target.checked}))}
-                />
-              </Box>
-              {/*<Divider/>*/}
-              <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
-                <Txt color="hint" sx={{ml: 2}}>
-                  {period.start.toDateString()}{' - '}
-                  {period.end.toDateString()}
-                </Txt>
-                <Txt color="hint" bold sx={{ml: 2}}>
-                  {currentFilteredData?.length ?? '-'}
-                </Txt>
-                <Btn
-                  sx={{marginLeft: 'auto', mr: 2}}
-                  color="primary"
-                  variant="contained"
-                  icon="download"
-                  onClick={() => window.print()}
-                >
-                  Download PDF
-                </Btn>
-              </Box>
-            </Box>
-          </Box>
-          {/*<AaSelect<OblastISO>*/}
-          {/*  multiple*/}
-          {/*  label={m.oblast}*/}
-          {/*  value={filters._4_What_oblast_are_you_from_iso ?? []}*/}
-          {/*  onChange={_ => setFilters(prev => ({...prev, _4_What_oblast_are_you_from_iso: _}))}*/}
-          {/*  options={selectedCurrentOblastISOs.map(iso => ({*/}
-          {/*    value: iso,*/}
-          {/*    children: map(OblastIndex.findByIso(iso!)?.koboKey, _ => m.protHHSnapshot.enum.oblast[_])*/}
-          {/*  }))}*/}
-          {/*/>*/}
-        </Box>
-      </Box>
-      {currentFilteredData && previousFilteredData ? (
-        <_ProtectionSnapshot
+    <Box sx={{width: '100%'}}>
+      <Box sx={{display: 'flex'}}>
+        <ProtSnapshotFilters
+          className="noprint"
           current={{
-            data: currentFilteredData,
-            period: period,
+            data: currentFilteredData ?? Arr([]),
             computed: currentComputedData,
           }}
           previous={{
-            data: previousFilteredData,
-            period: previousPeriod,
+            data: previousFilteredData ?? Arr([]),
             computed: previousComputedData
           }}
           filters={filters}
           onFilter={setFilters}
+          customFilters={customFilters}
+          onCustomFilters={setCustomFilters}
           onFilterOblast={updateOblastFilters}
         />
-      ) : (_hhCurrent.loading || _hhPrevious.loading) && (
-        <Fender type="loading"/>
-      )}
-    </Pdf>
+        <Box sx={{flex: 1}}>
+          {currentFilteredData && previousFilteredData ? (
+            <Pdf>
+              <_ProtectionSnapshot
+                current={{
+                  data: currentFilteredData,
+                  computed: currentComputedData,
+                }}
+                previous={{
+                  data: previousFilteredData,
+                  computed: previousComputedData
+                }}
+                filters={filters}
+                customFilters={customFilters}
+                onFilter={setFilters}
+                onCustomFilters={setCustomFilters}
+                onFilterOblast={updateOblastFilters}
+              />
+            </Pdf>
+          ) : (_hhCurrent.loading || _hhPrevious.loading) && (
+            <Fender type="loading"/>
+          )}
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

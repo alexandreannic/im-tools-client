@@ -1,4 +1,4 @@
-import {Slide, SlideBody, SlideCard, SlideContainer, SlideHeader, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {Slide, SlideBody, SlideCard, SlideContainer, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {format, sub} from 'date-fns'
 import {Box, Icon, useTheme} from '@mui/material'
 import {AaPieChart} from '../../shared/Chart/AaPieChart'
@@ -16,10 +16,10 @@ import logo from '../../core/img/drc-logo.png'
 export const ProtSnapshotSample = ({
   current: {
     data,
-    period,
     computed
   },
   filters,
+  customFilters,
   previous,
   onFilter
 }: ProtSnapshotSlideProps) => {
@@ -42,7 +42,7 @@ export const ProtSnapshotSample = ({
             <Box sx={{display: 'inline', fontWeight: 'lighter'}}>- {m.protHHSnapshot.title2}</Box>
           </Txt>
           <Txt color="hint" sx={{fontSize: '1.1em', display: 'flex', alignItems: 'center'}}>
-            <Icon sx={{mr: 1}}>date_range</Icon> {format(period.start, 'LLLL yyyy')} - {format(sub(period.end, {days: 1}), 'LLLL yyyy')}
+            <Icon sx={{mr: 1}}>date_range</Icon> {format(customFilters.start, 'LLLL yyyy')} - {format(sub(customFilters.end, {days: 1}), 'LLLL yyyy')}
           </Txt>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>

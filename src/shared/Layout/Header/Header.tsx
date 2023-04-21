@@ -51,17 +51,21 @@ export const Header = ({children}: Props) => {
           )}
           <HeaderItem>
             <NavLink to="/activity-info">
-              activity-info
+              Activity-Info
             </NavLink>
           </HeaderItem>
           <HeaderItem>
             <NavLink to="/snapshot">
-              snapshot
+              Snapshots
             </NavLink>
           </HeaderItem>
           <HeaderItem>
             <NavLink to="/kobo">
-              kobo
+              Database
+            </NavLink>
+          </HeaderItem><HeaderItem>
+            <NavLink to="/dashboard">
+              Dashboards
             </NavLink>
           </HeaderItem>
           <HeaderItem>

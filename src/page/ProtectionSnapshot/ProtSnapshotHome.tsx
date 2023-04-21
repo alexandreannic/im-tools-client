@@ -1,5 +1,5 @@
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Box, useTheme} from '@mui/material'
 import {Slide, SlideTxt} from '../../shared/PdfLayout/Slide'
@@ -11,9 +11,9 @@ import logoEu from '../../core/img/eu.png'
 export const ProtSnapshotHome = ({
   current: {
     data,
-    period,
     computed
   },
+  customFilters,
   previous,
   filters,
   onFilter,
@@ -29,7 +29,7 @@ export const ProtSnapshotHome = ({
           <Box sx={{fontSize: '3em'}}>{m.protHHSnapshot.title}</Box>
           <Txt block color="hint" sx={{fontSize: '1.6em', mb: 2}}>{m.protHHSnapshot.subTitle}</Txt>
           <SlideTxt size="big" color="hint" sx={{display: 'block', mb: 2}}>
-            {format(period.start, 'LLLL yyyy')} - {format(sub(period.end, {days: 1}), 'LLLL yyyy')}
+            {format(customFilters.start, 'LLLL yyyy')} - {format(sub(customFilters.end, {days: 1}), 'LLLL yyyy')}
           </SlideTxt>
           <SlideTxt sx={{display: 'block'}}>{m.protHHSnapshot.desc.disclaimer}</SlideTxt>
 

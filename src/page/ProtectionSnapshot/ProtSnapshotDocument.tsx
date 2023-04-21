@@ -11,7 +11,6 @@ import {toPercent} from '../../utils/utils'
 export const ProtSnapshotDocument = ({
   current: {
     data,
-    period,
     computed
   },
   previous,
