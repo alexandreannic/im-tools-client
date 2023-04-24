@@ -7,6 +7,7 @@ import {Kobo} from './Kobo/Kobo'
 import {koboModule} from './Kobo/koboModule'
 import {KoboForm} from './Kobo/KoboForm/KoboForm'
 import {DrcUaMap} from './DrcUaMap/DrcUaMap'
+import {Dashboard} from './Dashboard/Dashboard'
 
 export const Router = () => {
   const {m} = useI18n()
@@ -15,6 +16,7 @@ export const Router = () => {
       <Routes>
         <Route path="/map" element={<DrcUaMap/>}/>
         <Route path="/snapshot" element={<Home/>}/>
+        <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/activity-info" element={<ActivityInfo/>}/>
         <Route path={koboModule.basePath} element={<Kobo/>}>
           <Route path={koboModule.siteMap.form()} element={<KoboForm/>}/>
