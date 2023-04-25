@@ -121,6 +121,12 @@ export const en = Object.freeze({
     uaCitizenShip: 'Ukrainian citizenship',
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
+    protHHS2: {
+      HHsLocation: 'HHs Location',
+      HHs: 'HHs',
+      AvgHHSize: 'AvgHHSize',
+      poc: 'Person of concern',
+    },
     protHHSnapshot: {
       male1860: `Males 18-60 years old`,
       experiencedShellingDuringDisplacement: `Experienced shelling during displacement`,

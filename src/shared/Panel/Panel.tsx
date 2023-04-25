@@ -1,8 +1,9 @@
 import * as React from 'react'
-import {forwardRef, ReactNode, useState} from 'react'
+import {forwardRef, ReactNode, useRef, useState} from 'react'
 import {Box, Card, CardProps, Icon, LinearProgress} from '@mui/material'
 import {PanelHead} from './PanelHead'
 import {IconBtn} from 'mui-extension'
+import html2canvas from 'html2canvas'
 
 export interface PanelProps extends Omit<CardProps, 'title'> {
   loading?: boolean
@@ -11,6 +12,7 @@ export interface PanelProps extends Omit<CardProps, 'title'> {
   elevation?: number
   title?: ReactNode
   expendable?: boolean
+  savableAsImg?: boolean
 }
 
 export const Panel = forwardRef(({
@@ -22,9 +24,24 @@ export const Panel = forwardRef(({
   sx,
   title,
   expendable,
+  savableAsImg,
   ...other
 }: PanelProps, ref: any) => {
   const [expended, setExpended] = useState(false)
+  const content = useRef<HTMLDivElement>(null)
+
+  const openImageNewTag = (canvas: HTMLCanvasElement, name: string) => {
+    const w = window.open()!
+    // canvas.height = canvas.height * .5
+    // canvas.width = canvas.width * .5
+    w.document.write('<img src="' + canvas.toDataURL() + '" />')
+    w.document.title = name
+  }
+
+  const saveAsImg = () => {
+    html2canvas(content.current!, {}).then(_ => openImageNewTag(_, 'imaa-tools-img'))
+  }
+
   return (
     <Card
       ref={ref}
@@ -62,20 +79,27 @@ export const Panel = forwardRef(({
       }}
       {...other}
     >
-      {(title || expendable) && (
+      {(title || expendable || savableAsImg) && (
         <PanelHead>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             {title}
             {expendable && (
-              <IconBtn size="small" sx={{marginLeft: 'auto', color: t => t.palette.text.disabled}} onClick={() => setExpended(_ => !_)}>
+              <IconBtn size="small" sx={{marginLeft: 'auto', p: 0, color: t => t.palette.text.disabled}} onClick={() => setExpended(_ => !_)}>
                 <Icon>{expended ? 'fullscreen_exit' : 'fullscreen'}</Icon>
+              </IconBtn>
+            )}
+            {savableAsImg && (
+              <IconBtn size="small" sx={{ml: 1, p: 0, color: t => t.palette.text.disabled}} onClick={saveAsImg}>
+                <Icon>download</Icon>
               </IconBtn>
             )}
           </Box>
         </PanelHead>
       )}
       {loading && <LinearProgress sx={{mb: '-4px'}}/>}
-      {children}
+      <Box ref={content}>
+        {children}
+      </Box>
     </Card>
   )
 })

@@ -1,5 +1,6 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {sortObject} from '../utils/utils'
+import {mapObjetValue, sortObject} from '../utils/utils'
+import {keys} from 'lodash'
 
 export interface ChartDataValPercent extends ChartDataVal {
   base: number
@@ -16,6 +17,8 @@ export interface ChartDataVal {
 export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
 export namespace ChartTools {
+
+  export const mapValue = mapObjetValue
 
   export const take = <T extends string>(n: number) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
     return Arr(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
@@ -188,7 +191,7 @@ export namespace ChartTools {
     data: A[],
     filterValue?: A[],
     percent?: boolean
-  }): ChartData<A> => {
+  }): ChartData<Exclude<A, keyof typeof filterValue>> => {
     const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
       return [curr, (acc[curr] ?? 0) + 1]
     })

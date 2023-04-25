@@ -22,12 +22,19 @@ export const useProtHH_2_1Data = ({
       )
 
     return {
+      byGender: chain(ChartTools.single({
+        data: data.flatMap(_ => _.persons.map(_ => _.gender)),
+        filterValue: ['unable_unwilling_to_answer'],
+      }))
+        .map(_ => ChartTools.mapValue(_, x => x.value))
+        .get,
+
       do_you_identify_as_any_of_the_following: chain(ChartTools.single({
         data: data.map(_ => _.do_you_identify_as_any_of_the_following).compact(),
       }))
         .map(ChartTools.sortBy.value)
         .map(ChartTools.setLabel(ProtHHS_2_1Options.do_you_identify_as_any_of_the_following))
-        .val,
+        .get,
 
       where_are_you_current_living_oblast: ChartTools.byCategory({
         categories: categoryOblasts('where_are_you_current_living_oblast_iso'),
