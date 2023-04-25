@@ -1,13 +1,13 @@
-import {KoboAnswer, KoboAnswerMetaData} from '../sdk/server/kobo/Kobo'
 import {Arr, Enum, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
 import {Messages} from '../i18n/localization/en'
+import {KoboAnswer2} from '../sdk/server/kobo/Kobo'
 
 export namespace KoboFormProtHH {
 
   export const elderlyLimitIncluded = 60
-  export const isElderly = (age: number) => age >= elderlyLimitIncluded
+  export const isElderly = (age: number | string) => +age >= elderlyLimitIncluded
 
   export const ageGroupBHA = Object.freeze({
     '0 - 4': [0, 4],
@@ -34,37 +34,11 @@ export namespace KoboFormProtHH {
     }
   }
 
-  enum KoboGender {
-    female = 'female',
-    male = 'male',
-    prefer_not_to_answer = 'prefer_not_to_answer',
-    don_t_know = 'don_t_know',
-  }
-
   export enum Gender {
     female = 'female',
     male = 'male',
   }
 
-  export interface Person<G = Gender> {
-    age?: number
-    gender?: G
-  }
-  
-  export enum PriorityNeed {
-    health = 'health',
-    shelter = 'shelter',
-    food = 'food',
-    livelihoods = 'livelihoods',
-    other = 'other',
-    winter_items = 'winter_items',
-    cash = 'cash',
-    civil_documentation = 'civil_documentation',
-    university_or_teritary_eduction = 'university_or_teritary_eduction',
-    education_for_children = 'education_for_children',
-    nfis = 'nfis',
-    wash = 'wash',
-  }
 
   export enum Status {
     conflict_affected_person = 'conflict_affected_person',
@@ -73,13 +47,13 @@ export namespace KoboFormProtHH {
     idp_returnee = 'idp_returnee',
   }
 
-  export type Answer = ReturnType<typeof mapAnswers>
+  export type Answer = KoboAnswer2<ReturnType<typeof mapAnswers>>
 
   const mapGender = (g?: any): Gender | undefined => {
     if (g && g !== 'prefer_not_to_answer' && g !== 'don_t_know') return Gender[g as Gender]
   }
 
-  const mapPerson = (a: KoboAnswer) => {
+  const mapPerson = (a: Record<string, string | undefined>) => {
     const fields: [string, string, string, string][] = [
       [
         '_8_1_1_For_household_member_1_',
@@ -97,7 +71,7 @@ export namespace KoboFormProtHH {
     return Arr(fields)
       .map(([ageCol, sexCol, personalDoc, statusDoc]) => {
         return ({
-          age: isNaN(a[ageCol]) ? undefined : a[ageCol],
+          age: isNaN(a[ageCol] as any) ? undefined : +a[ageCol]!,
           gender: mapGender(a[sexCol]),
           personalDoc: a[personalDoc]?.split(' ') as GetType<'_14_1_1_What_type_of_ocuments_do_you_have'>[] | undefined,
           statusDoc: a[statusDoc]?.split(' ') as GetType<'_14_2_1_Do_you_or_your_househo'>[] | undefined
@@ -125,16 +99,6 @@ export namespace KoboFormProtHH {
   export const filterByNoIDP = (row: Answer): boolean => {
     return row._12_Do_you_identify_as_any_of !== Status.idp
   }
-
-  // const Dico = {
-  //   multiple: <T>(): T[] | undefined => {
-  //
-  //   }
-  // }
-  //
-  // const dictionnaire = {
-  //   _29_Which_NFI_do_you_need: Dico.multiple<'infant_clothing' | 'hygiene_items' | 'do_not_require41' | 'other_household_items' | 'blankets' | 'towels_bed_linen' | 'winter_clothes' | 'kitchen_items' | 'clothes_and_shoes'>()
-  // }
 
   export type GetType<T extends keyof Messages['protHHSnapshot']['enum']> = keyof Messages['protHHSnapshot']['enum'][T]
 
@@ -167,7 +131,7 @@ export namespace KoboFormProtHH {
     '_4_26_What_raion_in_S_currently_living_in',
     '_4_27_What_raion_in_T_currently_living_in',
   ]
-  export const mapAnswers = (a: KoboAnswerMetaData & Record<string, string | undefined>) => {
+  export const mapAnswers = (a: Record<string, string | undefined>) => {
     return {
       ...a,
       _29_Which_NFI_do_you_need: a._29_Which_NFI_do_you_need?.split(' ') as GetType<'nfi'>[] | undefined,

@@ -45,10 +45,13 @@ export interface KoboAnswerMetaData {
   // _submitted_by: any
 }
 
+/** @deprecated*/
 export type KoboAnswer = (KoboAnswerMetaData & {[key: string]: any})
 
+export type KoboAnswer2<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
+
 export class Kobo {
-  static readonly mapAnswerMetaData = (k: Record<keyof KoboAnswerMetaData, any>): KoboAnswer => {
+  static readonly mapAnswerMetaData = (k: Record<keyof KoboAnswerMetaData, any>): KoboAnswer2<any> => {
     return {
       ...k,
       start: new Date(k.start),

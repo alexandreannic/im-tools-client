@@ -10,6 +10,11 @@ export interface Period {
   end: Date
 }
 
+export interface ApiPagination {
+  offset: number
+  limit: number
+}
+
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends Record<string, unknown>
     ? DeepReadonly<T[P]>

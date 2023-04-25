@@ -49,7 +49,7 @@ export const ActivityInfo = ({
         end: new Date(parseInt(year), parseInt(month)),
       }
     })() : undefined
-    return api.koboForm.getLocalFormAnswers(filters).then(_ => Arr(_.map(KoboFormProtHH.mapAnswers)))
+    return api.koboForm.getLocalFormAnswers(filters).then(_ => Arr(_.map(KoboFormProtHH.mapAnswers) as Answer[]))
   }
   // const request = (period: string) => {
   //   const [year, month] = period.split('-')

@@ -71,7 +71,11 @@ export const ProtSnapshot = ({
   // previousPeriod?: Period
 }) => {
   const {api} = useConfig()
-  const fetch = (period: Period) => api.koboForm.getAnswers(formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  const fetch = (period: Period) => api.koboForm.getAnswersFromLocalForm({
+    formId,
+    filters: period,
+    fnMap: KoboFormProtHH.mapAnswers
+  }).then(_ => Arr(_.data))
   const _hhCurrent = useFetcher(fetch)
   const _hhPrevious = useFetcher(fetch)
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilter>>({})
