@@ -27,22 +27,32 @@ export interface KoboQuestion {
 }
 
 export interface KoboAnswerMetaData {
-  _id: number,
-  // 'formhub/uuid': string,
-  start: Date,
-  end: Date,
-  // __version__: string,
-  // 'meta/instanceID': string,
-  // _xform_id_string: string,
-  _uuid: UUID,
-  // _attachments: KoboAnswerAttachements[],
-  // _status: KoboAnswerStatus,
-  _geolocation: [number, number],
-  _submission_time: Date,
-  // _tags: KoboAnswerTags[],
-  // _notes: KoboAnswerNotes[],
-  // _validation_status: any,
-  // _submitted_by: any
+  start: Date
+  end: Date
+  version: string
+  submissionTime: string
+  id: string
+  validationStatus?: 'validation_status_approved'
+  validatedBy?: string
+  lastValidatedTimestamp?: number
+  geolocation?: [number, number]
+  //
+  // _id: number,
+  // // 'formhub/uuid': string,
+  // start: Date,
+  // end: Date,
+  // // __version__: string,
+  // // 'meta/instanceID': string,
+  // // _xform_id_string: string,
+  // _uuid: UUID,
+  // // _attachments: KoboAnswerAttachements[],
+  // // _status: KoboAnswerStatus,
+  // _geolocation: [number, number],
+  // _submission_time: Date,
+  // // _tags: KoboAnswerTags[],
+  // // _notes: KoboAnswerNotes[],
+  // // _validation_status: any,
+  // // _submitted_by: any
 }
 
 /** @deprecated*/
@@ -51,12 +61,12 @@ export type KoboAnswer = (KoboAnswerMetaData & {[key: string]: any})
 export type KoboAnswer2<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
 
 export class Kobo {
-  static readonly mapAnswerMetaData = (k: Record<keyof KoboAnswerMetaData, any>): KoboAnswer2<any> => {
+  static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer2<any> => {
     return {
       ...k,
       start: new Date(k.start),
       end: new Date(k.end),
-      _submission_time: new Date(k._submission_time),
+      submissionTime: new Date(k.submissionTime),
     }
   }
 }

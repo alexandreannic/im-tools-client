@@ -5,6 +5,7 @@ import {mapMPCA_NFI} from '../../../koboForm/MPCA_NFIMapping'
 import {mapMPCA_NFI_Myko} from '../../../koboForm/MPCA_NFI_MykoMapping'
 import {mapMPCA_NFI_NAA} from '../../../koboForm/MPCA_NFI_NAAMapping'
 import {KoboApiForm} from './KoboApi'
+import {mapMPCA_NFI_Old} from '../../../koboForm/MPCA_NFI_OldMapping'
 
 export interface AnswersFilters {
   start?: Date
@@ -34,6 +35,7 @@ export class KoboApiClient {
     'MPCA_NFI': 'a4Sx3PrFMDAMZEGsyzgJJg',
     'MPCA_NFI_NAA': 'aBGVXW2N26DaLehmKneuyB',
     'MPCA_NFI_Myko': 'a8WAWB9Yxu2jkgk4Ei8GTk',
+    'MPCA_NFI_Old': 'a3h8Ykmp2C8NFiw5DDGBLz',
   }
 
   /** @deprecated */
@@ -82,6 +84,15 @@ export class KoboApiClient {
           })
         }
       )
+  }
+
+  readonly getAnswersMPCA_NFI_Old = (filters: FiltersProps = {}) => {
+    return this.getAnswersFromKoboApi({
+      serverId: KoboApiClient.serverRefs.prod,
+      formId: KoboApiClient.koboFormRefs.MPCA_NFI_Old,
+      fnMap: mapMPCA_NFI_Old,
+      ...filters,
+    })
   }
 
   readonly getAnswersMPCA_NFI = (filters: FiltersProps = {}) => {

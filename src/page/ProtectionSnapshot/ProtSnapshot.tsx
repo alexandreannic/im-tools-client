@@ -234,7 +234,7 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
     initGoogleMaps(
       conf.gooogle.mapId,
       theme.palette.primary.main,
-      props.current.data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
+      props.current.data.map(_ => ({loc: _.geolocation!, size: _._8_What_is_your_household_size}))
     )
   }, [])
 

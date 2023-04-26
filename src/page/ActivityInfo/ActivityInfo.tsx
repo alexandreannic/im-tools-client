@@ -105,7 +105,7 @@ const _ActivityInfo = ({
     return chain(Arr(data))
       // .map(fillMissingSexOrGender)
       .map(x => x?.map(_ => ({..._})))
-      .map(data => data.map(_ => ({..._, ...koboHromadaMapping[_._id]})))
+      .map(data => data.map(_ => ({..._, ...koboHromadaMapping[_.id]})))
       .get
   }, [data])
 
@@ -155,7 +155,7 @@ const _ActivityInfo = ({
                     }
                   } catch (e: unknown) {
                     console.error(byPopulationGroup)
-                    throw new Error(byPopulationGroup.map(_ => _._id).join(',') + ' ' + (e as Error).message)
+                    throw new Error(byPopulationGroup.map(_ => _.id).join(',') + ' ' + (e as Error).message)
                   }
                 })
               }
