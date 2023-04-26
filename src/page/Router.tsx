@@ -7,6 +7,7 @@ import {Kobo} from './Kobo/Kobo'
 import {koboModule} from './Kobo/koboModule'
 import {KoboForm} from './Kobo/KoboForm/KoboForm'
 import {DrcUaMap} from './DrcUaMap/DrcUaMap'
+import {Playground} from './Playground'
 import {Dashboard} from './Dashboard/Dashboard'
 
 export const Router = () => {
@@ -18,6 +19,7 @@ export const Router = () => {
         <Route path="/snapshot" element={<Home/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/activity-info" element={<ActivityInfo/>}/>
+        <Route path="/playground" element={<Playground/>}/>
         <Route path={koboModule.basePath} element={<Kobo/>}>
           <Route path={koboModule.siteMap.form()} element={<KoboForm/>}/>
         </Route>

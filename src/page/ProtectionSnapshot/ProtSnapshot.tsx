@@ -71,7 +71,7 @@ export const ProtSnapshot = ({
   // previousPeriod?: Period
 }) => {
   const {api} = useConfig()
-  const fetch = (period: Period) => api.koboForm.getAnswersFromLocalForm({
+  const fetch = (period: Period) => api.koboApi.getAnswersFromLocalForm({
     formId,
     filters: period,
     fnMap: KoboFormProtHH.mapAnswers

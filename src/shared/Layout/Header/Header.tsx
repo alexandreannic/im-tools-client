@@ -73,6 +73,11 @@ export const Header = ({children}: Props) => {
               Map
             </NavLink>
           </HeaderItem>
+          <HeaderItem>
+            <NavLink to="/playground">
+              Playground
+            </NavLink>
+          </HeaderItem>
 
           {children}
         </div>

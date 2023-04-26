@@ -7,7 +7,7 @@ import {Page} from '../../../shared/Page'
 export const KoboForm = () => {
   const {api} = useConfig()
   const {serverId, formId} = useParams()
-  const _form = useFetcher(() => api.koboForm.getForm(serverId!, formId!))
+  const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
 
   useEffect(() => {
     _form.fetch()

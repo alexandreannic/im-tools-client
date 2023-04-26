@@ -1,0 +1,38 @@
+import {MPCA_NFI_NAAOptions} from './MPCA_NFI_NAAOptions'
+
+type Opt<T extends keyof typeof MPCA_NFI_NAAOptions> = keyof (typeof MPCA_NFI_NAAOptions)[T]
+
+export interface MPCA_NFI_NAA {
+start: string | undefined,
+	end: string | undefined,
+	today: string | undefined,
+	location_geopoint: string | undefined,
+	consent_mod_1: Opt<'consent_mod_1'> | undefined,
+	patron: string | undefined,
+	name_resp: string | undefined,
+	last_resp: string | undefined,
+	phone: number | undefined,
+	Does_the_beneficiary_have_an_i: Opt<'Does_the_beneficiary_have_an_i'> | undefined,
+	Other_ID_identification: Opt<'Other_ID_identification'> | undefined,
+	Number_of_ID: string | undefined,
+	ITN: string | undefined,
+	Total_Family: number | undefined,
+	group_in3fh72: string | undefined,
+	AgeHH: number | undefined,
+	GenderHH: Opt<'GenderHH'> | undefined,
+	// undefined: string | undefined,
+	Kits_to_be_provided: Opt<'Kits_to_be_provided'> | undefined,
+	HKMV_: number | undefined,
+	HKF_: number | undefined,
+	BLN_: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	// undefined: number | undefined,
+	consent_signature_payment: string | undefined,
+}
