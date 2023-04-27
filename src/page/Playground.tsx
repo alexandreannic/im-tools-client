@@ -1,9 +1,13 @@
 import {useConfig} from '../core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {KoboApiClient} from '../core/sdk/server/kobo/KoboApiClient'
-import {Divider} from '@mui/material'
+import {Box, Divider} from '@mui/material'
 import {format, parse} from 'date-fns'
+import {Layout} from '../shared/Layout'
+import {Arr} from '@alexandreannic/ts-utils'
+import {KoboFormProtHH} from '../core/koboForm/koboFormProtHH'
+import {Txt} from 'mui-extension'
 
 // const survey = await form.fetch().then(_ => _.content.survey)
 // const bln = survey.find(_ => _.label?.includes('BLN High Thermal Blankets: How many?'))
@@ -19,6 +23,7 @@ const limit: any = {
   lvivska: new Date(2022, 9, 10),
   chernivetska: new Date(2022, 9, 27),
   kharkivska: new Date(2022, 11, 28),
+  zaporizka: new Date(2022, 11, 8),
 }
 
 const extractRelevantProperty = (x: any) => {
@@ -129,6 +134,33 @@ const periods: Record<any, string[]> = {
     '2022-12-13',
     '2022-12-28',
   ],
+  zaporizka: [
+    '2023-02-14',
+    '2023-02-13',
+    '2023-01-27',
+    '2023-01-24',
+    '2023-0- 5',
+    '2023-0- 3',
+    '2023-02-17',
+    '2023-02-14',
+    '2023-02-13',
+    '2023-01-27',
+    '2023-01-24',
+    '2023-01-19',
+    '2023-0- 5',
+    '2023-0- 3',
+    '2023-01-24',
+    '2023-01-27',
+    '2023-02-13',
+    '2023-02-14',
+    '2023-02-17',
+    '2023-01-24',
+    '2023-0- 5',
+    '2023-02-13',
+    '2023-02-14',
+    '2023-02-15',
+    '2023-02-17',
+  ]
 }
 
 const dateExist = (oblast: keyof typeof periods, date: Date) => {
@@ -164,7 +196,8 @@ export const Playground = () => {
   const fetchMPCA_NFI_NAA = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_NAA())
   const fetchMPCA_NFI_Old = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Old())
 
-  const [res2, setRes] = useState({})
+  const [res2, setRes] = useState<any>({})
+  const [blanketsByAgeGroup2, setBlanketsByAgeGroup] = useState<any>({})
 
   useEffect(() => {
     const getGenderAges = (x: any, groupName: string) => {
@@ -203,6 +236,10 @@ export const Playground = () => {
     const moreBLN: any[] = []
     const lessBLN: any[] = []
     const missingWK: any[] = []
+    const oblasts = new Set<string>()
+    const blanketsByAgeGroup: any = {}
+    let maxDate = 0
+    let minDate = Number.MAX_VALUE
 
     ;(async () => {
       const res: any = {
@@ -214,9 +251,15 @@ export const Playground = () => {
         // kharkiv: {bln: 0, wkb: 0},
         // all: {bln: 0, wkb: 0},
       }
-      const init = () => ({bln: {male: 0, female: 0, all: 0}, wkb: {male: 0, female: 0, all: 0}})//male: 0, female: 0, anygender: 0,})
+      const init = () => ({
+        rows: 0,
+        bln: {bln: 0, male: 0, female: 0, all: 0},
+        wkb: {wkb: 0, male: 0, female: 0, all: 0}
+      })//male: 0, female: 0, anygender: 0,})
 
-      const push = (x: any, oblast: string, wkb: number, BLN: number) => {
+      const push = (x: any, oblast: string, WKB: number, BLN: number) => {
+        maxDate = Math.max(maxDate, x.start.getTime())
+        minDate = Math.min(minDate, x.start.getTime())
         const familyCompo = getGenderComposition(x)
         const genderAge = getGenderAges(x, 'group_in3fh72')
         const babies = genderAge.filter(([gender, age]) => age <= babyMaxYo)
@@ -225,34 +268,92 @@ export const Playground = () => {
           if (!res[oblast]) {
             res[oblast] = init()
           }
-          // const babyMales = wkb
-          // const babyFemales = wkb
           const babyMales = babies.filter(([gender]) => gender === 'male').length || familyCompo.childMale
           const babyFemales = babies.filter(([gender]) => gender === 'female').length || familyCompo.childFemale
 
-          // const blnForMale = BLN
-          // const blnForFemale = BLN
-          const blnForMale = (BLN > 0 ? familyCompo.totalMale || genderAge.filter(([gender]) => gender === 'male').length : 0)
-          const blnForFemale = (BLN > 0 ? familyCompo.totalFemale || genderAge.filter(([gender]) => gender === 'female').length : 0)
+          // const blnForMale = (BLN > 0 ? genderAge.filter(([gender]) => gender === 'male').length : 0)
+          // const blnForFemale = (BLN > 0 ? genderAge.filter(([gender]) => gender === 'female').length : 0)
+          if(familyCompo.totalMale > 0 && genderAge.filter(([gender]) => gender === 'male').length > 0 && familyCompo.totalMale !== genderAge.filter(([gender]) => gender === 'male').length) {
+            console.error(x)
+          }
+          const blnForMale = (BLN > 0 ?  genderAge.filter(([gender]) => gender === 'male').length || familyCompo.totalMale  : 0)
+          const blnForFemale = (BLN > 0 ? genderAge.filter(([gender]) => gender === 'female').length || familyCompo.totalFemale : 0)
 
+          // if (BLN > 0) {
+          //   const femaleGroupAge = Arr(genderAge.filter(([gender]) => gender === 'female').map(([gender, age]) => ({age: age as number}))).groupBy(KoboFormProtHH.groupByAgeGroup)
+          //   const maleGroupAge = Arr(genderAge.filter(([gender]) => gender === 'male').map(([gender, age]) => ({age: age as number}))).groupBy(KoboFormProtHH.groupByAgeGroup)
+          //   if (!blanketsByAgeGroup[oblast]) {
+          //     blanketsByAgeGroup[oblast] = {
+          //       'total': 0,
+          //       'all': {male: 0, female: 0},
+          //       '0 - 4': {male: 0, female: 0},
+          //       '5 - 9': {male: 0, female: 0},
+          //       '10 - 14': {male: 0, female: 0},
+          //       '15 - 18': {male: 0, female: 0},
+          //       '19 - 29': {male: 0, female: 0},
+          //       '30 - 59': {male: 0, female: 0},
+          //       '60+': {male: 0, female: 0},
+          //     }
+          //   }
+          //   console.log(
+          //     genderAge.filter(([gender]) => gender === 'male').length, '-',
+          //     femaleGroupAge['0 - 4']?.length ?? 0,
+          //     femaleGroupAge['5 - 9']?.length ?? 0,
+          //     femaleGroupAge['10 - 14']?.length ?? 0,
+          //     femaleGroupAge['15 - 18']?.length ?? 0,
+          //     femaleGroupAge['19 - 29']?.length ?? 0,
+          //     femaleGroupAge['30 - 59']?.length ?? 0,
+          //     femaleGroupAge['60+']?.length ?? 0,
+          //     maleGroupAge['0 - 4']?.length ?? 0,
+          //     maleGroupAge['5 - 9']?.length ?? 0,
+          //     maleGroupAge['10 - 14']?.length ?? 0,
+          //     maleGroupAge['15 - 18']?.length ?? 0,
+          //     maleGroupAge['19 - 29']?.length ?? 0,
+          //     maleGroupAge['30 - 59']?.length ?? 0,
+          //     maleGroupAge['60+']?.length ?? 0,
+          //     x
+          //   )
+          //   blanketsByAgeGroup[oblast]['0 - 4'].female += femaleGroupAge['0 - 4']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['5 - 9'].female += femaleGroupAge['5 - 9']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['10 - 14'].female += femaleGroupAge['10 - 14']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['15 - 18'].female += femaleGroupAge['15 - 18']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['19 - 29'].female += femaleGroupAge['19 - 29']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['30 - 59'].female += femaleGroupAge['30 - 59']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['60+'].female += femaleGroupAge['60+']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['0 - 4'].male += maleGroupAge['0 - 4']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['5 - 9'].male += maleGroupAge['5 - 9']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['10 - 14'].male += maleGroupAge['10 - 14']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['15 - 18'].male += maleGroupAge['15 - 18']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['19 - 29'].male += maleGroupAge['19 - 29']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['30 - 59'].male += maleGroupAge['30 - 59']?.length ?? 0
+          //   blanketsByAgeGroup[oblast]['60+'].male += maleGroupAge['60+']?.length ?? 0
+          //
+          //   blanketsByAgeGroup[oblast]['all'].male += Object.values(maleGroupAge).reduce<number>((acc, x) => acc + x.length, 0)
+          //   blanketsByAgeGroup[oblast]['all'].female += Object.values(femaleGroupAge).reduce<number>((acc, x) => acc + x.length, 0)
+          //   blanketsByAgeGroup[oblast]['total'] = blanketsByAgeGroup[oblast]['all'].female + blanketsByAgeGroup[oblast]['all'].male
+          // }
+
+          res[oblast].rows += 1
+          res[oblast].wkb.wkb += WKB
           res[oblast].wkb.male += babyMales
           res[oblast].wkb.female += babyFemales
-          // if (dateExist(oblast, x.end)) {
-          res[oblast].bln.male += blnForMale
-          res[oblast].bln.female += blnForFemale
-          // }
+          if (dateExist(oblast, x.start)) {
+            res[oblast].bln.bln += BLN
+            res[oblast].bln.male += blnForMale
+            res[oblast].bln.female += blnForFemale
+          }
           res[oblast].wkb.all = res[oblast].wkb.male + res[oblast].wkb.female
           res[oblast].bln.all = res[oblast].bln.male + res[oblast].bln.female
 
-          if (wkb > 0) {
-            console.log(
-              x.id,
-              'babyMales', babyMales,
-              'babyFemales', babyFemales,
-              'wkb', wkb
-            )
-          }
-          if (wkb > 0 && (babyMales + babyFemales) !== wkb) {
+          // if (WKB > 0) {
+          //   console.log(
+          //     x.id,
+          //     'babyMales', babyMales,
+          //     'babyFemales', babyFemales,
+          //     'wkb', WKB
+          //   )
+          // }
+          if (WKB > 0 && (babyMales + babyFemales) !== WKB) {
             // console.log(
             //   'genderAge', babies.filter(([gender]) => gender === 'male').length, babies.filter(([gender]) => gender === 'female').length,
             //   'family compo', familyCompo.childMale, familyCompo.childFemale,
@@ -279,6 +380,7 @@ export const Playground = () => {
       }
 
       await fetchMPCA_NFI.fetch().then(_ => _.data.forEach(x => {
+        oblasts.add(x.oblast!)
         push(
           x,
           x.oblast!,
@@ -286,12 +388,26 @@ export const Playground = () => {
           add(x.BLN_),
         )
       }))
-      // await fetchMPCA_NFI_Old.fetch().then(_ => _.data.forEach(x => {
-      //   if (!res.all) res.all = init()
-      //   res.all.wkb += add(x.WKB1_1_, x.WKB2_2_, x.WKB3_3_, x.WKB4_4_)
-      // }))
+      await fetchMPCA_NFI_Old.fetch().then(_ => _.data.forEach(x => {
+        const oblasts = {
+          _Lviv: 'lvivska',
+          _Chernivtsi: 'chernivetska',
+          _Dnipro_1: 'dnipropetrovska',
+          _kyiv: undefined,
+          cej__chernihiv: 'chernihivska',
+          plv__poltava: 'kharkivska',
+        }
+        const oblast = (oblasts as any)[x.location_office!]
+        if (!oblast) return
+        // console.log(x)
+        push(
+          x,
+          oblast,
+          add(x.WKB1_1_, x.WKB2_2_, x.WKB3_3_, x.WKB4_4_),
+          add(x.BLN_),
+        )
+      }))
       await fetchMPCA_NFI_NAA.fetch().then(_ => _.data.forEach(x => {
-        console.log((x as any).WKB1_1_, x.WKB2_How_many, x.WKB3_How_many, x.WKB4_How_many, x)
         push(
           x,
           'kharkivska',
@@ -303,16 +419,24 @@ export const Playground = () => {
       console.warn('Less BLN', lessBLN.map(extractRelevantProperty))
       console.warn('Missing WK', missingWK.map(extractRelevantProperty))
       console.log(res)
-      res.all = init()
+      console.log(format(new Date(minDate), 'yyyy-MM-dd'), '-', format(new Date(maxDate), 'yyyy-MM-dd'))
+      // console.log('oblasts', oblasts)
+      console.log(blanketsByAgeGroup)
+      const all = init()
       Object.keys(res).forEach(oblast => {
-        res.all.bln.female += res[oblast].bln.female
-        res.all.bln.male += res[oblast].bln.male
-        res.all.wkb.female += res[oblast].wkb.female
-        res.all.wkb.male += res[oblast].wkb.male
+        all.rows += res[oblast].rows
+        all.bln.bln += res[oblast].bln.bln
+        all.bln.female += res[oblast].bln.female
+        all.bln.male += res[oblast].bln.male
+        all.wkb.wkb += res[oblast].wkb.wkb
+        all.wkb.female += res[oblast].wkb.female
+        all.wkb.male += res[oblast].wkb.male
       })
+      res.all = all
       res.all.bln.all = res.all.bln.female + res.all.bln.male
       res.all.wkb.all = res.all.wkb.female + res.all.wkb.male
       setRes(res)
+      setBlanketsByAgeGroup(blanketsByAgeGroup)
     })()
   }, [])
 
@@ -321,15 +445,24 @@ export const Playground = () => {
   // console.log(fetchMPCA_NFI.entity?.data.map(_ => _.gender_respondent))
 
   return (
-    <div>
+    <Layout>
       <div>{fetchMPCA_NFI.entity?.data.length}</div>
       <div>{fetchMPCA_NFI_Myko.entity?.data.length}</div>
       <div>{fetchMPCA_NFI_NAA.entity?.data.length}</div>
 
       <Divider/>
-      <pre>
-        {JSON.stringify(res2, null, 2)}
-      </pre>
-    </div>
+      {Object.keys(res2).map(k =>
+        <Box key={k}>
+          <Txt bold block>{k}</Txt>
+          <Box sx={{display: 'flex'}}>
+            <Box sx={{mr: 4}}>
+              <pre>{JSON.stringify(blanketsByAgeGroup2[k], null, 2)}</pre>
+            </Box>
+            <pre>{JSON.stringify(res2[k], null, 2)}</pre>
+          </Box>
+          <Divider/>
+        </Box>
+      )}
+    </Layout>
   )
 }

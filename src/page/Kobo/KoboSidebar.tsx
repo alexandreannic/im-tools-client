@@ -4,6 +4,8 @@ import {Sidebar, SidebarHr, SidebarItem} from '../../shared/Layout/Sidebar'
 import {Fragment, useEffect, useState} from 'react'
 import {CircularProgress} from '@mui/material'
 import {koboModule} from './koboModule'
+import {koboFormId} from '../../koboFormId'
+import {KoboApiClient} from '../../core/sdk/server/kobo/KoboApiClient'
 
 export const KoboSidebar = () => {
   const {api} = useConfig()
@@ -11,7 +13,7 @@ export const KoboSidebar = () => {
   const _forms = useFetcher(api.kobo.fetchForms)
   const [serverId, setServerId] = useState<string | undefined>()
 
-  // const path = (page: string) => koboModule.basePath + '/' + page
+  const path = (page: string) => koboModule.basePath + '/' + page
 
   useEffect(() => {
     _servers.fetch()
@@ -21,6 +23,9 @@ export const KoboSidebar = () => {
 
   return (
     <Sidebar>
+      <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
+        fcrmMpcaNAA
+      </SidebarItem>
       {_servers.entity?.map(server =>
         <Fragment key={server.id}>
           <SidebarItem
