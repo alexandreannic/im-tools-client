@@ -6,11 +6,6 @@ import {Page} from '../../../shared/Page'
 import {Enum} from '@alexandreannic/ts-utils'
 import {Box, GlobalStyles} from '@mui/material'
 import {muiTheme} from '../../../core/theme'
-import {xxx} from './deletem'
-import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
-import {MPCA_NFI_Myko} from '../../../core/koboForm/MPCA_NFI_Myko'
-import {MPCA_NFI_NAA} from '../../../core/koboForm/MPCA_NFI_NAA'
-import {ApiPaginate} from '../../../core/type'
 
 const generalStyles = <GlobalStyles
   styles={{
@@ -38,12 +33,12 @@ const generalStyles = <GlobalStyles
     }
   }}
 />
+
 export const KoboForm = () => {
   const {api} = useConfig()
   const {serverId, formId} = useParams()
   const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
-  const _answers = useFetcher(() => Promise.resolve(xxx as ApiPaginate<KoboAnswer2<MPCA_NFI_NAA>>))
-  // const _answers = useFetcher(() => api.koboApi.getAnswersFromKoboApi({serverId: serverId!, formId: formId!}))
+  const _answers = useFetcher(() => api.koboApi.getAnswersFromKoboApi({serverId: serverId!, formId: formId!}))
 
   useEffect(() => {
     _form.fetch()

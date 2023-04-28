@@ -1,4 +1,4 @@
-export const hromadas = {
+export const aiHromadas = {
   'Aromatnenska_UA0102003_Ароматненська': 'chagq9rlebstwse2',
   'Bakhchysaraiska_UA0102005_Бахчисарайська': 'cd64pz7lebstwsj3',
   'Verkhorichenska_UA0102009_Верхоріченська': 'cg6s4wplebstwsj4',

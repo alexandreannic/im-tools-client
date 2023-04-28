@@ -43,7 +43,6 @@ export class KoboFormClient {
           return ({
             ..._,
             data: _.data.map(_ => ({
-              ..._,
               ...Kobo.mapAnswerMetaData(_),
               ...fnMap(_.answers) as any
             }))

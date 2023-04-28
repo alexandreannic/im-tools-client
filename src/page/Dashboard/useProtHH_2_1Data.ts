@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {ChartTools} from '../../core/chartTools'
 import {chain} from '../../utils/utils'
-import {ProtHHS_2_1Options} from '../../core/koboForm/ProtHHS_2_1Options'
+import {ProtHHS_2_1Options} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Options'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISO, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS_2_1Enrich} from './Dashboard'

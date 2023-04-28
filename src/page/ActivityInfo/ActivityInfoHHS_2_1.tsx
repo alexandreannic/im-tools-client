@@ -2,7 +2,6 @@ import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {useConfig} from '../../core/context/ConfigContext'
-import {Period, UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '../../core/activityInfo/AiProtectionHhs'
 import {koboHromadaMapping} from './koboHromadaMapping'
@@ -21,26 +20,25 @@ import {ItSelect} from 'shared/Select/Select'
 import {AnswerTable} from './AnswerTable'
 import {useItToast} from '../../core/useToast'
 import {format} from 'date-fns'
-import Answer = KoboFormProtHH.Answer
 import {Layout} from '../../shared/Layout'
+import {koboFormId} from '../../koboFormId'
+import {mapProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Mapping'
+import {enrichProtHHS_2_1, ProtHHS_2_1Enrich} from '../Dashboard/Dashboard'
+import {ProtHHS_2_1Options} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Options'
 
-const mapPopulationGroup = (s: KoboFormProtHH.Status): any => fnSwitch(s, {
+const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
+  returnee: 'Returnees',
+  non_displaced: 'Non-Displaced',
   idp: 'IDPs',
-  conflict_affected_person: 'Non-Displaced',
-  host_community_member: 'Non-Displaced',
-  idp_returnee: 'Returnees'
+  refugee: 'Non-Displaced',
 }, _ => 'Non-Displaced')
 
-export const ActivityInfo = ({
-  serverId = '746f2270-d15a-11ed-afa1-0242ac120002',
-  formId = 'aFU8x6tHksveU2c3hK7RUG',
-}: {
-  serverId?: UUID,
-  formId?: string,
-  period?: Period
-}) => {
-  const [period, setPeriod] = useState('2023-03')
+
+export const ActivityInfoHHS_2_1 = () => {
+  const [period, setPeriod] = useState('2023-04')
   const {api} = useConfig()
+
+
   const request = (period?: string) => {
     const filters = period ? (() => {
       const [year, month] = period.split('-')
@@ -49,7 +47,11 @@ export const ActivityInfo = ({
         end: new Date(parseInt(year), parseInt(month)),
       }
     })() : undefined
-    return api.koboForm.getLocalFormAnswers(filters).then(_ => Arr(_.map(KoboFormProtHH.mapAnswers) as Answer[]))
+    return api.koboForm.getAnswers({
+      formId: koboFormId.prod.protectionHh2,
+      fnMap: mapProtHHS_2_1,
+      filters,
+    }).then(_ => _.data.map(enrichProtHHS_2_1))
   }
   // const request = (period: string) => {
   //   const [year, month] = period.split('-')
@@ -82,7 +84,7 @@ const _ActivityInfo = ({
   period,
   setPeriod,
 }: {
-  data: KoboFormProtHH.Answer[]
+  data: ProtHHS_2_1Enrich[]
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {
@@ -93,7 +95,7 @@ const _ActivityInfo = ({
     }))
   })
   const res = groupByAndTransform(flattedData, [
-      _ => _.B_Interviewer_to_in_ert_their_DRC_office ?? 'undef',
+      _ => _.staff_to_insert_their_DRC_office ?? 'undef',
       _ => format(_.end, 'yyyy-MM'),
       // _ => _.gender,
       // _ => KoboFormProtHH.groupByAgeGroup(_) ?? 'undef',
@@ -115,33 +117,34 @@ const _ActivityInfo = ({
   })
 
   const formParams = useMemo(() => {
-    const activities: {rows: Answer[], activity: AiProtectionHhs.FormParams}[] = []
-    Enum.entries(enrichedData.groupBy(_ => _._4_What_oblast_are_you_from)).forEach(([oblast, byOblast]) => {
+    const activities: {rows: ProtHHS_2_1Enrich[], activity: AiProtectionHhs.FormParams}[] = []
+    Enum.entries(enrichedData.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
       const middle = Math.ceil(byOblast.length / 2)
       Enum.entries({
         'GP-DRC-00001': Arr([...byOblast].splice(0, Math.ceil(middle))),
         'GP-DRC-00003': Arr([...byOblast].splice(Math.ceil(middle), Math.ceil(byOblast.length))),
       }).forEach(([planCode, byPlanCode]) => {
-        Enum.entries(byPlanCode.groupBy(_ => _._4_1_What_raion_currently_living_in)).forEach(([raion, byRaion]) => {
-          Enum.entries(byRaion.groupBy(_ => _.hromada)).forEach(([hromada, byHromada]) => {
-            if ([oblast, raion, hromada].every(_ => _ === 'undefined')) {
-              return
-            }
+        Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
+          Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada)).forEach(([hromada, byHromada]) => {
+            const enOblast = ProtHHS_2_1Options.what_is_your_area_of_origin_oblast[oblast]
+            const enRaion = ProtHHS_2_1Options.what_is_your_area_of_origin_raion[raion]
+            const enHromada = ProtHHS_2_1Options.what_is_your_area_of_origin_hromada[hromada]
             activities.push({
               rows: byHromada,
               activity: {
                 'Plan Code': planCode,
-                Oblast: AiProtectionHhs.findLocation(aiOblasts, oblast) ?? (('⚠️' + oblast) as any),
-                Raion: AiProtectionHhs.findLocation(aiRaions, raion) ?? AiProtectionHhs.searchRaion(hromada) ?? (('⚠️' + raion) as any),
+                Oblast: AiProtectionHhs.findLocation(aiOblasts, enOblast) ?? (('⚠️' + oblast) as any),
+                Raion: AiProtectionHhs.findLocation(aiRaions, enRaion) ?? AiProtectionHhs.searchRaion(enHromada) ?? (('⚠️' + enRaion) as any),
                 // Raion: raion as any,
                 // Hromada: hromada as any,
-                Hromada: AiProtectionHhs.findLocation(aiHromadas, hromada) ?? (('⚠️' + hromada) as any),
-                subActivities: Enum.entries(byHromada.groupBy(_ => _._12_Do_you_identify_as_any_of)).map(([populationGroup, byPopulationGroup]) => {
+                Hromada: AiProtectionHhs.findLocation(aiHromadas, enHromada) ?? (('⚠️' + enHromada) as any),
+                subActivities: Enum.entries(byHromada.groupBy(_ => _.do_you_identify_as_any_of_the_following)).map(([populationGroup, byPopulationGroup]) => {
                   try {
                     const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
                     const childs = persons.filter(_ => _.age < 18)
                     const adults = persons.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
                     const elderly = persons.filter(_ => KoboFormProtHH.isElderly(_.age))
+                    console.log(persons)
                     return {
                       'Reporting Month': period,
                       'Total Individuals Reached': persons.length,
@@ -193,7 +196,7 @@ const _ActivityInfo = ({
           />
         </Box>
         <Btn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
-          _submit.call(-1, formParams.map(_ => _.activity)).catch(toastError)
+          _submit.call(-1, formParams.map((_, i) => AiProtectionHhs.makeForm(_.activity, period, i))).catch(toastError)
         }}>
           Submit all
         </Btn>
@@ -216,9 +219,9 @@ const _ActivityInfo = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {formParams.filter(_ => !selectedOblast || _.activity.Oblast === selectedOblast).map(a => a.activity.subActivities.map((sa, i) =>
+            {formParams.filter(_ => !selectedOblast || _.activity.Oblast === selectedOblast).map((a, i) => a.activity.subActivities.map((sa, j) =>
               <TableRow>
-                {i === 0 && (
+                {j === 0 && (
                   <>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
                       <Tooltip title="Submit!!">
@@ -228,7 +231,7 @@ const _ActivityInfo = ({
                           size="small"
                           sx={{minWidth: 50, mr: .5}}
                           onClick={() => {
-                            _submit.call(i, [a.activity]).catch(toastError)
+                            _submit.call(i, [AiProtectionHhs.makeForm(a.activity, period, i)]).catch(toastError)
                           }}
                         >
                           <Icon>send</Icon>

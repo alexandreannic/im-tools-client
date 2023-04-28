@@ -2,14 +2,15 @@ import {Page} from '../../shared/Page'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from '../../core/context/ConfigContext'
 import React, {useEffect} from 'react'
-import {ProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1'
+import {ProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1'
 import {_Arr, Arr, mapFor} from '@alexandreannic/ts-utils'
-import {mapProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1Mapping'
+import {mapProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {useI18n} from '../../core/i18n'
 import {useProtHH_2_1Data} from './useProtHH_2_1Data'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {Box} from '@mui/material'
 import {DashboardSample} from './DashboardSample'
+import {KoboAnswer2} from '../../core/sdk/server/kobo/Kobo'
 
 export type ProtHHS_2_1Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
@@ -18,7 +19,7 @@ export interface DashboardPageProps {
   computed: ReturnType<typeof useProtHH_2_1Data>
 }
 
-const enrichProtHHS_2_1 = (a: ProtHHS_2_1) => {
+export const enrichProtHHS_2_1 = (a: KoboAnswer2<ProtHHS_2_1>) => {
   const maxHHNumber = 12
   const mapPerson = (a: ProtHHS_2_1) => {
     const fields = [
@@ -33,7 +34,7 @@ const enrichProtHHS_2_1 = (a: ProtHHS_2_1) => {
           age: isNaN(a[ageCol] as any) ? undefined : +a[ageCol]!,
           gender: a[sexCol] as NonNullable<ProtHHS_2_1['hh_sex_1']>,
         })
-      })
+      }).filter(_ => _.age !== undefined || _.gender !== undefined)
   }
 
   return {

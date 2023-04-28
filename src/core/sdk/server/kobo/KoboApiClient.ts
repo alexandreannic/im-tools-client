@@ -1,11 +1,11 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
-import {IKoboForm, Kobo, KoboAnswer, KoboAnswer2, KoboQuestion} from './Kobo'
-import {mapMPCA_NFI} from '../../../koboForm/MPCA_NFIMapping'
-import {mapMPCA_NFI_Myko} from '../../../koboForm/MPCA_NFI_MykoMapping'
-import {mapMPCA_NFI_NAA} from '../../../koboForm/MPCA_NFI_NAAMapping'
+import {IKoboForm, Kobo, KoboAnswer2} from './Kobo'
+import {mapMPCA_NFI} from '../../../koboForm/MPCA_NFI/MPCA_NFIMapping'
+import {mapMPCA_NFI_Myko} from '../../../koboForm/MPCA_NFI_Myko/MPCA_NFI_MykoMapping'
+import {mapMPCA_NFI_NAA} from '../../../koboForm/MPCA_NFI_NAA/MPCA_NFI_NAAMapping'
 import {KoboApiForm} from './KoboApi'
-import {mapMPCA_NFI_Old} from '../../../koboForm/MPCA_NFI_OldMapping'
+import {mapMPCA_NFI_Old} from '../../../koboForm/MPCA_NFI_Old/MPCA_NFI_OldMapping'
 
 export interface AnswersFilters {
   start?: Date

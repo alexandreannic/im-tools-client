@@ -67,6 +67,12 @@ export class Kobo {
       start: new Date(k.start),
       end: new Date(k.end),
       submissionTime: new Date(k.submissionTime),
+      version: k.version,
+      id: k.id,
+      validationStatus: k.validationStatus,
+      validatedBy: k.validatedBy,
+      lastValidatedTimestamp: k.lastValidatedTimestamp,
+      geolocation: k.geolocation,
     }
   }
 }

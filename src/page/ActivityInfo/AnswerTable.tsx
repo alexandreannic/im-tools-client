@@ -1,13 +1,12 @@
-import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
 import {Enum, map} from '@alexandreannic/ts-utils'
 import {Box, BoxProps} from '@mui/material'
 import React from 'react'
 
-export const AnswerTable = ({
+export const AnswerTable = <T extends Record<string, any>,>({
   answers,
   ...props
 }: {
-  answers: KoboFormProtHH.Answer[]
+  answers: T[]
 } & BoxProps) => {
   return (
     <Box {...props}>

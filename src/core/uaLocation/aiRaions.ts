@@ -1,4 +1,4 @@
-export const raions = {
+export const aiRaions = {
   'Bakhchysaraiskyi_Бахчисарайський': 'clrmtnqlecp1fu03',
   'Bilohirskyi_Білогірський': 'cdwykrplecp1fu04',
   'Dzhankoiskyi_Джанкойський': 'cpa84v0lecp1fu05',

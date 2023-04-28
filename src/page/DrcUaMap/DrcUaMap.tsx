@@ -4,7 +4,7 @@ import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
 import {useConfig} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
-import {oblasts} from '../../core/uaLocation/oblasts'
+import {aiOblasts} from '../../core/uaLocation/aiOblasts'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 
 const generalStyles = <GlobalStyles styles={{

@@ -1,10 +1,36 @@
 import {ProtHHS_2_1} from './ProtHHS_2_1'
 
-export const mapProtHHS_2_1 = (_: Record<keyof ProtHHS_2_1, string | undefined>): ProtHHS_2_1 => ({
+
+const extractQuestionName = (_: Record<string, any>) => {
+  const output: any = {}
+  Object.entries(_).forEach(([k, v]) => {
+    const arr = k.split('/')
+    const qName = arr[arr.length - 1]
+    output[qName] = v
+  })
+  return output
+}
+
+export const mapProtHHS_2_1 = (_: Record<keyof ProtHHS_2_1, any>): ProtHHS_2_1 => ({
 	..._,
+	how_many_ind: _.how_many_ind ? +_.how_many_ind : undefined,
+	hh_age_1: _.hh_age_1 ? +_.hh_age_1 : undefined,
+	hh_age_2: _.hh_age_2 ? +_.hh_age_2 : undefined,
+	hh_age_3: _.hh_age_3 ? +_.hh_age_3 : undefined,
+	hh_age_4: _.hh_age_4 ? +_.hh_age_4 : undefined,
+	hh_age_5: _.hh_age_5 ? +_.hh_age_5 : undefined,
+	hh_age_6: _.hh_age_6 ? +_.hh_age_6 : undefined,
+	hh_age_7: _.hh_age_7 ? +_.hh_age_7 : undefined,
+	hh_age_8: _.hh_age_8 ? +_.hh_age_8 : undefined,
+	hh_age_9: _.hh_age_9 ? +_.hh_age_9 : undefined,
+	hh_age_10: _.hh_age_10 ? +_.hh_age_10 : undefined,
+	hh_age_11: _.hh_age_11 ? +_.hh_age_11 : undefined,
+	hh_age_12: _.hh_age_12 ? +_.hh_age_12 : undefined,
 	are_you_separated_from_any_of_your_households_members: _.are_you_separated_from_any_of_your_households_members?.split(' '),
 	do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household: _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household?.split(' '),
 	do_you_have_a_household_member_that_has_a_lot_of_difficulty: _.do_you_have_a_household_member_that_has_a_lot_of_difficulty?.split(' '),
+	how_many_children_have_one_or_more_of_the_functional_limitations: _.how_many_children_have_one_or_more_of_the_functional_limitations ? +_.how_many_children_have_one_or_more_of_the_functional_limitations : undefined,
+	how_many_adults_members_have_one_or_more_of_the_functional_limitations: _.how_many_adults_members_have_one_or_more_of_the_functional_limitations ? +_.how_many_adults_members_have_one_or_more_of_the_functional_limitations : undefined,
 	why_did_you_leave_your_area_of_origin: _.why_did_you_leave_your_area_of_origin?.split(' '),
 	when_did_you_leave_your_area_of_origin: _.when_did_you_leave_your_area_of_origin ? new Date(_.when_did_you_leave_your_area_of_origin) : undefined,
 	how_did_you_travel_to_your_displacement_location: _.how_did_you_travel_to_your_displacement_location?.split(' '),

@@ -3,11 +3,10 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useState} from 'react'
 import {KoboApiClient} from '../core/sdk/server/kobo/KoboApiClient'
 import {Box, Divider} from '@mui/material'
-import {format, parse} from 'date-fns'
+import {format} from 'date-fns'
 import {Layout} from '../shared/Layout'
-import {Arr} from '@alexandreannic/ts-utils'
-import {KoboFormProtHH} from '../core/koboForm/koboFormProtHH'
 import {Txt} from 'mui-extension'
+import {MPCA_NFIOptions} from '../core/koboForm/MPCA_NFI/MPCA_NFIOptions'
 
 // const survey = await form.fetch().then(_ => _.content.survey)
 // const bln = survey.find(_ => _.label?.includes('BLN High Thermal Blankets: How many?'))
@@ -16,6 +15,8 @@ import {Txt} from 'mui-extension'
 export const add = (...args: (string | number | undefined)[]) => {
   return args.reduce<number>((acc, curr) => acc + parseInt(curr as any ?? '0'), 0)
 }
+
+const aiPeriod = {start: new Date(2023, 3, 1), end: new Date(2023, 4, 1)}
 
 const limit: any = {
   chernihivska: new Date(2022, 11, 20),
@@ -191,10 +192,10 @@ export const Playground = () => {
   const {api} = useConfig()
 
   const form = useFetcher(() => api.koboApi.getForm(KoboApiClient.serverRefs.prod, KoboApiClient.koboFormRefs.MPCA_NFI_NAA))
-  const fetchMPCA_NFI = useFetcher(() => api.koboApi.getAnswersMPCA_NFI())
-  const fetchMPCA_NFI_Myko = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Myko())
-  const fetchMPCA_NFI_NAA = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_NAA())
-  const fetchMPCA_NFI_Old = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Old())
+  const fetchMPCA_NFI = useFetcher(() => api.koboApi.getAnswersMPCA_NFI({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
+  const fetchMPCA_NFI_Myko = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Myko({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
+  const fetchMPCA_NFI_NAA = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_NAA({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
+  const fetchMPCA_NFI_Old = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Old({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
 
   const [res2, setRes] = useState<any>({})
   const [blanketsByAgeGroup2, setBlanketsByAgeGroup] = useState<any>({})
@@ -257,7 +258,7 @@ export const Playground = () => {
         wkb: {wkb: 0, male: 0, female: 0, all: 0}
       })//male: 0, female: 0, anygender: 0,})
 
-      const push = (x: any, oblast: string, WKB: number, BLN: number) => {
+      const record = (x: any, oblast: string, WKB: number, BLN: number) => {
         maxDate = Math.max(maxDate, x.start.getTime())
         minDate = Math.min(minDate, x.start.getTime())
         const familyCompo = getGenderComposition(x)
@@ -381,10 +382,20 @@ export const Playground = () => {
 
       await fetchMPCA_NFI.fetch().then(_ => _.data.forEach(x => {
         oblasts.add(x.oblast!)
-        push(
+        record(
           x,
           x.oblast!,
           add(x.WKB1_1_, x.WKB2_2_, x.WKB3_3_, x.WKB4_4_),
+          add(x.BLN_),
+        )
+      }))
+      await fetchMPCA_NFI_Myko.fetch().then(_ => _.data.forEach(x => {
+        const oblast= 'mykolaivska'
+        oblasts.add(oblast)
+        record(
+          x,
+          oblast,
+          add(x.WKB1_How_many, x.WKB2_How_many, x.WKB3_How_many, x.WKB4_How_many),
           add(x.BLN_),
         )
       }))
@@ -400,7 +411,7 @@ export const Playground = () => {
         const oblast = (oblasts as any)[x.location_office!]
         if (!oblast) return
         // console.log(x)
-        push(
+        record(
           x,
           oblast,
           add(x.WKB1_1_, x.WKB2_2_, x.WKB3_3_, x.WKB4_4_),
@@ -408,7 +419,7 @@ export const Playground = () => {
         )
       }))
       await fetchMPCA_NFI_NAA.fetch().then(_ => _.data.forEach(x => {
-        push(
+        record(
           x,
           'kharkivska',
           add(x.WKB1_How_many, x.WKB2_How_many, x.WKB3_How_many, x.WKB4_How_many),
@@ -442,13 +453,23 @@ export const Playground = () => {
 
 
   // console.log(form.entity?.content.survey)
-  // console.log(fetchMPCA_NFI.entity?.data.map(_ => _.gender_respondent))
+  console.log(fetchMPCA_NFI.entity?.data)
 
   return (
     <Layout>
       <div>{fetchMPCA_NFI.entity?.data.length}</div>
       <div>{fetchMPCA_NFI_Myko.entity?.data.length}</div>
       <div>{fetchMPCA_NFI_NAA.entity?.data.length}</div>
+      <div>fetchMPCA_NFI</div>
+      {fetchMPCA_NFI.entity?.data.map(x =>
+        <div key={x.id}>Main form,{x.id},{format(x.start, 'yyyy-MM-dd')},{MPCA_NFIOptions.oblast[x.oblast!]},{MPCA_NFIOptions.raion[x.raion!]},{MPCA_NFIOptions.hromada[x.hromada!]},{x.staff_names}</div>
+      )}
+      {fetchMPCA_NFI_Myko.entity?.data.map(x =>
+        <div key={x.id}>Myko,{x.id},{format(x.start, 'yyyy-MM-dd')},,</div>
+      )}
+      {fetchMPCA_NFI_NAA.entity?.data.map(x =>
+        <div key={x.id}>NAA,{x.id},{format(x.start, 'yyyy-MM-dd')},,</div>
+      )}
 
       <Divider/>
       {Object.keys(res2).map(k =>

@@ -1,6 +1,6 @@
-import {oblasts} from '../uaLocation/oblasts'
-import {raions} from '../uaLocation/raions'
-import {hromadas} from '../uaLocation/hromadas'
+import {aiOblasts} from '../uaLocation/aiOblasts'
+import {aiRaions} from '../uaLocation/aiRaions'
+import {aiHromadas} from '../uaLocation/aiHromadas'
 import {makeid} from '../../utils/utils'
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {hromadaRefs} from '../uaLocation/hromadaRef'
@@ -108,9 +108,9 @@ export namespace AiProtectionHhs {
       'GP-DRC-00003': 'crsa7psleo7l08n4',
       'GP-DRC-00004': 'cxf2j7kleo7mstp5'
     },
-    Oblast: oblasts,
-    Raion: raions,
-    Hromada: hromadas,
+    Oblast: aiOblasts,
+    Raion: aiRaions,
+    Hromada: aiHromadas,
   }
 
   type GET<T extends keyof typeof inputsOptions> = keyof typeof inputsOptions[T]
@@ -229,8 +229,22 @@ export namespace AiProtectionHhs {
 // ID des indicators avec sublist from c79be77ldswj831t
 // c3vbxtgldsw1as42 : ck5orstldsw7jfn5
 
+  // const mapMonthToId: any = {
+  //   1: 'ja',
+  //   2: 'fe',
+  //   3: 'ma',
+  //   4: 'ap',
+  //   5: 'ma',
+  //   6: 'ju',
+  //   7: 'jy',
+  //   8: 'ao',
+  //   9: 'se',
+  //   10: 'oc',
+  //   11: 'no',
+  //   12: 'de',
+  // }
 
-  export const makeForm = (params: FormParams): any => {
+  export const makeForm = (params: FormParams, period: string, index: number): any => {
     const getKeyId = (id: keyof typeof inputs) => inputs[id].id
     // const buildOption = <T extends keyof typeof inputsOptions>(t: T, defaultValue?: keyof (typeof inputsOptions)[T]) => {
     //   return {
@@ -255,7 +269,11 @@ export namespace AiProtectionHhs {
       if (value !== undefined)
         return {[input.id]: value}
     }
-    const recordId = 'alexdrc' + makeid(9)
+    const monthNumber = period.split('-')[1].padStart(2, '0')
+    // if(!mapMonthToId[monthNumber]) {
+    //   throw new Error(`Wrong monthNumber ${monthNumber}`)
+    // }
+    const recordId = 'drcprothhs' + monthNumber + 'i' + ('' + index).padStart(3, '0')
     return {
       'changes': [
         {
@@ -273,10 +291,10 @@ export namespace AiProtectionHhs {
             // 'Response Theme': '',
           },
         },
-        ...params.subActivities.map(x => {
+        ...params.subActivities.map((x, i) => {
           return {
             formId: 'cy3vehlldsu5aeb6',
-            recordId: 'alexdrc' + makeid(9),
+            recordId: recordId + i,
             parentRecordId: recordId,
             fields: {
               ...buildValue(x, 'Reporting Month'),
@@ -298,7 +316,7 @@ export namespace AiProtectionHhs {
     }
   }
 
-  export const findLocation = <K extends string>(loc: Record<K, string>, name: string): K | undefined => {
+  export const findLocationHHS0 = <K extends string>(loc: Record<K, string>, name: string): K | undefined => {
     const harmonizedName = fnSwitch(name, {
       Cnernivetskyi: 'Chernivetska',
     }, _ => _)
@@ -309,11 +327,19 @@ export namespace AiProtectionHhs {
     return mapped
   }
 
+  export const findLocation = <K extends string>(loc: Record<K, string>, name: string): K | undefined => {
+    const mapped = Enum.keys(loc).find(_ => _.includes(name))
+    if (!mapped) {
+      console.error(`Cannot find location ${name}`)
+    }
+    return mapped
+  }
+
   export const searchRaion = (name: string): string | undefined => {
     const parent = Enum.values(hromadaRefs).find(_ => _.en === name)?.parent as keyof typeof raionRefs | undefined
     if (parent) {
       const enLabel = raionRefs[parent]?.en
-      return Enum.keys(raions).find(_ => _.includes(enLabel))
+      return Enum.keys(aiRaions).find(_ => _.includes(enLabel))
     }
   }
 }

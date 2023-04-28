@@ -1,4 +1,4 @@
-export const oblasts = {
+export const aiOblasts = {
   'Autonomous Republic of Crimea_Автономна Республіка Крим': 'ciua21glebrkckb2',
   'Cherkaska_Черкаська': 'chvmygrlebrkckc3',
   'Chernihivska_Чернігівська': 'clo1x4vlebrkckc4',
