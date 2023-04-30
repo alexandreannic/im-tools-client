@@ -3,8 +3,8 @@ import {MPCA_NFIOptions} from './MPCA_NFIOptions'
 type Opt<T extends keyof typeof MPCA_NFIOptions> = keyof (typeof MPCA_NFIOptions)[T]
 
 export interface MPCA_NFI {
-  start: string,
-  end: string,
+  start: Date,
+  end: Date,
   today: string,
   // Programme
   Programme: Opt<'Programme'>,
@@ -59,7 +59,7 @@ export interface MPCA_NFI {
   // Indicate the total number of people in your household, including the HHH
   Total_Family: number | undefined,
   // HH members (excluding HHH)
-  group_in3fh72: {AgeHH: string | undefined,GenderHH: string | undefined}[],
+  group_in3fh72: {AgeHH: number | undefined,GenderHH: string | undefined}[],
   // Please indicate the AGE of HH member
   AgeHH: number | undefined,
   // Please indicate the GENDER of HH member

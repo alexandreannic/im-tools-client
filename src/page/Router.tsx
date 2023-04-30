@@ -8,7 +8,7 @@ import {KoboForm} from './Kobo/KoboForm/KoboForm'
 import {DrcUaMap} from './DrcUaMap/DrcUaMap'
 import {Playground} from './Playground'
 import {Dashboard} from './Dashboard/Dashboard'
-import {ActivityInfoNFI} from './ActivityInfo/ActivityInfoNFI'
+import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
 
 export const Router = () => {
   const {m} = useI18n()
