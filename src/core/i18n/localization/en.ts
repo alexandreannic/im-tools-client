@@ -1,6 +1,6 @@
 import {format, formatDistance, formatDuration as formatDurationFns, sub} from 'date-fns'
 import {externalLinks} from '../../externalLinks'
-import {KoboFormProtHH} from '../../koboForm/koboFormProtHH'
+import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
 import Status = KoboFormProtHH.Status
 import {Period} from '../../type'
 
@@ -58,6 +58,10 @@ export const en = Object.freeze({
     no: 'No',
     previous: 'Previous',
     next: 'Next',
+    viewDate: `View data`,
+    koboData: `Kobo data`,
+    previewActivity: `Preview activity`,
+    previewRequestBody: `Preview request body code`,
     nLines: (n: number) => `<b>${n}</b> lignes`,
     confirm: 'Confirm',
     toggleDatatableColumns: 'Toggle',
@@ -69,6 +73,7 @@ export const en = Object.freeze({
     },
     start: 'Start',
     end: 'End',
+    version: 'Version',
     hhs: 'Households',
     individuals: 'Individuals',
     hhSize: 'Household size',
@@ -84,6 +89,7 @@ export const en = Object.freeze({
     selectAll: 'Select all',
     ageGroup: 'Age groups',
     sex: 'Sex',
+    refresh: 'Refresh',
     status: 'Current status',
     male: 'Male',
     female: 'Female',

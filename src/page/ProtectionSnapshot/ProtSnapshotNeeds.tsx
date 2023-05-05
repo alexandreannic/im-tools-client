@@ -48,9 +48,9 @@ export const ProtSnapshotNeeds = ({
           <SlideContainer column sx={{flex: 3}}>
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.desc.needs({
-                percentLvivWithoutHot: map(computed._28_accessToHotByOblast['UA-77'], _ => toPercent(_.value / _.base, 0))!,
-                percentZapoWithoutHot: map(computed._28_accessToHotByOblast['UA-12'], _ => toPercent(_.value / _.base, 0))!,
-                percentChernihivWithoutHot: map(computed._28_accessToHotByOblastForIDPs['UA-74'], _ => toPercent(_.value / _.base, 0))!,
+                percentLvivWithoutHot: map(computed._28_accessToHotByOblast['UA77'], _ => toPercent(_.value / _.base, 0))!,
+                percentZapoWithoutHot: map(computed._28_accessToHotByOblast['UA12'], _ => toPercent(_.value / _.base, 0))!,
+                percentChernihivWithoutHot: map(computed._28_accessToHotByOblastForIDPs['UA74'], _ => toPercent(_.value / _.base, 0))!,
               })
             }}/>
             <SlidePanel title={m.protHHSnapshot.lackOfInformationNeeded}>

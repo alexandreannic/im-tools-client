@@ -23,6 +23,9 @@ export const KoboSidebar = () => {
 
   return (
     <Sidebar>
+      <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.protectionHh2))}>
+        HHS v2
+      </SidebarItem>
       <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
         fcrmMpcaNAA
       </SidebarItem>

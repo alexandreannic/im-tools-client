@@ -28,7 +28,9 @@ export interface KoboApiForm {
         'calculate' |
         'integer' |
         'select_multiple' |
-        'date'
+        'date' |
+        'start' |
+        'end'
       select_from_list_name?: string
     }[]
     translated: ['hint', 'label', 'media::image']

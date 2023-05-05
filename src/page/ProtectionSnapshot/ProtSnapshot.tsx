@@ -7,10 +7,10 @@ import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {Fender} from 'mui-extension'
 import {Pdf} from 'shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
-import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
+import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {ProtSnapshotDocument} from './ProtSnapshotDocument'
 import {ProtSnapshotSafety} from './ProtSnapshotSafety'
-import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
+import {OblastISOSVG} from '../../shared/UkraineMap/ukraineSvgPath'
 import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
 import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
 import {ProtSnapshotSample} from './ProtSnapshotSample'
@@ -31,7 +31,7 @@ export interface ProtSnapshotSlideProps {
   onFilter: Dispatch<SetStateAction<Partial<ProtSnapshotFilter>>>
   customFilters: ProtSnapshotCustomFilters
   onCustomFilters: Dispatch<SetStateAction<ProtSnapshotCustomFilters>>
-  onFilterOblast: (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblast: OblastISO) => void
+  onFilterOblast: (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblast: OblastISOSVG) => void
 }
 
 export type ProtSnapshotCustomFilters = {
@@ -136,7 +136,7 @@ export const ProtSnapshot = ({
     end: customFilters.previousPeriodEnd,
   })
 
-  const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblastISO: OblastISO) => {
+  const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblastISO: OblastISOSVG) => {
     setFilters(f => {
       const value = f[key] as string[]
       if (value?.includes(oblastISO)) {

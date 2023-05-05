@@ -29,7 +29,7 @@ export interface MPCA_NFI_NAA {
   // Indicate the total number of people in your household, including the HHH
   Total_Family: number | undefined,
   // HH members (including HHH)
-  group_in3fh72: {AgeHH: string | undefined,GenderHH: string | undefined}[],
+  group_in3fh72: {AgeHH: number | undefined,GenderHH: string | undefined}[],
   // Please indicate the AGE of HH member
   AgeHH: number | undefined,
   // Please indicate the GENDER of HH member

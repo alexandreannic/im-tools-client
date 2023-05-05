@@ -6,7 +6,7 @@ import {Box, Divider} from '@mui/material'
 import {format} from 'date-fns'
 import {Layout} from '../shared/Layout'
 import {Txt} from 'mui-extension'
-import {MPCA_NFIOptions} from '../core/koboForm/MPCA_NFI/MPCA_NFIOptions'
+import {MPCA_NFIOptions} from '../core/koboModel/MPCA_NFI/MPCA_NFIOptions'
 
 // const survey = await form.fetch().then(_ => _.content.survey)
 // const bln = survey.find(_ => _.label?.includes('BLN High Thermal Blankets: How many?'))

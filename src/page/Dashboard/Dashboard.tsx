@@ -2,12 +2,11 @@ import {Page} from '../../shared/Page'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from '../../core/context/ConfigContext'
 import React, {useEffect} from 'react'
-import {ProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1'
+import {ProtHHS_2_1} from '../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {_Arr, Arr, mapFor} from '@alexandreannic/ts-utils'
-import {mapProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Mapping'
+import {mapProtHHS_2_1} from '../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {useI18n} from '../../core/i18n'
 import {useProtHH_2_1Data} from './useProtHH_2_1Data'
-import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {Box} from '@mui/material'
 import {DashboardSample} from './DashboardSample'
 import {KoboAnswer2} from '../../core/sdk/server/kobo/Kobo'
@@ -40,8 +39,6 @@ export const enrichProtHHS_2_1 = (a: KoboAnswer2<ProtHHS_2_1>) => {
   return {
     ...a,
     persons: mapPerson(a),
-    where_are_you_current_living_oblast_iso: OblastIndex.findByShortISO(a.where_are_you_current_living_oblast!)?.iso,
-    what_is_your_area_of_origin_oblast_iso: OblastIndex.findByShortISO(a.what_is_your_area_of_origin_oblast!)?.iso,
   }
 }
 

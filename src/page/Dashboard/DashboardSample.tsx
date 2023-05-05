@@ -8,7 +8,7 @@ import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {DashboardPageProps} from './Dashboard'
 import {useTheme} from '@mui/material'
-import {ProtHHS_2_1Options} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Options'
+import {ProtHHS_2_1Options} from '../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 
 export const DashboardSample = ({
   data,

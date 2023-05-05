@@ -10,7 +10,6 @@ export const combineSx = (...sxs: (SxProps<Theme> | undefined | false)[]): SxPro
 export const makeSx = <T>(_: { [key in keyof T]: SxProps<Theme> }) => _
 export const makeStyle = (_: SxProps<Theme>) => _
 
-
 export const sxUtils = makeSx({
   fontBig: {
     fontSize: t => t.typography.fontSize * 1.15,

@@ -1,5 +1,7 @@
 import {UUID} from '../../../type'
 
+export type KoboId = string
+
 export type KoboServer = {
   id: string
   url: string
@@ -62,6 +64,7 @@ export type KoboAnswer2<T extends Record<string, any> = Record<string, string | 
 
 export class Kobo {
   static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer2<any> => {
+    delete (k as any)['deviceid']
     return {
       ...k,
       start: new Date(k.start),

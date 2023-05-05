@@ -1,30 +1,30 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
-import {useConfig} from '../../core/context/ConfigContext'
+import {KoboFormProtHH} from '../../../core/koboModel/koboFormProtHH'
+import {useConfig} from '../../../core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {AiProtectionHhs} from '../../core/activityInfo/AiProtectionHhs'
-import {koboHromadaMapping} from './koboHromadaMapping'
-import {chain, groupByAndTransform} from '../../utils/utils'
-import {Page} from '../../shared/Page'
+import {AiProtectionHhs} from '../../../core/activityInfo/AiProtectionHhs'
+import {koboHromadaMapping} from '../HHS0/koboHromadaMapping'
+import {chain, groupByAndTransform} from '../../../utils/utils'
+import {Page} from '../../../shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
-import {Panel} from '../../shared/Panel'
-import {ItInput} from '../../shared/ItInput/ItInput'
+import {Panel} from '../../../shared/Panel'
+import {ItInput} from '../../../shared/ItInput/ItInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
-import {Btn} from '../../shared/Btn/Btn'
-import {aiOblasts} from '../../core/uaLocation/aiOblasts'
-import {aiRaions} from '../../core/uaLocation/aiRaions'
-import {aiHromadas} from '../../core/uaLocation/aiHromadas'
+import {Btn} from '../../../shared/Btn/Btn'
+import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
+import {aiRaions} from '../../../core/uaLocation/aiRaions'
+import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
 import {ItSelect} from 'shared/Select/Select'
-import {AnswerTable} from './AnswerTable'
-import {useItToast} from '../../core/useToast'
+import {AnswerTable} from '../shared/AnswerTable'
+import {useItToast} from '../../../core/useToast'
 import {format} from 'date-fns'
-import {Layout} from '../../shared/Layout'
-import {koboFormId} from '../../koboFormId'
-import {mapProtHHS_2_1} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Mapping'
-import {enrichProtHHS_2_1, ProtHHS_2_1Enrich} from '../Dashboard/Dashboard'
-import {ProtHHS_2_1Options} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Layout} from '../../../shared/Layout'
+import {koboFormId} from '../../../koboFormId'
+import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
+import {enrichProtHHS_2_1, ProtHHS_2_1Enrich} from '../../Dashboard/Dashboard'
+import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -55,7 +55,7 @@ export const ActivityInfoHHS_2_1 = () => {
   }
   // const request = (period: string) => {
   //   const [year, month] = period.split('-')
-  //   return api.koboForm.getAnswers(serverId, formId, {
+  //   return api.koboModel.getAnswers(serverId, formId, {
   //     start: new Date(parseInt(year), parseInt(month) - 1),
   //     end: new Date(parseInt(year), parseInt(month)),
   //   }).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
@@ -67,15 +67,13 @@ export const ActivityInfoHHS_2_1 = () => {
   }, [period])
 
   return (
-    <Layout>
-      <Page width={1200} loading={_hhCurrent.loading}>
-        {map(_hhCurrent.entity, _ => <_ActivityInfo
-          data={_}
-          period={period}
-          setPeriod={setPeriod}
-        />)}
-      </Page>
-    </Layout>
+    <Page width={1200} loading={_hhCurrent.loading}>
+      {map(_hhCurrent.entity, _ => <_ActivityInfo
+        data={_}
+        period={period}
+        setPeriod={setPeriod}
+      />)}
+    </Page>
   )
 }
 

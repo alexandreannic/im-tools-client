@@ -3,19 +3,23 @@ import {useConfig} from '../../../core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react'
 import {Page} from '../../../shared/Page'
 import {Layout} from '../../../shared/Layout'
-import {MPCA_NFI} from '../../../core/koboForm/MPCA_NFI/MPCA_NFI'
-import {Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
+import {MPCA_NFI} from '../../../core/koboModel/MPCA_NFI/MPCA_NFI'
+import {Tooltip} from '@mui/material'
 import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
-import {WashRMM} from './ActivitInfoNFIType'
-import {MPCA_NFIOptions} from '../../../core/koboForm/MPCA_NFI/MPCA_NFIOptions'
+import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
+import {MPCA_NFIOptions} from '../../../core/koboModel/MPCA_NFI/MPCA_NFIOptions'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
-import {KoboFormProtHH} from '../../../core/koboForm/koboFormProtHH'
-import {da} from 'date-fns/locale'
+import {KoboFormProtHH} from '../../../core/koboModel/koboFormProtHH'
 import {Datatable} from '../../../shared/Datatable/Datatable'
+import {Confirm} from 'mui-extension/lib/Confirm'
+import {AnswerTable} from '../shared/AnswerTable'
+import {Btn} from '../../../shared/Btn/Btn'
+import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 
 interface Answer {
+  file: string
   id: string
   start: Date
   oblast: keyof typeof MPCA_NFIOptions['oblast'] | undefined
@@ -40,10 +44,14 @@ export const getLocation = <K extends string>(loc: Record<K, string>, name: stri
   return mapped!
 }
 
-const toFormData = (answers: _Arr<Answer>, period: string): WashRMM[] => {
-  const activities: WashRMM[] = []
+interface Row {
+  rows: Answer[],
+  activity: WashRMM
+}
 
-  const pushActivity = (a: Pick<WashRMM,
+const toFormData = (answers: _Arr<Answer>, period: string) => {
+  const activities: Row[] = []
+  const pushActivity = (rows: Answer[], a: Pick<WashRMM,
     'WASH - APM' |
     'Boys' |
     'Oblast' |
@@ -60,16 +68,19 @@ const toFormData = (answers: _Arr<Answer>, period: string): WashRMM[] => {
   >) => {
     if (a['Total Reached (No Disaggregation)'] === 0) return
     activities.push({
-      'Reporting Month': period,
-      'Reporting Against a plan?': 'Yes',
-      'Location Type': 'Individuals/households',
-      'Population Group': 'Overall (all groups)',
-      'Activities & Indicators': '# of individuals benefiting from hygiene kit/items distribution (in-kind)',
-      'Breakdown known?': 'Yes',
-      'Implementing Partner': 'Danish Refugee Council',
-      Organisation: 'Danish Refugee Council',
-      'Disaggregation by population group, gender and age known?': 'Yes',
-      ...a,
+      rows,
+      activity: {
+        'Reporting Month': period,
+        'Reporting Against a plan?': 'Yes',
+        'Location Type': 'Individuals/households',
+        'Population Group': 'Overall (all groups)',
+        'Activities & Indicators': '# of individuals benefiting from hygiene kit/items distribution (in-kind)',
+        'Breakdown known?': 'Yes',
+        'Implementing Partner': 'Danish Refugee Council',
+        Organisation: 'Danish Refugee Council',
+        'Disaggregation by population group, gender and age known?': 'Yes',
+        ...a,
+      }
     })
   }
 
@@ -92,7 +103,7 @@ const toFormData = (answers: _Arr<Answer>, period: string): WashRMM[] => {
             AgeHH: number,
             GenderHH: keyof typeof MPCA_NFIOptions['GenderHH']
           }>
-          pushActivity({
+          pushActivity(planBK, {
             Oblast: getLocation(aiOblasts, enOblast),
             Raion: getLocation(aiRaions, enRaion),
             Hromada: getLocation(aiHromadas, enHromada),
@@ -107,7 +118,7 @@ const toFormData = (answers: _Arr<Answer>, period: string): WashRMM[] => {
             'People with disability': planBK.length,
             'Total Reached (No Disaggregation)': planBKPersons.length,
           })
-          pushActivity({
+          pushActivity(planHK, {
             Oblast: getLocation(aiOblasts, enOblast),
             Raion: getLocation(aiRaions, enRaion),
             Hromada: getLocation(aiHromadas, enHromada),
@@ -136,7 +147,7 @@ export const ActivityInfoNFI = () => {
   const [period, setPeriod] = useState('2023-04')
   const {api} = useConfig()
 
-  const _data = useFetcher((period: string): Promise<WashRMM[]> => {
+  const _data = useFetcher((period: string) => {
     const filters = period ? (() => {
       const [year, month] = period.split('-')
       return {
@@ -145,10 +156,28 @@ export const ActivityInfoNFI = () => {
       }
     })() : undefined
 
-    return api.koboApi.getAnswersMPCA_NFI({filters})
-      .then(_ => {
-        console.log('ROWS', _.data.length)
+    return Promise.all([
+      api.koboApi.getAnswersMPCA_NFI_NAA({filters}).then(_ => {
         return _.data.map(_ => ({
+          file: 'NAA',
+          id: _.id,
+          oblast: 'kharkivska' as any,
+          raion: 'TODO' as any, // TODO
+          hromada: 'TODO' as any, // TODO
+          settlement: getSettlement(_.start, 'TODO'),
+          start: _.start,
+          HKF_: _.HKF_ ?? 0,
+          HKMV_: _.HKMV_ ?? 0,
+          BK1: _.BK1_How_many ?? 0,
+          BK2: _.BK2_How_many ?? 0,
+          BK3: _.BK3_How_many ?? 0,
+          BK4: _.BK4_How_many ?? 0,
+          group_in3fh72: _.group_in3fh72,
+        }))
+      }),
+      api.koboApi.getAnswersMPCA_NFI({filters}).then(_ => {
+        return _.data.map(_ => ({
+          file: 'Main',
           id: _.id,
           oblast: _.oblast,
           hromada: _.hromada,
@@ -163,8 +192,8 @@ export const ActivityInfoNFI = () => {
           BK4: _.BK_Baby_Kit_002 ?? 0,
           group_in3fh72: _.group_in3fh72,
         }))
-      })
-      .then(_ => toFormData(Arr(_), period))
+      }),
+    ]).then(([r1, r2]) => toFormData(Arr([...r2, ...r1]), period))
   })
 
   useEffect(() => {
@@ -172,17 +201,15 @@ export const ActivityInfoNFI = () => {
   }, [period])
 
   return (
-    <Layout>
-      <Page width={1200} loading={_data.loading}>
-        {map(_data.entity, _ => (
-          <_ActivityInfo
-            data={_}
-            period={period}
-            setPeriod={setPeriod}
-          />
-        ))}
-      </Page>
-    </Layout>
+    <Page width={1200} loading={_data.loading}>
+      {map(_data.entity, _ => (
+        <_ActivityInfo
+          data={_}
+          period={period}
+          setPeriod={setPeriod}
+        />
+      ))}
+    </Page>
   )
 }
 
@@ -191,27 +218,34 @@ const _ActivityInfo = ({
   period,
   setPeriod,
 }: {
-  data: WashRMM[]
+  data: Row[]
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {
   return (
-    <Datatable data={data} columns={[
-      {id: 'wash', head: 'WASH - APM', render: _ => <>{_['WASH - APM']}</>},
-      {id: 'Oblast', head: 'Oblast', render: _ => <>{_['Oblast']}</>},
-      {id: 'Raion', head: 'Raion', render: _ => <>{_['Raion']}</>},
-      {id: 'Hromada', head: 'Hromada', render: _ => <>{_['Hromada']}</>},
-      {id: 'Settlement', head: 'Settlement', render: _ => <>{_['Settlement']}</>},
-      {id: 'location', head: 'Location Type', render: _ => <>{_['Location Type']}</>},
-      {id: 'population', head: 'Population Group', render: _ => <>{_['Population Group']}</>},
-      {id: 'boys', head: 'Boys', render: _ => <>{_['Boys']}</>},
-      {id: 'girls', head: 'Girls', render: _ => <>{_['Girls']}</>},
-      {id: 'women', head: 'Women', render: _ => <>{_['Women']}</>},
-      {id: 'men', head: 'Men', render: _ => <>{_['Men']}</>},
-      {id: 'elderly', head: 'Elderly Women', render: _ => <>{_['Elderly Women']}</>},
-      {id: 'elderly', head: 'Elderly Men', render: _ => <>{_['Elderly Men']}</>},
-      {id: 'people', head: 'People with disability', render: _ => <>{_['People with disability']}</>},
-      {id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_['Total Reached (No Disaggregation)']}</>},
+    <Datatable<Row> data={data} columns={[
+      {
+        id: 'actions', head: '', render: _ => <ActivityInfoActions
+          answers={_.rows}
+          activity={_.activity}
+          requestBody={mapWashRMM(_.activity)}
+        />
+      },
+      {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
+      {id: 'Oblast', head: 'Oblast', render: _ => <>{_.activity['Oblast']}</>},
+      {id: 'Raion', head: 'Raion', render: _ => <>{_.activity['Raion']}</>},
+      {id: 'Hromada', head: 'Hromada', render: _ => <>{_.activity['Hromada']}</>},
+      {id: 'Settlement', head: 'Settlement', render: _ => <>{_.activity['Settlement']}</>},
+      {id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
+      {id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
+      {id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
+      {id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
+      {id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
+      {id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
+      {id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
+      {id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
+      {id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
+      {id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
     ]}/>
   )
 }

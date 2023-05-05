@@ -85,10 +85,10 @@ export const ProtSnapshotDisplacement = ({
               <SlideTxt dangerouslySetInnerHTML={{
                 __html: m.protHHSnapshot.desc.displacement({
                   intentionToReturn: toPercent(computed._12_7_1_planToReturn.percent, 0),
-                  dnipIdps: toPercent(computed.oblastCurrent['UA-12'].value / computed.totalIdpsMember, 0),
-                  cherniIdps: toPercent(computed.oblastCurrent['UA-74'].value / computed.totalIdpsMember, 0),
-                  lvivIdps: toPercent(computed.oblastCurrent['UA-46'].value / computed.totalIdpsMember, 0),
-                  chernivIdps: toPercent(computed.oblastCurrent['UA-77'].value / computed.totalIdpsMember, 0),
+                  dnipIdps: toPercent(computed.oblastCurrent['UA12'].value / computed.totalIdpsMember, 0),
+                  cherniIdps: toPercent(computed.oblastCurrent['UA74'].value / computed.totalIdpsMember, 0),
+                  lvivIdps: toPercent(computed.oblastCurrent['UA46'].value / computed.totalIdpsMember, 0),
+                  chernivIdps: toPercent(computed.oblastCurrent['UA77'].value / computed.totalIdpsMember, 0),
                 })
               }}/>
             </div>

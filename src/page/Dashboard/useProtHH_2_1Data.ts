@@ -1,9 +1,9 @@
 import {useMemo} from 'react'
 import {ChartTools} from '../../core/chartTools'
 import {chain} from '../../utils/utils'
-import {ProtHHS_2_1Options} from '../../core/koboForm/ProtHHS_2_1/ProtHHS_2_1Options'
+import {ProtHHS_2_1Options} from '../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
-import {OblastISO, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
+import {OblastISOSVG, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS_2_1Enrich} from './Dashboard'
 
 export const useProtHH_2_1Data = ({
@@ -14,11 +14,11 @@ export const useProtHH_2_1Data = ({
 
   return useMemo(() => {
     const categoryOblasts = (
-      column: 'where_are_you_current_living_oblast_iso' | 'what_is_your_area_of_origin_oblast_iso' = 'where_are_you_current_living_oblast_iso'
+      column: 'where_are_you_current_living_oblast' | 'what_is_your_area_of_origin_oblast' = 'where_are_you_current_living_oblast'
     ) => Enum.keys(ukraineSvgPath)
       .reduce(
         (acc, isoCode) => ({...acc, [isoCode]: (_: ProtHHS_2_1Enrich): boolean => _[column] === isoCode}),
-        {} as Record<OblastISO, (_: ProtHHS_2_1Enrich) => boolean>
+        {} as Record<OblastISOSVG, (_: ProtHHS_2_1Enrich) => boolean>
       )
 
     return {
@@ -37,7 +37,7 @@ export const useProtHH_2_1Data = ({
         .get,
 
       where_are_you_current_living_oblast: ChartTools.byCategory({
-        categories: categoryOblasts('where_are_you_current_living_oblast_iso'),
+        categories: categoryOblasts('where_are_you_current_living_oblast'),
         data: data,
         filter: _ => true,
       })

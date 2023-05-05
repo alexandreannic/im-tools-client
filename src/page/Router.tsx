@@ -9,6 +9,8 @@ import {DrcUaMap} from './DrcUaMap/DrcUaMap'
 import {Playground} from './Playground'
 import {Dashboard} from './Dashboard/Dashboard'
 import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
+import {ActivityInfo, activityInfoModule} from './ActivityInfo/ActivityInfo'
+import {ActivityInfoHHS_2_1} from './ActivityInfo/HHS_2_1/ActivityInfoHHS_2_1'
 
 export const Router = () => {
   const {m} = useI18n()
@@ -18,7 +20,10 @@ export const Router = () => {
         <Route path="/map" element={<DrcUaMap/>}/>
         <Route path="/snapshot" element={<Home/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
-        <Route path="/activity-info" element={<ActivityInfoNFI/>}/>
+        <Route path={activityInfoModule.basePath} element={<ActivityInfo/>}>
+          <Route path={activityInfoModule.siteMap.hhs2} element={<ActivityInfoHHS_2_1/>}/>
+          <Route path={activityInfoModule.siteMap.nfi} element={<ActivityInfoNFI/>}/>
+        </Route>
         <Route path="/playground" element={<Playground/>}/>
         <Route path={koboModule.basePath} element={<Kobo/>}>
           <Route path={koboModule.siteMap.form()} element={<KoboForm/>}/>

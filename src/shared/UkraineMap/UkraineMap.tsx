@@ -1,5 +1,5 @@
 import {Arr, Enum, map} from '@alexandreannic/ts-utils'
-import {OblastISO, UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
+import {OblastISOSVG, UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
 import {alpha, Box, BoxProps, darken, useTheme} from '@mui/material'
 import {useMemo} from 'react'
 import {Oblast, OblastIndex} from './oblastIndex'
@@ -32,7 +32,7 @@ export const UkraineMap = ({
   omitValueLt?: number
   legend?: boolean
   title?: string
-  onSelect?: (oblast: OblastISO) => void
+  onSelect?: (oblast: OblastISOSVG) => void
   base?: number
   fillBaseOn?: 'percent' | 'value'
   data?: Partial<{ [key in keyof UkraineSvgPath]: {value: number, base?: number} }>
@@ -114,9 +114,10 @@ export const UkraineMap = ({
                   }
                 }}
               >
-                {map(OblastIndex.findByIso(iso), _ => (
+                {map(OblastIndex.findByIso(iso as any), _ => (
                   <title>
-                    {_.name}<br/>{'\n'}
+                    {_}
+                    {'\n'}
                     {res ? (
                       <>{res.value} {res.base && res.base !== 100 && '/ ' + res.base} - {toPercent(res.percent)}</>
                     ) : 0}

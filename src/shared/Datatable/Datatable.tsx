@@ -214,7 +214,7 @@ export const Datatable = <T extends any = any>({
                 {filteredColumns.map((_, i) => (
                   <TableCell
                     key={i}
-                    sx={combineSx(_.sx?.(item), sxUtils.truncate, sxStickyEnd)}
+                    sx={combineSx(_.sx?.(item), sxUtils.truncate, _.stickyEnd && sxStickyEnd)}
                     style={{..._.style, ..._.number && {textAlign: 'right'}}}
                     className={typeof _.className === 'function' ? _.className(item) : _.className}
                   >

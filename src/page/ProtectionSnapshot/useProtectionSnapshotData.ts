@@ -3,13 +3,14 @@ import {ChartDataVal, ChartTools} from '../../core/chartTools'
 import {format} from 'date-fns'
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
-import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
+import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {chain} from '../../utils/utils'
-import {OblastISO, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
+import {OblastISOSVG, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
 import {omit, pick} from 'lodash'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
+import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
 
 const hasntIdpCertificate = (_: (KoboFormProtHH.GetType<'_14_2_1_Do_you_or_your_househo'>)[] | undefined) => {
   return !_ || (!_.includes('idp_certificate') && !_.includes('idp_e_registration'))
@@ -33,7 +34,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
     const categoryOblasts = (column: '_4_What_oblast_are_you_from_iso' | '_12_1_What_oblast_are_you_from_001_iso' = '_4_What_oblast_are_you_from_iso') => Enum.keys(ukraineSvgPath)
       .reduce(
         (acc, k) => ({...acc, [k]: (_: Answer): boolean => _[column] === k}),
-        {} as Record<OblastISO, (_: Answer) => boolean>
+        {} as Record<OblastISOSVG, (_: Answer) => boolean>
       )
 
     const categoryFilters = {
@@ -45,8 +46,8 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
       all: (_: Answer) => true,
     }
 
-    const initOblastIndex = <T>(initialValue: T): Record<OblastISO, T> => {
-      const oblastIndex: Record<OblastISO, T> = {} as any
+    const initOblastIndex = <T>(initialValue: T): Record<OblastISOSVG, T> => {
+      const oblastIndex: Record<OblastISOSVG, T> = {} as any
       Enum.keys(ukraineSvgPath).forEach(k => {
         oblastIndex[k] = initialValue
       })
@@ -540,7 +541,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           memberWithDisability: compute(categoryFilters.memberWithDisability),
         }
       })(),
-      
+
       _40_1_What_is_your_first_priorty: chain(ChartTools.single({
         data: data.map(_ => _._40_1_What_is_your_first_priorty).compact(),
       }))

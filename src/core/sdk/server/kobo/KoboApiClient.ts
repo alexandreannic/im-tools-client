@@ -1,11 +1,12 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
-import {IKoboForm, Kobo, KoboAnswer2} from './Kobo'
-import {mapMPCA_NFI} from '../../../koboForm/MPCA_NFI/MPCA_NFIMapping'
-import {mapMPCA_NFI_Myko} from '../../../koboForm/MPCA_NFI_Myko/MPCA_NFI_MykoMapping'
-import {mapMPCA_NFI_NAA} from '../../../koboForm/MPCA_NFI_NAA/MPCA_NFI_NAAMapping'
+import {IKoboForm, Kobo, KoboAnswer2, KoboId} from './Kobo'
+import {mapMPCA_NFI} from '../../../koboModel/MPCA_NFI/MPCA_NFIMapping'
+import {mapMPCA_NFI_Myko} from '../../../koboModel/MPCA_NFI_Myko/MPCA_NFI_MykoMapping'
+import {mapMPCA_NFI_NAA} from '../../../koboModel/MPCA_NFI_NAA/MPCA_NFI_NAAMapping'
 import {KoboApiForm} from './KoboApi'
-import {mapMPCA_NFI_Old} from '../../../koboForm/MPCA_NFI_Old/MPCA_NFI_OldMapping'
+import {mapMPCA_NFI_Old} from '../../../koboModel/MPCA_NFI_Old/MPCA_NFI_OldMapping'
+import {mapProtHHS_2_1} from '../../../koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 
 export interface AnswersFilters {
   start?: Date
@@ -61,7 +62,10 @@ export class KoboApiClient {
       )
   }
 
-  // readonly getAnswersFromKoboApi = (serverId: UUID, formId: UUID, filters: AnswersFilters = {}) => {
+  readonly synchronizeAnswers = (serverId: KoboId, formId: KoboId) => {
+    return this.client.post(`/kobo-api/${serverId}/${formId}/sync`)
+  }
+
   readonly getAnswersFromKoboApi = <T extends Record<string, any> = Record<string, string | undefined>>({
     serverId,
     formId,
@@ -84,6 +88,15 @@ export class KoboApiClient {
           })
         }
       )
+  }
+
+  readonly getAnswersHH2 = (filters: FiltersProps = {}) => {
+    return this.getAnswersFromKoboApi({
+      serverId: KoboApiClient.serverRefs.prod,
+      formId: KoboApiClient.koboFormRefs.ProtHHS_2_1,
+      fnMap: mapProtHHS_2_1,
+      ...filters,
+    })
   }
 
   readonly getAnswersMPCA_NFI_Old = (filters: FiltersProps = {}) => {

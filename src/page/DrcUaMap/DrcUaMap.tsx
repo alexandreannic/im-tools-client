@@ -4,7 +4,6 @@ import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
 import {useConfig} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
-import {aiOblasts} from '../../core/uaLocation/aiOblasts'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 
 const generalStyles = <GlobalStyles styles={{
@@ -101,16 +100,16 @@ const drawOffices = (selector: string) => {
 
 const drawUA = (selector: string, theme: Theme) => {
   const occupiedOblasts = [
-    'UA-14',
-    'UA-23',
-    'UA-43',
-    'UA-09',
-    'UA-65',
+    'UA14',
+    'UA23',
+    'UA43',
+    'UA09',
+    'UA65',
   ]
   
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
-    ...Enum.values(OblastIndex.list).map(_ => [_.iso, occupiedOblasts.includes(_.iso) ? 2 : 1]),
+    ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_, occupiedOblasts.includes(_) ? 2 : 1]),
   ])
 
   console.log(theme.palette.primary.light,',color')

@@ -1,10 +1,15 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
 import {Kobo, KoboAnswer, KoboAnswer2} from './Kobo'
+import {deleteme} from './deleteme'
 
-export interface AnswersFilters {
+export interface AnswersFilters<T extends string = string> {
   start?: Date
   end?: Date
+  filterBy?: {
+    column: string
+    value: string
+  }[]
 }
 
 export interface FiltersProps {
@@ -37,9 +42,9 @@ export class KoboFormClient {
     filters?: AnswersFilters
     fnMap?: (_: Record<string, string | undefined>) => T
   }): Promise<ApiPaginate<KoboAnswer2<T>>> => {
-    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/${formId}/answers`, {qs: {...filters, ...paginate}})
+    return Promise.resolve(deleteme as ApiPaginate<Record<string, any>>)
+      // return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/${formId}/answers`, {qs: {...filters, ...paginate}})
       .then(_ => {
-          console.log(_)
           return ({
             ..._,
             data: _.data.map(_ => ({

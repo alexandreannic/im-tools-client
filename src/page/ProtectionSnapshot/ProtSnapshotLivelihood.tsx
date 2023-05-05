@@ -22,11 +22,7 @@ export const ProtSnapshotLivelihood = ({
   onFilterOblast
 }: ProtSnapshotSlideProps) => {
   const {m, formatLargeNumber, formatDate} = useI18n()
-  const {pdfTheme} = usePdfContext()
-  const theme = useTheme()
-
-  console.log('OFFICES', data.groupBy(_ => OblastIndex.findByKoboKey(_._4_What_oblast_are_you_from!)?.name))
-
+  
   return (
     <Slide>
       <SlideHeader>{m.protHHSnapshot.titles.livelihood}</SlideHeader>

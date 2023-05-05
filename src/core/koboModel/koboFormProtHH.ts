@@ -1,6 +1,6 @@
 import {Arr, Enum, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
-import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
-import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
+import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
+import {OblastISOSVG} from '../../shared/UkraineMap/ukraineSvgPath'
 import {Messages} from '../i18n/localization/en'
 import {KoboAnswer2} from '../sdk/server/kobo/Kobo'
 
@@ -152,9 +152,9 @@ export namespace KoboFormProtHH {
       B_Interviewer_to_in_ert_their_DRC_office: a.B_Interviewer_to_in_ert_their_DRC_office,
       _8_What_is_your_household_size: map(a._8_What_is_your_household_size, _ => +_),
       _4_What_oblast_are_you_from: a._4_What_oblast_are_you_from as GetType<'oblast'> | undefined,
-      _4_What_oblast_are_you_from_iso: OblastIndex.findByKoboKey(a._4_What_oblast_are_you_from!)?.iso as OblastISO | undefined,
+      _4_What_oblast_are_you_from_iso: OblastIndex.findISOByKoboKey(a._4_What_oblast_are_you_from!) as OblastISO | undefined,
       _12_1_What_oblast_are_you_from_001: a._12_1_What_oblast_are_you_from_001 as undefined | GetType<'oblast'>,
-      _12_1_What_oblast_are_you_from_001_iso: OblastIndex.findByKoboKey(a._12_1_What_oblast_are_you_from_001!)?.iso as OblastISO | undefined,
+      _12_1_What_oblast_are_you_from_001_iso: OblastIndex.findISOByKoboKey(a._12_1_What_oblast_are_you_from_001!) as OblastISO | undefined,
       _12_8_1_What_would_be_the_deciding_fac: (a._12_8_1_What_would_be_the_deciding_fac?.split(' ').map(_ => fnSwitch(_, {
         cessation_of_hostilities: 'improvement_in_security_situat',
         government_regains_territory_f: 'improvement_in_security_situat',

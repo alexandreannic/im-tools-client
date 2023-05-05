@@ -1,6 +1,5 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {mapObjetValue, sortObject} from '../utils/utils'
-import {keys} from 'lodash'
 
 export interface ChartDataValPercent extends ChartDataVal {
   base: number
