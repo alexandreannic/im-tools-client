@@ -12,7 +12,7 @@ import {Panel} from '../../../shared/Panel'
 import {ItInput} from '../../../shared/ItInput/ItInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
-import {Btn} from '../../../shared/Btn/Btn'
+import {ItBtn} from '../../../shared/Btn/ItBtn'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
@@ -20,11 +20,11 @@ import {ItSelect} from 'shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
 import {useItToast} from '../../../core/useToast'
 import {format} from 'date-fns'
-import {Layout} from '../../../shared/Layout'
 import {koboFormId} from '../../../koboFormId'
 import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {enrichProtHHS_2_1, ProtHHS_2_1Enrich} from '../../Dashboard/Dashboard'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -77,6 +77,12 @@ export const ActivityInfoHHS_2_1 = () => {
   )
 }
 
+interface Row {
+  rows: ProtHHS_2_1Enrich[],
+  activity: AiProtectionHhs.FormParams
+  request: any
+}
+
 const _ActivityInfo = ({
   data,
   period,
@@ -115,7 +121,8 @@ const _ActivityInfo = ({
   })
 
   const formParams = useMemo(() => {
-    const activities: {rows: ProtHHS_2_1Enrich[], activity: AiProtectionHhs.FormParams}[] = []
+    const activities: Row[] = []
+    let index = 0
     Enum.entries(enrichedData.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
       const middle = Math.ceil(byOblast.length / 2)
       Enum.entries({
@@ -127,39 +134,38 @@ const _ActivityInfo = ({
             const enOblast = ProtHHS_2_1Options.what_is_your_area_of_origin_oblast[oblast]
             const enRaion = ProtHHS_2_1Options.what_is_your_area_of_origin_raion[raion]
             const enHromada = ProtHHS_2_1Options.what_is_your_area_of_origin_hromada[hromada]
+            const activity = {
+              'Plan Code': planCode,
+              Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
+              Raion: AILocationHelper.findRaion(enRaion) ?? AILocationHelper.searchRaionByHromada(enHromada) ?? (('⚠️' + enRaion) as any),
+              Hromada: AILocationHelper.findHromada(enHromada) ?? (('⚠️' + enHromada) as any),
+              subActivities: Enum.entries(byHromada.groupBy(_ => _.do_you_identify_as_any_of_the_following)).map(([populationGroup, byPopulationGroup]) => {
+                try {
+                  const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
+                  const childs = persons.filter(_ => _.age < 18)
+                  const adults = persons.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
+                  const elderly = persons.filter(_ => KoboFormProtHH.isElderly(_.age))
+                  return {
+                    'Reporting Month': period,
+                    'Total Individuals Reached': persons.length,
+                    'Population Group': mapPopulationGroup(populationGroup),
+                    'Adult Men': adults.count(_ => _.gender === 'male'),
+                    'Adult Women': adults.count(_ => _.gender === 'female'),
+                    'Boys': childs.count(_ => _.gender === 'male'),
+                    'Girls': childs.count(_ => _.gender === 'female'),
+                    'Elderly Women': elderly.count(_ => _.gender === 'female'),
+                    'Elderly Men': elderly.count(_ => _.gender === 'male'),
+                  }
+                } catch (e: unknown) {
+                  console.error(byPopulationGroup)
+                  throw new Error(byPopulationGroup.map(_ => _.id).join(',') + ' ' + (e as Error).message)
+                }
+              })
+            }
             activities.push({
               rows: byHromada,
-              activity: {
-                'Plan Code': planCode,
-                Oblast: AiProtectionHhs.findLocation(aiOblasts, enOblast) ?? (('⚠️' + oblast) as any),
-                Raion: AiProtectionHhs.findLocation(aiRaions, enRaion) ?? AiProtectionHhs.searchRaion(enHromada) ?? (('⚠️' + enRaion) as any),
-                // Raion: raion as any,
-                // Hromada: hromada as any,
-                Hromada: AiProtectionHhs.findLocation(aiHromadas, enHromada) ?? (('⚠️' + enHromada) as any),
-                subActivities: Enum.entries(byHromada.groupBy(_ => _.do_you_identify_as_any_of_the_following)).map(([populationGroup, byPopulationGroup]) => {
-                  try {
-                    const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
-                    const childs = persons.filter(_ => _.age < 18)
-                    const adults = persons.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
-                    const elderly = persons.filter(_ => KoboFormProtHH.isElderly(_.age))
-                    console.log(persons)
-                    return {
-                      'Reporting Month': period,
-                      'Total Individuals Reached': persons.length,
-                      'Population Group': mapPopulationGroup(populationGroup),
-                      'Adult Men': adults.count(_ => _.gender === 'male'),
-                      'Adult Women': adults.count(_ => _.gender === 'female'),
-                      'Boys': childs.count(_ => _.gender === 'male'),
-                      'Girls': childs.count(_ => _.gender === 'female'),
-                      'Elderly Women': elderly.count(_ => _.gender === 'female'),
-                      'Elderly Men': elderly.count(_ => _.gender === 'male'),
-                    }
-                  } catch (e: unknown) {
-                    console.error(byPopulationGroup)
-                    throw new Error(byPopulationGroup.map(_ => _.id).join(',') + ' ' + (e as Error).message)
-                  }
-                })
-              }
+              activity,
+              request: AiProtectionHhs.makeForm(activity, period, index++)
             })
           })
         })
@@ -167,16 +173,6 @@ const _ActivityInfo = ({
     })
     return activities
   }, [data])
-
-  // const tableData: _Arr<{rows: Answer[], activity: Omit<AiProtectionHhs.FormParams, 'subActivities'> & AiProtectionHhs.FormParams['subActivities'][0]}> = useMemo(() => {
-  //   return Arr(formParams.flatMap(({activity: {subActivities, ...rest}, rows}) => subActivities.map(a => ({
-  //     rows,
-  //     activity: {
-  //       ...rest,
-  //       ...a
-  //     }
-  //   }))))
-  // }, [formParams])
 
   const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
   const {toastError} = useItToast()
@@ -193,11 +189,11 @@ const _ActivityInfo = ({
             options={Object.keys(aiOblasts).map(_ => ({value: _, children: _.split('_')[0]}))}
           />
         </Box>
-        <Btn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
-          _submit.call(-1, formParams.map((_, i) => AiProtectionHhs.makeForm(_.activity, period, i))).catch(toastError)
+        <ItBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+          _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastError)
         }}>
           Submit all
-        </Btn>
+        </ItBtn>
       </Box>
       <Panel>
         <Table>
@@ -218,22 +214,22 @@ const _ActivityInfo = ({
           </TableHead>
           <TableBody>
             {formParams.filter(_ => !selectedOblast || _.activity.Oblast === selectedOblast).map((a, i) => a.activity.subActivities.map((sa, j) =>
-              <TableRow>
+              <TableRow key={j}>
                 {j === 0 && (
                   <>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
                       <Tooltip title="Submit!!">
-                        <Btn
+                        <ItBtn
                           loading={_submit.getLoading(i)}
                           variant="contained"
                           size="small"
                           sx={{minWidth: 50, mr: .5}}
                           onClick={() => {
-                            _submit.call(i, [AiProtectionHhs.makeForm(a.activity, period, i)]).catch(toastError)
+                            _submit.call(i, [a.request]).catch(toastError)
                           }}
                         >
                           <Icon>send</Icon>
-                        </Btn>
+                        </ItBtn>
                       </Tooltip>
                       <Confirm
                         maxWidth={'lg'}
@@ -241,7 +237,7 @@ const _ActivityInfo = ({
                         PaperProps={{}}
                         content={<AnswerTable answers={a.rows}/>}>
                         <Tooltip title="Kobo data">
-                          <Btn icon="table_view" variant="outlined" size="small">View data</Btn>
+                          <ItBtn icon="table_view" variant="outlined" size="small">View data</ItBtn>
                         </Tooltip>
                       </Confirm>
                       <Confirm title="Preview activity" content={
@@ -254,7 +250,7 @@ const _ActivityInfo = ({
                         </Tooltip>
                       </Confirm>
                       <Confirm title="Preview request body code" content={
-                        <pre>{JSON.stringify(AiProtectionHhs.makeForm(a.activity, period, i), null, 2)}</pre>
+                        <pre>{JSON.stringify(a.request, null, 2)}</pre>
                       }>
                         <Tooltip title="Preview request body code">
                           <IconBtn color="primary">

@@ -5,7 +5,7 @@ export const ActivityInfoSidebar = () => {
   return (
     <Sidebar>
       {Object.entries(activityInfoModule.siteMap).map(([k, path]) =>
-        <SidebarItem to={path}>{k}</SidebarItem>
+        <SidebarItem key={path} to={path}>{k}</SidebarItem>
       )}
     </Sidebar>
   )

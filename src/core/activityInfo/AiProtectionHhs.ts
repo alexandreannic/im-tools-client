@@ -315,33 +315,6 @@ export namespace AiProtectionHhs {
       ]
     }
   }
-
-  export const findLocationHHS0 = <K extends string>(loc: Record<K, string>, name: string): K | undefined => {
-    const harmonizedName = fnSwitch(name, {
-      Cnernivetskyi: 'Chernivetska',
-    }, _ => _)
-    const mapped = Enum.keys(loc).find(_ => _.includes(harmonizedName))
-    // if (!mapped) {
-    //   throw new Error(`Cannot find location ${a}`)
-    // }
-    return mapped
-  }
-
-  export const findLocation = <K extends string>(loc: Record<K, string>, name: string): K | undefined => {
-    const mapped = Enum.keys(loc).find(_ => _.includes(name))
-    if (!mapped) {
-      console.error(`Cannot find location ${name}`)
-    }
-    return mapped
-  }
-
-  export const searchRaion = (name: string): string | undefined => {
-    const parent = Enum.values(hromadaRefs).find(_ => _.en === name)?.parent as keyof typeof raionRefs | undefined
-    if (parent) {
-      const enLabel = raionRefs[parent]?.en
-      return Enum.keys(aiRaions).find(_ => _.includes(enLabel))
-    }
-  }
 }
 
 //^(\d+)\t([^\t]+)\t([^\t\n]+)$\n

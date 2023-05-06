@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {forwardRef} from 'react'
-import {Box, Button, CircularProgress, Icon} from '@mui/material'
+import {Box, Button, CircularProgress, Icon, Tooltip} from '@mui/material'
 import {ButtonProps} from '@mui/material/Button'
 import {makeSx} from '../../core/theme'
 
@@ -14,13 +14,14 @@ const sx = makeSx({
 })
 
 export interface BtnProps extends ButtonProps {
+  tooltip?: string
   loading?: boolean
   icon?: string
   iconAfter?: string
 }
 
-export const Btn = forwardRef(({loading, children, disabled, icon, iconAfter, ...props}: BtnProps, ref: any) => {
-  return (
+export const ItBtn = forwardRef(({tooltip, loading, children, disabled, icon, iconAfter, ...props}: BtnProps, ref: any) => {
+  const btn = (
     <Button
       {...props}
       disabled={disabled || loading}
@@ -61,4 +62,7 @@ export const Btn = forwardRef(({loading, children, disabled, icon, iconAfter, ..
       }}/>}
     </Button>
   )
+  return tooltip ? (
+    <Tooltip title={tooltip}>{btn}</Tooltip>
+  ) : btn
 })

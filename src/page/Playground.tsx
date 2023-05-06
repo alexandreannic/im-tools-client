@@ -201,7 +201,7 @@ export const Playground = () => {
   const [blanketsByAgeGroup2, setBlanketsByAgeGroup] = useState<any>({})
 
   useEffect(() => {
-    const getGenderAges = (x: any, groupName: string) => {
+    const getGenderAges = (x: any, groupName: string): [string, number][] => {
       if (!x[groupName]) return []
       return (x[groupName] as Record<string, string>[]).map(x => {
         const [gender, age] = Object.entries(x).sort(([ka], [kb]) => ka.endsWith('GenderHH') ? -1 : 1).map(([k, v]) => v)

@@ -13,7 +13,7 @@ import {Panel} from '../../../shared/Panel'
 import {ItInput} from '../../../shared/ItInput/ItInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
-import {Btn} from '../../../shared/Btn/Btn'
+import {ItBtn} from '../../../shared/Btn/ItBtn'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
@@ -23,6 +23,7 @@ import {useItToast} from '../../../core/useToast'
 import {format} from 'date-fns'
 import Answer = KoboFormProtHH.Answer
 import {Layout} from '../../../shared/Layout'
+import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
 
 const mapPopulationGroup = (s: KoboFormProtHH.Status): any => fnSwitch(s, {
   idp: 'IDPs',
@@ -131,11 +132,9 @@ const _ActivityInfo = ({
               rows: byHromada,
               activity: {
                 'Plan Code': planCode,
-                Oblast: AiProtectionHhs.findLocation(aiOblasts, oblast) ?? (('⚠️' + oblast) as any),
-                Raion: AiProtectionHhs.findLocation(aiRaions, raion) ?? AiProtectionHhs.searchRaion(hromada) ?? (('⚠️' + raion) as any),
-                // Raion: raion as any,
-                // Hromada: hromada as any,
-                Hromada: AiProtectionHhs.findLocation(aiHromadas, hromada) ?? (('⚠️' + hromada) as any),
+                Oblast: AILocationHelper.findOblast(oblast) ?? (('⚠️' + oblast) as any),
+                Raion: AILocationHelper.findRaion(raion) ?? AILocationHelper.searchRaionByHromada(hromada) ?? (('⚠️' + raion) as any),
+                Hromada: AILocationHelper.findHromada(hromada) ?? (('⚠️' + hromada) as any),
                 subActivities: Enum.entries(byHromada.groupBy(_ => _._12_Do_you_identify_as_any_of)).map(([populationGroup, byPopulationGroup]) => {
                   try {
                     const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
@@ -192,11 +191,11 @@ const _ActivityInfo = ({
             options={Object.keys(aiOblasts).map(_ => ({value: _, children: _.split('_')[0]}))}
           />
         </Box>
-        <Btn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+        <ItBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, formParams.map(_ => _.activity)).catch(toastError)
         }}>
           Submit all
-        </Btn>
+        </ItBtn>
       </Box>
       <Panel>
         <Table>
@@ -222,7 +221,7 @@ const _ActivityInfo = ({
                   <>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
                       <Tooltip title="Submit!!">
-                        <Btn
+                        <ItBtn
                           loading={_submit.getLoading(i)}
                           variant="contained"
                           size="small"
@@ -232,7 +231,7 @@ const _ActivityInfo = ({
                           }}
                         >
                           <Icon>send</Icon>
-                        </Btn>
+                        </ItBtn>
                       </Tooltip>
                       <Confirm
                         maxWidth={'lg'}
@@ -240,7 +239,7 @@ const _ActivityInfo = ({
                         PaperProps={{}}
                         content={<AnswerTable answers={a.rows}/>}>
                         <Tooltip title="Kobo data">
-                          <Btn icon="table_view" variant="outlined" size="small">View data</Btn>
+                          <ItBtn icon="table_view" variant="outlined" size="small">View data</ItBtn>
                         </Tooltip>
                       </Confirm>
                       <Confirm title="Preview activity" content={

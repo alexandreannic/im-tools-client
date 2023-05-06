@@ -48,6 +48,7 @@ export const Sidebar = ({children, sx, ...props}: BoxProps) => {
       PaperProps={{
         id: sidebarId,
         sx: {
+          background: 'transparent',
           position: 'fixed',
           border: 'none',
           bottom: 0,
@@ -68,7 +69,6 @@ export const Sidebar = ({children, sx, ...props}: BoxProps) => {
           height: '100%',
           transition: t => t.transitions.create('width'),
           overflowY: 'auto',
-          background: t => t.palette.background.default,
           display: 'flex',
           flexDirection: 'column',
           borderRadius: 0,

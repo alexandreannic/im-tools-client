@@ -1,7 +1,7 @@
 import React from 'react'
 import {Icon, Tooltip} from '@mui/material'
 import {AnswerTable} from './AnswerTable'
-import {Btn} from '../../../shared/Btn/Btn'
+import {ItBtn} from '../../../shared/Btn/ItBtn'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {useI18n} from '../../../core/i18n'
 import {IconBtn} from 'mui-extension'
@@ -37,7 +37,7 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
       PaperProps={{}}
       content={<AnswerTable answers={answers}/>}>
       <Tooltip title="Kobo data">
-        <Btn icon="table_view" variant="outlined" size="small">{m.viewDate}</Btn>
+        <ItBtn icon="table_view" variant="outlined" size="small">{m.viewDate}</ItBtn>
       </Tooltip>
     </Confirm>
   )

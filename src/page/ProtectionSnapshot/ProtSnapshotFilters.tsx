@@ -5,7 +5,7 @@ import {ItSelect} from '../../shared/Select/Select'
 import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {Enum} from '@alexandreannic/ts-utils'
 import {IconBtn, Txt} from 'mui-extension'
-import {Btn} from '../../shared/Btn/Btn'
+import {ItBtn} from '../../shared/Btn/ItBtn'
 import {useI18n} from '../../core/i18n'
 import {protSnapshotInitialFilters, ProtSnapshotSlideProps} from './ProtSnapshot'
 import {PeriodPicker} from '../../shared/PeriodPicker/PeriodPicker'
@@ -37,7 +37,7 @@ export const ProtSnapshotFilters = ({
             <Icon>arrow_back</Icon>
           </IconBtn>
         </NavLink>
-        <Btn
+        <ItBtn
           sx={{marginLeft: 'auto', ml: 2}}
           color="primary"
           variant="contained"
@@ -45,16 +45,16 @@ export const ProtSnapshotFilters = ({
           onClick={() => window.print()}
         >
           Download PDF
-        </Btn>
+        </ItBtn>
       </Box>
       <Divider sx={{mb: 3}}/>
-      <Btn
+      <ItBtn
         icon="clear"
         color="primary"
         onClick={() => onCustomFilters(protSnapshotInitialFilters)}
       >
         Clear filters
-      </Btn>
+      </ItBtn>
       <UkraineMap
         legend={false}
         data={current.computed.oblastCurrent}

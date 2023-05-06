@@ -51,7 +51,7 @@ export interface DatatableProps<T> {
 export interface DatatableColumnProps<T> {
   id: string
   head?: string | ReactNode
-  render: (_: T) => ReactNode
+  render: (_: T, i: number) => ReactNode
   hidden?: boolean
   alwaysVisible?: boolean
   className?: string | ((_: T) => string | undefined)
@@ -218,7 +218,7 @@ export const Datatable = <T extends any = any>({
                     style={{..._.style, ..._.number && {textAlign: 'right'}}}
                     className={typeof _.className === 'function' ? _.className(item) : _.className}
                   >
-                    {_.render(item)}
+                    {_.render(item, i)}
                   </TableCell>
                 ))}
               </TableRow>

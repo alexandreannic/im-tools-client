@@ -1,10 +1,9 @@
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from '../../../core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react'
 import {Page} from '../../../shared/Page'
-import {Layout} from '../../../shared/Layout'
 import {MPCA_NFI} from '../../../core/koboModel/MPCA_NFI/MPCA_NFI'
-import {Tooltip} from '@mui/material'
+import {Box, Icon} from '@mui/material'
 import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
 import {MPCA_NFIOptions} from '../../../core/koboModel/MPCA_NFI/MPCA_NFIOptions'
@@ -13,10 +12,14 @@ import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
 import {KoboFormProtHH} from '../../../core/koboModel/koboFormProtHH'
 import {Datatable} from '../../../shared/Datatable/Datatable'
-import {Confirm} from 'mui-extension/lib/Confirm'
-import {AnswerTable} from '../shared/AnswerTable'
-import {Btn} from '../../../shared/Btn/Btn'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
+import {ActivityInfoHelper} from '../shared/activityInfoHelper'
+import {addMonths, format, startOfMonth} from 'date-fns'
+import {useI18n} from '../../../core/i18n'
+import {fixLocations} from './activityInfoNFIFix'
+import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
+import {ItBtn} from '../../../shared/Btn/ItBtn'
+import {useItToast} from '../../../core/useToast'
 
 interface Answer {
   file: string
@@ -35,11 +38,13 @@ interface Answer {
   group_in3fh72: NonNullable<MPCA_NFI['group_in3fh72']>
 }
 
-
-export const getLocation = <K extends string>(loc: Record<K, string>, name: string): K => {
+export const getLocation = <K extends string>(loc: Record<K, string>, name: string, type: string, rows: any): K => {
+  if (name === 'Cnernivetskyi') {
+    name = 'Chernivetskyi'
+  }
   const mapped = Enum.keys(loc).find(_ => _.includes(name))
   if (!mapped) {
-    console.error(`Cannot find location ${name}`)
+    console.error(`Cannot find location ${type} ${name}`, rows)
   }
   return mapped!
 }
@@ -47,40 +52,62 @@ export const getLocation = <K extends string>(loc: Record<K, string>, name: stri
 interface Row {
   rows: Answer[],
   activity: WashRMM
+  request: any
 }
 
-const toFormData = (answers: _Arr<Answer>, period: string) => {
+const toFormData = ({
+  answers,
+  period,
+  formId,
+}: {
+  formId: string
+  answers: _Arr<Answer>
+  period: Date
+}) => {
   const activities: Row[] = []
-  const pushActivity = (rows: Answer[], a: Pick<WashRMM,
-    'WASH - APM' |
-    'Boys' |
-    'Oblast' |
-    'Raion' |
-    'Hromada' |
-    'Settlement' |
-    'Girls' |
-    'Men' |
-    'Women' |
-    'Elderly Women' |
-    'Elderly Men' |
-    'People with disability' |
-    'Total Reached (No Disaggregation)'
-  >) => {
+  let index = 0
+
+  const pushActivity = (
+    rows: Answer[],
+    a: Pick<WashRMM,
+      'WASH - APM' |
+      'Boys' |
+      'Oblast' |
+      'Raion' |
+      'Hromada' |
+      'Settlement' |
+      'Girls' |
+      'Men' |
+      'Women' |
+      'Elderly Women' |
+      'Elderly Men' |
+      'People with disability' |
+      'Total Reached (No Disaggregation)'
+    >,
+  ) => {
     if (a['Total Reached (No Disaggregation)'] === 0) return
+    index++
+    const activity = Object.freeze({
+      'Reporting Month': format(period, 'yyyy-MM'),
+      'Reporting Against a plan?': 'Yes',
+      'Location Type': 'Individuals/households',
+      'Population Group': 'Overall (all groups)',
+      'Activities & Indicators': '# of individuals benefiting from hygiene kit/items distribution (in-kind)',
+      'Breakdown known?': 'Yes',
+      'Implementing Partner': 'Danish Refugee Council',
+      Organisation: 'Danish Refugee Council',
+      'Disaggregation by population group, gender and age known?': 'Yes',
+      ...a,
+    })
     activities.push({
       rows,
-      activity: {
-        'Reporting Month': period,
-        'Reporting Against a plan?': 'Yes',
-        'Location Type': 'Individuals/households',
-        'Population Group': 'Overall (all groups)',
-        'Activities & Indicators': '# of individuals benefiting from hygiene kit/items distribution (in-kind)',
-        'Breakdown known?': 'Yes',
-        'Implementing Partner': 'Danish Refugee Council',
-        Organisation: 'Danish Refugee Council',
-        'Disaggregation by population group, gender and age known?': 'Yes',
-        ...a,
-      }
+      activity,
+      request: ActivityInfoHelper.generateRequest({
+        activity: mapWashRMM(activity),
+        formId,
+        activityIdPrefix: 'drcnfi' + format(period, 'yyyyMM') + 'i',
+        activityIndex: index
+      })
     })
   }
 
@@ -94,7 +121,7 @@ const toFormData = (answers: _Arr<Answer>, period: string) => {
           const planBK = bySettlement.filter(_ => _.BK1 > 0 || _.BK2 > 0 || _.BK3 > 0 || _.BK4 > 0)
           const planHK = bySettlement.filter(_ => _.HKMV_ > 0 || _.HKF_ > 0)
           const planBKPersons = planBK.flatMap(_ => _.group_in3fh72)
-            .filter(_ => _.AgeHH !== undefined && _.GenderHH !== undefined) as _Arr<{
+            .filter(_ => _.AgeHH !== undefined && _.AgeHH < 3 && _.GenderHH !== undefined) as _Arr<{
             AgeHH: number,
             GenderHH: keyof typeof MPCA_NFIOptions['GenderHH']
           }>
@@ -104,10 +131,10 @@ const toFormData = (answers: _Arr<Answer>, period: string) => {
             GenderHH: keyof typeof MPCA_NFIOptions['GenderHH']
           }>
           pushActivity(planBK, {
-            Oblast: getLocation(aiOblasts, enOblast),
-            Raion: getLocation(aiRaions, enRaion),
-            Hromada: getLocation(aiHromadas, enHromada),
-            Settlement: settlement,
+            Oblast: getLocation(aiOblasts, enOblast, 'Oblasts', bySettlement),
+            Raion: getLocation(aiRaions, enRaion, 'Raions', bySettlement),
+            Hromada: getLocation(aiHromadas, enHromada, 'Hromadas', bySettlement),
+            Settlement: AILocationHelper.findSettlement(settlement)!,
             'WASH - APM': 'DRC-00003',
             'Boys': planBKPersons.filter(_ => _.GenderHH === 'male').length,
             'Girls': planBKPersons.filter(_ => _.GenderHH === 'female').length,
@@ -119,10 +146,10 @@ const toFormData = (answers: _Arr<Answer>, period: string) => {
             'Total Reached (No Disaggregation)': planBKPersons.length,
           })
           pushActivity(planHK, {
-            Oblast: getLocation(aiOblasts, enOblast),
-            Raion: getLocation(aiRaions, enRaion),
-            Hromada: getLocation(aiHromadas, enHromada),
-            Settlement: settlement,
+            Oblast: getLocation(aiOblasts, enOblast, 'Oblasts', bySettlement),
+            Raion: getLocation(aiRaions, enRaion, 'Raions', bySettlement),
+            Hromada: getLocation(aiHromadas, enHromada, 'Hromadas', bySettlement),
+            Settlement: AILocationHelper.findSettlement(settlement)!,
             'WASH - APM': 'DRC-00001',
             'Total Reached (No Disaggregation)': planHKPersons.length,
             'Boys': planHKPersons.count(_ => _.AgeHH < 18 && _.GenderHH === 'male'),
@@ -131,6 +158,7 @@ const toFormData = (answers: _Arr<Answer>, period: string) => {
             'Women': planHKPersons.count(_ => _.AgeHH >= 18 && _.AgeHH < KoboFormProtHH.elderlyLimitIncluded && _.GenderHH === 'female'),
             'Elderly Men': planHKPersons.count(_ => _.AgeHH >= KoboFormProtHH.elderlyLimitIncluded && _.GenderHH === 'male'),
             'Elderly Women': planHKPersons.count(_ => _.AgeHH >= KoboFormProtHH.elderlyLimitIncluded && _.GenderHH === 'female'),
+            'People with disability': planHK.length,
           })
         })
       })
@@ -139,23 +167,20 @@ const toFormData = (answers: _Arr<Answer>, period: string) => {
   return activities
 }
 
-const getSettlement = (date: Date, hromada: string): string => {
-  return `Kamianets-Podilskyi_UA6802011001_Кам'янець-Подільський`
+const computePeriod = (date: Date) => {
+  const start = startOfMonth(date)
+  return {
+    start,
+    end: addMonths(start, 1)
+  }
 }
 
 export const ActivityInfoNFI = () => {
-  const [period, setPeriod] = useState('2023-04')
+  const [period, setPeriod] = useState(new Date(2023, 3, 1))
   const {api} = useConfig()
+  const filters = computePeriod(period)
 
-  const _data = useFetcher((period: string) => {
-    const filters = period ? (() => {
-      const [year, month] = period.split('-')
-      return {
-        start: new Date(parseInt(year), parseInt(month) - 1),
-        end: new Date(parseInt(year), parseInt(month)),
-      }
-    })() : undefined
-
+  const _data = useFetcher((period: Date) => {
     return Promise.all([
       api.koboApi.getAnswersMPCA_NFI_NAA({filters}).then(_ => {
         return _.data.map(_ => ({
@@ -164,7 +189,6 @@ export const ActivityInfoNFI = () => {
           oblast: 'kharkivska' as any,
           raion: 'TODO' as any, // TODO
           hromada: 'TODO' as any, // TODO
-          settlement: getSettlement(_.start, 'TODO'),
           start: _.start,
           HKF_: _.HKF_ ?? 0,
           HKMV_: _.HKMV_ ?? 0,
@@ -175,25 +199,34 @@ export const ActivityInfoNFI = () => {
           group_in3fh72: _.group_in3fh72,
         }))
       }),
-      api.koboApi.getAnswersMPCA_NFI({filters}).then(_ => {
-        return _.data.map(_ => ({
-          file: 'Main',
-          id: _.id,
-          oblast: _.oblast,
-          hromada: _.hromada,
-          raion: _.raion,
-          settlement: getSettlement(_.start, _.hromada),
-          start: _.start,
-          HKF_: _.HKF_ ?? 0,
-          HKMV_: _.HKMV_ ?? 0,
-          BK1: _.BK_Baby_Kit_ ?? 0,
-          BK2: _.BK_Baby_Kit ?? 0,
-          BK3: _.BK_Baby_Kit_001 ?? 0,
-          BK4: _.BK_Baby_Kit_002 ?? 0,
-          group_in3fh72: _.group_in3fh72,
-        }))
-      }),
-    ]).then(([r1, r2]) => toFormData(Arr([...r2, ...r1]), period))
+      api.koboApi.getAnswersMPCA_NFI({filters})
+        .then(_ => fixLocations(_.data))
+        .then(_ => {
+          return _.map(_ => ({
+            file: 'Main',
+            id: _.id,
+            oblast: _.oblast,
+            hromada: _.hromada,
+            raion: _.raion,
+            settlement: _.settlement!,
+            start: _.start,
+            HKF_: _.HKF_ ?? 0,
+            HKMV_: _.HKMV_ ?? 0,
+            BK1: _.BK_Baby_Kit_ ?? 0,
+            BK2: _.BK_Baby_Kit ?? 0,
+            BK3: _.BK_Baby_Kit_001 ?? 0,
+            BK4: _.BK_Baby_Kit_002 ?? 0,
+            group_in3fh72: _.group_in3fh72,
+          }))
+        }),
+    ]).then(([naa, main]) => toFormData({
+      formId: 'crvtph7lg6d5dhq2',
+      answers: Arr([
+        ...main,
+        // ...naa
+      ]),
+      period,
+    }))
   })
 
   useEffect(() => {
@@ -219,33 +252,69 @@ const _ActivityInfo = ({
   setPeriod,
 }: {
   data: Row[]
-  period: string
-  setPeriod: Dispatch<SetStateAction<string>>
+  period: Date
+  setPeriod: Dispatch<SetStateAction<Date>>
 }) => {
+  const {toastError} = useItToast()
+  const {formatDate} = useI18n()
+  const {api} = useConfig()
+  const {m} = useI18n()
+  const _submit = useAsync((i: number, p: any) => api.activityInfo.submitActivity(p), {
+    requestKey: ([i]) => i
+  })
   return (
-    <Datatable<Row> data={data} columns={[
-      {
-        id: 'actions', head: '', render: _ => <ActivityInfoActions
-          answers={_.rows}
-          activity={_.activity}
-          requestBody={mapWashRMM(_.activity)}
-        />
-      },
-      {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
-      {id: 'Oblast', head: 'Oblast', render: _ => <>{_.activity['Oblast']}</>},
-      {id: 'Raion', head: 'Raion', render: _ => <>{_.activity['Raion']}</>},
-      {id: 'Hromada', head: 'Hromada', render: _ => <>{_.activity['Hromada']}</>},
-      {id: 'Settlement', head: 'Settlement', render: _ => <>{_.activity['Settlement']}</>},
-      {id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
-      {id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
-      {id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
-      {id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
-      {id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
-      {id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
-      {id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
-      {id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
-      {id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
-      {id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
-    ]}/>
+    <>
+      <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+        <Box>
+          {formatDate(computePeriod(period).start)}
+          {' - '}
+          {formatDate(computePeriod(period).end)}
+        </Box>
+        <ItBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+          _submit.call(-1, data.map(_ => _.request)).catch(toastError)
+        }}>
+          {m.submitAll}
+        </ItBtn>
+      </Box>
+
+      <Datatable<Row> data={data} columns={[
+        {
+          id: 'actions', head: '', render: (_, i) =>
+            <>
+              <ItBtn
+                loading={_submit.getLoading(i)}
+                variant="contained"
+                size="small"
+                sx={{minWidth: 50, mr: .5}}
+                onClick={() => {
+                  _submit.call(i, [_.request]).catch(toastError)
+                }}
+              >
+                <Icon>send</Icon>
+              </ItBtn>
+              <ActivityInfoActions
+                answers={_.rows}
+                activity={_.activity}
+                requestBody={_.request}
+              />
+            </>
+        },
+        {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
+        {id: 'Oblast', head: 'Oblast', render: _ => <>{_.activity['Oblast']?.split('_')[0]}</>},
+        {id: 'Raion', head: 'Raion', render: _ => <>{_.activity['Raion']?.split('_')[0]}</>},
+        {id: 'Hromada', head: 'Hromada', render: _ => <>{_.activity['Hromada']?.split('_')[0]}</>},
+        {id: 'Settlement', head: 'Settlement', render: _ => <>{_.activity['Settlement']?.split('_')[0]}</>},
+        {id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
+        {id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
+        {id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
+        {id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
+        {id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
+        {id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
+        {id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
+        {id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
+        {id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
+        {id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
+      ]}/>
+    </>
   )
 }

@@ -83,6 +83,8 @@ export const en = Object.freeze({
     current: 'Oblast of displacement',
     socialCohesion: 'Safety & Social cohesion',
     age: 'Age',
+    submitAll: 'Submit all',
+    submit: 'Submit',
     hohhOlder: 'HoHH 60+',
     hohhFemale: 'HoHH female',
     vulnerabilities: 'Vulnerabilities',
