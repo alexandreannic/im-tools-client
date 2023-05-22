@@ -5,7 +5,7 @@ import {Layout} from '../../shared/Layout'
 import {KoboSidebar} from './KoboSidebar'
 import {Header} from '../../shared/Layout/Header/Header'
 import {Outlet, Route, Routes} from 'react-router-dom'
-import {KoboForm} from './KoboForm/KoboForm'
+import {KoboTable} from './KoboForm/KoboTable'
 import {koboModule} from './koboModule'
 
 export const NoMatch = () => <div>NoMatch</div>

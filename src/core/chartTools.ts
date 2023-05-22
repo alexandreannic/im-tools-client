@@ -50,6 +50,25 @@ export namespace ChartTools {
     }
   }
 
+  export const single = <A extends string>({
+    data,
+    percent,
+    filterValue,
+  }: {
+    data: A[],
+    filterValue?: A[],
+    percent?: boolean
+  }): ChartData<Exclude<A, keyof typeof filterValue>> => {
+    const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
+      return [curr, (acc[curr] ?? 0) + 1]
+    })
+    const res: ChartData = {}
+    Enum.keys(obj).forEach(k => {
+      res[k] = {value: obj[k] / (percent ? data.length : 1)}
+    })
+    return res
+  }
+
   export const multiple = <A extends string>({
     data,
     type,
@@ -135,7 +154,6 @@ export namespace ChartTools {
     }
     return res
   }
-
   // export const reduceByCategory = <A extends Record<string, any>, K extends string, R>({
   //   data,
   //   reduce,
@@ -155,6 +173,7 @@ export namespace ChartTools {
   //     })
   //   })
   //   return res
+
   // }
 
   export const sumByCategory = <A extends Record<string, any>, K extends string>({
@@ -178,25 +197,6 @@ export namespace ChartTools {
           res[category].value += filter(x) ?? 0
         }
       })
-    })
-    return res
-  }
-
-  export const single = <A extends string>({
-    data,
-    percent,
-    filterValue,
-  }: {
-    data: A[],
-    filterValue?: A[],
-    percent?: boolean
-  }): ChartData<Exclude<A, keyof typeof filterValue>> => {
-    const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
-      return [curr, (acc[curr] ?? 0) + 1]
-    })
-    const res: ChartData = {}
-    Enum.keys(obj).forEach(k => {
-      res[k] = {value: obj[k] / (percent ? data.length : 1)}
     })
     return res
   }

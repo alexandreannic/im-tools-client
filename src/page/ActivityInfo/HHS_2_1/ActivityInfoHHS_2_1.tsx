@@ -22,7 +22,7 @@ import {useItToast} from '../../../core/useToast'
 import {format} from 'date-fns'
 import {koboFormId} from '../../../koboFormId'
 import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
-import {enrichProtHHS_2_1, ProtHHS_2_1Enrich} from '../../Dashboard/Dashboard'
+import {enrichProtHHS_2_1, ProtHHS2Enrich} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
 
@@ -78,7 +78,7 @@ export const ActivityInfoHHS_2_1 = () => {
 }
 
 interface Row {
-  rows: ProtHHS_2_1Enrich[],
+  rows: ProtHHS2Enrich[],
   activity: AiProtectionHhs.FormParams
   request: any
 }
@@ -88,7 +88,7 @@ const _ActivityInfo = ({
   period,
   setPeriod,
 }: {
-  data: ProtHHS_2_1Enrich[]
+  data: ProtHHS2Enrich[]
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {

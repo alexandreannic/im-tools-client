@@ -11,6 +11,7 @@ import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 import {AAIconBtn} from '../../../shared/IconBtn'
 import {Txt} from 'mui-extension'
+import {KoboStats, KoboStatsPage} from '../KoboStats/KoboStats'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -23,7 +24,7 @@ const sortFnByType: Record<any, (a: any, b: any) => number> = {
   object: (a: Date, b: Date) => a.getTime() - b.getTime(),
 }
 
-export const KoboForm = () => {
+export const KoboTable = () => {
   const {api} = useConfig()
   const {m, formatDate, formatLargeNumber} = useI18n()
   const {serverId, formId} = urlParamsValidation.validateSync(useParams())
@@ -70,6 +71,7 @@ export const KoboForm = () => {
 
   return (
     <Page loading={_form.loading} sx={{maxWidth: 2000}}>
+      <KoboStats serverId={serverId} formId={formId}/>
       <Box sx={{display: 'flex'}}>
         <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={_refresh.call}/>
         <Txt bold sx={{marginLeft: 'auto'}} skeleton={_answers.loading}>{formatLargeNumber(data?.length)}</Txt>
