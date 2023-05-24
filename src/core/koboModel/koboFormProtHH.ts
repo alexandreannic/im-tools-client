@@ -1,6 +1,5 @@
-import {Arr, Enum, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {OblastISOSVG} from '../../shared/UkraineMap/ukraineSvgPath'
 import {Messages} from '../i18n/localization/en'
 import {KoboAnswer2} from '../sdk/server/kobo/Kobo'
 

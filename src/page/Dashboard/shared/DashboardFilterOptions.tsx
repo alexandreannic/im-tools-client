@@ -1,5 +1,5 @@
 import React, {ReactNode, useMemo} from 'react'
-import {Box, Checkbox, FormControlLabel, FormGroup} from '@mui/material'
+import {Checkbox, FormControlLabel, FormGroup} from '@mui/material'
 import {makeSx} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'
 import {useI18n} from '../../../core/i18n'

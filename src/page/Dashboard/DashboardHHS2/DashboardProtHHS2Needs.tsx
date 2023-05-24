@@ -1,8 +1,5 @@
 import {SlideContainer, SlidePanel} from '../../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {AaPieChart} from '../../../shared/Chart/AaPieChart'
-import {Legend} from 'recharts'
-import {UkraineMap} from '../../../shared/UkraineMap/UkraineMap'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -11,7 +8,6 @@ import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_
 import {Lazy} from '../../../shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '../../../utils/utils'
-import {AAStackedBarChart} from '../../../shared/Chart/AaStackedBarChart'
 
 export const DashboardProtHHS2Needs = ({
   data,

@@ -1,5 +1,3 @@
-import {UUID} from '../../../type'
-
 export type KoboId = string
 
 export type KoboServer = {

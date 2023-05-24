@@ -3,7 +3,7 @@ import {ReactNode} from 'react'
 import {Box, BoxProps, Icon, Theme, useTheme} from '@mui/material'
 import {alpha} from '@mui/material/styles'
 import {makeSx} from 'mui-extension'
-import {NavLink, NavLinkProps} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 
 const css = makeSx({
   i: {

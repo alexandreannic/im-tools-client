@@ -1,8 +1,8 @@
-import {Box, BoxProps, Icon, Typography, useTheme} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import React, {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
 import {AaPieChart} from './Chart/AaPieChart'
-import {SlidePanel, SlidePanelTitle} from './PdfLayout/Slide'
+import {SlidePanelTitle} from './PdfLayout/Slide'
 import {PanelProps} from './Panel/Panel'
 
 const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {

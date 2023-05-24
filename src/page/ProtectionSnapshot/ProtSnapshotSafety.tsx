@@ -1,5 +1,5 @@
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Divider, useTheme} from '@mui/material'
 import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'

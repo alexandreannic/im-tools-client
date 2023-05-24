@@ -11,7 +11,7 @@ import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 import {AAIconBtn} from '../../../shared/IconBtn'
 import {Txt} from 'mui-extension'
-import {KoboStats, KoboStatsPage} from '../KoboStats/KoboStats'
+import {KoboStats} from '../KoboStats/KoboStats'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),

@@ -3,7 +3,6 @@ import * as React from 'react'
 import {memo, useMemo, useState} from 'react'
 import {Box, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
 import {styleUtils} from '../../core/theme'
-import {useI18n} from '../../core/i18n'
 
 export interface ScLineChartPropsBase {
   /**

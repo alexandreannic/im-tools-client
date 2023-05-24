@@ -1,4 +1,4 @@
-import {ReactNode, useMemo} from 'react'
+import {useMemo} from 'react'
 
 export const Lazy = <T, >({
   deps,

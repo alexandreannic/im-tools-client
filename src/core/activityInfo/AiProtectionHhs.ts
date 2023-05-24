@@ -1,10 +1,6 @@
 import {aiOblasts} from '../uaLocation/aiOblasts'
 import {aiRaions} from '../uaLocation/aiRaions'
 import {aiHromadas} from '../uaLocation/aiHromadas'
-import {makeid} from '../../utils/utils'
-import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {hromadaRefs} from '../uaLocation/hromadaRef'
-import {raionRefs} from '../uaLocation/raionRef'
 
 export namespace AiProtectionHhs {
 

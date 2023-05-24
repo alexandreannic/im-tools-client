@@ -4,7 +4,6 @@ import {LayoutProvider, useLayoutContext} from './LayoutContext'
 import {Box} from '@mui/material'
 import {layoutConfig} from './index'
 import {defaultSpacing} from '../../core/theme'
-import {Sidebar} from './Sidebar'
 import {Header} from './Header/Header'
 
 export const sidebarWith = 220

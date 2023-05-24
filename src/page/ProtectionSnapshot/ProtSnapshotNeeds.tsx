@@ -1,15 +1,12 @@
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
-import React, {useMemo} from 'react'
+import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {Box, Divider, useTheme} from '@mui/material'
 import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
-import {Txt} from 'mui-extension'
 import {Enum, map} from '@alexandreannic/ts-utils'
 import {toPercent} from '../../utils/utils'
-import {omitBy} from 'lodash'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 
 export const categoryIcons = {

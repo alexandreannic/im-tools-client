@@ -1,8 +1,7 @@
-import {Box, colors, SxProps, Theme, useTheme} from '@mui/material'
-import {Cell, Legend, Pie, PieChart, PieLabelRenderProps, PieProps, ResponsiveContainer, Tooltip} from 'recharts'
-import React, {ReactElement, ReactNode} from 'react'
+import {Box, SxProps, Theme, useTheme} from '@mui/material'
+import {Cell, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Tooltip} from 'recharts'
+import React, {ReactNode} from 'react'
 import {objToArray} from '../../utils/utils'
-import {Enum} from '@alexandreannic/ts-utils'
 
 const RADIAN = Math.PI / 180
 const renderCustomizedLabel = ({cx, cy, midAngle, innerRadius, outerRadius, percent, index}: any) => {

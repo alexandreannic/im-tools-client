@@ -7,11 +7,11 @@ import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {chain} from '../../utils/utils'
 import {OblastISOSVG, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
 import {omit, pick} from 'lodash'
+import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
+import {ageGroup} from '../../core/type'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
-import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {ageGroup} from '../../core/type'
 
 const hasntIdpCertificate = (_: (KoboFormProtHH.GetType<'_14_2_1_Do_you_or_your_househo'>)[] | undefined) => {
   return !_ || (!_.includes('idp_certificate') && !_.includes('idp_e_registration'))

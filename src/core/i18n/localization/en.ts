@@ -1,8 +1,8 @@
 import {format, formatDistance, formatDuration as formatDurationFns, sub} from 'date-fns'
 import {externalLinks} from '../../externalLinks'
 import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
-import Status = KoboFormProtHH.Status
 import {Period} from '../../type'
+import Status = KoboFormProtHH.Status
 
 const invalidDate = '-'
 

@@ -1,4 +1,3 @@
-import {Layout} from '../../shared/Layout/Layout'
 import {ProtSnapshot} from '../ProtectionSnapshot/ProtSnapshot'
 
 export const Home = () => {
