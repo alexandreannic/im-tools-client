@@ -18,7 +18,7 @@ interface MenuItem {
 }
 
 // const activityInfoMenu: MenuItem[] = [
-//   {name: 'HHS v2.1', children: ActivityInfoHHS_2_1},
+//   {name: 'HHS v2.1', children: ActivityInfoHHS2},
 //   {name: 'NFI', children: ActivityInfoNFI},
 // ]
 

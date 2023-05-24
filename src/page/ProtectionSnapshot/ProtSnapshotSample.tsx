@@ -1,4 +1,4 @@
-import {Slide, SlideBody, SlideWidget, SlideContainer, SlidePanelDepreacted, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {Slide, SlideBody, SlideContainer, SlidePanelDepreacted, SlideTxt, SlideWidget} from '../../shared/PdfLayout/Slide'
 import {format, sub} from 'date-fns'
 import {Box, Icon, useTheme} from '@mui/material'
 import {AaPieChart} from '../../shared/Chart/AaPieChart'
@@ -10,8 +10,7 @@ import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 import {Txt} from 'mui-extension'
-import logoEu from '../../core/img/eu.png'
-import logo from '../../core/img/drc-logo.png'
+import {DRCLogo, EULogo} from '../../shared/logo'
 
 export const ProtSnapshotSample = ({
   current: {
@@ -46,8 +45,8 @@ export const ProtSnapshotSample = ({
           </Txt>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
-          <Box component="img" src={logoEu} sx={{mr: 1.5, height: 38}}/>
-          <Box component="img" src={logo} sx={{height: 26}}/>
+          <EULogo/>
+          <DRCLogo/>
         </Box>
       </Box>
       <SlideBody>

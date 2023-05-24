@@ -1,12 +1,10 @@
-import {Box, BoxProps, CardProps, Icon} from '@mui/material'
-import logo from '../../core/img/drc-logo.png'
+import {Box, BoxProps, Icon} from '@mui/material'
 import {Txt, TxtProps} from 'mui-extension'
 import React, {ReactNode, useEffect, useRef} from 'react'
 import {usePdfContext} from './PdfLayout'
-import {Property} from 'csstype'
-import logoEu from '../../core/img/eu.png'
 import {Panel, PanelBody} from '../Panel'
 import {PanelProps} from '../Panel/Panel'
+import {DRCLogo, EULogo} from '../logo'
 
 export const Slide = (props: BoxProps) => {
   return (
@@ -98,8 +96,8 @@ export const SlideHeader = ({children}: BoxProps) => {
     }}>
       <Txt bold sx={{fontSize: '1.42em'}}>{children}</Txt>
       <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
-        <Box component="img" src={logoEu} sx={{mr: 1, height: 30}}/>
-        <Box component="img" src={logo} sx={{height: 22}}/>
+        <EULogo height={30}/>
+        <DRCLogo height={22}/>
       </Box>
     </Box>
   )

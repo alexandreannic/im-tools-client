@@ -10,7 +10,7 @@ import {Playground} from './Playground'
 import {DashboardProtHHS2} from './Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
 import {ActivityInfo, activityInfoModule} from './ActivityInfo/ActivityInfo'
-import {ActivityInfoHHS_2_1} from './ActivityInfo/HHS_2_1/ActivityInfoHHS_2_1'
+import {ActivityInfoHHS2} from './ActivityInfo/HHS_2_1/ActivityInfoHHS2'
 import {Dashboard, dashboardModule} from './Dashboard/Dashboard'
 
 export const Router = () => {
@@ -25,7 +25,7 @@ export const Router = () => {
         <Route path={dashboardModule.basePath} element={<Dashboard/>}/>
 
         <Route path={activityInfoModule.basePath} element={<ActivityInfo/>}>
-          <Route path={activityInfoModule.siteMap.hhs2} element={<ActivityInfoHHS_2_1/>}/>
+          <Route path={activityInfoModule.siteMap.hhs2} element={<ActivityInfoHHS2/>}/>
           <Route path={activityInfoModule.siteMap.nfi} element={<ActivityInfoNFI/>}/>
         </Route>
         <Route path="/playground" element={<Playground/>}/>

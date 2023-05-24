@@ -4,6 +4,7 @@ import {muiTheme} from '../../core/theme'
 import {set} from 'lodash'
 import {DashboardProvider} from './DashboardContext'
 import {makeSx} from 'mui-extension'
+import {DRCLogo} from '../../shared/logo'
 
 
 const dashboardMw = 1100
@@ -146,9 +147,12 @@ export const DashboardLayout = ({
           <Box sx={{width: dashboardMw, maxWidth: dashboardMw, margin: 'auto', mb: 2,}}>
             <Box sx={style.header} id={headerId}>
               <Box className="header_content">
-                <Box className="header_title" sx={{mb: 2}}>
-                  <Typography className="header_title_main" variant="h1">{title}&nbsp;</Typography>
-                  <Typography className="header_title_sub" variant="subtitle1" sx={{color: t => t.palette.text.secondary}}>{subTitle}</Typography>
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                  <Box className="header_title" sx={{mb: 2, flex: 1}}>
+                    <Typography className="header_title_main" variant="h1">{title}&nbsp;</Typography>
+                    <Typography className="header_title_sub" variant="subtitle1" sx={{color: t => t.palette.text.secondary}}>{subTitle}</Typography>
+                  </Box>
+                  <DRCLogo height={20} sx={{ml: 'auto'}}/>
                 </Box>
                 {header}
               </Box>

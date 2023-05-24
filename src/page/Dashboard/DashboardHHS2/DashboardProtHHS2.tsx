@@ -1,8 +1,8 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from '../../../core/context/ConfigContext'
-import React, {useEffect, useMemo} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
-import {_Arr, Arr, mapFor} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, map, mapFor} from '@alexandreannic/ts-utils'
 import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {useI18n} from '../../../core/i18n'
 import {useProtHHS2Data} from './useProtHHS2Data'
@@ -10,23 +10,28 @@ import {DashboardProtHHS2Sample} from './DashboardProtHHS2Sample'
 import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
 import {DashboardLayout} from '../DashboardLayout'
 import {DashboardProtHHS2Needs} from './DashboardProtHHS2Needs'
-import {DashboardFilterOptions} from './DashboardProtHHS2Filters'
 import {koboFormId, koboServerId} from '../../../koboFormId'
 import {DashboardProtHHS2Displacement} from './DashboardProtHHS2Displacement'
 import {ChartTools} from '../../../core/chartTools'
-import {chain} from '../../../utils/utils'
+import {chain, multipleFilters} from '../../../utils/utils'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {DashboardProtHHS2Document} from './DashboardProtHHS2Document'
 import {DashboardProtHHS2Livelihood} from './DashboardProtHHS2Livelihood'
+import {DashboardFilterOptions} from '../shared/DashboardFilterOptions'
+import {Box} from '@mui/material'
 
 export type ProtHHS2Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
+interface DashboardProtHHS2Filters {
+  start: Date
+  end: Date
+  currentOblast: string[]
+  originOblast: string[]
+}
+
 export interface DashboardPageProps {
-  filters: {
-    start: Date
-    end: Date
-  }
+  filters: DashboardProtHHS2Filters
   data: Arr<ProtHHS2Enrich>
   computed: NonNullable<ReturnType<typeof useProtHHS2Data>>
 }
@@ -92,6 +97,13 @@ export const DashboardProtHHS2BarChart = <T extends keyof typeof ProtHHS_2_1Opti
 export const DashboardProtHHS2 = () => {
   const {api} = useConfig()
   const {m} = useI18n()
+  const [filter, setFilters] = useState<DashboardProtHHS2Filters>({
+    start: new Date(2022, 0, 1),
+    end: new Date(2022, 0, 1),
+    currentOblast: [],
+    originOblast: [],
+  })
+
   const _form = useFetcher(() => api.koboApi.getForm(koboServerId.prod, koboFormId.prod.protectionHh2))
   const request = () => api.koboForm.getAnswers<ProtHHS_2_1>({
     formId: koboFormId.prod.protectionHh2,
@@ -109,34 +121,50 @@ export const DashboardProtHHS2 = () => {
 
   const getChoices = (questionName: keyof ProtHHS2Enrich) => {
     if (_form.entity && _answers.entity) {
-      console.log(_form.entity?.content.choices)
-      return _form.entity?.content.choices.filter(_ => questionName).map(_ => ({
-        name: _.name,
-        label: _.label[0]
-      }))
+      const listName = _form.entity?.content.survey.find(_ => _.name === questionName)?.select_from_list_name
+      if (listName)
+        return _form.entity?.content.choices.filter(_ => _.list_name === listName)
+          .map(_ => ({
+            name: _.name,
+            label: _.label[0]
+          }))
     }
     return []
   }
-  const data = _answers.entity ? Arr(_answers.entity) : undefined
+  const data = useMemo(() => {
+    if (_answers.entity) {
+      return Arr(multipleFilters(_answers.entity, [
+        filter?.currentOblast.length > 0 && (_ => filter.currentOblast.includes(_.where_are_you_current_living_oblast)),
+        filter?.originOblast.length > 0 && (_ => filter.currentOblast.includes(_.what_is_your_area_of_origin_oblast)),
+      ]))
+    }
+  }, [_answers.entity, filter])
   const computed = useProtHHS2Data({data})
 
-  console.log(getChoices('where_are_you_current_living_oblast'))
   return (
     <DashboardLayout
       title={m.ukraine}
       subTitle={m.protectionMonitoringDashboard}
       header={
-        <>
-          <DashboardFilterOptions label={m.oblast} options={getChoices('where_are_you_current_living_oblast')}/>
-        </>
+        <Box sx={{'& > :not(:last-child)': {mr: 1}}}>
+          <DashboardFilterOptions
+            value={filter.currentOblast}
+            label={m.current}
+            options={getChoices('where_are_you_current_living_oblast')}
+            onChange={currentOblast => setFilters(prev => ({...prev, currentOblast}))}
+          />
+          <DashboardFilterOptions
+            value={filter.originOblast}
+            label={m.origin}
+            options={getChoices('what_is_your_area_of_origin_oblast')}
+            onChange={originOblast => setFilters(prev => ({...prev, originOblast}))}
+          />
+        </Box>
       }
       steps={(() => {
         if (!data || !computed) return []
         const panelProps: DashboardPageProps = data && computed && {
-          filters: {
-            start: new Date(2022, 0, 1),
-            end: new Date(2024, 0, 1),
-          },
+          filters: filter,
           data,
           computed,
         }
@@ -150,3 +178,4 @@ export const DashboardProtHHS2 = () => {
       })()}/>
   )
 }
+

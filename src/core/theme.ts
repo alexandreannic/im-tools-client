@@ -146,6 +146,9 @@ export const muiTheme = (dark?: boolean): Theme => {
             fontSize: baseTheme.typography.fontSize,
             fontFamily,
           },
+          button: {
+            fontFamily,
+          },
           body: {
             color: baseTheme.palette.text.primary,
             fontSize: '1rem',

@@ -173,3 +173,12 @@ export const mapObject = <K extends string, V, NK extends string, NV>(t: Record<
   })
   return output
 }
+
+export const multipleFilters = <T>(list: T[], filters: Array<undefined | boolean | ((value: T, index: number, array: T[]) => boolean)>) => {
+  if (filters.length === 0) return list
+  return list.filter((t: T, index: number, array: T[]) => filters
+    .filter(filter => filter instanceof Function)
+    // @ts-ignore
+    .every(filter => filter(t, index, array))
+  )
+}

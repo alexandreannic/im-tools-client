@@ -1,5 +1,5 @@
 import {Box, BoxProps, GlobalStyles} from '@mui/material'
-import React, {ReactNode, useContext} from 'react'
+import React, {useContext} from 'react'
 import {defaultSpacing} from '../../core/theme'
 
 const generalStyles = <GlobalStyles

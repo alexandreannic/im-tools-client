@@ -14,8 +14,6 @@ import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} fr
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {AaBtn} from '../../../shared/Btn/AaBtn'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
-import {aiRaions} from '../../../core/uaLocation/aiRaions'
-import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
 import {ItSelect} from 'shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
 import {useItToast} from '../../../core/useToast'
@@ -34,7 +32,7 @@ const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify
 }, _ => 'Non-Displaced')
 
 
-export const ActivityInfoHHS_2_1 = () => {
+export const ActivityInfoHHS2 = () => {
   const [period, setPeriod] = useState('2023-04')
   const {api} = useConfig()
 

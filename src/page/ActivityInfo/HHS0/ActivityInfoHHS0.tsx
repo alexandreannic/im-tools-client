@@ -15,15 +15,13 @@ import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} fr
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {AaBtn} from '../../../shared/Btn/AaBtn'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
-import {aiRaions} from '../../../core/uaLocation/aiRaions'
-import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
 import {ItSelect} from 'shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
 import {useItToast} from '../../../core/useToast'
 import {format} from 'date-fns'
-import Answer = KoboFormProtHH.Answer
 import {Layout} from '../../../shared/Layout'
 import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
+import Answer = KoboFormProtHH.Answer
 
 const mapPopulationGroup = (s: KoboFormProtHH.Status): any => fnSwitch(s, {
   idp: 'IDPs',
