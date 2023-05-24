@@ -16,7 +16,7 @@ export interface PanelProps extends Omit<CardProps, 'title'> {
 }
 
 export const Panel = forwardRef(({
-  elevation = 1,
+  elevation,
   hoverable,
   loading,
   children,
@@ -45,8 +45,9 @@ export const Panel = forwardRef(({
   return (
     <Card
       ref={ref}
-      elevation={elevation}
+      // elevation={elevation}
       sx={{
+        position: 'relative',
         background: t => t.palette.background.paper,
         ...expended ? {
           zIndex: 1,
@@ -75,24 +76,38 @@ export const Panel = forwardRef(({
         ...(elevation === 0 && {
           border: t => `1px solid ${t.palette.divider}`,
         }),
+        '&:hover .panel-actions': {
+          display: 'block',
+        },
         ...sx,
       }}
       {...other}
     >
-      {(title || expendable || savableAsImg) && (
+      {(expendable || savableAsImg) && (
+        <Box className="panel-actions" sx={{
+          p: 1,
+          position: 'absolute',
+          display: 'none',
+          top: 0,
+          right: 0,
+        }}>
+          {expendable && (
+            <IconBtn size="small" sx={{marginLeft: 'auto', p: 0, color: t => t.palette.text.disabled}} onClick={() => setExpended(_ => !_)}>
+              <Icon>{expended ? 'fullscreen_exit' : 'fullscreen'}</Icon>
+            </IconBtn>
+          )}
+          {savableAsImg && (
+            <IconBtn size="small" sx={{ml: 1, p: 0, color: t => t.palette.text.disabled}} onClick={saveAsImg}>
+              <Icon>download</Icon>
+            </IconBtn>
+          )}
+        </Box>
+      )}
+
+      {(title) && (
         <PanelHead>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             {title}
-            {expendable && (
-              <IconBtn size="small" sx={{marginLeft: 'auto', p: 0, color: t => t.palette.text.disabled}} onClick={() => setExpended(_ => !_)}>
-                <Icon>{expended ? 'fullscreen_exit' : 'fullscreen'}</Icon>
-              </IconBtn>
-            )}
-            {savableAsImg && (
-              <IconBtn size="small" sx={{ml: 1, p: 0, color: t => t.palette.text.disabled}} onClick={saveAsImg}>
-                <Icon>download</Icon>
-              </IconBtn>
-            )}
           </Box>
         </PanelHead>
       )}

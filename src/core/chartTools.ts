@@ -1,5 +1,5 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {mapObjetValue, sortObject} from '../utils/utils'
+import {mapObject, mapObjectValue, sortObject} from '../utils/utils'
 
 export interface ChartDataValPercent extends ChartDataVal {
   base: number
@@ -17,7 +17,9 @@ export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
 export namespace ChartTools {
 
-  export const mapValue = mapObjetValue
+  export const mapValue = <K extends string, V, R>(fn: (_: V) => R) => (obj: Record<K, V>): Record<K, R> => mapObjectValue(obj, fn)
+
+  export const map = <K extends string, V, NK extends string, NV>(fn: (_: [K, V]) => [NK, NV]) => (obj: Record<K, V>): Record<NK, NV> => mapObject(obj, fn)
 
   export const take = <T extends string>(n: number) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
     return Arr(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
@@ -73,15 +75,13 @@ export namespace ChartTools {
     data,
     type,
     filterValue,
-    map,
   }: {
-    filterValue?: A[],
-    map?: (_: A) => A,
     data: _Arr<A[] | undefined>,
+    filterValue?: A[],
     type?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
   }): ChartData<A> => {
     const flatData: A[] = data.flatMap(_ => _).compact()
-    const all = flatData.filter(_ => filterValue ? !filterValue.includes(_) : true).map(map ?? (_ => _))
+    const all = flatData.filter(_ => filterValue ? !filterValue.includes(_) : true)
     const obj = Arr(all).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
     const base = fnSwitch(type!, {
       percentOfTotalAnswers: data.length,

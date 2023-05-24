@@ -1,8 +1,9 @@
-import {Box, BoxProps, Icon, useTheme} from '@mui/material'
+import {Box, BoxProps, Icon, Typography, useTheme} from '@mui/material'
 import React, {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
 import {AaPieChart} from './Chart/AaPieChart'
-import {SlidePanelTitle} from './PdfLayout/Slide'
+import {SlidePanel, SlidePanelTitle} from './PdfLayout/Slide'
+import {PanelProps} from './Panel/Panel'
 
 const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
   return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value
@@ -26,17 +27,13 @@ export const PieChartIndicator = ({
   title?: ReactNode
   value: number
   evolution?: number
-} & Omit<BoxProps, 'title'>) => {
+} & Omit<PanelProps, 'title'>) => {
   const theme = useTheme()
   return (
-    <Box
-      {...props}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        ...props.sx
-      }}
-    >
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
+    }}>
       <AaPieChart
         outerRadius={24}
         innerRadius={14}

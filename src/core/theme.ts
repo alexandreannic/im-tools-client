@@ -108,6 +108,22 @@ export const muiTheme = (dark?: boolean): Theme => {
       fontSize,
       fontFamily,
       fontWeightBold: 500,
+      h1: {
+        fontSize: '2.4em',
+        fontWeight: 500,
+      },
+      subtitle1: {
+        fontSize: '1.5em',
+        fontWeight: 500,
+      },
+      h2: {
+        fontSize: '1.6em',
+        fontWeight: 500,
+      },
+      h3: {
+        fontWeight: 500,
+        fontSize: '1.3em',
+      },
     },
   })
   const theme: ThemeOptions = {
@@ -148,13 +164,7 @@ export const muiTheme = (dark?: boolean): Theme => {
             // background: 'red',
           },
           ul: {
-            marginTop: '.5em',            
-          },
-          h1: baseTheme.typography.h4,
-          h2: {
-            ...baseTheme.typography.h6,
-            mb: 2,
-            mt: 3,
+            marginTop: '.5em',
           },
           p: {
             ...baseTheme.typography.body1,

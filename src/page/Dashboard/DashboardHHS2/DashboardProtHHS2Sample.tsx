@@ -1,5 +1,4 @@
-import {SlideCard, SlideContainer} from '../../../shared/PdfLayout/Slide'
-import {DashboardPanel} from '../DashboardPanel'
+import {SlideContainer, SlidePanel, SlideWidget} from '../../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {AaPieChart} from '../../../shared/Chart/AaPieChart'
 import {Legend} from 'recharts'
@@ -12,6 +11,7 @@ import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_
 import {Lazy} from '../../../shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '../../../utils/utils'
+import {AAStackedBarChart} from '../../../shared/Chart/AaStackedBarChart'
 
 export const DashboardProtHHS2Sample = ({
   data,
@@ -19,16 +19,54 @@ export const DashboardProtHHS2Sample = ({
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()
-  console.log(computed.byGender)
 
   return (
     <>
-      <SlideCard icon="home">
-        {formatLargeNumber(data.length)}
-      </SlideCard>
-      <SlideContainer>
-        <SlideContainer flexDirection="column">
-          <DashboardPanel title={m.protHHS2.poc}>
+      <SlideContainer alignItems="flex-start">
+        <SlideContainer column>
+          <SlideContainer>
+            <SlideWidget sx={{flex: 1}} icon="home" title={m.hhs}>
+              {formatLargeNumber(data.length)}
+            </SlideWidget>
+            <SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>
+              {formatLargeNumber(computed.individuals)}
+            </SlideWidget>
+            <SlideWidget sx={{flex: 1}} icon="group" title={m.hhSize}>
+              {(computed.individuals / data.length).toFixed(1)}
+            </SlideWidget>
+          </SlideContainer>
+          <SlidePanel>
+            <AaPieChart
+              outerRadius={80}
+              height={155}
+              width={300}
+              m={{
+                male: ProtHHS_2_1Options['hh_sex_1'].male,
+                female: ProtHHS_2_1Options['hh_sex_1'].female,
+                other: ProtHHS_2_1Options['hh_sex_1'].other,
+                unable_unwilling_to_answer: ProtHHS_2_1Options['hh_sex_1'].unable_unwilling_to_answer,
+              }}
+              data={computed.byGender}
+              colors={{
+                female: theme.palette.primary.main,
+                male: theme.palette.info.main,
+                other: theme.palette.divider,
+                unable_unwilling_to_answer: theme.palette.divider,
+              }}
+            >
+              <Legend iconType="circle" layout="vertical" verticalAlign="middle" align="right"/>
+            </AaPieChart>
+          </SlidePanel>
+          <SlidePanel title={m.protHHS2.HHsLocation}>
+            <AAStackedBarChart data={computed.ageGroup} height={240} colors={t => [
+              t.palette.primary.main,
+              t.palette.info.main,
+              t.palette.divider,
+            ]}/>
+          </SlidePanel>
+        </SlideContainer>
+        <SlideContainer column>
+          <SlidePanel title={m.protHHS2.poc}>
             <Lazy
               deps={[data]}
               fn={() => chain(ChartTools.single({
@@ -40,41 +78,16 @@ export const DashboardProtHHS2Sample = ({
             >
               {_ => <HorizontalBarChartGoogle data={_}/>}
             </Lazy>
-          </DashboardPanel>
-        </SlideContainer>
-        <SlideContainer flexDirection="column">
-          <AaPieChart
-            outerRadius={60}
-            height={120}
-            width={260}
-            m={{
-              male: ProtHHS_2_1Options['hh_sex_1'].male,
-              female: ProtHHS_2_1Options['hh_sex_1'].female,
-              other: ProtHHS_2_1Options['hh_sex_1'].other,
-              unable_unwilling_to_answer: ProtHHS_2_1Options['hh_sex_1'].unable_unwilling_to_answer,
-            }}
-            data={computed.byGender}
-            colors={{
-              female: theme.palette.primary.main,
-              male: theme.palette.info.main,
-              other: theme.palette.divider,
-              unable_unwilling_to_answer: theme.palette.divider,
-            }}
-          >
-            <Legend iconType="circle" layout="vertical" verticalAlign="middle" align="right"/>
-          </AaPieChart>
-          <DashboardPanel title={m.protHHS2.HHsLocation}>
-            <Lazy
-              deps={[data]}
-              fn={() => ChartTools.byCategory({
-                categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
-                data: data,
-                filter: _ => true,
-              })}
-            >
-              {_ => <UkraineMap data={_}/>}
+          </SlidePanel>
+          <SlidePanel title={m.protHHS2.HHsLocation}>
+            <Lazy deps={[data]} fn={() => ChartTools.byCategory({
+              categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
+              data: data,
+              filter: _ => true,
+            })}>
+              {_ => <UkraineMap data={_} sx={{mx: 3}}/>}
             </Lazy>
-          </DashboardPanel>
+          </SlidePanel>
         </SlideContainer>
       </SlideContainer>
     </>

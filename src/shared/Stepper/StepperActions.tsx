@@ -1,6 +1,6 @@
 import {Box} from '@mui/material'
 import {useI18n} from 'core/i18n'
-import {ItBtn} from '../Btn/ItBtn'
+import {AaBtn} from '../Btn/AaBtn'
 import {useStepperContext} from './Stepper'
 import {StepperActionsNext} from './StepperActionsNext'
 
@@ -32,9 +32,9 @@ export const StepperActions = ({
   return (
     <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 3}}>
       {_stepper.currentStep > 0 && !hidePrev && (
-        <ItBtn loading={loadingPrev} sx={{marginRight: 'auto'}} onClick={prev ? () => prev(_stepper.prev) : _stepper.prev} color="primary" icon="keyboard_arrow_left">
+        <AaBtn loading={loadingPrev} sx={{marginRight: 'auto'}} onClick={prev ? () => prev(_stepper.prev) : _stepper.prev} color="primary" icon="keyboard_arrow_left">
           {m.previous}
-        </ItBtn>
+        </AaBtn>
       )}
       {!hideNext && (
         <StepperActionsNext

@@ -1,3 +1,8 @@
+export const koboServerId = {
+  prod: '4820279f-6c3d-47ba-8afe-47f86b16ab5d',
+  dev: 'TODO'
+}
+
 export const koboFormId = {
   prod: {
     protectionHh2: 'aQDZ2xhPUnNd43XzuQucVR',

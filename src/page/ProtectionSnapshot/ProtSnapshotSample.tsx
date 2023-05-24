@@ -1,4 +1,4 @@
-import {Slide, SlideBody, SlideCard, SlideContainer, SlidePanel, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {Slide, SlideBody, SlideWidget, SlideContainer, SlidePanelDepreacted, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {format, sub} from 'date-fns'
 import {Box, Icon, useTheme} from '@mui/material'
 import {AaPieChart} from '../../shared/Chart/AaPieChart'
@@ -63,20 +63,20 @@ export const ProtSnapshotSample = ({
 
           <SlideContainer column sx={{flex: 6}}>
             <Box sx={{display: 'flex'}}>
-              <SlideCard title={m.hhs} icon="home">
+              <SlideWidget title={m.hhs} icon="home">
                 {formatLargeNumber(data.length)}
-              </SlideCard>
-              <SlideCard title={m.individuals} icon="person">
+              </SlideWidget>
+              <SlideWidget title={m.individuals} icon="person">
                 {formatLargeNumber(computed.totalMembers)}
-              </SlideCard>
-              <SlideCard title={m.hhSize} icon="group">
+              </SlideWidget>
+              <SlideWidget title={m.hhSize} icon="group">
                 {(computed.totalMembers / data.length).toFixed(1)}
-              </SlideCard>
+              </SlideWidget>
             </Box>
 
             <SlideContainer>
               <SlideContainer column>
-                <SlidePanel>
+                <SlidePanelDepreacted>
                   <AaPieChart
                     outerRadius={60}
                     height={120}
@@ -95,51 +95,51 @@ export const ProtSnapshotSample = ({
                   >
                     <Legend iconType="circle" layout="vertical" verticalAlign="middle" align="right"/>
                   </AaPieChart>
-                </SlidePanel>
-                <SlidePanel title={m.status}>
+                </SlidePanelDepreacted>
+                <SlidePanelDepreacted title={m.status}>
                   <HorizontalBarChartGoogle data={computed._12_Do_you_identify_as_any_of}/>
-                </SlidePanel>
+                </SlidePanelDepreacted>
               </SlideContainer>
               <SlideContainer>
-                <SlidePanel sx={{flex: 1, height: '100%'}} title={m.ageGroup}>
+                <SlidePanelDepreacted sx={{flex: 1, height: '100%'}} title={m.ageGroup}>
                   <HorizontalBarChartGoogle
                     data={computed._8_individuals.byAgeGroup}
                   />
-                </SlidePanel>
+                </SlidePanelDepreacted>
               </SlideContainer>
             </SlideContainer>
             <SlideContainer>
               <SlideContainer column>
-                <SlidePanel>
+                <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfIdp}
                     value={computed.categoriesTotal.idp.value / computed.currentStatusAnswered}
                   />
-                </SlidePanel>
-                <SlidePanel>
+                </SlidePanelDepreacted>
+                <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfMemberWithDisability}
                     value={computed.categoriesTotal.memberWithDisability.value / data.length}
                   />
-                </SlidePanel>
+                </SlidePanelDepreacted>
               </SlideContainer>
               <SlideContainer column>
-                <SlidePanel>
+                <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfHohhFemale}
                     value={computed.categoriesTotal.hohhFemale.value / data.length}
                   />
-                </SlidePanel>
-                <SlidePanel>
+                </SlidePanelDepreacted>
+                <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfHohh60}
                     value={computed.categoriesTotal.hohh60.value / data.length}
                   />
-                </SlidePanel>
+                </SlidePanelDepreacted>
               </SlideContainer>
             </SlideContainer>
           </SlideContainer>

@@ -1,10 +1,10 @@
 import React from 'react'
 import {styleUtils} from '../../../core/theme'
-import {ItBtn} from '../../Btn/ItBtn'
+import {AaBtn} from '../../Btn/AaBtn'
 
 export const HeaderItem = ({children, href}: {children: any; href?: string}) => {
   return (
-    <ItBtn
+    <AaBtn
       color="primary"
       href={href}
       sx={{
@@ -15,6 +15,6 @@ export const HeaderItem = ({children, href}: {children: any; href?: string}) => 
       }}
     >
       {children}
-    </ItBtn>
+    </AaBtn>
   )
 }

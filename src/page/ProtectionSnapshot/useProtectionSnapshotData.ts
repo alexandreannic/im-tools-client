@@ -11,6 +11,7 @@ import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
+import {ageGroup} from '../../core/type'
 
 const hasntIdpCertificate = (_: (KoboFormProtHH.GetType<'_14_2_1_Do_you_or_your_househo'>)[] | undefined) => {
   return !_ || (!_.includes('idp_certificate') && !_.includes('idp_e_registration'))
@@ -284,8 +285,11 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .val,
 
       _14_1_1_What_type_of_ocuments_do_you_have: chain(ChartTools.multiple({
-        data: data.flatMap(_ => _.persons).map(_ => _.personalDoc).compact(),
-        map: _ => _ === 'national_passport_diia_app7' || _ === 'national_passport_book7' || _ === 'national_passport_card7' ? 'national_passport' : _
+        data: data
+          .flatMap(_ => _.persons)
+          .map(_ => _.personalDoc)
+          .map((_: any) => _ === 'national_passport_diia_app7' || _ === 'national_passport_book7' || _ === 'national_passport_card7' ? 'national_passport' : _)
+          .compact(),
       }))
         .map(ChartTools.setLabel(m.protHHSnapshot.enum._14_1_1_What_type_of_ocuments_do_you_have))
         .map(ChartTools.sortBy.value)
@@ -676,9 +680,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _8_individuals: (() => {
         const persons = data.flatMap(_ => _.persons)
-        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof KoboFormProtHH.ageGroup, {value: number}>>((p, acc) => {
-          const group = Enum.keys(KoboFormProtHH.ageGroup).find(k => {
-            const [min, max] = KoboFormProtHH.ageGroup[k]
+        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof ageGroup, {value: number}>>((p, acc) => {
+          const group = Enum.keys(ageGroup).find(k => {
+            const [min, max] = ageGroup[k]
             return p.age && p.age >= min && p.age <= max
           })
           if (group) return [group, {value: (acc[group]?.value ?? 0) + 1}]
@@ -690,7 +694,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
         return {
           persons: persons,
-          byAgeGroup: sortBy.custom(Object.keys(KoboFormProtHH.ageGroup))(byAgeGroup),
+          byAgeGroup: sortBy.custom(Object.keys(ageGroup))(byAgeGroup),
           byGender: byGender,
         }
       })()

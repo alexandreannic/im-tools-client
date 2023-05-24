@@ -13,14 +13,14 @@ const sx = makeSx({
   },
 })
 
-export interface BtnProps extends ButtonProps {
+export interface AaBtnProps extends ButtonProps {
   tooltip?: string
   loading?: boolean
   icon?: string
   iconAfter?: string
 }
 
-export const ItBtn = forwardRef(({tooltip, loading, children, disabled, icon, iconAfter, ...props}: BtnProps, ref: any) => {
+export const AaBtn = forwardRef(({tooltip, loading, children, disabled, icon, iconAfter, ...props}: AaBtnProps, ref: any) => {
   const btn = (
     <Button
       {...props}

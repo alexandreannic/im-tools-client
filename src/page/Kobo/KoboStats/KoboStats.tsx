@@ -7,7 +7,7 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Arr, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {ChartTools} from '../../../core/chartTools'
-import {DashboardPanel} from '../../Dashboard/DashboardPanel'
+import {Panel} from '../../../shared/Panel'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -46,20 +46,20 @@ export const KoboStats = ({
           {form.content.survey.map(item => fnSwitch(item.type, {
             select_multiple: () => {
               return (
-                <DashboardPanel title={item.name + ' ' + item.type}>
+                <Panel title={item.name + ' ' + item.type} savableAsImg={true} expendable={true}>
                   <HorizontalBarChartGoogle data={ChartTools.multiple({
                     data: Arr(answers.map(_ => _[item.name]?.split(' ')))
                   })}/>
-                </DashboardPanel>
+                </Panel>
               )
             },
             select_one: () => {
               return (
-                <DashboardPanel title={item.name}>
+                <Panel title={item.name} savableAsImg={true} expendable={true}>
                   <HorizontalBarChartGoogle data={ChartTools.single({
                     data: Arr(answers.map(_ => _[item.name])).compact()
                   })}/>
-                </DashboardPanel>
+                </Panel>
               )
             }
           }, _ => <></>))}

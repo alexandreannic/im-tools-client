@@ -1,13 +1,13 @@
-import {ItBtn, BtnProps} from '../Btn/ItBtn'
+import {AaBtn, AaBtnProps} from '../Btn/AaBtn'
 import {useI18n} from 'core/i18n'
 
-interface Props extends BtnProps {
+interface Props extends AaBtnProps {
 }
 
 export const StepperActionsNext = ({children, icon, ...props}: Props) => {
   const {m} = useI18n()
   return (
-    <ItBtn
+    <AaBtn
       id="btn-submit"
       color="primary"
       variant="contained"
@@ -15,6 +15,6 @@ export const StepperActionsNext = ({children, icon, ...props}: Props) => {
       {...props}
     >
       {children ?? m.next}
-    </ItBtn>
+    </AaBtn>
   )
 }

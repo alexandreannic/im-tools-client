@@ -18,7 +18,7 @@ import {addMonths, format, startOfMonth} from 'date-fns'
 import {useI18n} from '../../../core/i18n'
 import {fixLocations} from './activityInfoNFIFix'
 import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
-import {ItBtn} from '../../../shared/Btn/ItBtn'
+import {AaBtn} from '../../../shared/Btn/AaBtn'
 import {useItToast} from '../../../core/useToast'
 
 interface Answer {
@@ -270,18 +270,18 @@ const _ActivityInfo = ({
           {' - '}
           {formatDate(computePeriod(period).end)}
         </Box>
-        <ItBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+        <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, data.map(_ => _.request)).catch(toastError)
         }}>
           {m.submitAll}
-        </ItBtn>
+        </AaBtn>
       </Box>
 
       <Datatable<Row> data={data} columns={[
         {
           id: 'actions', head: '', render: (_, i) =>
             <>
-              <ItBtn
+              <AaBtn
                 loading={_submit.getLoading(i)}
                 variant="contained"
                 size="small"
@@ -291,7 +291,7 @@ const _ActivityInfo = ({
                 }}
               >
                 <Icon>send</Icon>
-              </ItBtn>
+              </AaBtn>
               <ActivityInfoActions
                 answers={_.rows}
                 activity={_.activity}

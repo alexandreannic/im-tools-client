@@ -13,7 +13,7 @@ import {Panel} from '../../../shared/Panel'
 import {ItInput} from '../../../shared/ItInput/ItInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
-import {ItBtn} from '../../../shared/Btn/ItBtn'
+import {AaBtn} from '../../../shared/Btn/AaBtn'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
@@ -191,11 +191,11 @@ const _ActivityInfo = ({
             options={Object.keys(aiOblasts).map(_ => ({value: _, children: _.split('_')[0]}))}
           />
         </Box>
-        <ItBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+        <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, formParams.map(_ => _.activity)).catch(toastError)
         }}>
           Submit all
-        </ItBtn>
+        </AaBtn>
       </Box>
       <Panel>
         <Table>
@@ -221,7 +221,7 @@ const _ActivityInfo = ({
                   <>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
                       <Tooltip title="Submit!!">
-                        <ItBtn
+                        <AaBtn
                           loading={_submit.getLoading(i)}
                           variant="contained"
                           size="small"
@@ -231,7 +231,7 @@ const _ActivityInfo = ({
                           }}
                         >
                           <Icon>send</Icon>
-                        </ItBtn>
+                        </AaBtn>
                       </Tooltip>
                       <Confirm
                         maxWidth={'lg'}
@@ -239,7 +239,7 @@ const _ActivityInfo = ({
                         PaperProps={{}}
                         content={<AnswerTable answers={a.rows}/>}>
                         <Tooltip title="Kobo data">
-                          <ItBtn icon="table_view" variant="outlined" size="small">View data</ItBtn>
+                          <AaBtn icon="table_view" variant="outlined" size="small">View data</AaBtn>
                         </Tooltip>
                       </Confirm>
                       <Confirm title="Preview activity" content={

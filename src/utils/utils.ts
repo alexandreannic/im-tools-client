@@ -157,10 +157,19 @@ export function groupByAndTransform<T>(arr: T[], predicates: ((item: T) => any)[
   }
 }
 
-export const mapObjetValue = <K extends string, V, R>(t: Record<K, V>, fn: (_: V) => R): Record<K, R> => {
+export const mapObjectValue = <K extends string, V, R>(t: Record<K, V>, fn: (_: V) => R): Record<K, R> => {
   const output = {} as Record<K, R>
   Enum.entries(t).forEach(([k, v]) => {
     output[k] = fn(v)
+  })
+  return output
+}
+
+export const mapObject = <K extends string, V, NK extends string, NV>(t: Record<K, V>, fn: (_: [K, V]) => [NK, NV]): Record<NK, NV> => {
+  const output = {} as Record<NK, NV>
+  Enum.entries(t).forEach(_ => {
+    const res = fn(_)
+    output[res[0]] = res[1]
   })
   return output
 }

@@ -2,7 +2,7 @@ import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Box, Divider, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
@@ -57,7 +57,7 @@ export const ProtSnapshotDocument = ({
               })
             }}
             />
-            <SlidePanel>
+            <SlidePanelDepreacted>
               <PieChartIndicator
                 title={m.protHHSnapshot.requiredLegalAidInformation}
                 value={computed._39_What_type_of_information_wouldPercent.percent}
@@ -74,10 +74,10 @@ export const ProtSnapshotDocument = ({
               <HorizontalBarChartGoogle
                 data={computed._16_1_2_What_are_the_barriers_}
               />
-            </SlidePanel>
+            </SlidePanelDepreacted>
           </SlideContainer>
           <SlideContainer column sx={{flex: 2.8}}>
-            <SlidePanel>
+            <SlidePanelDepreacted>
               <PieChartIndicator
                 title={m.protHHSnapshot.hhWDisabilityWoAllowance}
                 value={computed.disabilityWithoutAllowance.percent}
@@ -93,8 +93,8 @@ export const ProtSnapshotDocument = ({
               {/*  title={m.protHHSnapshot.childWithoutBirthCertificate}*/}
               {/*  value={computed._15_1_1_What_housing_land_and.percent}*/}
               {/*/>*/}
-            </SlidePanel>
-            <SlidePanel>
+            </SlidePanelDepreacted>
+            <SlidePanelDepreacted>
               <SlidePanelTitle>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
               <Box sx={{display: 'flex', mt: 2.5, mb: 5, justifyContent: 'space-between'}}>
                 <PieChartIndicator
@@ -115,7 +115,7 @@ export const ProtSnapshotDocument = ({
                 title={m.protHHSnapshot.maleWithoutIDPCertByOblast}
                 sx={{width: 350, margin: 'auto'}}
               />
-            </SlidePanel>
+            </SlidePanelDepreacted>
             {/*<SlidePanel>*/}
             {/*  <PieChartIndicator*/}
             {/*    title={m.uaCitizenShip}*/}

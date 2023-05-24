@@ -7,7 +7,7 @@ import {CssBaseline, ThemeProvider} from '@mui/material'
 import {muiTheme} from './core/theme'
 import {I18nProvider} from './core/i18n'
 import {ToastProvider} from 'mui-extension'
-import {HashRouter} from 'react-router-dom'
+import {BrowserRouter as Router} from 'react-router-dom'
 import {ApiSdk} from './core/sdk/server/ApiSdk'
 import {ApiClient} from './core/sdk/server/ApiClient'
 import {ConfigContextProvider} from './core/context/ConfigContext'
@@ -28,7 +28,7 @@ root.render(
     _ => <CssBaseline children={_}/>,
     _ => <I18nProvider children={_}/>,
     _ => <ToastProvider children={_}/>,
-    _ => <HashRouter children={_}/>,
+    _ => <Router children={_}/>,
     _ => <ConfigContextProvider children={_} api={api}/>,
     _ => <NfiProvider children={_}/>,
   ]}>
