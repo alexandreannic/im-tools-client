@@ -24,12 +24,12 @@ const api = new ApiSdk(new ApiClient({
 
 root.render(
   <Provide providers={[
+    _ => <ConfigContextProvider children={_} api={api}/>,
+    _ => <ToastProvider children={_}/>,
+    _ => <Router children={_}/>,
     _ => <ThemeProvider theme={muiTheme()} children={_}/>,
     _ => <CssBaseline children={_}/>,
     _ => <I18nProvider children={_}/>,
-    _ => <ToastProvider children={_}/>,
-    _ => <Router children={_}/>,
-    _ => <ConfigContextProvider children={_} api={api}/>,
     _ => <NfiProvider children={_}/>,
   ]}>
     <App/>

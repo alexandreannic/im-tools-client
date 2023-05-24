@@ -6,6 +6,7 @@ import {DashboardProvider} from './DashboardContext'
 import {makeSx} from 'mui-extension'
 
 
+const dashboardMw = 1100
 const headerId = 'aa-sidebar-id'
 const headerStickyClass = 'sticky-header'
 
@@ -62,16 +63,35 @@ const style = makeSx({
   }
 })
 
-const generalStyles = <GlobalStyles
-  styles={{
-    ['.' + headerStickyClass]: {
-      position: 'fixed',
-      top: 0,
-      right: 0,
-      left: 0,
+const generalStyles = <GlobalStyles styles={t => ({
+  [`.${headerStickyClass} .header_content`]: {
+    maxWidth: dashboardMw,
+    margin: 'auto',
+  },
+  [`.${headerStickyClass} .header_title_main`]: {
+    fontSize: '1.2em',
+  },
+  [`.${headerStickyClass} .header_title_sub`]: {
+    fontSize: '1.2em',
+    '&:before': {
+      content: '" - "',
     }
-  }}
-/>
+  },
+  [`.${headerStickyClass} .header_title`]: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: t.spacing(1),
+  },
+  [`#${headerId}.${headerStickyClass}`]: {
+    border: 'none',
+    boxShadow: t.shadows[4],
+    padding: `${t.spacing(1)} ${t.spacing(2)} ${t.spacing(1.5)} ${t.spacing(2)}`,
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    left: 0,
+  }
+})}/>
 
 export const DashboardLayout = ({
   steps,
@@ -123,11 +143,15 @@ export const DashboardLayout = ({
               ))}
             </Box>
           </Box>
-          <Box sx={{width: 1100, maxWidth: 1100, margin: 'auto', mb: 2,}}>
+          <Box sx={{width: dashboardMw, maxWidth: dashboardMw, margin: 'auto', mb: 2,}}>
             <Box sx={style.header} id={headerId}>
-              <Typography variant="h1">{title}</Typography>
-              <Typography gutterBottom variant="subtitle1">{subTitle}</Typography>
-              {header}
+              <Box className="header_content">
+                <Box className="header_title" sx={{mb: 2}}>
+                  <Typography className="header_title_main" variant="h1">{title}&nbsp;</Typography>
+                  <Typography className="header_title_sub" variant="subtitle1" sx={{color: t => t.palette.text.secondary}}>{subTitle}</Typography>
+                </Box>
+                {header}
+              </Box>
             </Box>
             {steps.map(step => (
               <Box key={step.name}>
