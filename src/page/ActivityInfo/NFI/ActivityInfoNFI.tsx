@@ -17,7 +17,7 @@ import {ActivityInfoHelper} from '../shared/activityInfoHelper'
 import {addMonths, format, startOfMonth} from 'date-fns'
 import {useI18n} from '../../../core/i18n'
 import {fixLocations} from './activityInfoNFIFix'
-import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
+import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
 import {AaBtn} from '../../../shared/Btn/AaBtn'
 import {useItToast} from '../../../core/useToast'
 
@@ -130,11 +130,14 @@ const toFormData = ({
             AgeHH: number,
             GenderHH: keyof typeof MPCA_NFIOptions['GenderHH']
           }>
+          const location = {
+            Oblast: AILocationHelper.findOblast(enOblast) ?? '⚠️' + enOblast,
+            Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? '⚠️' + enRaion,
+            Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w  ?? '⚠️' + enHromada,
+            Settlement: AILocationHelper.findSettlement(enOblast, enRaion, enHromada, settlement)?._5w  ?? '⚠️' + settlement,
+          }
           pushActivity(planBK, {
-            Oblast: getLocation(aiOblasts, enOblast, 'Oblasts', bySettlement),
-            Raion: getLocation(aiRaions, enRaion, 'Raions', bySettlement),
-            Hromada: getLocation(aiHromadas, enHromada, 'Hromadas', bySettlement),
-            Settlement: AILocationHelper.findSettlement(settlement)!,
+            ...location,
             'WASH - APM': 'DRC-00003',
             'Boys': planBKPersons.filter(_ => _.GenderHH === 'male').length,
             'Girls': planBKPersons.filter(_ => _.GenderHH === 'female').length,
@@ -146,10 +149,7 @@ const toFormData = ({
             'Total Reached (No Disaggregation)': planBKPersons.length,
           })
           pushActivity(planHK, {
-            Oblast: getLocation(aiOblasts, enOblast, 'Oblasts', bySettlement),
-            Raion: getLocation(aiRaions, enRaion, 'Raions', bySettlement),
-            Hromada: getLocation(aiHromadas, enHromada, 'Hromadas', bySettlement),
-            Settlement: AILocationHelper.findSettlement(settlement)!,
+            ...location,
             'WASH - APM': 'DRC-00001',
             'Total Reached (No Disaggregation)': planHKPersons.length,
             'Boys': planHKPersons.count(_ => _.AgeHH < 18 && _.GenderHH === 'male'),
@@ -300,10 +300,10 @@ const _ActivityInfo = ({
             </>
         },
         {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
-        {id: 'Oblast', head: 'Oblast', render: _ => <>{_.activity['Oblast']?.split('_')[0]}</>},
-        {id: 'Raion', head: 'Raion', render: _ => <>{_.activity['Raion']?.split('_')[0]}</>},
-        {id: 'Hromada', head: 'Hromada', render: _ => <>{_.activity['Hromada']?.split('_')[0]}</>},
-        {id: 'Settlement', head: 'Settlement', render: _ => <>{_.activity['Settlement']?.split('_')[0]}</>},
+        {id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.print5w(_.activity['Oblast'])}</>},
+        {id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.print5w(_.activity['Raion'])}</>},
+        {id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.print5w(_.activity['Hromada'])}</>},
+        {id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.print5w(_.activity['Settlement'])}</>},
         {id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
         {id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
         {id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},

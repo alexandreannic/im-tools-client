@@ -22,7 +22,7 @@ import {koboFormId} from '../../../koboFormId'
 import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
-import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
+import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -127,7 +127,7 @@ const _ActivityInfo = ({
         'GP-DRC-00001': Arr([...byOblast].splice(0, Math.ceil(middle))),
         'GP-DRC-00003': Arr([...byOblast].splice(Math.ceil(middle), Math.ceil(byOblast.length))),
       }).forEach(([planCode, byPlanCode]) => {
-        Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
+        Enum.entries(byPlanCode.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
           Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada)).forEach(([hromada, byHromada]) => {
             const enOblast = ProtHHS_2_1Options.what_is_your_area_of_origin_oblast[oblast]
             const enRaion = ProtHHS_2_1Options.what_is_your_area_of_origin_raion[raion]
@@ -135,8 +135,8 @@ const _ActivityInfo = ({
             const activity = {
               'Plan Code': planCode,
               Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
-              Raion: AILocationHelper.findRaion(enOblast, enRaion) ?? (('⚠️' + enRaion) as any),
-              Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada) ?? (('⚠️' + enHromada) as any),
+              Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? (('⚠️' + enRaion) as any),
+              Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? (('⚠️' + enHromada) as any),
               subActivities: Enum.entries(byHromada.groupBy(_ => _.do_you_identify_as_any_of_the_following)).map(([populationGroup, byPopulationGroup]) => {
                 try {
                   const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
@@ -193,7 +193,7 @@ const _ActivityInfo = ({
           Submit all
         </AaBtn>
       </Box>
-      <Panel>
+      <Panel sx={{overflowX: 'auto'}}>
         <Table>
           <TableHead>
             <TableRow>
@@ -258,11 +258,11 @@ const _ActivityInfo = ({
                       </Confirm>
                     </TableCell>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
-                      {a.activity.Oblast.split('_')[0] ?? a.activity.Oblast}
+                      {AILocationHelper.print5w(a.activity.Oblast)}
                       <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
-                      {a.activity.Raion.split('_')[0] ?? a.activity.Raion}
+                      {AILocationHelper.print5w(a.activity.Raion)}
                       <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
-                      {a.activity.Hromada.split('_')[0] ?? a.activity.Hromada}
+                      {AILocationHelper.print5w(a.activity.Hromada)}
                     </TableCell>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
                       {a.activity['Plan Code']}

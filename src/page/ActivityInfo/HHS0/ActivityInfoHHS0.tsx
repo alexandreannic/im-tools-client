@@ -20,7 +20,7 @@ import {AnswerTable} from '../shared/AnswerTable'
 import {useItToast} from '../../../core/useToast'
 import {format} from 'date-fns'
 import {Layout} from '../../../shared/Layout'
-import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
+import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
 import Answer = KoboFormProtHH.Answer
 
 const mapPopulationGroup = (s: KoboFormProtHH.Status): any => fnSwitch(s, {
@@ -131,8 +131,8 @@ const _ActivityInfo = ({
               activity: {
                 'Plan Code': planCode,
                 Oblast: AILocationHelper.findOblast(oblast) ?? (('⚠️' + oblast) as any),
-                Raion: AILocationHelper.findRaion(oblast, raion) ?? AILocationHelper.searchRaionByHromada(hromada) ?? (('⚠️' + raion) as any),
-                Hromada: AILocationHelper.findHromada(oblast, raion, hromada) ?? (('⚠️' + hromada) as any),
+                Raion: AILocationHelper.findRaion(oblast, raion)?._5w ?? AILocationHelper.searchRaionByHromada(hromada) ?? (('⚠️' + raion) as any),
+                Hromada: AILocationHelper.findHromada(oblast, raion, hromada)?._5w ?? (('⚠️' + hromada) as any),
                 subActivities: Enum.entries(byHromada.groupBy(_ => _._12_Do_you_identify_as_any_of)).map(([populationGroup, byPopulationGroup]) => {
                   try {
                     const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
@@ -260,11 +260,11 @@ const _ActivityInfo = ({
                       </Confirm>
                     </TableCell>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
-                      {a.activity.Oblast.split('_')[0] ?? a.activity.Oblast}
+                      {a.activity.Oblast?.split('_')[0] ?? a.activity.Oblast}
                       <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
-                      {a.activity.Raion.split('_')[0] ?? a.activity.Raion}
+                      {a.activity.Raion?.split('_')[0] ?? a.activity.Raion}
                       <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
-                      {a.activity.Hromada.split('_')[0] ?? a.activity.Hromada}
+                      {a.activity.Hromada?.split('_')[0] ?? a.activity.Hromada}
                     </TableCell>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
                       {a.activity['Plan Code']}

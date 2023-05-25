@@ -1,7 +1,8 @@
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
-import {AILocationHelper} from '../../../core/uaLocation/AILocationHelper'
+import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
+import {aiSettlement} from '../../../core/uaLocation/aiSettlement'
 
 type Opt<T extends keyof typeof optionsWashRMM> = keyof (typeof optionsWashRMM)[T]
 
@@ -45,7 +46,7 @@ export const mapWashRMM = (a: WashRMM) => ({
 // @ts-ignore
   'c1dnndblee1f1fs2o': 'c700rjplbuo1fjq5m:' + aiHromadas[a['Hromada']],
 // @ts-ignore
-  'ctgq0o6lee1f1fs2p': 'cqvi6fqlbuo3hyc63:' + AILocationHelper.findSettlementIdByName(a['Settlement']),
+  'ctgq0o6lee1f1fs2p': 'cqvi6fqlbuo3hyc63:' + aiSettlement[a['Settlement']],
   'c1noyq5lee1f1fs2r': optionsWashRMM['Location Type'][a['Location Type']!],
   'cl7k9nxlee1f1fs31': a['Other Institution'],
   'cjmh99nlepqfnnz2': 'c6q8ni3lepq77hp3' + ':' + optionsWashRMM['Activities & Indicators'][a['Activities & Indicators']!],
