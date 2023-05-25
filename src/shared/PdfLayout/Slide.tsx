@@ -197,7 +197,7 @@ export const SlideWidget = ({
   icon,
   ...props
 }: Omit<PanelProps, 'expendable' | 'savableAsImg'> & {
-  icon?: string
+  icon?: string | ReactNode
 }) => {
   return (
     <SlidePanel
@@ -217,7 +217,7 @@ export const SlideWidget = ({
         display: 'inline-flex',
         alignItems: 'center'
       }}>
-        {icon && <Icon color="disabled" sx={{mr: 1}} fontSize="large">{icon}</Icon>}
+        {icon && (typeof icon === 'string' ? <Icon color="disabled" sx={{mr: 1}} fontSize="large">{icon}</Icon> : icon)}
         {children}
       </Box>
       <Txt block color="hint">

@@ -135,8 +135,8 @@ const _ActivityInfo = ({
             const activity = {
               'Plan Code': planCode,
               Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
-              Raion: AILocationHelper.findRaion(enRaion) ?? AILocationHelper.searchRaionByHromada(enHromada) ?? (('⚠️' + enRaion) as any),
-              Hromada: AILocationHelper.findHromada(enHromada) ?? (('⚠️' + enHromada) as any),
+              Raion: AILocationHelper.findRaion(enOblast, enRaion) ?? (('⚠️' + enRaion) as any),
+              Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada) ?? (('⚠️' + enHromada) as any),
               subActivities: Enum.entries(byHromada.groupBy(_ => _.do_you_identify_as_any_of_the_following)).map(([populationGroup, byPopulationGroup]) => {
                 try {
                   const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>

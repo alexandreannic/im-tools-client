@@ -12,6 +12,8 @@ import {Lazy} from '../../../shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '../../../utils/utils'
 import {AAStackedBarChart} from '../../../shared/Chart/AaStackedBarChart'
+import {Donut, PieChartIndicator} from '../../../shared/PieChartIndicator'
+import {Panel, PanelBody} from '../../../shared/Panel'
 
 export const DashboardProtHHS2Sample = ({
   data,
@@ -21,7 +23,7 @@ export const DashboardProtHHS2Sample = ({
   const theme = useTheme()
 
   return (
-    <>
+    <SlideContainer column>
       <SlideContainer alignItems="flex-start">
         <SlideContainer column>
           <SlideContainer>
@@ -35,37 +37,43 @@ export const DashboardProtHHS2Sample = ({
               {(computed.individuals / data.length).toFixed(1)}
             </SlideWidget>
           </SlideContainer>
-          <SlidePanel>
-            <AaPieChart
-              outerRadius={80}
-              height={155}
-              width={300}
-              m={{
-                male: ProtHHS_2_1Options['hh_sex_1'].male,
-                female: ProtHHS_2_1Options['hh_sex_1'].female,
-                other: ProtHHS_2_1Options['hh_sex_1'].other,
-                unable_unwilling_to_answer: ProtHHS_2_1Options['hh_sex_1'].unable_unwilling_to_answer,
-              }}
-              data={computed.byGender}
-              colors={{
-                female: theme.palette.primary.main,
-                male: theme.palette.info.main,
-                other: theme.palette.divider,
-                unable_unwilling_to_answer: theme.palette.divider,
-              }}
-            >
-              <Legend iconType="circle" layout="vertical" verticalAlign="middle" align="right"/>
-            </AaPieChart>
-          </SlidePanel>
-          <SlidePanel title={m.protHHS2.HHsLocation}>
-            <AAStackedBarChart data={computed.ageGroup} height={240} colors={t => [
+        </SlideContainer>
+        <SlideContainer column>
+          <SlideContainer>
+            <Panel sx={{flex: 1, m: 0}}>
+              <PanelBody>
+                <Lazy deps={[data]} fn={() => ChartTools.percentage({
+                  data: computed.flatData,
+                  value: _ => _.gender === 'female'
+                })}>
+                  {_ => (
+                    <PieChartIndicator value={_.percent} title={m.women}/>
+                  )}
+                </Lazy>
+              </PanelBody>
+            </Panel>
+            <SlideWidget sx={{flex: 1}} icon="elderly" title={m.avgAge}>
+              <Lazy deps={[data]} fn={() => computed.flatData.map(_ => _.age).compact().sum() / computed.flatData.length}>
+                {_ => _.toFixed(1)}
+              </Lazy>
+            </SlideWidget>
+            <SlideWidget sx={{flex: 1}} icon="my_location" title={m.coveredOblasts}>
+              <Lazy deps={[data]} fn={() => data.distinct(_ => _.where_are_you_current_living_oblast).length}>
+                {_ => _}
+              </Lazy>
+            </SlideWidget>
+          </SlideContainer>
+        </SlideContainer>
+      </SlideContainer>
+      <SlideContainer alignItems="flex-start">
+        <SlideContainer column>
+          <SlidePanel title={m.ageGroup}>
+            <AAStackedBarChart data={computed.ageGroup} height={250} colors={t => [
               t.palette.primary.main,
               t.palette.info.main,
               t.palette.divider,
             ]}/>
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column>
           <SlidePanel title={m.protHHS2.poc}>
             <Lazy
               deps={[data]}
@@ -79,6 +87,8 @@ export const DashboardProtHHS2Sample = ({
               {_ => <HorizontalBarChartGoogle data={_}/>}
             </Lazy>
           </SlidePanel>
+        </SlideContainer>
+        <SlideContainer column>
           <SlidePanel title={m.protHHS2.HHsLocation}>
             <Lazy deps={[data]} fn={() => ChartTools.byCategory({
               categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
@@ -90,6 +100,6 @@ export const DashboardProtHHS2Sample = ({
           </SlidePanel>
         </SlideContainer>
       </SlideContainer>
-    </>
+    </SlideContainer>
   )
 }

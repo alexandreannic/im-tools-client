@@ -5,6 +5,7 @@ import {aiRaions} from './aiRaions'
 import {aiOblasts} from './aiOblasts'
 import {hromadaRefs} from './hromadaRef'
 import {raionRefs} from './raionRef'
+import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 
 export class AILocationHelper {
 
@@ -18,15 +19,36 @@ export class AILocationHelper {
 
   static readonly findOblast = (name: string) => AILocationHelper.findLocation(aiOblasts, name, 'Oblast')
 
-  static readonly findRaion = (name: string) => AILocationHelper.findLocation(aiRaions, name, 'Raion')
-
-  static readonly findHromada = (name: string) => AILocationHelper.findLocation(aiHromadas, name, 'Hromada')
-
+  /** @deprecated */
   static readonly searchRaionByHromada = (name: string): string | undefined => {
     const parent = Enum.values(hromadaRefs).find(_ => _.en === name)?.parent as keyof typeof raionRefs | undefined
     if (parent) {
       const enLabel = raionRefs[parent]?.en
       return Enum.keys(aiRaions).find(_ => _.includes(enLabel))
+    }
+  }
+
+  static readonly findRaion = (oblastName: string, raionName: string): undefined | {label: string, iso: string} => {
+    const oblastIso = OblastIndex.findISOByName(oblastName)
+    const list = Enum.entries(raionRefs).filter(([, v]) => v.parent === oblastIso)
+    const res = list.find(([, v]) => v.en === raionName)
+    if (res) {
+      return {
+        iso: res[0],
+        label: res[1].en
+      }
+    }
+  }
+
+  static readonly findHromada = (oblastName: string, raionName: string, hromadaName: string) => {
+    const raionIso = AILocationHelper.findRaion(oblastName, raionName)?.iso
+    const list = Enum.entries(hromadaRefs).filter(([, v]) => v.parent === raionIso)
+    const res = list.find(([, v]) => v.en === hromadaName)
+    if (res) {
+      return {
+        iso: res[0],
+        label: res[1].en
+      }
     }
   }
 

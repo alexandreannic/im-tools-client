@@ -1,11 +1,10 @@
 import {OblastISOSVG} from './ukraineSvgPath'
 import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
+import {Enum} from '@alexandreannic/ts-utils'
 
 export interface Oblast {
-  koboKey: KoboFormProtHH.GetType<'oblast'>
   name: string
   iso: OblastISOSVG
-  drcOffice?: string
 }
 
 export type OblastISO = keyof typeof OblastIndex['oblastByISO']
@@ -13,21 +12,20 @@ export type OblastName = typeof OblastIndex['oblastByISO'][keyof typeof OblastIn
 
 export class OblastIndex {
 
+  /** @deprecated used by old hhs form */
   static readonly findISOByKoboKey = (koboKey: string): OblastISO | undefined => {
     // @ts-ignore
     return protHH0oblastKey[koboKey]
-  }
-
-  static readonly findNameByKoboKey = (koboKey: keyof typeof protHH0oblastKey): OblastName | undefined => {
-    const iso = protHH0oblastKey[koboKey]
-    // @ts-ignore
-    return OblastIndex.oblastByISO[iso]
   }
 
   static readonly findByIso = (iso: OblastISO): OblastName | undefined => {
     return OblastIndex.oblastByISO[iso]
   }
 
+  static readonly findISOByName = (name: string): OblastISO | undefined => {
+    return Enum.entries(OblastIndex.oblastByISO)
+      .find(([k, v]) => v === name)?.[0]
+  }
 
   static readonly oblastByISO = Object.freeze({
     'UA01': `Autonomous Republic of Crimea`,

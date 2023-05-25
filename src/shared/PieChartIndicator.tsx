@@ -9,6 +9,37 @@ const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) =
   return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value
 }
 
+export const Donut = ({
+  percent = 0,
+  size = 55,
+}: {
+  percent?: number
+  size?: number
+}) => {
+  const theme = useTheme()
+  return (
+    <AaPieChart
+      outerRadius={size / 2}
+      innerRadius={(size / 2) - 10}
+      height={size}
+      width={size}
+      hideLabel
+      data={{
+        value: percent,
+        rest: 1 - percent,
+      }}
+      colors={{
+        value: theme.palette.primary.main,
+        rest: theme.palette.divider,
+      }}
+      m={{
+        value: 'ukrainian',
+        rest: 'other',
+      }}
+    />
+  )
+}
+
 export const PieChartIndicator = ({
   titleIcon,
   title,
@@ -34,25 +65,7 @@ export const PieChartIndicator = ({
       display: 'flex',
       alignItems: 'center',
     }}>
-      <AaPieChart
-        outerRadius={24}
-        innerRadius={14}
-        height={55}
-        width={55}
-        hideLabel
-        data={{
-          value: value,
-          rest: 1 - value,
-        }}
-        colors={{
-          value: theme.palette.primary.main,
-          rest: theme.palette.divider,
-        }}
-        m={{
-          value: 'ukrainian',
-          rest: 'other',
-        }}
-      />
+      <Donut percent={value}/>
       <Box sx={{ml: dense ? .75 : 1.5}}>
         <SlidePanelTitle noWrap={noWrap}>
           {title && (

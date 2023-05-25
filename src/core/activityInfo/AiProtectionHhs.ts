@@ -2,6 +2,7 @@ import {aiOblasts} from '../uaLocation/aiOblasts'
 import {aiRaions} from '../uaLocation/aiRaions'
 import {aiHromadas} from '../uaLocation/aiHromadas'
 
+/** @deprecated*/
 export namespace AiProtectionHhs {
 
   export const inputs = {

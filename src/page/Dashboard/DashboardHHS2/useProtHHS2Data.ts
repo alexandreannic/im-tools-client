@@ -4,7 +4,7 @@ import {chain} from '../../../utils/utils'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '../../../shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS2Enrich} from './DashboardProtHHS2'
-import {groupByAgeGroup} from '../../../core/type'
+import {ageGroup, groupByAgeGroup} from '../../../core/type'
 
 export const useProtHHS2Data = ({
   data,
@@ -34,7 +34,7 @@ export const useProtHHS2Data = ({
             Other: v.filter(_ => _.gender === undefined).length,
           })
         ))
-        // .map(_ => ChartTools.sortBy.custom(Enum.keys(ageGroup))(_))
+        .map(_ => _.sort((a, b) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))
         .get
       ,
 
