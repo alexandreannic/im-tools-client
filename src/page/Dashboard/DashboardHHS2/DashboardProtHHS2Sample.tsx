@@ -90,13 +90,7 @@ export const DashboardProtHHS2Sample = ({
         </SlideContainer>
         <SlideContainer column>
           <SlidePanel title={m.protHHS2.HHsLocation}>
-            <Lazy deps={[data]} fn={() => ChartTools.byCategory({
-              categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
-              data: data,
-              filter: _ => true,
-            })}>
-              {_ => <UkraineMap data={_} sx={{mx: 3}}/>}
-            </Lazy>
+            <UkraineMap data={computed.byCurrentOblast} sx={{mx: 3}}/>
           </SlidePanel>
         </SlideContainer>
       </SlideContainer>

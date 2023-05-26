@@ -149,13 +149,13 @@ export const DashboardProtHHS2 = () => {
         <Box sx={{'& > :not(:last-child)': {mr: 1}}}>
           <DashboardFilterOptions
             value={filter.currentOblast}
-            label={m.current}
+            label={m.currentOblast}
             options={getChoices('where_are_you_current_living_oblast')}
             onChange={currentOblast => setFilters(prev => ({...prev, currentOblast}))}
           />
           <DashboardFilterOptions
             value={filter.originOblast}
-            label={m.origin}
+            label={m.originOblast}
             options={getChoices('what_is_your_area_of_origin_oblast')}
             onChange={originOblast => setFilters(prev => ({...prev, originOblast}))}
           />

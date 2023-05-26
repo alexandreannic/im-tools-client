@@ -62,7 +62,7 @@ export const SlideContainer = ({
   column,
   title,
   ...props
-}: BoxProps & {
+}: Omit<BoxProps, 'flexDirection'> & {
   column?: boolean
 }) => {
   return (

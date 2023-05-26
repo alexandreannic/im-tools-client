@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '../../../utils/utils'
-import {_Arr, Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '../../../shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS2Enrich} from './DashboardProtHHS2'
 import {ageGroup, groupByAgeGroup} from '../../../core/type'
@@ -14,6 +14,8 @@ export const useProtHHS2Data = ({
   return useMemo(() => {
     if (!data) return
 
+    const flatData = data.flatMap(_ => _.persons.map(p => ({..._, ...p})))
+
     const categoryOblasts = (
       column: 'where_are_you_current_living_oblast' | 'what_is_your_area_of_origin_oblast' = 'where_are_you_current_living_oblast'
     ) => Enum.keys(ukraineSvgPath)
@@ -22,8 +24,20 @@ export const useProtHHS2Data = ({
         {} as Record<OblastISOSVG, (_: ProtHHS2Enrich) => boolean>
       )
 
+    const byCurrentOblast = ChartTools.byCategory({
+      categories: categoryOblasts('where_are_you_current_living_oblast'),
+      data: flatData,
+      filter: _ => true,
+    })
+
+    const byOriginOblast = ChartTools.byCategory({
+      categories: categoryOblasts('what_is_your_area_of_origin_oblast'),
+      data: flatData,
+      filter: _ => true,
+    })
+
     return {
-      flatData: data.flatMap(_ => _.persons.map(p => ({..._, ...p}))),
+      flatData,
       individuals: data.flatMap(_ => _.persons).length,
       categoryOblasts,
       ageGroup: chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(groupByAgeGroup))
@@ -44,6 +58,9 @@ export const useProtHHS2Data = ({
       }))
         .map(ChartTools.mapValue(_ => _.value))
         .get,
+
+      byCurrentOblast,
+      byOriginOblast,
     }
   }, [data])
 }

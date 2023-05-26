@@ -60,7 +60,7 @@ export const ProtSnapshotDisplacement = ({
                 base={computed.totalIdpsMember}
                 data={computed.oblastOrigins}
                 onSelect={onFilterOblast('_12_1_What_oblast_are_you_from_001_iso')}
-                title={m.origin}
+                title={m.originOblast}
                 // legend={true}
                 sx={{mx: 2}}
               />
@@ -74,7 +74,7 @@ export const ProtSnapshotDisplacement = ({
                 base={computed.totalIdpsMember}
                 data={computed.oblastCurrent}
                 onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
-                title={m.current}
+                title={m.currentOblast}
                 sx={{mx: 2}}
               />
             </Box>

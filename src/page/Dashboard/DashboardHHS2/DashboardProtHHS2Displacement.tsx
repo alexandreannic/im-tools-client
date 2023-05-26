@@ -2,13 +2,14 @@ import {SlideContainer, SlidePanel} from '../../../shared/PdfLayout/Slide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, DashboardProtHHS2BarChart} from './DashboardProtHHS2'
-import {Box, useTheme} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import {Lazy} from '../../../shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {ScLineChart} from '../../../shared/Chart/ScLineChart'
 import {Txt} from 'mui-extension'
-import {map} from '@alexandreannic/ts-utils'
+import {Enum, map} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
+import {UkraineMap} from '../../../shared/UkraineMap/UkraineMap'
 
 export const DashboardProtHHS2Displacement = ({
   data,
@@ -21,7 +22,7 @@ export const DashboardProtHHS2Displacement = ({
   return (
     <>
       <SlideContainer>
-        <SlideContainer flexDirection="column">
+        <SlideContainer column>
           <SlidePanel title={m.departureFromAreaOfOrigin}>
             <Lazy deps={[data]} fn={() => ChartTools.groupByDate({
               data: data
@@ -44,6 +45,13 @@ export const DashboardProtHHS2Displacement = ({
                 </>
               )}
             </Lazy>
+          </SlidePanel>
+          <SlidePanel title={m.idpPopulationByOblast}>
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <UkraineMap sx={{flex: 1}} data={computed.byCurrentOblast} base={computed.flatData.length} title={m.originOblast}/>
+              <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
+              <UkraineMap sx={{flex: 1}} data={computed.byOriginOblast} base={computed.flatData.length} legend={false} title={m.currentOblast}/>
+            </Box>
           </SlidePanel>
         </SlideContainer>
         <SlideContainer column>

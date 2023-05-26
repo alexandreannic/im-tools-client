@@ -19,7 +19,7 @@ export const DashboardProtHHS2Needs = ({
   return (
     <>
       <SlideContainer>
-        <SlideContainer flexDirection="column">
+        <SlideContainer column>
           <SlidePanel title={m.protHHS2.poc}>
             <Lazy
               deps={[data]}
@@ -34,7 +34,7 @@ export const DashboardProtHHS2Needs = ({
             </Lazy>
           </SlidePanel>
         </SlideContainer>
-        <SlideContainer flexDirection="column">
+        <SlideContainer column>
 
         </SlideContainer>
       </SlideContainer>
