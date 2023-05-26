@@ -92,6 +92,10 @@ export const muiTheme = (dark?: boolean): Theme => {
   const baseTheme = createTheme({
     spacing: defaultSpacing,
     palette: {
+      action: {
+        active: alpha(mainColor, .1),
+        activatedOpacity: .1,
+      },
       primary: colorPrimary,
       secondary: colorSecondary,
       error: red,

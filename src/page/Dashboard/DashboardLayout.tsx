@@ -1,11 +1,10 @@
-import React, {ReactNode, useEffect} from 'react'
-import {Box, GlobalStyles, ThemeProvider, Typography} from '@mui/material'
-import {muiTheme} from '../../core/theme'
+import React, {ReactNode, useEffect, useState} from 'react'
+import {Box, GlobalStyles, Icon, ThemeProvider, Typography} from '@mui/material'
+import {combineSx, muiTheme} from '../../core/theme'
 import {set} from 'lodash'
 import {DashboardProvider} from './DashboardContext'
 import {makeSx} from 'mui-extension'
 import {DRCLogo} from '../../shared/logo'
-
 
 const dashboardMw = 1100
 const headerId = 'aa-sidebar-id'
@@ -13,30 +12,25 @@ const headerStickyClass = 'sticky-header'
 
 let header$: HTMLElement | null = null
 
-const stickHeader = () => {
-  if (!header$) {
-    header$ = document.getElementById(headerId)!
-  }
-  if (window.scrollY > header$.offsetHeight) {
-    if (!header$.classList.contains(headerStickyClass))
-      header$.classList.add(headerStickyClass)
-  } else {
-    header$.classList.remove(headerStickyClass)
-  }
-}
-
-/**
- * Don't do it the React way to improve perfs
- */
-// const stickSidebarToHeader = () => {
-//   if (!sidebar) {
-//     sidebar = document.getElementById(sidebarId)
-//   }
-//   if (sidebar) {
-//     sidebar.style.top = Math.max(layoutConfig.headerHeight - window.scrollY, 0) + 'px'
-//   }
-// }
 const style = makeSx({
+  menuItemActive: {
+    borderWidth: 2,
+    color: t => t.palette.primary.main,
+    background: t => t.palette.action.active,
+    borderColor: t => t.palette.primary.main,
+  },
+  menuItem: {
+    py: 1,
+    px: 3,
+    pr: 2,
+    display: 'flex',
+    color: t => t.palette.text.secondary,
+    alignItems: 'center',
+    fontWeight: t => t.typography.fontWeightBold,
+    borderRight: t => `1px solid ${t.palette.divider}`,
+    borderBottomLeftRadius: 40,
+    borderTopLeftRadius: 40,
+  },
   sidebar: {
     position: 'fixed',
     p: 2,
@@ -52,17 +46,25 @@ const style = makeSx({
     py: 2,
     mb: 2,
     borderBottom: t => `1px solid ${t.palette.divider}`,
-    // position: 'sticky',
-    // top: 0,
   },
   sectionTitle: {
     background: t => t.palette.background.default,
     pt: 1,
-    // zIndex: 1,
-    // position: 'sticky',
-    // top: 150
   }
 })
+const stickHeader = () => {
+  if (!header$) {
+    header$ = document.getElementById(headerId)!
+  }
+  if (window.scrollY > header$.offsetHeight) {
+    if (!header$.classList.contains(headerStickyClass)) {
+      header$.classList.add(headerStickyClass)
+    }
+  } else {
+    header$.classList.remove(headerStickyClass)
+  }
+
+}
 
 const generalStyles = <GlobalStyles styles={t => ({
   [`.${headerStickyClass} .header_content`]: {
@@ -94,8 +96,18 @@ const generalStyles = <GlobalStyles styles={t => ({
   }
 })}/>
 
+const spyTitles = (sections: string[], fn: (sectionName: string) => void) => {
+  const sections$ = sections.map(_ => document.getElementById(_))
+  const set = () => {
+    const index = sections$.findIndex(_ => window.scrollY >= (_?.offsetTop ?? -1) - 70)
+    fn(sections[index])
+  }
+  window.addEventListener('scroll', set)
+  set()
+}
+
 export const DashboardLayout = ({
-  steps,
+  sections,
   header,
   title,
   subTitle,
@@ -103,24 +115,29 @@ export const DashboardLayout = ({
   title: string
   subTitle?: string
   header?: ReactNode
-  steps: {
+  sections: {
     name: string
     title: ReactNode
     component: () => JSX.Element
   }[]
 }) => {
+  const [activeSection, setActiveSection] = useState('x')
   useEffect(() => {
     window.addEventListener('scroll', stickHeader)
+    if (sections.length === 0) return
+    spyTitles(sections.map(_ => _.name).reverse(), (s: string) => {
+      if (s && s !== activeSection) {
+        setActiveSection(s)
+      }
+    })
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault()
         // @ts-ignore
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        })
+        document.querySelector(this.getAttribute('href')).scrollIntoView({behavior: 'smooth'})
       })
     })
-  }, [])
+  }, [sections])
   return (
     <DashboardProvider>
       {generalStyles}
@@ -137,9 +154,12 @@ export const DashboardLayout = ({
         <Box sx={t => ({display: 'flex', background: t.palette.background.default})}>
           <Box sx={style.sidebar}>
             <Box>
-              {steps.map(step => (
-                <Box sx={{mb: 2}} key={step.name}>
-                  <Box component="a" href={'#' + step.name}>{step.title}</Box>
+              {sections.map(s => (
+                <Box key={s.name} sx={combineSx(
+                  style.menuItem,
+                  activeSection === s.name && style.menuItemActive,
+                )}>
+                  <Box component="a" href={'#' + s.name}>{s.title}</Box>
                 </Box>
               ))}
             </Box>
@@ -157,13 +177,13 @@ export const DashboardLayout = ({
                 {header}
               </Box>
             </Box>
-            {steps.map(step => (
-              <Box key={step.name}>
-                <Typography variant="h2" id={step.name} sx={{...style.sectionTitle, mt: 3, mb: 2}}>
-                  {step.title}
+            {sections.map(s => (
+              <Box key={s.name}>
+                <Typography id={s.name} variant="h2" sx={{...style.sectionTitle, mt: 3, mb: 2}}>
+                  {s.title}
                 </Typography>
                 <Box>
-                  {step.component()}
+                  {s.component()}
                 </Box>
               </Box>
             ))}

@@ -161,7 +161,7 @@ export const DashboardProtHHS2 = () => {
           />
         </Box>
       }
-      steps={(() => {
+      sections={(() => {
         if (!data || !computed) return []
         const panelProps: DashboardPageProps = data && computed && {
           filters: filter,
