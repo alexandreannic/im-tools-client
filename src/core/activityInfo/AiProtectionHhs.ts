@@ -110,7 +110,7 @@ export namespace AiProtectionHhs {
     Hromada: aiHromadas,
   }
 
-  type GET<T extends keyof typeof inputsOptions> = keyof typeof inputsOptions[T]
+  export type GET<T extends keyof typeof inputsOptions> = keyof typeof inputsOptions[T]
 
 // let B: Partial<Record<keyof typeof inputs, any>> = {
 //   ID: 2,

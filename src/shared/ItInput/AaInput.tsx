@@ -6,6 +6,6 @@ export type ItInputProps = Omit<TextFieldProps, 'variant' | 'margin'> & {
   InputProps?: Partial<FilledInputProps>
 }
 
-export const ItInput = React.forwardRef(({small, ...props}: ItInputProps, ref) => {
+export const AaInput = React.forwardRef(({small, ...props}: ItInputProps, ref) => {
   return <TextField {...props} size="small" variant="outlined" margin="dense" inputRef={ref} />
 })

@@ -9,7 +9,7 @@ import {chain, groupByAndTransform} from '../../../utils/utils'
 import {Page} from '../../../shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
 import {Panel} from '../../../shared/Panel'
-import {ItInput} from '../../../shared/ItInput/ItInput'
+import {AaInput} from '../../../shared/ItInput/AaInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {AaBtn} from '../../../shared/Btn/AaBtn'
@@ -23,6 +23,7 @@ import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Map
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
+import {useI18n} from '../../../core/i18n'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -137,7 +138,7 @@ const _ActivityInfo = ({
               Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
               Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? (('⚠️' + enRaion) as any),
               Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? (('⚠️' + enHromada) as any),
-              subActivities: Enum.entries(byHromada.groupBy(_ => _.do_you_identify_as_any_of_the_following)).map(([populationGroup, byPopulationGroup]) => {
+              subActivities: Enum.entries(byHromada.groupBy(_ => mapPopulationGroup(_.do_you_identify_as_any_of_the_following))).map(([populationGroup, byPopulationGroup]) => {
                 try {
                   const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
                   const childs = persons.filter(_ => _.age < 18)
@@ -146,7 +147,7 @@ const _ActivityInfo = ({
                   return {
                     'Reporting Month': period,
                     'Total Individuals Reached': persons.length,
-                    'Population Group': mapPopulationGroup(populationGroup),
+                    'Population Group': populationGroup as any,
                     'Adult Men': adults.count(_ => _.gender === 'male'),
                     'Adult Women': adults.count(_ => _.gender === 'female'),
                     'Boys': childs.count(_ => _.gender === 'male'),
@@ -172,6 +173,7 @@ const _ActivityInfo = ({
     return activities
   }, [data])
 
+  const {m} = useI18n()
   const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
   const {toastError} = useItToast()
 
@@ -179,7 +181,7 @@ const _ActivityInfo = ({
     <div>
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
         <Box>
-          <ItInput type="month" value={period} onChange={_ => setPeriod(_.target.value)}/>
+          <AaInput type="month" value={period} onChange={_ => setPeriod(_.target.value)}/>
           <ItSelect
             label="Oblast"
             value={selectedOblast?.split('_')[0] ?? ''}
@@ -232,10 +234,9 @@ const _ActivityInfo = ({
                       <Confirm
                         maxWidth={'lg'}
                         title="Kobo data"
-                        PaperProps={{}}
                         content={<AnswerTable answers={a.rows}/>}>
                         <Tooltip title="Kobo data">
-                          <AaBtn icon="table_view" variant="outlined" size="small">View data</AaBtn>
+                          <AaBtn icon="table_view" variant="outlined" size="small">{m.viewData}</AaBtn>
                         </Tooltip>
                       </Confirm>
                       <Confirm title="Preview activity" content={

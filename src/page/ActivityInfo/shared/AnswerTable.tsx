@@ -8,6 +8,7 @@ export const AnswerTable = <T extends Record<string, any>, >({
 }: {
   answers: T[]
 } & BoxProps) => {
+  console.log('answers', answers)
   return (
     <Sheet<T>
       {...props}

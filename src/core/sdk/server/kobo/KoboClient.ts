@@ -42,14 +42,13 @@ export class KoboFormClient {
     filters?: AnswersFilters
     fnMap?: (_: Record<string, string | undefined>) => T
   }): Promise<ApiPaginate<KoboAnswer2<T>>> => {
-    return Promise.resolve(deleteme as ApiPaginate<Record<string, any>>)
-      // return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/${formId}/answers`, {qs: {...filters, ...paginate}})
+    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/${formId}/answers`, {qs: {...filters, ...paginate}})
       .then(_ => {
           return ({
             ..._,
-            data: _.data.map(_ => ({
+            data: _.data.map(({answers, ..._}) => ({
               ...Kobo.mapAnswerMetaData(_),
-              ...fnMap(_.answers) as any
+              ...fnMap(answers) as any
             }))
           })
         }

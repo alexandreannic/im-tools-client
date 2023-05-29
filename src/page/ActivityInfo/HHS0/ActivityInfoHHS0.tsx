@@ -10,7 +10,7 @@ import {chain, groupByAndTransform} from '../../../utils/utils'
 import {Page} from '../../../shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
 import {Panel} from '../../../shared/Panel'
-import {ItInput} from '../../../shared/ItInput/ItInput'
+import {AaInput} from '../../../shared/ItInput/AaInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {AaBtn} from '../../../shared/Btn/AaBtn'
@@ -181,7 +181,7 @@ const _ActivityInfo = ({
     <div>
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
         <Box>
-          <ItInput type="month" value={period} onChange={_ => setPeriod(_.target.value)}/>
+          <AaInput type="month" value={period} onChange={_ => setPeriod(_.target.value)}/>
           <ItSelect
             label="Oblast"
             value={selectedOblast?.split('_')[0] ?? ''}

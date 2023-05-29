@@ -182,3 +182,15 @@ export const multipleFilters = <T>(list: T[], filters: Array<undefined | boolean
     .every(filter => filter(t, index, array))
   )
 }
+
+export interface Paginate<T> {
+  data: T[]
+  totalSize: number
+}
+
+export const paginateData = <T>(limit: number, offset: number) => (data: T[]): Paginate<T> => {
+  return {
+    data: data.slice(offset, offset + limit),
+    totalSize: data.length,
+  }
+}

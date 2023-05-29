@@ -1,7 +1,6 @@
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
-import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
 import {aiSettlement} from '../../../core/uaLocation/aiSettlement'
 
 type Opt<T extends keyof typeof optionsWashRMM> = keyof (typeof optionsWashRMM)[T]

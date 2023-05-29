@@ -4,7 +4,7 @@ import {useI18n} from '../core/i18n'
 import {Home} from './Home/Home'
 import {Kobo} from './Kobo/Kobo'
 import {koboModule} from './Kobo/koboModule'
-import {KoboTable} from './Kobo/KoboForm/KoboTable'
+import {KoboTableLayout} from './Kobo/KoboForm/KoboTableLayout'
 import {DrcUaMap} from './DrcUaMap/DrcUaMap'
 import {Playground} from './Playground'
 import {DashboardProtHHS2} from './Dashboard/DashboardHHS2/DashboardProtHHS2'
@@ -30,7 +30,7 @@ export const Router = () => {
         </Route>
         <Route path="/playground" element={<Playground/>}/>
         <Route path={koboModule.basePath} element={<Kobo/>}>
-          <Route path={koboModule.siteMap.form()} element={<KoboTable/>}/>
+          <Route path={koboModule.siteMap.form()} element={<KoboTableLayout/>}/>
         </Route>
         <Route
           path="/"
