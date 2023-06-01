@@ -1,4 +1,4 @@
-import {Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel} from '@mui/material'
+import {Box, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel} from '@mui/material'
 import {AaBtn} from '../Btn/AaBtn'
 import {useI18n} from '../../core/i18n'
 import React, {useEffect, useState} from 'react'
@@ -55,9 +55,12 @@ export const SheetFilterDialog = ({
   if (!property) return <></>
   return (
     <Dialog open={!!property}>
-      <DialogTitle>
-        {property ?? ''}
-        <AAIconBtn onClick={onClear} icon="clear"/>
+      <DialogTitle sx={{display: 'flex', alignItems: 'center'}}>
+        <Box sx={{flex: 1}}>{property ?? ''}</Box>
+        <AAIconBtn onClick={() => {
+          onClear?.()
+          setInnerValue(undefined)
+        }} icon="clear"/>
       </DialogTitle>
       <DialogContent>
         {Array.isArray(propertyType) ? (

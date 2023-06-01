@@ -80,6 +80,10 @@ export const en = Object.freeze({
     hhs: 'Households',
     individuals: 'Individuals',
     hhSize: 'Household size',
+    passportSerie: 'Passport serie',
+    passportNumber: 'Passport number',
+    taxID: 'TaxID',
+    phone: 'Phone',
     decidingFactorsToReturn: 'Deciding factors to return',
     displacement: 'Displacement',
     originOblast: 'Oblast of origin',
@@ -90,6 +94,9 @@ export const en = Object.freeze({
     submitAll: 'Submit all',
     submit: 'Submit',
     hohhOlder: 'HoHH 60+',
+    lastName: 'Last name',
+    firstName: 'First name',
+    patronyme: 'Patronyme',
     hohhFemale: 'HoHH female',
     vulnerabilities: 'Vulnerabilities',
     selectAll: 'Select all',
@@ -713,8 +720,12 @@ export const en = Object.freeze({
       subTitle: 'Ukraine Response',
       factorInfluencingSenseOfSafety: 'Factors influencing the sense of safety',
     },
+    date: 'Date',
     departureFromAreaOfOrigin: `Departure from area of origin`,
     dateOfDeparture: `Date of departure`,
     pin: 'Pin',
+    mpcaDeduplication: {
+      deduplicationCheck: 'Deduplication'
+    }
   },
 })

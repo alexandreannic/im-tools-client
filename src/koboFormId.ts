@@ -10,6 +10,7 @@ export const koboFormId = {
     fcrmMpca: 'a4Sx3PrFMDAMZEGsyzgJJg',
     fcrmMpcaMyko: 'a8WAWB9Yxu2jkgk4Ei8GTk',
     fcrmMpcaNAA: 'aBGVXW2N26DaLehmKneuyB',
+    BNRE: 'aKgX4MNs6gCemDQKPeXxY8',
   },
   dev: {
     fcrmMpca: 'aQRGMGocoAhcMLaHDh2Tbn',

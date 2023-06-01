@@ -192,10 +192,10 @@ export const Playground = () => {
   const {api} = useConfig()
 
   const form = useFetcher(() => api.koboApi.getForm(KoboApiClient.serverRefs.prod, KoboApiClient.koboFormRefs.MPCA_NFI_NAA))
-  const fetchMPCA_NFI = useFetcher(() => api.koboApi.getAnswersMPCA_NFI({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
-  const fetchMPCA_NFI_Myko = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Myko({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
-  const fetchMPCA_NFI_NAA = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_NAA({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
-  const fetchMPCA_NFI_Old = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Old({filters: {start: aiPeriod.start, end: aiPeriod.end}}))
+  const fetchMPCA_NFI = useFetcher(() => api.koboApi.getAnswersMPCA_NFI())
+  const fetchMPCA_NFI_Myko = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Myko())
+  const fetchMPCA_NFI_NAA = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_NAA())
+  const fetchMPCA_NFI_Old = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Old())
 
   const [res2, setRes] = useState<any>({})
   const [blanketsByAgeGroup2, setBlanketsByAgeGroup] = useState<any>({})
@@ -461,15 +461,19 @@ export const Playground = () => {
       <div>{fetchMPCA_NFI_Myko.entity?.data.length}</div>
       <div>{fetchMPCA_NFI_NAA.entity?.data.length}</div>
       <div>fetchMPCA_NFI</div>
-      {fetchMPCA_NFI.entity?.data.map(x =>
-        <div key={x.id}>Main form,{x.id},{format(x.start, 'yyyy-MM-dd')},{MPCA_NFIOptions.oblast[x.oblast!]},{MPCA_NFIOptions.raion[x.raion!]},{MPCA_NFIOptions.hromada[x.hromada!]},{x.staff_names}</div>
-      )}
-      {fetchMPCA_NFI_Myko.entity?.data.map(x =>
-        <div key={x.id}>Myko,{x.id},{format(x.start, 'yyyy-MM-dd')},,</div>
-      )}
-      {fetchMPCA_NFI_NAA.entity?.data.map(x =>
-        <div key={x.id}>NAA,{x.id},{format(x.start, 'yyyy-MM-dd')},,</div>
-      )}
+      <div>{fetchMPCA_NFI.entity ? (fetchMPCA_NFI.entity.data.find(_ => _.ITN === '1952810617')?.id ?? 'None') : 'Loading...'}</div>
+      {/*<div>{fetchMPCA_NFI_Myko.entity?.data.find(_ => _.id === '1952810617')?.id ?? 'None'}</div>*/}
+      {/*<div>{fetchMPCA_NFI_NAA.entity?.data.find(_ => _.id === '1952810617')?.id ?? 'None'}</div>*/}
+
+      {/*{fetchMPCA_NFI.entity?.data.map(x =>*/}
+      {/*  <div key={x.id}>Main form,{x.id},{format(x.start, 'yyyy-MM-dd')},{MPCA_NFIOptions.oblast[x.oblast!]},{MPCA_NFIOptions.raion[x.raion!]},{MPCA_NFIOptions.hromada[x.hromada!]},{x.staff_names}</div>*/}
+      {/*)}*/}
+      {/*{fetchMPCA_NFI_Myko.entity?.data.map(x =>*/}
+      {/*  <div key={x.id}>Myko,{x.id},{format(x.start, 'yyyy-MM-dd')},,</div>*/}
+      {/*)}*/}
+      {/*{fetchMPCA_NFI_NAA.entity?.data.map(x =>*/}
+      {/*  <div key={x.id}>NAA,{x.id},{format(x.start, 'yyyy-MM-dd')},,</div>*/}
+      {/*)}*/}
 
       <Divider/>
       {Object.keys(res2).map(k =>

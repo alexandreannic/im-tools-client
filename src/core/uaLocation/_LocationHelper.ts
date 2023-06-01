@@ -4,6 +4,7 @@ import {aiOblasts} from './aiOblasts'
 import {aiRaions} from './aiRaions'
 import {hromadas} from './hromadas'
 import {AILocation, raions} from './raions'
+// @ts-ignore
 import {settlements as untypedSettlements} from './settlements'
 
 const settlements: Record<string, AILocation> = untypedSettlements
@@ -37,7 +38,7 @@ export class AILocationHelper {
     return index
   })()
 
-  static print5w = (label5w: string) => label5w//.split('_')[0] ?? label5w
+  static print5w = (label5w: string) => label5w.split('_')[0] ?? label5w
 
   private static getSettlementsByHromadaIso = (hromadaIso: string) => {
     const isos = AILocationHelper.settlementsIndex[hromadaIso]

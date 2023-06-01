@@ -17,7 +17,7 @@ export const mapMPCA_NFI = (_: Record<keyof MPCA_NFI, any>): MPCA_NFI => ({
 	hh_elderly_check: _.hh_elderly_check ? +_.hh_elderly_check : undefined,
 	agex: _.agex ? +_.agex : undefined,
 	Total_Family: _.Total_Family ? +_.Total_Family : undefined,
-	group_in3fh72: _.group_in3fh72.map(extractQuestionName),
+	group_in3fh72: _.group_in3fh72?.map(extractQuestionName),
 	AgeHH: _.AgeHH ? +_.AgeHH : undefined,
 	Does_anyone_in_your_elect_all_that_apply: _.Does_anyone_in_your_elect_all_that_apply?.split(' '),
 	Kits_to_be_provided: _.Kits_to_be_provided?.split(' '),

@@ -2,7 +2,7 @@ import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useConfig} from '../../core/context/ConfigContext'
 import {Sidebar, SidebarHr, SidebarItem} from '../../shared/Layout/Sidebar'
 import {Fragment, useEffect, useState} from 'react'
-import {CircularProgress} from '@mui/material'
+import {CircularProgress, Divider} from '@mui/material'
 import {koboModule} from './koboModule'
 import {koboFormId} from '../../koboFormId'
 import {KoboApiClient} from '../../core/sdk/server/kobo/KoboApiClient'
@@ -26,9 +26,13 @@ export const KoboSidebar = () => {
       <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.protectionHh2))}>
         HHS v2
       </SidebarItem>
+      <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.BNRE))}>
+        BNRE
+      </SidebarItem>
       <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
         fcrmMpcaNAA
       </SidebarItem>
+      <Divider/>
       {_servers.entity?.map(server =>
         <Fragment key={server.id}>
           <SidebarItem

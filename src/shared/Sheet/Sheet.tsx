@@ -67,14 +67,14 @@ const generalStyles = <GlobalStyles
 
 type OrderBy = 'asc' | 'desc'
 
-type Answer = Record<string, string | string[] | Date | number | undefined>
+type Answer = Record<string, any/* string | number[] | string[] | Date | number | undefined*/>
 
 export interface SheetTableProps<T extends Answer> extends BoxProps {
   header?: ReactNode
   actions?: ReactNode
   loading?: boolean
   total?: number
-  data?: T[]
+  readonly data?: T[]
   getRenderRowKey?: (_: T, index: number) => string
   onClickRows?: (_: T, event: React.MouseEvent<HTMLElement>) => void
   rowsPerPageOptions?: number[]
@@ -205,7 +205,7 @@ export const Sheet = <T extends Answer = Answer>({
         return row => {
           const v = row[k]
           if (!v) return false
-          if (Array.isArray(v)) return !!v.find(_ => filter.includes(_))
+          if (Array.isArray(v)) return !!(v as string[]).find(_ => filter.includes(_))
           if (typeof v !== 'string') throw new Error(`Value of ${String(k)} is ${v} but string expected.`)
           return filter.includes(v)
         }
@@ -214,7 +214,7 @@ export const Sheet = <T extends Answer = Answer>({
         return row => {
           const v = row[k]
           if (!v) return false
-          if (!(v instanceof Date)) throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
+          if (!((v as any) instanceof Date)) throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
           const [min, max] = filter
           return (!min || v.getTime() >= min.getTime()) && (!max || v.getTime() <= max.getTime())
         }
@@ -326,8 +326,8 @@ export const Sheet = <T extends Answer = Answer>({
           if (prev) {
             delete prev[filteringProperty!]
           }
-          setFilteringProperty(undefined)
-          return prev
+          // setFilteringProperty(undefined)
+          return {...prev}
         })}
         onChange={(p: string, v: string | string[]) => {
           setFilters(_ => ({..._, [p]: v}))

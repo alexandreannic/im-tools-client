@@ -4,7 +4,7 @@ import {BoxProps, LinearProgress} from '@mui/material'
 import {Page as MxPage} from 'mui-extension'
 
 export interface PageProps extends BoxProps {
-  width?: number
+  width?: number | 'xs' | 'md' | 'lg'
   animated?: boolean
   className?: any
   style?: object
@@ -13,12 +13,17 @@ export interface PageProps extends BoxProps {
 }
 
 export const Page = ({loading, children, sx, ...props}: PageProps) => {
+  const width = typeof props.width === 'string' ? ({
+    xs: 780,
+    md: 1000,
+    lg: 1200,
+  })[props.width] : props.width
   return (
     <>
       {loading && (
         <LinearProgress/>
       )}
-      <MxPage {...props} sx={{...sx, my: 2, px: 2}}>
+      <MxPage {...props} width={width} sx={{...sx, my: 2, px: 2}}>
         {children}
       </MxPage>
     </>

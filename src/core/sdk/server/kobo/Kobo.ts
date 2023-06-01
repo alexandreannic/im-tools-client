@@ -26,11 +26,11 @@ export interface KoboQuestion {
   select_from_list_name: SelectFromListName
 }
 
-export interface KoboAnswerMetaData {
+export type KoboAnswerMetaData = {
   start: Date
   end: Date
   version: string
-  submissionTime: string
+  submissionTime: Date
   id: string
   validationStatus?: 'validation_status_approved'
   validatedBy?: string

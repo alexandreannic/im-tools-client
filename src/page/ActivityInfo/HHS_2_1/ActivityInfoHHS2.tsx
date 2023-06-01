@@ -5,7 +5,7 @@ import {useConfig} from '../../../core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '../../../core/activityInfo/AiProtectionHhs'
 import {koboHromadaMapping} from '../HHS0/koboHromadaMapping'
-import {chain, groupByAndTransform} from '../../../utils/utils'
+import {chain} from '../../../utils/utils'
 import {Page} from '../../../shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
 import {Panel} from '../../../shared/Panel'
@@ -17,13 +17,13 @@ import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {ItSelect} from 'shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
 import {useItToast} from '../../../core/useToast'
-import {format} from 'date-fns'
 import {koboFormId} from '../../../koboFormId'
 import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
 import {useI18n} from '../../../core/i18n'
+import {alreadySentKobosInApril} from './missSubmittedData'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -38,19 +38,22 @@ export const ActivityInfoHHS2 = () => {
   const {api} = useConfig()
 
 
-  const request = (period?: string) => {
-    const filters = period ? (() => {
-      const [year, month] = period.split('-')
-      return {
-        start: new Date(parseInt(year), parseInt(month) - 1),
-        end: new Date(parseInt(year), parseInt(month)),
-      }
-    })() : undefined
+  const request = (period: string) => {
+    const [year, month] = period.split('-')
+    const filters = (year === '2023' && month === '04') ? undefined : {
+      start: new Date(parseInt(year), parseInt(month) - 1),
+      end: new Date(parseInt(year), parseInt(month)),
+    }
     return api.koboForm.getAnswers({
       formId: koboFormId.prod.protectionHh2,
       fnMap: mapProtHHS_2_1,
       filters,
-    }).then(_ => _.data.map(enrichProtHHS_2_1))
+    }).then(_ => _.data.map(enrichProtHHS_2_1)).then(_ => {
+      return _.filter(_ => {
+        const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
+        return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
+      })
+    })
   }
   // const request = (period: string) => {
   //   const [year, month] = period.split('-')
@@ -91,21 +94,7 @@ const _ActivityInfo = ({
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {
-  const flattedData = data.flatMap(row => {
-    return row.persons.map(_ => ({
-      ...row,
-      ..._,
-    }))
-  })
-  const res = groupByAndTransform(flattedData, [
-      _ => _.staff_to_insert_their_DRC_office ?? 'undef',
-      _ => format(_.end, 'yyyy-MM'),
-      // _ => _.gender,
-      // _ => KoboFormProtHH.groupByAgeGroup(_) ?? 'undef',
-    ],
-    (_: any[]) => _.length
-  )
-
+  console.log(data.length)
   const enrichedData = useMemo(() => {
     return chain(Arr(data))
       // .map(fillMissingSexOrGender)
@@ -192,7 +181,7 @@ const _ActivityInfo = ({
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastError)
         }}>
-          Submit all
+          Submit {data.length}
         </AaBtn>
       </Box>
       <Panel sx={{overflowX: 'auto'}}>

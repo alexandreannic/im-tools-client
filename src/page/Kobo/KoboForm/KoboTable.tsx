@@ -10,9 +10,9 @@ import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 import {AAIconBtn} from '../../../shared/IconBtn'
-import {Txt} from 'mui-extension'
 import {KoboApiColType, KoboApiForm} from '../../../core/sdk/server/kobo/KoboApi'
-import {Panel, PanelHead, PanelTitle} from '../../../shared/Panel'
+import {Panel, PanelHead} from '../../../shared/Panel'
+import {Txt} from 'mui-extension'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -62,13 +62,15 @@ export const KoboTableLayout = () => {
     <Page loading={_form.loading} sx={{maxWidth: 2000}}>
       {/*<KoboStats serverId={serverId} formId={formId}/>*/}
       <Panel>
-        <PanelHead action={
+        <PanelHead sx={{pb: 1}} action={
           <Box sx={{display: 'flex'}}>
-            <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={_refresh.call}/>
+            <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={async () => {
+              await _refresh.call()
+              await _answers.fetch({force: true, clean: false})
+            }}/>
           </Box>
-
         }>
-          {_form.entity?.name}
+          <Txt skeleton={_form.loading && 190}>{_form.entity?.name}</Txt>
         </PanelHead>
         {_form.entity && (
           <KoboTable

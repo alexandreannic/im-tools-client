@@ -20,6 +20,8 @@ import {fixLocations} from './activityInfoNFIFix'
 import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
 import {AaBtn} from '../../../shared/Btn/AaBtn'
 import {useItToast} from '../../../core/useToast'
+import {Panel} from '../../../shared/Panel'
+import {Txt} from 'mui-extension'
 
 interface Answer {
   file: string
@@ -133,8 +135,8 @@ const toFormData = ({
           const location = {
             Oblast: AILocationHelper.findOblast(enOblast) ?? '⚠️' + enOblast,
             Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? '⚠️' + enRaion,
-            Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w  ?? '⚠️' + enHromada,
-            Settlement: AILocationHelper.findSettlement(enOblast, enRaion, enHromada, settlement)?._5w  ?? '⚠️' + settlement,
+            Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? '⚠️' + enHromada,
+            Settlement: AILocationHelper.findSettlement(enOblast, enRaion, enHromada, settlement)?._5w ?? '⚠️' + settlement,
           }
           pushActivity(planBK, {
             ...location,
@@ -264,57 +266,58 @@ const _ActivityInfo = ({
   })
   return (
     <>
-      <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-        <Box>
+      <Box sx={{display: 'flex', mb: 3, alignItems: 'center', justifyContent: 'space-between'}}>
+        <Txt bold fontSize="big">
           {formatDate(computePeriod(period).start)}
           {' - '}
           {formatDate(computePeriod(period).end)}
-        </Box>
+        </Txt>
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, data.map(_ => _.request)).catch(toastError)
         }}>
           {m.submitAll}
         </AaBtn>
       </Box>
-
-      <Datatable<Row> data={data} columns={[
-        {
-          id: 'actions', head: '', render: (_, i) =>
-            <>
-              <AaBtn
-                loading={_submit.getLoading(i)}
-                variant="contained"
-                size="small"
-                sx={{minWidth: 50, mr: .5}}
-                onClick={() => {
-                  _submit.call(i, [_.request]).catch(toastError)
-                }}
-              >
-                <Icon>send</Icon>
-              </AaBtn>
-              <ActivityInfoActions
-                answers={_.rows}
-                activity={_.activity}
-                requestBody={_.request}
-              />
-            </>
-        },
-        {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
-        {id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.print5w(_.activity['Oblast'])}</>},
-        {id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.print5w(_.activity['Raion'])}</>},
-        {id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.print5w(_.activity['Hromada'])}</>},
-        {id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.print5w(_.activity['Settlement'])}</>},
-        {id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
-        {id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
-        {id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
-        {id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
-        {id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
-        {id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
-        {id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
-        {id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
-        {id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
-        {id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
-      ]}/>
+      <Panel>
+        <Datatable<Row> data={data} columns={[
+          {
+            id: 'actions', head: '', render: (_, i) =>
+              <>
+                <AaBtn
+                  loading={_submit.getLoading(i)}
+                  variant="contained"
+                  size="small"
+                  sx={{minWidth: 50, mr: .5}}
+                  onClick={() => {
+                    _submit.call(i, [_.request]).catch(toastError)
+                  }}
+                >
+                  <Icon>send</Icon>
+                </AaBtn>
+                <ActivityInfoActions
+                  answers={_.rows}
+                  activity={_.activity}
+                  requestBody={_.request}
+                />
+              </>
+          },
+          {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
+          {id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.print5w(_.activity['Oblast'])}</>},
+          {id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.print5w(_.activity['Raion'])}</>},
+          {id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.print5w(_.activity['Hromada'])}</>},
+          {id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.print5w(_.activity['Settlement'])}</>},
+          {id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
+          {id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
+          {id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
+          {id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
+          {id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
+          {id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
+          {id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
+          {id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
+          {id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
+          {id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
+        ]}/>
+      </Panel>
     </>
   )
 }
