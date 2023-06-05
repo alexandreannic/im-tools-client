@@ -7,12 +7,12 @@ import {Txt} from 'mui-extension'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 
 const generalStyles = <GlobalStyles styles={{
-  // '#map-offices svg path[fill="none"]': {
-  //   strokeWidth: 0
-  // },
-  // '#map-ua svg path[fill="none"]': {
-  //   strokeWidth: 0
-  // }
+  '#map-isa-offices svg path[fill="none"]': {
+    strokeWidth: 0
+  },
+  '#map-isa-ua svg path[fill="none"]': {
+    strokeWidth: 0
+  }
 }}/>
 
 const occupiedColor = '#ffdcd2'
@@ -100,16 +100,15 @@ const drawOffices = (selector: string) => {
 
 const drawUA = (selector: string, theme: Theme) => {
   const occupiedOblasts = [
-    'UA14',
-    'UA23',
-    'UA43',
-    'UA09',
+    'UA12',
     'UA65',
+    'UA48',
+    'UA23',
   ]
 
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
-    ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_, occupiedOblasts.includes(_) ? 2 : 1]),
+    ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
 
   console.log(theme.palette.primary.light,',color')
@@ -168,8 +167,8 @@ export const IsaUaMap = () => {
     drawMaps({
       apiKey: conf.gooogle.apiKey,
       theme,
-      mapUaSelector: '#map-ua',
-      mapOfficeSelector: '#map-offices',
+      mapUaSelector: '#map-isa-ua',
+      mapOfficeSelector: '#map-isa-offices',
     })
   }, [])
 
@@ -179,8 +178,8 @@ export const IsaUaMap = () => {
       hello
       <Box sx={{display: 'inline-flex', m: 2, border: t => `1px solid ${t.palette.divider}`, alignItems: 'center', background: 'white'}}>
         <Box sx={{position: 'relative', height: 500, width: 700}}>
-          <Box id="map-ua" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
-          {/*<Box id="map-offices" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>*/}
+          <Box id="map-isa-ua" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
+          <Box id="map-isa-offices" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
         </Box>
         <Box sx={{ml: 3}}>
           <Txt block color="hint" size="big" sx={{mb: 1}}>Legend</Txt>

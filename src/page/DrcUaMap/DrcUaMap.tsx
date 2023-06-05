@@ -106,11 +106,12 @@ const drawUA = (selector: string, theme: Theme) => {
     'UA09',
     'UA65',
   ]
-  
+
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
-    ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_, occupiedOblasts.includes(_) ? 2 : 1]),
+    ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
+  console.log(Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),)
 
   console.log(theme.palette.primary.light,',color')
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)

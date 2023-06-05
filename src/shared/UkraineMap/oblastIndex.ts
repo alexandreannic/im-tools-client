@@ -27,8 +27,9 @@ export class OblastIndex {
       .find(([k, v]) => v === name)?.[0]
   }
 
+
   static readonly oblastByISO = Object.freeze({
-    'UA01': `Autonomous Republic of Crimea`,
+    'UA43': `Autonomous Republic of Crimea`,
     'UA71': `Cherkaska`,
     'UA74': `Chernihivska`,
     'UA73': `Chernivetska`,
