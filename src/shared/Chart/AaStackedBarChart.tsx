@@ -46,7 +46,7 @@ export const AAStackedBarChart = ({
           //   bottom: 5,
         >
           {/*<CartesianGrid strokeDasharray="3 3"/>*/}
-          <XAxis type="number" domain={[0, 100]}/>
+          <XAxis type="number" domain={[0, 10]}/>
           <YAxis dataKey="key" type="category" width={110}/>
           <Tooltip/>
           <Legend/>

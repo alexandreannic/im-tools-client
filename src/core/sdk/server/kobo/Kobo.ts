@@ -45,7 +45,12 @@ export type KoboAnswerMetaData = {
   // // 'meta/instanceID': string,
   // // _xform_id_string: string,
   // _uuid: UUID,
-  // // _attachments: KoboAnswerAttachements[],
+  attachments: {
+    download_url: string
+    filename: string
+    download_small_url: string
+    id: string
+  }[],
   // // _status: KoboAnswerStatus,
   // _geolocation: [number, number],
   // _submission_time: Date,

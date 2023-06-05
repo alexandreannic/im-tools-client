@@ -40,7 +40,7 @@ export const useProtHHS2Data = ({
       flatData,
       individuals: data.flatMap(_ => _.persons).length,
       categoryOblasts,
-      ageGroup: chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(groupByAgeGroup))
+      ageGroup: chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(_ => groupByAgeGroup(_, p => p.age!)))
         .map(_ => Enum.entries(_).map(([group, v]) => ({
             key: group,
             Male: v.filter(_ => _.gender === 'male').length,

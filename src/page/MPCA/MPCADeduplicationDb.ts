@@ -1,5 +1,9 @@
 import {MicrosoftGraphClient, MPCADeduplicationOffice, MPCASheetDeduplication, MPCASheetTransaction} from '../../core/sdk/microsoftGraph/microsoftGraphClient'
 import * as Loki from 'lokijs'
+import {lazy, sleep} from '@alexandreannic/ts-utils'
+// @ts-ignore
+import {onedrivedd} from './transaction'
+import {dedup} from './dedup'
 
 export type MPCADeduplication = MPCASheetTransaction & Partial<MPCASheetDeduplication> & {
   office: MPCADeduplicationOffice
@@ -34,9 +38,9 @@ export class MPCADeduplicationDb {
     }))
   }
 
-  readonly getAll = () => {
-    return this.db.find()
-  }
+  readonly length = lazy(() => {
+    return this.db.count()
+  })
 
   readonly search = (filters: MPCADeduplicationFilter = {}) => {
     return this.db.find({
@@ -54,20 +58,23 @@ export class MPCADeduplicationDb {
     db: MPCADeduplicationDb
     sdk: MicrosoftGraphClient,
   }) => {
-    const transactions = await Promise.all([
-      sdk.fetchMPCATransaction('CEJ').then(r => r.map(_ => ({..._, office: 'CEJ'} as const))),
-      sdk.fetchMPCATransaction('DNK').then(r => r.map(_ => ({..._, office: 'DNK'} as const))),
-      sdk.fetchMPCATransaction('HRK').then(r => r.map(_ => ({..._, office: 'HRK'} as const))),
-    ])
-      .then(([cej, dnk, hrk]) => [...cej, ...dnk, ...hrk])
-      .then(_ => _.map(db.insertTransaction))
+    await sleep(1000);
+    (onedrivedd as any).map(db.insertTransaction)
+    // const transactions = await Promise.all([
+    //   sdk.fetchMPCATransaction('CEJ').then(r => r.map(_ => ({..._, office: 'CEJ'} as const))),
+    //   sdk.fetchMPCATransaction('DNK').then(r => r.map(_ => ({..._, office: 'DNK'} as const))),
+    //   sdk.fetchMPCATransaction('HRK').then(r => r.map(_ => ({..._, office: 'HRK'} as const))),
+    // ])
+    //   .then(([cej, dnk, hrk]) => [...cej, ...dnk, ...hrk])
+    //   .then(_ => _.map(db.insertTransaction))
 
-    const deduplications = await Promise.all([
-      sdk.fetchMPCADeduplication('CEJ').then(r => r.map(_ => ({..._, office: 'CEJ'} as const))),
-      sdk.fetchMPCADeduplication('DNK').then(r => r.map(_ => ({..._, office: 'DNK'} as const))),
-      sdk.fetchMPCADeduplication('HRK').then(r => r.map(_ => ({..._, office: 'HRK'} as const))),
-    ]).then(([cej, dnk, hrk]) => [...cej, ...dnk, ...hrk])
-      .then(_ => _.map(db.insertDeduplication))
+    // const deduplications = await Promise.all([
+    //   sdk.fetchMPCADeduplication('CEJ').then(r => r.map(_ => ({..._, office: 'CEJ'} as const))),
+    //   sdk.fetchMPCADeduplication('DNK').then(r => r.map(_ => ({..._, office: 'DNK'} as const))),
+    //   sdk.fetchMPCADeduplication('HRK').then(r => r.map(_ => ({..._, office: 'HRK'} as const))),
+    // ]).then(([cej, dnk, hrk]) => [...cej, ...dnk, ...hrk])
+    // .then(_ => _.map(db.insertDeduplication))
+    ;(dedup as any).map(db.insertDeduplication)
   }
 
 }

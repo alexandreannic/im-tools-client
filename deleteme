@@ -1,0 +1,36 @@
+:Authority:
+kobo.humanitarianresponse.info
+:Method:
+GET
+:Path:
+/api/v2/assets/aKgX4MNs6gCemDQKPeXxY8/data/435017684/attachments/181450126/
+:Scheme:
+https
+Accept:
+image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Accept-Encoding:
+gzip, deflate, br
+Accept-Language:
+en-US,en;q=0.9,fr;q=0.8
+Cookie:
+_hjSessionUser_2294719=eyJpZCI6IjE3ZWRlODQ0LWJiYzUtNWE3Ny1hNTU3LTZhNGI2ODdmOTJjNyIsImNyZWF0ZWQiOjE2Nzc0OTczNTMzODcsImV4aXN0aW5nIjp0cnVlfQ==; _ga_E60ZNX2F68=GS1.1.1680180377.7.0.1680180381.56.0.0; _ga_VPFPJMZXDR=GS1.1.1680180377.6.0.1680180381.56.0.0; _ga=GA1.2.1329855677.1674240023; csrftoken=c08Z3sCzivz9FOVlzfKSb8XcpLMS2BeF1w8Y2h0CS6nz5ZgrQHDuCwJJlRftjAab; kobonaut=kduqvodyy8g7xa5jmxvrpee1rgkwlv1j; selectedAssetUid=aKgX4MNs6gCemDQKPeXxY8; __csrf=8XuMj19Oe10Q9AmoZ0yC5ZPvIwpnfkWyXtuLiQxROCOgzLHugsrewnB2ECSYwjS4
+If-Modified-Since:
+Fri, 02 Jun 2023 07:26:23 GMT
+If-None-Match:
+"2ab7c988af67af281f9fe7f4f1d8ffa4"
+Referer:
+https://kobo.humanitarianresponse.info/
+Sec-Ch-Ua:
+"Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"
+Sec-Ch-Ua-Mobile:
+?0
+Sec-Ch-Ua-Platform:
+"macOS"
+Sec-Fetch-Dest:
+image
+Sec-Fetch-Mode:
+no-cors
+Sec-Fetch-Site:
+same-origin
+User-Agent:
+Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36

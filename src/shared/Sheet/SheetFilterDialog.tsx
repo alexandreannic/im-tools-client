@@ -60,14 +60,14 @@ export const SheetFilterDialog = ({
         <AAIconBtn onClick={() => {
           onClear?.()
           setInnerValue(undefined)
-        }} icon="clear"/>
+        }} icon="filter_list_off"/>
       </DialogTitle>
       <DialogContent>
         {Array.isArray(propertyType) ? (
           <MultipleChoices
             options={propertyType?.map(_ => ({value: _, children: _}))}
             initialValue={value as any}
-            onChange={_ => setInnerValue(_)}
+            onChange={_ => _.length === 0 ? setInnerValue(undefined) : setInnerValue(_)}
           >
             {({options, toggleAll, allChecked, someChecked}) => (
               <>

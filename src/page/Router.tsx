@@ -4,7 +4,7 @@ import {useI18n} from '../core/i18n'
 import {Home} from './Home/Home'
 import {Kobo} from './Kobo/Kobo'
 import {koboModule} from './Kobo/koboModule'
-import {KoboTableLayout} from './Kobo/KoboForm/KoboTable'
+import {KoboTableLayoutRoute} from './Kobo/KoboForm/KoboTable'
 import {DrcUaMap} from './DrcUaMap/DrcUaMap'
 import {Playground} from './Playground'
 import {DashboardProtHHS2} from './Dashboard/DashboardHHS2/DashboardProtHHS2'
@@ -12,15 +12,23 @@ import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
 import {ActivityInfo, activityInfoModule} from './ActivityInfo/ActivityInfo'
 import {ActivityInfoHHS2} from './ActivityInfo/HHS_2_1/ActivityInfoHHS2'
 import {Dashboard, dashboardModule} from './Dashboard/Dashboard'
-import {MPCA} from './MPCA/MPCA'
+import {MPCADedupTable} from './MPCA/MPCADedupTable'
+import {MPCA, mpcaModule} from './MPCA/MPCA'
+import {MPCADashboard} from './MPCA/MPCADashboard'
+import {MPCAFinanceFile} from './MPCA/MPCAFinanceFile'
+import {IsaUaMap} from './DrcUaMap/IsaUaMap'
 
 export const Router = () => {
   const {m} = useI18n()
   return (
     <div>
       <Routes>
-        <Route path="/mpca" element={<MPCA/>}/>
-        <Route path="/map" element={<DrcUaMap/>}/>
+        <Route path={mpcaModule.basePath} element={<MPCA/>}>
+          <Route path={mpcaModule.siteMap.deduplication} element={<MPCADedupTable/>}/>
+          <Route path={mpcaModule.siteMap.dashboard} element={<MPCADashboard/>}/>
+          <Route path={mpcaModule.siteMap.paymentTools} element={<MPCAFinanceFile/>}/>
+        </Route>
+        <Route path="/map" element={<IsaUaMap/>}/>
         <Route path="/snapshot" element={<Home/>}/>
 
         <Route path={dashboardModule.basePath + '/' + dashboardModule.siteMap.hhs} element={<DashboardProtHHS2/>}/>
@@ -32,7 +40,7 @@ export const Router = () => {
         </Route>
         <Route path="/playground" element={<Playground/>}/>
         <Route path={koboModule.basePath} element={<Kobo/>}>
-          <Route path={koboModule.siteMap.form()} element={<KoboTableLayout/>}/>
+          <Route path={koboModule.siteMap.form()} element={<KoboTableLayoutRoute/>}/>
         </Route>
         <Route
           path="/"

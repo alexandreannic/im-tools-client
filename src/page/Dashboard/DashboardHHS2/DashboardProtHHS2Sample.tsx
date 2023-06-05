@@ -89,7 +89,7 @@ export const DashboardProtHHS2Sample = ({
           </SlidePanel>
         </SlideContainer>
         <SlideContainer column>
-          <SlidePanel title={m.protHHS2.HHsLocation}>
+          <SlidePanel title={m.HHsLocation}>
             <UkraineMap data={computed.byCurrentOblast} sx={{mx: 3}}/>
           </SlidePanel>
         </SlideContainer>

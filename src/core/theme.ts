@@ -75,7 +75,7 @@ export const styleUtils = (t: Theme) => ({
 export const defaultSpacing = 8
 
 export const muiTheme = (dark?: boolean): Theme => {
-  const defaultRadius = 4
+  const defaultRadius = 8
   const fontFamily = '"Open Sans", sans-serif'
   const fontSize = 14
   const mainColor = '#c9000a'
@@ -93,15 +93,16 @@ export const muiTheme = (dark?: boolean): Theme => {
     spacing: defaultSpacing,
     palette: {
       action: {
-        // active: alpha(mainColor, .1),
-        activatedOpacity: .1,
+        focus: alpha(mainColor, .1),
+        focusOpacity: .1,
       },
       primary: colorPrimary,
       secondary: colorSecondary,
       error: red,
       mode: dark ? 'dark' : 'light',
       background: {
-        default: dark ? '#1e1e22' : '#f8f9fa',
+        default: dark ? 'black' : 'white',
+        // default: dark ? '#1e1e22' : '#f8f9fa',
         paper: dark ? 'black' : 'white',
       }
     },
@@ -201,13 +202,17 @@ export const muiTheme = (dark?: boolean): Theme => {
           },
         },
       },
-      // MuiCard: {
-      //   styleOverrides: {
-      //     root: {
-      //       borderRadius: defaultRadius,
-      //     },
-      //   },
-      // },
+      MuiCard: {
+        defaultProps: {
+          elevation: 0,
+        },
+        styleOverrides: {
+          root: {
+            border: `1px solid ${baseTheme.palette.divider}`,
+            //       borderRadius: defaultRadius,
+          },
+        },
+      },
       MuiTabs: {
         styleOverrides: {
           root: {

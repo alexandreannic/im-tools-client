@@ -65,6 +65,7 @@ export const Sidebar = ({children, sx, ...props}: BoxProps) => {
     >
       <Box
         sx={{
+          background: t => t.palette.background.default,
           width: layoutConfig.sidebarWith,
           height: '100%',
           transition: t => t.transitions.create('width'),

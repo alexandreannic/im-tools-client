@@ -25,7 +25,7 @@ const css = makeSx({
   },
   active: {
     color: t => t.palette.primary.main,
-    background: t => t.palette.action.active,
+    background: t => t.palette.action.focus,
     // borderColor: t => alpha(t.palette.primary.light, .8),
   }
 })

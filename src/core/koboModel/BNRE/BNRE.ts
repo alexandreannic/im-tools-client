@@ -56,7 +56,7 @@ export type BNRE = {
   // 3.1.6 What is the civil status of the Head of Household?
   hh_char_civ_stat: Opt<'hh_char_civ_stat'>,
   // 3.1.7 HH Members
-  hh_char_hh_det: {hh_char_hh_det_gender: string | undefined,hh_char_hh_det_age: string | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_preg: string | undefined}[],
+  hh_char_hh_det?: {hh_char_hh_det_gender: string | undefined,hh_char_hh_det_age: string | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_preg: string | undefined}[],
   // 3.1.7.1 Please select the GENDER of HH member
   hh_char_hh_det_gender: Opt<'hh_char_hh_det_gender'>,
   // 3.1.7.2 Please indicate the AGE of HH member

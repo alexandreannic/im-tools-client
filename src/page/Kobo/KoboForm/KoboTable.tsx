@@ -33,10 +33,20 @@ const ignoredColType: KoboApiColType[] = [
   'note',
 ]
 
-export const KoboTableLayout = () => {
+export const KoboTableLayoutRoute = () => {
+  const {serverId, formId} = urlParamsValidation.validateSync(useParams())
+  return <KoboTableLayout serverId={serverId} formId={formId}/>
+}
+
+export const KoboTableLayout = ({
+  serverId,
+  formId
+}: {
+  serverId: string
+  formId: string
+}) => {
   const {api} = useConfig()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const {serverId, formId} = urlParamsValidation.validateSync(useParams())
   const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
   const _answers = useFetcher(() => api.koboForm.getAnswers({
     formId,
@@ -59,7 +69,7 @@ export const KoboTableLayout = () => {
   }, [])
 
   return (
-    <Page loading={_form.loading} sx={{maxWidth: 2000}}>
+    <Page loading={_form.loading}>
       {/*<KoboStats serverId={serverId} formId={formId}/>*/}
       <Panel>
         <PanelHead sx={{pb: 1}} action={
@@ -72,7 +82,7 @@ export const KoboTableLayout = () => {
         }>
           <Txt skeleton={_form.loading && 190}>{_form.entity?.name}</Txt>
         </PanelHead>
-        {_form.entity && (
+        {_form.entity && data && (
           <KoboTable
             form={_form.entity}
             loading={_answers.loading}
@@ -97,8 +107,8 @@ export const KoboTable = ({
 }: {
   loading?: boolean
   form: KoboApiForm
-  data: KoboAnswer2<any>
-  sort?: SheetTableProps<any>['sort']
+  data: KoboAnswer2[]
+  sort?: SheetTableProps<KoboAnswer2>['sort']
 }) => {
   const {m, formatDate} = useI18n()
 

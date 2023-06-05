@@ -142,4 +142,8 @@ export class KoboApiClient {
   readonly getForms = (serverId: UUID) => {
     return this.client.get<IKoboForm[]>(`/kobo-api/${serverId}`)
   }
+
+  readonly getAttachement = (serverId: UUID, filepath: string) => {
+    return this.client.get<IKoboForm[]>(`/kobo-api/${serverId}/attachment/${filepath}`)
+  }
 }

@@ -16,7 +16,7 @@ const style = makeSx({
   menuItemActive: {
     borderWidth: 2,
     color: t => t.palette.primary.main,
-    background: t => t.palette.action.active,
+    background: t => t.palette.action.focus,
     borderColor: t => t.palette.primary.main,
   },
   menuItem: {

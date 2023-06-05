@@ -47,8 +47,8 @@ export const ageGroup = Object.freeze({
   '60+': [elderlyLimitIncluded, Infinity],
 })
 
-export const groupByAgeGroup = <T extends {age?: number}>(p: T): keyof typeof ageGroupBHA | undefined => {
+export const groupByAgeGroup = <T>(p: T, getAge: (_: T) => number): keyof typeof ageGroupBHA | undefined => {
   for (const [k, [min, max]] of Enum.entries(ageGroupBHA)) {
-    if (p.age && p.age >= min && p.age <= max) return k
+    if (getAge(p) && getAge(p) >= min && getAge(p) <= max) return k
   }
 }

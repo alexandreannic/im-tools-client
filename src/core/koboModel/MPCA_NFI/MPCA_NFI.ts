@@ -8,7 +8,7 @@ export interface MPCA_NFI {
   today: string,
   // Programme
   Programme: Opt<'Programme'>,
-  // Please select DRC project and donor that the MPCA registration is for
+  // Please select DRC project and donor that the MPCADedupTable registration is for
   DRC_project: Opt<'DRC_project'>,
   // Office in charge of distribution/registration
   drc_base: Opt<'drc_base'>,
@@ -152,13 +152,13 @@ export interface MPCA_NFI {
   internal_referral_specific: Opt<'internal_referral_specific'>[],
   // For DRC staff - Please enter any additional comments regarding specific needs of this household?
   additional_specific_needs: string | undefined,
-  // This household is eligible for MPCA because they satisfy the inclusion criteria for the category of area
+  // This household is eligible for MPCADedupTable because they satisfy the inclusion criteria for the category of area
   mpca_eligible_inclusion_area: Opt<'mpca_eligible_inclusion_area'>,
-  // This household is eligible for MPCA because they were referred to from DRC Protection and pass the exclusion criteria
+  // This household is eligible for MPCADedupTable because they were referred to from DRC Protection and pass the exclusion criteria
   protection_referral: Opt<'protection_referral'>,
-  // This household is eligible for MPCA because they are elderly-headed.
+  // This household is eligible for MPCADedupTable because they are elderly-headed.
   mpca_yes_ehh: Opt<'mpca_yes_ehh'>,
-  // This household is eligible for MPCA because they meet at least one of the vulnerability targeting criteria.
+  // This household is eligible for MPCADedupTable because they meet at least one of the vulnerability targeting criteria.
   mpca_eligible_vul: Opt<'mpca_eligible_vul'>,
   // Is this household currently renting or planning to rent an apartment/home?
   Is_this_household_currently_re: Opt<'Is_this_household_currently_re'>,
@@ -180,7 +180,7 @@ export interface MPCA_NFI {
   your_id: string | undefined,
   // Enter registration address
   registration_address: string | undefined,
-  // Confirm phone number of person receiving MPCA
+  // Confirm phone number of person receiving MPCADedupTable
   confirm_phone: string | undefined,
   // What is your area of origin prior to displacement? (Select Oblast)
   area_of_origin: Opt<'area_of_origin'>,
