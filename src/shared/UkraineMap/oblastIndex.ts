@@ -28,6 +28,7 @@ export class OblastIndex {
   }
 
 
+
   static readonly oblastByISO = Object.freeze({
     'UA43': `Autonomous Republic of Crimea`,
     'UA71': `Cherkaska`,

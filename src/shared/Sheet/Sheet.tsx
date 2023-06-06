@@ -1,14 +1,13 @@
 import {Box, BoxProps, Checkbox, GlobalStyles, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
-import React, {CSSProperties, ReactNode, useMemo, useState} from 'react'
+import React, {ReactNode, useMemo, useState} from 'react'
 import {useI18n} from '../../core/i18n'
 import {Fender, IconBtn} from 'mui-extension'
 import {usePersistentState} from 'react-persistent-state'
 import {multipleFilters, paginateData} from '../../utils/utils'
 import {SheetFilterDialog} from './SheetFilterDialog'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import * as assert from 'assert'
-import {useSetState} from '@alexandreannic/react-hooks-lib'
 import {AAIconBtn} from '../IconBtn'
+import {useSetState} from '@alexandreannic/react-hooks-lib'
 
 const generalStyles = <GlobalStyles
   styles={t => ({
@@ -58,7 +57,7 @@ const generalStyles = <GlobalStyles
     '.td': {
       // display: 'inline-flex',
       alignItems: 'center',
-      height: 30,
+      height: 38,
       resize: 'both',
       padding: '2px 2px 2px 2px',
       borderBottom: `1px solid ${t.palette.divider}`,
@@ -69,6 +68,7 @@ const generalStyles = <GlobalStyles
       // width: 100,
     },
     'thead .th': {
+      height: 42,
       zIndex: 2,
       background: t.palette.background.paper,
       top: 0,
@@ -92,6 +92,7 @@ export interface SheetTableProps<T extends Answer> extends BoxProps {
   select?: {
     selectActions?: ReactNode
     getId: (_: T) => string
+    onSelect: (_: string[]) => void
   },
   readonly data?: T[]
   getRenderRowKey?: (_: T, index: number) => string
@@ -114,6 +115,7 @@ export interface SheetColumnProps<T extends Answer> {
   noSort?: boolean
   head?: string | ReactNode
   align?: 'center' | 'right'
+  onClick?: (_: T) => void
   render: (_: T) => ReactNode
   hidden?: boolean
   alwaysVisible?: boolean
@@ -178,7 +180,9 @@ export const Sheet = <T extends Answer = Answer>({
 }: SheetTableProps<T>) => {
   const [limit, setLimit] = useState(25)
   const [offset, setOffset] = useState(0)
+
   const _selected = useSetState<string>()
+  useMemo(() => select?.onSelect(_selected.toArray), [_selected.get])
 
   const {m} = useI18n()
   const [filteringProperty, setFilteringProperty] = useState<keyof T | undefined>(undefined)
@@ -301,11 +305,13 @@ export const Sheet = <T extends Answer = Answer>({
           </Box>
         )}
       </Box>
-      <Box sx={{overflowX: 'scroll'}}>
-        <Box sx={{width: 'max-content'}}>
+      <Box sx={{overflowX: 'auto'}}>
+        <Box sx={{
+          // width: 'max-content'
+        }}>
           {generalStyles}
 
-          <Box component="table" {...props} className="table">
+          <Box component="table" {...props} className="table" sx={{minWidth: '100%'}}>
             <thead>
             <tr className="tr trh">
               {map(select?.getId, getId => (
@@ -372,6 +378,7 @@ export const Sheet = <T extends Answer = Answer>({
                   <td
                     title={_.render(item) as any}
                     key={i}
+                    onClick={_.onClick ? () => _.onClick?.(item) : undefined}
                     className={'td td-clickable ' + fnSwitch(_.align!, {
                       'center': 'td-center',
                       'right': 'td-right'

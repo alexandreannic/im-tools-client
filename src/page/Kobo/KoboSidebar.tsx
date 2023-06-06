@@ -5,7 +5,7 @@ import {Fragment, useEffect, useState} from 'react'
 import {CircularProgress, Divider} from '@mui/material'
 import {koboModule} from './koboModule'
 import {koboFormId} from '../../koboFormId'
-import {KoboApiClient} from '../../core/sdk/server/kobo/KoboApiClient'
+import {KoboApiSdk} from '../../core/sdk/server/kobo/KoboApiSdk'
 
 export const KoboSidebar = () => {
   const {api} = useConfig()
@@ -23,13 +23,13 @@ export const KoboSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.protectionHh2))}>
+      <SidebarItem to={path(koboModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.protectionHh2))}>
         HHS v2
       </SidebarItem>
-      <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.BNRE))}>
+      <SidebarItem to={path(koboModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.BNRE))}>
         BNRE
       </SidebarItem>
-      <SidebarItem to={path(koboModule.siteMap.form(KoboApiClient.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
+      <SidebarItem to={path(koboModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
         fcrmMpcaNAA
       </SidebarItem>
       <Divider/>

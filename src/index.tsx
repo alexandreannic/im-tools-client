@@ -35,7 +35,6 @@ root.render(
     <App/>
   </Provide>
 )
-console.log(process.env.GOOGLE_MAPS_API_KEY)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -15,7 +15,7 @@ import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} fr
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {AaBtn} from '../../../shared/Btn/AaBtn'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
-import {ItSelect} from 'shared/Select/Select'
+import {AaSelect} from 'shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
 import {useItToast} from '../../../core/useToast'
 import {format} from 'date-fns'
@@ -182,7 +182,7 @@ const _ActivityInfo = ({
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
         <Box>
           <AaInput type="month" value={period} onChange={_ => setPeriod(_.target.value)}/>
-          <ItSelect
+          <AaSelect
             label="Oblast"
             value={selectedOblast?.split('_')[0] ?? ''}
             onChange={_ => setSelectedOblast(_)}

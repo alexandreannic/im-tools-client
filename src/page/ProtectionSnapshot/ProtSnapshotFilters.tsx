@@ -1,7 +1,7 @@
 import React from 'react'
 import {Box, BoxProps, Divider, Icon, Switch} from '@mui/material'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
-import {ItSelect} from '../../shared/Select/Select'
+import {AaSelect} from '../../shared/Select/Select'
 import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {Enum} from '@alexandreannic/ts-utils'
 import {IconBtn, Txt} from 'mui-extension'
@@ -80,7 +80,7 @@ export const ProtSnapshotFilters = ({
         }))}
         sx={{mb: 3}}
       />
-      <ItSelect<KoboFormProtHH.GetType<'vulnerability'>>
+      <AaSelect<KoboFormProtHH.GetType<'vulnerability'>>
         sx={{mb: 3}}
         multiple
         label={m.vulnerabilities}
@@ -90,7 +90,7 @@ export const ProtSnapshotFilters = ({
           ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
         )}
       />
-      <ItSelect<KoboFormProtHH.Status>
+      <AaSelect<KoboFormProtHH.Status>
         sx={{mb: 3}}
         multiple
         label={m.status}

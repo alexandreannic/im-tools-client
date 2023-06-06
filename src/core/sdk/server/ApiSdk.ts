@@ -1,10 +1,11 @@
 import {ApiClient, RequestOption} from './ApiClient'
-import {NfiMPcaClient} from './nfi/NfiMPcaClient'
-import {KoboFormClient} from './kobo/KoboClient'
-import {KoboClient} from './kobo/KoboFormClient'
+import {NfiMPcaSdk} from './nfi/NfiMPcaSdk'
+import {KoboFormSdk} from './kobo/KoboClient'
+import {KoboSdk} from './kobo/KoboFormClient'
 import {ActivityInfoSdk} from './activity-info/ActiviftyInfoSdk'
-import {KoboApiClient} from './kobo/KoboApiClient'
+import {KoboApiSdk} from './kobo/KoboApiSdk'
 import {Method} from 'axios'
+import {MpcaPayment, MpcaPaymentSdk} from './mpcaPaymentTool/MpcaPaymentSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -12,7 +13,6 @@ export class ApiSdk {
   }
 
   readonly proxy = <T = any>(method: Method, url: string, options?: RequestOption) => {
-    console.log(options)
     return this.client.post<T>(`/proxy`, {
       responseType: 'blob',
       body: {
@@ -25,9 +25,10 @@ export class ApiSdk {
     })
   }
 
-  readonly nfi = new NfiMPcaClient(this.client)
-  readonly koboForm = new KoboFormClient(this.client)
-  readonly kobo = new KoboClient(this.client)
-  readonly koboApi = new KoboApiClient(this.client)
+  readonly nfi = new NfiMPcaSdk(this.client)
+  readonly koboForm = new KoboFormSdk(this.client)
+  readonly kobo = new KoboSdk(this.client)
+  readonly koboApi = new KoboApiSdk(this.client)
   readonly activityInfo = new ActivityInfoSdk(this.client)
+  readonly mpcaPayment = new MpcaPaymentSdk(this.client)
 }

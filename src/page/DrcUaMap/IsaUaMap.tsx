@@ -5,8 +5,13 @@ import {useConfig} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
+import {Panel} from '../../shared/Panel'
 
 const generalStyles = <GlobalStyles styles={{
+  '#map-isa-ua path': {
+    stroke: '#bfbfbf',
+    strokeWidth: 1,
+  },
   '#map-isa-offices svg path[fill="none"]': {
     strokeWidth: 0
   },
@@ -73,91 +78,70 @@ const drawMaps = async ({
   google.charts.setOnLoadCallback(() => {
     drawUA(mapUaSelector, theme)
     drawOffices(mapOfficeSelector)
-    setTimeout(() => drawOfficeMarkers(mapOfficeSelector, theme), 2000)
+    // setTimeout(() => drawOfficeMarkers(mapOfficeSelector, theme), 2000)
   })
 }
 
+const occupiedOblasts = [
+  'UA65',
+  'UA12',
+  'UA48',
+  'UA23',
+]
+
 const drawOffices = (selector: string) => {
+  // const data = google.visualization.arrayToDataTable([
+  //   ['City', 'Population', 'Area'],
+  //   ...offices.map(o => [o.city, 100, 100]),
+  // ])
+
   const data = google.visualization.arrayToDataTable([
-    ['City', 'Population', 'Area'],
-    ...offices.map(o => [o.city, 100, 100]),
+    ['State', 'Population'],
+    // ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 100 : 0]),
   ])
 
-  console.log('data', offices.map(o => [o.city, 100, 100]))
+  console.log(Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 100 : 0]))
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
-  // chart.draw(data, {
-  //   legend: 'none',
-  //   backgroundColor: 'transparent',
-  //   datalessRegionColor: 'transparent',
-  //   displayMode: 'text',
-  //   region: 'UA',
-  //   resolution: 'provinces',
-  //   // colorAxis: {
-  //   //   colors: ['#fafafa']
-  //   // }
-  // })
+  chart.draw(data, {
+    legend: 'none',
+    colorAxis: {
+      colors: ['#f8f8f8', '#000000'],
+    },
+    backgroundColor: {
+      fill: 'transparent',
+    },
+    datalessRegionColor: 'transparent',
+    displayMode: 'text',
+    region: 'UA',
+    resolution: 'provinces',
+    // colorAxis: {
+    //   colors: ['#fafafa']
+    // }
+  })
 }
 
 const drawUA = (selector: string, theme: Theme) => {
-  const occupiedOblasts = [
-    'UA12',
-    'UA65',
-    'UA48',
-    'UA23',
-  ]
-
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
     ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
 
-  console.log(theme.palette.primary.light,',color')
+  console.log(theme.palette.primary.light, ',color')
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
     legend: 'none',
     colorAxis: {
       colors: ['#f8f8f8', occupiedColor],
     },
-    backgroundColor: 'transparent',
+    backgroundColor: {
+      fill: 'transparent',
+      stroke: '#000000',
+    },
     datalessRegionColor: 'transparent',
     displayMode: 'regions',
     region: 'UA',
     resolution: 'provinces',
   })
-}
-
-const drawOfficeMarkers = (selector: string, theme: Theme) => {
-  console.log('draw markers', `${selector} text[text-anchor=middle]`)
-  document.querySelectorAll(`${selector} text[text-anchor=middle]`).forEach((marker: any) => {
-    console.log(marker)
-    const office = offices.find(_ => _.city === marker.innerHTML.trim())
-    if (!office) {
-      return
-    }
-    const label = marker.cloneNode(true)
-    marker.setAttribute('font-family', 'Material Icons')
-    marker.setAttribute('font-size', '26')
-    if (office.closed) {
-      marker.innerHTML = officeStyle(theme).closed.icon
-      marker.style.fill = officeStyle(theme).closed.color
-    } else {
-      marker.innerHTML = officeStyle(theme).open.icon
-      marker.style.fill = officeStyle(theme).open.color
-    }
-    if (office.align === 'right') {
-      label.setAttribute('x', +marker.getAttribute('x') + 16)
-      label.setAttribute('y', +marker.getAttribute('y') - 6)
-      label.setAttribute('text-anchor', 'right')
-    } else {
-      label.setAttribute('y', +marker.getAttribute('y') + 12)
-    }
-    marker.parentNode.insertBefore(label, marker.nextSibling)
-    label.setAttribute('font-size', theme.typography.fontSize * .875)
-    label.setAttribute('font-family', theme.typography.fontFamily)
-    label.setAttribute('fill', theme.palette.text)
-    label.setAttribute('font-weight', 'bold')
-  })
-
 }
 
 export const IsaUaMap = () => {
@@ -172,30 +156,23 @@ export const IsaUaMap = () => {
     })
   }, [])
 
+  const offset = 280
   return (
-    <div>
+    <Box>
       {generalStyles}
-      hello
-      <Box sx={{display: 'inline-flex', m: 2, border: t => `1px solid ${t.palette.divider}`, alignItems: 'center', background: 'white'}}>
+      <Box sx={{display: 'inline-flex', alignItems: 'center', background: 'white', position: 'relative'}}>
         <Box sx={{position: 'relative', height: 500, width: 700}}>
+          <Box sx={{textAlign: 'center', fontSize: '1.6em'}}>Areas of Intervention (Oblast Level)</Box>
           <Box id="map-isa-ua" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
           <Box id="map-isa-offices" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
         </Box>
-        <Box sx={{ml: 3}}>
-          <Txt block color="hint" size="big" sx={{mb: 1}}>Legend</Txt>
-          {Enum.values(officeStyle(theme)).map(t =>
-            <Box key={t.label} sx={{display: 'flex', alignItems: 'center', mb: 2}}>
-              <Icon sx={{color: t.color, mr: 1}}>{t.icon}</Icon>
-              {t.label}
-            </Box>
-          )}
-          <Box sx={{display: 'flex', alignItems: 'center', mb: 1, mr: 4}}>
-            <Box sx={{background: occupiedColor, height: 21, width: 21, borderRadius: 21, mr: 1, border: t => `2px solid ${t.palette.divider}`}}/>
-            Oblasts totally or partially<br/>
-            controlled by Russian military
-          </Box>
+        <Box sx={{fontSize: '.9em'}}>
+          <Box sx={{position: 'absolute', top: 249, right: 450 - offset}}>Dnipropetrovska</Box>
+          <Box sx={{position: 'absolute', top: 334, right: 514 - offset}}>Khersonska</Box>
+          <Box sx={{position: 'absolute', top: 294, right: 570 - offset}}>Mykolaivska</Box>
+          <Box sx={{position: 'absolute', top: 300, right: 445 - offset}}>Zaporizka</Box>
         </Box>
       </Box>
-    </div>
+    </Box>
   )
 }

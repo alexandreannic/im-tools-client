@@ -9,7 +9,7 @@ export const PanelTitle = ({sx, ...props}: Props) => {
       variant="h3"
       {...props}
       sx={{
-        my: 2,
+        my: 0,
         mx: 0,
         ...sx,
       }}

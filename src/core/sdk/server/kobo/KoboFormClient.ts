@@ -1,7 +1,7 @@
 import {ApiClient} from '../ApiClient'
 import {IKoboForm, KoboServer} from './Kobo'
 
-export class KoboClient {
+export class KoboSdk {
 
   constructor(private client: ApiClient) {
   }

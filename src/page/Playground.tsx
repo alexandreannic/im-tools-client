@@ -1,7 +1,7 @@
 import {useConfig} from '../core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useState} from 'react'
-import {KoboApiClient} from '../core/sdk/server/kobo/KoboApiClient'
+import {KoboApiSdk} from '../core/sdk/server/kobo/KoboApiSdk'
 import {Box, Divider} from '@mui/material'
 import {format} from 'date-fns'
 import {Layout} from '../shared/Layout'
@@ -191,7 +191,7 @@ const babyMaxYo = 1
 export const Playground = () => {
   const {api} = useConfig()
 
-  const form = useFetcher(() => api.koboApi.getForm(KoboApiClient.serverRefs.prod, KoboApiClient.koboFormRefs.MPCA_NFI_NAA))
+  const form = useFetcher(() => api.koboApi.getForm(KoboApiSdk.serverRefs.prod, KoboApiSdk.koboFormRefs.MPCA_NFI_NAA))
   const fetchMPCA_NFI = useFetcher(() => api.koboApi.getAnswersMPCA_NFI())
   const fetchMPCA_NFI_Myko = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_Myko())
   const fetchMPCA_NFI_NAA = useFetcher(() => api.koboApi.getAnswersMPCA_NFI_NAA())

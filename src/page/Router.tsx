@@ -12,21 +12,23 @@ import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
 import {ActivityInfo, activityInfoModule} from './ActivityInfo/ActivityInfo'
 import {ActivityInfoHHS2} from './ActivityInfo/HHS_2_1/ActivityInfoHHS2'
 import {Dashboard, dashboardModule} from './Dashboard/Dashboard'
-import {MPCADedupTable} from './MPCA/MPCADedupTable'
-import {MPCA, mpcaModule} from './MPCA/MPCA'
-import {MPCADashboard} from './MPCA/MPCADashboard'
-import {MPCAFinanceFile} from './MPCA/MPCAFinanceFile'
+import {MpcaDedupTable} from './Mpca/DedupTable/MpcaDedupTable'
+import {Mpca, mpcaModule} from './Mpca/Mpca'
+import {MpcaDashboard} from './Mpca/Dashboard/MpcaDashboard'
+import {MpcaPaymentTools} from './Mpca/PaymentTools/MpcaPaymentTools'
 import {IsaUaMap} from './DrcUaMap/IsaUaMap'
+import {MpcaPaymentTool} from './Mpca/PaymentTool/MpcaPaymentTool'
 
 export const Router = () => {
   const {m} = useI18n()
   return (
     <div>
       <Routes>
-        <Route path={mpcaModule.basePath} element={<MPCA/>}>
-          <Route path={mpcaModule.siteMap.deduplication} element={<MPCADedupTable/>}/>
-          <Route path={mpcaModule.siteMap.dashboard} element={<MPCADashboard/>}/>
-          <Route path={mpcaModule.siteMap.paymentTools} element={<MPCAFinanceFile/>}/>
+        <Route path={mpcaModule.basePath} element={<Mpca/>}>
+          <Route path={mpcaModule.siteMap.deduplication} element={<MpcaDedupTable/>}/>
+          <Route path={mpcaModule.siteMap.dashboard} element={<MpcaDashboard/>}/>
+          <Route path={mpcaModule.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
+          <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
         </Route>
         <Route path="/map" element={<IsaUaMap/>}/>
         <Route path="/snapshot" element={<Home/>}/>

@@ -1,7 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
 import {Kobo, KoboAnswer, KoboAnswer2} from './Kobo'
-import {deleteme} from './deleteme'
 
 export interface AnswersFilters<T extends string = string> {
   start?: Date
@@ -21,7 +20,7 @@ export interface FnMap<T> {
   fnMap?: (_: Record<string, string | undefined>) => T
 }
 
-export class KoboFormClient {
+export class KoboFormSdk {
 
   constructor(private client: ApiClient) {
   }

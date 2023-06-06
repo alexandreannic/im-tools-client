@@ -62,7 +62,6 @@ export const MultipleChoices = <T extends string, V extends string = string>({
   const toggleAll = () => onChange?.(innerValue?.length === 0 ? allValues : [])
 
   const onClick = (v: T) => {
-    console.log(v)
     setInnerValue(prev => prev.includes(v)
       ? prev.filter(_ => _ !== v)
       : [...prev, v])
