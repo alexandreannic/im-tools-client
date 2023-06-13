@@ -178,19 +178,38 @@ const computePeriod = (date: Date) => {
 }
 
 export const ActivityInfoNFI = () => {
-  const [period, setPeriod] = useState(new Date(2023, 3, 1))
+  const [period, setPeriod] = useState(new Date(2023, 4, 1))
   const {api} = useConfig()
   const filters = computePeriod(period)
 
   const _data = useFetcher((period: Date) => {
     return Promise.all([
+      api.koboApi.getAnswersMPCA_NFI_Myko({filters}).then(_ => {
+        return _.data.map(_ => ({
+          file: 'Myko',
+          id: _.id,
+          oblast: 'mykolaivska' as any,
+          raion: undefined as any,
+          hromada: undefined as any,
+          settlement: undefined!,
+          start: _.start,
+          HKF_: _.HKF_ ?? 0,
+          HKMV_: _.HKMV_ ?? 0,
+          BK1: _.BK4_How_many ?? 0,
+          BK2: _.BK4_How_many ?? 0,
+          BK3: _.BK4_How_many ?? 0,
+          BK4: _.BK4_How_many ?? 0,
+          group_in3fh72: _.group_in3fh72,
+        }))
+      }),
       api.koboApi.getAnswersMPCA_NFI_NAA({filters}).then(_ => {
         return _.data.map(_ => ({
           file: 'NAA',
           id: _.id,
           oblast: 'kharkivska' as any,
-          raion: 'TODO' as any, // TODO
-          hromada: 'TODO' as any, // TODO
+          raion: 'kharkivskyi' as any,
+          hromada: 'kharkivska_2' as any,
+          settlement: undefined!,
           start: _.start,
           HKF_: _.HKF_ ?? 0,
           HKMV_: _.HKMV_ ?? 0,
@@ -221,11 +240,12 @@ export const ActivityInfoNFI = () => {
             group_in3fh72: _.group_in3fh72,
           }))
         }),
-    ]).then(([naa, main]) => toFormData({
+    ]).then(([myko, naa, main]) => toFormData({
       formId: 'crvtph7lg6d5dhq2',
       answers: Arr([
+        ...myko,
         ...main,
-        // ...naa
+        ...naa
       ]),
       period,
     }))

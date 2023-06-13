@@ -1,14 +1,14 @@
 import {useMemo} from 'react'
 
-export const Lazy = <T, >({
+export const Lazy = <T, D extends any>({
   deps,
   fn,
   children,
 }: {
-  deps: any[]
-  fn: () => T
-  children: (t: T) => any
+  deps: D[]
+  fn: (_: D) => T
+  children: (..._: T[]) => any
 }) => {
-  const res = useMemo(fn, deps)
-  return children(res)
+  const res = useMemo(() => deps.map(fn), deps)
+  return children(...res)
 }

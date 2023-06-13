@@ -77,7 +77,7 @@ export const DashboardFilterLabel = ({
           top: 57,
         }}>
           <Box sx={{
-            overflowY: 'scroll',
+            overflowY: 'auto',
             maxHeight: '50vh',
           }}>
             {children}

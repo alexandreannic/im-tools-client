@@ -31,6 +31,7 @@ export type KoboAnswerMetaData = {
   end: Date
   version: string
   submissionTime: Date
+  submittedBy?: string
   id: string
   validationStatus?: 'validation_status_approved'
   validatedBy?: string

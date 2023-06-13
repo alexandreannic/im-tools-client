@@ -5,7 +5,6 @@ import {Home} from './Home/Home'
 import {Kobo} from './Kobo/Kobo'
 import {koboModule} from './Kobo/koboModule'
 import {KoboTableLayoutRoute} from './Kobo/KoboForm/KoboTable'
-import {DrcUaMap} from './DrcUaMap/DrcUaMap'
 import {Playground} from './Playground'
 import {DashboardProtHHS2} from './Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
@@ -18,12 +17,14 @@ import {MpcaDashboard} from './Mpca/Dashboard/MpcaDashboard'
 import {MpcaPaymentTools} from './Mpca/PaymentTools/MpcaPaymentTools'
 import {IsaUaMap} from './DrcUaMap/IsaUaMap'
 import {MpcaPaymentTool} from './Mpca/PaymentTool/MpcaPaymentTool'
+import {DatabaseSources} from './Database/DatabaseSources'
 
 export const Router = () => {
   const {m} = useI18n()
   return (
     <div>
       <Routes>
+        <Route path="/database" element={<DatabaseSources/>}/>
         <Route path={mpcaModule.basePath} element={<Mpca/>}>
           <Route path={mpcaModule.siteMap.deduplication} element={<MpcaDedupTable/>}/>
           <Route path={mpcaModule.siteMap.dashboard} element={<MpcaDashboard/>}/>

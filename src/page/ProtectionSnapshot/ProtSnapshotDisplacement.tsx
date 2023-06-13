@@ -96,7 +96,7 @@ export const ProtSnapshotDisplacement = ({
               <SlideContainer column>
                 <SlidePanelDepreacted title={m.intentionToReturn}>
                   <PieChartIndicator
-                    value={computed._12_7_1_planToReturn.percent}
+                    percent={computed._12_7_1_planToReturn.percent}
                     evolution={computed._12_7_1_planToReturn.percent - previous.computed._12_7_1_planToReturn.percent}
                   >
                     <Txt color="hint" block sx={{fontSize: '1.15rem', mt: -.25, ml: .25}}><sup>(1)</sup></Txt>
@@ -130,7 +130,7 @@ export const ProtSnapshotDisplacement = ({
                   {/*<Divider sx={{my: 2}}/>*/}
                   <PieChartIndicator
                     // title={m.protHHSnapshot.numberHhSeparatedDueToConflict}
-                    value={computed._13_4_1_Are_you_separated_from_any_of_percent.percent}
+                    percent={computed._13_4_1_Are_you_separated_from_any_of_percent.percent}
                     evolution={computed._13_4_1_Are_you_separated_from_any_of_percent.percent - previous.computed._13_4_1_Are_you_separated_from_any_of_percent.percent}
                   />
                   <Divider sx={{my: 2}}/>

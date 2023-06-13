@@ -1,10 +1,9 @@
 import React, {ReactNode, useMemo} from 'react'
 import {Checkbox, FormControlLabel, FormGroup} from '@mui/material'
-import {makeSx} from 'mui-extension'
+import {makeSx, Txt} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'
 import {useI18n} from '../../../core/i18n'
 import {combineSx} from '../../../core/theme'
-import {MultipleChoices} from '../../../shared/MultipleChoices'
 
 const css = makeSx({
   optionSelectAll: {
@@ -14,6 +13,7 @@ const css = makeSx({
   option: {
     whiteSpace: 'nowrap',
     px: 1,
+    mr: 0,
     transition: t => t.transitions.create('all'),
     '&:hover': {
       background: t => t.palette.action.hover,
@@ -25,8 +25,10 @@ export const DashboardFilterOptions = ({
   value = [],
   label,
   options,
+  icon,
   onChange,
 }: {
+  icon?: string
   value: string[]
   label: string
   options: {name: string, label: ReactNode}[]
@@ -47,7 +49,7 @@ export const DashboardFilterOptions = ({
   const toggleAll = () => onChange?.(value?.length === 0 ? allValues : [])
 
   return (
-    <DashboardFilterLabel icon="location_on" active={value.length > 0} label={
+    <DashboardFilterLabel icon={icon} active={value.length > 0} label={
       <>
         {value.length > 0 ? valuesLabel[0] : label}
         {value.length > 1 && <>&nbsp;+ {value.length - 1}</>}
@@ -56,7 +58,7 @@ export const DashboardFilterOptions = ({
       <FormControlLabel
         onClick={toggleAll}
         control={<Checkbox checked={allChecked} indeterminate={!allChecked && someChecked}/>}
-        label={m.selectAll}
+        label={<Txt bold>{m.selectAll}</Txt>}
         sx={combineSx(css.option, css.optionSelectAll)}
       />
       <FormGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

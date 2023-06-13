@@ -22,6 +22,7 @@ export interface FnMap<T> {
   fnMap?: (_: Record<string, string | undefined>) => T
 }
 
+
 export class KoboApiSdk {
 
   constructor(private client: ApiClient) {
@@ -135,15 +136,22 @@ export class KoboApiSdk {
     })
   }
 
-  readonly getForm = (serverId: UUID, formId: UUID) => {
-    return this.client.get<KoboApiForm>(`/kobo-api/${serverId}/${formId}`)
+  readonly getForm = (serverId: UUID, formId: UUID): Promise<KoboApiForm> => {
+    return this.client.get(`/kobo-api/${serverId}/${formId}`)
   }
 
-  readonly getForms = (serverId: UUID) => {
-    return this.client.get<IKoboForm[]>(`/kobo-api/${serverId}`)
+  readonly getForms = (serverId: UUID): Promise<IKoboForm[]> => {
+    return this.client.get(`/kobo-api/${serverId}`).then(_ => _.results.map((_: Record<keyof IKoboForm, any>): IKoboForm => {
+      return {
+        ..._,
+        date_created: new Date(_.date_created),
+        date_modified: new Date(_.date_modified),
+      }
+    }))
   }
 
   readonly getAttachement = (serverId: UUID, filepath: string) => {
     return this.client.get<IKoboForm[]>(`/kobo-api/${serverId}/attachment/${filepath}`)
   }
+
 }

@@ -26,8 +26,8 @@ export namespace ChartTools {
   }
 
   export const sortBy = {
-    custom: <T extends string>(order: T[]) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
-      return sortObject(obj as Record<T, ChartDataVal>, ([aK, aV], [bK, bV]) => {
+    custom: <T extends string>(order: T[]) => <V>(obj: Record<T, V>): Record<T, V> => {
+      return sortObject(obj as Record<T, V>, ([aK, aV], [bK, bV]) => {
         return order.indexOf(aK) - order.indexOf(bK)
       })
     },

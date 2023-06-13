@@ -1,10 +1,11 @@
 import React, {ReactNode, useEffect, useState} from 'react'
-import {Box, GlobalStyles, Icon, ThemeProvider, Typography} from '@mui/material'
+import {Box, GlobalStyles, Icon, LinearProgress, ThemeProvider, Typography} from '@mui/material'
 import {combineSx, muiTheme} from '../../core/theme'
 import {set} from 'lodash'
 import {DashboardProvider} from './DashboardContext'
 import {makeSx} from 'mui-extension'
 import {DRCLogo} from '../../shared/logo'
+import {PeriodPicker} from '../../shared/PeriodPicker/PeriodPicker'
 
 const dashboardMw = 1100
 const headerId = 'aa-sidebar-id'
@@ -32,12 +33,24 @@ const style = makeSx({
     borderTopLeftRadius: 40,
   },
   sidebar: {
+    maxWidth: 250,
+    minWidth: 250,
+  },
+  sidebarContent: {
+    maxWidth: 250,
     position: 'fixed',
     p: 2,
     top: 0,
     bottom: 0,
     display: 'flex',
     alignItems: 'center',
+  },
+  body: {
+    flex: 1,
+    px: 2,
+    maxWidth: dashboardMw,
+    margin: 'auto',
+    mb: 2,
   },
   header: {
     transition: t => t.transitions.create('all'),
@@ -88,7 +101,7 @@ const generalStyles = <GlobalStyles styles={t => ({
   [`#${headerId}.${headerStickyClass}`]: {
     border: 'none',
     boxShadow: t.shadows[4],
-    padding: `${t.spacing(1)} ${t.spacing(2)} ${t.spacing(1.5)} ${t.spacing(2)}`,
+    padding: `${t.spacing(1)} ${t.spacing(2)} ${t.spacing(1)} ${t.spacing(2)}`,
     position: 'fixed',
     top: 0,
     right: 0,
@@ -109,19 +122,25 @@ const spyTitles = (sections: string[], fn: (sectionName: string) => void) => {
 export const DashboardLayout = ({
   sections,
   header,
+  action,
+  loading,
   title,
+  beforeSection,
   subTitle,
 }: {
+  action?: ReactNode
+  loading?: boolean
   title: string
   subTitle?: string
   header?: ReactNode
+  beforeSection?: ReactNode
   sections: {
     name: string
     title: ReactNode
     component: () => JSX.Element
   }[]
 }) => {
-  const [activeSection, setActiveSection] = useState('x')
+  const [activeSection, setActiveSection] = useState(sections[0]?.name)
   useEffect(() => {
     window.addEventListener('scroll', stickHeader)
     if (sections.length === 0) return
@@ -152,34 +171,41 @@ export const DashboardLayout = ({
         return t
       })()}>
         <Box sx={t => ({display: 'flex', background: t.palette.background.default})}>
+          {loading && <LinearProgress sx={{position: 'fixed', top: 0, right: 0, left: 0}}/>}
           <Box sx={style.sidebar}>
-            <Box>
-              {sections.map(s => (
-                <Box key={s.name} sx={combineSx(
-                  style.menuItem,
-                  activeSection === s.name && style.menuItemActive,
-                )}>
-                  <Box component="a" href={'#' + s.name}>{s.title}</Box>
-                </Box>
-              ))}
+            <Box sx={style.sidebarContent}>
+              <Box>
+                {sections.map(s => (
+                  <Box key={s.name} sx={combineSx(
+                    style.menuItem,
+                    activeSection === s.name && style.menuItemActive,
+                  )}>
+                    <Box component="a" href={'#' + s.name}>{s.title}</Box>
+                  </Box>
+                ))}
+              </Box>
             </Box>
           </Box>
-          <Box sx={{width: dashboardMw, maxWidth: dashboardMw, margin: 'auto', mb: 2,}}>
+          <Box sx={style.body}>
             <Box sx={style.header} id={headerId}>
               <Box className="header_content">
-                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
                   <Box className="header_title" sx={{mb: 2, flex: 1}}>
                     <Typography className="header_title_main" variant="h1">{title}&nbsp;</Typography>
                     <Typography className="header_title_sub" variant="subtitle1" sx={{color: t => t.palette.text.secondary}}>{subTitle}</Typography>
                   </Box>
-                  <DRCLogo height={20} sx={{ml: 'auto'}}/>
+                  <Box sx={{ml: 'auto', mr: 2}}>
+                    {action}
+                  </Box>
+                  <DRCLogo height={20}/>
                 </Box>
                 {header}
               </Box>
             </Box>
+            {beforeSection}
             {sections.map(s => (
               <Box key={s.name}>
-                <Typography id={s.name} variant="h2" sx={{...style.sectionTitle, mt: 3, mb: 2}}>
+                <Typography id={s.name} variant="h2" sx={{...style.sectionTitle, mt: 5, mb: 2}}>
                   {s.title}
                 </Typography>
                 <Box>

@@ -85,9 +85,9 @@ export const muiTheme = (dark?: boolean): Theme => {
     dark: darken(mainColor, .4),
   }
   const colorSecondary = {
-    main: '#1e2b50',
-    light: lighten('#1e2b50', 0.3),
-    dark: darken('#1e2b50', 0.3),
+    main: '#1a73e8',
+    light: lighten('#1a73e8', 0.3),
+    dark: darken('#1a73e8', 0.3),
   }
   const baseTheme = createTheme({
     spacing: defaultSpacing,
@@ -122,7 +122,7 @@ export const muiTheme = (dark?: boolean): Theme => {
         fontWeight: 500,
       },
       h2: {
-        fontSize: '1.6em',
+        fontSize: '1.7em',
         fontWeight: 500,
       },
       h3: {

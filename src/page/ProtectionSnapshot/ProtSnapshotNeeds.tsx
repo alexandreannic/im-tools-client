@@ -59,16 +59,16 @@ export const ProtSnapshotNeeds = ({
               <SlidePanelTitle>{m.protHHSnapshot.mostNeededInformation}</SlidePanelTitle>
               <Box sx={{display: 'flex', mt: 1}}>
                 {Enum.entries(computed._39_What_type_of_information_would!).splice(0, 3).map(([k, v]) =>
-                  <PieChartIndicator fractionDigits={0} dense title={v.label} value={v.value / data.length} sx={{flex: 1}}/>
+                  <PieChartIndicator fractionDigits={0} dense title={v.label} percent={v.value / data.length} sx={{flex: 1}}/>
                 )}
               </Box>
             </SlidePanelDepreacted>
           </SlideContainer>
           <SlideContainer column sx={{flex: 3, minWidth: 318}}>
-            <SlidePanelDepreacted title={m.protHHSnapshot.firstPriorityNeed}>
+            <SlidePanelDepreacted title={m.firstPriorityNeed}>
               <Box sx={{display: 'flex', mt: 1}}>
                 {Enum.entries(computed._40_1_What_is_your_first_priorty!).splice(0, 3).map(([k, v]) =>
-                  <PieChartIndicator fractionDigits={0} dense title={v.label} value={v.value / data.length} sx={{flex: 1}}/>
+                  <PieChartIndicator fractionDigits={0} dense title={v.label} percent={v.value / data.length} sx={{flex: 1}}/>
                 )}
               </Box>
               <Divider sx={{my: 2}}/>

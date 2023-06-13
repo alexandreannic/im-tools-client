@@ -2,6 +2,7 @@ import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 
 import React from 'react'
 import {Box, BoxProps, Theme, useTheme} from '@mui/material'
 import {Arr} from '@alexandreannic/ts-utils'
+import {chartConfig} from './chartConfig'
 
 const RADIAN = Math.PI / 180
 
@@ -14,12 +15,7 @@ export const AAStackedBarChart = ({
   height,
   width,
   sx,
-  colors = (t: Theme) => [
-    '#000',
-    t.palette.primary.dark,
-    t.palette.primary.main,
-    t.palette.primary.light,
-  ],
+  colors = chartConfig.defaultColors,
   ...props
 }: {
   colors?: (t: Theme) => string[]

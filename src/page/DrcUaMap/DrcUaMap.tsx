@@ -83,7 +83,6 @@ const drawOffices = (selector: string) => {
     ...offices.map(o => [o.city, 100, 100]),
   ])
 
-  console.log('data', offices.map(o => [o.city, 100, 100]))
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
     legend: 'none',

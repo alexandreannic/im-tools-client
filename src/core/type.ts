@@ -23,6 +23,14 @@ export type DeepReadonly<T> = {
     : T[P];
 }
 
+export type StringArrayKeys<T> = {
+  [K in keyof T]: T[K] extends string[] ? K : never;
+}[keyof T]
+
+export type StringKeys<T> = {
+  [K in keyof T]: T[K] extends string | undefined ? K : never;
+}[keyof T]
+
 
 export const elderlyLimitIncluded = 60
 
@@ -32,8 +40,8 @@ export const ageGroupBHA = Object.freeze({
   '0 - 4': [0, 4],
   '5 - 9': [5, 9],
   '10 - 14': [10, 14],
-  '15 - 18': [15, 18],
-  '19 - 29': [19, 29],
+  '15 - 17': [15, 17],
+  '18 - 29': [18, 29],
   '30 - 59': [30, 59],
   '60+': [elderlyLimitIncluded, Infinity],
 })

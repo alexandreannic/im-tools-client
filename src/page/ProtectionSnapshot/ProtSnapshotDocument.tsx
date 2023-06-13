@@ -60,13 +60,13 @@ export const ProtSnapshotDocument = ({
             <SlidePanelDepreacted>
               <PieChartIndicator
                 title={m.protHHSnapshot.requiredLegalAidInformation}
-                value={computed._39_What_type_of_information_wouldPercent.percent}
+                percent={computed._39_What_type_of_information_wouldPercent.percent}
                 evolution={computed._39_What_type_of_information_wouldPercent.percent - previous.computed._39_What_type_of_information_wouldPercent.percent}
               />
               <Divider sx={{my: 2}}/>
               <PieChartIndicator
                 title={m.hhBarriersToPersonalDocument}
-                value={computed._16_1_1_Have_you_experienced_a.percent}
+                percent={computed._16_1_1_Have_you_experienced_a.percent}
                 evolution={computed._16_1_1_Have_you_experienced_a.percent - previous.computed._16_1_1_Have_you_experienced_a.percent}
               />
               <Divider sx={{my: 2}}/>
@@ -80,13 +80,13 @@ export const ProtSnapshotDocument = ({
             <SlidePanelDepreacted>
               <PieChartIndicator
                 title={m.protHHSnapshot.hhWDisabilityWoAllowance}
-                value={computed.disabilityWithoutAllowance.percent}
+                percent={computed.disabilityWithoutAllowance.percent}
                 evolution={computed.disabilityWithoutAllowance.percent - previous.computed.disabilityWithoutAllowance.percent}
               />
               <Divider sx={{my: 2}}/>
               <PieChartIndicator
                 title={m.protHHSnapshot.noAccommodationDocument}
-                value={computed._26_4_noHouseFormalDocPercent.percent}
+                percent={computed._26_4_noHouseFormalDocPercent.percent}
                 evolution={computed._26_4_noHouseFormalDocPercent.percent - previous.computed._26_4_noHouseFormalDocPercent.percent}
               />
               {/*<PieChartIndicator*/}
@@ -99,12 +99,12 @@ export const ProtSnapshotDocument = ({
               <Box sx={{display: 'flex', mt: 2.5, mb: 5, justifyContent: 'space-between'}}>
                 <PieChartIndicator
                   title={m.protHHSnapshot.male1860}
-                  value={computed._14_1_1_idp_male_without_cert.percent}
+                  percent={computed._14_1_1_idp_male_without_cert.percent}
                   evolution={computed._14_1_1_idp_male_without_cert.percent - previous.computed._14_1_1_idp_male_without_cert.percent}
                 />
                 <PieChartIndicator
                   title={m.others}
-                  value={computed._14_1_1_idp_nomale_without_cert.percent}
+                  percent={computed._14_1_1_idp_nomale_without_cert.percent}
                   evolution={computed._14_1_1_idp_nomale_without_cert.percent - previous.computed._14_1_1_idp_nomale_without_cert.percent}
                 />
               </Box>

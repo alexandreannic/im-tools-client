@@ -113,14 +113,14 @@ export const ProtSnapshotSample = ({
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfIdp}
-                    value={computed.categoriesTotal.idp.value / computed.currentStatusAnswered}
+                    percent={computed.categoriesTotal.idp.value / computed.currentStatusAnswered}
                   />
                 </SlidePanelDepreacted>
                 <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfMemberWithDisability}
-                    value={computed.categoriesTotal.memberWithDisability.value / data.length}
+                    percent={computed.categoriesTotal.memberWithDisability.value / data.length}
                   />
                 </SlidePanelDepreacted>
               </SlideContainer>
@@ -129,14 +129,14 @@ export const ProtSnapshotSample = ({
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfHohhFemale}
-                    value={computed.categoriesTotal.hohhFemale.value / data.length}
+                    percent={computed.categoriesTotal.hohhFemale.value / data.length}
                   />
                 </SlidePanelDepreacted>
                 <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
                     title={m.protHHSnapshot.numberOfHohh60}
-                    value={computed.categoriesTotal.hohh60.value / data.length}
+                    percent={computed.categoriesTotal.hohh60.value / data.length}
                   />
                 </SlidePanelDepreacted>
               </SlideContainer>

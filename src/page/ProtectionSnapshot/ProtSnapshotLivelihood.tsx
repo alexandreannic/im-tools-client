@@ -38,7 +38,7 @@ export const ProtSnapshotLivelihood = ({
             <SlidePanelDepreacted>
               <PieChartIndicator
                 title={m.atLeastOneMemberWorking}
-                value={computed._31_Is_anyone_from_the_household_percent.all.percent}
+                percent={computed._31_Is_anyone_from_the_household_percent.all.percent}
                 evolution={computed._31_Is_anyone_from_the_household_percent.all.percent - previous.computed._31_Is_anyone_from_the_household_percent.all.percent}
               />
               {/*<PieChartIndicator*/}
@@ -62,13 +62,13 @@ export const ProtSnapshotLivelihood = ({
                 <PieChartIndicator
                   sx={{flex: 1}}
                   title={<Txt size="small">{m.idps}&nbsp;<Txt fontWeight="lighter">({computed.idpsCount})</Txt></Txt>}
-                  value={computed._32_dependingOnAllowancePercent.idp.percent}
+                  percent={computed._32_dependingOnAllowancePercent.idp.percent}
                   evolution={computed._32_dependingOnAllowancePercent.idp.percent - previous.computed._32_dependingOnAllowancePercent.idp.percent}
                 />
                 <PieChartIndicator
                   sx={{flex: 1}}
                   title={<Txt size="small">{m.noIdps}&nbsp;<Txt fontWeight="lighter">({computed.noIdpsCount})</Txt></Txt>}
-                  value={computed._32_dependingOnAllowancePercent.notIdp.percent}
+                  percent={computed._32_dependingOnAllowancePercent.notIdp.percent}
                   evolution={computed._32_dependingOnAllowancePercent.notIdp.percent - previous.computed._32_dependingOnAllowancePercent.notIdp.percent}
                 />
               </SlideContainer>
@@ -81,7 +81,7 @@ export const ProtSnapshotLivelihood = ({
               <Divider sx={{my: 1.5}}/>
               <PieChartIndicator
                 title={m.protHHSnapshot.idpWithAllowance}
-                value={computed._32_1_What_type_of_allowances_byIdp.percent}
+                percent={computed._32_1_What_type_of_allowances_byIdp.percent}
                 evolution={computed._32_1_What_type_of_allowances_byIdp.percent - previous.computed._32_1_What_type_of_allowances_byIdp.percent}
               />
               {/*<PieChartIndicator*/}

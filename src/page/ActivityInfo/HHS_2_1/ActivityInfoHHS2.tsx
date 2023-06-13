@@ -94,7 +94,6 @@ const _ActivityInfo = ({
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {
-  console.log(data.length)
   const enrichedData = useMemo(() => {
     return chain(Arr(data))
       // .map(fillMissingSexOrGender)

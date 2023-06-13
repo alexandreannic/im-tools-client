@@ -3,6 +3,7 @@ import * as React from 'react'
 import {memo, useMemo, useState} from 'react'
 import {Box, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
 import {styleUtils} from '../../core/theme'
+import {chartConfig} from './chartConfig'
 
 export interface ScLineChartPropsBase {
   /**
@@ -17,7 +18,7 @@ export interface ScLineChartPropsBase {
   hideXTicks?: boolean
 }
 
-interface Props extends ScLineChartPropsBase {
+export interface ScLineChartProps extends ScLineChartPropsBase {
   curves: {
     label: string
     key: string
@@ -26,7 +27,7 @@ interface Props extends ScLineChartPropsBase {
   }[]
 }
 
-const colors = (t: Theme) => [t.palette.primary.main, '#e48c00', 'red', 'green']
+const colors = chartConfig.defaultColors
 
 export const ScLineChart = memo(({
   sx,
@@ -36,7 +37,7 @@ export const ScLineChart = memo(({
   hideLabelToggle,
   curves,
   height = 300
-}: Props) => {
+}: ScLineChartProps) => {
   const theme = useTheme()
   const [showCurves, setShowCurves] = useState<boolean[]>(new Array(curves.length).fill(false))
   const mappedData = useMemo(() => {
@@ -70,7 +71,8 @@ export const ScLineChart = memo(({
       <Box sx={{height, ml: -4 - (hideYTicks ? 4 : 0), mb: hideXTicks ? -4 : 0, ...sx}}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={mappedData}>
-            <CartesianGrid strokeDasharray="3 3"/>
+            <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>
+            <Legend wrapperStyle={{position: 'relative', marginTop: -16}}/>
             <XAxis tick={!hideXTicks} dataKey="date"/>
             <YAxis tick={!hideYTicks}/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}}/>
@@ -103,7 +105,7 @@ export const ScLineChart = memo(({
   )
 })
 
-export const ScBarChart = ({curves, height}: Props) => {
+export const ScBarChart = ({curves, height}: ScLineChartProps) => {
   const theme = useTheme()
 
   const mappedData = useMemo(() => {

@@ -21,7 +21,7 @@ const computeFill = (value: number, min: number, max: number) => {
 
 export const UkraineMap = ({
   data = {} as any,
-  omitValueLt = 5,
+  omitValueLt = 0,
   base,
   fillBaseOn,
   onSelect,
@@ -43,9 +43,9 @@ export const UkraineMap = ({
     return omitValueLt ? omitBy(data, _ => (_.base ?? _.value) <= omitValueLt) : data
   }, [data])
 
+
   const {max, min, maxPercent, minPercent} = useMemo(() => {
     const _data = Arr(Enum.values(filteredData)).compact()
-    // .filter(_ => _.value !== 0)
     const values = _data.map(_ => _!.value ?? 0)
     // TODO _data.map create invalid array length
     const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.get.map(_ => {

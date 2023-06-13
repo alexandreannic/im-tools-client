@@ -69,16 +69,14 @@ export const KoboTableLayout = ({
   }, [])
 
   return (
-    <Page loading={_form.loading}>
+    <Page loading={_form.loading} width="full">
       {/*<KoboStats serverId={serverId} formId={formId}/>*/}
       <Panel>
-        <PanelHead sx={{pb: 1}} action={
-          <Box sx={{display: 'flex'}}>
-            <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={async () => {
-              await _refresh.call()
-              await _answers.fetch({force: true, clean: false})
-            }}/>
-          </Box>
+        <PanelHead action={
+          <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={async () => {
+            await _refresh.call()
+            await _answers.fetch({force: true, clean: false})
+          }}/>
         }>
           <Txt skeleton={_form.loading && 190}>{_form.entity?.name}</Txt>
         </PanelHead>
@@ -138,12 +136,24 @@ export const KoboTable = ({
       }
       return col
     })
-    const idColumn = {
-      id: 'id',
-      head: 'ID',
-      render: (_: any) => _.id,
-    }
-    return [idColumn, ...questions ?? []]
+    const metaColumn: SheetColumnProps<KoboAnswer2>[]  = [
+      {
+        id: 'id',
+        head: 'ID',
+        render: (_: any) => _.id,
+      },
+      {
+        id: 'submissionTime',
+        head: m.submissionTime,
+        render: _ => formatDate(_.submissionTime),
+      },
+      {
+        id: 'submittedBy',
+        head: m.submittedBy,
+        render: _ => _.submittedBy,
+      },
+    ]
+    return [...metaColumn, ...questions ?? []]
   }, [form])
 
   return (

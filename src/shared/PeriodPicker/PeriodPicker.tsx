@@ -4,14 +4,14 @@ import {useI18n} from '../../core/i18n'
 import {Box, BoxProps} from '@mui/material'
 import {Datepicker} from '../Datepicker/Datepicker'
 
-export interface DatepickerProps extends Omit<BoxProps, 'onChange'> {
+export interface PeriodPickerProps extends Omit<BoxProps, 'onChange'> {
   value?: [Date | undefined, Date | undefined]
   onChange: (_: [Date | undefined, Date | undefined]) => void
   label?: [string, string]
   fullWidth?: boolean
 }
 
-export const PeriodPicker = ({value, onChange, label, fullWidth, sx, ...props}: DatepickerProps) => {
+export const PeriodPicker = ({value, onChange, label, fullWidth, sx, ...props}: PeriodPickerProps) => {
   const [start, setStart] = useState<Date | undefined>(undefined)
   const [end, setEnd] = useState<Date | undefined>(undefined)
   const {m} = useI18n()

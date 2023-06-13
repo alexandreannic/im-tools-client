@@ -23,8 +23,8 @@ export const PanelHead = ({icon, children, action, sx, ...other}: Props) => {
       <PanelTitle>
         {icon && <Icon sx={{color: t => t.palette.text.disabled, mr: 1}}>{icon}</Icon>}
         <div style={{flex: 1}}>{children}</div>
-        {action}
       </PanelTitle>
+      <Box sx={{marginLeft: 'auto'}}>{action}</Box>
     </Box>
   )
 }

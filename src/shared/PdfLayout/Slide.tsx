@@ -212,7 +212,11 @@ export const SlideWidget = ({
         },
         ...sx,
       }}>
+      <Txt block color="hint" uppercase bold>
+        {title}
+      </Txt>
       <Box sx={{
+        fontWeight: t => t.typography.fontWeightBold,
         fontSize: '1.7em',
         display: 'inline-flex',
         alignItems: 'center'
@@ -220,9 +224,6 @@ export const SlideWidget = ({
         {icon && (typeof icon === 'string' ? <Icon color="disabled" sx={{mr: 1}} fontSize="large">{icon}</Icon> : icon)}
         {children}
       </Box>
-      <Txt block color="hint">
-        {title}
-      </Txt>
     </SlidePanel>
   )
 }

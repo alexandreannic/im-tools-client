@@ -5,6 +5,9 @@ import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '../../../shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS2Enrich} from './DashboardProtHHS2'
 import {ageGroup, groupByAgeGroup} from '../../../core/type'
+import {endOfMonth, startOfMonth, sub} from 'date-fns'
+
+export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
 
 export const useProtHHS2Data = ({
   data,
@@ -12,7 +15,12 @@ export const useProtHHS2Data = ({
   data?: _Arr<ProtHHS2Enrich>
 }) => {
   return useMemo(() => {
-    if (!data) return
+    if (!data || data.length === 0) return
+    const sorted = data.sort((a, b) => a.end.getTime() - b.end.getTime())
+    const start = sorted[0].end
+    const end = sorted[sorted.length - 1].end
+    const currentMonth = data.filter(_ => _.end >= startOfMonth(end))
+    const lastMonth = data.filter(_ => _.end < startOfMonth(end) && _.end > startOfMonth(sub(end, {months: 1})))
 
     const flatData = data.flatMap(_ => _.persons.map(p => ({..._, ...p})))
 
@@ -36,16 +44,26 @@ export const useProtHHS2Data = ({
       filter: _ => true,
     })
 
+    const idps = data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
+    const idpsIndividuals = flatData.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
+
+    console.log('DEBUG', data.filter(_ => _.persons.length !== _.how_many_ind))
     return {
+      start,
+      end,
+      currentMonth,
+      lastMonth,
       flatData,
-      individuals: data.flatMap(_ => _.persons).length,
+      idps,
+      idpsIndividuals,
+      individuals: data.sum(_ => _.persons.length),
       categoryOblasts,
       ageGroup: chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(_ => groupByAgeGroup(_, p => p.age!)))
         .map(_ => Enum.entries(_).map(([group, v]) => ({
             key: group,
             Male: v.filter(_ => _.gender === 'male').length,
             Female: v.filter(_ => _.gender === 'female').length,
-            Other: v.filter(_ => _.gender === undefined).length,
+            Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length,
           })
         ))
         .map(_ => _.sort((a, b) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))

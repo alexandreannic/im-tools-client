@@ -50,7 +50,7 @@ export const Panel = forwardRef(({
         position: 'relative',
         background: t => t.palette.background.paper,
         ...expended ? {
-          zIndex: 1,
+          zIndex: 9990,
           position: 'fixed',
           fontSize: 17,
           top: 0,

@@ -40,32 +40,39 @@ export const Donut = ({
   )
 }
 
-export const PieChartIndicator = ({
-  titleIcon,
-  title,
-  value,
-  evolution,
-  noWrap,
-  children,
-  dense,
-  fractionDigits = 0,
-  ...props
-}: {
+export interface PieChartIndicatorProps extends Omit<PanelProps, 'title'> {
   fractionDigits?: number
   dense?: boolean
   noWrap?: boolean
   titleIcon?: string
   title?: ReactNode
-  value: number
+  value?: number
+  base?: number
+  percent: number
   evolution?: number
-} & Omit<PanelProps, 'title'>) => {
-  const theme = useTheme()
+}
+
+export const PieChartIndicator = ({
+  titleIcon,
+  title,
+  percent,
+  evolution,
+  noWrap,
+  children,
+  dense,
+  value,
+  base,
+  fractionDigits = 0,
+  sx,
+  ...props
+}: PieChartIndicatorProps) => {
   return (
     <Box sx={{
       display: 'flex',
       alignItems: 'center',
+      ...sx,
     }}>
-      <Donut percent={value}/>
+      <Donut percent={percent} size={dense ? 50 : 55}/>
       <Box sx={{ml: dense ? .75 : 1.5}}>
         <SlidePanelTitle noWrap={noWrap}>
           {title && (
@@ -75,8 +82,16 @@ export const PieChartIndicator = ({
             </>
           )}
         </SlidePanelTitle>
-        <Txt sx={{fontSize: '1.4em', display: 'inline-flex', lineHeight: 1, alignItems: 'center'}}>
-          <Txt bold>{renderPercent(value, true, fractionDigits)}</Txt>
+        <Txt sx={{fontSize: '1.7em', display: 'inline-flex', lineHeight: 1, alignItems: 'center'}}>
+          <Txt bold>{renderPercent(percent, true, fractionDigits)}</Txt>
+          {value && (
+            <Txt color="disabled" sx={{fontWeight: 'lighter'}}>
+              &nbsp;({value}
+              {base && (
+                <>&nbsp;/&nbsp;{base}</>
+              )})
+            </Txt>
+          )}
           {evolution && (
             <Txt sx={{
               color: t => evolution > 0 ? t.palette.success.main : t.palette.error.main,

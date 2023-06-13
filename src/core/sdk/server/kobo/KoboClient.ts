@@ -1,6 +1,9 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
 import {Kobo, KoboAnswer, KoboAnswer2} from './Kobo'
+import {DashboardFilterOptions} from '../../../../page/Dashboard/shared/DashboardFilterOptions'
+import {koboFormId} from '../../../../koboFormId'
+import {mapProtHHS_2_1} from '../../../koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 
 export interface AnswersFilters<T extends string = string> {
   start?: Date
@@ -52,5 +55,20 @@ export class KoboFormSdk {
           })
         }
       )
+  }
+
+  readonly getProtHHS2 = <T extends Record<string, any> = Record<string, string | undefined>>({
+    filters = {},
+    paginate = {offset: 0, limit: 100000},
+  }: {
+    paginate?: ApiPagination;
+    filters?: AnswersFilters
+  } = {}) => {
+    return this.getAnswers({
+      formId: koboFormId.prod.protectionHh2,
+      paginate,
+      filters,
+      fnMap: mapProtHHS_2_1
+    })
   }
 }
