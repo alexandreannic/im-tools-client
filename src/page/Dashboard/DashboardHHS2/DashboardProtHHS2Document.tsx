@@ -10,7 +10,7 @@ import {ChartTools} from '../../../core/chartTools'
 import {chain} from '../../../utils/utils'
 import {PieChartIndicator} from '../../../shared/PieChartIndicator'
 import {UkraineMap} from '../../../shared/UkraineMap/UkraineMap'
-import {PieChartIndicatorKobo} from '../shared/KoboPieChartIndicator'
+import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 
 export const DashboardProtHHS2Document = ({
   data,
@@ -62,7 +62,7 @@ export const DashboardProtHHS2Document = ({
             }
           </Lazy>
           <SlidePanel>
-            <PieChartIndicatorKobo
+            <KoboPieChartIndicator
               compare={{now: computed.currentMonth, before: computed.lastMonth}}
               title={m.protHHS2.accessBarriersToObtainDocumentation}
               question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
@@ -102,7 +102,7 @@ export const DashboardProtHHS2Document = ({
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <PieChartIndicatorKobo
+            <KoboPieChartIndicator
               compare={{now: computed.currentMonth, before: computed.lastMonth}}
               title={m.lackOfHousingDoc}
               filterBase={_ => !_.includes('unable_unwilling_to_answer')}

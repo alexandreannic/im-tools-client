@@ -14,7 +14,7 @@ import {PieChartIndicator} from '../../../shared/PieChartIndicator'
 import {KoboLineChart} from '../shared/KoboLineChart'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
-import {KoboPieChartIndicatorMultiple, PieChartIndicatorKobo} from '../shared/KoboPieChartIndicator'
+import {KoboPieChartIndicatorMultiple, KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {chain} from '../../../utils/utils'
 
@@ -30,7 +30,7 @@ export const DashboardProtHHS2FamilyUnity = ({
       <SlideContainer>
         <SlideContainer column>
           <SlidePanel>
-            <PieChartIndicatorKobo
+            <KoboPieChartIndicator
               compare={{now: computed.currentMonth, before: computed.lastMonth}}
               title={m.protHHS2.familyMemberSeparated}
               question="are_you_separated_from_any_of_your_households_members"

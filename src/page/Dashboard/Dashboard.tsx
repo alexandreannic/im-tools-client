@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 export const dashboardModule = {
   basePath: '/dashboard',
   siteMap: {
-    hhs: 'hhs',
+    hhs: 'househould-survey',
   }
 }
 

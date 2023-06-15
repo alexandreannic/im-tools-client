@@ -24,7 +24,8 @@
     "reactNamespace": "React",
     "jsx": "react-jsx"
   },
+  "exclude": ["./lib", "./node_modules"],
   "include": [
-    "src"
+    "src", "deploy.ts"
   ]
 }

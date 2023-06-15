@@ -14,7 +14,7 @@ import {PieChartIndicator} from '../../../shared/PieChartIndicator'
 import {KoboLineChart} from '../shared/KoboLineChart'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
-import {KoboPieChartIndicatorMultiple, PieChartIndicatorKobo} from '../shared/KoboPieChartIndicator'
+import {KoboPieChartIndicatorMultiple, KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 
 
 export const DashboardProtHHS2Displacement = ({
@@ -47,6 +47,8 @@ export const DashboardProtHHS2Displacement = ({
               <UkraineMap sx={{flex: 1}} data={computed.byCurrentOblast} base={computed.flatData.length} legend={false} title={m.currentOblast}/>
             </Box>
           </SlidePanel>
+        </SlideContainer>
+        <SlideContainer column>
           <SlidePanel title={m.protHHS2.residentialIntentionsByHousehold}>
             <ProtHHS2BarChart
               data={data}
@@ -54,8 +56,6 @@ export const DashboardProtHHS2Displacement = ({
               question="what_are_your_households_intentions_in_terms_of_place_of_residence"
             />
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column>
           <SlidePanel>
             <Lazy deps={[data]} fn={() => ChartTools.percentage({
               value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,

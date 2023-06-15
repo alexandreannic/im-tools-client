@@ -12,7 +12,7 @@ import {chain} from '../../../utils/utils'
 import {AAStackedBarChart} from '../../../shared/Chart/AaStackedBarChart'
 import {PieChartIndicator} from '../../../shared/PieChartIndicator'
 import {Panel} from '../../../shared/Panel'
-import {PieChartIndicatorKobo} from '../shared/KoboPieChartIndicator'
+import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 
 export const DashboardProtHHS2Sample = ({
   data,
@@ -55,8 +55,7 @@ export const DashboardProtHHS2Sample = ({
               </Lazy>
             </Panel>
             <Panel sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <PieChartIndicatorKobo
-                compare={{now: computed.currentMonth, before: computed.lastMonth}}
+              <KoboPieChartIndicator
                 title={m.uaCitizen}
                 data={data}
                 filterBase={_ => _ !== 'unable_unwilling_to_answer'}

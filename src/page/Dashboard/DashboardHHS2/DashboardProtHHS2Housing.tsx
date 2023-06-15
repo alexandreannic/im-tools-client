@@ -3,7 +3,7 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
-import {PieChartIndicatorKobo} from '../shared/KoboPieChartIndicator'
+import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ChartTools} from '../../../core/chartTools'
 import {KoboLineChart} from '../shared/KoboLineChart'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
@@ -28,7 +28,7 @@ export const DashboardProtHHS2Housing = ({
             />
           </SlidePanel>
           <SlidePanel>
-            <PieChartIndicatorKobo
+            <KoboPieChartIndicator
               compare={{now: computed.currentMonth, before: computed.lastMonth}}
               title={m.protHHSnapshot.noAccommodationDocument}
               question="do_you_have_formal_rental_documents_to_stay_in_your_accommodation"
@@ -45,7 +45,7 @@ export const DashboardProtHHS2Housing = ({
         </SlideContainer>
         <SlideContainer column>
           <SlidePanel>
-            <PieChartIndicatorKobo
+            <KoboPieChartIndicator
               compare={{now: computed.currentMonth, before: computed.lastMonth}}
               title={m.mainConcerns}
               question="what_are_your_main_concerns_regarding_your_accommodation"

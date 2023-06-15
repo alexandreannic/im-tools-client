@@ -47,7 +47,6 @@ export const useProtHHS2Data = ({
     const idps = data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
     const idpsIndividuals = flatData.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
 
-    console.log('DEBUG', data.filter(_ => _.persons.length !== _.how_many_ind))
     return {
       start,
       end,

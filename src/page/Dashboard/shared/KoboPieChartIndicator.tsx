@@ -34,7 +34,7 @@ export const KoboPieChartIndicatorMultiple = <T, K extends StringArrayKeys<T>>({
   )
 }
 
-export const PieChartIndicatorKobo = <T, K extends StringKeys<T> | StringArrayKeys<T>>({
+export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKeys<T>>({
   title,
   question,
   compare,

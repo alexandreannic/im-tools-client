@@ -226,7 +226,7 @@ export namespace ChartTools {
     base?: (a: A) => boolean,
   }): ChartDataVal & {percent: number} => {
     const v = Arr(data).count(value)
-    const b = base ? Arr(data).count(base) : data.length
+    const b = (base ? Arr(data).count(base) : data.length) || 1
     return {value: v, base: b, percent: v / b}
   }
 

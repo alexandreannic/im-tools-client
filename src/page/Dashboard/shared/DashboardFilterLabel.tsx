@@ -74,7 +74,7 @@ export const DashboardFilterLabel = ({
           border: 'none',
           zIndex: 102,
           position: 'absolute',
-          top: 57,
+          top: 46,
         }}>
           <Box sx={{
             overflowY: 'auto',

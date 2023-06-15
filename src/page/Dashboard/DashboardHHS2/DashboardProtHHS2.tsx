@@ -25,6 +25,9 @@ import {PeriodPicker} from '../../../shared/PeriodPicker/PeriodPicker'
 import {intersection} from 'lodash'
 import {makeKoboBarChartComponent} from '../shared/KoboBarChart'
 import {DashboardProtHHS2FamilyUnity} from './DashboardProtHHS2FamilyUnity'
+import {DashboardProtHHS2Safety} from './DashboardProtHHS2Safety'
+import {DebouncedInput} from '../../../shared/DebouncedInput'
+import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
 
 export type ProtHHS2Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
@@ -188,14 +191,21 @@ export const DashboardProtHHS2 = () => {
       title={m.ukraine}
       subTitle={m.protectionMonitoringDashboard}
       action={
-        <PeriodPicker
+        <DebouncedInput<[Date | undefined, Date | undefined]>
+          debounce={400}
           value={[filter.start, filter.end]}
           onChange={([start, end]) => setFilters(prev => ({...prev, start, end}))}
-          sx={{mt: -.5}}
-        />
+        >
+          {(value, onChange) => <PeriodPicker
+            value={value ?? [undefined, undefined]}
+            onChange={onChange}
+            // min={computed?.start}
+            // max={computed?.end}
+          />}
+        </DebouncedInput>
       }
       header={
-        <Box sx={{overflowX: 'auto', display: 'flex', alignItems: 'center', '& > :not(:last-child)': {mr: 1}}}>
+        <Box sx={{display: 'flex', alignItems: 'center', '& > :not(:last-child)': {mr: 1}}}>
           <DashboardFilterOptions
             value={filter.originOblast}
             label={m.originOblast}
@@ -250,6 +260,8 @@ export const DashboardProtHHS2 = () => {
           computed,
         }
         return [
+          {name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
+          {name: 'violence', title: m.violence, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
           {name: 'family_unity', title: m.familyUnity, component: () => <DashboardProtHHS2FamilyUnity {...panelProps}/>},
           {name: 'housing', title: m.housing, component: () => <DashboardProtHHS2Housing {...panelProps}/>},
           {name: 'sample', title: m.sample, component: () => <DashboardProtHHS2Sample {...panelProps}/>},

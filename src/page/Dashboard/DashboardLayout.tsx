@@ -1,5 +1,5 @@
 import React, {ReactNode, useEffect, useState} from 'react'
-import {Box, GlobalStyles, Icon, LinearProgress, ThemeProvider, Typography} from '@mui/material'
+import {Box, darken, GlobalStyles, Icon, LinearProgress, ThemeProvider, Typography} from '@mui/material'
 import {combineSx, muiTheme} from '../../core/theme'
 import {set} from 'lodash'
 import {DashboardProvider} from './DashboardContext'
@@ -14,15 +14,9 @@ const headerStickyClass = 'sticky-header'
 let header$: HTMLElement | null = null
 
 const style = makeSx({
-  menuItemActive: {
-    borderWidth: 2,
-    color: t => t.palette.primary.main,
-    background: t => t.palette.action.focus,
-    borderColor: t => t.palette.primary.main,
-  },
   menuItem: {
     py: 1,
-    px: 3,
+    px: 2,
     pr: 2,
     display: 'flex',
     color: t => t.palette.text.secondary,
@@ -31,13 +25,25 @@ const style = makeSx({
     borderRight: t => `1px solid ${t.palette.divider}`,
     borderBottomLeftRadius: 40,
     borderTopLeftRadius: 40,
+    transition: t => t.transitions.create('background'),
+    ':hover': {
+      borderWidth: 2,
+      background: t => t.palette.action.hover,
+      borderColor: t => darken(t.palette.action.hover, .9),
+    },
+  },
+  menuItemActive: {
+    borderWidth: 2,
+    color: t => t.palette.primary.main,
+    background: t => t.palette.action.focus,
+    borderColor: t => t.palette.primary.main,
   },
   sidebar: {
-    maxWidth: 250,
-    minWidth: 250,
+    maxWidth: 270,
+    minWidth: 270,
   },
   sidebarContent: {
-    maxWidth: 250,
+    maxWidth: 270,
     position: 'fixed',
     p: 2,
     top: 0,
@@ -101,6 +107,7 @@ const generalStyles = <GlobalStyles styles={t => ({
   [`#${headerId}.${headerStickyClass}`]: {
     border: 'none',
     boxShadow: t.shadows[4],
+    background: t.palette.background.paper,
     padding: `${t.spacing(1)} ${t.spacing(2)} ${t.spacing(1)} ${t.spacing(2)}`,
     position: 'fixed',
     top: 0,
@@ -112,7 +119,7 @@ const generalStyles = <GlobalStyles styles={t => ({
 const spyTitles = (sections: string[], fn: (sectionName: string) => void) => {
   const sections$ = sections.map(_ => document.getElementById(_))
   const set = () => {
-    const index = sections$.findIndex(_ => window.scrollY >= (_?.offsetTop ?? -1) - 70)
+    const index = sections$.findIndex(_ => window.scrollY >= (_?.offsetTop ?? -1) - 140)
     fn(sections[index])
   }
   window.addEventListener('scroll', set)
@@ -151,7 +158,7 @@ export const DashboardLayout = ({
     })
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
-        e.preventDefault()
+        // e.preventDefault()
         // @ts-ignore
         document.querySelector(this.getAttribute('href')).scrollIntoView({behavior: 'smooth'})
       })
@@ -162,25 +169,28 @@ export const DashboardLayout = ({
       {generalStyles}
       <ThemeProvider theme={(() => {
         const t = muiTheme()
-        t.palette.background.default = 'white'
+        t.palette.background.default = '#f8f9fa'
         t.shape.borderRadius = 8
         set(t, 'components.MuiCard.styleOverrides.root', () => ({
-          border: `1px solid ${t.palette.divider}`,
+          // border: `1px solid ${t.palette.divider}`,
+          border: 'none',
           boxShadow: 'none',
         }))
         return t
       })()}>
-        <Box sx={t => ({display: 'flex', background: t.palette.background.default})}>
+        <Box sx={t => ({minHeight: '100vh', display: 'flex', background: t.palette.background.default})}>
           {loading && <LinearProgress sx={{position: 'fixed', top: 0, right: 0, left: 0}}/>}
           <Box sx={style.sidebar}>
             <Box sx={style.sidebarContent}>
               <Box>
                 {sections.map(s => (
-                  <Box key={s.name} sx={combineSx(
-                    style.menuItem,
-                    activeSection === s.name && style.menuItemActive,
-                  )}>
-                    <Box component="a" href={'#' + s.name}>{s.title}</Box>
+                  <Box component="a" href={'#' + s.name}>
+                    <Box key={s.name} sx={combineSx(
+                      style.menuItem,
+                      activeSection === s.name && style.menuItemActive,
+                    )}>
+                      {s.title}
+                    </Box>
                   </Box>
                 ))}
               </Box>
@@ -205,7 +215,7 @@ export const DashboardLayout = ({
             {beforeSection}
             {sections.map(s => (
               <Box key={s.name}>
-                <Typography id={s.name} variant="h2" sx={{...style.sectionTitle, mt: 5, mb: 2}}>
+                <Typography id={s.name} variant="h2" sx={{...style.sectionTitle, background: 'none', marginTop: '-60px', paddingTop: '120px', mb: 2}}>
                   {s.title}
                 </Typography>
                 <Box>

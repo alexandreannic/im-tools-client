@@ -194,3 +194,5 @@ export const paginateData = <T>(limit: number, offset: number) => (data: T[]): P
     totalSize: data.length,
   }
 }
+
+export const forceArrayStringInference = <T extends string>(a: T[]) => a

@@ -168,9 +168,10 @@ const _ActivityInfo = ({
   return (
     <div>
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-        <Box>
-          <AaInput type="month" value={period} onChange={_ => setPeriod(_.target.value)}/>
+        <Box sx={{display: 'flex', '& > *': {mr: 1}}}>
+          <AaInput type="month" sx={{minWidth: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
           <AaSelect
+            sx={{minWidth: 200}}
             label="Oblast"
             value={selectedOblast?.split('_')[0] ?? ''}
             onChange={_ => setSelectedOblast(_)}

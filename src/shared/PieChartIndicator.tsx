@@ -82,18 +82,22 @@ export const PieChartIndicator = ({
             </>
           )}
         </SlidePanelTitle>
-        <Txt sx={{fontSize: '1.7em', display: 'inline-flex', lineHeight: 1, alignItems: 'center'}}>
-          <Txt bold>{renderPercent(percent, true, fractionDigits)}</Txt>
-          {value && (
-            <Txt color="disabled" sx={{fontWeight: 'lighter'}}>
-              &nbsp;({value}
-              {base && (
-                <>&nbsp;/&nbsp;{base}</>
-              )})
+        <Box sx={{display: 'inline-flex', lineHeight: 1, alignItems: 'flex-end'}}>
+          <Txt bold sx={{fontSize: '1.7em'}}>{renderPercent(percent, true, fractionDigits)}</Txt>
+          {value !== undefined && (
+            <Txt color="disabled" sx={{ml: .5, fontWeight: '400'}}>
+              <span style={{fontSize: '1.6em', letterSpacing: '2px'}}>
+                &nbsp;{value}
+              </span>
+              {base !== undefined && (
+                <span style={{fontSize: '1.2em'}}>/{base}</span>
+              )}
+              {/*<Txt color="disabled" sx={{fontSize: '1.4em', fontWeight: 'lighter'}}>)</Txt>*/}
             </Txt>
           )}
           {evolution && (
             <Txt sx={{
+              fontSize: '1.7em',
               color: t => evolution > 0 ? t.palette.success.main : t.palette.error.main,
               display: 'inline-flex', alignItems: 'center'
             }}>
@@ -104,7 +108,7 @@ export const PieChartIndicator = ({
               {children}
             </Txt>
           )}
-        </Txt>
+        </Box>
       </Box>
     </Box>
   )
