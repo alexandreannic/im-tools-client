@@ -8,6 +8,8 @@ export interface RequestOption {
   readonly body?: any
   readonly timeout?: number
   readonly responseType?: ResponseType
+  readonly mapData?: (_: any) => any
+  readonly mapError?: (_: any) => never
 }
 
 export interface ApiClientParams {
@@ -81,7 +83,7 @@ export class ApiClient {
       return client
         .request({
           method,
-          url: url + (options ? '?' + objectToQueryString(options.qs) : ''),
+          url: url + (options?.qs && Object.keys(options.qs).length > 0 ? '?' + objectToQueryString(options.qs) : ''),
           headers: builtOptions?.headers,
           // TODO(Alex) Check if it works
           // params: options?.qs,
@@ -90,7 +92,7 @@ export class ApiClient {
             encode: params => qs.stringify(params, {arrayFormat: 'repeat'}),
           }
         })
-        .then(mapData ?? ((_: AxiosResponse) => _.data))
+        .then(options?.mapData ?? mapData ?? ((_: AxiosResponse) => _.data))
         .catch(
           mapError ??
           ((_: AxiosError) => {

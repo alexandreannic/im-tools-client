@@ -1,14 +1,13 @@
-import React, {Dispatch, SetStateAction} from 'react'
+import React from 'react'
 import {Box, BoxProps, Divider, Icon, Switch} from '@mui/material'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
-import {ItSelect} from '../../shared/Select/Select'
-import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
+import {AaSelect} from '../../shared/Select/Select'
+import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {Enum} from '@alexandreannic/ts-utils'
 import {IconBtn, Txt} from 'mui-extension'
-import {Btn} from '../../shared/Btn/Btn'
+import {AaBtn} from '../../shared/Btn/AaBtn'
 import {useI18n} from '../../core/i18n'
-import {ProtSnapshotCustomFilters, ProtSnapshotFilter, protSnapshotInitialFilters, ProtSnapshotSlideProps, ProtSSData} from './ProtSnapshot'
-import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
+import {protSnapshotInitialFilters, ProtSnapshotSlideProps} from './ProtSnapshot'
 import {PeriodPicker} from '../../shared/PeriodPicker/PeriodPicker'
 import {NavLink} from 'react-router-dom'
 
@@ -38,7 +37,7 @@ export const ProtSnapshotFilters = ({
             <Icon>arrow_back</Icon>
           </IconBtn>
         </NavLink>
-        <Btn
+        <AaBtn
           sx={{marginLeft: 'auto', ml: 2}}
           color="primary"
           variant="contained"
@@ -46,16 +45,16 @@ export const ProtSnapshotFilters = ({
           onClick={() => window.print()}
         >
           Download PDF
-        </Btn>
+        </AaBtn>
       </Box>
       <Divider sx={{mb: 3}}/>
-      <Btn
+      <AaBtn
         icon="clear"
         color="primary"
         onClick={() => onCustomFilters(protSnapshotInitialFilters)}
       >
         Clear filters
-      </Btn>
+      </AaBtn>
       <UkraineMap
         legend={false}
         data={current.computed.oblastCurrent}
@@ -81,7 +80,7 @@ export const ProtSnapshotFilters = ({
         }))}
         sx={{mb: 3}}
       />
-      <ItSelect<KoboFormProtHH.GetType<'vulnerability'>>
+      <AaSelect<KoboFormProtHH.GetType<'vulnerability'>>
         sx={{mb: 3}}
         multiple
         label={m.vulnerabilities}
@@ -91,7 +90,7 @@ export const ProtSnapshotFilters = ({
           ({value: v, children: m.protHHSnapshot.enum.vulnerability[v]})
         )}
       />
-      <ItSelect<KoboFormProtHH.Status>
+      <AaSelect<KoboFormProtHH.Status>
         sx={{mb: 3}}
         multiple
         label={m.status}

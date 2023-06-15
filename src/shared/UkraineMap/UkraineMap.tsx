@@ -1,8 +1,8 @@
 import {Arr, Enum, map} from '@alexandreannic/ts-utils'
-import {OblastISO, UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
+import {OblastISOSVG, UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
 import {alpha, Box, BoxProps, darken, useTheme} from '@mui/material'
 import {useMemo} from 'react'
-import {Oblast, OblastIndex} from './oblastIndex'
+import {OblastIndex} from './oblastIndex'
 import {Txt} from 'mui-extension'
 import {toPercent} from '../../utils/utils'
 import {omitBy} from 'lodash'
@@ -21,7 +21,7 @@ const computeFill = (value: number, min: number, max: number) => {
 
 export const UkraineMap = ({
   data = {} as any,
-  omitValueLt = 5,
+  omitValueLt = 0,
   base,
   fillBaseOn,
   onSelect,
@@ -32,7 +32,7 @@ export const UkraineMap = ({
   omitValueLt?: number
   legend?: boolean
   title?: string
-  onSelect?: (oblast: OblastISO) => void
+  onSelect?: (oblast: OblastISOSVG) => void
   base?: number
   fillBaseOn?: 'percent' | 'value'
   data?: Partial<{ [key in keyof UkraineSvgPath]: {value: number, base?: number} }>
@@ -43,9 +43,9 @@ export const UkraineMap = ({
     return omitValueLt ? omitBy(data, _ => (_.base ?? _.value) <= omitValueLt) : data
   }, [data])
 
+
   const {max, min, maxPercent, minPercent} = useMemo(() => {
     const _data = Arr(Enum.values(filteredData)).compact()
-    // .filter(_ => _.value !== 0)
     const values = _data.map(_ => _!.value ?? 0)
     // TODO _data.map create invalid array length
     const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.get.map(_ => {
@@ -114,9 +114,10 @@ export const UkraineMap = ({
                   }
                 }}
               >
-                {map(OblastIndex.findByIso(iso), _ => (
+                {map(OblastIndex.findByIso(iso as any), _ => (
                   <title>
-                    {_.name}<br/>{'\n'}
+                    {_}
+                    {'\n'}
                     {res ? (
                       <>{res.value} {res.base && res.base !== 100 && '/ ' + res.base} - {toPercent(res.percent)}</>
                     ) : 0}

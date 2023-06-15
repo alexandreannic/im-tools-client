@@ -10,7 +10,6 @@ export const combineSx = (...sxs: (SxProps<Theme> | undefined | false)[]): SxPro
 export const makeSx = <T>(_: { [key in keyof T]: SxProps<Theme> }) => _
 export const makeStyle = (_: SxProps<Theme>) => _
 
-
 export const sxUtils = makeSx({
   fontBig: {
     fontSize: t => t.typography.fontSize * 1.15,
@@ -76,7 +75,7 @@ export const styleUtils = (t: Theme) => ({
 export const defaultSpacing = 8
 
 export const muiTheme = (dark?: boolean): Theme => {
-  const defaultRadius = 4
+  const defaultRadius = 8
   const fontFamily = '"Open Sans", sans-serif'
   const fontSize = 14
   const mainColor = '#c9000a'
@@ -86,19 +85,24 @@ export const muiTheme = (dark?: boolean): Theme => {
     dark: darken(mainColor, .4),
   }
   const colorSecondary = {
-    main: '#1e2b50',
-    light: lighten('#1e2b50', 0.3),
-    dark: darken('#1e2b50', 0.3),
+    main: '#1a73e8',
+    light: lighten('#1a73e8', 0.3),
+    dark: darken('#1a73e8', 0.3),
   }
   const baseTheme = createTheme({
     spacing: defaultSpacing,
     palette: {
+      action: {
+        focus: alpha(mainColor, .1),
+        focusOpacity: .1,
+      },
       primary: colorPrimary,
       secondary: colorSecondary,
       error: red,
       mode: dark ? 'dark' : 'light',
       background: {
-        default: dark ? '#1e1e22' : '#f8f9fa',
+        default: dark ? 'black' : 'white',
+        // default: dark ? '#1e1e22' : '#f8f9fa',
         paper: dark ? 'black' : 'white',
       }
     },
@@ -109,6 +113,22 @@ export const muiTheme = (dark?: boolean): Theme => {
       fontSize,
       fontFamily,
       fontWeightBold: 500,
+      h1: {
+        fontSize: '2.4em',
+        fontWeight: 500,
+      },
+      subtitle1: {
+        fontSize: '1.5em',
+        fontWeight: 500,
+      },
+      h2: {
+        fontSize: '1.7em',
+        fontWeight: 500,
+      },
+      h3: {
+        fontWeight: 500,
+        fontSize: '1.3em',
+      },
     },
   })
   const theme: ThemeOptions = {
@@ -131,6 +151,9 @@ export const muiTheme = (dark?: boolean): Theme => {
             fontSize: baseTheme.typography.fontSize,
             fontFamily,
           },
+          button: {
+            fontFamily,
+          },
           body: {
             color: baseTheme.palette.text.primary,
             fontSize: '1rem',
@@ -149,13 +172,7 @@ export const muiTheme = (dark?: boolean): Theme => {
             // background: 'red',
           },
           ul: {
-            marginTop: '.5em',            
-          },
-          h1: baseTheme.typography.h4,
-          h2: {
-            ...baseTheme.typography.h6,
-            mb: 2,
-            mt: 3,
+            marginTop: '.5em',
           },
           p: {
             ...baseTheme.typography.body1,
@@ -185,13 +202,17 @@ export const muiTheme = (dark?: boolean): Theme => {
           },
         },
       },
-      // MuiCard: {
-      //   styleOverrides: {
-      //     root: {
-      //       borderRadius: defaultRadius,
-      //     },
-      //   },
-      // },
+      MuiCard: {
+        defaultProps: {
+          elevation: 0,
+        },
+        styleOverrides: {
+          root: {
+            border: `1px solid ${baseTheme.palette.divider}`,
+            //       borderRadius: defaultRadius,
+          },
+        },
+      },
       MuiTabs: {
         styleOverrides: {
           root: {

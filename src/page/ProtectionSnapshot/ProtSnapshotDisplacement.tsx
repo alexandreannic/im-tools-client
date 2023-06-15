@@ -4,7 +4,7 @@ import React, {useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {Box, Divider, Icon, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ScLineChart} from '../../shared/Chart/ScLineChart'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
@@ -44,7 +44,7 @@ export const ProtSnapshotDisplacement = ({
       <SlideBody>
         <SlideContainer>
           <SlideContainer sx={{flex: 3}} column>
-            <SlidePanel title={m.departureFromAreaOfOrigin}>
+            <SlidePanelDepreacted title={m.departureFromAreaOfOrigin}>
               <ScLineChart hideYTicks hideXTicks height={140} hideLabelToggle curves={[
                 {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: computed._12_3_1_dateDeparture},
               ]}/>
@@ -52,7 +52,7 @@ export const ProtSnapshotDisplacement = ({
                 {map(_12_3_1_dateDeparture.head, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
                 {map(_12_3_1_dateDeparture.last, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
               </Txt>
-            </SlidePanel>
+            </SlidePanelDepreacted>
             <SlidePanelTitle>{m.protHHSnapshot.percentagePopulationByOblast}</SlidePanelTitle>
             <Box sx={{px: 1}}>
               <UkraineMap
@@ -60,7 +60,7 @@ export const ProtSnapshotDisplacement = ({
                 base={computed.totalIdpsMember}
                 data={computed.oblastOrigins}
                 onSelect={onFilterOblast('_12_1_What_oblast_are_you_from_001_iso')}
-                title={m.origin}
+                title={m.originOblast}
                 // legend={true}
                 sx={{mx: 2}}
               />
@@ -74,7 +74,7 @@ export const ProtSnapshotDisplacement = ({
                 base={computed.totalIdpsMember}
                 data={computed.oblastCurrent}
                 onSelect={onFilterOblast('_4_What_oblast_are_you_from_iso')}
-                title={m.current}
+                title={m.currentOblast}
                 sx={{mx: 2}}
               />
             </Box>
@@ -85,18 +85,18 @@ export const ProtSnapshotDisplacement = ({
               <SlideTxt dangerouslySetInnerHTML={{
                 __html: m.protHHSnapshot.desc.displacement({
                   intentionToReturn: toPercent(computed._12_7_1_planToReturn.percent, 0),
-                  dnipIdps: toPercent(computed.oblastCurrent['UA-12'].value / computed.totalIdpsMember, 0),
-                  cherniIdps: toPercent(computed.oblastCurrent['UA-74'].value / computed.totalIdpsMember, 0),
-                  lvivIdps: toPercent(computed.oblastCurrent['UA-46'].value / computed.totalIdpsMember, 0),
-                  chernivIdps: toPercent(computed.oblastCurrent['UA-77'].value / computed.totalIdpsMember, 0),
+                  dnipIdps: toPercent(computed.oblastCurrent['UA12'].value / computed.totalIdpsMember, 0),
+                  cherniIdps: toPercent(computed.oblastCurrent['UA74'].value / computed.totalIdpsMember, 0),
+                  lvivIdps: toPercent(computed.oblastCurrent['UA46'].value / computed.totalIdpsMember, 0),
+                  chernivIdps: toPercent(computed.oblastCurrent['UA77'].value / computed.totalIdpsMember, 0),
                 })
               }}/>
             </div>
             <SlideContainer>
               <SlideContainer column>
-                <SlidePanel title={m.intentionToReturn}>
+                <SlidePanelDepreacted title={m.intentionToReturn}>
                   <PieChartIndicator
-                    value={computed._12_7_1_planToReturn.percent}
+                    percent={computed._12_7_1_planToReturn.percent}
                     evolution={computed._12_7_1_planToReturn.percent - previous.computed._12_7_1_planToReturn.percent}
                   >
                     <Txt color="hint" block sx={{fontSize: '1.15rem', mt: -.25, ml: .25}}><sup>(1)</sup></Txt>
@@ -104,7 +104,7 @@ export const ProtSnapshotDisplacement = ({
                   <Divider sx={{my: 2}}/>
                   <SlidePanelTitle>{m.decidingFactorsToReturn}</SlidePanelTitle>
                   <HorizontalBarChartGoogle data={computed._12_8_1_What_would_be_the_deciding_fac} base={data.length}/>
-                </SlidePanel>
+                </SlidePanelDepreacted>
               </SlideContainer>
               <SlideContainer column>
                 {/*<SlidePanel title={<Txt noWrap>{m.protHHSnapshot.experiencedShellingDuringDisplacement}</Txt>}>*/}
@@ -120,7 +120,7 @@ export const ProtSnapshotDisplacement = ({
                 {/*  />*/}
                 {/*</SlidePanel>*/}
 
-                <SlidePanel title={m.protHHSnapshot.hhSeparatedDueToConflict}>
+                <SlidePanelDepreacted title={m.protHHSnapshot.hhSeparatedDueToConflict}>
                   {/*<UkraineMap*/}
                   {/*  sx={{mt: 2, mx: 4}}*/}
                   {/*  fillBaseOn="percent"*/}
@@ -130,13 +130,13 @@ export const ProtSnapshotDisplacement = ({
                   {/*<Divider sx={{my: 2}}/>*/}
                   <PieChartIndicator
                     // title={m.protHHSnapshot.numberHhSeparatedDueToConflict}
-                    value={computed._13_4_1_Are_you_separated_from_any_of_percent.percent}
+                    percent={computed._13_4_1_Are_you_separated_from_any_of_percent.percent}
                     evolution={computed._13_4_1_Are_you_separated_from_any_of_percent.percent - previous.computed._13_4_1_Are_you_separated_from_any_of_percent.percent}
                   />
                   <Divider sx={{my: 2}}/>
                   <SlidePanelTitle>{m.protHHSnapshot.locationOfSeparated}</SlidePanelTitle>
                   <HorizontalBarChartGoogle hideValue data={computed._13_4_3_If_separated_from_a_household_}/>
-                </SlidePanel>
+                </SlidePanelDepreacted>
 
                 <Divider/>
                 <Txt sx={{mt: -1}} size="small" color="hint">

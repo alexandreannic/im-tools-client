@@ -1,10 +1,10 @@
 import {Box, BoxProps, Icon} from '@mui/material'
-import logo from '../../core/img/drc-logo.png'
 import {Txt, TxtProps} from 'mui-extension'
 import React, {ReactNode, useEffect, useRef} from 'react'
 import {usePdfContext} from './PdfLayout'
-import {Property} from 'csstype'
-import logoEu from '../../core/img/eu.png'
+import {Panel, PanelBody} from '../Panel'
+import {PanelProps} from '../Panel/Panel'
+import {DRCLogo, EULogo} from '../logo'
 
 export const Slide = (props: BoxProps) => {
   return (
@@ -62,16 +62,21 @@ export const SlideContainer = ({
   column,
   title,
   ...props
-}: BoxProps & {
+}: Omit<BoxProps, 'flexDirection'> & {
   column?: boolean
 }) => {
-  const {pdfTheme: t} = usePdfContext()
   return (
     <Box {...props} sx={{
       display: 'flex',
       flex: 1,
-      ...column && {flexDirection: 'column',},
-      '& > :not(:last-child)': column ? {mb: t.slidePadding} : {mr: t.slidePadding},
+      ...column && {
+        flexDirection: 'column',
+        // '& > *': {
+        //   flex: 1
+        // },
+      },
+
+      '& > :not(:last-child)': column ? {mb: 2} : {mr: 2},
       ...sx,
     }}>
       {children}
@@ -91,8 +96,8 @@ export const SlideHeader = ({children}: BoxProps) => {
     }}>
       <Txt bold sx={{fontSize: '1.42em'}}>{children}</Txt>
       <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
-        <Box component="img" src={logoEu} sx={{mr: 1, height: 30}}/>
-        <Box component="img" src={logo} sx={{height: 22}}/>
+        <EULogo height={30}/>
+        <DRCLogo height={22}/>
       </Box>
     </Box>
   )
@@ -101,7 +106,7 @@ export const SlideHeader = ({children}: BoxProps) => {
 export const SlideBody = (props: BoxProps) => {
   const {pdfTheme} = usePdfContext()
   return (
-    <Box {...props} sx={{p: pdfTheme.slidePadding, pb: 0, ...props.sx}}/>
+    <Box {...props} sx={{p: 2, pb: 0, ...props.sx}}/>
   )
 }
 
@@ -124,7 +129,7 @@ const preventOverCapitalization = (text: string): string => {
   })
   return text
 }
-export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML, sx, children, ... props}: {icon?: string} & TxtProps) => {
+export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML, sx, children, ...props}: {icon?: string} & TxtProps) => {
   const ref = useRef<HTMLDivElement>()
 
   useEffect(() => {
@@ -147,11 +152,21 @@ export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML
   </Txt>
 }
 
-export const SlidePanel = ({children, title, sx, noBackground, ...props}: Omit<BoxProps, 'title'> & {
+export const SlidePanel = ({savableAsImg = true, expendable = true, children, sx, ...props}: PanelProps) => {
+  return (
+    <Panel {...props} savableAsImg={savableAsImg} expendable={expendable} sx={{
+      ...sx,
+      m: 0,
+    }}>
+      <PanelBody>{children}</PanelBody>
+    </Panel>
+  )
+}
+/** @deprecated*/
+export const SlidePanelDepreacted = ({children, title, sx, noBackground, ...props}: Omit<BoxProps, 'title'> & {
   title?: ReactNode,
   noBackground?: boolean
 }) => {
-  const {pdfTheme} = usePdfContext()
   return (
     <Box
       {...props}
@@ -159,10 +174,9 @@ export const SlidePanel = ({children, title, sx, noBackground, ...props}: Omit<B
         ...sx,
         p: 1.5,
         background: t => noBackground ? undefined : t.palette.background.default,
-        borderRadius: pdfTheme.slideRadius,
-        // border: t => `1px solid ${t.palette.divider}`
-        '&:not(:last-child)': {
-          mb: pdfTheme.slidePadding
+        borderRadius: t => t.shape.borderRadius,
+        '&:last-child': {
+          mb: 0
         },
       }}
     >
@@ -176,39 +190,40 @@ export const SlidePanel = ({children, title, sx, noBackground, ...props}: Omit<B
   )
 }
 
-export const SlideCard = ({
+export const SlideWidget = ({
   sx,
   children,
   title,
   icon,
   ...props
-}: BoxProps & {
-  icon?: string
+}: Omit<PanelProps, 'expendable' | 'savableAsImg'> & {
+  icon?: string | ReactNode
 }) => {
-  const {pdfTheme} = usePdfContext()
   return (
-    <Box {...props} sx={{
-      '&:not(:last-of-type)': {
-        mr: pdfTheme.slidePadding,
-      },
-      p: 1.25,
-      width: '100%',
-      background: t => t.palette.background.default,
-      borderRadius: pdfTheme.slideRadius,
-      textAlign: 'center',
-      ...sx,
-    }}>
+    <SlidePanel
+      {...props}
+      expendable={false}
+      savableAsImg={false}
+      sx={{
+        width: '100%',
+        textAlign: 'center',
+        '&:last-child': {
+          mr: 0,
+        },
+        ...sx,
+      }}>
+      <Txt block color="hint" uppercase bold>
+        {title}
+      </Txt>
       <Box sx={{
-        fontSize: '1.5em',
+        fontWeight: t => t.typography.fontWeightBold,
+        fontSize: '1.7em',
         display: 'inline-flex',
         alignItems: 'center'
       }}>
-        {icon && <Icon color="disabled" sx={{mr: 1}} fontSize="large">{icon}</Icon>}
+        {icon && (typeof icon === 'string' ? <Icon color="disabled" sx={{mr: 1}} fontSize="large">{icon}</Icon> : icon)}
         {children}
       </Box>
-      <Txt block color="hint">
-        {title}
-      </Txt>
-    </Box>
+    </SlidePanel>
   )
 }

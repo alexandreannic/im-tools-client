@@ -1,5 +1,5 @@
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Divider, useTheme} from '@mui/material'
 import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
@@ -32,8 +32,8 @@ export const ProtSnapshotSafety = ({
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.desc.safety({
                 safetyDuringDisplacement: toPercent(computed._12_5_1_During_your_displacement_journPercent.value / computed.idpsCount, 0),
-                sosKharkiv: map(computed._18_1_1_Please_rate_your_sense_of_safe_map['UA-63'], _ => toPercent(_.value / _.base, 0))!,
-                sosChernihiv: map(computed._18_1_1_Please_rate_your_sense_of_safe_map['UA-74'], _ => toPercent(_.value / _.base, 0))!,
+                sosKharkiv: map(computed._18_1_1_Please_rate_your_sense_of_safe_map['UA63'], _ => toPercent(_.value / _.base, 0))!,
+                sosChernihiv: map(computed._18_1_1_Please_rate_your_sense_of_safe_map['UA74'], _ => toPercent(_.value / _.base, 0))!,
               })
             }}/>
             <SlidePanel>
@@ -46,7 +46,7 @@ export const ProtSnapshotSafety = ({
               {/*<Divider sx={{my: 2}}/>*/}
               <PieChartIndicator
                 title={m.propertyDamaged}
-                value={computed._27_Has_your_house_apartment_been_.percent}
+                percent={computed._27_Has_your_house_apartment_been_.percent}
                 // evolution={computed._27_Has_your_house_apartment_been_.percent - previous.computed._27_Has_your_house_apartment_been_.percent}
               />
               <Divider sx={{my: 1.5}}/>

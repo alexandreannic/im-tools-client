@@ -156,3 +156,43 @@ export function groupByAndTransform<T>(arr: T[], predicates: ((item: T) => any)[
     })
   }
 }
+
+export const mapObjectValue = <K extends string, V, R>(t: Record<K, V>, fn: (_: V) => R): Record<K, R> => {
+  const output = {} as Record<K, R>
+  Enum.entries(t).forEach(([k, v]) => {
+    output[k] = fn(v)
+  })
+  return output
+}
+
+export const mapObject = <K extends string, V, NK extends string, NV>(t: Record<K, V>, fn: (_: [K, V]) => [NK, NV]): Record<NK, NV> => {
+  const output = {} as Record<NK, NV>
+  Enum.entries(t).forEach(_ => {
+    const res = fn(_)
+    output[res[0]] = res[1]
+  })
+  return output
+}
+
+export const multipleFilters = <T>(list: T[], filters: Array<undefined | boolean | ((value: T, index: number, array: T[]) => boolean)>) => {
+  if (filters.length === 0) return list
+  return list.filter((t: T, index: number, array: T[]) => filters
+    .filter(filter => filter instanceof Function)
+    // @ts-ignore
+    .every(filter => filter(t, index, array))
+  )
+}
+
+export interface Paginate<T> {
+  data: T[]
+  totalSize: number
+}
+
+export const paginateData = <T>(limit: number, offset: number) => (data: T[]): Paginate<T> => {
+  return {
+    data: data.slice(offset, offset + limit),
+    totalSize: data.length,
+  }
+}
+
+export const forceArrayStringInference = <T extends string>(a: T[]) => a

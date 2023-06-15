@@ -1,5 +1,5 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {sortObject} from '../utils/utils'
+import {mapObject, mapObjectValue, sortObject} from '../utils/utils'
 
 export interface ChartDataValPercent extends ChartDataVal {
   base: number
@@ -17,13 +17,17 @@ export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
 export namespace ChartTools {
 
+  export const mapValue = <K extends string, V, R>(fn: (_: V) => R) => (obj: Record<K, V>): Record<K, R> => mapObjectValue(obj, fn)
+
+  export const map = <K extends string, V, NK extends string, NV>(fn: (_: [K, V]) => [NK, NV]) => (obj: Record<K, V>): Record<NK, NV> => mapObject(obj, fn)
+
   export const take = <T extends string>(n: number) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
     return Arr(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
   }
 
   export const sortBy = {
-    custom: <T extends string>(order: T[]) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
-      return sortObject(obj as Record<T, ChartDataVal>, ([aK, aV], [bK, bV]) => {
+    custom: <T extends string>(order: T[]) => <V>(obj: Record<T, V>): Record<T, V> => {
+      return sortObject(obj as Record<T, V>, ([aK, aV], [bK, bV]) => {
         return order.indexOf(aK) - order.indexOf(bK)
       })
     },
@@ -48,19 +52,36 @@ export namespace ChartTools {
     }
   }
 
+  export const single = <A extends string>({
+    data,
+    percent,
+    filterValue,
+  }: {
+    data: A[],
+    filterValue?: A[],
+    percent?: boolean
+  }): ChartData<Exclude<A, keyof typeof filterValue>> => {
+    const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
+      return [curr, (acc[curr] ?? 0) + 1]
+    })
+    const res: ChartData = {}
+    Enum.keys(obj).forEach(k => {
+      res[k] = {value: obj[k] / (percent ? data.length : 1)}
+    })
+    return res
+  }
+
   export const multiple = <A extends string>({
     data,
     type,
     filterValue,
-    map,
   }: {
-    filterValue?: A[],
-    map?: (_: A) => A,
     data: _Arr<A[] | undefined>,
+    filterValue?: A[],
     type?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
   }): ChartData<A> => {
     const flatData: A[] = data.flatMap(_ => _).compact()
-    const all = flatData.filter(_ => filterValue ? !filterValue.includes(_) : true).map(map ?? (_ => _))
+    const all = flatData.filter(_ => filterValue ? !filterValue.includes(_) : true)
     const obj = Arr(all).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
     const base = fnSwitch(type!, {
       percentOfTotalAnswers: data.length,
@@ -133,7 +154,6 @@ export namespace ChartTools {
     }
     return res
   }
-
   // export const reduceByCategory = <A extends Record<string, any>, K extends string, R>({
   //   data,
   //   reduce,
@@ -153,6 +173,7 @@ export namespace ChartTools {
   //     })
   //   })
   //   return res
+
   // }
 
   export const sumByCategory = <A extends Record<string, any>, K extends string>({
@@ -176,25 +197,6 @@ export namespace ChartTools {
           res[category].value += filter(x) ?? 0
         }
       })
-    })
-    return res
-  }
-
-  export const single = <A extends string>({
-    data,
-    percent,
-    filterValue,
-  }: {
-    data: A[],
-    filterValue?: A[],
-    percent?: boolean
-  }): ChartData<A> => {
-    const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
-      return [curr, (acc[curr] ?? 0) + 1]
-    })
-    const res: ChartData = {}
-    Enum.keys(obj).forEach(k => {
-      res[k] = {value: obj[k] / (percent ? data.length : 1)}
     })
     return res
   }
@@ -224,7 +226,7 @@ export namespace ChartTools {
     base?: (a: A) => boolean,
   }): ChartDataVal & {percent: number} => {
     const v = Arr(data).count(value)
-    const b = base ? Arr(data).count(base) : data.length
+    const b = (base ? Arr(data).count(base) : data.length) || 1
     return {value: v, base: b, percent: v / b}
   }
 

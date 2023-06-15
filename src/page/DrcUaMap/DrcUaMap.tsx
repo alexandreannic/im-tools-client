@@ -4,7 +4,6 @@ import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
 import {useConfig} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
-import {oblasts} from '../../core/uaLocation/oblasts'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 
 const generalStyles = <GlobalStyles styles={{
@@ -84,7 +83,6 @@ const drawOffices = (selector: string) => {
     ...offices.map(o => [o.city, 100, 100]),
   ])
 
-  console.log('data', offices.map(o => [o.city, 100, 100]))
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
     legend: 'none',
@@ -101,17 +99,18 @@ const drawOffices = (selector: string) => {
 
 const drawUA = (selector: string, theme: Theme) => {
   const occupiedOblasts = [
-    'UA-14',
-    'UA-23',
-    'UA-43',
-    'UA-09',
-    'UA-65',
+    'UA14',
+    'UA23',
+    'UA43',
+    'UA09',
+    'UA65',
   ]
-  
+
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
-    ...Enum.values(OblastIndex.list).map(_ => [_.iso, occupiedOblasts.includes(_.iso) ? 2 : 1]),
+    ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
+  console.log(Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),)
 
   console.log(theme.palette.primary.light,',color')
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)

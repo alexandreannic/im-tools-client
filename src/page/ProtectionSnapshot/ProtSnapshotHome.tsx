@@ -5,8 +5,7 @@ import {Box, useTheme} from '@mui/material'
 import {Slide, SlideTxt} from '../../shared/PdfLayout/Slide'
 import {Txt} from 'mui-extension'
 import {format, sub} from 'date-fns'
-import logoDrc from '../../core/img/drc-logo.png'
-import logoEu from '../../core/img/eu.png'
+import {DRCLogo, EULogo} from '../../shared/logo'
 
 export const ProtSnapshotHome = ({
   current: {
@@ -39,8 +38,8 @@ export const ProtSnapshotHome = ({
             alignItems: 'center',
             // justifyContent: 'flex-end'
           }}>
-            <Box component="img" src={logoDrc} sx={{height: 24}}/>
-            <Box component="img" src={logoEu} sx={{height: 30, ml: 2}}/>
+            <DRCLogo height={24}/>
+            <EULogo height={30} sx={{ml: 2}}/>
           </Box>
         </Box>
       </Box>

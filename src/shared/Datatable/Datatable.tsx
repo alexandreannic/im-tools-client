@@ -1,16 +1,4 @@
-import {
-  Box,
-  LinearProgress,
-  SxProps,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel,
-  Theme,
-} from '@mui/material'
+import {Box, LinearProgress, SxProps, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TableSortLabel, Theme,} from '@mui/material'
 import React, {CSSProperties, ReactNode, useMemo} from 'react'
 import {DatatableColumnToggle} from './DatatableColumnsToggle'
 import {useI18n} from '../../core/i18n'
@@ -51,7 +39,7 @@ export interface DatatableProps<T> {
 export interface DatatableColumnProps<T> {
   id: string
   head?: string | ReactNode
-  render: (_: T) => ReactNode
+  render: (_: T, i: number) => ReactNode
   hidden?: boolean
   alwaysVisible?: boolean
   className?: string | ((_: T) => string | undefined)
@@ -214,11 +202,11 @@ export const Datatable = <T extends any = any>({
                 {filteredColumns.map((_, i) => (
                   <TableCell
                     key={i}
-                    sx={combineSx(_.sx?.(item), sxUtils.truncate, sxStickyEnd)}
+                    sx={combineSx(_.sx?.(item), sxUtils.truncate, _.stickyEnd && sxStickyEnd)}
                     style={{..._.style, ..._.number && {textAlign: 'right'}}}
                     className={typeof _.className === 'function' ? _.className(item) : _.className}
                   >
-                    {_.render(item)}
+                    {_.render(item, i)}
                   </TableCell>
                 ))}
               </TableRow>

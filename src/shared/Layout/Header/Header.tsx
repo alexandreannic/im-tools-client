@@ -60,6 +60,11 @@ export const Header = ({children}: Props) => {
             </NavLink>
           </HeaderItem>
           <HeaderItem>
+            <NavLink to="/database">
+              DB!
+            </NavLink>
+          </HeaderItem>
+          <HeaderItem>
             <NavLink to="/kobo">
               Database
             </NavLink>
@@ -69,8 +74,18 @@ export const Header = ({children}: Props) => {
             </NavLink>
           </HeaderItem>
           <HeaderItem>
+            <NavLink to="/mpca">
+              MPCA
+            </NavLink>
+          </HeaderItem>
+          <HeaderItem>
             <NavLink to="/map">
               Map
+            </NavLink>
+          </HeaderItem>
+          <HeaderItem>
+            <NavLink to="/playground">
+              Playground
             </NavLink>
           </HeaderItem>
 

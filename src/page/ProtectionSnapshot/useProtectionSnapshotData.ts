@@ -3,10 +3,12 @@ import {ChartDataVal, ChartTools} from '../../core/chartTools'
 import {format} from 'date-fns'
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
-import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
+import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {chain} from '../../utils/utils'
-import {OblastISO, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
+import {OblastISOSVG, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
 import {omit, pick} from 'lodash'
+import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
+import {ageGroup} from '../../core/type'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
@@ -33,7 +35,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
     const categoryOblasts = (column: '_4_What_oblast_are_you_from_iso' | '_12_1_What_oblast_are_you_from_001_iso' = '_4_What_oblast_are_you_from_iso') => Enum.keys(ukraineSvgPath)
       .reduce(
         (acc, k) => ({...acc, [k]: (_: Answer): boolean => _[column] === k}),
-        {} as Record<OblastISO, (_: Answer) => boolean>
+        {} as Record<OblastISOSVG, (_: Answer) => boolean>
       )
 
     const categoryFilters = {
@@ -45,8 +47,8 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
       all: (_: Answer) => true,
     }
 
-    const initOblastIndex = <T>(initialValue: T): Record<OblastISO, T> => {
-      const oblastIndex: Record<OblastISO, T> = {} as any
+    const initOblastIndex = <T>(initialValue: T): Record<OblastISOSVG, T> => {
+      const oblastIndex: Record<OblastISOSVG, T> = {} as any
       Enum.keys(ukraineSvgPath).forEach(k => {
         oblastIndex[k] = initialValue
       })
@@ -283,8 +285,11 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
         .val,
 
       _14_1_1_What_type_of_ocuments_do_you_have: chain(ChartTools.multiple({
-        data: data.flatMap(_ => _.persons).map(_ => _.personalDoc).compact(),
-        map: _ => _ === 'national_passport_diia_app7' || _ === 'national_passport_book7' || _ === 'national_passport_card7' ? 'national_passport' : _
+        data: data
+          .flatMap(_ => _.persons)
+          .map(_ => _.personalDoc)
+          .map((_: any) => _ === 'national_passport_diia_app7' || _ === 'national_passport_book7' || _ === 'national_passport_card7' ? 'national_passport' : _)
+          .compact(),
       }))
         .map(ChartTools.setLabel(m.protHHSnapshot.enum._14_1_1_What_type_of_ocuments_do_you_have))
         .map(ChartTools.sortBy.value)
@@ -540,7 +545,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           memberWithDisability: compute(categoryFilters.memberWithDisability),
         }
       })(),
-      
+
       _40_1_What_is_your_first_priorty: chain(ChartTools.single({
         data: data.map(_ => _._40_1_What_is_your_first_priorty).compact(),
       }))
@@ -675,9 +680,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _8_individuals: (() => {
         const persons = data.flatMap(_ => _.persons)
-        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof KoboFormProtHH.ageGroup, {value: number}>>((p, acc) => {
-          const group = Enum.keys(KoboFormProtHH.ageGroup).find(k => {
-            const [min, max] = KoboFormProtHH.ageGroup[k]
+        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof ageGroup, {value: number}>>((p, acc) => {
+          const group = Enum.keys(ageGroup).find(k => {
+            const [min, max] = ageGroup[k]
             return p.age && p.age >= min && p.age <= max
           })
           if (group) return [group, {value: (acc[group]?.value ?? 0) + 1}]
@@ -689,7 +694,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
         return {
           persons: persons,
-          byAgeGroup: sortBy.custom(Object.keys(KoboFormProtHH.ageGroup))(byAgeGroup),
+          byAgeGroup: sortBy.custom(Object.keys(ageGroup))(byAgeGroup),
           byGender: byGender,
         }
       })()

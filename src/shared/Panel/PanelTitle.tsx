@@ -1,18 +1,16 @@
-import {Box, BoxProps} from '@mui/material'
-import {styleUtils} from '../../core/theme'
+import {Typography, TypographyProps} from '@mui/material'
 
-interface Props extends BoxProps {}
+interface Props extends TypographyProps {
+}
 
 export const PanelTitle = ({sx, ...props}: Props) => {
   return (
-    <Box
-      component="h3"
+    <Typography
+      variant="h3"
       {...props}
       sx={{
-        fontWeight: t => t.typography.fontWeightMedium,
-        my: 2,
+        my: 0,
         mx: 0,
-        fontSize: t => styleUtils(t).fontSize.title,
         ...sx,
       }}
     />

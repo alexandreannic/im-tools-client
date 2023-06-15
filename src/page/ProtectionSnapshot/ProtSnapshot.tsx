@@ -7,10 +7,10 @@ import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {Fender} from 'mui-extension'
 import {Pdf} from 'shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
-import {KoboFormProtHH} from '../../core/koboForm/koboFormProtHH'
+import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {ProtSnapshotDocument} from './ProtSnapshotDocument'
 import {ProtSnapshotSafety} from './ProtSnapshotSafety'
-import {OblastISO} from '../../shared/UkraineMap/ukraineSvgPath'
+import {OblastISOSVG} from '../../shared/UkraineMap/ukraineSvgPath'
 import {ProtSnapshotNeeds} from './ProtSnapshotNeeds'
 import {ProtSnapshotDisplacement} from './ProtSnapshotDisplacement'
 import {ProtSnapshotSample} from './ProtSnapshotSample'
@@ -31,7 +31,7 @@ export interface ProtSnapshotSlideProps {
   onFilter: Dispatch<SetStateAction<Partial<ProtSnapshotFilter>>>
   customFilters: ProtSnapshotCustomFilters
   onCustomFilters: Dispatch<SetStateAction<ProtSnapshotCustomFilters>>
-  onFilterOblast: (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblast: OblastISO) => void
+  onFilterOblast: (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblast: OblastISOSVG) => void
 }
 
 export type ProtSnapshotCustomFilters = {
@@ -71,7 +71,11 @@ export const ProtSnapshot = ({
   // previousPeriod?: Period
 }) => {
   const {api} = useConfig()
-  const fetch = (period: Period) => api.koboForm.getAnswers(formId, period).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  const fetch = (period: Period) => api.koboApi.getAnswersFromLocalForm({
+    formId,
+    filters: period,
+    fnMap: KoboFormProtHH.mapAnswers
+  }).then(_ => Arr(_.data))
   const _hhCurrent = useFetcher(fetch)
   const _hhPrevious = useFetcher(fetch)
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilter>>({})
@@ -132,7 +136,7 @@ export const ProtSnapshot = ({
     end: customFilters.previousPeriodEnd,
   })
 
-  const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblastISO: OblastISO) => {
+  const updateOblastFilters = (key: '_12_1_What_oblast_are_you_from_001_iso' | '_4_What_oblast_are_you_from_iso') => (oblastISO: OblastISOSVG) => {
     setFilters(f => {
       const value = f[key] as string[]
       if (value?.includes(oblastISO)) {
@@ -230,7 +234,7 @@ export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
     initGoogleMaps(
       conf.gooogle.mapId,
       theme.palette.primary.main,
-      props.current.data.map(_ => ({loc: _._geolocation, size: _._8_What_is_your_household_size}))
+      props.current.data.map(_ => ({loc: _.geolocation!, size: _._8_What_is_your_household_size}))
     )
   }, [])
 
