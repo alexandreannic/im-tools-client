@@ -13,8 +13,6 @@ import {ApiClient} from './core/sdk/server/ApiClient'
 import {ConfigContextProvider} from './core/context/ConfigContext'
 import {NfiProvider} from './core/context/NfiContext'
 import {appConfig} from './conf/AppConfig'
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
-import {LocalizationProvider} from '@mui/x-date-pickers'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

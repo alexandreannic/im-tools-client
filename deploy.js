@@ -75,7 +75,7 @@ var isOnMainBranch = function () { return new RegExp("".concat(config.mainBranch
             // } else if (!gitWorkspaceIsEmpty()) {
             //   console.error(`Your git status must be clean before to publish.`)
             // } else {
-            return [4 /*yield*/, run("git remote add azure ".concat(config.gitServer))];
+            return [4 /*yield*/, run("git remote remove azure")];
             case 1:
                 // if (!isOnMainBranch()) {
                 //   console.error(`You must be on branch ${config.mainBranch} to publish.`)
@@ -83,10 +83,10 @@ var isOnMainBranch = function () { return new RegExp("".concat(config.mainBranch
                 //   console.error(`Your git status must be clean before to publish.`)
                 // } else {
                 _a.sent();
-                return [4 /*yield*/, run("git push -f azure ".concat(config.mainBranch))];
+                return [4 /*yield*/, run("git remote add azure ".concat(config.gitServer))];
             case 2:
                 _a.sent();
-                return [4 /*yield*/, run("git remote remove azure")
+                return [4 /*yield*/, run("git push -f azure ".concat(config.mainBranch))
                     // await run(`git commit -m "Release ${getPackageVersion()}"`)
                     // await run(`git push https://${config.username}:${config.password}@${config.gitServer} master`)
                 ];
