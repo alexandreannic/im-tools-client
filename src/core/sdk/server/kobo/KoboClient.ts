@@ -1,9 +1,8 @@
 import {ApiClient} from '../ApiClient'
-import {ApiPaginate, ApiPagination, UUID} from '../../../type'
+import {ApiPaginate, ApiPagination, UUID} from '@/core/type'
 import {Kobo, KoboAnswer, KoboAnswer2} from './Kobo'
-import {DashboardFilterOptions} from '../../../../page/Dashboard/shared/DashboardFilterOptions'
-import {koboFormId} from '../../../../koboFormId'
-import {mapProtHHS_2_1} from '../../../koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
+import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
+import {koboFormId} from '@/koboFormId'
 
 export interface AnswersFilters<T extends string = string> {
   start?: Date

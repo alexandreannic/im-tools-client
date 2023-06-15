@@ -1,5 +1,5 @@
 import {Box} from '@mui/material'
-import {useI18n} from 'core/i18n'
+import {useI18n} from '@/core/i18n'
 import {AaBtn} from '../Btn/AaBtn'
 import {useStepperContext} from './Stepper'
 import {StepperActionsNext} from './StepperActionsNext'

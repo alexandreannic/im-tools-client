@@ -102,7 +102,7 @@ export const AAStackedBarChartSplit = ({
           <Tooltip/>
           <Legend/>
           {allKeys.map((k, i) =>
-            <Bar dataKey={k} stackId={k} fill={colors[i]}/>
+            <Bar key={k} dataKey={k} stackId={k} fill={colors[i]}/>
           )}
         </BarChart>
       </ResponsiveContainer>

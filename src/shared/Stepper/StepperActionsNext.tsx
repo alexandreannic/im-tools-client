@@ -1,5 +1,5 @@
 import {AaBtn, AaBtnProps} from '../Btn/AaBtn'
-import {useI18n} from 'core/i18n'
+import {useI18n} from '@/core/i18n'
 
 interface Props extends AaBtnProps {
 }

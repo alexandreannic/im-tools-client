@@ -145,7 +145,7 @@ export const en = Object.freeze({
     avgAge: 'Avg. years old',
     coveredOblasts: 'Covered oblasts',
     lackOfPersonalDoc: 'Individuals lacking personal document',
-    lackOfHousingDoc: 'Lack of house land document',
+    lackOfHousingDoc: 'Missing house land document',
     sample: 'Sample overview',
     documentation: 'Documentation',
     livelihood: 'Livelihood',
@@ -202,9 +202,10 @@ export const en = Object.freeze({
         and the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect 
         those of the European Union or the BHA. Neither the European Union nor the BHA can be held responsible for any use of the dashboard.
       `,
+      mainConcernsRegardingHousing: 'Main concerns regarding the accommodation',
       typeOfIncident: 'Type of incident',
       poorRelationshipWithHostCommunity: 'Bad relationship with the host communities',
-      poorSenseOfSafety: 'Poor sense of safety by oblast',
+      poorSenseOfSafety: 'Poor sense of safety',
       safetyAndSecurity: 'Safety & Security',
       reasonForRemainInOrigin: 'Reason for remained in the location of origin',
       familyMemberSeparated: 'Family members separated',

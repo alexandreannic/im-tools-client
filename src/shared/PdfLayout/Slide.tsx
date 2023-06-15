@@ -4,7 +4,7 @@ import React, {ReactNode, useEffect, useRef} from 'react'
 import {usePdfContext} from './PdfLayout'
 import {Panel, PanelBody} from '../Panel'
 import {PanelProps} from '../Panel/Panel'
-import {DRCLogo, EULogo} from '../logo'
+import {DRCLogo, EULogo} from '../logo/logo'
 
 export const Slide = (props: BoxProps) => {
   return (

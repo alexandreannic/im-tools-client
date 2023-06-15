@@ -1,7 +1,7 @@
 import {Arr, Enum} from '@alexandreannic/ts-utils'
 import {ageGroupBHA, groupByAgeGroup} from '../core/type'
 import {ChartTools} from '../core/chartTools'
-import {UseProtHHS2Data} from '../page/Dashboard/DashboardHHS2/useProtHHS2Data'
+import {UseProtHHS2Data} from '../features/Dashboard/DashboardHHS2/useProtHHS2Data'
 
 export const get = (computed: UseProtHHS2Data) => {
   const csv: {base: string, gender: string, ageGroup: string, total: number}[] = []
