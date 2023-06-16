@@ -1,10 +1,12 @@
 import React, {ReactNode, useEffect, useState} from 'react'
-import {Box, darken, GlobalStyles, LinearProgress, ThemeProvider, Typography} from '@mui/material'
+import {Box, Collapse, darken, GlobalStyles, Icon, LinearProgress, ThemeProvider, Typography} from '@mui/material'
 import {combineSx, muiTheme} from '../../core/theme'
 import {set} from 'lodash'
 import {DashboardProvider} from './DashboardContext'
 import {makeSx} from 'mui-extension'
 import {DRCLogo} from '../../shared/logo/logo'
+import {AAIconBtn} from '@/shared/IconBtn'
+import {useSetState} from '@alexandreannic/react-hooks-lib'
 
 const dashboardMw = 1100
 const headerId = 'aa-sidebar-id'
@@ -38,13 +40,14 @@ const style = makeSx({
     borderColor: t => t.palette.primary.main,
   },
   sidebar: {
-    maxWidth: 270,
-    minWidth: 270,
+    maxWidth: 284,
+    minWidth: 284,
   },
   sidebarContent: {
-    maxWidth: 270,
+    maxWidth: 284,
     position: 'fixed',
-    p: 2,
+    p: 1,
+    pr: .5,
     top: 0,
     bottom: 0,
     display: 'flex',
@@ -67,6 +70,8 @@ const style = makeSx({
     borderBottom: t => `1px solid ${t.palette.divider}`,
   },
   sectionTitle: {
+    display: 'flex',
+    alignItems: 'center',
     background: t => t.palette.background.default,
     pt: 1,
   }
@@ -142,12 +147,14 @@ export const DashboardLayout = ({
   header?: ReactNode
   beforeSection?: ReactNode
   sections: {
+    icon?: string
     name: string
     title: ReactNode
     component: () => JSX.Element
   }[]
 }) => {
   const [activeSection, setActiveSection] = useState(sections[0]?.name)
+  const hiddenSections = useSetState()
   useEffect(() => {
     window.addEventListener('scroll', stickHeader)
     if (sections.length === 0) return
@@ -158,7 +165,7 @@ export const DashboardLayout = ({
     })
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
-        // e.preventDefault()
+        e.preventDefault()
         // @ts-ignore
         document.querySelector(this.getAttribute('href')).scrollIntoView({behavior: 'smooth'})
       })
@@ -189,6 +196,7 @@ export const DashboardLayout = ({
                       style.menuItem,
                       activeSection === s.name && style.menuItemActive,
                     )}>
+                      <Icon sx={{mr: 1.5}}>{s.icon}</Icon>
                       {s.title}
                     </Box>
                   </Box>
@@ -217,10 +225,11 @@ export const DashboardLayout = ({
               <Box key={s.name}>
                 <Typography id={s.name} variant="h2" sx={{...style.sectionTitle, background: 'none', marginTop: '-60px', paddingTop: '120px', mb: 2}}>
                   {s.title}
+                  <AAIconBtn icon="expand_less" sx={{ml: 1, color: t => t.palette.divider}} onClick={() => hiddenSections.toggle(s.name)}/>
                 </Typography>
-                <Box>
+                <Collapse in={!hiddenSections.has(s.name)}>
                   {s.component()}
-                </Box>
+                </Collapse>
               </Box>
             ))}
           </Box>

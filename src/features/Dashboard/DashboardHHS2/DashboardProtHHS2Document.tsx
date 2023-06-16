@@ -38,7 +38,7 @@ export const DashboardProtHHS2Document = ({
                 data: idpsAnsweredRegistrationQuestion.filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male'),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
-                {_ => <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} percent={_.percent} value={_.value}/>}
+                {_ => <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} percent={_.percent}/>}
               </Lazy>
               <Lazy deps={[idpsAnsweredRegistrationQuestion]} fn={() => ChartTools.percentage({
                 data: idpsAnsweredRegistrationQuestion.filter(_ => _.age && !(_.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male')),
@@ -85,11 +85,11 @@ export const DashboardProtHHS2Document = ({
 
         <SlideContainer column sx={{flex: 1}}>
           <SlidePanel>
-            <Lazy deps={[data]} fn={() => ChartTools.percentage({
-              data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
+            <Lazy deps={[data, computed.lastMonth, computed.currentMonth]} fn={(x) => ChartTools.percentage({
+              data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
               value: _ => !_.includes('none')
             })}>
-              {_ => <PieChartIndicator sx={{mb: 2}} title={m.lackOfPersonalDoc} value={_.value} percent={_.percent}/>}
+              {(_, last, curr) => <PieChartIndicator sx={{mb: 2}} title={m.lackOfPersonalDoc} evolution={(curr?.percent ?? 1) - (last?.percent ?? 1)} percent={_.percent}/>}
             </Lazy>
             <Lazy deps={[data]} fn={() => chain(ChartTools.multiple({
               data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),

@@ -26,6 +26,8 @@ import {DashboardProtHHS2FamilyUnity} from './DashboardProtHHS2FamilyUnity'
 import {DashboardProtHHS2Safety} from './DashboardProtHHS2Safety'
 import {DebouncedInput} from '../../../shared/DebouncedInput'
 import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
+import json from './TODELETERAWDATA.json'
+import {ApiPaginate} from '@/core/type'
 
 export type ProtHHS2Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
@@ -84,46 +86,6 @@ export const ProtHHS2BarChart = makeKoboBarChartComponent<ProtHHS_2_1, typeof Pr
   options: ProtHHS_2_1Options
 })
 
-// export const DashboardProtHHS2BarChart2 = <T extends keyof typeof ProtHHS_2_1Options>({
-//   question,
-//   data,
-//   limit,
-//   sortBy,
-//   overrideLabel = {},
-//   filterValue,
-//   questionType = 'single',
-// }: {
-//   limit?: number
-//   questionType?: 'multiple' | 'single'
-//   sortBy?: keyof typeof ChartTools.sortBy
-//   data: _Arr<ProtHHS_2_1>,
-//   overrideLabel?: Partial<Record<keyof (typeof ProtHHS_2_1Options)[T], string>>
-//   filterValue?: (keyof (typeof ProtHHS_2_1Options)[T])[]
-//   question: T
-// }) => {
-//   const {m} = useI18n()
-//   const res = useMemo(() => {
-//     const base = Arr(data).map(_ => (_ as any)[question]).compact()
-//     return {
-//       base: base.length,
-//       chart: chain(ChartTools[questionType]({
-//         data: base as any,
-//         filterValue: filterValue as any,
-//       }))
-//         .map(ChartTools.setLabel({
-//           ...((ProtHHS_2_1Options as any)[question]),
-//           ...overrideLabel,
-//         }))
-//         .map(ChartTools.sortBy.value)
-//         .map(limit ? ChartTools.take(limit) : _ => _)
-//         .get
-//     }
-//   }, [data, question])
-//   return (
-//     <HorizontalBarChartGoogle data={res.chart} base={res.base}/>
-//   )
-// }
-
 export const DashboardProtHHS2 = () => {
   const {api} = useConfig()
   const {m} = useI18n()
@@ -143,10 +105,10 @@ export const DashboardProtHHS2 = () => {
     }
   })
     .then(_ => _.data)
-    // .then(_ => _.filter(_ => {
-    //   return (!filter.start || _.end.getTime() > filter.start.getTime())
-    //     && (!filter.end || _.end.getTime() < filter.end.getTime())
-    // }))
+    .then(_ => _.filter(_ => {
+      return (!filter.start || _.end.getTime() > filter.start.getTime())
+        && (!filter.end || _.end.getTime() < filter.end.getTime())
+    }))
     .then(_ => _.map(enrichProtHHS_2_1))
   const _answers = useFetcher(request)
 
@@ -256,16 +218,16 @@ export const DashboardProtHHS2 = () => {
           computed,
         }
         return [
-          {name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
-          {name: 'violence', title: m.violence, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
-          {name: 'family_unity', title: m.familyUnity, component: () => <DashboardProtHHS2FamilyUnity {...panelProps}/>},
-          {name: 'housing', title: m.housing, component: () => <DashboardProtHHS2Housing {...panelProps}/>},
-          {name: 'sample', title: m.sample, component: () => <DashboardProtHHS2Sample {...panelProps}/>},
-          {name: 'displacement', title: m.displacement, component: () => <DashboardProtHHS2Displacement {...panelProps}/>},
-          {name: 'specificNeeds', title: m.specificNeeds, component: () => <DashboardProtHHS2Needs {...panelProps}/>},
-          {name: 'document', title: m.protHHS2.registrationAndDocumention, component: () => <DashboardProtHHS2Document {...panelProps}/>},
-          {name: 'livelihood', title: m.livelihood, component: () => <DashboardProtHHS2Livelihood {...panelProps}/>},
-          {name: 'priorityneeds', title: m.priorityNeeds, component: () => <DashboardProtHHS2PN {...panelProps}/>},
+          {icon: 'bar_chart', name: 'sample', title: m.sample, component: () => <DashboardProtHHS2Sample {...panelProps}/>},
+          {icon: 'explore', name: 'displacement', title: m.displacement, component: () => <DashboardProtHHS2Displacement {...panelProps}/>},
+          {icon: 'family_restroom', name: 'family_unity', title: m.familyUnity, component: () => <DashboardProtHHS2FamilyUnity {...panelProps}/>},
+          {icon: 'home', name: 'housing', title: m.housing, component: () => <DashboardProtHHS2Housing {...panelProps}/>},
+          {icon: 'savings', name: 'livelihood', title: m.livelihood, component: () => <DashboardProtHHS2Livelihood {...panelProps}/>},
+          {icon: 'fingerprint', name: 'document', title: m.protHHS2.registrationAndDocumention, component: () => <DashboardProtHHS2Document {...panelProps}/>},
+          {icon: 'local_police', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
+          {icon: 'rocket_launch', name: 'violence', title: m.violence, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
+          // {icon: 'accessible_forward', name: 'specificNeeds', title: m.specificNeeds, component: () => <DashboardProtHHS2Needs {...panelProps}/>},
+          {icon: 'traffic', name: 'priorityneeds', title: m.priorityNeeds, component: () => <DashboardProtHHS2PN {...panelProps}/>},
         ]
       })()}/>
   )

@@ -219,7 +219,7 @@ export const en = Object.freeze({
       missingDocumentationByOblastPopulation: 'Missing Documentation by Oblast Population',
       HHSwSN: 'Head of HH with specific needs',
       specificNeedsToHHS: 'Specific needs applying to HH',
-      safetyOrSecurityConcernsDuringDisplacement: 'HHs experienced safety/security concerns during displacement',
+      safetyOrSecurityConcernsDuringDisplacement: 'HHs experienced security concerns during displacement',
       HHs: 'HHs',
       AvgHHSize: 'AvgHHSize',
       poc: 'Person of concern',

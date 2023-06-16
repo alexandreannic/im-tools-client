@@ -3,6 +3,7 @@ import {ApiPaginate, ApiPagination, UUID} from '@/core/type'
 import {Kobo, KoboAnswer, KoboAnswer2} from './Kobo'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {koboFormId} from '@/koboFormId'
+import json from '@/features/Dashboard/DashboardHHS2/TODELETERAWDATA.json'
 
 export interface AnswersFilters<T extends string = string> {
   start?: Date
@@ -43,6 +44,7 @@ export class KoboFormSdk {
     filters?: AnswersFilters
     fnMap?: (_: Record<string, string | undefined>) => T
   }): Promise<ApiPaginate<KoboAnswer2<T>>> => {
+    return Promise.reject('DEV')
     return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/${formId}/answers`, {qs: {...filters, ...paginate}})
       .then(_ => {
           return ({
@@ -69,5 +71,16 @@ export class KoboFormSdk {
       filters,
       fnMap: mapProtHHS_2_1
     })
+      // TODO DELETE !!!!
+      .catch(() => {
+        const _ = json as ApiPaginate<any>
+        return ({
+          ..._,
+          data: _.data.map(({answers, ..._}) => ({
+            ...Kobo.mapAnswerMetaData(_),
+            ...mapProtHHS_2_1(answers) as any
+          }))
+        })
+      })
   }
 }

@@ -65,10 +65,7 @@ export const useProtHHS2Data = ({
             Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length,
           })
         ))
-        .map(_ => _.sort((a, b) => {
-          console.log(b, Object.keys(ageGroup).indexOf(b.key))
-          return Object.keys(ageGroupBHA).indexOf(b.key) - Object.keys(ageGroupBHA).indexOf(a.key)
-        }))
+        .map(_ => _.sort((a, b) => Object.keys(ageGroupBHA).indexOf(b.key) - Object.keys(ageGroupBHA).indexOf(a.key)))
         .get
       ,
 
