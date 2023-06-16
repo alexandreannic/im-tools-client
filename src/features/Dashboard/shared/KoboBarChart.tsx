@@ -3,7 +3,7 @@ import {ChartTools} from '../../../core/chartTools'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../../core/i18n'
 import React, {useMemo} from 'react'
-import {chain} from '../../../utils/utils'
+import {chain} from '@/utils/utils'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 
 export const makeKoboBarChartComponent = <D extends Record<string, any>, O extends Partial<Record<keyof D, Record<string, string>>>>({

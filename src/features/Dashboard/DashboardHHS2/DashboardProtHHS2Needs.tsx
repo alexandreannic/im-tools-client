@@ -7,7 +7,7 @@ import {Divider, useTheme} from '@mui/material'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {Lazy} from '../../../shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
-import {chain} from '../../../utils/utils'
+import {chain} from '@/utils/utils'
 import {PieChartIndicator} from '../../../shared/PieChartIndicator'
 
 export const DashboardProtHHS2Needs = ({

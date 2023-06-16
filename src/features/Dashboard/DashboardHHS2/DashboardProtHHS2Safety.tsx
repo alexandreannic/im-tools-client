@@ -7,7 +7,7 @@ import {KoboPieChartIndicator, KoboPieChartIndicatorMultiple} from '../shared/Ko
 import {Lazy} from '../../../shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {chain, forceArrayStringInference} from '../../../utils/utils'
+import {chain, forceArrayStringInference} from '@/utils/utils'
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {PieChartIndicator} from '../../../shared/PieChartIndicator'
 import {Panel} from '../../../shared/Panel'

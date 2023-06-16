@@ -16,7 +16,7 @@ import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
 import {KoboPieChartIndicatorMultiple, KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {chain} from '../../../utils/utils'
+import {chain} from '@/utils/utils'
 
 
 export const DashboardProtHHS2FamilyUnity = ({
