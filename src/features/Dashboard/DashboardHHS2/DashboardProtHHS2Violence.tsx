@@ -54,6 +54,7 @@ export const DashboardProtHHS2Violence = ({
   }, [data])
   return (
     <SlideContainer column>
+      <SlidePanelTitle>Reported incidents over the last 6 months</SlidePanelTitle>
       <SlideContainer>
         <Lazy deps={[data]} fn={() => {
           const questions = forceArrayStringInference([
@@ -127,8 +128,6 @@ export const DashboardProtHHS2Violence = ({
               </SlidePanel>
             )}
           </Lazy>
-        </SlideContainer>
-        <SlideContainer column>
           <Lazy deps={[groupedIndividualsType.when]} fn={() =>
             chain(ChartTools.multiple({
               data: groupedIndividualsType.when,
@@ -139,11 +138,13 @@ export const DashboardProtHHS2Violence = ({
               .get
           }>
             {_ => (
-              <SlidePanel title={m.protHHS2.typeOfIncident}>
+              <SlidePanel title={m.protHHS2.timelineOfIncident}>
                 <HorizontalBarChartGoogle data={_}/>
               </SlidePanel>
             )}
           </Lazy>
+        </SlideContainer>
+        <SlideContainer column>
           <Lazy deps={[groupedIndividualsType.who]} fn={() =>
             chain(ChartTools.multiple({
               data: groupedIndividualsType.who,
@@ -154,11 +155,19 @@ export const DashboardProtHHS2Violence = ({
               .get
           }>
             {_ => (
-              <SlidePanel title={m.protHHS2.typeOfIncident}>
+              <SlidePanel title={m.perpetrators}>
                 <HorizontalBarChartGoogle data={_}/>
               </SlidePanel>
             )}
           </Lazy>
+          <SlidePanel title={m.majorStressFactors}>
+            <ProtHHS2BarChart
+              data={data}
+              questionType="multiple"
+              filterValue={['unable_unwilling_to_answer']}
+              question="what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members"
+            />
+          </SlidePanel>
         </SlideContainer>
       </SlideContainer>
     </SlideContainer>

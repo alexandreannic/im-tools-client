@@ -35,16 +35,16 @@ export const DashboardProtHHS2Document = ({
           <SlidePanel title={m.protHHSnapshot.maleWithoutIDPCert}>
             <SlideContainer>
               <Lazy deps={[idpsAnsweredRegistrationQuestion]} fn={() => ChartTools.percentage({
+                data: idpsAnsweredRegistrationQuestion,
+                value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
+              })}>
+                {_ => <PieChartIndicator sx={{flex: 1}} title={m.all} percent={_.percent} value={_.value}/>}
+              </Lazy>
+              <Lazy deps={[idpsAnsweredRegistrationQuestion]} fn={() => ChartTools.percentage({
                 data: idpsAnsweredRegistrationQuestion.filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male'),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
-                {_ => <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} percent={_.percent}/>}
-              </Lazy>
-              <Lazy deps={[idpsAnsweredRegistrationQuestion]} fn={() => ChartTools.percentage({
-                data: idpsAnsweredRegistrationQuestion.filter(_ => _.age && !(_.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male')),
-                value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
-              })}>
-                {_ => <PieChartIndicator sx={{flex: 1}} title={m.other} percent={_.percent} value={_.value}/>}
+                {_ => <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} percent={_.percent} value={_.value}/>}
               </Lazy>
             </SlideContainer>
           </SlidePanel>

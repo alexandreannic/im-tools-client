@@ -46,7 +46,7 @@ export const DashboardProtHHS2FamilyUnity = ({
 
         </SlideContainer>
         <SlideContainer column>
-          <SlidePanel title={m.protHHS2.locationOfSeparatedFamiltyMembers}>
+          <SlidePanel title={m.protHHS2.locationOfSeparatedFamilyMembers}>
             <Lazy deps={[data]} fn={() => chain(ChartTools.single({
               data: data.flatMap(_ => [
                 _.where_is_your_partner,

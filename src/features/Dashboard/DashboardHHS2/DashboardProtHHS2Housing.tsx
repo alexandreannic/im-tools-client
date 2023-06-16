@@ -31,6 +31,7 @@ export const DashboardProtHHS2Housing = ({
               title={m.protHHSnapshot.noAccommodationDocument}
               question="do_you_have_formal_rental_documents_to_stay_in_your_accommodation"
               filter={_ => _ !== 'yes_i_have_a_written_lease_agreement' && _ !== 'yes_i_have_state_assigned_shelter_with_proving_documents'}
+              filterBase={_ => _ !== 'unable_unwilling_to_answer'}
               data={data.filter(_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== undefined)}
               sx={{mb: 2}}
             />
@@ -58,7 +59,7 @@ export const DashboardProtHHS2Housing = ({
               filterValue={['unable_unwilling_to_answer', 'none']}
             />
           </SlidePanel>
-          <SlidePanel title={m.tenureOfAccommodation}>
+          <SlidePanel title={m.accommodationCondition}>
             <ProtHHS2BarChart
               data={data}
               questionType="multiple"

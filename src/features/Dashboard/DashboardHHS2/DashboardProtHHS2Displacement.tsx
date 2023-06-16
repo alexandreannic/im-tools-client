@@ -21,7 +21,7 @@ export const DashboardProtHHS2Displacement = ({
     <>
       <SlideContainer>
         <SlideContainer column>
-          <SlidePanel>
+          <SlidePanel title={m.displacementAndReturn}>
             <KoboLineChartDate
               data={data}
               question={['when_did_you_first_leave_your_area_of_origin', 'when_did_you_return_to_your_area_of_origin']}
@@ -42,11 +42,14 @@ export const DashboardProtHHS2Displacement = ({
           </SlidePanel>
         </SlideContainer>
         <SlideContainer column>
-          <SlidePanel title={m.protHHS2.residentialIntentionsByHousehold}>
+          <SlidePanel title={m.intentions}>
             <ProtHHS2BarChart
               data={data}
               filterValue={['unable_unwilling_to_answer']}
               question="what_are_your_households_intentions_in_terms_of_place_of_residence"
+              overrideLabel={{
+                return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
+              }}
             />
           </SlidePanel>
           <SlidePanel>

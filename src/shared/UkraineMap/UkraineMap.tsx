@@ -110,7 +110,7 @@ export const UkraineMap = ({
                 sx={{
                   transition: t => t.transitions.create('fill'),
                   '&:hover': {
-                    fill: t => t.palette.primary.dark
+                    fill: t => t.palette.action.hover,
                   }
                 }}
               >

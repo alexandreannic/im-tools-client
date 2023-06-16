@@ -2269,7 +2269,7 @@ export const ProtHHS_2_1Options = {
   do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household: {
     'pregnant_and_lactating_woman': `Pregnant and Lactating person (PLW)`,
     'child_headed_household': `Child (< 18) headed household`,
-    'elder__headed_household': `Elder (≥ 60) headed household`,
+    'elder__headed_household': `Elderly headed household (≥ 60)`,
     'person_with_disability_headed_household': `Person with disability headed household`,
     'chronicallyill_headed_household': `Household headed by a person with serious medical condition`,
     'no_specific_needs': `No specific needs`,

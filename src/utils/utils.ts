@@ -196,3 +196,22 @@ export const paginateData = <T>(limit: number, offset: number) => (data: T[]): P
 }
 
 export const forceArrayStringInference = <T extends string>(a: T[]) => a
+
+export const uppercaseHandlingAcronyms = (text: string): string => {
+  const acronyms = [
+    'HoHH',
+    'IDPs',
+    'PwD',
+    'PwDs',
+    'HHs',
+    'w/',
+    'PoC',
+    'PoCs',
+    'NFIs',
+  ]
+  text = text.toUpperCase()
+  acronyms.forEach(_ => {
+    text = text.replaceAll(_.toUpperCase(), _)
+  })
+  return text
+}

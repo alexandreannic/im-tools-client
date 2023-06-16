@@ -5,6 +5,7 @@ import {usePdfContext} from './PdfLayout'
 import {Panel, PanelBody} from '../Panel'
 import {PanelProps} from '../Panel/Panel'
 import {DRCLogo, EULogo} from '../logo/logo'
+import {uppercaseHandlingAcronyms} from '@/utils/utils'
 
 export const Slide = (props: BoxProps) => {
   return (
@@ -110,31 +111,12 @@ export const SlideBody = (props: BoxProps) => {
   )
 }
 
-const preventOverCapitalization = (text: string): string => {
-  const acronyms = [
-    'HoHH',
-    'IDPs',
-    'PwD',
-    'PwDs',
-    'HHs',
-    'PoC',
-    'PoCs',
-    'NFIs',
-  ]
-  acronyms.forEach(_ => {
-    text = text.replaceAll(' ' + _ + ' ', `<span style="text-transform: none">&nbsp;${_}&nbsp;</span>`)
-    text = text.replaceAll(' ' + _, `<span style="text-transform: none">&nbsp;${_}</span>`)
-    text = text.replaceAll(_ + ' ', `<span style="text-transform: none">${_}&nbsp;</span>`)
-    text = text.replaceAll(_, `<span style="text-transform: none">${_}</span>`)
-  })
-  return text
-}
 export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML, sx, children, ...props}: {icon?: string} & TxtProps) => {
   const ref = useRef<HTMLDivElement>()
 
   useEffect(() => {
     if (ref.current)
-      ref.current.innerHTML = preventOverCapitalization(ref.current.innerHTML)
+      ref.current.innerHTML = uppercaseHandlingAcronyms(ref.current.innerHTML)
   }, [children])
 
   return <Txt
@@ -144,7 +126,6 @@ export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML
     bold
     sx={{display: 'flex', alignItems: 'center', mb: .5, fontSize: '1.05em', lineHeight: 1.15, mr: -1, ...sx}}
     color="hint"
-    uppercase={uppercase}
     {...props}
   >
     {icon && <Icon color="disabled" sx={{mr: 1}}>{icon}</Icon>}
@@ -196,8 +177,9 @@ export const SlideWidget = ({
   title,
   icon,
   ...props
-}: Omit<PanelProps, 'expendable' | 'savableAsImg'> & {
+}: Omit<PanelProps, 'title' | 'expendable' | 'savableAsImg'> & {
   icon?: string | ReactNode
+  title: string
 }) => {
   return (
     <SlidePanel
@@ -212,8 +194,8 @@ export const SlideWidget = ({
         },
         ...sx,
       }}>
-      <Txt block color="hint" uppercase bold>
-        {title}
+      <Txt block color="hint" bold>
+        {uppercaseHandlingAcronyms(title)}
       </Txt>
       <Box sx={{
         fontWeight: t => t.typography.fontWeightBold,

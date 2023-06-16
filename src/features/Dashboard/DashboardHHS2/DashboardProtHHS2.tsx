@@ -224,8 +224,8 @@ export const DashboardProtHHS2 = () => {
           {icon: 'home', name: 'housing', title: m.housing, component: () => <DashboardProtHHS2Housing {...panelProps}/>},
           {icon: 'savings', name: 'livelihood', title: m.livelihood, component: () => <DashboardProtHHS2Livelihood {...panelProps}/>},
           {icon: 'fingerprint', name: 'document', title: m.protHHS2.registrationAndDocumention, component: () => <DashboardProtHHS2Document {...panelProps}/>},
-          {icon: 'local_police', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
-          {icon: 'rocket_launch', name: 'violence', title: m.violence, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
+          {icon: 'rocket_launch', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
+          {icon: 'local_police', name: 'violence', title: m.protHHS2.protectionIncidents, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
           // {icon: 'accessible_forward', name: 'specificNeeds', title: m.specificNeeds, component: () => <DashboardProtHHS2Needs {...panelProps}/>},
           {icon: 'traffic', name: 'priorityneeds', title: m.priorityNeeds, component: () => <DashboardProtHHS2PN {...panelProps}/>},
         ]

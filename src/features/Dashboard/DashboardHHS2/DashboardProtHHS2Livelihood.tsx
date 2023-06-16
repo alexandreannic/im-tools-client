@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel} from '../../../shared/PdfLayout/Slide'
+import {SlideContainer, SlidePanel, SlidePanelTitle} from '../../../shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
@@ -12,6 +12,7 @@ import {UkraineMap} from '../../../shared/UkraineMap/UkraineMap'
 import {KoboLineChart} from '../shared/KoboLineChart'
 import {_Arr} from '@alexandreannic/ts-utils'
 import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
+import {Divider} from '@mui/material'
 
 export const DashboardProtHHS2Livelihood = ({
   data,
@@ -67,14 +68,33 @@ export const DashboardProtHHS2Livelihood = ({
               data: d,
               base: _ => _ !== undefined,
             })}>
-              {(_, curr, last) => <PieChartIndicator title={m.protHHS2.hhOutOfWorkAndSeekingEmployment} percent={_.percent}/>}
+              {(_, curr, last) => <PieChartIndicator sx={{mb: 2}} title={m.protHHS2.hhOutOfWorkAndSeekingEmployment} percent={_.percent}/>}
             </Lazy>
             <KoboLineChart
               question="including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment"
               data={data}
               displayedValues={['yes']}
             />
+            <Divider sx={{mb: 1}}/>
+            <SlidePanelTitle>{m.unemployedMemberByOblast}</SlidePanelTitle>
+            <Lazy deps={[data]} fn={() => ChartTools.byCategory({
+              categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
+              data,
+              filter: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes'
+            })}>
+              {_ => <UkraineMap data={_} fillBaseOn="percent" sx={{mx: 3}}/>}
+            </Lazy>
           </SlidePanel>
+          <SlidePanel title={m.protHHS2.unemploymentFactors}>
+            <ProtHHS2BarChart
+              data={data}
+              question="what_are_the_reasons_for_being_out_of_work"
+              questionType="multiple"
+              filterValue={['unable_unwilling_to_answer']}
+            />
+          </SlidePanel>
+        </SlideContainer>
+        <SlideContainer column sx={{flex: 1}}>
           <SlidePanel title={m.monthlyIncomePerHH}>
             <Lazy deps={[data]} fn={() => chain(ChartTools.single({
               filterValue: ['no_income', 'unable_unwilling_to_answer'],
@@ -89,17 +109,6 @@ export const DashboardProtHHS2Livelihood = ({
               }
             </Lazy>
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column sx={{flex: 1}}>
-          <SlidePanel title={m.unemployedMemberByOblast}>
-            <Lazy deps={[data]} fn={() => ChartTools.byCategory({
-              categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
-              data,
-              filter: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes'
-            })}>
-              {_ => <UkraineMap data={_} fillBaseOn="percent" sx={{mx: 3}}/>}
-            </Lazy>
-          </SlidePanel>
           <SlidePanel title={m.protHHS2.mainSourceOfIncome}>
             <ProtHHS2BarChart
               question="what_are_the_main_sources_of_income_of_your_household"
@@ -107,6 +116,18 @@ export const DashboardProtHHS2Livelihood = ({
               filterValue={['unable_unwilling_to_answer']}
               questionType="multiple"
               limit={4}
+            />
+          </SlidePanel>
+
+          <SlidePanel title={m.copyingMechanisms}>
+            <ProtHHS2BarChart
+              data={data}
+              question="what_are_the_strategies_that_your_household_uses_to_cope_with_these_challenges"
+              questionType="multiple"
+              overrideLabel={{
+                reducing_consumption_of_food: m.protHHS2.reducing_consumption_of_food,
+              }}
+              filterValue={['unable_unwilling_to_answer']}
             />
           </SlidePanel>
         </SlideContainer>

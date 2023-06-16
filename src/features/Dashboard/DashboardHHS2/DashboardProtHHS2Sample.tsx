@@ -51,7 +51,7 @@ export const DashboardProtHHS2Sample = ({
                 value: _ => _.gender === 'female'
               })}>
                 {_ => (
-                  <PieChartIndicator percent={_.percent} title={m.women}/>
+                  <PieChartIndicator percent={_.percent} title={m.females}/>
                 )}
               </Lazy>
             </Panel>
