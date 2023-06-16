@@ -241,11 +241,11 @@ export const DashboardProtHHS2 = () => {
       }
       beforeSection={
         <>
-          <Alert type="info" deletable persistentDelete>
-            <Txt size="big" bold block>{m.protHHS2.descTitle}</Txt>
-            <Txt block sx={{mb: 1}}>{m.protHHS2.desc}</Txt>
-            {m.protHHS2.disclaimer}
-          </Alert>
+          {/*<Alert type="info" deletable persistentDelete>*/}
+          {/*  <Txt size="big" bold block>{m.protHHS2.descTitle}</Txt>*/}
+          {/*  <Txt block sx={{mb: 1}}>{m.protHHS2.desc}</Txt>*/}
+          {/*  {m.protHHS2.disclaimer}*/}
+          {/*</Alert>*/}
         </>
       }
       sections={(() => {
