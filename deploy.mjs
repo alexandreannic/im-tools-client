@@ -46,8 +46,3 @@ const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execS
     console.log(`Successfully deployed!`)
   // }
 })()
-// toggle dep
-
-
-git push -f <remote> <local branch>:<remote branch>
-
