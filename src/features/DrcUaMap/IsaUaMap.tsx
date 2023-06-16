@@ -1,11 +1,9 @@
 import {Enum, sleep} from '@alexandreannic/ts-utils'
 import React, {useEffect} from 'react'
-import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
+import {Box, GlobalStyles, useTheme} from '@mui/material'
 import {useConfig} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
-import {Txt} from 'mui-extension'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
-import {Panel} from '../../shared/Panel'
 
 const generalStyles = <GlobalStyles styles={{
   '#map-isa-ua path': {

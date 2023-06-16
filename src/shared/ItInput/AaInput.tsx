@@ -1,4 +1,4 @@
-import {FilledInputProps, FormControl, FormControlProps, InputLabel, OutlinedInput, OutlinedInputProps} from '@mui/material'
+import {FilledInputProps, FormControl, InputLabel, OutlinedInput, OutlinedInputProps} from '@mui/material'
 import React from 'react'
 
 export interface ItInputProps extends OutlinedInputProps {

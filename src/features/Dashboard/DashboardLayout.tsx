@@ -1,11 +1,10 @@
 import React, {ReactNode, useEffect, useState} from 'react'
-import {Box, darken, GlobalStyles, Icon, LinearProgress, ThemeProvider, Typography} from '@mui/material'
+import {Box, darken, GlobalStyles, LinearProgress, ThemeProvider, Typography} from '@mui/material'
 import {combineSx, muiTheme} from '../../core/theme'
 import {set} from 'lodash'
 import {DashboardProvider} from './DashboardContext'
 import {makeSx} from 'mui-extension'
 import {DRCLogo} from '../../shared/logo/logo'
-import {PeriodPicker} from '../../shared/PeriodPicker/PeriodPicker'
 
 const dashboardMw = 1100
 const headerId = 'aa-sidebar-id'

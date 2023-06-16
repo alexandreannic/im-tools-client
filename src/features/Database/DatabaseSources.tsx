@@ -1,6 +1,6 @@
 import {Page} from '../../shared/Page'
 import {useConfig} from '../../core/context/ConfigContext'
-import {koboFormId, koboServerId} from '../../koboFormId'
+import {koboServerId} from '../../koboFormId'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useEffect, useState} from 'react'
 import {KoboFormListButton} from './KoboFormList'

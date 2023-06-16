@@ -1,11 +1,11 @@
 import {useMemo} from 'react'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
-import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '../../../shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS2Enrich} from './DashboardProtHHS2'
 import {ageGroup, ageGroupBHA, groupByAgeGroup} from '../../../core/type'
-import {endOfMonth, startOfMonth, sub} from 'date-fns'
+import {startOfMonth, sub} from 'date-fns'
 
 export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
 

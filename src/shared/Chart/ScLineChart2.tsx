@@ -1,8 +1,7 @@
-import {Bar, BarChart, CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
+import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
 import * as React from 'react'
-import {memo, useMemo, useState} from 'react'
-import {Box, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
-import {styleUtils} from '../../core/theme'
+import {memo} from 'react'
+import {Box, SxProps, Theme, useTheme} from '@mui/material'
 import {map} from '@alexandreannic/ts-utils'
 
 export interface ScLineChartPropsBase {

@@ -1,7 +1,7 @@
 import {ReactNode, useEffect, useMemo, useState} from 'react'
 import {SxProps, Theme} from '@mui/material'
 import {ChartTools} from '../core/chartTools'
-import multiple = ChartTools.multiple
+
 
 interface MultipleChoicesBase<T, V> {
   label?: ReactNode

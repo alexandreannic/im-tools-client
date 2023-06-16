@@ -5,7 +5,7 @@ import {KoboSdk} from './kobo/KoboFormClient'
 import {ActivityInfoSdk} from './activity-info/ActiviftyInfoSdk'
 import {KoboApiSdk} from './kobo/KoboApiSdk'
 import {Method} from 'axios'
-import {MpcaPayment, MpcaPaymentSdk} from './mpcaPaymentTool/MpcaPaymentSdk'
+import {MpcaPaymentSdk} from './mpcaPaymentTool/MpcaPaymentSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {

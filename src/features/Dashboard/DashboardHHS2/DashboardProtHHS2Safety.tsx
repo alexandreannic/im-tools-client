@@ -3,15 +3,7 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {KoboPieChartIndicator, KoboPieChartIndicatorMultiple} from '../shared/KoboPieChartIndicator'
-import {Lazy} from '../../../shared/Lazy'
-import {ChartTools} from '../../../core/chartTools'
-import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {chain, forceArrayStringInference} from '@/utils/utils'
-import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {PieChartIndicator} from '../../../shared/PieChartIndicator'
-import {Panel} from '../../../shared/Panel'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 
 export const DashboardProtHHS2Safety = ({
   data,

@@ -1,7 +1,7 @@
 import {Bar, BarChart, CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
 import * as React from 'react'
 import {memo, useMemo, useState} from 'react'
-import {Box, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
+import {Box, Checkbox, SxProps, useTheme} from '@mui/material'
 import {styleUtils} from '../../core/theme'
 import {chartConfig} from './chartConfig'
 

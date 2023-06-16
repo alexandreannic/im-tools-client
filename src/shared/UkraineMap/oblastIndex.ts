@@ -1,5 +1,4 @@
 import {OblastISOSVG} from './ukraineSvgPath'
-import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {Enum} from '@alexandreannic/ts-utils'
 
 export interface Oblast {

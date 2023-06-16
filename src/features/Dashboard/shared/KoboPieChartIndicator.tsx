@@ -2,7 +2,6 @@ import {PieChartIndicator, PieChartIndicatorProps} from '../../../shared/PieChar
 import {useMemo} from 'react'
 import {_Arr} from '@alexandreannic/ts-utils'
 import {StringArrayKeys, StringKeys} from '../../../core/type'
-import {before} from 'lodash'
 
 /** @deprecated*/
 export const KoboPieChartIndicatorMultiple = <T, K extends StringArrayKeys<T>>({

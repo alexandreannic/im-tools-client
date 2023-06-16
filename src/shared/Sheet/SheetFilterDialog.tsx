@@ -7,7 +7,6 @@ import {SheetColumnProps} from './Sheet'
 import {MultipleChoices} from '../MultipleChoices'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {PeriodPicker} from '../PeriodPicker/PeriodPicker'
-import {IconBtn} from 'mui-extension'
 import {AAIconBtn} from '../IconBtn'
 
 interface PropsBase {

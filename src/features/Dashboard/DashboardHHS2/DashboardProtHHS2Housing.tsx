@@ -5,8 +5,6 @@ import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ChartTools} from '../../../core/chartTools'
-import {KoboLineChart} from '../shared/KoboLineChart'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 
 export const DashboardProtHHS2Housing = ({
   data,
