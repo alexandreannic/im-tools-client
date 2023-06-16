@@ -36,6 +36,7 @@
     "yup": "^1.1.1"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.7",
     "@types/google.maps": "^3.52.2",
     "@types/google.visualization": "^0.0.69",
     "@types/lokijs": "^1.5.8",
