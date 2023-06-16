@@ -22,7 +22,7 @@ export interface UseLayoutContextProps {
 }
 
 export const LayoutProvider = ({title, showSidebarButton, mobileBreakpoint = 760, children}: LayoutProviderProps) => {
-  const [pageWidth, setPageWidth] = useState(getWidth())
+  const [pageWidth, setPageWidth] = useState(0)
   const [sidebarOpen, setSidebarOpen] = usePersistentState(true, 'sidebarOpen')
   const [sidebarPinned, setSidebarPinned] = usePersistentState(true, 'sidebarPinned')
 

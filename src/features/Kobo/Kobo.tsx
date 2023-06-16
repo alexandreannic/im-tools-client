@@ -3,9 +3,10 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect} from 'react'
 import {Layout} from '../../shared/Layout'
 import {KoboSidebar} from './KoboSidebar'
-import {Outlet} from 'react-router-dom'
+import {koboModule} from '@/features/Kobo/koboModule'
+import {Route, Routes} from 'react-router-dom'
+import {KoboTableLayoutRoute} from '@/features/Kobo/KoboForm/KoboTable'
 
-export const NoMatch = () => <div>NoMatch</div>
 
 export const Kobo = () => {
   const {api} = useConfig()
@@ -14,12 +15,13 @@ export const Kobo = () => {
   useEffect(() => {
     _forms.fetch()
   }, [])
-
   return (
     <Layout
       sidebar={<KoboSidebar/>}
     >
-      <Outlet/>
+      <Routes>
+        <Route path={koboModule.siteMap.form()} element={<KoboTableLayoutRoute/>}/>
+      </Routes>
     </Layout>
   )
 }

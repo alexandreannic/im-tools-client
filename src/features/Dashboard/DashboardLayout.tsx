@@ -54,7 +54,8 @@ const style = makeSx({
     flex: 1,
     px: 2,
     maxWidth: dashboardMw,
-    margin: 'auto',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     mb: 2,
   },
   header: {

@@ -12,6 +12,7 @@ import {AAIconBtn} from '../../../shared/IconBtn'
 import {KoboApiColType, KoboApiForm} from '../../../core/sdk/server/kobo/KoboApi'
 import {Panel, PanelHead} from '../../../shared/Panel'
 import {Txt} from 'mui-extension'
+import {koboFormId, koboServerId} from '@/koboFormId'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -33,8 +34,8 @@ const ignoredColType: KoboApiColType[] = [
 ]
 
 export const KoboTableLayoutRoute = () => {
-  const {serverId, formId} = urlParamsValidation.validateSync(useParams())
-  return <KoboTableLayout serverId={serverId} formId={formId}/>
+  // const {serverId, formId} = urlParamsValidation.validateSync(useParams())
+  return <KoboTableLayout serverId={koboServerId.prod} formId={koboFormId.prod.protectionHh2}/>
 }
 
 export const KoboTableLayout = ({
