@@ -18,16 +18,13 @@ import {Alert, Txt} from 'mui-extension'
 import {DashboardProtHHS2Housing} from './DashboardProtHHS2Housing'
 import {DashboardProtHHS2Displacement} from './DashboardProtHHS2Displacement'
 import {DashboardProtHHS2PN} from './DashboardProtHHS2PN'
-import {DashboardProtHHS2Needs} from './DashboardProtHHS2Needs'
-import {PeriodPicker} from '../../../shared/PeriodPicker/PeriodPicker'
+import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {intersection} from 'lodash'
 import {makeKoboBarChartComponent} from '../shared/KoboBarChart'
 import {DashboardProtHHS2FamilyUnity} from './DashboardProtHHS2FamilyUnity'
 import {DashboardProtHHS2Safety} from './DashboardProtHHS2Safety'
-import {DebouncedInput} from '../../../shared/DebouncedInput'
+import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
-import json from './TODELETERAWDATA.json'
-import {ApiPaginate} from '@/core/type'
 
 export type ProtHHS2Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
@@ -37,6 +34,7 @@ interface DashboardProtHHS2Filters {
   currentOblast: string[]
   originOblast: string[]
   hhType: string[]
+  poc: string[]
   typeOfSite: string[]
   specificNeeds: string[]
 }
@@ -95,6 +93,7 @@ export const DashboardProtHHS2 = () => {
     currentOblast: [],
     originOblast: [],
     hhType: [],
+    poc: [],
     specificNeeds: [],
     typeOfSite: [],
   })
@@ -136,6 +135,7 @@ export const DashboardProtHHS2 = () => {
         filter?.currentOblast.length > 0 && (_ => filter.currentOblast.includes(_.where_are_you_current_living_oblast)),
         filter?.originOblast.length > 0 && (_ => filter.originOblast.includes(_.what_is_your_area_of_origin_oblast)),
         filter?.hhType.length > 0 && (_ => filter.hhType.includes(_.what_is_the_type_of_your_household)),
+        filter?.poc.length > 0 && (_ => filter.poc.includes(_.do_you_identify_as_any_of_the_following)),
         filter?.typeOfSite.length > 0 && (_ => filter.typeOfSite.includes(_.type_of_site)),
         filter?.specificNeeds.length > 0 && (_ => intersection(filter.specificNeeds, _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household).length > 0),
       ]))
@@ -184,6 +184,13 @@ export const DashboardProtHHS2 = () => {
             options={getChoices('type_of_site').map(_ => ({..._, label: _.label.split('(')[0]}))}
             icon="location_city"
             onChange={typeOfSite => setFilters(prev => ({...prev, typeOfSite}))}
+          />
+          <DashboardFilterOptions
+            value={filter.poc}
+            label={m.poc}
+            options={getChoices('do_you_identify_as_any_of_the_following')}
+            icon="directions_run"
+            onChange={poc => setFilters(prev => ({...prev, poc}))}
           />
           <DashboardFilterOptions
             value={filter.hhType}

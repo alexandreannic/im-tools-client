@@ -1,6 +1,6 @@
 import {ChartTools} from '../../../core/chartTools'
 import {format} from 'date-fns'
-import {ScLineChart, ScLineChartProps} from '../../../shared/Chart/ScLineChart'
+import {ScLineChart, ScLineChartProps} from '@/shared/Chart/ScLineChart'
 import {_Arr} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
 

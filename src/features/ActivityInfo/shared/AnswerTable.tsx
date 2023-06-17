@@ -1,6 +1,6 @@
 import {BoxProps} from '@mui/material'
 import React from 'react'
-import {Sheet} from '../../../shared/Sheet/Sheet'
+import {Sheet} from '@/shared/Sheet/Sheet'
 
 export const AnswerTable = <T extends Record<string, any>, >({
   answers,

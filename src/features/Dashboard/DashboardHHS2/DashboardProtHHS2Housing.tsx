@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel} from '../../../shared/PdfLayout/Slide'
+import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'

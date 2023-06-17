@@ -2,7 +2,7 @@ import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
 import {StringKeys} from '../../../core/type'
-import {ScLineChart2, ScLineChart2Data} from '../../../shared/Chart/ScLineChart2'
+import {ScLineChart2, ScLineChart2Data} from '@/shared/Chart/ScLineChart2'
 
 export const KoboLineChart = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
   data,

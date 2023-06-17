@@ -173,7 +173,7 @@ export const DashboardLayout = ({
   }, [sections])
   return (
     <DashboardProvider>
-      {/*{generalStyles}*/}
+      {generalStyles}
       <ThemeProvider theme={(() => {
         const t = muiTheme()
         t.palette.background.default = '#f8f9fa'

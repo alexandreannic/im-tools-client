@@ -1,7 +1,7 @@
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
 import {useI18n} from '../../../core/i18n'
 import {useTheme} from '@mui/material'
-import {SlideContainer, SlidePanel} from '../../../shared/PdfLayout/Slide'
+import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 
 export const DashboardProtHHS2PN = ({
   data,

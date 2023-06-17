@@ -1,11 +1,11 @@
 import {MpcaPayment, MpcaPaymentUpdate} from '../../../core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {Controller, useForm} from 'react-hook-form'
-import {AaSelect} from '../../../shared/Select/Select'
+import {AaSelect} from '@/shared/Select/Select'
 import React, {useEffect} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {Row} from '../../../shared/Row'
-import {AaInput} from '../../../shared/ItInput/AaInput'
-import {AAIconBtn} from '../../../shared/IconBtn'
+import {Row} from '@/shared/Row'
+import {AaInput} from '@/shared/ItInput/AaInput'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 const budgetLines = [
   {value: '', children: ''},

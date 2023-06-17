@@ -4,10 +4,10 @@ import {useConfig} from '../../../core/context/ConfigContext'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Arr, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {ChartTools} from '../../../core/chartTools'
-import {Panel} from '../../../shared/Panel'
+import {Panel} from '@/shared/Panel'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),

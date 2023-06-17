@@ -1,12 +1,12 @@
-import {SlideContainer, SlidePanel} from '../../../shared/PdfLayout/Slide'
+import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
 import {Box, Icon} from '@mui/material'
-import {Lazy} from '../../../shared/Lazy'
+import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
-import {UkraineMap} from '../../../shared/UkraineMap/UkraineMap'
-import {PieChartIndicator} from '../../../shared/PieChartIndicator'
+import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
+import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
 
 

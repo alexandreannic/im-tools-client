@@ -1,4 +1,4 @@
-import {PeriodPicker, PeriodPickerProps} from '../../../shared/PeriodPicker/PeriodPicker'
+import {PeriodPicker, PeriodPickerProps} from '@/shared/PeriodPicker/PeriodPicker'
 import {DashboardFilterLabel} from './DashboardFilterLabel'
 
 export const DashboardFilterPeriod = ({...props}: PeriodPickerProps) => {

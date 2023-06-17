@@ -1,7 +1,7 @@
 import React from 'react'
 import {Icon, Tooltip} from '@mui/material'
 import {AnswerTable} from './AnswerTable'
-import {AaBtn} from '../../../shared/Btn/AaBtn'
+import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {useI18n} from '../../../core/i18n'
 import {IconBtn} from 'mui-extension'

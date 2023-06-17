@@ -1,4 +1,4 @@
-import {PieChartIndicator, PieChartIndicatorProps} from '../../../shared/PieChartIndicator'
+import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/PieChartIndicator'
 import {useMemo} from 'react'
 import {_Arr} from '@alexandreannic/ts-utils'
 import {StringArrayKeys, StringKeys} from '../../../core/type'

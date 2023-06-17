@@ -1,17 +1,17 @@
-import {SlideContainer, SlidePanel, SlideWidget} from '../../../shared/PdfLayout/Slide'
-import {HorizontalBarChartGoogle} from '../../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {UkraineMap} from '../../../shared/UkraineMap/UkraineMap'
+import {SlideContainer, SlidePanel, SlideWidget} from '@/shared/PdfLayout/Slide'
+import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
-import {Lazy} from '../../../shared/Lazy'
+import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
-import {AAStackedBarChart} from '../../../shared/Chart/AaStackedBarChart'
-import {PieChartIndicator} from '../../../shared/PieChartIndicator'
-import {Panel} from '../../../shared/Panel'
+import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
+import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {Panel} from '@/shared/Panel'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 
 export const DashboardProtHHS2Sample = ({
@@ -91,7 +91,7 @@ export const DashboardProtHHS2Sample = ({
           </SlidePanel>
         </SlideContainer>
         <SlideContainer column>
-          <SlidePanel title={m.protHHS2.poc}>
+          <SlidePanel title={m.poc}>
             <Lazy
               deps={[data]}
               fn={() => chain(ChartTools.single({

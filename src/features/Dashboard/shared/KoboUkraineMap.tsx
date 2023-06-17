@@ -1,8 +1,8 @@
 import {ChartTools} from '../../../core/chartTools'
-import {UkraineMap} from '../../../shared/UkraineMap/UkraineMap'
+import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useMemo} from 'react'
 import {_Arr} from '@alexandreannic/ts-utils'
-import {OblastISOSVG} from '../../../shared/UkraineMap/ukraineSvgPath'
+import {OblastISOSVG} from '@/shared/UkraineMap/ukraineSvgPath'
 import {BoxProps} from '@mui/material'
 
 export const KoboUkraineMap = <D extends Record<string, any>>({

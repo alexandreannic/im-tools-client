@@ -149,7 +149,6 @@ export const en = Object.freeze({
     submissionTime: 'Submission',
     submittedBy: 'By',
     protectionMonitoringDashboard: 'Protection monitoring dashboard',
-    female: 'Female',
     undefined: 'Unknown',
     women: 'Women',
     avgAge: 'Avg. age',
@@ -192,6 +191,7 @@ export const en = Object.freeze({
     idp: 'IDP',
     noIdp: 'Non-IDP',
     idps: 'IDPs',
+    poc: 'Person of concern',
     global: 'Global',
     donor: 'Donor',
     program: 'Program',
@@ -236,7 +236,6 @@ export const en = Object.freeze({
       safetyOrSecurityConcernsDuringDisplacement: 'HHs reporting security concerns during displacement',
       HHs: 'HHs',
       AvgHHSize: 'AvgHHSize',
-      poc: 'Person of concern',
     },
     protHHSnapshot: {
       male1860: `Males 18-60 years old`,
