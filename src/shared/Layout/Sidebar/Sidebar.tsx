@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {useEffect} from 'react'
-import {Box, BoxProps, SwipeableDrawer, Switch} from '@mui/material'
+import {Box, BoxProps, Icon, SwipeableDrawer, Switch} from '@mui/material'
 import {useLayoutContext} from '../LayoutContext'
 import {layoutConfig} from '../index'
 import {SidebarFooter} from './SidebarFooter'
@@ -9,36 +9,51 @@ import {SidebarBody} from './SidebarBody'
 import {SidebarHeader} from './SidebarHeader'
 import {stopPropagation} from 'mui-extension'
 import {useI18n} from '../../../core/i18n'
-
-const sidebarId = 'signalconso-sidebar-id'
+import {useConfig} from '@/core/context/ConfigContext'
 
 let sidebar: HTMLElement | null = null
+let header: HTMLElement | null = null
 
 /**
  * Don't do it the React way to improve perfs
  */
-const stickSidebarToHeader = () => {
+const stickSidebarToHeader = (sidebarId: string, headerId: string) => {
   if (!sidebar) {
     sidebar = document.getElementById(sidebarId)
   }
-  if (sidebar) {
-    sidebar.style.top = Math.max(layoutConfig.headerHeight - window.scrollY, 0) + 'px'
+  if (!header) {
+    header = document.getElementById(headerId)
   }
+  setTimeout(() => {
+    if (sidebar && header) {
+      sidebar.style.top = Math.max(header.offsetHeight < window.scrollY ? header.offsetHeight : header.offsetHeight - window.scrollY, 0) + 'px'
+    }
+  }, 0)
 }
 
-export const Sidebar = ({children, sx, ...props}: BoxProps) => {
+export const Sidebar = ({
+  children,
+  sx,
+  id = 'signalconso-sidebar-id',
+  headerId,
+  ...props
+}: BoxProps & {
+  headerId: string
+}) => {
   const {isMobileWidth, sidebarOpen, setSidebarOpen, sidebarPinned, setSidebarPinned} = useLayoutContext()
   const {m} = useI18n()
+  const {darkTheme, setDarkTheme} = useConfig()
 
   useEffect(() => {
     // Element has been re-created by SwipeableDrawer, thus variable point to nothing.
     sidebar = null
-    stickSidebarToHeader()
+    header = null
+    stickSidebarToHeader(id, headerId)
     setSidebarOpen(_ => !isMobileWidth)
   }, [isMobileWidth, sidebarPinned])
 
   useEffect(() => {
-    window.addEventListener('scroll', stickSidebarToHeader)
+    window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId))
   }, [])
 
   const isTemporary = isMobileWidth || !sidebarPinned
@@ -46,7 +61,7 @@ export const Sidebar = ({children, sx, ...props}: BoxProps) => {
   return (
     <SwipeableDrawer
       PaperProps={{
-        id: sidebarId,
+        id,
         sx: {
           background: 'transparent',
           position: 'fixed',
@@ -65,7 +80,7 @@ export const Sidebar = ({children, sx, ...props}: BoxProps) => {
     >
       <Box
         sx={{
-          background: t => t.palette.background.default,
+          background: isTemporary ? t => t.palette.background.default : undefined,
           width: layoutConfig.sidebarWith,
           height: '100%',
           transition: t => t.transitions.create('width'),
@@ -77,16 +92,21 @@ export const Sidebar = ({children, sx, ...props}: BoxProps) => {
         }}
         {...props}
       >
-        <SidebarHeader hidden={!isTemporary} />
+        <SidebarHeader hidden={!isTemporary}/>
         <SidebarBody>{children}</SidebarBody>
-        {!isMobileWidth && (
-          <SidebarFooter>
+        {/*<Icon onClick={() => setDarkTheme(_ => !_)}>{darkTheme ? 'light_mode' : 'dark_mode'}</Icon>*/}
+        <SidebarFooter>
+          <SidebarItem onClick={stopPropagation(() => setDarkTheme(_ => !_))} icon="dark_mode" sx={{mr: 0, pr: 0}}>
+            {m.theme}
+            <Switch color="primary" sx={{ml: 'auto'}} checked={darkTheme}/>
+          </SidebarItem>
+          {!isMobileWidth && (
             <SidebarItem onClick={stopPropagation(() => setSidebarPinned(_ => !_))} icon="push_pin" sx={{mr: 0, pr: 0}}>
               {m.pin}
-              <Switch color="primary" sx={{ml: 'auto'}} checked={sidebarPinned} onChange={() => setSidebarPinned(_ => !_)} />
+              <Switch color="primary" sx={{ml: 'auto'}} checked={sidebarPinned}/>
             </SidebarItem>
-          </SidebarFooter>
-        )}
+          )}
+        </SidebarFooter>
       </Box>
     </SwipeableDrawer>
   )

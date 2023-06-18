@@ -7,7 +7,6 @@ const css = makeSx({
   button: {
     py: .75,
     px: 1.25,
-    zIndex: 101,
     fontWeight: t => t.typography.fontWeightBold,
     display: 'inline-flex',
     alignItems: 'center',
@@ -54,7 +53,6 @@ export const DashboardFilterLabel = ({
             bottom: 0,
             right: 0,
             left: 0,
-            zIndex: 100,
           }}
         />
       )}
@@ -72,7 +70,7 @@ export const DashboardFilterLabel = ({
           boxShadow: t => t.shadows[4],
           overflow: 'hidden',
           border: 'none',
-          zIndex: 102,
+          zIndex: 1300,
           position: 'absolute',
           top: 46,
         }}>

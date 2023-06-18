@@ -30,7 +30,7 @@ export const DashboardProtHHS2Document = ({
   // console.log(data.sum(_ => _.how_many_ind ?? 0))
   return (
     <>
-      <SlideContainer alignItems="flex-start">
+      <SlideContainer responsive alignItems="flex-start">
         <SlideContainer column sx={{flex: 1}}>
           <SlidePanel title={m.protHHSnapshot.maleWithoutIDPCert}>
             <SlideContainer>
@@ -63,7 +63,7 @@ export const DashboardProtHHS2Document = ({
           </Lazy>
           <SlidePanel>
             <KoboPieChartIndicator
-              compare={{now: computed.currentMonth, before: computed.lastMonth}}
+              compare={{before: computed.lastMonth}}
               title={m.protHHS2.accessBarriersToObtainDocumentation}
               question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
               filter={_ => !_.includes('no')}
@@ -82,7 +82,6 @@ export const DashboardProtHHS2Document = ({
             />
           </SlidePanel>
         </SlideContainer>
-
         <SlideContainer column sx={{flex: 1}}>
           <SlidePanel>
             <Lazy deps={[data, computed.lastMonth, computed.currentMonth]} fn={(x) => ChartTools.percentage({
@@ -103,7 +102,7 @@ export const DashboardProtHHS2Document = ({
           </SlidePanel>
           <SlidePanel>
             <KoboPieChartIndicator
-              compare={{now: computed.currentMonth, before: computed.lastMonth}}
+              compare={{before: computed.lastMonth}}
               title={m.lackOfHousingDoc}
               filterBase={_ => !_.includes('unable_unwilling_to_answer')}
               filter={_ => !_.includes('none')}

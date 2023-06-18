@@ -99,8 +99,8 @@ export const DashboardProtHHS2Violence = ({
           return res
         }}>
           {_ => Enum.entries(_).map(([k, v]) => (
-            <SlidePanel key={k} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <PieChartIndicator value={v.value} base={v.base} percent={v.value / v.base} title={fnSwitch(k, {
+            <SlidePanel key={k} sx={{flex: 1, m: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+              <PieChartIndicator sx={{minWidth: 160}} value={v.value} base={v.base} percent={v.value / v.base} title={fnSwitch(k, {
                 has_any_adult_female_member_experienced_violence: m.adultWomen,
                 has_any_adult_male_member_experienced_violence: m.adultMen,
                 has_any_boy_member_experienced_violence: m.boy,
@@ -111,7 +111,7 @@ export const DashboardProtHHS2Violence = ({
           ))}
         </Lazy>
       </SlideContainer>
-      <SlideContainer>
+      <SlideContainer responsive>
         <SlideContainer column>
           <Lazy deps={[groupedIndividualsType.type]} fn={() =>
             chain(ChartTools.multiple({

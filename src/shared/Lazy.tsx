@@ -1,14 +1,18 @@
-import {useMemo} from 'react'
+import {memo, useMemo} from 'react'
 
-export const Lazy = <T, D extends any>({
+interface Type {
+  <T, D extends any>(_: {
+    deps: D[]
+    fn: (_: D) => T
+    children: (..._: T[]) => any
+  }): any
+}
+
+export const Lazy: Type = memo(({
   deps,
   fn,
   children,
-}: {
-  deps: D[]
-  fn: (_: D) => T
-  children: (..._: T[]) => any
 }) => {
   const res = useMemo(() => deps.map(fn), deps)
   return children(...res)
-}
+}, (prev, curr) => !!prev.deps.find(p => !!curr.deps.filter(c => c !== p)))

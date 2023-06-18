@@ -1,4 +1,4 @@
-import {Box, BoxProps, Icon} from '@mui/material'
+import {Box, BoxProps, Icon, useTheme} from '@mui/material'
 import {Txt, TxtProps} from 'mui-extension'
 import React, {ReactNode, useEffect, useRef} from 'react'
 import {usePdfContext} from './PdfLayout'
@@ -6,6 +6,7 @@ import {Panel, PanelBody} from '../Panel'
 import {PanelProps} from '../Panel/Panel'
 import {DRCLogo, EULogo} from '../logo/logo'
 import {uppercaseHandlingAcronyms} from '@/utils/utils'
+import {useLayoutContext} from '@/shared/Layout/LayoutContext'
 
 export const Slide = (props: BoxProps) => {
   return (
@@ -62,21 +63,33 @@ export const SlideContainer = ({
   sx,
   column,
   title,
+  responsive,
   ...props
 }: Omit<BoxProps, 'flexDirection'> & {
+  responsive?: boolean
   column?: boolean
 }) => {
+  const theme = useTheme()
   return (
     <Box {...props} sx={{
       display: 'flex',
+      width: '100%',
       flex: 1,
+      [theme.breakpoints.down('md')]: responsive ? {
+        flexDirection: 'column',
+        '& > :not(:last-child)': {
+          mb: 2,
+          mr: 0,
+          flex: 1,
+
+        }
+      } : {},
       ...column && {
         flexDirection: 'column',
         // '& > *': {
         //   flex: 1
         // },
       },
-
       '& > :not(:last-child)': column ? {mb: 2} : {mr: 2},
       ...sx,
     }}>

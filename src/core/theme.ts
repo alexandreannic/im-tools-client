@@ -101,9 +101,9 @@ export const muiTheme = (dark?: boolean): Theme => {
       error: red,
       mode: dark ? 'dark' : 'light',
       background: {
-        default: dark ? 'black' : 'white',
-        // default: dark ? '#1e1e22' : '#f8f9fa',
-        paper: dark ? 'black' : 'white',
+        // default: dark ? 'black' : 'white',
+        default: dark ? 'black' : '#f8f9fa',
+        paper: dark ? '#1e1e22' : 'white',
       }
     },
     shape: {
@@ -208,7 +208,8 @@ export const muiTheme = (dark?: boolean): Theme => {
         },
         styleOverrides: {
           root: {
-            border: `1px solid ${baseTheme.palette.divider}`,
+            border: 'none',
+            // border: `1px solid ${baseTheme.palette.divider}`,
             //       borderRadius: defaultRadius,
           },
         },
@@ -303,7 +304,7 @@ export const muiTheme = (dark?: boolean): Theme => {
           },
         },
       },
-      MuiOutlinedInput: {
+      MuiOutlinedInput: dark ? {} : {
         styleOverrides: {
           root: {
             '&:hover $notchedOutline': {

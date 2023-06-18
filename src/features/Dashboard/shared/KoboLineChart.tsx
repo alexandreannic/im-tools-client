@@ -20,9 +20,7 @@ export const KoboLineChart = <T extends {end: Date}, K extends StringKeys<T>, V 
 }) => {
   const transform: ScLineChart2Data[] = useMemo(() => {
     return Enum.entries(data.groupBy(_ => format(_.end, 'yyyy-MM'))).map(([date, group]) => {
-      const res = {
-        name: date,
-      } as ScLineChart2Data
+      const res = {} as ScLineChart2Data
       group
         .map(_ => _[question])
         .filter(_ => _ !== undefined && (!displayedValues || displayedValues?.includes(_ as any)))
@@ -35,6 +33,7 @@ export const KoboLineChart = <T extends {end: Date}, K extends StringKeys<T>, V 
       Enum.keys(res).forEach(k => {
         res[k] = Math.round(res[k] / group.length * 100)
       })
+      res.name = date
       return res
     })
   }, [data, question])

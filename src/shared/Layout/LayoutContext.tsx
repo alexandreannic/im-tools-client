@@ -22,9 +22,9 @@ export interface UseLayoutContextProps {
 }
 
 export const LayoutProvider = ({title, showSidebarButton, mobileBreakpoint = 760, children}: LayoutProviderProps) => {
-  const [pageWidth, setPageWidth] = useState(0)
-  const [sidebarOpen, setSidebarOpen] = usePersistentState(true, 'sidebarOpen')
-  const [sidebarPinned, setSidebarPinned] = usePersistentState(true, 'sidebarPinned')
+  const [pageWidth, setPageWidth] = useState(getWidth())
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarPinned, setSidebarPinned] = useState(true)
 
   useEffect(() => {
     window.addEventListener('resize', () => setPageWidth(getWidth()))
@@ -48,7 +48,7 @@ export const LayoutProvider = ({title, showSidebarButton, mobileBreakpoint = 760
 }
 
 function getWidth(): number {
-  return window.outerWidth
+  return (typeof window !== 'undefined') ? window.outerWidth : 1100
 }
 
 export const useLayoutContext = (): UseLayoutContextProps => {

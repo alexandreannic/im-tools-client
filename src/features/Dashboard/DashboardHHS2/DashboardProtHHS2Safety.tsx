@@ -4,6 +4,7 @@ import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
+import {KoboLineChart} from '@/features/Dashboard/shared/KoboLineChart'
 
 export const DashboardProtHHS2Safety = ({
   data,
@@ -12,15 +13,16 @@ export const DashboardProtHHS2Safety = ({
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   return (
-    <SlideContainer>
+    <SlideContainer responsive>
       <SlideContainer column>
         <SlidePanel>
           <KoboPieChartIndicator
             sx={{mb: 1}}
             title={m.protHHS2.poorSenseOfSafety}
             question="please_rate_your_sense_of_safety_in_this_location"
-            filter={_ => _ === '_1_very_unsafe' || _ === '_2_unsafe'}
+            filter={_ => _ === '_2_unsafe'}// || _ === '_2_unsafe'}
             filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+            compare={{before: computed.lastMonth}}
             data={data}
           />
           <KoboUkraineMap
@@ -49,6 +51,7 @@ export const DashboardProtHHS2Safety = ({
             question="how_would_you_describe_the_relationship_between_member_of_the_host_community"
             filter={_ => _ === '_2_bad' || _ === '_1_very_bad'}
             filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+            compare={{before: computed.lastMonth}}
             data={data}
           />
           <KoboUkraineMap

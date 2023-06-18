@@ -3,7 +3,6 @@ import {ReactNode} from 'react'
 import {Box, BoxProps, Icon, Theme, useTheme} from '@mui/material'
 import {alpha} from '@mui/material/styles'
 import {makeSx} from 'mui-extension'
-import {NavLink} from 'react-router-dom'
 
 const css = makeSx({
   i: {
@@ -20,20 +19,24 @@ const styleActive = (t: Theme) => ({
 export interface SidebarItemProps extends BoxProps {
   icon?: string | ReactNode
   large?: boolean
+  href?: string
   active?: boolean
   to?: string
 }
 
-export const SidebarItem = ({children, to, icon, className, active, large, sx, ...props}: SidebarItemProps) => {
+export const SidebarItem = ({
+  children,
+  to,
+  icon,
+  className,
+  active,
+  large,
+  sx,
+  ...props
+}: SidebarItemProps) => {
   const theme = useTheme()
-  const navLinkProps: any = to ? {
-    component: NavLink,
-    to, 
-    // activeStyle: styleActive(theme),
-  } : {}
   return (
     <Box
-      {...navLinkProps}
       sx={{
         transition: t => t.transitions.create('all'),
         display: 'flex',

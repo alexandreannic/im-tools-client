@@ -24,7 +24,7 @@ export const DashboardProtHHS2Sample = ({
   console.log('computed.ageGroup', computed.ageGroup)
   return (
     <SlideContainer column>
-      <SlideContainer alignItems="flex-start">
+      <SlideContainer alignItems="flex-start" responsive>
         <SlideContainer column>
           <SlideContainer>
             <SlideWidget sx={{flex: 1}} icon="home" title={m.hhs}>
@@ -81,7 +81,7 @@ export const DashboardProtHHS2Sample = ({
           </SlideContainer>
         </SlideContainer>
       </SlideContainer>
-      <SlideContainer alignItems="flex-start">
+      <SlideContainer alignItems="flex-start" responsive>
         <SlideContainer column>
           <SlidePanel title={m.HHsLocation}>
             <UkraineMap data={computed.byCurrentOblast} sx={{mx: 3}} base={data.length}/>

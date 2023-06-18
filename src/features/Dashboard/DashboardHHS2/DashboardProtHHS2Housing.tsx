@@ -16,7 +16,7 @@ export const DashboardProtHHS2Housing = ({
 
   return (
     <>
-      <SlideContainer>
+      <SlideContainer responsive>
         <SlideContainer column>
           <SlidePanel title={m.housingStructure}>
             <ProtHHS2BarChart
@@ -27,7 +27,7 @@ export const DashboardProtHHS2Housing = ({
           </SlidePanel>
           <SlidePanel>
             <KoboPieChartIndicator
-              compare={{now: computed.currentMonth, before: computed.lastMonth}}
+              compare={{before: computed.lastMonth}}
               title={m.protHHSnapshot.noAccommodationDocument}
               question="do_you_have_formal_rental_documents_to_stay_in_your_accommodation"
               filter={_ => _ !== 'yes_i_have_a_written_lease_agreement' && _ !== 'yes_i_have_state_assigned_shelter_with_proving_documents'}
@@ -45,7 +45,7 @@ export const DashboardProtHHS2Housing = ({
         <SlideContainer column>
           <SlidePanel>
             <KoboPieChartIndicator
-              compare={{now: computed.currentMonth, before: computed.lastMonth}}
+              compare={{before: computed.lastMonth}}
               title={m.protHHS2.mainConcernsRegardingHousing}
               question="what_are_your_main_concerns_regarding_your_accommodation"
               filter={_ => !_.includes('none')}

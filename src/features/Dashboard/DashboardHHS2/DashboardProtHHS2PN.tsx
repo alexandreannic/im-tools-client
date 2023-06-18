@@ -13,7 +13,7 @@ export const DashboardProtHHS2PN = ({
 
   return (
     <>
-      <SlideContainer>
+      <SlideContainer responsive>
         <SlidePanel title={m.firstPriorityNeed}>
           <ProtHHS2BarChart
             data={data}

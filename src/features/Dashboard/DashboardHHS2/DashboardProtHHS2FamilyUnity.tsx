@@ -27,11 +27,11 @@ export const DashboardProtHHS2FamilyUnity = ({
   const {formatLargeNumber, m} = useI18n()
   return (
     <>
-      <SlideContainer>
+      <SlideContainer responsive>
         <SlideContainer column>
           <SlidePanel>
             <KoboPieChartIndicator
-              compare={{now: computed.currentMonth, before: computed.lastMonth}}
+              compare={{before: computed.lastMonth}}
               title={m.protHHS2.familyMemberSeparated}
               question="are_you_separated_from_any_of_your_households_members"
               filter={_ => !_.includes('no') && !_.includes('unable_unwilling_to_answer')}

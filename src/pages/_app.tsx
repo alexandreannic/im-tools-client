@@ -7,7 +7,7 @@ import {I18nProvider} from '@/core/i18n'
 import {ToastProvider} from 'mui-extension'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {ApiClient} from '@/core/sdk/server/ApiClient'
-import {ConfigContextProvider} from '@/core/context/ConfigContext'
+import {ConfigContextProvider, useConfig} from '@/core/context/ConfigContext'
 import {NfiProvider} from '@/core/context/NfiContext'
 import {appConfig} from '@/conf/AppConfig'
 
@@ -15,12 +15,20 @@ const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
 }))
 
-const App = ({Component, pageProps}: AppProps) => {
+const App = (props: AppProps) => {
+  return (
+    <ConfigContextProvider api={api}>
+      <AppWithConfig {...props}/>
+    </ConfigContextProvider>
+  )
+}
+
+const AppWithConfig = ({Component, pageProps}: AppProps) => {
+  const config = useConfig()
   return (
     <Provide providers={[
-      _ => <ConfigContextProvider children={_} api={api}/>,
       _ => <ToastProvider children={_}/>,
-      _ => <ThemeProvider theme={muiTheme()} children={_}/>,
+      _ => <ThemeProvider theme={muiTheme(config.darkTheme)} children={_}/>,
       _ => <CssBaseline children={_}/>,
       _ => <I18nProvider children={_}/>,
       _ => <NfiProvider children={_}/>,

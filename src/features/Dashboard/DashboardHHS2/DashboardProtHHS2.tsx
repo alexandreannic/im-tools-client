@@ -25,6 +25,7 @@ import {DashboardProtHHS2FamilyUnity} from './DashboardProtHHS2FamilyUnity'
 import {DashboardProtHHS2Safety} from './DashboardProtHHS2Safety'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
+import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Disability'
 
 export type ProtHHS2Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
@@ -163,7 +164,7 @@ export const DashboardProtHHS2 = () => {
         </DebouncedInput>
       }
       header={
-        <Box sx={{display: 'flex', alignItems: 'center', '& > :not(:last-child)': {mr: 1}}}>
+        <Box sx={{display: 'flex', whiteSpace: 'nowrap', alignItems: 'center', '& > :not(:last-child)': {mr: 1}}}>
           <DashboardFilterOptions
             value={filter.originOblast}
             label={m.originOblast}
@@ -233,7 +234,7 @@ export const DashboardProtHHS2 = () => {
           {icon: 'fingerprint', name: 'document', title: m.protHHS2.registrationAndDocumention, component: () => <DashboardProtHHS2Document {...panelProps}/>},
           {icon: 'rocket_launch', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
           {icon: 'local_police', name: 'violence', title: m.protHHS2.protectionIncidents, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
-          // {icon: 'accessible_forward', name: 'specificNeeds', title: m.specificNeeds, component: () => <DashboardProtHHS2Needs {...panelProps}/>},
+          {icon: 'health_and_safety', name: 'disability', title: m.protHHS2.disabilityAndHealth, component: () => <DashboardProtHHS2Disability {...panelProps}/>},
           {icon: 'traffic', name: 'priorityneeds', title: m.priorityNeeds, component: () => <DashboardProtHHS2PN {...panelProps}/>},
         ]
       })()}/>

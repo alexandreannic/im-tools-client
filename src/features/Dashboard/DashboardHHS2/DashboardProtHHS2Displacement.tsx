@@ -18,60 +18,58 @@ export const DashboardProtHHS2Displacement = ({
   const {formatLargeNumber, m} = useI18n()
 
   return (
-    <>
-      <SlideContainer>
-        <SlideContainer column>
-          <SlidePanel title={m.displacementAndReturn}>
-            <KoboLineChartDate
-              data={data}
-              question={['when_did_you_first_leave_your_area_of_origin', 'when_did_you_return_to_your_area_of_origin']}
-              label={[m.departureFromAreaOfOrigin, m.returnToOrigin]}
-              end={computed.end}
-            />
-          </SlidePanel>
-          <SlidePanel title={m.idpPopulationByOblast}>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
-              <UkraineMap sx={{flex: 1}} data={computed.byOriginOblast} base={computed.flatData.length} title={m.originOblast}/>
-              <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
-                <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
-                <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
-              </Box>
-              <UkraineMap sx={{flex: 1}} data={computed.byCurrentOblast} base={computed.flatData.length} legend={false} title={m.currentOblast}/>
+    <SlideContainer responsive>
+      <SlideContainer column>
+        <SlidePanel title={m.displacementAndReturn}>
+          <KoboLineChartDate
+            data={data}
+            question={['when_did_you_first_leave_your_area_of_origin', 'when_did_you_return_to_your_area_of_origin']}
+            label={[m.departureFromAreaOfOrigin, m.returnToOrigin]}
+            end={computed.end}
+          />
+        </SlidePanel>
+        <SlidePanel title={m.idpPopulationByOblast}>
+          <Box sx={{display: 'flex', alignItems: 'center'}}>
+            <UkraineMap sx={{flex: 1}} data={computed.byOriginOblast} base={computed.flatData.length} title={m.originOblast}/>
+            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+              <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
+              <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
+              <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
             </Box>
-          </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column>
-          <SlidePanel title={m.intentions}>
-            <ProtHHS2BarChart
-              data={data}
-              filterValue={['unable_unwilling_to_answer']}
-              question="what_are_your_households_intentions_in_terms_of_place_of_residence"
-              overrideLabel={{
-                return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
-              }}
-            />
-          </SlidePanel>
-          <SlidePanel>
-            <Lazy deps={[data]} fn={() => ChartTools.percentage({
-              value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,
-              data,
-              base: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns !== undefined
-                && !_.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns.includes('unable_unwilling_to_answer'),
-            })}>
-              {_ => (
-                <PieChartIndicator sx={{mb: 1}} percent={_.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
-              )}
-            </Lazy>
-            <ProtHHS2BarChart
-              questionType="multiple"
-              data={data}
-              filterValue={['unable_unwilling_to_answer', 'none', 'other_specify']}
-              question="did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns"
-            />
-          </SlidePanel>
-        </SlideContainer>
+            <UkraineMap sx={{flex: 1}} data={computed.byCurrentOblast} base={computed.flatData.length} legend={false} title={m.currentOblast}/>
+          </Box>
+        </SlidePanel>
       </SlideContainer>
-    </>
+      <SlideContainer column>
+        <SlidePanel title={m.intentions}>
+          <ProtHHS2BarChart
+            data={data}
+            filterValue={['unable_unwilling_to_answer']}
+            question="what_are_your_households_intentions_in_terms_of_place_of_residence"
+            overrideLabel={{
+              return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
+            }}
+          />
+        </SlidePanel>
+        <SlidePanel>
+          <Lazy deps={[data]} fn={() => ChartTools.percentage({
+            value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,
+            data,
+            base: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns !== undefined
+              && !_.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns.includes('unable_unwilling_to_answer'),
+          })}>
+            {_ => (
+              <PieChartIndicator sx={{mb: 1}} percent={_.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
+            )}
+          </Lazy>
+          <ProtHHS2BarChart
+            questionType="multiple"
+            data={data}
+            filterValue={['unable_unwilling_to_answer', 'none', 'other_specify']}
+            question="did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns"
+          />
+        </SlidePanel>
+      </SlideContainer>
+    </SlideContainer>
   )
 }

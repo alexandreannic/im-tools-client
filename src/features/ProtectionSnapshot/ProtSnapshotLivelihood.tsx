@@ -80,7 +80,7 @@ export const ProtSnapshotLivelihood = ({
               {/*/>*/}
               <Divider sx={{my: 1.5}}/>
               <PieChartIndicator
-                title={m.protHHSnapshot.idpWithAllowance}
+                title={m.idpWithAllowance}
                 percent={computed._32_1_What_type_of_allowances_byIdp.percent}
                 evolution={computed._32_1_What_type_of_allowances_byIdp.percent - previous.computed._32_1_What_type_of_allowances_byIdp.percent}
               />

@@ -73,8 +73,8 @@ export const ScLineChart2 = memo(({
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={data}>
             <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>
-            <XAxis tick={!hideXTicks} dataKey="name"/>
-            <YAxis tick={!hideYTicks}/>
+            <XAxis  dataKey="name"/>
+            <YAxis/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}} formatter={_ => `${_}%`}/>
             {lines.map((line, i) => (
               <Line
