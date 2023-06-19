@@ -34,13 +34,13 @@ export const useProtHHS2Data = ({
 
     const byCurrentOblast = ChartTools.byCategory({
       categories: categoryOblasts('where_are_you_current_living_oblast'),
-      data: flatData,
+      data: data,
       filter: _ => true,
     })
 
     const byOriginOblast = ChartTools.byCategory({
       categories: categoryOblasts('what_is_your_area_of_origin_oblast'),
-      data: flatData,
+      data: data,
       filter: _ => true,
     })
 
