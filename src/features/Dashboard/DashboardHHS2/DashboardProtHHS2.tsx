@@ -229,7 +229,7 @@ export const DashboardProtHHS2 = () => {
       }
       beforeSection={
         <>
-          <Alert type="info" deletable persistentDelete>
+          <Alert type="info" deletable persistentDelete sx={{mb: '-80px'}}>
             <Txt size="big" bold block>{m.protHHS2.descTitle}</Txt>
             <Txt block sx={{mb: 1}}>{m.protHHS2.desc}</Txt>
             {m.protHHS2.disclaimer}
@@ -252,7 +252,7 @@ export const DashboardProtHHS2 = () => {
           {icon: 'fingerprint', name: 'document', title: m.protHHS2.registrationAndDocumention, component: () => <DashboardProtHHS2Document {...panelProps}/>},
           {icon: 'rocket_launch', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
           {icon: 'local_police', name: 'violence', title: m.protHHS2.protectionIncidents, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
-          {icon: 'health_and_safety', name: 'disability', title: m.protHHS2.disabilityAndHealth, component: () => <DashboardProtHHS2Disability {...panelProps}/>},
+          {icon: 'healing', name: 'disability', title: m.protHHS2.disabilityAndHealth, component: () => <DashboardProtHHS2Disability {...panelProps}/>},
           {icon: 'traffic', name: 'priorityneeds', title: m.priorityNeeds, component: () => <DashboardProtHHS2PN {...panelProps}/>},
         ]
       })()}/>
