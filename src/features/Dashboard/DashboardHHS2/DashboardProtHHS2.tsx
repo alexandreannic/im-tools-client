@@ -26,6 +26,7 @@ import {DashboardProtHHS2Safety} from './DashboardProtHHS2Safety'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
 import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Disability'
+import {koboFormId} from '@/koboFormId'
 
 export type ProtHHS2Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
@@ -110,7 +111,17 @@ export const DashboardProtHHS2 = () => {
         && (!filter.end || _.end.getTime() < filter.end.getTime())
     }))
     .then(_ => _.map(enrichProtHHS_2_1))
+
   const _answers = useFetcher(request)
+  const _period = useFetcher(() => api.koboForm.getFormPeriod(koboFormId.prod.protectionHh2))
+
+  useEffect(() => {
+    _period.fetch()
+  }, [])
+
+  useEffect(() => {
+    if (_period.entity) setFilters(prev => ({...prev, ..._period.entity}))
+  }, [_period.entity])
 
   useEffect(() => {
     _answers.fetch({force: true, clean: false}, filter)
@@ -168,23 +179,23 @@ export const DashboardProtHHS2 = () => {
               sx={{marginTop: '-6px'}}
               value={value ?? [undefined, undefined]}
               onChange={onChange}
-              // min={computed?.start}
-              // max={computed?.end}
+              min={_period.entity?.start}
+              max={_period.entity?.end}
             />}
           </DebouncedInput>
           <DashboardFilterOptions
-            value={filter.originOblast}
-            label={m.originOblast}
-            options={getChoices('what_is_your_area_of_origin_oblast')}
             icon="location_on"
-            onChange={originOblast => setFilters(prev => ({...prev, originOblast}))}
-          />
-          <DashboardFilterOptions
-            icon="explore"
             value={filter.currentOblast}
             label={m.currentOblast}
             options={getChoices('what_is_your_area_of_origin_oblast')}
             onChange={currentOblast => setFilters(prev => ({...prev, currentOblast}))}
+          />
+          <DashboardFilterOptions
+            value={filter.originOblast}
+            label={m.originOblast}
+            options={getChoices('what_is_your_area_of_origin_oblast')}
+            icon="explore"
+            onChange={originOblast => setFilters(prev => ({...prev, originOblast}))}
           />
           <DashboardFilterOptions
             value={filter.typeOfSite}

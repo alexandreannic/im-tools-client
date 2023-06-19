@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
-import {ApiPaginate, ApiPagination, UUID} from '@/core/type'
-import {Kobo, KoboAnswer, KoboAnswer2} from './Kobo'
+import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
+import {Kobo, KoboAnswer, KoboAnswer2, KoboId} from './Kobo'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {koboFormId} from '@/koboFormId'
 import json from '@/features/Dashboard/DashboardHHS2/TODELETERAWDATA.json'
@@ -31,6 +31,13 @@ export class KoboFormSdk {
   readonly getLocalFormAnswers = (filters: AnswersFilters = {}) => {
     return this.client.get<KoboAnswer[]>(`/kobo/local-form`, {qs: filters})
       .then(_ => _.map(Kobo.mapAnswerMetaData))
+  }
+
+  readonly getFormPeriod = (formId: KoboId): Promise<Period> => {
+    if (formId === koboFormId.prod.protectionHh2) {
+      return Promise.resolve({start: new Date(2023, 3, 1), end: new Date()})
+    }
+    throw new Error('To implement')
   }
 
   readonly getAnswers = <T extends Record<string, any> = Record<string, string | undefined>>({
