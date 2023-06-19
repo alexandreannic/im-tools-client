@@ -23,7 +23,7 @@ export interface UseLayoutContextProps {
 
 export const LayoutProvider = ({title, showSidebarButton, mobileBreakpoint = 760, children}: LayoutProviderProps) => {
   const [pageWidth, setPageWidth] = useState(getWidth())
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarPinned, setSidebarPinned] = useState(true)
 
   useEffect(() => {

@@ -34,12 +34,12 @@ export const Panel = forwardRef(({
     const w = window.open()!
     // canvas.height = canvas.height * .5
     // canvas.width = canvas.width * .5
-    w.document.write('<img src="' + canvas.toDataURL() + '" />')
+    w.document.write('<static src="' + canvas.toDataURL() + '" />')
     w.document.title = name
   }
 
   const saveAsImg = () => {
-    html2canvas(content.current!, {}).then(_ => openImageNewTag(_, 'imaa-tools-img'))
+    html2canvas(content.current!, {}).then(_ => openImageNewTag(_, 'imaa-tools-static'))
   }
 
   return (

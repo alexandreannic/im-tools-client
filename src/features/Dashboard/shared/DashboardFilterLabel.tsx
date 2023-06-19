@@ -1,4 +1,4 @@
-import {Box, BoxProps, Card, Icon} from '@mui/material'
+import {Box, BoxProps, Card, Icon, Popover} from '@mui/material'
 import React, {ReactNode, useState} from 'react'
 import {makeSx} from 'mui-extension'
 import {combineSx} from '../../../core/theme'
@@ -41,47 +41,46 @@ export const DashboardFilterLabel = ({
   children: ReactNode
   label: ReactNode
 } & BoxProps) => {
-  const [open, setOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  // const [open, setOpen] = useState(false)
+
+  const open = (!!anchorEl)
+
   return (
     <Box sx={{position: 'relative', display: 'inline-block', ...sx}}>
-      {open && (
-        <Box
-          onClick={() => setOpen(false)}
-          sx={{
-            position: 'fixed',
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-          }}
-        />
-      )}
       <Box
         component="button"
         sx={combineSx(css.button, active && css.active)}
-        onClick={() => setOpen(_ => !_)}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
       >
         {icon && <Icon fontSize="small" sx={{mr: 1}}>{icon}</Icon>}
         {label}
-        <Icon sx={{ml: 1}} fontSize="small">{open ? 'expand_less' : 'expand_more'}</Icon>
+        <Icon color="disabled" sx={{ml: 1}} fontSize="small">{open ? 'expand_less' : 'expand_more'}</Icon>
       </Box>
-      {open && (
-        <Card sx={{
+      <Popover
+        disableScrollLock={true}
+        open={open}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        sx={{
           boxShadow: t => t.shadows[4],
           overflow: 'hidden',
-          border: 'none',
-          zIndex: 1300,
-          position: 'absolute',
-          top: 46,
+          // border: 'none',
+          // position: 'absolute',
+          // top: 46,
+        }}
+      >
+        <Box sx={{
+          overflowY: 'auto',
+          maxHeight: '50vh',
         }}>
-          <Box sx={{
-            overflowY: 'auto',
-            maxHeight: '50vh',
-          }}>
-            {children}
-          </Box>
-        </Card>
-      )}
+          {children}
+        </Box>
+      </Popover>
     </Box>
   )
 }

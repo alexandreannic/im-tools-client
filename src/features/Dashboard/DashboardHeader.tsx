@@ -9,6 +9,7 @@ const headerStickyClass = 'sticky-header'
 let header$: HTMLElement | null = null
 
 const stickHeader = () => {
+  console.log('stick')
   if (!header$) {
     header$ = document.getElementById(dashboardHeaderId)!
   }
@@ -29,24 +30,24 @@ const generalStyles = <GlobalStyles styles={t => ({
   },
   [`.${headerStickyClass} .header_content`]: {},
   [`.${headerStickyClass} .header_title_main`]: {
-    fontSize: '1.2em',
+    fontSize: '1.4em',
   },
   [`.${headerStickyClass} .header_title_sub`]: {
-    fontSize: '1.2em',
-    '&:before': {
-      content: '" - "',
-    }
+    fontSize: '1.1em',
+    // '&:before': {
+    //   content: '" - "',
+    // }
   },
   [`.${headerStickyClass} .header_title`]: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: t.spacing(1),
+    // display: 'flex',
+    // alignItems: 'center',
+    marginBottom: t.spacing(0),
   },
   [`#${dashboardHeaderId}.${headerStickyClass}`]: {
     border: 'none',
     boxShadow: t.shadows[4],
     background: t.palette.background.paper,
-    padding: `${t.spacing(1)} ${t.spacing(2)} ${t.spacing(1)} ${t.spacing(2)}`,
+    padding: `${t.spacing(1)} ${t.spacing(0)} ${t.spacing(0)} ${t.spacing(2)}`,
     position: 'fixed',
     top: 0,
     right: 0,
@@ -71,7 +72,9 @@ export const DashboardHeader = ({
 
   useEffect(() => {
     header$ = null
+    console.log('addevent')
     window.addEventListener('scroll', stickHeader)
+    // window.addEventListener('touchmove', stickHeader)
   }, [])
 
   return (
@@ -83,8 +86,8 @@ export const DashboardHeader = ({
           transition: t => t.transitions.create('all'),
           zIndex: 2,
           background: t => t.palette.background.default,
-          py: 2,
-          px: 2,
+          pt: 2,
+          pl: 2,
           width: '100%',
           mb: 2,
           borderBottom: t => `1px solid ${t.palette.divider}`,
@@ -95,6 +98,7 @@ export const DashboardHeader = ({
           <Box sx={{display: 'flex', alignItems: 'center', mb: 1}}>
             {showSidebarButton && (
               <IconBtn
+                size="small"
                 sx={{
                   alignSelf: 'start',
                   mr: 2,
@@ -110,15 +114,17 @@ export const DashboardHeader = ({
                 <Icon>menu</Icon>
               </IconBtn>
             )}
-            <Box className="header_title" sx={{mb: 2, flex: 1, whiteSpace: 'nowrap'}}>
-              <Typography className="header_title_main" variant="h1">{title}&nbsp;</Typography>
+            <Box className="header_title" sx={{mb: 1, flex: 1, whiteSpace: 'nowrap'}}>
+              <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <Typography className="header_title_main" variant="h1" sx={{flex: 1}}>{title}</Typography>
+                <EULogo height={26} sx={{mr: 1}}/>
+                <DRCLogo height={24}/>
+              </Box>
               <Typography className="header_title_sub" variant="subtitle1" sx={{color: t => t.palette.text.secondary}}>{subTitle}</Typography>
             </Box>
             <Box sx={{ml: 'auto', mr: 2}}>
               {action}
             </Box>
-            <EULogo height={26} sx={{mr: 1}}/>
-            <DRCLogo height={24}/>
           </Box>
           {header}
         </Box>

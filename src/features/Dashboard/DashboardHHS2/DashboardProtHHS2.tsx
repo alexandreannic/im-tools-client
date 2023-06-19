@@ -149,22 +149,29 @@ export const DashboardProtHHS2 = () => {
       loading={_answers.loading}
       title={m.ukraine}
       subTitle={m.protectionMonitoringDashboard}
-      action={
-        <DebouncedInput<[Date | undefined, Date | undefined]>
-          debounce={400}
-          value={[filter.start, filter.end]}
-          onChange={([start, end]) => setFilters(prev => ({...prev, start, end}))}
-        >
-          {(value, onChange) => <PeriodPicker
-            value={value ?? [undefined, undefined]}
-            onChange={onChange}
-            // min={computed?.start}
-            // max={computed?.end}
-          />}
-        </DebouncedInput>
-      }
       header={
-        <Box sx={{display: 'flex', whiteSpace: 'nowrap', alignItems: 'center', '& > :not(:last-child)': {mr: 1}}}>
+        <Box sx={{
+          pt: 1,
+          pb: 1,
+          display: 'flex',
+          overflowX: 'auto',
+          whiteSpace: 'nowrap',
+          alignItems: 'center',
+          '& > :not(:last-child)': {mr: 1}
+        }}>
+          <DebouncedInput<[Date | undefined, Date | undefined]>
+            debounce={400}
+            value={[filter.start, filter.end]}
+            onChange={([start, end]) => setFilters(prev => ({...prev, start, end}))}
+          >
+            {(value, onChange) => <PeriodPicker
+              sx={{marginTop: '-6px'}}
+              value={value ?? [undefined, undefined]}
+              onChange={onChange}
+              // min={computed?.start}
+              // max={computed?.end}
+            />}
+          </DebouncedInput>
           <DashboardFilterOptions
             value={filter.originOblast}
             label={m.originOblast}

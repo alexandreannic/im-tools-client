@@ -1,21 +1,43 @@
-import {BoxProps} from '@mui/material'
+import {Box, BoxProps, useTheme} from '@mui/material'
 import React from 'react'
-import Image from 'next/image'
-import eu from './eu.png'
-import drc from './drc-logo.png'
 
 export const EULogo = ({
   height = 38,
+  sx,
   ...props
 }: {
   height?: number
 } & BoxProps) => {
+  const theme = useTheme()
   return (
-    <Image
-      src={eu}
-      height={height}
-      alt="EU Logo"
-    />
+    <>
+      <Box
+        sx={{
+          [theme.breakpoints.down('sm')]: {
+            display: 'none'
+          },
+          ...sx,
+        }}
+        component="img"
+        src="/static/eu.png"
+        height={height}
+        alt="EU Logo"
+        {...props}
+      />
+      <Box
+        component="img"
+        sx={{
+          [theme.breakpoints.up('sm')]: {
+            display: 'none'
+          },
+          ...sx,
+        }}
+        src="/static/eu-mobile.png"
+        height={height}
+        alt="EU Logo"
+        {...props}
+      />
+    </>
   )
 }
 
@@ -26,8 +48,8 @@ export const DRCLogo = ({
   height?: number
 } & BoxProps) => {
   return (
-    <Image
-      src={drc}
+    <img
+      src="/static/drc-logo.png"
       height={height}
       alt="DRC Logo"
     />

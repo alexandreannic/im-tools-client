@@ -161,7 +161,11 @@ export const DashboardLayout = ({
             <Box key={s.name}>
               <Typography id={s.name} variant="h2" sx={{...style.sectionTitle, background: 'none', marginTop: '-50px', paddingTop: '110px', mb: 2}}>
                 {s.title}
-                <AAIconBtn icon="expand_less" sx={{ml: 1, color: t => t.palette.divider}} onClick={() => hiddenSections.toggle(s.name)}/>
+                <AAIconBtn
+                  icon={hiddenSections.has(s.name) ? 'expand_less' : 'expand_more'}
+                  sx={{ml: 1, color: t => t.palette.text.disabled}}
+                  onClick={() => hiddenSections.toggle(s.name)}
+                />
               </Typography>
               <Collapse in={!hiddenSections.has(s.name)}>
                 {s.component()}

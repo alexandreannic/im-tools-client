@@ -60,6 +60,9 @@ export const Sidebar = ({
 
   return (
     <SwipeableDrawer
+      ModalProps={{
+        disableScrollLock: true,
+      }}
       PaperProps={{
         id,
         sx: {

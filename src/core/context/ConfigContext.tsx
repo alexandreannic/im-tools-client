@@ -1,6 +1,7 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useState} from 'react'
 import {ApiSdk} from '../sdk/server/ApiSdk'
 import {appConfig, AppConfig} from '../../conf/AppConfig'
+import {usePersistentState} from 'react-persistent-state'
 
 export interface ConfigContext {
   api: ApiSdk
@@ -20,7 +21,7 @@ export const ConfigContextProvider = ({
   api: ApiSdk,
   children: ReactNode
 }) => {
-  const [darkTheme, setDarkTheme] = useState(false)
+  const [darkTheme, setDarkTheme] = usePersistentState(false, 'dark-theme')
   return (
     <_ConfigContext.Provider value={{
       api,
