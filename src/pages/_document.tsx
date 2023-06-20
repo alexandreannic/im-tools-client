@@ -26,7 +26,7 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8"/>
           <meta name="viewport" content="width=device-width, initial-scale=1"/>
           <base href="/"/>
-          <link rel="icon" type="image/x-icon" href="/icons/favicon.ico"/>
+          <link rel="icon" type="image/x-icon" href="/static/favicon.svg"/>
           <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
           <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
