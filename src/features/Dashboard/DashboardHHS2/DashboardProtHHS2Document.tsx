@@ -2,7 +2,7 @@ import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import React, {useMemo} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
+import {DashboardPageProps, ProtHHS2BarChart, ProtHHS2Enrich} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {Lazy} from '@/shared/Lazy'
@@ -11,6 +11,18 @@ import {chain} from '@/utils/utils'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
+import {ProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
+import {_Arr} from '@alexandreannic/ts-utils'
+
+const getIdpsAnsweringRegistrationQuestion = (base: _Arr<ProtHHS2Enrich>) => {
+  return base
+    .flatMap(_ => _.persons.map(p => ({..._, ...p})))
+    .filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
+    .filter(_ =>
+      (_.isIdpRegistered && _.isIdpRegistered !== 'unable_unwilling_to_answer')
+      || (_.are_you_and_your_hh_members_registered_as_idps && _.are_you_and_your_hh_members_registered_as_idps !== 'unable_unwilling_to_answer')
+    )
+}
 
 export const DashboardProtHHS2Document = ({
   data,
@@ -20,29 +32,27 @@ export const DashboardProtHHS2Document = ({
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()
 
-  const idpsAnsweredRegistrationQuestion = useMemo(() => computed.idpsIndividuals
-      .filter(_ =>
-        (_.isIdpRegistered && _.isIdpRegistered !== 'unable_unwilling_to_answer')
-        || (_.are_you_and_your_hh_members_registered_as_idps && _.are_you_and_your_hh_members_registered_as_idps !== 'unable_unwilling_to_answer')
-      )
-    , [computed.idpsIndividuals])
   return (
     <>
       <SlideContainer responsive alignItems="flex-start">
         <SlideContainer column sx={{flex: 1}}>
           <SlidePanel title={m.protHHSnapshot.maleWithoutIDPCert}>
             <SlideContainer>
-              <Lazy deps={[idpsAnsweredRegistrationQuestion]} fn={() => ChartTools.percentage({
-                data: idpsAnsweredRegistrationQuestion,
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                data: getIdpsAnsweringRegistrationQuestion(d),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
-                {_ => <PieChartIndicator sx={{flex: 1}} title={m.all} percent={_.percent} value={_.value}/>}
+                {(d, l) => (
+                  <PieChartIndicator sx={{flex: 1}} title={m.all} percent={d.percent} evolution={d.percent - l.percent}/>
+                )}
               </Lazy>
-              <Lazy deps={[idpsAnsweredRegistrationQuestion]} fn={() => ChartTools.percentage({
-                data: idpsAnsweredRegistrationQuestion.filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male'),
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male'),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
-                {_ => <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} percent={_.percent} value={_.value}/>}
+                {(d, l) => (
+                  <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} percent={d.percent} evolution={d.percent - l.percent}/>
+                )}
               </Lazy>
             </SlideContainer>
           </SlidePanel>

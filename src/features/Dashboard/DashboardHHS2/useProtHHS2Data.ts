@@ -20,7 +20,7 @@ export const useProtHHS2Data = ({
     const start = sorted[0].end
     const end = sorted[sorted.length - 1].end
     const currentMonth = data.filter(_ => _.end >= startOfMonth(end))
-    const lastMonth = data.filter(_ => _.end < startOfMonth(end) && _.end > startOfMonth(sub(end, {months: 1})))
+    const lastMonth = data.filter(_ => _.end < startOfMonth(end))
 
     const flatData = data.flatMap(_ => _.persons.map(p => ({..._, ...p})))
 
@@ -44,17 +44,12 @@ export const useProtHHS2Data = ({
       filter: _ => true,
     })
 
-    const idps = data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
-    const idpsIndividuals = flatData.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
-
     return {
       start,
       end,
       currentMonth,
       lastMonth,
       flatData,
-      idps,
-      idpsIndividuals,
       individuals: data.sum(_ => _.persons.length),
       categoryOblasts,
       ageGroup: chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(_ => groupByAgeGroup(_, p => p.age!)))
