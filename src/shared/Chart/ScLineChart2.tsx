@@ -1,8 +1,10 @@
-import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
+import {CartesianGrid, LabelList, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
 import * as React from 'react'
-import {memo} from 'react'
-import {Box, SxProps, Theme, useTheme} from '@mui/material'
+import {memo, useState} from 'react'
+import {Box, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
 import {map} from '@alexandreannic/ts-utils'
+import {styleUtils} from '@/core/theme'
+import {chartConfig} from '@/shared/Chart/chartConfig'
 
 export interface ScLineChartPropsBase {
   /**
@@ -16,6 +18,7 @@ export interface ScLineChartPropsBase {
   sx?: SxProps
   hideYTicks?: boolean
   hideXTicks?: boolean
+  percent?: boolean
 }
 
 interface Props extends ScLineChartPropsBase {
@@ -26,7 +29,7 @@ export type ScLineChart2Data = Record<string, number> & {
   name: string
 }
 
-const colors = (t: Theme) => [t.palette.primary.main, '#e48c00', 'red', 'green']
+const colors = chartConfig.defaultColors
 
 export const ScLineChart2 = memo(({
   data,
@@ -36,46 +39,36 @@ export const ScLineChart2 = memo(({
   hideXTicks,
   disableAnimation,
   hideLabelToggle,
+  percent,
   height = 220
 }: Props) => {
   const theme = useTheme()
-  // const [showCurves, setShowCurves] = useState<boolean[]>(new Array(curves.length).fill(false))
-  // const mappedData = useMemo(() => {
-  //   const res: any[] = []
-  //   curves.forEach((curve, i) => {
-  //     Object.entries(curve.curve).forEach(([k, data], j) => {
-  //       if (!res[j]) res[j] = {date: data.label ?? k} as any
-  //       res[j][curve.key] = data.value
-  //     })
-  //     res.push()
-  //   })
-  //   return res
-  // }, [curves])
-
   const lines = Object.keys(data[0] ?? {}).filter(_ => _ !== 'name')
+  const [showCurves, setShowCurves] = useState<boolean[]>(new Array(lines.length).fill(false))
+
   return (
     <>
-      {/*{!hideLabelToggle && (*/}
-      {/*  <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>*/}
-      {/*    {curves.map((c, i) => (*/}
-      {/*      <>*/}
-      {/*        <Checkbox*/}
-      {/*          key={c.key}*/}
-      {/*          checked={showCurves[i]}*/}
-      {/*          onChange={e => setShowCurves(prev => prev.map((_, index) => (i === index ? e.currentTarget.checked : _)))}*/}
-      {/*          sx={{'& svg': {fill: c.color ?? colors(theme)[i] ?? colors(theme)[0] + ' !important'}}}*/}
-      {/*        />*/}
-      {/*      </>*/}
-      {/*    ))}*/}
-      {/*  </Box>*/}
-      {/*)}*/}
+      {!hideLabelToggle && (
+        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+          {lines.map((c, i) => (
+            <>
+              <Checkbox
+                key={c}
+                checked={showCurves[i]}
+                onChange={e => setShowCurves(prev => prev.map((_, index) => (i === index ? e.currentTarget.checked : _)))}
+                sx={{'& svg': {fill: colors(theme)[i] ?? colors(theme)[0] + ' !important'}}}
+              />
+            </>
+          ))}
+        </Box>
+      )}
       <Box sx={{height, ml: -4 - (hideYTicks ? 4 : 0), mb: hideXTicks ? -4 : 0, ...sx}}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={data}>
             <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>
-            <XAxis  dataKey="name"/>
+            <XAxis dataKey="name"/>
             <YAxis/>
-            <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}} formatter={_ => `${_}%`}/>
+            <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}} formatter={_ => `${_}${percent ? '%' : ''}`}/>
             {lines.map((line, i) => (
               <Line
                 isAnimationActive={!disableAnimation}
@@ -86,16 +79,16 @@ export const ScLineChart2 = memo(({
                 stroke={colors(theme)[i] ?? colors(theme)[0]}
                 strokeWidth={2}
               >
-                {/*{showCurves[i] && (*/}
-                {/*  <LabelList*/}
-                {/*    dataKey={_.key}*/}
-                {/*    position="top"*/}
-                {/*    style={{*/}
-                {/*      fill: _.color ?? colors(theme)[i] ?? colors(theme)[0],*/}
-                {/*      fontSize: styleUtils(theme).fontSize.small,*/}
-                {/*    }}*/}
-                {/*  />*/}
-                {/*)}*/}
+                {showCurves[i] && (
+                  <LabelList
+                    dataKey={lines[i]}
+                    position="top"
+                    style={{
+                      fill: colors(theme)[i] ?? colors(theme)[0],
+                      fontSize: styleUtils(theme).fontSize.small,
+                    }}
+                  />
+                )}
               </Line>
             ))}
           </LineChart>

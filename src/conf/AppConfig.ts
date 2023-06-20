@@ -31,8 +31,6 @@ export const appConfig = {
   }
 }
 
-console.log(appConfig)
-
 export type AppConfig = typeof appConfig
 
 

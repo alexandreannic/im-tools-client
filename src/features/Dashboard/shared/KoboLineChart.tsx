@@ -38,6 +38,12 @@ export const KoboLineChart = <T extends {end: Date}, K extends StringKeys<T>, V 
     })
   }, [data, question])
   return (
-    <ScLineChart2 data={transform} height={height} translation={translations as any}/>
+    <ScLineChart2
+      data={transform}
+      percent
+      height={height}
+      translation={translations as any}
+      hideLabelToggle
+    />
   )
 }

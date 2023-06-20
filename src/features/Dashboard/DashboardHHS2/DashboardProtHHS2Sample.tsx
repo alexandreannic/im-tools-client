@@ -21,7 +21,6 @@ export const DashboardProtHHS2Sample = ({
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()
 
-  console.log('computed.ageGroup', computed.ageGroup)
   return (
     <SlideContainer column>
       <SlideContainer alignItems="flex-start" responsive>

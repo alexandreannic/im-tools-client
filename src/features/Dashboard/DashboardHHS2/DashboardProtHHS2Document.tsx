@@ -26,8 +26,6 @@ export const DashboardProtHHS2Document = ({
         || (_.are_you_and_your_hh_members_registered_as_idps && _.are_you_and_your_hh_members_registered_as_idps !== 'unable_unwilling_to_answer')
       )
     , [computed.idpsIndividuals])
-  // console.log(data.filter(_ => true).map(_ => _.id + '    ' + _.how_many_ind))
-  // console.log(data.sum(_ => _.how_many_ind ?? 0))
   return (
     <>
       <SlideContainer responsive alignItems="flex-start">

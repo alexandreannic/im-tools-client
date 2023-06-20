@@ -9,11 +9,9 @@ const headerStickyClass = 'sticky-header'
 let header$: HTMLElement | null = null
 
 const stickHeader = () => {
-  console.log('stick')
   if (!header$) {
     header$ = document.getElementById(dashboardHeaderId)!
   }
-  console.log('scroll', window.scrollY, header$.offsetHeight)
   if (window.scrollY > header$.offsetHeight) {
     if (!header$.classList.contains(headerStickyClass)) {
       header$.classList.add(headerStickyClass)
@@ -72,9 +70,7 @@ export const DashboardHeader = ({
 
   useEffect(() => {
     header$ = null
-    console.log('addevent')
     window.addEventListener('scroll', stickHeader)
-    // window.addEventListener('touchmove', stickHeader)
   }, [])
 
   return (

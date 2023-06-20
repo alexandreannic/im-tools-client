@@ -4,6 +4,7 @@ import {memo, useMemo, useState} from 'react'
 import {Box, Checkbox, SxProps, useTheme} from '@mui/material'
 import {styleUtils} from '../../core/theme'
 import {chartConfig} from './chartConfig'
+import {Enum} from '@alexandreannic/ts-utils'
 
 export interface ScLineChartPropsBase {
   /**
@@ -29,6 +30,9 @@ export interface ScLineChartProps extends ScLineChartPropsBase {
 
 const colors = chartConfig.defaultColors
 
+/**
+ * @deprecated
+ */
 export const ScLineChart = memo(({
   sx,
   hideYTicks,
@@ -40,16 +44,26 @@ export const ScLineChart = memo(({
 }: ScLineChartProps) => {
   const theme = useTheme()
   const [showCurves, setShowCurves] = useState<boolean[]>(new Array(curves.length).fill(false))
+  // key : "when_did_you_first_leave_your_area_of_origin"
+  // label : "Displacement from area of origin"
+  // 2022-02:{label: '2022-02', value: 4}
+  // 2022-03:{label: '2022-03', value: 28}
+
   const mappedData = useMemo(() => {
-    const res: any[] = []
+    const res: Record<string, Record<string, number>> = {}
     curves.forEach((curve, i) => {
-      Object.entries(curve.curve).forEach(([k, data], j) => {
-        if (!res[j]) res[j] = {date: data.label ?? k} as any
-        res[j][curve.key] = data.value
+      Object.entries(curve.curve).forEach(([label, data], j) => {
+        if (!res[label]) res[label] = {}
+        res[label][curve.key] = data.value
+        // {2022: {when_did_you_first_leave_your_area_of_origin: 1, other: 2}}
+        // if (!res[j]) res[j] = {date: data.label ?? k} as any
+        // res[j][curve.key] = data.value
       })
-      res.push()
     })
-    return res
+    return Enum.entries(res).map(([k, v]) => ({
+      name: k,
+      ...v
+    }))
   }, [curves])
 
   return (
@@ -73,7 +87,7 @@ export const ScLineChart = memo(({
           <LineChart height={height - 60} data={mappedData}>
             <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>
             <Legend wrapperStyle={{position: 'relative', marginTop: -16}}/>
-            <XAxis tick={!hideXTicks} dataKey="date"/>
+            <XAxis tick={!hideXTicks} dataKey="name"/>
             <YAxis tick={!hideYTicks}/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}}/>
             {curves.map((_, i) => (
