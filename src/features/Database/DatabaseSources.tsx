@@ -1,5 +1,5 @@
 import {Page} from '../../shared/Page'
-import {useConfig} from '../../core/context/ConfigContext'
+import {useAppSettings} from '../../core/context/ConfigContext'
 import {koboServerId} from '../../koboFormId'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useEffect, useState} from 'react'
@@ -10,7 +10,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 
 export const DatabaseSources = () => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const _allKoboForm = useFetcher(() => api.koboApi.getForms(koboServerId.prod))
   const _sources = useFetchers((formId: UUID) => api.koboApi.getForm(koboServerId.prod, formId), {
     requestKey: ([_]) => _

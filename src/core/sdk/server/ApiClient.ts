@@ -70,6 +70,7 @@ export class ApiClient {
     const client = axios.create({
       baseURL: baseUrl,
       headers: {...headers},
+      withCredentials: true,
     })
     client.interceptors.request.use(request => {
       // console.log('Starting Request', JSON.stringify(request, null, 2))

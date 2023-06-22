@@ -8,7 +8,7 @@ import {Txt} from 'mui-extension'
 import {Panel, PanelTitle} from '@/shared/Panel'
 import {add, sub} from 'date-fns'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '../../../conf/AppConfig'
 import {koboServerId} from '../../../koboFormId'
@@ -95,7 +95,7 @@ export const mapMpcaKoboAnswer = (deduplicationDb?: MpcaDeduplicationDb) => (_: 
 
 export const MpcaDedupTable = () => {
   const {m, formatDate} = useI18n()
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const {deduplicationDb, _koboAnswers, _form} = useMPCADeduplicationContext()
   const _servers = useFetcher(api.kobo.fetchServers)
   const [selected, setSelected] = useState<string[]>([])

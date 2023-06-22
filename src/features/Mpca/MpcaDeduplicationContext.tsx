@@ -4,7 +4,7 @@ import {MpcaDeduplicationDb} from './MpcaDeduplicationDb'
 import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {koboFormId, koboServerId} from '../../koboFormId'
 import {mapBNRE} from '../../core/koboModel/BNRE/BNREMapping'
-import {useConfig} from '../../core/context/ConfigContext'
+import {useAppSettings} from '../../core/context/ConfigContext'
 import {BNRE} from '../../core/koboModel/BNRE/BNRE'
 import {KoboAnswer2} from '../../core/sdk/server/kobo/Kobo'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
@@ -33,7 +33,7 @@ export const MPCADeduplicationProvider = ({
   children: ReactNode
 }) => {
   const [deduplicationDb, setDeduplicationDb] = useState<MpcaDeduplicationDb | undefined>()
-  const {api} = useConfig()
+  const {api} = useAppSettings()
 
   const _form = useFetcher(() => api.koboApi.getForm(koboServerId.prod, koboFormId.prod.BNRE))
   const _getPayments = useFetcher(api.mpcaPayment.getAll)

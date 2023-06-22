@@ -1,4 +1,4 @@
-import {useConfig} from '../../core/context/ConfigContext'
+import {useAppSettings} from '../../core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect} from 'react'
 import {Layout} from '../../shared/Layout'
@@ -9,7 +9,7 @@ import {KoboTableLayoutRoute} from '@/features/Kobo/KoboForm/KoboTable'
 
 
 export const Kobo = () => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const _forms = useFetcher(api.kobo.fetchServers)
 
   useEffect(() => {

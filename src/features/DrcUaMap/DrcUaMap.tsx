@@ -1,7 +1,7 @@
 import {Enum, sleep} from '@alexandreannic/ts-utils'
 import React, {useEffect} from 'react'
 import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
-import {useConfig} from '../../core/context/ConfigContext'
+import {useAppSettings} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
@@ -37,16 +37,17 @@ const officeStyle = (t: Theme) => ({
 })
 
 const offices: Office[] = [
-  {city: 'Kyiv'},
-  {city: 'Dnipro'},
-  {city: 'Mykolaiev'},
-  {city: 'Lviv'},
-  {city: 'Chernihiv'},
-  {city: 'Poltava'},
-  {city: 'Chernivtsi'},
-  {city: 'Sloviansk', closed: true},
-  {city: 'Slevlerodonetsk', closed: true, align: 'right'},
-  {city: 'Mariupol', closed: true},
+  // {city: 'Sumy'},
+  // {city: 'Kyiv'},
+  // {city: 'Dnipro'},
+  // {city: 'Mykolaiev'},
+  // {city: 'Lviv'},
+  // {city: 'Chernihiv'},
+  // {city: 'Poltava'},
+  // {city: 'Chernivtsi'},
+  // {city: 'Sloviansk', closed: true},
+  // {city: 'Slevlerodonetsk', closed: true, align: 'right'},
+  // {city: 'Mariupol', closed: true},
 ]
 
 const drawMaps = async ({
@@ -71,29 +72,33 @@ const drawMaps = async ({
     'mapsApiKey': apiKey
   })
   google.charts.setOnLoadCallback(() => {
-    drawUA(mapUaSelector, theme)
+    // drawUA(mapUaSelector, theme)
     drawOffices(mapOfficeSelector)
-    setTimeout(() => drawOfficeMarkers(mapOfficeSelector, theme), 2000)
+    // setTimeout(() => drawOfficeMarkers(mapOfficeSelector, theme), 2000)
   })
 }
 
 const drawOffices = (selector: string) => {
   const data = google.visualization.arrayToDataTable([
     ['City', 'Population', 'Area'],
-    ...offices.map(o => [o.city, 100, 100]),
+    ['Rome',      2761477,    1285.31],
+    ['Milan',     1324110,    181.76],
+    // ...offices.map(o => [o.city, 100, 100]),
   ])
+
+  console.log(offices.map(o => [o.city, 100, 100]),)
 
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
-    legend: 'none',
-    backgroundColor: 'transparent',
-    datalessRegionColor: 'transparent',
-    displayMode: 'text',
-    region: 'UA',
-    resolution: 'provinces',
-    // colorAxis: {
-    //   colors: ['#fafafa']
-    // }
+    // legend: 'none',
+    // backgroundColor: 'transparent',
+    // datalessRegionColor: 'transparent',
+    displayMode: 'markers',
+    region: 'IT',
+    // resolution: 'provinces',
+    colorAxis: {
+      colors: ['green', 'blue']
+    }
   })
 }
 
@@ -110,9 +115,7 @@ const drawUA = (selector: string, theme: Theme) => {
     ['State', 'Population'],
     ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
-  console.log(Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),)
 
-  console.log(theme.palette.primary.light,',color')
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
     legend: 'none',
@@ -128,7 +131,7 @@ const drawUA = (selector: string, theme: Theme) => {
 }
 
 const drawOfficeMarkers = (selector: string, theme: Theme) => {
-  console.log('draw markers', `${selector} text[text-anchor=middle]`)
+  console.log('draw markers', document.querySelectorAll(`${selector} text[text-anchor=middle]`))
   document.querySelectorAll(`${selector} text[text-anchor=middle]`).forEach((marker: any) => {
     console.log(marker)
     const office = offices.find(_ => _.city === marker.innerHTML.trim())
@@ -163,7 +166,7 @@ const drawOfficeMarkers = (selector: string, theme: Theme) => {
 
 export const DrcUaMap = () => {
   const theme = useTheme()
-  const {conf} = useConfig()
+  const {conf} = useAppSettings()
   useEffect(() => {
     drawMaps({
       apiKey: conf.gooogle.apiKey,
@@ -176,7 +179,6 @@ export const DrcUaMap = () => {
   return (
     <div>
       {generalStyles}
-      hello
       <Box sx={{display: 'inline-flex', m: 2, border: t => `1px solid ${t.palette.divider}`, alignItems: 'center', background: 'white'}}>
         <Box sx={{position: 'relative', height: 500, width: 700}}>
           <Box id="map-ua" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>

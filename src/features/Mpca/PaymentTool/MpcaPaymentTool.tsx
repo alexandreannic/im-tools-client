@@ -7,7 +7,7 @@ import {Alert, Txt} from 'mui-extension'
 import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import {koboFormId} from '../../../koboFormId'
 import {KoboId} from '../../../core/sdk/server/kobo/Kobo'
 import {map} from '@alexandreannic/ts-utils'
@@ -30,7 +30,7 @@ const amounts = {
 }
 export const MpcaPaymentTool = () => {
   const {id} = urlValidation.validateSync(useParams())
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const {m, formatLargeNumber, formatDate} = useI18n()
   const {deduplicationDb} = useMPCADeduplicationContext()
   const _getPayment = useFetcher(api.mpcaPayment.get)

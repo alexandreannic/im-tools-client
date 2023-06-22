@@ -1,4 +1,4 @@
-import {useConfig} from '../core/context/ConfigContext'
+import {useAppSettings} from '../core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useState} from 'react'
 import {KoboApiSdk} from '../core/sdk/server/kobo/KoboApiSdk'
@@ -188,7 +188,7 @@ const familyCompositionProperties = [
 const babyMaxYo = 1
 
 export const Playground = () => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
 
   const form = useFetcher(() => api.koboApi.getForm(KoboApiSdk.serverRefs.prod, KoboApiSdk.koboFormRefs.MPCA_NFI_NAA))
   const fetchMPCA_NFI = useFetcher(() => api.koboApi.getAnswersMPCA_NFI())

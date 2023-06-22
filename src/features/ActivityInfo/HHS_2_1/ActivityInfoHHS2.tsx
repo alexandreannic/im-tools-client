@@ -1,7 +1,7 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '../../../core/koboModel/koboFormProtHH'
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '../../../core/activityInfo/AiProtectionHhs'
 import {koboHromadaMapping} from '../HHS0/koboHromadaMapping'
@@ -35,7 +35,7 @@ const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify
 
 export const ActivityInfoHHS2 = () => {
   const [period, setPeriod] = useState('2023-04')
-  const {api} = useConfig()
+  const {api} = useAppSettings()
 
 
   const request = (period: string) => {
@@ -102,7 +102,7 @@ const _ActivityInfo = ({
       .get
   }, [data])
 
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const _submit = useAsync((i: number, p: AiProtectionHhs.FormParams[]) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
   })

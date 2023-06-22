@@ -79,6 +79,7 @@ export const en = Object.freeze({
     previous: 'Previous',
     filter: 'Filter',
     next: 'Next',
+    signIn: 'Sign-in',
     viewDate: `View data`,
     information: 'Information',
     koboData: `Kobo data`,

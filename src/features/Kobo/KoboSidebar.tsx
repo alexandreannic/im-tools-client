@@ -1,5 +1,5 @@
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useConfig} from '../../core/context/ConfigContext'
+import {useAppSettings} from '../../core/context/ConfigContext'
 import {Sidebar, SidebarHr, SidebarItem} from '../../shared/Layout/Sidebar'
 import {Fragment, useEffect, useState} from 'react'
 import {CircularProgress, Divider} from '@mui/material'
@@ -8,7 +8,7 @@ import {koboFormId} from '../../koboFormId'
 import {KoboApiSdk} from '../../core/sdk/server/kobo/KoboApiSdk'
 
 export const KoboSidebar = () => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const _servers = useFetcher(api.kobo.fetchServers)
   const _forms = useFetcher(api.kobo.fetchForms)
   const [serverId, setServerId] = useState<string | undefined>()

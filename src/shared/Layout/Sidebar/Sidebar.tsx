@@ -9,7 +9,7 @@ import {SidebarBody} from './SidebarBody'
 import {SidebarHeader} from './SidebarHeader'
 import {stopPropagation} from 'mui-extension'
 import {useI18n} from '../../../core/i18n'
-import {useConfig} from '@/core/context/ConfigContext'
+import {useAppSettings} from '@/core/context/ConfigContext'
 
 let sidebar: HTMLElement | null = null
 let header: HTMLElement | null = null
@@ -42,7 +42,7 @@ export const Sidebar = ({
 }) => {
   const {isMobileWidth, sidebarOpen, setSidebarOpen, sidebarPinned, setSidebarPinned} = useLayoutContext()
   const {m} = useI18n()
-  const {darkTheme, setDarkTheme} = useConfig()
+  const {darkTheme, setDarkTheme} = useAppSettings()
 
   useEffect(() => {
     // Element has been re-created by SwipeableDrawer, thus variable point to nothing.

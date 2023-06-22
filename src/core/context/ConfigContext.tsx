@@ -12,7 +12,7 @@ export interface ConfigContext {
 
 export const _ConfigContext = React.createContext({} as ConfigContext)
 
-export const useConfig = () => useContext(_ConfigContext)
+export const useAppSettings = () => useContext(_ConfigContext)
 
 export const ConfigContextProvider = ({
   api,

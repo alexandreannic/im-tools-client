@@ -1,7 +1,7 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '../../../core/koboModel/koboFormProtHH'
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import {Period, UUID} from '../../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '../../../core/activityInfo/AiProtectionHhs'
@@ -39,7 +39,7 @@ export const ActivityInfoHHS0 = ({
   period?: Period
 }) => {
   const [period, setPeriod] = useState('2023-03')
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const request = (period?: string) => {
     const filters = period ? (() => {
       const [year, month] = period.split('-')
@@ -108,7 +108,7 @@ const _ActivityInfo = ({
       .get
   }, [data])
 
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const _submit = useAsync((i: number, p: AiProtectionHhs.FormParams[]) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
   })

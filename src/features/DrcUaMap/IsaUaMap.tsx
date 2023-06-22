@@ -1,7 +1,7 @@
 import {Enum, sleep} from '@alexandreannic/ts-utils'
 import React, {useEffect} from 'react'
 import {Box, GlobalStyles, useTheme} from '@mui/material'
-import {useConfig} from '../../core/context/ConfigContext'
+import {useAppSettings} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 
@@ -144,7 +144,7 @@ const drawUA = (selector: string, theme: Theme) => {
 
 export const IsaUaMap = () => {
   const theme = useTheme()
-  const {conf} = useConfig()
+  const {conf} = useAppSettings()
   useEffect(() => {
     drawMaps({
       apiKey: conf.gooogle.apiKey,

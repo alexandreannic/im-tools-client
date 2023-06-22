@@ -336,4 +336,3 @@ export const muiTheme = (dark?: boolean): Theme => {
       : ({} as any)),
   })
 }
-

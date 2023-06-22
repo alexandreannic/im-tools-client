@@ -1,5 +1,5 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {MPCA_NFI} from '../../../core/koboModel/MPCA_NFI/MPCA_NFI'
@@ -176,7 +176,7 @@ const computePeriod = (date: Date) => {
 
 export const ActivityInfoNFI = () => {
   const [period, setPeriod] = useState(new Date(2023, 4, 1))
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const filters = computePeriod(period)
 
   const _data = useFetcher((period: Date) => {
@@ -276,7 +276,7 @@ const _ActivityInfo = ({
 }) => {
   const {toastError} = useItToast()
   const {formatDate} = useI18n()
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const {m} = useI18n()
   const _submit = useAsync((i: number, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i

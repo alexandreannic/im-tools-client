@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {Box} from '@mui/material'
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -28,7 +28,7 @@ export const KoboStats = ({
   serverId: string
   formId: string
 }) => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
   const _answers = useFetcher(() => api.koboForm.getAnswers({
     formId,

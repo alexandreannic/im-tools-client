@@ -6,6 +6,7 @@ import {ActivityInfoSdk} from './activity-info/ActiviftyInfoSdk'
 import {KoboApiSdk} from './kobo/KoboApiSdk'
 import {Method} from 'axios'
 import {MpcaPaymentSdk} from './mpcaPaymentTool/MpcaPaymentSdk'
+import {SessionSdk} from '@/core/sdk/server/session/SessionSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -25,6 +26,7 @@ export class ApiSdk {
     })
   }
 
+  readonly session = new SessionSdk(this.client)
   readonly nfi = new NfiMPcaSdk(this.client)
   readonly koboForm = new KoboFormSdk(this.client)
   readonly kobo = new KoboSdk(this.client)

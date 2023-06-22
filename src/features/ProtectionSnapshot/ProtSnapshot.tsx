@@ -1,5 +1,5 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useConfig} from '../../core/context/ConfigContext'
+import {useAppSettings} from '../../core/context/ConfigContext'
 import {Period, UUID} from '../../core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {Box, useTheme} from '@mui/material'
@@ -70,7 +70,7 @@ export const ProtSnapshot = ({
   // period?: Period
   // previousPeriod?: Period
 }) => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const fetch = (period: Period) => api.koboApi.getAnswersFromLocalForm({
     formId,
     filters: period,
@@ -228,7 +228,7 @@ export const ProtSnapshot = ({
 
 export const _ProtectionSnapshot = (props: ProtSnapshotSlideProps) => {
   const theme = useTheme()
-  const {conf} = useConfig()
+  const {conf} = useAppSettings()
 
   useEffect(() => {
     initGoogleMaps(

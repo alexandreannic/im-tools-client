@@ -1,4 +1,4 @@
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import {OrderBy, useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useParams} from 'react-router'
 import React, {useEffect, useMemo, useState} from 'react'
@@ -45,7 +45,7 @@ export const KoboTableLayout = ({
   serverId: string
   formId: string
 }) => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const {m, formatDate, formatLargeNumber} = useI18n()
   const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
   const _answers = useFetcher(() => api.koboForm.getAnswers({

@@ -1,5 +1,5 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useConfig} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '../../../core/context/ConfigContext'
 import React, {useEffect, useMemo, useState} from 'react'
 import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
@@ -87,7 +87,7 @@ export const ProtHHS2BarChart = makeKoboBarChartComponent<ProtHHS_2_1, typeof Pr
 })
 
 export const DashboardProtHHS2 = () => {
-  const {api} = useConfig()
+  const {api} = useAppSettings()
   const {m} = useI18n()
   const [filter, setFilters] = useState<DashboardProtHHS2Filters>({
     // start: new Date(2023, 5, 1),
