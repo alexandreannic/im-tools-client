@@ -6,6 +6,16 @@ export type KoboServer = {
   token: string
 }
 
+export interface KoboForm {
+  server: KoboServer
+  createdAt: Date
+  updatedAt: Date
+  id: KoboId
+  name: string
+  serverId: string
+  uploadedBy?: string
+}
+
 export enum KoboQuestionType {
   SelectOne = 'select_one',
   Text = 'text',
@@ -85,7 +95,7 @@ export class Kobo {
 }
 
 
-export interface IKoboForm {
+export interface ApiKoboForm {
   // access_types: null
   // asset_type: "survey"
   // children: {count: 0}

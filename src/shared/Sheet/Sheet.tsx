@@ -340,17 +340,17 @@ export const Sheet = <T extends Answer = Answer>({
                     }, _ => ''))}
                   >
                     {_.head}
-                    <IconBtn size="small">
+                    <IconBtn size="small" sx={{mx: .5}}>
                       <Icon
                         fontSize="small"
                         color={filters[_.id] ? 'primary' : 'disabled'}
-                        sx={{verticalAlign: 'middle', mx: 1}}
+                        sx={{verticalAlign: 'middle'}}
                         onClick={e => {
                           e.stopPropagation()
                           setFilteringProperty(_.id)
                         }}
                       >
-                        filter_list
+                        more_vert
                       </Icon>
                     </IconBtn>
                   </th>

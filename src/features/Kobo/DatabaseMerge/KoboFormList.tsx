@@ -1,9 +1,9 @@
-import {IKoboForm} from '../../core/sdk/server/kobo/Kobo'
-import {ScRadioGroup, ScRadioGroupItem} from '../../shared/RadioGroup'
-import {UUID} from '../../core/type'
+import {ApiKoboForm} from '../../../core/sdk/server/kobo/Kobo'
+import {ScRadioGroup, ScRadioGroupItem} from '../../../shared/RadioGroup'
+import {UUID} from '../../../core/type'
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material'
-import {useI18n} from '../../core/i18n'
-import {AaBtn, AaBtnProps} from '../../shared/Btn/AaBtn'
+import {useI18n} from '../../../core/i18n'
+import {AaBtn, AaBtnProps} from '../../../shared/Btn/AaBtn'
 import React, {useState} from 'react'
 
 export const KoboFormListButton = ({children, variant = 'contained', ...props}: Omit<AaBtnProps, 'onChange'> & KoboFormListProps) => {
@@ -51,7 +51,7 @@ export const KoboFormListDialog = ({
 interface KoboFormListProps {
   value?: UUID,
   onChange?: (e: UUID) => void
-  forms: IKoboForm[]
+  forms: ApiKoboForm[]
 }
 
 export const KoboFormList = ({

@@ -16,7 +16,7 @@ import {useI18n} from '../../../core/i18n'
 import {fixLocations} from './activityInfoNFIFix'
 import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {useItToast} from '../../../core/useToast'
+import {useAaToast} from '../../../core/useToast'
 import {Panel} from '@/shared/Panel'
 import {Txt} from 'mui-extension'
 
@@ -274,7 +274,7 @@ const _ActivityInfo = ({
   period: Date
   setPeriod: Dispatch<SetStateAction<Date>>
 }) => {
-  const {toastError} = useItToast()
+  const {toastHttpError} = useAaToast()
   const {formatDate} = useI18n()
   const {api} = useAppSettings()
   const {m} = useI18n()
@@ -290,7 +290,7 @@ const _ActivityInfo = ({
           {formatDate(computePeriod(period).end)}
         </Txt>
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
-          _submit.call(-1, data.map(_ => _.request)).catch(toastError)
+          _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
         }}>
           {m.submitAll}
         </AaBtn>
@@ -306,7 +306,7 @@ const _ActivityInfo = ({
                   size="small"
                   sx={{minWidth: 50, mr: .5}}
                   onClick={() => {
-                    _submit.call(i, [_.request]).catch(toastError)
+                    _submit.call(i, [_.request]).catch(toastHttpError)
                   }}
                 >
                   <Icon>send</Icon>

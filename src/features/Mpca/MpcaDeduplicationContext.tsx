@@ -39,10 +39,7 @@ export const MPCADeduplicationProvider = ({
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)
 
-  const _koboAnswers = useFetcher(() => api.koboForm.getAnswers<BNRE>({
-    formId: koboFormId.prod.BNRE,
-    fnMap: mapBNRE,
-  }).then(_ => Arr(_.data)))
+  const _koboAnswers = useFetcher(() => api.kobo.answer.searchBnre().then(_ => Arr(_.data)))
 
   useEffect(() => {
     MpcaDeduplicationDb.build({db, sdk}).then(() => {

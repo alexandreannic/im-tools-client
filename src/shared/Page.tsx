@@ -28,8 +28,15 @@ export const PageHeader = ({
     </Box>
   )
 }
-export const PageTitle = (props: BoxProps) => {
-  return <Box component="h2" {...props}/>
+export const PageTitle = ({action, children, sx, ...props}: BoxProps & {action?: ReactNode}) => {
+  return (
+    <Box component="h2" sx={{display: 'flex', alignItems: 'center', ...sx}}>
+      {children}
+      {action && (
+        <Box sx={{ml: 'auto'}}>{action}</Box>
+      )}
+    </Box>
+  )
 }
 
 export const Page = ({loading, children, sx, ...props}: PageProps) => {

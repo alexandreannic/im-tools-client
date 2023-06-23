@@ -1,18 +1,25 @@
-import {useAppSettings} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '@/core/context/ConfigContext'
 import {OrderBy, useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useParams} from 'react-router'
 import React, {useEffect, useMemo, useState} from 'react'
-import {Page} from '@/shared/Page'
+import {Page, PageTitle} from '@/shared/Page'
 import {Sheet, SheetColumnProps, SheetTableProps} from '@/shared/Sheet/Sheet'
-import {useI18n} from '../../../core/i18n'
+import {Sidebar, SidebarBody, SidebarHeader, SidebarItem} from '@/shared/Layout/Sidebar'
+import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
-import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
+import {KoboAnswer2, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {KoboApiColType, KoboApiForm} from '../../../core/sdk/server/kobo/KoboApi'
+import {KoboApiColType, KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {Panel, PanelHead} from '@/shared/Panel'
 import {Txt} from 'mui-extension'
-import {koboFormId, koboServerId} from '@/koboFormId'
+import {koboModule} from '@/features/Kobo/koboModule'
+import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
+import {Header} from '@/shared/Layout/Header/Header'
+import {Layout} from '@/shared/Layout'
+import {Skeleton} from '@mui/material'
+import {useParams} from 'react-router'
+import {AaBtn} from '@/shared/Btn/AaBtn'
+import {DatabaseNew} from '@/features/Kobo/DatabaseNew/DatabaseNew'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -33,23 +40,54 @@ const ignoredColType: KoboApiColType[] = [
   'note',
 ]
 
-export const KoboTableLayoutRoute = () => {
+export const Database = () => {
+  const {m} = useI18n()
+  const {api} = useAppSettings()
+  const _forms = useFetcher(api.kobo.form.getAll)
+
+  useEffect(() => {
+    _forms.fetch()
+  }, [])
+
   // const {serverId, formId} = urlParamsValidation.validateSync(useParams())
-  return <KoboTableLayout serverId={koboServerId.prod} formId={koboFormId.prod.protectionHh2}/>
+  return (
+    <Router basename={koboModule.basePath}>
+      <Layout
+        sidebar={
+          <Sidebar headerId="app-header">
+            <SidebarBody>
+              <DatabaseNew onAdded={() => _forms.fetch({force: true, clean: false})}>
+                <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
+              </DatabaseNew>
+              {_forms.loading ? (
+                <>
+                  <Skeleton/>
+                  <Skeleton/>
+                  <Skeleton/>
+                </>
+              ) : _forms.entity?.map(_ => (
+                <SidebarItem key={_.id} to={koboModule.siteMap.form(_.serverId, _.id)} component={NavLink}>{_.name}</SidebarItem>
+              ))}
+            </SidebarBody>
+          </Sidebar>
+        }
+        header={<Header id="app-header"/>}
+      >
+        <Routes>
+          <Route path={koboModule.siteMap.form()} element={<DatabaseLayout/>}/>
+        </Routes>
+      </Layout>
+    </Router>
+  )
 }
 
-export const KoboTableLayout = ({
-  serverId,
-  formId
-}: {
-  serverId: string
-  formId: string
-}) => {
+export const DatabaseLayout = () => {
+  const {serverId, formId} = urlParamsValidation.validateSync(useParams())
   const {api} = useAppSettings()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
-  const _answers = useFetcher(() => api.koboForm.getAnswers({
-    formId,
+  const _form = useFetcher(api.koboApi.getForm)
+  const _answers = useFetcher((id: KoboId) => api.kobo.answer.search({
+    formId: id,
   }))
   const [sort, setSort] = useState<{sortBy?: keyof KoboAnswer2, orderBy?: OrderBy}>()
   const data = useMemo(() => {
@@ -64,24 +102,23 @@ export const KoboTableLayout = ({
   const _refresh = useAsync(() => api.koboApi.synchronizeAnswers(serverId, formId))
 
   useEffect(() => {
-    _form.fetch()
-    _answers.fetch()
-  }, [])
+    _form.fetch({}, serverId, formId)
+    _answers.fetch({}, formId)
+  }, [serverId, formId])
 
   return (
     <Page loading={_form.loading} width="full">
-      {/*<KoboStats serverId={serverId} formId={formId}/>*/}
-      <Panel>
-        <PanelHead action={
+      <PageTitle action={
+        <>
           <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={async () => {
             await _refresh.call()
-            await _answers.fetch({force: true, clean: false})
+            await _answers.fetch({force: true, clean: false}, formId)
           }}/>
-        }>
-          <Txt skeleton={_form.loading && 190}>{_form.entity?.name}</Txt>
-        </PanelHead>
+        </>
+      }>{_form.entity?.name}</PageTitle>
+      <Panel>
         {_form.entity && data && (
-          <KoboTable
+          <DatabaseTable
             form={_form.entity}
             loading={_answers.loading}
             data={data}
@@ -97,7 +134,7 @@ export const KoboTableLayout = ({
   )
 }
 
-export const KoboTable = ({
+export const DatabaseTable = ({
   loading,
   data,
   form,
@@ -136,7 +173,7 @@ export const KoboTable = ({
       }
       return col
     })
-    const metaColumn: SheetColumnProps<KoboAnswer2>[]  = [
+    const metaColumn: SheetColumnProps<KoboAnswer2>[] = [
       {
         id: 'id',
         head: 'ID',

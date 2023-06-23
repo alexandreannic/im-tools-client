@@ -97,7 +97,7 @@ export const MpcaDedupTable = () => {
   const {m, formatDate} = useI18n()
   const {api} = useAppSettings()
   const {deduplicationDb, _koboAnswers, _form} = useMPCADeduplicationContext()
-  const _servers = useFetcher(api.kobo.fetchServers)
+  const _servers = useFetcher(api.kobo.server.getAll)
   const [selected, setSelected] = useState<string[]>([])
   const _payment = useAsync(api.mpcaPayment.create)
 

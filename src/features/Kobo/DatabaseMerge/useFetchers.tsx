@@ -14,9 +14,9 @@ type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 
 type FetcherResult<T extends Func> = ThenArg<ReturnType<T>>
 
-export type UseFetcher<F extends Func<Promise<FetcherResult<F>>>, E = any> = {
+export type UseFetchers<F extends Func<Promise<FetcherResult<F>>>, E = any> = {
   list: FetcherResult<F>[],
-  loading: (key: string) => boolean | undefined,
+  loading: (key?: string) => boolean,
   get: (key: string) => FetcherResult<F> | undefined,
   error: (key: string) => E | undefined
   fetch: Fetch<F>,
@@ -36,7 +36,7 @@ export const useFetchers = <F extends Func<Promise<any>>, E = any>(
     mapError?: (_: any) => E
     requestKey: (_: Parameters<F>) => string,
   }
-): UseFetcher<F, E> => {
+): UseFetchers<F, E> => {
   const entities = useMap<string, FetcherResult<F>>()
   const errors = useMap<string, E | undefined>()
   const loadings = useMap<string, boolean>()
@@ -61,15 +61,13 @@ export const useFetchers = <F extends Func<Promise<any>>, E = any>(
       .then((x: FetcherResult<F>) => {
         entities.set(key, x)
         fetch$.current = undefined
+        loadings.set(key, false)
       })
       .catch((e) => {
         errors.set(key, mapError ? mapError(e) : e)
+        loadings.set(key, false)
         entities.delete(key)
         throw e
-      })
-      .finally(() => {
-
-        loadings.set(key, false)
       })
     return fetch$.current
   }
@@ -82,7 +80,7 @@ export const useFetchers = <F extends Func<Promise<any>>, E = any>(
 
   return {
     list,
-    loading: loadings.get,
+    loading: (key?: string) => key ? (loadings.get(key) ?? false) : loadings.values().filter(_ => _).length > 0,
     get: entities.get,
     error: errors.get,
     // TODO(Alex) not sure the error is legitimate

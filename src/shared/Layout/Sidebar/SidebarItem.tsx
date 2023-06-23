@@ -26,7 +26,6 @@ export interface SidebarItemProps extends BoxProps {
 
 export const SidebarItem = ({
   children,
-  to,
   icon,
   className,
   active,
@@ -56,7 +55,7 @@ export const SidebarItem = ({
           color: t => t.palette.primary.main,
           background: t => alpha(t.palette.primary.main, 0.16),
         }),
-        ...((to || props.onClick) && {
+        ...((props.onClick) && {
           cursor: 'pointer',
           '&:hover': {
             background: 'rgba(0, 0, 0, .05)',

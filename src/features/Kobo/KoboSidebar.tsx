@@ -7,10 +7,11 @@ import {koboModule} from './koboModule'
 import {koboFormId} from '../../koboFormId'
 import {KoboApiSdk} from '../../core/sdk/server/kobo/KoboApiSdk'
 
+/**@deprecated*/
 export const KoboSidebar = () => {
   const {api} = useAppSettings()
-  const _servers = useFetcher(api.kobo.fetchServers)
-  const _forms = useFetcher(api.kobo.fetchForms)
+  const _servers = useFetcher(api.kobo.server.getAll)
+  const _forms = useFetcher(api.kobo.form.get)
   const [serverId, setServerId] = useState<string | undefined>()
 
   const path = (page: string) => koboModule.basePath + '/' + page

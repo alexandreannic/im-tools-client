@@ -3,13 +3,12 @@ import {IconBtn} from 'mui-extension'
 import {layoutConfig} from '../index'
 import React from 'react'
 import {useLayoutContext} from '../LayoutContext'
-import {HeaderItem} from './HeaderItem'
-import {NavLink} from 'react-router-dom'
+import {HeaderMenu} from '@/shared/Layout/Header/HeaderMenu'
 
 interface Props extends BoxProps {
 }
 
-export const Header = ({children}: Props) => {
+export const Header = ({children, sx, id, ...props}: BoxProps) => {
   const {sidebarOpen, showSidebarButton, setSidebarOpen} = useLayoutContext()
 
   return (
@@ -24,7 +23,10 @@ export const Header = ({children}: Props) => {
           alignItems: 'center',
           background: t => t.palette.background.paper,
           borderBottom: t => '1px solid ' + t.palette.divider,
+          ...sx,
         }}
+        id={id}
+        {...props}
       >
         <div
           style={{
@@ -49,48 +51,9 @@ export const Header = ({children}: Props) => {
               <Icon>menu</Icon>
             </IconBtn>
           )}
-          <HeaderItem>
-            <NavLink to="/activity-info">
-              Activity-Info
-            </NavLink>
-          </HeaderItem>
-          <HeaderItem>
-            <NavLink to="/snapshot">
-              Snapshots
-            </NavLink>
-          </HeaderItem>
-          <HeaderItem>
-            <NavLink to="/database">
-              DB!
-            </NavLink>
-          </HeaderItem>
-          <HeaderItem>
-            <NavLink to="/kobo">
-              Database
-            </NavLink>
-          </HeaderItem><HeaderItem>
-            <NavLink to="/dashboard">
-              Dashboards
-            </NavLink>
-          </HeaderItem>
-          <HeaderItem>
-            <NavLink to="/mpca">
-              MPCA
-            </NavLink>
-          </HeaderItem>
-          <HeaderItem>
-            <NavLink to="/map">
-              Map
-            </NavLink>
-          </HeaderItem>
-          <HeaderItem>
-            <NavLink to="/playground">
-              Playground
-            </NavLink>
-          </HeaderItem>
-
           {children}
         </div>
+        <HeaderMenu/>
       </Box>
     </Slide>
   )

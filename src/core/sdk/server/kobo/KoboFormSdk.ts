@@ -1,16 +1,28 @@
 import {ApiClient} from '../ApiClient'
-import {IKoboForm, KoboServer} from './Kobo'
+import {ApiKoboForm, KoboForm, KoboId, KoboServer} from './Kobo'
+import {UUID} from '@/core/type'
 
-export class KoboSdk {
+export interface KoboFormCreate {
+  name: string
+  serverId: UUID
+  uid: KoboId
+}
+
+
+export class KoboFormSdk {
 
   constructor(private client: ApiClient) {
   }
 
-  readonly fetchServers = () => {
-    return this.client.get<KoboServer[]>(`/kobo`)
+  readonly create = (body: KoboFormCreate): Promise<KoboForm> => {
+    return this.client.put(`/kobo/form`, {body})
   }
 
-  readonly fetchForms = (formId: string): Promise<IKoboForm[]> => {
-    return this.client.get(`/kobo/${formId}`).then(_ => _.results)
+  readonly get = (formId: string): Promise<KoboForm> => {
+    return this.client.get(`/kobo/form/${formId}`)
+  }
+
+  readonly getAll = (): Promise<KoboForm[]> => {
+    return this.client.get(`/kobo/form`)
   }
 }

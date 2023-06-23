@@ -12,7 +12,6 @@ import {NfiProvider} from '@/core/context/NfiContext'
 import {appConfig} from '@/conf/AppConfig'
 import {MsalProvider} from '@azure/msal-react'
 import {getMsalInstance} from '@/core/msal'
-import {SessionProvider} from '@/core/context/SessionContext'
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
@@ -36,7 +35,6 @@ const AppWithConfig = ({Component, pageProps}: AppProps) => {
       _ => <CssBaseline children={_}/>,
       _ => <I18nProvider children={_}/>,
       _ => <MsalProvider children={_} instance={msal}/>,
-      _ => <SessionProvider children={_}/>,
       _ => <NfiProvider children={_}/>,
     ]}>
       <Box>

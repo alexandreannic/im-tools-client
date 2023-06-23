@@ -38,7 +38,7 @@ export const Sidebar = ({
   headerId,
   ...props
 }: BoxProps & {
-  headerId: string
+  headerId?: string
 }) => {
   const {isMobileWidth, sidebarOpen, setSidebarOpen, sidebarPinned, setSidebarPinned} = useLayoutContext()
   const {m} = useI18n()
@@ -48,12 +48,14 @@ export const Sidebar = ({
     // Element has been re-created by SwipeableDrawer, thus variable point to nothing.
     sidebar = null
     header = null
-    stickSidebarToHeader(id, headerId)
+    if (headerId)
+      stickSidebarToHeader(id, headerId)
     setSidebarOpen(_ => !isMobileWidth)
   }, [isMobileWidth, sidebarPinned])
 
   useEffect(() => {
-    window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId))
+    if (headerId)
+      window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId))
   }, [])
 
   const isTemporary = isMobileWidth || !sidebarPinned

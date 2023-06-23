@@ -1,13 +1,13 @@
 import {useToast} from 'mui-extension'
 import {appConfig} from '../conf/AppConfig'
 
-export const useItToast = () => {
-  const {toastError, ...toasts} = useToast()
+export const useAaToast = () => {
+  const toasts = useToast()
   return {
     ...toasts,
-    toastError: (e: unknown) => {
+    toastHttpError: (e: unknown) => {
       console.error(e)
-      toastError(`Something went wrong. Contact ${appConfig.contact}`)
+      toasts.toastError(`Something went wrong. Contact ${appConfig.contact}`)
     }
   }
 }

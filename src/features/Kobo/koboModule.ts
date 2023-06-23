@@ -1,4 +1,4 @@
-const basePath = '/kobo'
+const basePath = '/database'
 
 export const koboModule = {
   basePath,

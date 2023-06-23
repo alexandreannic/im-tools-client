@@ -27,7 +27,12 @@ export class MpcaDeduplicationDb {
   }
 
   readonly insertTransaction = (row: MPCASheetTransaction & {office: MPCADeduplicationOffice}) => {
-    return this.db.insert(row)
+    console.log('row', row)
+    try {
+      return this.db.insert(row)
+    } catch (e) {
+      console.error(e)
+    }
     // return Promise.resolve(this.db.insert({test: row.tentativeStart}))
   }
 

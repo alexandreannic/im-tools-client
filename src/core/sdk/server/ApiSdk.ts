@@ -1,12 +1,13 @@
 import {ApiClient, RequestOption} from './ApiClient'
 import {NfiMPcaSdk} from './nfi/NfiMPcaSdk'
-import {KoboFormSdk} from './kobo/KoboSdk'
-import {KoboSdk} from './kobo/KoboFormSdk'
 import {ActivityInfoSdk} from './activity-info/ActiviftyInfoSdk'
 import {KoboApiSdk} from './kobo/KoboApiSdk'
 import {Method} from 'axios'
 import {MpcaPaymentSdk} from './mpcaPaymentTool/MpcaPaymentSdk'
 import {SessionSdk} from '@/core/sdk/server/session/SessionSdk'
+import {KoboAnswerSdk} from '@/core/sdk/server/kobo/KoboAnswerSdk'
+import {KoboServerSdk} from '@/core/sdk/server/kobo/KoboServerSdk'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -25,11 +26,13 @@ export class ApiSdk {
       }
     })
   }
-
   readonly session = new SessionSdk(this.client)
   readonly nfi = new NfiMPcaSdk(this.client)
-  readonly koboForm = new KoboFormSdk(this.client)
-  readonly kobo = new KoboSdk(this.client)
+  readonly kobo = {
+    answer: new KoboAnswerSdk(this.client),
+    server: new KoboServerSdk(this.client),
+    form: new KoboFormSdk(this.client),
+  }
   readonly koboApi = new KoboApiSdk(this.client)
   readonly activityInfo = new ActivityInfoSdk(this.client)
   readonly mpcaPayment = new MpcaPaymentSdk(this.client)

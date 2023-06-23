@@ -17,7 +17,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {AaSelect} from '@/shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
-import {useItToast} from '../../../core/useToast'
+import {useAaToast} from '../../../core/useToast'
 import {format} from 'date-fns'
 import {Layout} from '@/shared/Layout'
 import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
@@ -48,7 +48,7 @@ export const ActivityInfoHHS0 = ({
         end: new Date(parseInt(year), parseInt(month)),
       }
     })() : undefined
-    return api.koboForm.getLocalFormAnswers(filters).then(_ => Arr(_.map(KoboFormProtHH.mapAnswers) as Answer[]))
+    return api.kobo.answer.getAllFromLocalForm(filters).then(_ => Arr(_.map(KoboFormProtHH.mapAnswers) as Answer[]))
   }
   // const request = (period: string) => {
   //   const [year, month] = period.split('-')
@@ -175,7 +175,7 @@ const _ActivityInfo = ({
   // }, [formParams])
 
   const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
-  const {toastError} = useItToast()
+  const {toastHttpError} = useAaToast()
 
   return (
     <div>
@@ -190,7 +190,7 @@ const _ActivityInfo = ({
           />
         </Box>
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
-          _submit.call(-1, formParams.map(_ => _.activity)).catch(toastError)
+          _submit.call(-1, formParams.map(_ => _.activity)).catch(toastHttpError)
         }}>
           Submit all
         </AaBtn>
@@ -225,7 +225,7 @@ const _ActivityInfo = ({
                           size="small"
                           sx={{minWidth: 50, mr: .5}}
                           onClick={() => {
-                            _submit.call(i, [a.activity]).catch(toastError)
+                            _submit.call(i, [a.activity]).catch(toastHttpError)
                           }}
                         >
                           <Icon>send</Icon>

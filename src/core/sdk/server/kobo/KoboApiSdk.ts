@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
-import {IKoboForm, Kobo, KoboAnswer2, KoboId} from './Kobo'
+import {ApiKoboForm, Kobo, KoboAnswer2, KoboId} from './Kobo'
 import {mapMPCA_NFI} from '../../../koboModel/MPCA_NFI/MPCA_NFIMapping'
 import {mapMPCA_NFI_Myko} from '../../../koboModel/MPCA_NFI_Myko/MPCA_NFI_MykoMapping'
 import {mapMPCA_NFI_NAA} from '../../../koboModel/MPCA_NFI_NAA/MPCA_NFI_NAAMapping'
@@ -140,8 +140,8 @@ export class KoboApiSdk {
     return this.client.get(`/kobo-api/${serverId}/${formId}`)
   }
 
-  readonly getForms = (serverId: UUID): Promise<IKoboForm[]> => {
-    return this.client.get(`/kobo-api/${serverId}`).then(_ => _.results.map((_: Record<keyof IKoboForm, any>): IKoboForm => {
+  readonly getForms = (serverId: UUID): Promise<ApiKoboForm[]> => {
+    return this.client.get(`/kobo-api/${serverId}`).then(_ => _.results.map((_: Record<keyof ApiKoboForm, any>): ApiKoboForm => {
       return {
         ..._,
         date_created: new Date(_.date_created),
@@ -151,7 +151,7 @@ export class KoboApiSdk {
   }
 
   readonly getAttachement = (serverId: UUID, filepath: string) => {
-    return this.client.get<IKoboForm[]>(`/kobo-api/${serverId}/attachment/${filepath}`)
+    return this.client.get<ApiKoboForm[]>(`/kobo-api/${serverId}/attachment/${filepath}`)
   }
 
 }

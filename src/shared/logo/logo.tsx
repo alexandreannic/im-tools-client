@@ -48,10 +48,12 @@ export const DRCLogo = ({
   height?: number
 } & BoxProps) => {
   return (
-    <img
+    <Box
+      component="img"
       src="/static/drc-logo.png"
       height={height}
       alt="DRC Logo"
+      {...props}
     />
 
   )

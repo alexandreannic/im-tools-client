@@ -99,7 +99,7 @@ export const DashboardProtHHS2 = () => {
     specificNeeds: [],
     typeOfSite: [],
   })
-  const request = (filter: DashboardProtHHS2Filters) => api.koboForm.getProtHHS2({
+  const request = (filter: DashboardProtHHS2Filters) => api.kobo.answer.searchProtHhs({
     filters: {
       start: filter.start,
       end: filter.end,
@@ -113,7 +113,7 @@ export const DashboardProtHHS2 = () => {
     .then(_ => _.map(enrichProtHHS_2_1))
 
   const _answers = useFetcher(request)
-  const _period = useFetcher(() => api.koboForm.getFormPeriod(koboFormId.prod.protectionHh2))
+  const _period = useFetcher(() => api.kobo.answer(koboFormId.prod.protectionHh2))
 
   useEffect(() => {
     _period.fetch()

@@ -18,7 +18,7 @@ export interface LayoutProps {
 
 export const Layout = ({
   sidebar,
-  header = <Header/>,
+  header = <Header id="app-header"/>,
   title,
   mobileBreakpoint,
   children

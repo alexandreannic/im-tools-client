@@ -30,7 +30,7 @@ export const KoboStats = ({
 }) => {
   const {api} = useAppSettings()
   const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
-  const _answers = useFetcher(() => api.koboForm.getAnswers({
+  const _answers = useFetcher(() => api.kobo.answer.search({
     formId,
   }))
 
