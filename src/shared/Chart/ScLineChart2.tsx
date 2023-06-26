@@ -72,7 +72,6 @@ export const ScLineChart2 = ({
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}} formatter={_ => `${_}${percent ? '%' : ''}`}/>
             {lines.map((line, i) => (
               <Line
-                label={true}
                 isAnimationActive={!disableAnimation}
                 key={line}
                 name={map(translation, _ => _[line]) ?? line}

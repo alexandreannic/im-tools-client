@@ -48,6 +48,7 @@ const AppWithConfig = (props: AppProps) => {
 const AppWithBaseContext = ({Component, pageProps}: AppProps) => {
   const settings = useAppSettings()
   const {m} = useI18n()
+  console.log(settings.conf)
   if (settings.conf.appOff) {
     return (
       <Box sx={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
