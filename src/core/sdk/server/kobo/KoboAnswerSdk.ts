@@ -69,15 +69,15 @@ export class KoboAnswerSdk {
       ...filters,
     })
     // TODO DELETE !!!!
-    .catch(() => {
-      const _ = json as ApiPaginate<any>
-      return ({
-        ..._,
-        data: _.data.map(({answers, ..._}) => ({
-          ...Kobo.mapAnswerMetaData(_),
-          ...mapProtHHS_2_1(answers) as any
-        }))
-      })
-    })
+    // .catch(() => {
+    //   const _ = json as ApiPaginate<any>
+    //   return ({
+    //     ..._,
+    //     data: _.data.map(({answers, ..._}) => ({
+    //       ...Kobo.mapAnswerMetaData(_),
+    //       ...mapProtHHS_2_1(answers) as any
+    //     }))
+    //   })
+    // })
   }
 }
