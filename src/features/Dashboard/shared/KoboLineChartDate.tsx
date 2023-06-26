@@ -52,6 +52,7 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
   return (
     <>
       <ScLineChart2
+        hideLabelToggle={true}
         height={220}
         data={curve2}
         translation={translations as any}

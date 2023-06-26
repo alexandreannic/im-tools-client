@@ -1,4 +1,4 @@
-import {CartesianGrid, LabelList, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
+import {CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
 import * as React from 'react'
 import {memo, useState} from 'react'
 import {Box, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
@@ -31,7 +31,7 @@ export type ScLineChart2Data = Record<string, number> & {
 
 const colors = chartConfig.defaultColors
 
-export const ScLineChart2 = memo(({
+export const ScLineChart2 = ({
   data,
   sx,
   translation,
@@ -66,11 +66,13 @@ export const ScLineChart2 = memo(({
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={data}>
             <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>
+            <Legend/>
             <XAxis dataKey="name"/>
             <YAxis/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}} formatter={_ => `${_}${percent ? '%' : ''}`}/>
             {lines.map((line, i) => (
               <Line
+                label={true}
                 isAnimationActive={!disableAnimation}
                 key={line}
                 name={map(translation, _ => _[line]) ?? line}
@@ -88,7 +90,7 @@ export const ScLineChart2 = memo(({
                       fontSize: styleUtils(theme).fontSize.small,
                     }}
                   />
-                )}
+                  )}
               </Line>
             ))}
           </LineChart>
@@ -96,4 +98,4 @@ export const ScLineChart2 = memo(({
       </Box>
     </>
   )
-})
+}

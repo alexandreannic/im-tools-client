@@ -24,11 +24,6 @@ const Index = () => {
       </Box>
       <Box>
         <a href="/database">
-          DB!
-        </a>
-      </Box>
-      <Box>
-        <a href="/database">
           Database
         </a>
       </Box>

@@ -23,7 +23,6 @@ export const DatabaseNew = ({
   const {m, formatDate} = useI18n()
   const [selectedForm, setSelectedForm] = useState<KoboFormCreate & {uid: string} | undefined>()
 
-  console.log(selectedForm)
   useEffect(() => {
     _server.fetch()
   }, [])

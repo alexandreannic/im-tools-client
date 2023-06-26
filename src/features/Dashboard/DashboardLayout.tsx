@@ -1,13 +1,14 @@
 import React, {ReactNode, useEffect, useState} from 'react'
-import {Box, Collapse, Typography} from '@mui/material'
+import {Box, Collapse, LinearProgress, Typography} from '@mui/material'
 import {combineSx} from '../../core/theme'
 import {DashboardProvider} from './DashboardContext'
-import {makeSx, Page} from 'mui-extension'
+import {makeSx} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useSetState} from '@alexandreannic/react-hooks-lib'
 import {Layout} from '@/shared/Layout'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {DashboardHeader, dashboardHeaderId} from '@/features/Dashboard/DashboardHeader'
+import {Page} from '@/shared/Page'
 
 const style = makeSx({
   sectionTitle: {
@@ -47,13 +48,13 @@ export const DashboardLayout = ({
   sections,
   header,
   action,
-  loading,
+  loading = false,
   title,
   beforeSection,
   subTitle,
 }: {
   action?: ReactNode
-  loading?: boolean
+  loading: boolean
   title: string
   subTitle?: string
   header?: ReactNode
@@ -84,6 +85,9 @@ export const DashboardLayout = ({
   }, [sections])
   return (
     <DashboardProvider>
+      {loading && (
+        <LinearProgress sx={{position: 'fixed', top: 0, right: 0, left: 0}}/>
+      )}
       <Layout
         header={
           <DashboardHeader
@@ -109,7 +113,7 @@ export const DashboardLayout = ({
             ))}
           </Sidebar>
         }>
-        <Page width={1100} loading={loading} sx={{mb: 2}}>
+        <Page width={1100} disableAnimation sx={{mb: 2}}>
           {beforeSection}
           {sections.map(s => (
             <Box key={s.name}>

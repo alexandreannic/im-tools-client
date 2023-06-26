@@ -75,7 +75,7 @@ export const MpcaPaymentTools = () => {
               id: 'actions',
               head: '',
               align: 'right',
-              onClick: _ => navigate(mpcaModule.basePath + '/' + mpcaModule.siteMap.paymentTool(_.id)),
+              onClick: _ => navigate(mpcaModule.siteMap.paymentTool(_.id)),
               render: _ => (
                 <TableIcon>chevron_right</TableIcon>
               )

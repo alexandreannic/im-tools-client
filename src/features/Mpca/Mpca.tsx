@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
+import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {Sidebar, SidebarBody, SidebarItem} from '../../shared/Layout/Sidebar'
 import {Layout} from '../../shared/Layout'
 import {useI18n} from '../../core/i18n'
@@ -14,10 +14,10 @@ import {Header} from '@/shared/Layout/Header/Header'
 export const mpcaModule = {
   basePath: '/mpca',
   siteMap: {
-    deduplication: 'deduplication',
-    dashboard: 'dashboard',
-    paymentTools: 'payment-tools',
-    paymentTool: (id = ':id') => 'payment-tool/' + id,
+    deduplication: '/deduplication',
+    dashboard: '/dashboard',
+    paymentTools: '/payment-tools',
+    paymentTool: (id = ':id') => '/payment-tool/' + id,
   }
 }
 
@@ -38,7 +38,7 @@ const MPCASidebar = () => {
 export const Mpca = () => {
   const db = useMemo(() => new MpcaDeduplicationDb(), [])
   return (
-    <Router basename={mpcaModule.basePath}>
+    <Router>
       <MPCADeduplicationProvider db={db}>
         <Layout
           sidebar={<MPCASidebar/>}

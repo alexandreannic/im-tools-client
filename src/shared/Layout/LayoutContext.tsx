@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react'
-import {usePersistentState} from 'react-persistent-state'
 
 const LayoutContext = createContext<UseLayoutContextProps>({} as UseLayoutContextProps)
 

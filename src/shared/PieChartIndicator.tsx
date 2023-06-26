@@ -20,13 +20,14 @@ export const Donut = ({
   const theme = useTheme()
   return (
     <AaPieChart
+      hideTooltip={true}
       outerRadius={size / 2}
       innerRadius={(size / 2) - 10}
       height={size}
       width={size}
       hideLabel
       data={{
-        value: percent,
+        value: Math.round(percent * 100) / 100,
         rest: 1 - percent,
       }}
       colors={{

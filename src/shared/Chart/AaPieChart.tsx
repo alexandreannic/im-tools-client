@@ -1,7 +1,7 @@
 import {Box, SxProps, Theme, useTheme} from '@mui/material'
 import {Cell, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Tooltip} from 'recharts'
 import React, {ReactNode} from 'react'
-import {objToArray} from '../../utils/utils'
+import {objToArray, toPercent} from '@/utils/utils'
 
 const RADIAN = Math.PI / 180
 const renderCustomizedLabel = ({cx, cy, midAngle, innerRadius, outerRadius, percent, index}: any) => {
@@ -44,6 +44,7 @@ export const AaPieChart = <T extends Record<string, number>>({
   innerRadius,
   hideLabel,
   valueInMiddle,
+  hideTooltip,
   ...props
 }: {
   data: T
@@ -53,6 +54,7 @@ export const AaPieChart = <T extends Record<string, number>>({
   colors?: Partial<Record<keyof T, string>>
   height?: number
   width?: number
+  hideTooltip?: boolean
   hideLabel?: boolean
   valueInMiddle?: string
   children?: ReactNode,
@@ -79,7 +81,9 @@ export const AaPieChart = <T extends Record<string, number>>({
       )}
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <Tooltip/>
+          {!hideTooltip && (
+            <Tooltip formatter={_ => toPercent(_)}/>
+          )}
           {children}
           <Pie
             data={objToArray(data).map(_ => {

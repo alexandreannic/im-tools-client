@@ -15,6 +15,17 @@ export interface PanelProps extends Omit<CardProps, 'title'> {
   savableAsImg?: boolean
 }
 
+const openImageNewTag = (canvas: HTMLCanvasElement, name: string) => {
+  setTimeout(() => {
+    // w.document.write('<static src="' + canvas.toDataURL('png') + '" />')
+    canvas.toBlob((blob) => {
+      const w = window.open(URL.createObjectURL(blob!), '_blank')!
+      w.document.title = name
+    })
+    document.body.appendChild(canvas)
+  }, 1000)
+}
+
 export const Panel = forwardRef(({
   elevation,
   hoverable,
@@ -29,14 +40,6 @@ export const Panel = forwardRef(({
 }: PanelProps, ref: any) => {
   const [expended, setExpended] = useState(false)
   const content = useRef<HTMLDivElement>(null)
-
-  const openImageNewTag = (canvas: HTMLCanvasElement, name: string) => {
-    const w = window.open()!
-    // canvas.height = canvas.height * .5
-    // canvas.width = canvas.width * .5
-    w.document.write('<static src="' + canvas.toDataURL() + '" />')
-    w.document.title = name
-  }
 
   const saveAsImg = () => {
     html2canvas(content.current!, {}).then(_ => openImageNewTag(_, 'imaa-tools-static'))

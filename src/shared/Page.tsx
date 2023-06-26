@@ -10,6 +10,7 @@ export interface PageProps extends BoxProps {
   style?: object
   loading?: boolean
   children: ReactNode
+  disableAnimation?: boolean
 }
 
 export const PageHeader = ({
@@ -39,19 +40,33 @@ export const PageTitle = ({action, children, sx, ...props}: BoxProps & {action?:
   )
 }
 
-export const Page = ({loading, children, sx, ...props}: PageProps) => {
+export const Page = ({
+  loading,
+  children,
+  sx,
+  disableAnimation,
+  ...props
+}: PageProps) => {
   const width = typeof props.width === 'string' ? ({
     xs: 780,
     md: 1000,
     lg: 1200,
     full: 3000,
   })[props.width] : props.width
+
   return (
     <>
       {loading && (
         <LinearProgress/>
       )}
-      <MxPage {...props} width={width} sx={{...sx, my: 2, px: 2}}>
+      <MxPage
+        {...props}
+        width={width}
+        animated={!disableAnimation}
+        sx={{
+          ...sx, my: 2, px: 2, ...disableAnimation && {transform: 'none',}
+        }}
+      >
         {children}
       </MxPage>
     </>

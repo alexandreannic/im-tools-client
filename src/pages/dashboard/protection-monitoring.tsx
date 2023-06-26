@@ -1,9 +1,9 @@
 import {DashboardProtHHS2} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
 
-const DashboardProtectionHouseholdSurvey = () => {
+const DashboardProtectionMonitoring = () => {
   return (
     <DashboardProtHHS2/>
   )
 }
 
-export default DashboardProtectionHouseholdSurvey
+export default DashboardProtectionMonitoring

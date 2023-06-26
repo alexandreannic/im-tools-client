@@ -113,7 +113,7 @@ export const DashboardProtHHS2 = () => {
     .then(_ => _.map(enrichProtHHS_2_1))
 
   const _answers = useFetcher(request)
-  const _period = useFetcher(() => api.kobo.answer(koboFormId.prod.protectionHh2))
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(koboFormId.prod.protectionHh2))
 
   useEffect(() => {
     _period.fetch()
@@ -229,7 +229,7 @@ export const DashboardProtHHS2 = () => {
       }
       beforeSection={
         <>
-          <Alert type="info" deletable persistentDelete sx={{mb: '-80px'}}>
+          <Alert type="info" deletable persistentDelete sx={{mb: '-20px'}}>
             <Txt size="big" bold block>{m.protHHS2.descTitle}</Txt>
             <Txt block sx={{mb: 1}}>{m.protHHS2.desc}</Txt>
             {m.protHHS2.disclaimer}
