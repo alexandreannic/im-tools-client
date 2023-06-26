@@ -23,6 +23,8 @@ const run = (cl) => {
       }
     })
   })
+}
+
 const gitWorkspaceIsEmpty = () => execSync(`git status --porcelain`).toString() === ''
 
 const newversion = process.argv[2] ?? 'patch' //as 'patch' | 'minor' | 'major'
@@ -37,13 +39,14 @@ const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execS
   // } else if (!gitWorkspaceIsEmpty()) {
   //   console.error(`Your git status must be clean before to publish.`)
   // } else {
-    await run(`git remote remove azure`).catch(console.log)
-    await run(`git remote add azure ${config.gitServer}`)
-    await run(`git push -f azure ${config.mainBranch}`)
-    await run(`git remote remove azure`)
-    // await run(`git commit -m "Release ${getPackageVersion()}"`)
-    // await run(`git push https://${config.username}:${config.password}@${config.gitServer} master`)
-    console.log(`Successfully deployed!`)
+  await run(`git remote remove azure`).catch(console.error)
+  await run(`git remote add azure ${config.gitServer}`)
+  await run(`git push -f azure ${config.mainBranch}`)
+  await run(`git remote remove azure`)
+  // await run(`git commit -m "Release ${getPackageVersion()}"`)
+  // await run(`git push https://${config.username}:${config.password}@${config.gitServer} master`)
+  console.log(`Successfully deployed!`)
   // }
 })()
-//2
+
+// toggle deploy

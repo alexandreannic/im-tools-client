@@ -6,6 +6,7 @@ import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
+import json from './TODELETERAWDATA.json'
 
 interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -68,15 +69,15 @@ export class KoboAnswerSdk {
       ...filters,
     })
     // TODO DELETE !!!!
-    // .catch(() => {
-    //   const _ = json as ApiPaginate<any>
-    //   return ({
-    //     ..._,
-    //     data: _.data.map(({answers, ..._}) => ({
-    //       ...Kobo.mapAnswerMetaData(_),
-    //       ...mapProtHHS_2_1(answers) as any
-    //     }))
-    //   })
-    // })
+    .catch(() => {
+      const _ = json as ApiPaginate<any>
+      return ({
+        ..._,
+        data: _.data.map(({answers, ..._}) => ({
+          ...Kobo.mapAnswerMetaData(_),
+          ...mapProtHHS_2_1(answers) as any
+        }))
+      })
+    })
   }
 }

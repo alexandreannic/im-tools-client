@@ -208,6 +208,7 @@ export const en = Object.freeze({
     register: 'Register',
     noIdpsOnly: 'Non-IDPs only',
     uaCitizen: 'UA citizen',
+    appInMaintenance: 'Application in maintenance, we\'ll be back soon.',
     ukrainianCitizenShip: 'Ukrainian citizenship',
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
