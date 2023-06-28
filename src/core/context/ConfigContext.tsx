@@ -14,7 +14,7 @@ export const _ConfigContext = React.createContext({} as ConfigContext)
 
 export const useAppSettings = () => useContext(_ConfigContext)
 
-export const ConfigContextProvider = ({
+export const AppSettingsProvider = ({
   api,
   children,
 }: {

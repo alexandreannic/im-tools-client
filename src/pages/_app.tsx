@@ -7,7 +7,7 @@ import {I18nProvider, useI18n} from '@/core/i18n'
 import {ToastProvider, Txt} from 'mui-extension'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {ApiClient} from '@/core/sdk/server/ApiClient'
-import {ConfigContextProvider, useAppSettings} from '@/core/context/ConfigContext'
+import {AppSettingsProvider, useAppSettings} from '@/core/context/ConfigContext'
 import {NfiProvider} from '@/core/context/NfiContext'
 import {appConfig} from '@/conf/AppConfig'
 import {MsalProvider} from '@azure/msal-react'
@@ -21,7 +21,7 @@ const api = new ApiSdk(new ApiClient({
 const App = (props: AppProps) => {
   return (
     <Provide providers={[
-      _ => <ConfigContextProvider api={api} children={_}/>,
+      _ => <AppSettingsProvider api={api} children={_}/>,
     ]}>
       <AppWithConfig {...props}/>
     </Provide>
@@ -32,7 +32,6 @@ const AppWithConfig = (props: AppProps) => {
   const msal = useMemo(() => getMsalInstance(settings.conf), [settings.conf])
   return (
     <Provide providers={[
-      _ => <ConfigContextProvider api={api} children={_}/>,
       _ => <ToastProvider children={_}/>,
       _ => <ThemeProvider theme={muiTheme(settings.darkTheme)} children={_}/>,
       _ => <CssBaseline children={_}/>,
@@ -48,7 +47,6 @@ const AppWithConfig = (props: AppProps) => {
 const AppWithBaseContext = ({Component, pageProps}: AppProps) => {
   const settings = useAppSettings()
   const {m} = useI18n()
-  console.log(settings.conf)
   if (settings.conf.appOff) {
     return (
       <Box sx={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

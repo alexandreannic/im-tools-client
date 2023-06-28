@@ -8,6 +8,7 @@ import {SessionSdk} from '@/core/sdk/server/session/SessionSdk'
 import {KoboAnswerSdk} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import {KoboServerSdk} from '@/core/sdk/server/kobo/KoboServerSdk'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
+import {WfpDeduplicationSdk} from '@/core/sdk/server/wfpDeduplication/WfpDeduplicationSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -36,4 +37,5 @@ export class ApiSdk {
   readonly koboApi = new KoboApiSdk(this.client)
   readonly activityInfo = new ActivityInfoSdk(this.client)
   readonly mpcaPayment = new MpcaPaymentSdk(this.client)
+  readonly wfpDeduplication = new WfpDeduplicationSdk(this.client)
 }

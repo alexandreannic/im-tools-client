@@ -42,9 +42,9 @@ export const MPCADeduplicationProvider = ({
   const _koboAnswers = useFetcher(() => api.kobo.answer.searchBnre().then(_ => Arr(_.data)))
 
   useEffect(() => {
-    MpcaDeduplicationDb.build({db, sdk}).then(() => {
-      setDeduplicationDb(() => db)
-    })
+    // MpcaDeduplicationDb.build({db, sdk}).then(() => {
+    //   setDeduplicationDb(() => db)
+    // })
   }, [])
 
 
