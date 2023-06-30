@@ -1,4 +1,4 @@
-import {Box, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel} from '@mui/material'
+import {Box, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, Icon, MenuItem} from '@mui/material'
 import {AaBtn} from '../Btn/AaBtn'
 import {useI18n} from '../../core/i18n'
 import React, {useEffect, useState} from 'react'
@@ -8,8 +8,12 @@ import {MultipleChoices} from '../MultipleChoices'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {PeriodPicker} from '../PeriodPicker/PeriodPicker'
 import {AAIconBtn} from '../IconBtn'
+import {Txt} from 'mui-extension'
+import {OrderBy} from '@alexandreannic/react-hooks-lib'
 
 interface PropsBase {
+  orderBy?: OrderBy
+  onOrderByChange?: (_: OrderBy) => void
   property?: string
   onClose?: () => void
   onClear?: () => void
@@ -38,6 +42,8 @@ interface PropsDate extends PropsBase {
 type Props = PropsMultiple | PropsSingle | PropsDate
 
 export const SheetFilterDialog = ({
+  orderBy,
+  onOrderByChange,
   property,
   value,
   onChange,
@@ -56,12 +62,21 @@ export const SheetFilterDialog = ({
     <Dialog open={!!property}>
       <DialogTitle sx={{display: 'flex', alignItems: 'center'}}>
         <Box sx={{flex: 1}}>{property ?? ''}</Box>
-        <AAIconBtn onClick={() => {
+        <AAIconBtn icon="filter_list_off" onClick={() => {
           onClear?.()
           setInnerValue(undefined)
-        }} icon="filter_list_off"/>
+        }}/>
       </DialogTitle>
       <DialogContent>
+        <Box sx={{display: 'flex', alignItems: 'center', borderBottom: t => `1px solid ${t.palette.divider}`, mb: 1}}>
+          <Txt color="hint" sx={{flex: 1}}>{m.sort}</Txt>
+          <MenuItem onClick={() => onOrderByChange?.('desc')}>
+            <Icon fontSize="small" color={orderBy === 'desc' ? 'primary' : undefined}>south</Icon>
+          </MenuItem>
+          <MenuItem onClick={() => onOrderByChange?.('asc')}>
+            <Icon fontSize="small" color={orderBy === 'asc' ? 'primary' : undefined}>north</Icon>
+          </MenuItem>
+        </Box>
         {Array.isArray(propertyType) ? (
           <MultipleChoices
             options={propertyType?.map(_ => ({value: _, children: _}))}

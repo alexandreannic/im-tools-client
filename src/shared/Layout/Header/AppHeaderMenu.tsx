@@ -5,18 +5,25 @@ import {Box, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {AaBtn} from '@/shared/Btn/AaBtn'
+import {alpha} from '@mui/material/styles'
 
-export const HeaderMenu = () => {
+export const AppHeaderMenu = () => {
   const session = useSession()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = (!!anchorEl)
   const {m} = useI18n()
+  if (!session.session) {
+    return <></>
+  }
   return (
     <>
       <AAIconBtn
         icon="person"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         sx={{
+          '&:hover': {
+            background: t => alpha(t.palette.primary.main, .6),
+          },
           background: t => t.palette.primary.main,
           color: t => t.palette.primary.contrastText,
         }}

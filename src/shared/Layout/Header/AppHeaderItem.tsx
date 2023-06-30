@@ -2,7 +2,7 @@ import React from 'react'
 import {styleUtils} from '../../../core/theme'
 import {AaBtn} from '../../Btn/AaBtn'
 
-export const HeaderItem = ({children, href}: {children: any; href?: string}) => {
+export const AppHeaderItem = ({children, href}: {children: any; href?: string}) => {
   return (
     <AaBtn
       color="primary"

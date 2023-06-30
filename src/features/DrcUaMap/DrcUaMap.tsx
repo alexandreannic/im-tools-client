@@ -1,12 +1,25 @@
-import {Enum, sleep} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, sleep} from '@alexandreannic/ts-utils'
 import React, {useEffect} from 'react'
 import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
 import {useAppSettings} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
-import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
+import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
+import {SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Panel} from '@/shared/Panel'
+import {borderColor} from '@mui/system'
 
+const mapTheme = {
+  occupiedColor: '#ffd0c4',
+  baseColor: '#e4e4e4', // #f8f8f8
+  borderColor: 'white',
+
+}
 const generalStyles = <GlobalStyles styles={{
+  '#map-ua path': {
+    strokeWidth: 1,
+    stroke: mapTheme.borderColor,
+  },
   '#map-offices svg path[fill="none"]': {
     strokeWidth: 0
   },
@@ -15,12 +28,11 @@ const generalStyles = <GlobalStyles styles={{
   }
 }}/>
 
-const occupiedColor = '#ffdcd2'
 
 interface Office {
   city: string
   closed?: boolean
-  align?: 'right'
+  align?: 'right' | 'left'
 }
 
 const officeStyle = (t: Theme) => ({
@@ -37,17 +49,19 @@ const officeStyle = (t: Theme) => ({
 })
 
 const offices: Office[] = [
-  // {city: 'Sumy'},
-  // {city: 'Kyiv'},
-  // {city: 'Dnipro'},
-  // {city: 'Mykolaiev'},
-  // {city: 'Lviv'},
-  // {city: 'Chernihiv'},
+  {city: 'Sumy'},
+  {city: 'Kyiv'},
+  {city: 'Dnipro'},
+  {city: 'Mykolaiv', align: 'left'},
+  {city: 'Lviv'},
+  {city: 'Chernihiv'},
+  {city: 'Kharkiv'},
+  {city: 'Herson'},
   // {city: 'Poltava'},
   // {city: 'Chernivtsi'},
-  // {city: 'Sloviansk', closed: true},
-  // {city: 'Slevlerodonetsk', closed: true, align: 'right'},
-  // {city: 'Mariupol', closed: true},
+  {city: 'Slovyansk', closed: true},
+  {city: 'Severodonetsk', closed: true, align: 'right'},
+  {city: 'Mariupol', closed: true},
 ]
 
 const drawMaps = async ({
@@ -72,30 +86,28 @@ const drawMaps = async ({
     'mapsApiKey': apiKey
   })
   google.charts.setOnLoadCallback(() => {
-    // drawUA(mapUaSelector, theme)
+    drawUA(mapUaSelector, theme)
     drawOffices(mapOfficeSelector)
-    // setTimeout(() => drawOfficeMarkers(mapOfficeSelector, theme), 2000)
+    setTimeout(() => drawOfficeMarkers(mapOfficeSelector, theme), 2000)
   })
 }
 
 const drawOffices = (selector: string) => {
   const data = google.visualization.arrayToDataTable([
     ['City', 'Population', 'Area'],
-    ['Rome',      2761477,    1285.31],
-    ['Milan',     1324110,    181.76],
-    // ...offices.map(o => [o.city, 100, 100]),
+    ...offices.map(o => [o.city, 100, 100]),
   ])
 
   console.log(offices.map(o => [o.city, 100, 100]),)
 
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
-    // legend: 'none',
-    // backgroundColor: 'transparent',
-    // datalessRegionColor: 'transparent',
-    displayMode: 'markers',
-    region: 'IT',
-    // resolution: 'provinces',
+    legend: 'none',
+    backgroundColor: 'transparent',
+    datalessRegionColor: 'transparent',
+    displayMode: 'text',
+    region: 'UA',
+    resolution: 'provinces',
     colorAxis: {
       colors: ['green', 'blue']
     }
@@ -109,18 +121,23 @@ const drawUA = (selector: string, theme: Theme) => {
     'UA43',
     'UA09',
     'UA65',
+    'UA09', // Luhanska is UA-44 in Activity Info
   ]
+
+  const fixActivityInfoWrongIso = (_: OblastISO): string => _ === 'UA44' ? 'UA09' : _
 
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
-    ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
+    ...Enum.keys(OblastIndex.oblastByISO)
+      .map(fixActivityInfoWrongIso)
+      .map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
 
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
     legend: 'none',
     colorAxis: {
-      colors: ['#f8f8f8', occupiedColor],
+      colors: [mapTheme.baseColor, mapTheme.occupiedColor],
     },
     backgroundColor: 'transparent',
     datalessRegionColor: 'transparent',
@@ -148,13 +165,20 @@ const drawOfficeMarkers = (selector: string, theme: Theme) => {
       marker.innerHTML = officeStyle(theme).open.icon
       marker.style.fill = officeStyle(theme).open.color
     }
-    if (office.align === 'right') {
-      label.setAttribute('x', +marker.getAttribute('x') + 16)
-      label.setAttribute('y', +marker.getAttribute('y') - 6)
-      label.setAttribute('text-anchor', 'right')
-    } else {
+    fnSwitch(office.align!, {
+      'right': () => {
+        label.setAttribute('x', +marker.getAttribute('x') + 16)
+        label.setAttribute('y', +marker.getAttribute('y') - 6)
+        label.setAttribute('text-anchor', 'right')
+      },
+      'left': () => {
+        label.setAttribute('x', +marker.getAttribute('x') - 46 - label.clientWidth)
+        label.setAttribute('y', +marker.getAttribute('y') - 6)
+      }
+    }, () => {
       label.setAttribute('y', +marker.getAttribute('y') + 12)
-    }
+
+    })
     marker.parentNode.insertBefore(label, marker.nextSibling)
     label.setAttribute('font-size', theme.typography.fontSize * .875)
     label.setAttribute('font-family', theme.typography.fontFamily)
@@ -179,25 +203,29 @@ export const DrcUaMap = () => {
   return (
     <div>
       {generalStyles}
-      <Box sx={{display: 'inline-flex', m: 2, border: t => `1px solid ${t.palette.divider}`, alignItems: 'center', background: 'white'}}>
-        <Box sx={{position: 'relative', height: 500, width: 700}}>
-          <Box id="map-ua" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
-          <Box id="map-offices" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
-        </Box>
-        <Box sx={{ml: 3}}>
-          <Txt block color="hint" size="big" sx={{mb: 1}}>Legend</Txt>
-          {Enum.values(officeStyle(theme)).map(t =>
-            <Box key={t.label} sx={{display: 'flex', alignItems: 'center', mb: 2}}>
-              <Icon sx={{color: t.color, mr: 1}}>{t.icon}</Icon>
-              {t.label}
+      <Box sx={{m: 2, border: t => `1px solid ${t.palette.divider}`}}>
+        <Panel savableAsImg={true} sx={{display: 'inline-block'}}>
+          <Box sx={{display: 'inline-flex', alignItems: 'center',}}>
+            <Box sx={{position: 'relative', height: 500, width: 700}}>
+              <Box id="map-ua" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
+              <Box id="map-offices" sx={{top: 0, right: 0, bottom: 0, left: 0, position: 'absolute'}}/>
             </Box>
-          )}
-          <Box sx={{display: 'flex', alignItems: 'center', mb: 1, mr: 4}}>
-            <Box sx={{background: occupiedColor, height: 21, width: 21, borderRadius: 21, mr: 1, border: t => `2px solid ${t.palette.divider}`}}/>
-            Oblasts totally or partially<br/>
-            controlled by Russian military
+            <Box sx={{ml: 3}}>
+              <Txt block color="hint" size="big" sx={{mb: 1}}>Legend</Txt>
+              {Enum.values(officeStyle(theme)).map(t =>
+                <Box key={t.label} sx={{display: 'flex', alignItems: 'center', mb: 2}}>
+                  <Icon sx={{color: t.color, mr: 1}}>{t.icon}</Icon>
+                  {t.label}
+                </Box>
+              )}
+              <Box sx={{display: 'flex', alignItems: 'center', mb: 1, mr: 4}}>
+                <Box sx={{background: mapTheme.occupiedColor, height: 21, width: 21, borderRadius: 21, mr: 1, border: t => `2px solid ${t.palette.divider}`}}/>
+                Oblasts totally or partially<br/>
+                controlled by Russian military
+              </Box>
+            </Box>
           </Box>
-        </Box>
+        </Panel>
       </Box>
     </div>
   )

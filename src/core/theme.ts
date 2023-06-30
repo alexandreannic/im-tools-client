@@ -252,9 +252,19 @@ export const muiTheme = (dark?: boolean): Theme => {
       MuiDialogTitle: {
         styleOverrides: {
           root: {
-            paddingBottom: 8,
+            paddingRight: defaultSpacing * 2,
+            paddingLeft: defaultSpacing * 2,
+            paddingBottom: defaultSpacing,
           },
         },
+      },
+      MuiDialogContent: {
+        styleOverrides: {
+          root: {
+            paddingRight: defaultSpacing * 2,
+            paddingLeft: defaultSpacing * 2,
+          }
+        }
       },
       MuiFormHelperText: {
         styleOverrides: {
@@ -336,3 +346,4 @@ export const muiTheme = (dark?: boolean): Theme => {
       : ({} as any)),
   })
 }
+

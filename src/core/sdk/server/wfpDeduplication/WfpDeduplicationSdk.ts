@@ -15,6 +15,10 @@ export class WfpDeduplicationSdk {
   constructor(private client: ApiClient) {
   }
 
+  readonly uploadTaxIdsMapping = (file: File) => {
+    return this.client.postFile(`/wfp-deduplication/upload-taxid`, {file})
+  }
+
   readonly search = (filters: WfpDeduplicationSearch = {}): Promise<ApiPaginate<WfpDeduplication>> => {
     return this.client.post<ApiPaginate<any>>(`/wfp-deduplication/search`, {body: filters}).then(_ => ({
       ..._,

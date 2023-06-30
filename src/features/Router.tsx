@@ -11,7 +11,7 @@ import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
 import {ActivityInfo, activityInfoModule} from './ActivityInfo/ActivityInfo'
 import {ActivityInfoHHS2} from './ActivityInfo/HHS_2_1/ActivityInfoHHS2'
 import {Dashboard, dashboardModule} from './Dashboard/Dashboard'
-import {MpcaDedupTable} from './Mpca/DedupTable/MpcaDedupTable'
+import {MpcaData} from '@/features/Mpca/MpcaData/MpcaData'
 import {Mpca, mpcaModule} from './Mpca/Mpca'
 import {MpcaDashboard} from './Mpca/Dashboard/MpcaDashboard'
 import {MpcaPaymentTools} from './Mpca/PaymentTools/MpcaPaymentTools'
@@ -26,7 +26,7 @@ export const Router = () => {
       <Routes>
         <Route path="/database" element={<DatabaseSources/>}/>
         <Route path={mpcaModule.basePath} element={<Mpca/>}>
-          <Route path={mpcaModule.siteMap.deduplication} element={<MpcaDedupTable/>}/>
+          <Route path={mpcaModule.siteMap.deduplication} element={<MpcaData/>}/>
           <Route path={mpcaModule.siteMap.dashboard} element={<MpcaDashboard/>}/>
           <Route path={mpcaModule.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
           <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>

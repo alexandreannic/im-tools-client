@@ -1,6 +1,7 @@
 import axios, {AxiosError, AxiosResponse, ResponseType} from 'axios'
 import * as qs from 'qs'
 import {objectToQueryString} from '@/utils/utils'
+import {formatDate} from '@/core/i18n/localization/en'
 
 export interface RequestOption {
   readonly qs?: any
@@ -148,6 +149,19 @@ export class ApiClient {
       ...interceptedOptions,
       headers: {...headers, ...interceptedOptions?.headers},
     }
+  }
+
+  readonly postFile = <T = any>(uri: string, options: RequestOption & {file: File}): Promise<T> => {
+    const form = new FormData()
+    form.append('aa-file', options.file)
+    return this.request('POST', uri, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Content-Type': 'multipart/form-data'
+      },
+      body: form
+    })
   }
 
   readonly get = <T = any>(uri: string, options?: RequestOption): Promise<T> => {

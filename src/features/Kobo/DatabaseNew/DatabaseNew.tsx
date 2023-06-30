@@ -1,4 +1,4 @@
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {ReactElement, useEffect, useState} from 'react'
 import {Modal, Txt} from 'mui-extension'
@@ -7,6 +7,7 @@ import {Box} from '@mui/material'
 import {useFetchers} from '@/features/Kobo/DatabaseMerge/useFetchers'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {KoboFormCreate} from '@/core/sdk/server/kobo/KoboFormSdk'
+import {useAaToast} from '@/core/useToast'
 
 
 export const DatabaseNew = ({
@@ -22,6 +23,11 @@ export const DatabaseNew = ({
   const _create = useAsync(api.kobo.form.create)
   const {m, formatDate} = useI18n()
   const [selectedForm, setSelectedForm] = useState<KoboFormCreate & {uid: string} | undefined>()
+  const {toastHttpError} = useAaToast()
+
+  // useEffectFn(_server.error, toastHttpError)
+  // useEffectFn(_form.error, toastHttpError)
+  // useEffectFn(_create.getError(), toastHttpError)
 
   useEffect(() => {
     _server.fetch()
@@ -49,6 +55,7 @@ export const DatabaseNew = ({
         <>
           {_server.entity?.map(server =>
             <Box
+              key={server.id}
               sx={{
                 '&:not(:last-of-type)': {
                   mb: 2,

@@ -2,19 +2,19 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
-import {useI18n} from '../../../core/i18n'
+import {useI18n} from '@/core/i18n'
 import {Box, Icon, IconProps} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {Panel, PanelTitle} from '@/shared/Panel'
 import {add, sub} from 'date-fns'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {useAppSettings} from '../../../core/context/ConfigContext'
+import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {appConfig} from '../../../conf/AppConfig'
-import {koboServerId} from '../../../koboFormId'
+import {appConfig} from '@/conf/AppConfig'
+import {koboServerId} from '@/koboFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
-import {BNRE} from '../../../core/koboModel/BNRE/BNRE'
+import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
+import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {MpcaDeduplicationDb} from '../MpcaDeduplicationDb'
 
 export const TableImg = ({
@@ -93,7 +93,7 @@ export const mapMpcaKoboAnswer = (deduplicationDb?: MpcaDeduplicationDb) => (_: 
   })
 }
 
-export const MpcaDedupTable = () => {
+export const MpcaData = () => {
   const {m, formatDate} = useI18n()
   const {api} = useAppSettings()
   const {deduplicationDb, _koboAnswers, _form} = useMPCADeduplicationContext()

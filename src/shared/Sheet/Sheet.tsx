@@ -25,6 +25,7 @@ const generalStyles = <GlobalStyles
     //   zIndex: 2,
     // },
     '.th': {
+      position: 'relative',
       // overflow: 'auto',
     },
     '.tr': {
@@ -32,7 +33,15 @@ const generalStyles = <GlobalStyles
       whiteSpace: 'nowrap',
       // borderBottom: `1px solid ${t.palette.divider}`,
     },
-    '.th.th-sorted': {
+    // '.th-action': {
+    //   position: 'absolute',
+    //   left: 0,
+    //   display: 'none',
+    // },
+    // '.th:hover .th-action': {
+    //   display: 'block',
+    // },
+    '.th-active': {
       borderBottomColor: t.palette.primary.main,
       boxShadow: `${t.palette.primary.main} 0 -1px 0 0 inset`,
     },
@@ -53,6 +62,10 @@ const generalStyles = <GlobalStyles
     },
     '.td-right': {
       textAlign: 'right',
+    },
+    '.td-loading': {
+      padding: 0,
+      border: 'none',
     },
     '.td': {
       // display: 'inline-flex',
@@ -86,7 +99,6 @@ type Answer = Record<string, any/* string | number[] | string[] | Date | number 
 
 export interface SheetTableProps<T extends Answer> extends BoxProps {
   header?: ReactNode
-  actions?: ReactNode
   loading?: boolean
   total?: number
   select?: {
@@ -106,7 +118,7 @@ export interface SheetTableProps<T extends Answer> extends BoxProps {
     sortableColumns?: string[]
     sortBy?: keyof T
     orderBy?: OrderBy
-    onSortChange: (_: {sortBy?: string; orderBy?: OrderBy}) => void
+    onSortChange: (_: {sortBy?: keyof T; orderBy?: OrderBy}) => void
   }
 }
 
@@ -119,7 +131,8 @@ export interface SheetColumnProps<T extends Answer> {
   render: (_: T) => ReactNode
   hidden?: boolean
   alwaysVisible?: boolean
-  type?: 'number' | 'date' | string[] | 'string'
+  tooltip?: (_: T) => string
+  type?: 'number' | 'date' | string[] | 'string' | 'stringOrUndefined'
   className?: string | ((_: T) => string | undefined)
   // sx?: (_: T) => SxProps<Theme> | undefined
   // style?: CSSProperties
@@ -147,7 +160,7 @@ const checkFilterType = (() => {
     return Array.isArray(f) && (typeof f[0] === 'number')
   }
   const isForMultipleChoices = (f: Filter): f is string[] => {
-    return Array.isArray(f) && (typeof f[0] === 'string')
+    return Array.isArray(f) && ((typeof f[0] === 'string') || f.length === 0)
   }
   const isString = (f: Filter): f is string => {
     return (typeof f === 'string')
@@ -167,7 +180,6 @@ export const Sheet = <T extends Answer = Answer>({
   data,
   columns,
   getRenderRowKey,
-  actions,
   header,
   showColumnsToggle,
   showColumnsToggleBtnTooltip,
@@ -191,15 +203,18 @@ export const Sheet = <T extends Answer = Answer>({
     return columns.filter(_ => !_.hidden)
   }, [columns])
 
+  const getAllPossibleValues = (key: string) => Array.from(new Set(data?.map(_ => _[key]))) as string[]
+
   const propertyTypes = useMemo(() => {
     const types = {} as Record<keyof T, SheetColumnProps<any>['type']>
     columns.forEach(_ => {
+      console.log(_.type)
       types[_.id as keyof T] = _.type
     })
     return types
   }, [columns])
-  // const editingPropertyType = useMemo(() => columns.find(_ => _.id === filteringProperty)?.type, [filteringProperty])
 
+  // const editingPropertyType = useMemo(() => columns.find(_ => _.id === filteringProperty)?.type, [filteringProperty])
   // const displayableColumns = useMemo(() => columns.filter(_ => !_.hidden), [columns])
   // const toggleableColumnsName = useMemo(
   //   () => displayableColumns.filter(_ => !_.alwaysVisible && _.head && _.head !== ''),
@@ -207,16 +222,14 @@ export const Sheet = <T extends Answer = Answer>({
   // )
   const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], id)
   const filteredColumns = useMemo(() => displayableColumns.filter(_ => !hiddenColumns.includes(_.id)), [columns, hiddenColumns])
+
   // const displayTableHeader = useMemo(() => !!displayableColumns.find(_ => _.head !== ''), [displayableColumns])
 
-  const onSortBy = (columnId: typeof columns[0]['id']) => {
+  const onOrderBy = (columnId: keyof T, orderBy?: OrderBy) => {
     if (!sort) return
-    if (sort.sortBy === columnId && sort.orderBy === 'desc') {
-      sort.onSortChange({sortBy: undefined, orderBy: undefined})
-    } else {
-      sort.onSortChange({sortBy: columnId, orderBy: sort.orderBy === 'asc' ? 'desc' : 'asc'})
-    }
+    sort.onSortChange({sortBy: columnId, orderBy})
   }
+
 
   const filteredData = useMemo(() => {
     if (!data) return
@@ -269,42 +282,44 @@ export const Sheet = <T extends Answer = Answer>({
 
   return (
     <>
-      <Box sx={{position: 'relative', p: 2}}>
-        {header}
-        {_selected.size > 0 && (
-          <Box sx={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            background: t => t.palette.background.paper,
-          }}>
+      {header || select && (
+        <Box sx={{position: 'relative', p: 2}}>
+          {header}
+          {_selected.size > 0 && (
             <Box sx={{
               position: 'absolute',
-              top: -1,
-              right: -1,
-              left: -1,
+              top: 0,
+              right: 0,
+              left: 0,
               bottom: 0,
-              display: 'flex',
-              alignItems: 'center',
-              border: t => `2px solid ${t.palette.primary.main}`,
-              color: t => t.palette.primary.main,
-              fontWeight: t => t.typography.fontWeightBold,
-              background: t => t.palette.action.focus,
-              borderTopLeftRadius: t => t.shape.borderRadius + 'px',
-              borderTopRightRadius: t => t.shape.borderRadius + 'px',
-              px: 2,
+              background: t => t.palette.background.paper,
             }}>
-              <Box sx={{flex: 1,}}>
-                {_selected.size} {m.selected}.
+              <Box sx={{
+                position: 'absolute',
+                top: -1,
+                right: -1,
+                left: -1,
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                border: t => `2px solid ${t.palette.primary.main}`,
+                color: t => t.palette.primary.main,
+                fontWeight: t => t.typography.fontWeightBold,
+                background: t => t.palette.action.focus,
+                borderTopLeftRadius: t => t.shape.borderRadius + 'px',
+                borderTopRightRadius: t => t.shape.borderRadius + 'px',
+                px: 2,
+              }}>
+                <Box sx={{flex: 1,}}>
+                  {_selected.size} {m.selected}.
+                </Box>
+                {select?.selectActions}
+                <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
               </Box>
-              {select?.selectActions}
-              <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
             </Box>
-          </Box>
-        )}
-      </Box>
+          )}
+        </Box>
+      )}
       <Box sx={{overflowX: 'auto'}}>
         <Box sx={{
           // width: 'max-content'
@@ -330,20 +345,21 @@ export const Sheet = <T extends Answer = Answer>({
               ))}
               {filteredColumns.map((_, i) => {
                 const sortedByThis = sort?.sortBy === _.id ?? true
+                const active = sortedByThis || filters[_.id]
                 return (
                   <th
                     key={_.id}
-                    onClick={() => onSortBy(_.id)}
-                    className={'td th' + (sortedByThis ? ' th-sorted' : '') + (fnSwitch(_.align!, {
+                    // onClick={() => onSortBy(_.id)}
+                    className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
                       'center': ' td-center',
                       'right': ' td-right'
                     }, _ => ''))}
                   >
                     {_.head}
-                    <IconBtn size="small" sx={{mx: .5}}>
+                    <IconBtn size="small" sx={{mx: .5}} className="th-action">
                       <Icon
                         fontSize="small"
-                        color={filters[_.id] ? 'primary' : 'disabled'}
+                        color={active ? 'primary' : 'disabled'}
                         sx={{verticalAlign: 'middle'}}
                         onClick={e => {
                           e.stopPropagation()
@@ -358,11 +374,14 @@ export const Sheet = <T extends Answer = Answer>({
               })}
             </tr>
             </thead>
-            {loading && (
-              <LinearProgress/>
-            )}
-
             <tbody>
+            {loading && (
+              <tr>
+                <td className="td-loading" colSpan={filteredColumns?.length ?? 1}>
+                  <LinearProgress/>
+                </td>
+              </tr>
+            )}
             {filteredAndPaginatedData?.data.map((item, i) => (
               <tr
                 className="tr"
@@ -376,7 +395,7 @@ export const Sheet = <T extends Answer = Answer>({
                 )}
                 {filteredColumns.map((_, i) => (
                   <td
-                    title={_.render(item) as any}
+                    title={_.tooltip?.(item) ?? _.render(item) as any}
                     key={i}
                     onClick={_.onClick ? () => _.onClick?.(item) : undefined}
                     className={'td td-clickable ' + fnSwitch(_.align!, {
@@ -412,6 +431,11 @@ export const Sheet = <T extends Answer = Answer>({
         }}
       />
       <SheetFilterDialog
+        orderBy={sort?.sortBy === 'filteringProperty' ? sort?.orderBy : undefined}
+        onOrderByChange={_ => {
+          console.log(filteringProperty, _)
+          filteringProperty && onOrderBy(filteringProperty, _)
+        }}
         value={filteringProperty && filters[filteringProperty] as any}
         propertyType={propertyTypes[filteringProperty]}
         property={filteringProperty as string}

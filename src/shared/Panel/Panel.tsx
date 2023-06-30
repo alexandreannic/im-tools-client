@@ -107,7 +107,7 @@ export const Panel = forwardRef(({
         </Box>
       )}
 
-      {(title) && (
+      {title && (
         <PanelHead>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             {title}

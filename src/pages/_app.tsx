@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import type {AppProps} from 'next/app'
 import {Provide} from '@/shared/Provide'
-import {Box, ButtonBase, CssBaseline, Icon, ThemeProvider} from '@mui/material'
+import {Box, CssBaseline, Icon, StyledEngineProvider, ThemeProvider} from '@mui/material'
 import {muiTheme} from '@/core/theme'
 import {I18nProvider, useI18n} from '@/core/i18n'
 import {ToastProvider, Txt} from 'mui-extension'
@@ -13,14 +13,21 @@ import {appConfig} from '@/conf/AppConfig'
 import {MsalProvider} from '@azure/msal-react'
 import {getMsalInstance} from '@/core/msal'
 import {DRCLogo} from '@/shared/logo/logo'
+import {CacheProvider, EmotionCache} from '@emotion/react'
+import createEmotionCache from '@/core/createEmotionCache'
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
 }))
 
-const App = (props: AppProps) => {
+const clientSideEmotionCache = createEmotionCache()
+
+const App = ({emotionCache = clientSideEmotionCache, ...props}: AppProps & {
+  emotionCache?: EmotionCache
+}) => {
   return (
     <Provide providers={[
+      _ => <CacheProvider value={emotionCache} children={_}/>,
       _ => <AppSettingsProvider api={api} children={_}/>,
     ]}>
       <AppWithConfig {...props}/>
@@ -32,6 +39,7 @@ const AppWithConfig = (props: AppProps) => {
   const msal = useMemo(() => getMsalInstance(settings.conf), [settings.conf])
   return (
     <Provide providers={[
+      _ => <StyledEngineProvider injectFirst children={_}/>,
       _ => <ToastProvider children={_}/>,
       _ => <ThemeProvider theme={muiTheme(settings.darkTheme)} children={_}/>,
       _ => <CssBaseline children={_}/>,

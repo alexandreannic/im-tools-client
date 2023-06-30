@@ -1,25 +1,25 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {OrderBy, useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {OrderBy, useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Page, PageTitle} from '@/shared/Page'
 import {Sheet, SheetColumnProps, SheetTableProps} from '@/shared/Sheet/Sheet'
-import {Sidebar, SidebarBody, SidebarHeader, SidebarItem} from '@/shared/Layout/Sidebar'
+import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
 import {KoboAnswer2, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {KoboApiColType, KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {Panel, PanelHead} from '@/shared/Panel'
-import {Txt} from 'mui-extension'
+import {Panel} from '@/shared/Panel'
 import {koboModule} from '@/features/Kobo/koboModule'
-import {BrowserRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
-import {Header} from '@/shared/Layout/Header/Header'
+import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
+import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
 import {Skeleton} from '@mui/material'
 import {useParams} from 'react-router'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {DatabaseNew} from '@/features/Kobo/DatabaseNew/DatabaseNew'
+import {useAaToast} from '@/core/useToast'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -44,6 +44,9 @@ export const Database = () => {
   const {m} = useI18n()
   const {api} = useAppSettings()
   const _forms = useFetcher(api.kobo.form.getAll)
+  const {toastHttpError} = useAaToast()
+
+  useEffectFn(_forms.error, toastHttpError)
 
   useEffect(() => {
     _forms.fetch()
@@ -51,7 +54,7 @@ export const Database = () => {
 
   // const {serverId, formId} = urlParamsValidation.validateSync(useParams())
   return (
-    <Router basename={koboModule.basePath}>
+    <Router>
       <Layout
         sidebar={
           <Sidebar headerId="app-header">
@@ -71,7 +74,7 @@ export const Database = () => {
             </SidebarBody>
           </Sidebar>
         }
-        header={<Header id="app-header"/>}
+        header={<AppHeader id="app-header"/>}
       >
         <Routes>
           <Route path={koboModule.siteMap.form()} element={<DatabaseLayout/>}/>

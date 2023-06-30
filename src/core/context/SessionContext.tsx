@@ -50,7 +50,7 @@ export const SessionProvider = ({
   }
 
   useEffect(() => {
-    _getSession.call().then()
+    _getSession.call()
   }, [])
 
   useEffectFn(_login.error, () => toastError(m.youDontHaveAccess))

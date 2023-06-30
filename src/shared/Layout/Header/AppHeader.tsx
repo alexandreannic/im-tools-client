@@ -1,15 +1,18 @@
 import {alpha, Box, BoxProps, Icon, Slide} from '@mui/material'
-import {IconBtn} from 'mui-extension'
+import {IconBtn, Txt} from 'mui-extension'
 import {layoutConfig} from '../index'
 import React from 'react'
 import {useLayoutContext} from '../LayoutContext'
-import {HeaderMenu} from '@/shared/Layout/Header/HeaderMenu'
+import {AppHeaderMenu} from '@/shared/Layout/Header/AppHeaderMenu'
+import {AppHeaderApps} from '@/shared/Layout/Header/AppHeaderApps'
+import {AAIconBtn} from '@/shared/IconBtn'
+import Link from 'next/link'
 
 interface Props extends BoxProps {
 }
 
-export const Header = ({children, sx, id, ...props}: BoxProps) => {
-  const {sidebarOpen, showSidebarButton, setSidebarOpen} = useLayoutContext()
+export const AppHeader = ({children, sx, id, ...props}: Props) => {
+  const {sidebarOpen, showSidebarButton, setSidebarOpen, title} = useLayoutContext()
 
   return (
     <Slide direction="down" in={true} mountOnEnter unmountOnExit>
@@ -21,8 +24,8 @@ export const Header = ({children, sx, id, ...props}: BoxProps) => {
           py: 0.5,
           display: 'flex',
           alignItems: 'center',
-          background: t => t.palette.background.paper,
-          borderBottom: t => '1px solid ' + t.palette.divider,
+          // background: t => t.palette.background.paper,
+          // borderBottom: t => '1px solid ' + t.palette.divider,
           ...sx,
         }}
         id={id}
@@ -37,6 +40,7 @@ export const Header = ({children, sx, id, ...props}: BoxProps) => {
         >
           {showSidebarButton && (
             <IconBtn
+              size="small"
               sx={{
                 mr: 1,
                 border: t => `2px solid ${t.palette.primary.main}`,
@@ -51,9 +55,14 @@ export const Header = ({children, sx, id, ...props}: BoxProps) => {
               <Icon>menu</Icon>
             </IconBtn>
           )}
+          <Txt sx={{ml: 1}} size="big" bold>{title}</Txt>
           {children}
         </div>
-        <HeaderMenu/>
+        <Link href="/">
+          <AAIconBtn icon="home"/>
+        </Link>
+        <AppHeaderApps sx={{mr: 1}}/>
+        <AppHeaderMenu/>
       </Box>
     </Slide>
   )

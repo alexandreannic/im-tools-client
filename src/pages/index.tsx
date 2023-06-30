@@ -1,54 +1,33 @@
 import {useI18n} from '@/core/i18n'
 import {useMsal} from '@azure/msal-react'
-import {HeaderItem} from '@/shared/Layout/Header/HeaderItem'
-import {NavLink} from 'react-router-dom'
 import React from 'react'
-import {Box} from '@mui/material'
+import {Box, Grid} from '@mui/material'
+import {appFeatures} from '@/features/appFeatures'
+import {FeatureLogo} from '@/features/FeatureLogo'
+import Link from 'next/link'
+import {Page} from '@/shared/Page'
+import {DRCLogo} from '@/shared/logo/logo'
+import {Txt} from 'mui-extension'
 
 const Index = () => {
   const {m} = useI18n()
   const msal = useMsal()
 
   return (
-    <>
-
-      <Box>
-        <a href="/activity-info">
-          Activity-Info
-        </a>
+    <Page>
+      <Box sx={{textAlign: 'center'}}>
+        <DRCLogo/>
+        <Txt sx={{textAlign: 'center'}} size="title" block>{m.title}</Txt>
+        <Txt sx={{textAlign: 'center', mb: 4}} size="big" color="hint" block>{m.subTitle}</Txt>
       </Box>
-      <Box>
-        <a href="/snapshot">
-          Snapshots
-        </a>
-      </Box>
-      <Box>
-        <a href="/database">
-          Database
-        </a>
-      </Box>
-      <Box>
-        <a href="/dashboard">
-          Dashboards
-        </a>
-      </Box>
-      <Box>
-        <a href="/mpca">
-          MPCA
-        </a>
-      </Box>
-      <Box>
-        <a href="/map">
-          Map
-        </a>
-      </Box>
-      <Box>
-        <a href="/playground">
-          Playground
-        </a>
-      </Box>
-
-    </>
+      <Grid container>
+        {appFeatures.map(feature => (
+          <Grid item md={3} sm={4} xs={6}>
+            <FeatureLogo sx={{m: 2}} feature={feature}/>
+          </Grid>
+        ))}
+      </Grid>
+    </Page>
   )
 }
 

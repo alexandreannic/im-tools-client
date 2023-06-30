@@ -5,7 +5,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {Panel, PanelTitle} from '@/shared/Panel'
 import {useI18n} from '../../../core/i18n'
 import {Txt} from 'mui-extension'
-import {TableIcon} from '../DedupTable/MpcaDedupTable'
+import {TableIcon} from '@/features/Mpca/MpcaData/MpcaData'
 import {useNavigate} from 'react-router'
 import {mpcaModule} from '../Mpca'
 
