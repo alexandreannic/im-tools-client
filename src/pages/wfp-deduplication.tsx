@@ -216,3 +216,108 @@ export default _
 //   "mode": "cors",
 //   "credentials": "include"
 // });
+
+// When IMPORT SUCCEED
+
+// {
+//   "task": {
+//   "id": "c1c2ce00-340a-45b0-a1c4-f380af58c167",
+//     "parentId": null,
+//     "type": "beneficiary-import-requests",
+//     "additionalInfo": {
+//     "rowSum": 639360,
+//       "rowCount": 52,
+//       "failsCount": 0,
+//       "successCount": 52,
+//       "warningsCount": 0,
+//       "lastBatchIndex": 1,
+//       "categoryPerFile": "CASH-MPA",
+//       "numberOfBatches": 1,
+//       "lastBatchResult": null
+//   },
+//   "fileName": "HRK_20230704.xlsx.gpg",
+//     "createdAt": "2023-07-04T12:17:33.557Z",
+//     "children": [
+//     {
+//       "id": "66682ea5-8e96-4111-9637-423fd16e6047",
+//       "parentId": "c1c2ce00-340a-45b0-a1c4-f380af58c167",
+//       "type": "upload-report-export-requests",
+//       "additionalInfo": {},
+//       "fileName": "validation_result_c1c2ce00-340a-45b0-a1c4-f380af58c167.csv.gpg",
+//       "createdAt": "2023-07-04T12:17:34.870Z",
+//       "children": [],
+//       "parkedAt": null,
+//       "startedAt": "2023-07-04T12:17:35.020Z",
+//       "authorizedAt": null,
+//       "cancelledAt": null,
+//       "finishedAt": "2023-07-04T12:17:35.279Z",
+//       "errors": null,
+//       "informationMessages": null,
+//       "warnings": null,
+//       "progress": null,
+//       "payload": {},
+//       "fileExpired": false,
+//       "signatures": [],
+//       "scheduledFor": null,
+//       "createdByManager": null,
+//       "authorizedByManager": null,
+//       "cancelledByManager": null,
+//       "createdByManagerId": "137",
+//       "authorizedByManagerId": null,
+//       "cancelledByManagerId": null,
+//       "dryRun": false,
+//       "dryRunErrors": [],
+//       "preCancelledByManager": null,
+//       "preCancelledAt": null,
+//       "createdByVendorUser": null,
+//       "cancelledByVendorUser": null,
+//       "additionalFiles": [],
+//       "deduplicationWarnings": null,
+//       "deduplicationOptions": {
+//         "overlapPeriod": "none",
+//         "uaopFlag": "IncrementalDeltaAmountYesOption",
+//         "categories": []
+//       }
+//     }
+//   ],
+//     "parkedAt": "2023-07-04T12:17:33.556Z",
+//     "startedAt": "2023-07-04T12:17:33.698Z",
+//     "authorizedAt": null,
+//     "cancelledAt": null,
+//     "finishedAt": "2023-07-04T12:17:34.970Z",
+//     "errors": null,
+//     "informationMessages": null,
+//     "warnings": null,
+//     "progress": "1",
+//     "payload": {},
+//   "fileExpired": false,
+//     "signatures": [],
+//     "scheduledFor": null,
+//     "createdByManager": {
+//     "id": "137",
+//       "name": "Alexandre ANNIC",
+//       "email": "alexandre.annic@drc.ngo",
+//       "agency": "DRC"
+//   },
+//   "authorizedByManager": null,
+//     "cancelledByManager": null,
+//     "createdByManagerId": "137",
+//     "authorizedByManagerId": null,
+//     "cancelledByManagerId": null,
+//     "dryRun": true,
+//     "dryRunErrors": [],
+//     "preCancelledByManager": null,
+//     "preCancelledAt": null,
+//     "createdByVendorUser": null,
+//     "cancelledByVendorUser": null,
+//     "additionalFiles": [],
+//     "deduplicationWarnings": null,
+//     "deduplicationOptions": {
+//     "overlapPeriod": "none",
+//       "uaopFlag": "IncrementalDeltaAmountNoOption",
+//       "categories": []
+//   },
+//   "deduplicationCount": "0"
+// },
+//   "scheduler": null
+// }

@@ -121,10 +121,7 @@ export const DashboardProtHHS2 = () => {
   useEffect(() => {
     if (_period.entity) setFilters(prev => ({
       ...prev,
-      // ..._period.entity,
-      // TODO REMOVEME
-      start: new Date(2023, 5, 1),
-      end: new Date(2023, 6, 1),
+      ..._period.entity,
     }))
   }, [_period.entity])
 
