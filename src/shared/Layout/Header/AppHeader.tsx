@@ -4,7 +4,7 @@ import {layoutConfig} from '../index'
 import React, {useEffect} from 'react'
 import {useLayoutContext} from '../LayoutContext'
 import {AppHeaderMenu} from '@/shared/Layout/Header/AppHeaderMenu'
-import {AppHeaderApps} from '@/shared/Layout/Header/AppHeaderApps'
+import {AppHeaderFeatures} from '@/shared/Layout/Header/AppHeaderFeatures'
 import {AAIconBtn} from '@/shared/IconBtn'
 import Link from 'next/link'
 
@@ -66,7 +66,7 @@ export const AppHeader = ({children, sx, id, ...props}: Props) => {
         <Link href="/">
           <AAIconBtn icon="home"/>
         </Link>
-        <AppHeaderApps sx={{mr: 1}}/>
+        <AppHeaderFeatures sx={{mr: 1}}/>
         <AppHeaderMenu/>
       </Box>
     </Slide>

@@ -34,8 +34,8 @@ const stickSidebarToHeader = (sidebarId: string, headerId: string) => {
 export const Sidebar = ({
   children,
   sx,
-  id = 'signalconso-sidebar-id',
-  headerId,
+  id = 'app-sidebar-id',
+  headerId = 'app-header',
   ...props
 }: BoxProps & {
   headerId?: string

@@ -29,7 +29,7 @@ const MPCASidebar = () => {
   const path = (page: string) => '' + page
   const {m} = useI18n()
   return (
-    <Sidebar headerId="app-header">
+    <Sidebar>
       <SidebarBody>
         <SidebarItem component={NavLink} icon="equalizer" to={path(mpcaModule.siteMap.dashboard)}>{m.dashboard}</SidebarItem>
         <SidebarItem component={NavLink} icon="table_chart" to={path(mpcaModule.siteMap.data)}>{m.data}</SidebarItem>

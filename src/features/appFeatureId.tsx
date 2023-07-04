@@ -5,6 +5,7 @@ export enum AppFeatureId {
   databases = 'databases',
   mpca = 'mpca',
   wfp_deduplication = 'wfp_deduplication',
+  activity_info = 'activity_info',
 }
 
 export interface AppFeature {
@@ -36,6 +37,13 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'savings',
     color: 'green',
     path: '/mpca',
+  },
+  activity_info: {
+    materialIcons: 'group_work',
+    id: AppFeatureId.activity_info,
+    name: 'Activity Info',
+    color: '#00e6b8',
+    path: '/activity-info',
   },
   wfp_deduplication: {
     id: AppFeatureId.wfp_deduplication,

@@ -5,7 +5,7 @@ import {useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {useI18n} from '@/core/i18n'
 import {Icon, IconProps} from '@mui/material'
 import {Txt} from 'mui-extension'
-import {Panel, PanelHead} from '@/shared/Panel'
+import {Panel, PanelHead, PanelTitle} from '@/shared/Panel'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -92,7 +92,7 @@ export const MpcaData = () => {
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
         <Sheet
-          header={<PanelHead>MPCA</PanelHead>}
+          header={<PanelTitle>{m.data}</PanelTitle>}
           select={{
             getId: _ => _.id,
             onSelect: _ => setSelected(_),

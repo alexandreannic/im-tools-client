@@ -292,7 +292,7 @@ export const Sheet = <T extends Answer = Answer>({
 
   return (
     <>
-      {header || select && (
+      {(header || select) && (
         <Box sx={{position: 'relative', p: 2}}>
           {header}
           {_selected.size > 0 && (
