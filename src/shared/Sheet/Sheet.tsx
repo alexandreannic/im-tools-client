@@ -8,6 +8,8 @@ import {SheetFilterDialog} from './SheetFilterDialog'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
 import {useSetState} from '@alexandreannic/react-hooks-lib'
+import {offset} from '@popperjs/core'
+import {orderBy, sortBy} from 'lodash'
 
 const generalStyles = <GlobalStyles
   styles={t => ({
@@ -173,6 +175,11 @@ const checkFilterType = (() => {
   }
 })()
 
+
+interface SheetSearch {
+
+}
+
 export const Sheet = <T extends Answer = Answer>({
   id,
   loading,
@@ -190,46 +197,43 @@ export const Sheet = <T extends Answer = Answer>({
   select,
   ...props
 }: SheetTableProps<T>) => {
-  const [limit, setLimit] = useState(25)
-  const [offset, setOffset] = useState(0)
+  const {m} = useI18n()
+  const [sheetSearch, setSheetSearch] = useState({
+    limit: 25,
+    offset: 0,
+    sortBy: sort?.sortBy,
+    orderBy: sort?.orderBy,
+  })
+  // const [limit, setLimit] = useState(25)
+  // const [offset, setOffset] = useState(0)
+  // const [sortBy, setSortBy] = useState()
 
   const _selected = useSetState<string>()
   useMemo(() => select?.onSelect(_selected.toArray), [_selected.get])
 
-  const {m} = useI18n()
-  const [filteringProperty, setFilteringProperty] = useState<keyof T | undefined>(undefined)
+  const [openColumnConfig, setOpenColumnConfig] = useState<{
+    anchorEl: HTMLElement
+    columnId: string
+  } | undefined>()
+  // const [filteringProperty, setFilteringProperty] = useState<keyof T | undefined>(undefined)
   const [filters, setFilters] = useState<Record<keyof T, Filter>>({} as any)
   const displayableColumns: SheetColumnProps<T>[] = useMemo(() => {
     return columns.filter(_ => !_.hidden)
   }, [columns])
 
-  const getAllPossibleValues = (key: string) => Array.from(new Set(data?.map(_ => _[key]))) as string[]
-
   const propertyTypes = useMemo(() => {
     const types = {} as Record<keyof T, SheetColumnProps<any>['type']>
     columns.forEach(_ => {
-      console.log(_.type)
       types[_.id as keyof T] = _.type
     })
     return types
   }, [columns])
-
-  // const editingPropertyType = useMemo(() => columns.find(_ => _.id === filteringProperty)?.type, [filteringProperty])
-  // const displayableColumns = useMemo(() => columns.filter(_ => !_.hidden), [columns])
-  // const toggleableColumnsName = useMemo(
-  //   () => displayableColumns.filter(_ => !_.alwaysVisible && _.head && _.head !== ''),
-  //   [displayableColumns],
-  // )
   const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], id)
   const filteredColumns = useMemo(() => displayableColumns.filter(_ => !hiddenColumns.includes(_.id)), [columns, hiddenColumns])
 
-  // const displayTableHeader = useMemo(() => !!displayableColumns.find(_ => _.head !== ''), [displayableColumns])
-
   const onOrderBy = (columnId: keyof T, orderBy?: OrderBy) => {
-    if (!sort) return
-    sort.onSortChange({sortBy: columnId, orderBy})
+    setSheetSearch(prev => ({...prev, orderBy, sortBy: columnId}))
   }
-
 
   const filteredData = useMemo(() => {
     if (!data) return
@@ -275,10 +279,15 @@ export const Sheet = <T extends Answer = Answer>({
     }))
   }, [data, filters])
 
-  const filteredAndPaginatedData = useMemo(() => {
+  const filteredAndSortedData = useMemo(() => {
     if (!filteredData) return
-    return paginateData<T>(limit, offset)(filteredData)
-  }, [limit, offset, filteredData])
+    return orderBy(filteredData, sheetSearch.sortBy, sheetSearch.orderBy)
+  }, [filteredData, sheetSearch.sortBy, sheetSearch.orderBy])
+
+  const filteredSortedAndPaginatedData = useMemo(() => {
+    if (!filteredAndSortedData) return
+    return paginateData<T>(sheetSearch.limit, sheetSearch.offset)(filteredAndSortedData)
+  }, [sheetSearch.limit, sheetSearch.offset, filteredAndSortedData])
 
   return (
     <>
@@ -362,11 +371,10 @@ export const Sheet = <T extends Answer = Answer>({
                         color={active ? 'primary' : 'disabled'}
                         sx={{verticalAlign: 'middle'}}
                         onClick={e => {
-                          e.stopPropagation()
-                          setFilteringProperty(_.id)
+                          setOpenColumnConfig({anchorEl: e.currentTarget, columnId: _.id})
                         }}
                       >
-                        more_vert
+                        keyboard_arrow_down
                       </Icon>
                     </IconBtn>
                   </th>
@@ -382,7 +390,7 @@ export const Sheet = <T extends Answer = Answer>({
                 </td>
               </tr>
             )}
-            {filteredAndPaginatedData?.data.map((item, i) => (
+            {filteredSortedAndPaginatedData?.data.map((item, i) => (
               <tr
                 className="tr"
                 key={getRenderRowKey ? getRenderRowKey(item, i) : i}
@@ -421,37 +429,37 @@ export const Sheet = <T extends Answer = Answer>({
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
         count={filteredData?.length ?? 0}
-        rowsPerPage={limit}
-        page={offset / limit}
+        rowsPerPage={sheetSearch.limit}
+        page={sheetSearch.offset / sheetSearch.limit}
         onPageChange={(event: unknown, newPage: number) => {
-          setOffset(newPage * limit)
+          setSheetSearch(prev => ({...prev, offset: newPage * sheetSearch.limit}))
         }}
         onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setLimit(event.target.value as any)
+          setSheetSearch(prev => ({...prev, limit: event.target.value as any}))
         }}
       />
-      <SheetFilterDialog
-        orderBy={sort?.sortBy === 'filteringProperty' ? sort?.orderBy : undefined}
-        onOrderByChange={_ => {
-          console.log(filteringProperty, _)
-          filteringProperty && onOrderBy(filteringProperty, _)
-        }}
-        value={filteringProperty && filters[filteringProperty] as any}
-        propertyType={propertyTypes[filteringProperty]}
-        property={filteringProperty as string}
-        onClose={() => setFilteringProperty(undefined)}
-        onClear={() => setFilters(prev => {
-          if (prev) {
-            delete prev[filteringProperty!]
-          }
-          // setFilteringProperty(undefined)
-          return {...prev}
-        })}
-        onChange={(p: string, v: string | string[]) => {
-          setFilters(_ => ({..._, [p]: v}))
-          setFilteringProperty(undefined)
-        }}
-      />
+      {map(openColumnConfig, c =>
+        <SheetFilterDialog
+          anchorEl={c.anchorEl}
+          orderBy={sheetSearch.orderBy}
+          onOrderByChange={_ => onOrderBy(c.columnId, _)}
+          value={filters[c.columnId] as any}
+          propertyType={propertyTypes[c.columnId]}
+          property={c.columnId}
+          onClose={() => setOpenColumnConfig(undefined)}
+          onClear={() => setFilters(prev => {
+            if (prev) {
+              delete prev[c.columnId!]
+            }
+            // setFilteringProperty(undefined)
+            return {...prev}
+          })}
+          onChange={(p: string, v: string | string[]) => {
+            setFilters(_ => ({..._, [p]: v}))
+            setOpenColumnConfig(undefined)
+          }}
+        />
+      )}
     </>
   )
 }

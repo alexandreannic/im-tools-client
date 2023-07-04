@@ -36,7 +36,7 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
       title={m.koboData}
       PaperProps={{}}
       content={<AnswerTable answers={answers}/>}>
-      <Tooltip title="Kobo data">
+      <Tooltip title="DatabaseLayout data">
         <AaBtn icon="table_view" variant="outlined" size="small">{m.viewDate}</AaBtn>
       </Tooltip>
     </Confirm>

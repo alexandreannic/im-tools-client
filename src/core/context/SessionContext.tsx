@@ -9,9 +9,12 @@ import {Box, ButtonBase, CircularProgress, Icon} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {DRCLogo} from '@/shared/logo/logo'
 import {useAaToast} from '@/core/useToast'
+import {Access} from '@/core/sdk/server/access/Access'
+import {useFetchers} from '@/features/Database/DatabaseMerge/useFetchersFn'
 
 export interface SessionContext {
   session: UserSession
+  accesses: Access[]
   logout: () => void
 }
 
@@ -28,16 +31,19 @@ export const SessionProvider = ({
   const {m} = useI18n()
   const {toastError} = useAaToast()
   const {api} = useAppSettings()
-  const [session, setSession] = useState<UserSession | undefined | 'loading'>('loading')
+  const [session, setSession] = useState<UserSession | undefined>()
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
 
-  const _login = useFetcher(() => msal.instance.loginPopup({
+  const _login = useFetchers(() => msal.instance.loginPopup({
     scopes: ['User.Read']
   }))
+  const _access = useFetcher(api.access.search)
 
   const _getSession = useAsync(mapPromise({
     promise: api.session.get,
     mapThen: setSession,
   }))
+
 
   const _saveSession = useAsync(mapPromise({
     promise: api.session.login,
@@ -50,22 +56,29 @@ export const SessionProvider = ({
   }
 
   useEffect(() => {
+    if (session?.email)
+      _access.fetch({force: true, clean: true}, {email: session.email})
+  }, [session?.email])
+
+  useEffect(() => {
     _getSession.call()
+    setIsInitialLoading(false)
   }, [])
 
-  useEffectFn(_login.error, () => toastError(m.youDontHaveAccess))
+  useEffectFn(_login.error, _ => _ && toastError(m.youDontHaveAccess))
   useEffectFn(_saveSession.getError(), () => toastError(m.youDontHaveAccess))
   useEffectFn(_getSession.getError(), () => toastError(m.youDontHaveAccess))
 
   return (
     <>
-      {(session === 'loading' || _getSession.getLoading()) ? (
+      {isInitialLoading || (_getSession.getLoading()) ? (
         <Box sx={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
           <CircularProgress/>
         </Box>
-      ) : session ? (
+      ) : session && _access.entity ? (
         <Context.Provider value={{
           session,
+          accesses: _access.entity,
           logout,
         }}>
           {children}

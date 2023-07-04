@@ -2,9 +2,8 @@ import {useI18n} from '@/core/i18n'
 import {useMsal} from '@azure/msal-react'
 import React from 'react'
 import {Box, Grid} from '@mui/material'
-import {appFeatures} from '@/features/appFeatures'
+import {appFeatures} from '@/features/appFeatureId'
 import {FeatureLogo} from '@/features/FeatureLogo'
-import Link from 'next/link'
 import {Page} from '@/shared/Page'
 import {DRCLogo} from '@/shared/logo/logo'
 import {Txt} from 'mui-extension'
@@ -22,7 +21,7 @@ const Index = () => {
       </Box>
       <Grid container>
         {appFeatures.map(feature => (
-          <Grid item md={3} sm={4} xs={6}>
+          <Grid key={feature.id} item md={3} sm={4} xs={6}>
             <FeatureLogo sx={{m: 2}} feature={feature}/>
           </Grid>
         ))}

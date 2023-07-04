@@ -1,4 +1,4 @@
-import {AppFeature} from '@/features/appFeatures'
+import {AppFeature} from '@/features/appFeatureId'
 import React from 'react'
 import {ButtonBase, ButtonBaseProps, Icon} from '@mui/material'
 import {Txt} from 'mui-extension'

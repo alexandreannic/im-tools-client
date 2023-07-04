@@ -5,7 +5,7 @@ import {useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {useI18n} from '@/core/i18n'
 import {Box, Icon, IconProps} from '@mui/material'
 import {Txt} from 'mui-extension'
-import {Panel, PanelTitle} from '@/shared/Panel'
+import {Panel, PanelHead, PanelTitle} from '@/shared/Panel'
 import {add, sub} from 'date-fns'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -16,33 +16,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {MpcaDeduplicationDb} from '../MpcaDeduplicationDb'
-
-export const TableImg = ({
-  url,
-}: {
-  url: string
-}) => {
-  return (
-    <a href={url} target="_blank">
-      <Box component="span" sx={{
-        '&:hover': {
-          transform: 'scale(1.1)'
-          // height: 32,
-          // width: 32,
-        },
-        verticalAlign: 'middle',
-        display: 'inline-block',
-        transition: t => t.transitions.create('all'),
-        backgroundColor: t => t.palette.divider,
-        backgroundImage: `url(${url})`,
-        height: 30,
-        width: 30,
-        borderRadius: '4px',
-        backgroundSize: 'cover'
-      }}/>
-    </a>
-  )
-}
+import {TableImg} from '@/shared/TableImg/TableImg'
 
 export const TableIcon = ({sx, ...props}: IconProps) => {
   return <Icon sx={{verticalAlign: 'middle', ...sx}} fontSize="medium" {...props}/>
@@ -119,7 +93,7 @@ export const MpcaData = () => {
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
         <Sheet
-          header={<PanelTitle>MPCA</PanelTitle>}
+          header={<PanelHead>MPCA</PanelHead>}
           select={{
             getId: _ => _.id,
             onSelect: _ => setSelected(_),

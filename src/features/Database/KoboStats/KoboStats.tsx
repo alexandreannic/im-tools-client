@@ -8,6 +8,7 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import {Arr, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {ChartTools} from '../../../core/chartTools'
 import {Panel} from '@/shared/Panel'
+import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -29,19 +30,19 @@ export const KoboStats = ({
   formId: string
 }) => {
   const {api} = useAppSettings()
-  const _form = useFetcher(() => api.koboApi.getForm(serverId!, formId!))
+  const _schema = useDatabaseContext().formSchemas
   const _answers = useFetcher(() => api.kobo.answer.search({
     formId,
   }))
 
   useEffect(() => {
-    _form.fetch()
+    _schema.fetch({}, serverId, formId)
     _answers.fetch()
   }, [])
 
   return (
     <Box>
-      {map(_form.entity, form => map(_answers.entity?.data, answers => (
+      {map(_schema.get(formId), form => map(_answers.entity?.data, answers => (
         <>
           {form.content.survey.map(item => fnSwitch(item.type, {
             select_multiple: () => {

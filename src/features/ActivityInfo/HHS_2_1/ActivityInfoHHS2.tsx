@@ -222,9 +222,9 @@ const _ActivityInfo = ({
                       </Tooltip>
                       <Confirm
                         maxWidth={'lg'}
-                        title="Kobo data"
+                        title="DatabaseLayout data"
                         content={<AnswerTable answers={a.rows}/>}>
-                        <Tooltip title="Kobo data">
+                        <Tooltip title="DatabaseLayout data">
                           <AaBtn icon="table_view" variant="outlined" size="small">{m.viewData}</AaBtn>
                         </Tooltip>
                       </Confirm>

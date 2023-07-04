@@ -27,6 +27,7 @@ import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
 import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Disability'
 import {koboFormId} from '@/koboFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
+import {getProtHhsIptData} from '@/utils/getIptData'
 
 export type ProtHHS2Enrich = ReturnType<typeof enrichProtHHS_2_1>
 
@@ -154,6 +155,8 @@ export const DashboardProtHHS2 = () => {
     }
   }, [_answers.entity, filter])
   const computed = useProtHHS2Data({data})
+
+  console.log('getProtHhsIptData', getProtHhsIptData(computed))
 
   return (
     <DashboardLayout

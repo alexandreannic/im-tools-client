@@ -26,6 +26,7 @@ export interface KoboApiForm {
         'select_one' |
         'note' |
         'end_group' |
+        'image' |
         'text' |
         'calculate' |
         'integer' |

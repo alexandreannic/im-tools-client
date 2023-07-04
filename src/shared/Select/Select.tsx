@@ -71,7 +71,7 @@ export const AaSelect = <T extends string, V extends string = string>({
         {...props}
       >
         {multiple && options.length > 5 && (
-          <MenuItem dense value={IGNORED_VALUE} onClick={onSelectAll} divider disableGutters sx={{
+          <MenuItem dense value={IGNORED_VALUE} onClick={onSelectAll} divider sx={{
             py: 0,
             fontWeight: t => t.typography.fontWeightBold,
           }}>
@@ -83,7 +83,7 @@ export const AaSelect = <T extends string, V extends string = string>({
           </MenuItem>
         )}
         {options.map((option, i) => (
-          <MenuItem dense key={option.key ?? option.value} disableGutters value={option.value} sx={{
+          <MenuItem dense key={option.key ?? option.value} value={option.value} sx={{
             py: 0,
             minHeight: '38px !important',
           }}>

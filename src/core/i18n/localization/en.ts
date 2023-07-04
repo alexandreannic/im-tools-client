@@ -45,6 +45,7 @@ export const en = Object.freeze({
   formatDuration,
   formatLargeNumber,
   messages: {
+    invalid: 'Invalid',
     others: 'Others',
     other: 'Other',
     majorStressFactors: 'Major stress factors',
@@ -70,6 +71,8 @@ export const en = Object.freeze({
     familyUnity: 'Family unity',
     city: 'City',
     no: 'No',
+    question: 'Question',
+    answer: 'Answer',
     calculations: 'Calculations',
     mykolaiv: 'Mykolaiv',
     perpetrators: 'Perpetrators',
@@ -81,6 +84,9 @@ export const en = Object.freeze({
     next: 'Next',
     logout: 'Logout',
     youDontHaveAccess: `You don't have access. Contact alexandre.annic@drc.ngo`,
+    share: 'Share',
+    refresh: 'Refresh',
+    grantAccess: 'Grant access',
     title: 'Information Management Portal',
     subTitle: 'Ukraine',
     signIn: 'Sign-in',
@@ -153,7 +159,6 @@ export const en = Object.freeze({
     createdAt: 'Created at',
     updatedAt: 'Updated at',
     returnToThePlaceOfHabitualResidence: 'Return to the place of habitual residence',
-    refresh: 'Refresh',
     currentStatus: 'Current status',
     status: 'Status',
     male: 'Male',
@@ -868,6 +873,6 @@ export const en = Object.freeze({
         NotDeduplicated: 'Not deduplicated',
         Error: 'Error',
       }
-    }
+    },
   },
 })

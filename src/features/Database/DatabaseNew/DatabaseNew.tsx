@@ -4,10 +4,11 @@ import {ReactElement, useEffect, useState} from 'react'
 import {Modal, Txt} from 'mui-extension'
 import {useI18n} from '@/core/i18n'
 import {Box} from '@mui/material'
-import {useFetchers} from '@/features/Kobo/DatabaseMerge/useFetchers'
+import {useFetchers} from '@/features/Database/DatabaseMerge/useFetchersFn'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {KoboFormCreate} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {useAaToast} from '@/core/useToast'
+import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 
 
 export const DatabaseNew = ({
@@ -41,7 +42,7 @@ export const DatabaseNew = ({
 
   return (
     <Modal
-      loading={_server.loading || _form.loading() || _create.getLoading()}
+      loading={_server.loading || _form.loading || _create.getLoading()}
       title={m.database.registerNewForm}
       confirmLabel={m.register}
       onConfirm={(event, close) => {

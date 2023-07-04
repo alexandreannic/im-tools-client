@@ -97,9 +97,7 @@ export const makeid = (length = 14) => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
   return result
-
 }
-
 
 export function groupByPredicates<T>(arr: T[], groupingFunctions: Array<(item: T) => string>): Record<string, any> {
   const result: Record<string, any> = {}

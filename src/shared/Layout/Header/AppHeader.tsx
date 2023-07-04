@@ -1,7 +1,7 @@
 import {alpha, Box, BoxProps, Icon, Slide} from '@mui/material'
 import {IconBtn, Txt} from 'mui-extension'
 import {layoutConfig} from '../index'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useLayoutContext} from '../LayoutContext'
 import {AppHeaderMenu} from '@/shared/Layout/Header/AppHeaderMenu'
 import {AppHeaderApps} from '@/shared/Layout/Header/AppHeaderApps'
@@ -24,6 +24,11 @@ export const AppHeader = ({children, sx, id, ...props}: Props) => {
           py: 0.5,
           display: 'flex',
           alignItems: 'center',
+          // position: 'fixed',
+          // top: 0,
+          // right: 0,
+          // left: 0,
+          // boxShadow: t => t.shadows[3],
           // background: t => t.palette.background.paper,
           // borderBottom: t => '1px solid ' + t.palette.divider,
           ...sx,

@@ -15,6 +15,10 @@ export class WfpDeduplicationSdk {
   constructor(private client: ApiClient) {
   }
 
+  readonly refresh = () => {
+    return this.client.post(`/wfp-deduplication/refresh`)
+  }
+
   readonly uploadTaxIdsMapping = (file: File) => {
     return this.client.postFile(`/wfp-deduplication/upload-taxid`, {file})
   }

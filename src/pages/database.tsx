@@ -1,5 +1,5 @@
 import React from 'react'
-import {Database} from '@/features/Kobo/Database/Database'
+import {Database} from '@/features/Database/Database'
 import {SessionProvider} from '@/core/context/SessionContext'
 
 const DashboardProtectionHouseholdSurvey = () => {

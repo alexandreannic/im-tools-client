@@ -11,15 +11,20 @@ import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {KoboApiColType, KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {Panel} from '@/shared/Panel'
-import {koboModule} from '@/features/Kobo/koboModule'
+import {databaseModule} from '@/features/Database/databaseModule'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
 import {Skeleton} from '@mui/material'
 import {useParams} from 'react-router'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {DatabaseNew} from '@/features/Kobo/DatabaseNew/DatabaseNew'
+import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {useAaToast} from '@/core/useToast'
+import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
+import {DatabaseAccess} from '@/features/Database/DatabaseAccess/DatabaseAccess'
+import {KoboTableImg} from '@/shared/TableImg/KoboTableImg'
+import {type} from 'os'
+import {render} from 'react-dom'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -54,41 +59,43 @@ export const Database = () => {
 
   // const {serverId, formId} = urlParamsValidation.validateSync(useParams())
   return (
-    <Router>
-      <Layout
-        sidebar={
-          <Sidebar headerId="app-header">
-            <SidebarBody>
-              <DatabaseNew onAdded={() => _forms.fetch({force: true, clean: false})}>
-                <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
-              </DatabaseNew>
-              {_forms.loading ? (
-                <>
-                  <Skeleton/>
-                  <Skeleton/>
-                  <Skeleton/>
-                </>
-              ) : _forms.entity?.map(_ => (
-                <SidebarItem key={_.id} to={koboModule.siteMap.form(_.serverId, _.id)} component={NavLink}>{_.name}</SidebarItem>
-              ))}
-            </SidebarBody>
-          </Sidebar>
-        }
-        header={<AppHeader id="app-header"/>}
-      >
-        <Routes>
-          <Route path={koboModule.siteMap.form()} element={<DatabaseLayout/>}/>
-        </Routes>
-      </Layout>
-    </Router>
+    <DatabaseProvider>
+      <Router>
+        <Layout
+          sidebar={
+            <Sidebar headerId="app-header">
+              <SidebarBody>
+                <DatabaseNew onAdded={() => _forms.fetch({force: true, clean: false})}>
+                  <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
+                </DatabaseNew>
+                {_forms.loading ? (
+                  <>
+                    <Skeleton/>
+                    <Skeleton/>
+                    <Skeleton/>
+                  </>
+                ) : _forms.entity?.map(_ => (
+                  <SidebarItem key={_.id} to={databaseModule.siteMap.form(_.serverId, _.id)} component={NavLink}>{_.name}</SidebarItem>
+                ))}
+              </SidebarBody>
+            </Sidebar>
+          }
+          header={<AppHeader id="app-header"/>}
+        >
+          <Routes>
+            <Route path={databaseModule.siteMap.form()} element={<DatabaseLayout/>}/>
+          </Routes>
+        </Layout>
+      </Router>
+    </DatabaseProvider>
   )
 }
 
 export const DatabaseLayout = () => {
+  const _formSchemas = useDatabaseContext().formSchemas
   const {serverId, formId} = urlParamsValidation.validateSync(useParams())
   const {api} = useAppSettings()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const _form = useFetcher(api.koboApi.getForm)
   const _answers = useFetcher((id: KoboId) => api.kobo.answer.search({
     formId: id,
   }))
@@ -105,24 +112,29 @@ export const DatabaseLayout = () => {
   const _refresh = useAsync(() => api.koboApi.synchronizeAnswers(serverId, formId))
 
   useEffect(() => {
-    _form.fetch({}, serverId, formId)
+    _formSchemas.fetch({}, serverId, formId)
     _answers.fetch({}, formId)
   }, [serverId, formId])
 
   return (
-    <Page loading={_form.loading} width="full">
+    <Page loading={_formSchemas.getLoading(formId)} width="full">
       <PageTitle action={
         <>
+          <DatabaseAccess serverId={serverId} koboFormId={formId}>
+            <AaBtn variant="outlined" icon="person_add">
+              {m.grantAccess}
+            </AaBtn>
+          </DatabaseAccess>
           <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={async () => {
             await _refresh.call()
             await _answers.fetch({force: true, clean: false}, formId)
           }}/>
         </>
-      }>{_form.entity?.name}</PageTitle>
+      }>{_formSchemas.get(formId)?.name}</PageTitle>
       <Panel>
-        {_form.entity && data && (
+        {data && map(_formSchemas.get(formId), schema => (
           <DatabaseTable
-            form={_form.entity}
+            form={schema}
             loading={_answers.loading}
             data={data}
             sort={{
@@ -131,7 +143,7 @@ export const DatabaseLayout = () => {
               onSortChange: setSort,
             }}
           />
-        )}
+        ))}
       </Panel>
     </Page>
   )
@@ -148,13 +160,14 @@ export const DatabaseTable = ({
   data: KoboAnswer2[]
   sort?: SheetTableProps<KoboAnswer2>['sort']
 }) => {
-  const {m, formatDate} = useI18n()
+  const {m, formatDate, formatDateTime} = useI18n()
 
   const columns = useMemo(() => {
     const questions = form.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(q => {
       const col: SheetColumnProps<KoboAnswer2<any>> = {
         id: q.name,
         head: q.name,
+        tooltip: x => fnSwitch(q.type, {}, () => x[q.name]),
         type: fnSwitch<any, SheetColumnProps<any>['type']>(q.type, {
           date: 'date',
           integer: 'number',
@@ -165,13 +178,14 @@ export const DatabaseTable = ({
           select_one: form.content.choices.filter(_ => _.list_name === q.select_from_list_name).map(_ => _.name),
         }, () => undefined),
         render: x => fnSwitch(q.type, {
+          image: <KoboTableImg attachments={x.attachments} fileName={x[q.name]}/>,
           text: x[q.name],
           integer: x[q.name],
           select_one: x[q.name],
-          date: x[q.name] ? formatDate(new Date(x[q.name])) : '',
+          date: x[q.name] ? formatDateTime(new Date(x[q.name])) : '',
           select_multiple: x[q.name],//?.join(', '),
-          start: formatDate(x.start),
-          end: formatDate(x.end),
+          start: formatDateTime(x.start),
+          end: formatDateTime(x.end),
         }, type => JSON.stringify(x[q.name]))
       }
       return col
@@ -185,7 +199,8 @@ export const DatabaseTable = ({
       {
         id: 'submissionTime',
         head: m.submissionTime,
-        render: _ => formatDate(_.submissionTime),
+        render: _ => formatDateTime(_.submissionTime),
+        type: 'date',
       },
       {
         id: 'submittedBy',

@@ -1,20 +1,20 @@
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useAppSettings} from '../../core/context/ConfigContext'
-import {Sidebar, SidebarHr, SidebarItem} from '../../shared/Layout/Sidebar'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {Sidebar, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Fragment, useEffect, useState} from 'react'
 import {CircularProgress, Divider} from '@mui/material'
-import {koboModule} from './koboModule'
-import {koboFormId} from '../../koboFormId'
-import {KoboApiSdk} from '../../core/sdk/server/kobo/KoboApiSdk'
+import {databaseModule} from './databaseModule'
+import {koboFormId} from '@/koboFormId'
+import {KoboApiSdk} from '@/core/sdk/server/kobo/KoboApiSdk'
 
 /**@deprecated*/
-export const KoboSidebar = () => {
+export const DatabaseSidebar = () => {
   const {api} = useAppSettings()
   const _servers = useFetcher(api.kobo.server.getAll)
   const _forms = useFetcher(api.kobo.form.get)
   const [serverId, setServerId] = useState<string | undefined>()
 
-  const path = (page: string) => koboModule.basePath + '/' + page
+  const path = (page: string) => databaseModule.basePath + '/' + page
 
   useEffect(() => {
     _servers.fetch()
@@ -24,13 +24,13 @@ export const KoboSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarItem to={path(koboModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.protectionHh2))}>
+      <SidebarItem to={path(databaseModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.protectionHh2))}>
         HHS v2
       </SidebarItem>
-      <SidebarItem to={path(koboModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.BNRE))}>
+      <SidebarItem to={path(databaseModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.BNRE))}>
         BNRE
       </SidebarItem>
-      <SidebarItem to={path(koboModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
+      <SidebarItem to={path(databaseModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
         fcrmMpcaNAA
       </SidebarItem>
       <Divider/>
@@ -51,7 +51,7 @@ export const KoboSidebar = () => {
                 <SidebarItem
                   key={form.uid}
                   icon="assignment"
-                  to={koboModule.siteMap.form(server.id, form.uid)}
+                  to={databaseModule.siteMap.form(server.id, form.uid)}
                 >
                   {form.name}
                 </SidebarItem>

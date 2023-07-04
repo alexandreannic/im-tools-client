@@ -2,9 +2,9 @@ import {Navigate, Route, Routes} from 'react-router-dom'
 import React from 'react'
 import {useI18n} from '../core/i18n'
 import {Home} from './Home/Home'
-import {Kobo} from './Kobo/Kobo'
-import {koboModule} from './Kobo/koboModule'
-import {Database} from '@/features/Kobo/Database/Database'
+import {Database} from '@/features/Database/Database'
+import {databaseModule} from '@/features/Database/databaseModule'
+import {Database} from '@/features/Database/Database'
 import {Playground} from './Playground'
 import {DashboardProtHHS2} from './Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ActivityInfoNFI} from './ActivityInfo/NFI/ActivityInfoNFI'
@@ -17,7 +17,7 @@ import {MpcaDashboard} from './Mpca/Dashboard/MpcaDashboard'
 import {MpcaPaymentTools} from './Mpca/PaymentTools/MpcaPaymentTools'
 import {IsaUaMap} from './DrcUaMap/IsaUaMap'
 import {MpcaPaymentTool} from './Mpca/PaymentTool/MpcaPaymentTool'
-import {DatabaseSources} from '@/features/Kobo/DatabaseMerge/DatabaseSources'
+import {DatabaseSources} from '@/features/Database/DatabaseMerge/DatabaseSources'
 
 export const Router = () => {
   const {m} = useI18n()
@@ -42,8 +42,8 @@ export const Router = () => {
           <Route path={activityInfoModule.siteMap.nfi} element={<ActivityInfoNFI/>}/>
         </Route>
         <Route path="/playground" element={<Playground/>}/>
-        <Route path={koboModule.basePath} element={<Kobo/>}>
-          <Route path={koboModule.siteMap.form()} element={<Database/>}/>
+        <Route path={databaseModule.basePath} element={<Database/>}>
+          <Route path={databaseModule.siteMap.form()} element={<Database/>}/>
         </Route>
         <Route
           path="/"

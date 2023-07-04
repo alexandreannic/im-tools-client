@@ -5,7 +5,7 @@ import {Box, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {appFeatures} from '@/features/appFeatures'
+import {appFeatures} from '@/features/appFeatureId'
 import {FeatureLogo} from '@/features/FeatureLogo'
 
 export const AppHeaderApps = (props: Omit<AAIconBtnProps, 'icon'>) => {
@@ -31,7 +31,7 @@ export const AppHeaderApps = (props: Omit<AAIconBtnProps, 'icon'>) => {
       >
         <Box sx={{width: 300, p: .5}}>
           {appFeatures.map(_ =>
-            <FeatureLogo iconSize={40} key={_.path} feature={_} sx={{
+            <FeatureLogo iconSize={40} key={_.id} feature={_} sx={{
               display: 'inline-block',
               height: 80,
               width: 80,

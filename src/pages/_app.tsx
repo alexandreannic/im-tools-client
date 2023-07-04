@@ -20,14 +20,17 @@ const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
 }))
 
-const clientSideEmotionCache = createEmotionCache()
+// const clientSideEmotionCache = createEmotionCache()
 
-const App = ({emotionCache = clientSideEmotionCache, ...props}: AppProps & {
+const App = ({
+  // emotionCache = clientSideEmotionCache,
+  ...props
+}: AppProps & {
   emotionCache?: EmotionCache
 }) => {
   return (
     <Provide providers={[
-      _ => <CacheProvider value={emotionCache} children={_}/>,
+      // _ => <CacheProvider value={emotionCache} children={_}/>,
       _ => <AppSettingsProvider api={api} children={_}/>,
     ]}>
       <AppWithConfig {...props}/>
@@ -39,7 +42,7 @@ const AppWithConfig = (props: AppProps) => {
   const msal = useMemo(() => getMsalInstance(settings.conf), [settings.conf])
   return (
     <Provide providers={[
-      _ => <StyledEngineProvider injectFirst children={_}/>,
+      // _ => <StyledEngineProvider injectFirst children={_}/>,
       _ => <ToastProvider children={_}/>,
       _ => <ThemeProvider theme={muiTheme(settings.darkTheme)} children={_}/>,
       _ => <CssBaseline children={_}/>,

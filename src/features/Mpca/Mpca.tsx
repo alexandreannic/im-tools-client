@@ -11,10 +11,9 @@ import {MpcaPaymentTools} from '@/features/Mpca/PaymentTools/MpcaPaymentTools'
 import {MpcaPaymentTool} from '@/features/Mpca/PaymentTool/MpcaPaymentTool'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {WfpDeduplicationData} from '@/features/WfpDeduplication/WfpDeduplicationData'
-import {WfpDeduplication, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
-import {WfpDeduplicationSdk} from '@/core/sdk/server/wfpDeduplication/WfpDeduplicationSdk'
-import {getOverlapMonths} from '@/utils/utils'
+import {useSession} from '@/core/context/SessionContext'
+import {appFeatures, appFeaturesIndex} from '@/features/appFeatureId'
+import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 
 export const mpcaModule = {
   basePath: '/mpca',
@@ -44,6 +43,13 @@ const MPCASidebar = () => {
 
 export const Mpca = () => {
   const db = useMemo(() => new MpcaDeduplicationDb(), [])
+  const {accesses} = useSession()
+  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.Mpca.id), [accesses])
+  if (access.length === 0) {
+    return (
+      <NoFeatureAccessPage/>
+    )
+  }
   return (
     <Router>
       <MPCADeduplicationProvider db={db}>

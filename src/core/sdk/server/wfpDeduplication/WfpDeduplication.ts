@@ -26,16 +26,16 @@ export interface WfpDeduplication {
 }
 
 export class WfpDeduplication {
-  static readonly map = (_: Record<keyof WfpDeduplication, any> & {beneficiary?: {taxId?: string}}): WfpDeduplication => ({
-    ..._,
-    createdAt: new Date(_.createdAt),
-    validFrom: new Date(_.validFrom),
-    expiry: new Date(_.expiry),
-    existingStart: _.existingStart ? new Date(_.existingStart) : undefined,
-    existingEnd: _.existingEnd ? new Date(_.existingEnd) : undefined,
-    taxId: _.beneficiary?.taxId,
-    suggestion: getDrcSuggestion(_)
-  })
+  static readonly map = (_: Record<keyof WfpDeduplication, any> & {beneficiary?: {taxId?: string}}): WfpDeduplication => {
+    _.createdAt = new Date(_.createdAt)
+    _.validFrom = new Date(_.validFrom)
+    _.expiry = new Date(_.expiry)
+    _.existingStart = _.existingStart ? new Date(_.existingStart) : undefined
+    _.existingEnd = _.existingEnd ? new Date(_.existingEnd) : undefined
+    _.taxId = _.beneficiary?.taxId
+    _.suggestion = getDrcSuggestion(_)
+    return _
+  }
 }
 
 export enum DrcSupportSuggestion {
@@ -64,13 +64,12 @@ export const getDrcSuggestion = (_: WfpDeduplication): DrcSupportSuggestion => {
   if (_.status === WfpDeduplicationStatus.Error) return DrcSupportSuggestion.DeduplicationFailed
   if (unAgencies.includes(_.existingOrga)) return DrcSupportSuggestion.ThreeMonthsUnAgency
   if (_.status === WfpDeduplicationStatus.Deduplicated) return DrcSupportSuggestion.NoAssistanceFullDuplication
-
   const overlap = getOverlapMonths(_.validFrom, _.expiry, _.existingStart, _.existingEnd)
-  if (overlap === 0)
+  if (overlap === 3)
     return DrcSupportSuggestion.NoAssistanceExactSameTimeframe
-  if (overlap === 1)
-    return DrcSupportSuggestion.TwoMonths
   if (overlap === 2)
     return DrcSupportSuggestion.OneMonth
+  if (overlap === 1)
+    return DrcSupportSuggestion.TwoMonths
   throw new Error(`Unhandled case for ${JSON.stringify(_)}`)
 }

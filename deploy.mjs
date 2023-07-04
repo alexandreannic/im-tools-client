@@ -18,7 +18,7 @@ const run = (cl) => {
       if (code === 0) {
         resolve(code)
       } else {
-        console.log(`${cl} exited with ${code}`)
+        console.error(`${cl} exited with ${code}`)
         reject(code)
       }
     })
@@ -45,7 +45,7 @@ const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execS
   await run(`git remote remove azure`)
   // await run(`git commit -m "Release ${getPackageVersion()}"`)
   // await run(`git push https://${config.username}:${config.password}@${config.gitServer} master`)
-  console.log(`Successfully deployed!`)
+  console.info(`Successfully deployed!`)
   // }
 })()
 

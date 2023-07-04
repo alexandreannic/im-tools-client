@@ -19,7 +19,6 @@ const stickHeader = () => {
   } else {
     header$.classList.remove(headerStickyClass)
   }
-
 }
 
 const generalStyles = <GlobalStyles styles={t => ({

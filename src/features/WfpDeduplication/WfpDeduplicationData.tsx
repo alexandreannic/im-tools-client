@@ -8,6 +8,7 @@ import {Panel} from '@/shared/Panel'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {Icon} from '@mui/material'
+import {BtnUploader, Txt} from 'mui-extension'
 
 export const WfpDeduplicationData = () => {
   const {api} = useAppSettings()
@@ -27,7 +28,7 @@ export const WfpDeduplicationData = () => {
           loading={_search.loading}
           columns={[
             {id: 'createdAt', head: m.createdAt, render: _ => formatDate(_.createdAt), type: 'date'},
-            {id: 'taxId', head: m.taxId, render: _ => _.taxId ?? _.beneficiaryId, type: 'stringOrUndefined'},
+            {id: 'taxId', head: m.taxId, render: _ => _.taxId ?? <Txt color="error">{m.mpcaDb.uploadWfpTaxIdMapping}</Txt>, type: 'stringOrUndefined'},
             {id: 'amount', head: m.amount, align: 'right', render: _ => formatLargeNumber(_.amount)},
             {id: 'validFrom', head: m.validFrom, render: _ => formatDate(_.validFrom)},
             {id: 'expiry', head: m.expiry, render: _ => formatDate(_.expiry)},
