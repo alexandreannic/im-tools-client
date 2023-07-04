@@ -90,9 +90,8 @@ export const ProtHHS2BarChart = makeKoboBarChartComponent<ProtHHS_2_1, typeof Pr
 export const DashboardProtHHS2 = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(koboFormId.prod.protectionHh2))
   const [filter, setFilters] = useState<DashboardProtHHS2Filters>({
-    // start: new Date(2023, 5, 1),
-    // end: new Date(2023, 6, 1),
     currentOblast: [],
     originOblast: [],
     hhType: [],
@@ -114,14 +113,19 @@ export const DashboardProtHHS2 = () => {
     .then(_ => _.map(enrichProtHHS_2_1))
 
   const _answers = useFetcher(request)
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(koboFormId.prod.protectionHh2))
 
   useEffect(() => {
     _period.fetch()
   }, [])
 
   useEffect(() => {
-    if (_period.entity) setFilters(prev => ({...prev, ..._period.entity}))
+    if (_period.entity) setFilters(prev => ({
+      ...prev,
+      // ..._period.entity,
+      // TODO REMOVEME
+      start: new Date(2023, 5, 1),
+      end: new Date(2023, 6, 1),
+    }))
   }, [_period.entity])
 
   useEffect(() => {
@@ -155,8 +159,6 @@ export const DashboardProtHHS2 = () => {
     }
   }, [_answers.entity, filter])
   const computed = useProtHHS2Data({data})
-
-  console.log('getProtHhsIptData', getProtHhsIptData(computed))
 
   return (
     <DashboardLayout

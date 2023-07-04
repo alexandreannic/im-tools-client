@@ -31,7 +31,7 @@ export const PageHeader = ({
 }
 export const PageTitle = ({action, children, sx, ...props}: BoxProps & {action?: ReactNode}) => {
   return (
-    <Box component="h2" sx={{display: 'flex', alignItems: 'center', ...sx}}>
+    <Box component="h2" sx={{display: 'flex', mt: 0, alignItems: 'center', ...sx}}>
       {children}
       {action && (
         <Box sx={{ml: 'auto'}}>{action}</Box>

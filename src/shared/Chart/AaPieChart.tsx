@@ -82,7 +82,7 @@ export const AaPieChart = <T extends Record<string, number>>({
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           {!hideTooltip && (
-            <Tooltip formatter={_ => toPercent(_)}/>
+            <Tooltip formatter={_ => toPercent(+_)}/>
           )}
           {children}
           <Pie

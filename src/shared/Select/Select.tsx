@@ -33,7 +33,7 @@ export const AaSelect = <T extends string, V extends string = string>({
 }: AaSelect<T, V>) => {
   const {m} = useI18n()
   const [innerValue, setInnerValue] = useState<T | T[]>()
-  const IGNORED_VALUE = 'IGNORED_VALUE' as T
+  const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE' as T
   const id = Math.random() + ''
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export const AaSelect = <T extends string, V extends string = string>({
         value={value}
         onChange={e => {
           const value = e.target.value
-          if (![value].flat().includes(IGNORED_VALUE)) {
+          if (![value].flat().includes(IGNORED_VALUE_FOR_SELECT_ALL_ITEM)) {
             setInnerValue(value as any)
           }
         }}
@@ -71,7 +71,7 @@ export const AaSelect = <T extends string, V extends string = string>({
         {...props}
       >
         {multiple && options.length > 5 && (
-          <MenuItem dense value={IGNORED_VALUE} onClick={onSelectAll} divider sx={{
+          <MenuItem dense value={IGNORED_VALUE_FOR_SELECT_ALL_ITEM} onClick={onSelectAll} divider sx={{
             py: 0,
             fontWeight: t => t.typography.fontWeightBold,
           }}>

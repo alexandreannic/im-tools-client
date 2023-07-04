@@ -62,14 +62,14 @@ const WpfDeduplicationSidebar = () => {
 
 export const WfpDeduplicationPage = () => {
   const {accesses} = useSession()
-  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.WFP_Deduplication.id), [accesses])
+  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.wfp_deduplication.id), [accesses])
   if (access.length === 0) {
     return (
       <NoFeatureAccessPage/>
     )
   }
   return (
-    <Layout title={appFeaturesIndex.WFP_Deduplication.name} sidebar={<WpfDeduplicationSidebar/>}>
+    <Layout title={appFeaturesIndex.wfp_deduplication.name} sidebar={<WpfDeduplicationSidebar/>}>
       <WfpDeduplicationData/>
     </Layout>
   )

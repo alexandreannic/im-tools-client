@@ -191,15 +191,16 @@ export const Sheet = <T extends Answer = Answer>({
   showColumnsToggle,
   showColumnsToggleBtnTooltip,
   renderEmptyState,
-  rowsPerPageOptions = [5, 10, 25, 100],
+  rowsPerPageOptions = [20, 100, 500, 1000],
   sort,
   onClickRows,
   select,
   ...props
 }: SheetTableProps<T>) => {
+  console.log('render Sheet')
   const {m} = useI18n()
   const [sheetSearch, setSheetSearch] = useState({
-    limit: 25,
+    limit: 20,
     offset: 0,
     sortBy: sort?.sortBy,
     orderBy: sort?.orderBy,

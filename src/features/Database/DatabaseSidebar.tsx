@@ -46,21 +46,21 @@ export const DatabaseSidebar = () => {
           >
             {server.url.replace(/https?\:\/\//, '')}
           </SidebarItem>
-          {serverId === server.id && (
-            _forms.entity ? (_forms.entity?.map(form =>
-                <SidebarItem
-                  key={form.uid}
-                  icon="assignment"
-                  to={databaseModule.siteMap.form(server.id, form.uid)}
-                >
-                  {form.name}
-                </SidebarItem>
-              )
-            ) : (_forms.loading && (
-                <CircularProgress/>
-              )
-            )
-          )}
+          {/*{serverId === server.id && (*/}
+          {/*  _forms.entity ? (_forms.entity?.map(form =>*/}
+          {/*      <SidebarItem*/}
+          {/*        key={form.uid}*/}
+          {/*        icon="assignment"*/}
+          {/*        to={databaseModule.siteMap.form(server.id, form.uid)}*/}
+          {/*      >*/}
+          {/*        {form.name}*/}
+          {/*      </SidebarItem>*/}
+          {/*    )*/}
+          {/*  ) : (_forms.loading && (*/}
+          {/*      <CircularProgress/>*/}
+          {/*    )*/}
+          {/*  )*/}
+          {/*)}*/}
           <SidebarHr/>
         </Fragment>
       )}
