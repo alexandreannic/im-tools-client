@@ -38,6 +38,11 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/core/uaLocation/*",
+    "src/core/uaLocation/aiSettlement.js",
+    "src/core/uaLocation/aiHromadas.ts",
+    "src/core/uaLocation/settlements.js",
+    "src/core/uaLocation/hromadas.ts"
   ]
 }

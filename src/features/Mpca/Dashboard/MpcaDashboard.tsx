@@ -6,7 +6,6 @@ import {SlideContainer, SlidePanel, SlideWidget} from '@/shared/PdfLayout/Slide'
 import {BNREOblastToISO, UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
 import {BNRE} from '../../../core/koboModel/BNRE/BNRE'
-import {MpcaDeduplicationDb} from '../MpcaDeduplicationDb'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
@@ -15,7 +14,7 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import {_Arr} from '@alexandreannic/ts-utils'
 
 export const MpcaDashboard = () => {
-  const {deduplicationDb, _koboAnswers} = useMPCADeduplicationContext()
+  const {_koboAnswers} = useMPCADeduplicationContext()
   const computed = useBNREComputed({data: _koboAnswers.entity})
 
   useEffect(() => {
@@ -23,10 +22,9 @@ export const MpcaDashboard = () => {
   }, [])
 
   return (
-    <Page width="lg" loading={!deduplicationDb || _koboAnswers.loading}>
+    <Page width="lg" loading={_koboAnswers.loading}>
       {computed && _koboAnswers.entity && (
         <_MPCADashboard
-          db={deduplicationDb}
           data={_koboAnswers.entity}
           computed={computed}
         />
@@ -36,11 +34,9 @@ export const MpcaDashboard = () => {
 }
 
 export const _MPCADashboard = ({
-  db,
   data,
   computed,
 }: {
-  db?: MpcaDeduplicationDb,
   data: _Arr<KoboAnswer2<BNRE>>
   computed: NonNullable<UseBNREComputed>
 }) => {
@@ -56,7 +52,6 @@ export const _MPCADashboard = ({
             {formatLargeNumber(computed?.flatData.length)}
           </SlideWidget>
           <SlideWidget sx={{flex: 1}} icon="content_copy" title={m.deduplications}>
-            {formatLargeNumber(db?.length())}
           </SlideWidget>
         </SlideContainer>
         <SlideContainer>

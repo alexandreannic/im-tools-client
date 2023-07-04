@@ -31,9 +31,9 @@ export const DatabaseAccess = ({
   const {m} = useI18n()
   const {api} = useAppSettings()
   const _formSchemas = useDatabaseContext().formSchemas
-  const _access = useFetchers((databaseId: KoboId) => api.access.searchByFeature(AppFeatureId.databases)
+  const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.searchByFeature(AppFeatureId.databases)
     .then(_ => _.filter(_ => _.params?.database === databaseId))
-  )
+  const _access = useFetchers(requestInConstToFixTsInference)
   const {control, register} = useForm<Form>()
 
   const schema = _formSchemas.get(koboFormId)?.content.survey
@@ -72,7 +72,7 @@ export const DatabaseAccess = ({
             loading={!questions}
             onChange={console.log}
             options={questions ?? []}
-            renderOption={(props, _) => <Txt truncate {...props}>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
+            renderOption={(props, _) => <Txt truncate>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
             renderInput={({InputProps, ...props}) => <AaInput sx={{minWidth: 300}} {...InputProps} {...props}/>}
           />
           {_access.get()?.map(_ =>

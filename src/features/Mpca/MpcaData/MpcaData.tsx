@@ -3,10 +3,9 @@ import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {useI18n} from '@/core/i18n'
-import {Box, Icon, IconProps} from '@mui/material'
+import {Icon, IconProps} from '@mui/material'
 import {Txt} from 'mui-extension'
-import {Panel, PanelHead, PanelTitle} from '@/shared/Panel'
-import {add, sub} from 'date-fns'
+import {Panel, PanelHead} from '@/shared/Panel'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -15,7 +14,6 @@ import {koboServerId} from '@/koboFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
-import {MpcaDeduplicationDb} from '../MpcaDeduplicationDb'
 import {TableImg} from '@/shared/TableImg/TableImg'
 
 export const TableIcon = ({sx, ...props}: IconProps) => {
@@ -32,12 +30,13 @@ export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${koboServerId.prod}/attachment?path=${url.split('api')[1]}`
 }
 
-export const mapMpcaKoboAnswer = (deduplicationDb?: MpcaDeduplicationDb) => (_: KoboAnswer2<BNRE>) => {
-  const deduplication = deduplicationDb && _.pay_det_tax_id_num ? deduplicationDb.search({
-    taxId: [_.pay_det_tax_id_num],
-    start: sub(_.submissionTime, {days: 1}),
-    end: add(_.submissionTime, {days: 1}),
-  }) : undefined
+export const mapMpcaKoboAnswer = () => (_: KoboAnswer2<BNRE>) => {
+  // TODO(Alex)
+  // const deduplication = deduplicationDb && _.pay_det_tax_id_num ? deduplicationDb.search({
+  //   taxId: [_.pay_det_tax_id_num],
+  //   start: sub(_.submissionTime, {days: 1}),
+  //   end: add(_.submissionTime, {days: 1}),
+  // }) : undefined
   return ({
     id: _.id,
     date: _.start,
@@ -54,13 +53,13 @@ export const mapMpcaKoboAnswer = (deduplicationDb?: MpcaDeduplicationDb) => (_: 
     idFileName: _.pay_det_id_ph,
     idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
     phone: _.ben_det_ph_number,
-    deduplicationFile: deduplication?.[0]?.list,
+    deduplicationFile: 'TODO',
     // deduplicationFile: deduplication?.map(_ => _.list).join(', '),
     duplication: ((): DeduplicationStatus | undefined => {
-      if (!_.pay_det_tax_id_num || !deduplication) return
+      if (!_.pay_det_tax_id_num) return
       // if (t.length > 1) return <Icon fontSize="small" color="error">error</Icon>
-      if (deduplication.length > 0) {
-        return deduplication[0].duplicatedDonor ? DeduplicationStatus.duplicate : DeduplicationStatus.no_duplicate
+      if (false) {
+        return false ? DeduplicationStatus.duplicate : DeduplicationStatus.no_duplicate
       }
       return DeduplicationStatus.pending
     })(),
@@ -70,7 +69,7 @@ export const mapMpcaKoboAnswer = (deduplicationDb?: MpcaDeduplicationDb) => (_: 
 export const MpcaData = () => {
   const {m, formatDate} = useI18n()
   const {api} = useAppSettings()
-  const {deduplicationDb, _koboAnswers, _form} = useMPCADeduplicationContext()
+  const {_koboAnswers, _form} = useMPCADeduplicationContext()
   const _servers = useFetcher(api.kobo.server.getAll)
   const [selected, setSelected] = useState<string[]>([])
   const _payment = useAsync(api.mpcaPayment.create)
@@ -83,9 +82,9 @@ export const MpcaData = () => {
 
   const enhancedData = useMemo(() => {
     if (!_koboAnswers.entity) return
-    const map = mapMpcaKoboAnswer(deduplicationDb)
+    const map = mapMpcaKoboAnswer()
     return _koboAnswers.entity.map(map)
-  }, [_koboAnswers.entity, deduplicationDb])
+  }, [_koboAnswers.entity])
 
   const getAllPossibleValues = (key: keyof NonNullable<typeof enhancedData>[0]) => Array.from(new Set(enhancedData?.map(_ => _[key]))) as string[]
 
@@ -129,7 +128,7 @@ export const MpcaData = () => {
               id: 'deduplicationFile',
               head: 'deduplicationFile',
               type: getAllPossibleValues('deduplicationFile'),
-              render: _ => deduplicationDb ? _.deduplicationFile : <Txt skeleton={50}/>
+              render: _ => <Txt skeleton={50}/>
             },
             {
               id: 'duplication',
@@ -140,7 +139,7 @@ export const MpcaData = () => {
                 duplicate: <TableIcon color="warning" children="content_copy"/>,
                 no_duplicate: <TableIcon color="success" children="check_circle"/>,
                 pending: <TableIcon color="disabled" children="schedule"/>,
-              }, () => deduplicationDb ? undefined : <Txt skeleton={30}/>)
+              }, () => <Txt skeleton={30}/>)
             },
             {id: 'taxId', head: m.taxID, render: _ => _.taxId},
             {

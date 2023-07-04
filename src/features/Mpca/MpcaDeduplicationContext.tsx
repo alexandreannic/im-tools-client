@@ -1,18 +1,15 @@
-import React, {ReactNode, useContext, useEffect, useState} from 'react'
-import {MicrosoftGraphClient} from '../../core/sdk/microsoftGraph/microsoftGraphClient'
-import {MpcaDeduplicationDb} from './MpcaDeduplicationDb'
+import React, {ReactNode, useContext, useEffect} from 'react'
+import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClient'
 import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {koboFormId, koboServerId} from '../../koboFormId'
-import {mapBNRE} from '../../core/koboModel/BNRE/BNREMapping'
-import {useAppSettings} from '../../core/context/ConfigContext'
-import {BNRE} from '../../core/koboModel/BNRE/BNRE'
-import {KoboAnswer2} from '../../core/sdk/server/kobo/Kobo'
+import {koboFormId, koboServerId} from '@/koboFormId'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {BNRE} from '@/core/koboModel/BNRE/BNRE'
+import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
-import {KoboApiForm} from '../../core/sdk/server/kobo/KoboApi'
-import {MpcaPayment} from '../../core/sdk/server/mpcaPaymentTool/MpcaPaymentSdk'
+import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPaymentSdk'
 
 export interface MpcaDeduplicationContext {
-  deduplicationDb: MpcaDeduplicationDb | undefined
   _koboAnswers: UseFetcher<() => Promise<_Arr<KoboAnswer2<BNRE>>>>
   _form: UseFetcher<() => Promise<KoboApiForm>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
@@ -26,13 +23,10 @@ export const useMPCADeduplicationContext = () => useContext(Context)
 export const MPCADeduplicationProvider = ({
   children,
   sdk = new MicrosoftGraphClient(),
-  db,
 }: {
-  db: MpcaDeduplicationDb
   sdk?: MicrosoftGraphClient
   children: ReactNode
 }) => {
-  const [deduplicationDb, setDeduplicationDb] = useState<MpcaDeduplicationDb | undefined>()
   const {api} = useAppSettings()
 
   const _form = useFetcher(() => api.koboApi.getForm(koboServerId.prod, koboFormId.prod.BNRE))
@@ -54,7 +48,6 @@ export const MPCADeduplicationProvider = ({
       _form,
       _getPayments,
       _create,
-      deduplicationDb
     }}>
       {children}
     </Context.Provider>

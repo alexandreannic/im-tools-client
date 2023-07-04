@@ -23,8 +23,6 @@ import {useAaToast} from '@/core/useToast'
 import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {DatabaseAccess} from '@/features/Database/DatabaseAccess/DatabaseAccess'
 import {KoboTableImg} from '@/shared/TableImg/KoboTableImg'
-import {type} from 'os'
-import {render} from 'react-dom'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),

@@ -4,7 +4,6 @@ import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
 import {MPCADeduplicationProvider} from './MpcaDeduplicationContext'
 import React, {useMemo} from 'react'
-import {MpcaDeduplicationDb} from './MpcaDeduplicationDb'
 import {MpcaData} from '@/features/Mpca/MpcaData/MpcaData'
 import {MpcaDashboard} from '@/features/Mpca/Dashboard/MpcaDashboard'
 import {MpcaPaymentTools} from '@/features/Mpca/PaymentTools/MpcaPaymentTools'
@@ -12,7 +11,7 @@ import {MpcaPaymentTool} from '@/features/Mpca/PaymentTool/MpcaPaymentTool'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {WfpDeduplicationData} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {useSession} from '@/core/context/SessionContext'
-import {appFeatures, appFeaturesIndex} from '@/features/appFeatureId'
+import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 
 export const mpcaModule = {
@@ -42,9 +41,8 @@ const MPCASidebar = () => {
 }
 
 export const Mpca = () => {
-  const db = useMemo(() => new MpcaDeduplicationDb(), [])
   const {accesses} = useSession()
-  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.Mpca.id), [accesses])
+  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.mpca.id), [accesses])
   if (access.length === 0) {
     return (
       <NoFeatureAccessPage/>
@@ -52,7 +50,7 @@ export const Mpca = () => {
   }
   return (
     <Router>
-      <MPCADeduplicationProvider db={db}>
+      <MPCADeduplicationProvider>
         <Layout
           sidebar={<MPCASidebar/>}
           header={<AppHeader id="app-header"/>}

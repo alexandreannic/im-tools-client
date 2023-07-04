@@ -31,11 +31,10 @@ export const MpcaPaymentTool = () => {
   const {id} = urlValidation.validateSync(useParams())
   const {api} = useAppSettings()
   const {m, formatLargeNumber, formatDate} = useI18n()
-  const {deduplicationDb} = useMPCADeduplicationContext()
   const _getPayment = useFetcher(api.mpcaPayment.get)
   const _update = useAsync(api.mpcaPayment.update)
   const _answers = useFetcher((ids: KoboId[]) => {
-      const fnMap = mapMpcaKoboAnswer(deduplicationDb)
+      const fnMap = mapMpcaKoboAnswer()
       return api.kobo.answer.searchBnre()
         .then(_ => _.data.filter(_ => ids.includes(_.id)).map(fnMap))
     }
@@ -50,7 +49,7 @@ export const MpcaPaymentTool = () => {
   useEffect(() => {
     if (!tool) return
     _answers.fetch({}, tool.answers)
-  }, [tool, deduplicationDb])
+  }, [tool])
 
   return (
     <Page width="full">
