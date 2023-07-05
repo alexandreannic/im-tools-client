@@ -1,4 +1,4 @@
-import {exec, execSync} from 'child_process'
+import { exec, execSync } from 'child_process'
 import * as fs from 'fs'
 
 const config = {
@@ -33,20 +33,25 @@ const getPackageVersion = () => JSON.parse(fs.readFileSync('package.json', 'utf8
 
 const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execSync('git branch --show-current').toString())
 
-;(async () => {
-  // if (!isOnMainBranch()) {
-  //   console.error(`You must be on branch ${config.mainBranch} to publish.`)
-  // } else if (!gitWorkspaceIsEmpty()) {
-  //   console.error(`Your git status must be clean before to publish.`)
-  // } else {
-  await run(`git remote remove azure`).catch(console.error)
-  await run(`git remote add azure ${config.gitServer}`)
-  await run(`git push -f azure ${config.mainBranch}`)
-  await run(`git remote remove azure`)
-  // await run(`git commit -m "Release ${getPackageVersion()}"`)
-  // await run(`git push https://${config.username}:${config.password}@${config.gitServer} master`)
-  console.info(`Successfully deployed!`)
-  // }
-})()
+  ; (async () => {
+    try {
+
+      // if (!isOnMainBranch()) {
+      //   console.error(`You must be on branch ${config.mainBranch} to publish.`)
+      // } else if (!gitWorkspaceIsEmpty()) {
+      //   console.error(`Your git status must be clean before to publish.`)
+      // } else {
+      await run(`git remote remove azure`).catch(console.error)
+      await run(`git remote add azure ${config.gitServer}`)
+      await run(`git push -f azure ${config.mainBranch}`)
+      await run(`git remote remove azure`)
+      // await run(`git commit -m "Release ${getPackageVersion()}"`)
+      // await run(`git push https://${config.username}:${config.password}@${config.gitServer} master`)
+      console.info(`Successfully deployed!`)
+    } catch (e) {
+      console.error(e)
+      await run(`git remote remove azure`)
+    }
+  })()
 
 // toggle deploy

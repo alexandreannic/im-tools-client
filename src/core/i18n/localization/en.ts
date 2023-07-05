@@ -50,7 +50,6 @@ export const en = Object.freeze({
     other: 'Other',
     majorStressFactors: 'Major stress factors',
     area: 'Area',
-    women: 'Women',
     men: 'Men',
     activities: 'Activities',
     noComment: 'No comment',

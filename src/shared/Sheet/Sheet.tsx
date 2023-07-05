@@ -1,16 +1,16 @@
-import {Box, BoxProps, Checkbox, GlobalStyles, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
-import React, {ReactNode, useMemo, useState} from 'react'
-import {useI18n} from '../../core/i18n'
-import {Fender, IconBtn} from 'mui-extension'
-import {usePersistentState} from 'react-persistent-state'
-import {downloadStringAsFile, multipleFilters, paginateData} from '../../utils/utils'
-import {SheetFilterDialog} from './SheetFilterDialog'
-import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {AAIconBtn} from '../IconBtn'
-import {useAsync, useSetState} from '@alexandreannic/react-hooks-lib'
-import {offset} from '@popperjs/core'
-import {orderBy, sortBy} from 'lodash'
-import {generateXLSFromArray, generateXLSgenerateXLSFromArrayFromArray} from '@/shared/Sheet/generateXLSFile'
+import { Box, BoxProps, Checkbox, GlobalStyles, Icon, LinearProgress, SxProps, TablePagination, Theme, } from '@mui/material'
+import React, { ReactNode, useMemo, useState } from 'react'
+import { useI18n } from '../../core/i18n'
+import { Fender, IconBtn } from 'mui-extension'
+import { usePersistentState } from 'react-persistent-state'
+import { downloadStringAsFile, multipleFilters, paginateData } from '../../utils/utils'
+import { SheetFilterDialog } from './SheetFilterDialog'
+import { Enum, fnSwitch, map } from '@alexandreannic/ts-utils'
+import { AAIconBtn } from '../IconBtn'
+import { useAsync, useSetState } from '@alexandreannic/react-hooks-lib'
+import { offset } from '@popperjs/core'
+import { orderBy, sortBy } from 'lodash'
+import { generateXLSFromArray } from '@/shared/Sheet/generateXLSFile'
 
 const generalStyles = <GlobalStyles
   styles={t => ({
@@ -121,7 +121,7 @@ export interface SheetTableProps<T extends Answer> extends BoxProps {
     sortableColumns?: string[]
     sortBy?: keyof T
     orderBy?: OrderBy
-    onSortChange: (_: {sortBy?: keyof T; orderBy?: OrderBy}) => void
+    onSortChange: (_: { sortBy?: keyof T; orderBy?: OrderBy }) => void
   }
 }
 
@@ -132,7 +132,7 @@ export interface SheetColumnProps<T extends Answer> {
   align?: 'center' | 'right'
   onClick?: (_: T) => void
   render: (_: T) => ReactNode
-  renderExport: (_: T) => string | number | undefined
+  renderExport?: (_: T) => string | number | undefined
   hidden?: boolean
   alwaysVisible?: boolean
   tooltip?: (_: T) => string
@@ -201,7 +201,7 @@ export const Sheet = <T extends Answer = Answer>({
 }: SheetTableProps<T>) => {
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   console.log('render Sheet')
-  const {m} = useI18n()
+  const { m } = useI18n()
   const [sheetSearch, setSheetSearch] = useState({
     limit: 20,
     offset: 0,
@@ -236,7 +236,7 @@ export const Sheet = <T extends Answer = Answer>({
   const filteredColumns = useMemo(() => displayableColumns.filter(_ => !hiddenColumns.includes(_.id)), [columns, hiddenColumns])
 
   const onOrderBy = (columnId: keyof T, orderBy?: OrderBy) => {
-    setSheetSearch(prev => ({...prev, orderBy, sortBy: columnId}))
+    setSheetSearch(prev => ({ ...prev, orderBy, sortBy: columnId }))
   }
 
   const filteredData = useMemo(() => {
@@ -297,17 +297,18 @@ export const Sheet = <T extends Answer = Answer>({
     if (filteredAndSortedData) {
       const res = _generateXLSFromArray.call({
         data: filteredAndSortedData,
-        schema: columns.map(_ => ({name: _.head as string ?? _.id, render: _.renderExport})),
+        schema: columns
+          .filter(_ => _.renderExport)
+          .map(_ => ({ name: _.head as string ?? _.id, render: _.renderExport ? _.renderExport : () => '' })),
       })
-      console.log(res)
     }
   }
 
   return (
     <>
-      <Box sx={{position: 'relative', p: 2}}>
+      <Box sx={{ position: 'relative', p: 2 }}>
         {header}
-        <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+        <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download" />
         {_selected.size > 0 && (
           <Box sx={{
             position: 'absolute',
@@ -333,107 +334,107 @@ export const Sheet = <T extends Answer = Answer>({
               borderTopRightRadius: t => t.shape.borderRadius + 'px',
               px: 2,
             }}>
-              <Box sx={{flex: 1,}}>
+              <Box sx={{ flex: 1, }}>
                 {_selected.size} {m.selected}.
               </Box>
               {select?.selectActions}
-              <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
+              <AAIconBtn color="primary" icon="clear" onClick={_selected.clear} />
             </Box>
           </Box>
         )}
       </Box>
-      <Box sx={{overflowX: 'auto'}}>
+      <Box sx={{ overflowX: 'auto' }}>
         <Box sx={{
           // width: 'max-content'
         }}>
           {generalStyles}
 
-          <Box component="table" {...props} className="table" sx={{minWidth: '100%'}}>
+          <Box component="table" {...props} className="table" sx={{ minWidth: '100%' }}>
             <thead>
-            <tr className="tr trh">
-              {map(select?.getId, getId => (
-                <th className="td th td-center">
-                  <Checkbox
-                    size="small"
-                    checked={_selected.size === data?.length}
-                    indeterminate={_selected.size !== data?.length && _selected.size !== 0}
-                    onChange={() => {
-                      if (!data) return
-                      if (_selected.size === 0) _selected.add(data.map(getId))
-                      else _selected.clear()
-                    }}
-                  />
-                </th>
-              ))}
-              {filteredColumns.map((_, i) => {
-                const sortedByThis = sort?.sortBy === _.id ?? true
-                const active = sortedByThis || filters[_.id]
-                return (
-                  <th
-                    key={_.id}
-                    // onClick={() => onSortBy(_.id)}
-                    className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
-                      'center': ' td-center',
-                      'right': ' td-right'
-                    }, _ => ''))}
-                  >
-                    {_.head}
-                    <IconBtn size="small" sx={{mx: .5}} className="th-action">
-                      <Icon
-                        fontSize="small"
-                        color={active ? 'primary' : 'disabled'}
-                        sx={{verticalAlign: 'middle'}}
-                        onClick={e => {
-                          setOpenColumnConfig({anchorEl: e.currentTarget, columnId: _.id})
-                        }}
-                      >
-                        keyboard_arrow_down
-                      </Icon>
-                    </IconBtn>
+              <tr className="tr trh">
+                {map(select?.getId, getId => (
+                  <th className="td th td-center">
+                    <Checkbox
+                      size="small"
+                      checked={_selected.size === data?.length}
+                      indeterminate={_selected.size !== data?.length && _selected.size !== 0}
+                      onChange={() => {
+                        if (!data) return
+                        if (_selected.size === 0) _selected.add(data.map(getId))
+                        else _selected.clear()
+                      }}
+                    />
                   </th>
-                )
-              })}
-            </tr>
+                ))}
+                {filteredColumns.map((_, i) => {
+                  const sortedByThis = sort?.sortBy === _.id ?? true
+                  const active = sortedByThis || filters[_.id]
+                  return (
+                    <th
+                      key={_.id}
+                      // onClick={() => onSortBy(_.id)}
+                      className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
+                        'center': ' td-center',
+                        'right': ' td-right'
+                      }, _ => ''))}
+                    >
+                      {_.head}
+                      <IconBtn size="small" sx={{ mx: .5 }} className="th-action">
+                        <Icon
+                          fontSize="small"
+                          color={active ? 'primary' : 'disabled'}
+                          sx={{ verticalAlign: 'middle' }}
+                          onClick={e => {
+                            setOpenColumnConfig({ anchorEl: e.currentTarget, columnId: _.id })
+                          }}
+                        >
+                          keyboard_arrow_down
+                        </Icon>
+                      </IconBtn>
+                    </th>
+                  )
+                })}
+              </tr>
             </thead>
             <tbody>
-            {loading && (
-              <tr>
-                <td className="td-loading" colSpan={filteredColumns?.length ?? 1}>
-                  <LinearProgress/>
-                </td>
-              </tr>
-            )}
-            {filteredSortedAndPaginatedData?.data.map((item, i) => (
-              <tr
-                className="tr"
-                key={getRenderRowKey ? getRenderRowKey(item, i) : i}
-                onClick={e => onClickRows?.(item, e)}
-              >
-                {select?.getId && (
-                  <td className="td td-center">
-                    <Checkbox size="small" checked={_selected.has(select.getId(item))} onChange={() => _selected.toggle(select.getId(item))}/>
+              {loading && (
+                <tr>
+                  <td className="td-loading" colSpan={filteredColumns?.length ?? 1}>
+                    <LinearProgress />
                   </td>
-                )}
-                {filteredColumns.map((_, i) => (
-                  <td
-                    title={_.tooltip?.(item) ?? _.render(item) as any}
-                    key={i}
-                    onClick={_.onClick ? () => _.onClick?.(item) : undefined}
-                    className={'td td-clickable ' + fnSwitch(_.align!, {
-                      'center': 'td-center',
-                      'right': 'td-right'
-                    }, _ => '')}
-                  >
-                    {_.render(item)}
-                  </td>
-                ))}
-              </tr>
-            ))}
+                </tr>
+              )}
+              {filteredSortedAndPaginatedData?.data.map((item, i) => (
+                <tr
+                  className="tr"
+                  key={getRenderRowKey ? getRenderRowKey(item, i) : i}
+                  onClick={e => onClickRows?.(item, e)}
+                >
+                  {select?.getId && (
+                    <td className="td td-center">
+                      <Checkbox size="small" checked={_selected.has(select.getId(item))} onChange={() => _selected.toggle(select.getId(item))} />
+                    </td>
+                  )}
+                  {filteredColumns.map((_, i) => (
+                    <td
+                      title={_.tooltip?.(item) ?? _.render(item) as any}
+                      key={i}
+                      onClick={_.onClick ? () => _.onClick?.(item) : undefined}
+                      className={'td td-clickable ' + fnSwitch(_.align!, {
+                        'center': 'td-center',
+                        'right': 'td-right'
+                      }, _ => '')}
+                    >
+                      {_.render(item)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </Box>
           {!loading && (!filteredData || filteredData.length === 0) && (
             <div>
-              {renderEmptyState ? renderEmptyState : <Fender title={m.noDataAtm} icon="highlight_off"/>}
+              {renderEmptyState ? renderEmptyState : <Fender title={m.noDataAtm} icon="highlight_off" />}
             </div>
           )}
         </Box>
@@ -445,10 +446,10 @@ export const Sheet = <T extends Answer = Answer>({
         rowsPerPage={sheetSearch.limit}
         page={sheetSearch.offset / sheetSearch.limit}
         onPageChange={(event: unknown, newPage: number) => {
-          setSheetSearch(prev => ({...prev, offset: newPage * sheetSearch.limit}))
+          setSheetSearch(prev => ({ ...prev, offset: newPage * sheetSearch.limit }))
         }}
         onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setSheetSearch(prev => ({...prev, limit: event.target.value as any}))
+          setSheetSearch(prev => ({ ...prev, limit: event.target.value as any }))
         }}
       />
       {map(openColumnConfig, c =>
@@ -465,10 +466,10 @@ export const Sheet = <T extends Answer = Answer>({
               delete prev[c.columnId!]
             }
             // setFilteringProperty(undefined)
-            return {...prev}
+            return { ...prev }
           })}
           onChange={(p: string, v: string | string[]) => {
-            setFilters(_ => ({..._, [p]: v}))
+            setFilters(_ => ({ ..._, [p]: v }))
             setOpenColumnConfig(undefined)
           }}
         />
