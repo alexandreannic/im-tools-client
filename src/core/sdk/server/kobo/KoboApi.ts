@@ -1,5 +1,9 @@
 export type KoboApiColType = KoboApiForm['content']['survey'][0]['type']
 
+export type KoboQuestionSchema = KoboApiForm['content']['survey'][0]
+
+export type KoboQuestionType = KoboQuestionSchema['type']
+
 export interface KoboApiForm {
   name: string
   content: {

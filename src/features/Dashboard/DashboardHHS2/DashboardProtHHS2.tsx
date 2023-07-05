@@ -157,6 +157,16 @@ export const DashboardProtHHS2 = () => {
   }, [_answers.entity, filter])
   const computed = useProtHHS2Data({data})
 
+  useEffect(() => {
+    const start = new Date(2023, 5, 1)
+    const end = new Date(2023, 6, 1)
+    const filtered = data?.filter(_ => {
+      return (!filter.start || _.end.getTime() > start.getTime())
+        && (!filter.end || _.end.getTime() < end.getTime())
+    })
+    console.log('getProtHhsIptData', getProtHhsIptData(filtered))
+  }, [data])
+
   return (
     <DashboardLayout
       loading={_answers.loading}

@@ -1,20 +1,30 @@
-import {Arr, Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {ageGroupBHA, groupByAgeGroup} from '../core/type'
 import {ChartTools} from '../core/chartTools'
-import {UseProtHHS2Data} from '../features/Dashboard/DashboardHHS2/useProtHHS2Data'
+import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
 
-export const getProtHhsIptData = (computed: UseProtHHS2Data) => {
+export const getProtHhsIptData = (data?: _Arr<ProtHHS2Enrich>) => {
   const csv: {base: string, gender: string, ageGroup: string, total: number}[] = []
-  const z = computed?.flatData.groupBy(_ => _.staff_to_insert_their_DRC_office)
-  if (z && computed) {
-    Enum.entries(z).forEach(([base, v]) => {
+  const flatData = data?.flatMap(_ => _.persons.map(p => ({..._, ...p})))
+  const mapOffice = {
+    chernihiv: 'Central',
+    dnipro: 'East',
+    kharkiv: 'East',
+    lviv: 'West',
+    mykolaiv: 'South',
+    sumy: 'East'
+  }
+
+  if (flatData) {
+    const byOffice = flatData?.groupBy(_ => mapOffice[_.staff_to_insert_their_DRC_office])
+    Enum.entries(ChartTools.sortBy.custom(['West', 'Central', 'East', 'South'])(byOffice)).forEach(([base, v]) => {
       csv.push({
         base,
         gender: 'total',
         ageGroup: 'total',
         total: v.length,
       })
-      Enum.entries(Arr(v).groupBy(_ => _.gender)).forEach(([gender, genderV]) => {
+      Enum.entries(ChartTools.sortBy.custom(['male', 'female'])(Arr(v).groupBy(_ => _.gender))).forEach(([gender, genderV]) => {
         csv.push({
           base,
           gender,
@@ -37,10 +47,10 @@ export const getProtHhsIptData = (computed: UseProtHHS2Data) => {
       base: 'total',
       gender: 'total',
       ageGroup: 'total',
-      total: computed.flatData.length,
+      total: flatData.length,
     })
+    return toCsv(csv)
   }
-  return toCsv(csv)
 }
 const toCsv = (data: {base: string, gender: string, ageGroup: string, total: number}[]) => {
   return data.map(row => Object.values(row).map(_ => `"${_}"`).join(',')).join('\n')

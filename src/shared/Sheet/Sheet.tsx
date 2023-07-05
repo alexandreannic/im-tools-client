@@ -3,13 +3,14 @@ import React, {ReactNode, useMemo, useState} from 'react'
 import {useI18n} from '../../core/i18n'
 import {Fender, IconBtn} from 'mui-extension'
 import {usePersistentState} from 'react-persistent-state'
-import {multipleFilters, paginateData} from '../../utils/utils'
+import {downloadStringAsFile, multipleFilters, paginateData} from '../../utils/utils'
 import {SheetFilterDialog} from './SheetFilterDialog'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
-import {useSetState} from '@alexandreannic/react-hooks-lib'
+import {useAsync, useSetState} from '@alexandreannic/react-hooks-lib'
 import {offset} from '@popperjs/core'
 import {orderBy, sortBy} from 'lodash'
+import {generateXLSFromArray, generateXLSgenerateXLSFromArrayFromArray} from '@/shared/Sheet/generateXLSFile'
 
 const generalStyles = <GlobalStyles
   styles={t => ({
@@ -131,6 +132,7 @@ export interface SheetColumnProps<T extends Answer> {
   align?: 'center' | 'right'
   onClick?: (_: T) => void
   render: (_: T) => ReactNode
+  renderExport: (_: T) => string | number | undefined
   hidden?: boolean
   alwaysVisible?: boolean
   tooltip?: (_: T) => string
@@ -197,6 +199,7 @@ export const Sheet = <T extends Answer = Answer>({
   select,
   ...props
 }: SheetTableProps<T>) => {
+  const _generateXLSFromArray = useAsync(generateXLSFromArray)
   console.log('render Sheet')
   const {m} = useI18n()
   const [sheetSearch, setSheetSearch] = useState({
@@ -290,46 +293,55 @@ export const Sheet = <T extends Answer = Answer>({
     return paginateData<T>(sheetSearch.limit, sheetSearch.offset)(filteredAndSortedData)
   }, [sheetSearch.limit, sheetSearch.offset, filteredAndSortedData])
 
+  const exportToCSV = () => {
+    if (filteredAndSortedData) {
+      const res = _generateXLSFromArray.call({
+        data: filteredAndSortedData,
+        schema: columns.map(_ => ({name: _.head as string ?? _.id, render: _.renderExport})),
+      })
+      console.log(res)
+    }
+  }
+
   return (
     <>
-      {(header || select) && (
-        <Box sx={{position: 'relative', p: 2}}>
-          {header}
-          {_selected.size > 0 && (
+      <Box sx={{position: 'relative', p: 2}}>
+        {header}
+        <AAIconBtn loading={_generateXLSFromArray.loading} onClick={exportToCSV} icon="download"/>
+        {_selected.size > 0 && (
+          <Box sx={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0,
+            background: t => t.palette.background.paper,
+          }}>
             <Box sx={{
               position: 'absolute',
-              top: 0,
-              right: 0,
-              left: 0,
+              top: -1,
+              right: -1,
+              left: -1,
               bottom: 0,
-              background: t => t.palette.background.paper,
+              display: 'flex',
+              alignItems: 'center',
+              border: t => `2px solid ${t.palette.primary.main}`,
+              color: t => t.palette.primary.main,
+              fontWeight: t => t.typography.fontWeightBold,
+              background: t => t.palette.action.focus,
+              borderTopLeftRadius: t => t.shape.borderRadius + 'px',
+              borderTopRightRadius: t => t.shape.borderRadius + 'px',
+              px: 2,
             }}>
-              <Box sx={{
-                position: 'absolute',
-                top: -1,
-                right: -1,
-                left: -1,
-                bottom: 0,
-                display: 'flex',
-                alignItems: 'center',
-                border: t => `2px solid ${t.palette.primary.main}`,
-                color: t => t.palette.primary.main,
-                fontWeight: t => t.typography.fontWeightBold,
-                background: t => t.palette.action.focus,
-                borderTopLeftRadius: t => t.shape.borderRadius + 'px',
-                borderTopRightRadius: t => t.shape.borderRadius + 'px',
-                px: 2,
-              }}>
-                <Box sx={{flex: 1,}}>
-                  {_selected.size} {m.selected}.
-                </Box>
-                {select?.selectActions}
-                <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
+              <Box sx={{flex: 1,}}>
+                {_selected.size} {m.selected}.
               </Box>
+              {select?.selectActions}
+              <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
             </Box>
-          )}
-        </Box>
-      )}
+          </Box>
+        )}
+      </Box>
       <Box sx={{overflowX: 'auto'}}>
         <Box sx={{
           // width: 'max-content'

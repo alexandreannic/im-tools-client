@@ -1,43 +1,54 @@
 import {Checkbox, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SxProps, Theme} from '@mui/material'
-import React, {ReactNode, useEffect, useState} from 'react'
+import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {useI18n} from '../../core/i18n'
+import {makeSx} from '@/core/theme'
 
-interface AaSelectBase<T, V> {
+interface AaSelectBase<T> {
   label?: ReactNode
+  showUndefinedOption?: boolean
   options: {value: T, children: ReactNode, key?: string}[]
   sx?: SxProps<Theme>
 }
 
-interface AaSelectMultiple<T, V> extends AaSelectBase<T, V> {
+interface AaSelectMultiple<T> extends AaSelectBase<T> {
   value: T[]
   multiple: true
   onChange: (t: T[], e: any) => void
 }
 
-interface AaSelectSimple<T, V> extends AaSelectBase<T, V> {
-  value: T
+interface AaSelectSimple<T> extends AaSelectBase<T> {
+  value?: T
   multiple?: false
   onChange: (t: T, e: any) => void
 }
 
-type AaSelect<T, V> = AaSelectSimple<T, V> | AaSelectMultiple<T, V>
+type AaSelect<T> = AaSelectSimple<T> | AaSelectMultiple<T>
 
-export const AaSelect = <T extends string, V extends string = string>({
+const style = makeSx({
+  item: {
+    py: 0,
+    minHeight: '38px !important',
+  }
+})
+
+export const AaSelect = <T extends string | number>({
   value,
   multiple,
+  showUndefinedOption,
   label,
   onChange,
   options,
   sx,
   ...props
-}: AaSelect<T, V>) => {
+}: AaSelect<T>) => {
   const {m} = useI18n()
   const [innerValue, setInnerValue] = useState<T | T[]>()
   const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE' as T
   const id = Math.random() + ''
 
   useEffect(() => {
-    if (innerValue) onChange(innerValue as any, {})
+    if (innerValue !== undefined)
+      onChange(innerValue === '' ? undefined : innerValue as any, {})
   }, [innerValue])
 
   const onSelectAll = (e: any) => {
@@ -50,6 +61,8 @@ export const AaSelect = <T extends string, V extends string = string>({
     }
   }
 
+  const displayedValue = useMemo(() => options.find(_ => _.value === innerValue)?.children, [options, innerValue])
+
   return (
     <FormControl size="small" sx={{width: '100%', ...sx}}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
@@ -60,7 +73,7 @@ export const AaSelect = <T extends string, V extends string = string>({
         id={id}
         renderValue={x => [x].flat().join(', ')}
         multiple={multiple}
-        value={value}
+        value={displayedValue}
         onChange={e => {
           const value = e.target.value
           if (![value].flat().includes(IGNORED_VALUE_FOR_SELECT_ALL_ITEM)) {
@@ -82,11 +95,11 @@ export const AaSelect = <T extends string, V extends string = string>({
             {m.selectAll}
           </MenuItem>
         )}
+        {showUndefinedOption && (
+          <MenuItem dense value={''} sx={style.item}/>
+        )}
         {options.map((option, i) => (
-          <MenuItem dense key={option.key ?? option.value} value={option.value} sx={{
-            py: 0,
-            minHeight: '38px !important',
-          }}>
+          <MenuItem dense key={option.key ?? option.value} value={option.value} sx={style.item}>
             {multiple && (
               <Checkbox size="small" checked={value.includes(option.value)} sx={{
                 paddingTop: `8px !important`,

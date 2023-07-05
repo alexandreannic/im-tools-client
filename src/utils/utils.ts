@@ -228,3 +228,28 @@ export const getOverlapMonths = (startDate1: Date, endDate1: Date, startDate2: D
 
   return overlapMonths > 0 ? overlapMonths : 0
 }
+
+export const downloadBufferAsFile = (buffer: Buffer, filename: string) => {
+  const _ = document.createElement('a')
+  const content = new Blob([buffer])
+  const encodedUri = window.URL.createObjectURL(content)
+  const link = document.createElement('a')
+  link.setAttribute('href', encodedUri)
+  link.setAttribute('download', filename)
+  link.click()
+}
+
+export const downloadStringAsFile = (stringData: string, fileName: string) => {
+  const _ = document.createElement('a')
+  _.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(stringData))
+  _.setAttribute('download', fileName)
+  _.click()
+}
+
+export const slugify = (_?: string) => _?.replaceAll(/[^a-zA-Z0-9]/g, '')
+
+export const removeHtml = (_?: string) => _?.replace(/(<([^>]+)>)/gi, '')
+
+export const convertNumberIndexToLetter = (_: number) => {
+  return (_ + 9).toString(36).toUpperCase()
+}
