@@ -1,7 +1,7 @@
-import {format, formatDistance, formatDuration as formatDurationFns, sub} from 'date-fns'
-import {externalLinks} from '../../externalLinks'
-import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
-import {Period} from '../../type'
+import { format, formatDistance, formatDuration as formatDurationFns, sub } from 'date-fns'
+import { externalLinks } from '../../externalLinks'
+import { KoboFormProtHH } from '../../koboModel/koboFormProtHH'
+import { Period } from '../../type'
 import Status = KoboFormProtHH.Status
 
 const invalidDate = '-'
@@ -26,7 +26,7 @@ export const formatDateTime = (d?: Date): string => {
 }
 
 export const dateFromNow = (d?: Date): string | undefined => {
-  return d ? formatDistance(d, new Date(), {addSuffix: true}) : undefined
+  return d ? formatDistance(d, new Date(), { addSuffix: true }) : undefined
 }
 
 export const formatLargeNumber = (n?: number): string => {
@@ -50,12 +50,18 @@ export const en = Object.freeze({
     other: 'Other',
     majorStressFactors: 'Major stress factors',
     area: 'Area',
+    women: 'Women',
+    men: 'Men',
+    activities: 'Activities',
+    noComment: 'No comment',
     answers: 'Answers',
     noDataAtm: 'No data at the moment',
     seeResults: `See results`,
     select3Outcomes: `Please, select 3 outcomes`,
     oblast: 'Oblast',
     close: 'Close',
+    focalPoint: 'Focal point',
+    project: 'Project',
     violence: 'Violence',
     copyingMechanisms: 'Coping mechanisms',
     female: 'Female',
@@ -94,6 +100,7 @@ export const en = Object.freeze({
     viewDate: `View data`,
     information: 'Information',
     koboData: `Kobo data`,
+    activity: 'Activity',
     previewActivity: `Preview activity`,
     previewRequestBody: `Preview request body code`,
     nLines: (n: number) => `<b>${n}</b> lignes`,
@@ -165,6 +172,7 @@ export const en = Object.freeze({
     ukraine: 'Ukraine',
     submissionTime: 'Submission',
     submittedBy: 'By',
+    mealVisitMonitoringDashboard: 'MEAL Visit Monitoring Dashboard',
     protectionMonitoringDashboard: 'Protection monitoring dashboard',
     undefined: 'Unknown',
     women: 'Women',
@@ -219,11 +227,25 @@ export const en = Object.freeze({
     noIdpsOnly: 'Non-IDPs only',
     uaCitizen: 'UA citizen',
     appInMaintenance: 'Application in maintenance, we\'ll be back soon.',
+    comments: 'Comments',
     ukrainianCitizenShip: 'Ukrainian citizenship',
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
     database: {
       registerNewForm: 'Register new form',
+    },
+    mealMonitoringVisit: {
+      ecrec: 'ECREC activities',
+      protection: 'Protection activities',
+      eore: 'EORE activities',
+      shelter: 'Shelter activities',
+      lau: 'LAU activities',
+      criticalConcern: 'Critical concern',
+      nfiDistribution: 'NFI distributions',
+      photoFolder: 'Photo folder',
+      concerns: 'Concerns',
+      securityConcerns: 'Security concerns',
+      hasPriorityQueuesForVulnerableIndividuals: 'Priority queues for vulnerable individuals',
     },
     protHHS2: {
       barriersToAccessHealth: 'Barriers to access healthcare',
@@ -798,7 +820,7 @@ export const en = Object.freeze({
           DRC protection monitoring targeted Internally Displaced Persons (IDPs)
           and people directly exposed to and affected by the current armed conflict.
         `,
-        previousPeriodNote: (period: Period) => `<sup>(1)</sup> Compared to the previous period of ${format(period.start, 'LLL yyyy')} - ${format(sub(period.end, {days: 1}),
+        previousPeriodNote: (period: Period) => `<sup>(1)</sup> Compared to the previous period of ${format(period.start, 'LLL yyyy')} - ${format(sub(period.end, { days: 1 }),
           'LLL yyyy')}`,
         dataAccuracy: `<sup>(1)</sup> Due to uneven monitoring across the oblasts, values does not reflect the exact proportions; however, they reveal trend insights.`,
       },

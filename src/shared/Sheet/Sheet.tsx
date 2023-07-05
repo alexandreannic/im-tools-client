@@ -307,7 +307,7 @@ export const Sheet = <T extends Answer = Answer>({
     <>
       <Box sx={{position: 'relative', p: 2}}>
         {header}
-        <AAIconBtn loading={_generateXLSFromArray.loading} onClick={exportToCSV} icon="download"/>
+        <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
         {_selected.size > 0 && (
           <Box sx={{
             position: 'absolute',

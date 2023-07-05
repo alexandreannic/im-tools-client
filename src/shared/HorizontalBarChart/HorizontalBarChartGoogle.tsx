@@ -16,6 +16,7 @@ export interface HorizontalBarChartGoogleData {
 }
 
 interface Props<K extends string> {
+  onClickData?: (_: K, item: HorizontalBarChartGoogleData) => void
   showLastBorder?: boolean
   hideValue?: boolean
   dense?: boolean
@@ -66,6 +67,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
   descs,
   barHeight = 2,
   hideValue,
+  onClickData,
   showLastBorder,
 }: Omit<Props<K>, 'data'> & {data: NonNullable<Props<K>['data']>}) => {
   const values: HorizontalBarChartGoogleData[] = useMemo(() => Enum.values(data), [data])
@@ -85,7 +87,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
         const percentOfMax = 100 * (item.base ? percents[i] / maxPercent : item.value / maxValue)
         return (
           <TooltipWrapper percentOfBase={percents[i]} percentOfAll={base ? percents[i] : item.value / values.length} key={i} item={item}>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
+            <Box sx={{display: 'flex', alignItems: 'center'}} onClick={() => onClickData?.(k, item)}>
               {icons && (
                 <Icon color="disabled" sx={{mr: 1}}>{icons[k]}</Icon>
               )}

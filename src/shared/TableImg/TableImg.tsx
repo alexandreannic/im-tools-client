@@ -3,7 +3,9 @@ import React from 'react'
 
 export const TableImg = ({
   url,
+  size = 30,
 }: {
+  size?: number
   url: string
 }) => {
   return url ? (
@@ -19,9 +21,9 @@ export const TableImg = ({
         transition: t => t.transitions.create('all'),
         backgroundColor: t => t.palette.divider,
         backgroundImage: `url(${url})`,
-        height: 30,
-        width: 30,
-        borderRadius: '4px',
+        height: size,
+        width: size,
+        borderRadius: '6px',
         backgroundSize: 'cover'
       }}/>
     </a>

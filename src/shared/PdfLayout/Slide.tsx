@@ -1,5 +1,5 @@
 import {Box, BoxProps, Icon, useTheme} from '@mui/material'
-import {Txt, TxtProps} from 'mui-extension'
+import {PanelBodyProps, Txt, TxtProps} from 'mui-extension'
 import React, {ReactNode, useEffect, useRef} from 'react'
 import {usePdfContext} from './PdfLayout'
 import {Panel, PanelBody} from '../Panel'
@@ -133,7 +133,6 @@ export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML
   }, [children])
 
   return <Txt
-    ref={ref}
     block
     // size="big"
     bold
@@ -141,18 +140,18 @@ export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML
     color="hint"
     {...props}
   >
-    {icon && <Icon color="disabled" sx={{mr: 1}}>{icon}</Icon>}
-    {dangerouslySetInnerHTML ? <div dangerouslySetInnerHTML={dangerouslySetInnerHTML}/> : children}
+    {icon && <Icon color="disabled" sx={{mr: .5}}>{icon}</Icon>}
+    <div ref={ref}>{dangerouslySetInnerHTML ? <div dangerouslySetInnerHTML={dangerouslySetInnerHTML}/> : children}</div>
   </Txt>
 }
 
-export const SlidePanel = ({savableAsImg = true, expendable = true, children, sx, ...props}: PanelProps) => {
+export const SlidePanel = ({savableAsImg = true, expendable = true, children, sx, BodyProps, ...props}: PanelProps & {BodyProps?: PanelBodyProps}) => {
   return (
     <Panel {...props} savableAsImg={savableAsImg} expendable={expendable} sx={{
       ...sx,
       m: 0,
     }}>
-      <PanelBody>{children}</PanelBody>
+      <PanelBody {...BodyProps}>{children}</PanelBody>
     </Panel>
   )
 }

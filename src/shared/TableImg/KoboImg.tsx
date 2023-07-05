@@ -9,11 +9,13 @@ const getKoboImagePath = (url: string, serverId: string = koboServerId.prod): st
   // return appConfig.apiURL + `/kobo-api/${koboServerId.prod}/attachment?path=${url.split('api')[1]}`
 }
 
-export const KoboTableImg = ({
+export const KoboImg = ({
   fileName,
   serverId,
   attachments,
+  size,
 }: {
+  size?: number
   fileName?: string
   serverId?: string
   attachments: KoboAttachment[]
@@ -23,6 +25,6 @@ export const KoboTableImg = ({
     [attachments, fileName]
   )
   return (
-    <TableImg url={fileUrl ? getKoboImagePath(fileUrl, serverId) : ''}/>
+    <TableImg size={size} url={fileUrl ? getKoboImagePath(fileUrl, serverId) : ''}/>
   )
 }

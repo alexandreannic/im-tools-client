@@ -43,6 +43,8 @@
     "src/core/uaLocation/aiSettlement.js",
     "src/core/uaLocation/aiHromadas.ts",
     "src/core/uaLocation/settlements.js",
-    "src/core/uaLocation/hromadas.ts"
+    "src/core/uaLocation/hromadas.ts",
+    "src/core/uaLocation/raions.ts",
+    "src/core/uaLocation/aiRaions.ts"
   ]
 }

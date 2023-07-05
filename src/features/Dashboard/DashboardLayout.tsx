@@ -9,6 +9,7 @@ import {Layout} from '@/shared/Layout'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {DashboardHeader, dashboardHeaderId} from '@/features/Dashboard/DashboardHeader'
 import {Page} from '@/shared/Page'
+import {map} from '@alexandreannic/ts-utils'
 
 const style = makeSx({
   sectionTitle: {
@@ -50,25 +51,28 @@ export const DashboardLayout = ({
   action,
   loading = false,
   title,
+  pageWidth = 1100,
   beforeSection,
   subTitle,
 }: {
+  pageWidth?: number
   action?: ReactNode
   loading: boolean
   title: string
   subTitle?: string
   header?: ReactNode
   beforeSection?: ReactNode
-  sections: {
+  sections?: {
     icon?: string
     name: string
     title: ReactNode
     component: () => JSX.Element
   }[]
 }) => {
-  const [activeSection, setActiveSection] = useState(sections[0]?.name)
+  const [activeSection, setActiveSection] = useState(sections?.[0]?.name ?? '')
   const hiddenSections = useSetState()
   useEffect(() => {
+    if (!sections) return
     if (sections.length === 0) return
     spyTitles(sections.map(_ => _.name).reverse(), (s: string) => {
       if (s && s !== activeSection) {
@@ -98,9 +102,9 @@ export const DashboardLayout = ({
             id={dashboardHeaderId}
           />
         }
-        sidebar={
+        sidebar={map(sections, _ => (
           <Sidebar headerId={dashboardHeaderId}>
-            {sections.map(s => (
+            {_.map(s => (
               <SidebarItem
                 icon={s.icon}
                 key={s.name}
@@ -112,10 +116,10 @@ export const DashboardLayout = ({
               </SidebarItem>
             ))}
           </Sidebar>
-        }>
-        <Page width={1100} disableAnimation sx={{mb: 2}}>
+        ))}>
+        <Page width={pageWidth} disableAnimation sx={{mb: 2}}>
           {beforeSection}
-          {sections.map(s => (
+          {sections?.map(s => (
             <Box key={s.name}>
               <Typography id={s.name} variant="h2" sx={combineSx(style.sectionTitle, hiddenSections.has(s.name) && style.sectionShrinked)}>
                 {s.title}

@@ -14,11 +14,13 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
   question,
   data,
   limit,
+  onClickData,
   sortBy,
   overrideLabel = {},
   filterValue,
   questionType = 'single',
 }: {
+  onClickData?: (_: K) => void
   limit?: number
   questionType?: 'multiple' | 'single'
   sortBy?: typeof ChartTools.sortBy.value
@@ -37,7 +39,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
         filterValue: filterValue as any,
       }))
         .map(ChartTools.setLabel({
-          ...((ProtHHS_2_1Options as any)[question]),
+          ...options[question],
           ...overrideLabel,
         }))
         .map(sortBy ?? ChartTools.sortBy.value)
@@ -46,7 +48,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
     }
   }, [data, question])
   return (
-    <HorizontalBarChartGoogle data={res.chart} base={res.base}/>
+    <HorizontalBarChartGoogle data={res.chart} base={res.base} onClickData={_ => onClickData?.(_ as K)} />
   )
 }
 

@@ -22,7 +22,7 @@ import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {useAaToast} from '@/core/useToast'
 import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {DatabaseAccess} from '@/features/Database/DatabaseAccess/DatabaseAccess'
-import {KoboTableImg} from '@/shared/TableImg/KoboTableImg'
+import {KoboImg} from '@/shared/TableImg/KoboImg'
 import {usePersistentState} from 'react-persistent-state'
 import {removeHtml, slugify} from '@/utils/utils'
 import {AaSelect} from '@/shared/Select/Select'
@@ -203,7 +203,7 @@ export const DatabaseTable = ({
           select_one: form.content.choices.filter(_ => _.list_name === q.select_from_list_name).map(_ => _.name),
         }, () => undefined),
         render: row => fnSwitch(q.type, {
-          image: <KoboTableImg attachments={row.attachments} fileName={row[q.name]}/>,
+          image: <KoboImg attachments={row.attachments} fileName={row[q.name]}/>,
           text: row[q.name],
           integer: row[q.name],
           date: row[q.name] ? formatDate(new Date(row[q.name])) : '',

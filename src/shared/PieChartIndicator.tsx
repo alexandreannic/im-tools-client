@@ -79,13 +79,8 @@ export const PieChartIndicator = ({
     }}>
       <Donut percent={percent} size={dense ? 50 : 55}/>
       <Box sx={{ml: dense ? .75 : 1.5}}>
-        <SlidePanelTitle noWrap={noWrap}>
-          {title && (
-            <>
-              {title}
-              {titleIcon && <Icon sx={{ml: .5}}>{titleIcon}</Icon>}
-            </>
-          )}
+        <SlidePanelTitle icon={titleIcon} noWrap={noWrap}>
+          {title}
         </SlidePanelTitle>
         <Box sx={{display: 'inline-flex', lineHeight: 1, alignItems: 'flex-start'}}>
           <Txt bold sx={{fontSize: '1.7em'}}>{renderPercent(percent, true, fractionDigits)}</Txt>

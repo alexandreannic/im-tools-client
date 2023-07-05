@@ -7,6 +7,7 @@ import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
 import json from './TODELETERAWDATA.json'
+import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
 
 interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -31,6 +32,9 @@ export class KoboAnswerSdk {
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
     if (formId === koboFormId.prod.protectionHh2) {
       return Promise.resolve({start: new Date(2023, 3, 1), end: new Date()})
+    }
+    if (formId === koboFormId.prod.mealVisitMonitoring) {
+      return Promise.resolve({start: new Date(2023, 5, 15), end: new Date()})
     }
     throw new Error('To implement')
   }
@@ -58,6 +62,14 @@ export class KoboAnswerSdk {
     return this.search<BNRE>({
       formId: koboFormId.prod.BNRE,
       fnMap: mapBNRE,
+      ...filters,
+    })
+  }
+
+  readonly searchMealVisitMonitoring = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: koboFormId.prod.mealVisitMonitoring,
+      fnMap: mapMealVisitMonitoring,
       ...filters,
     })
   }
