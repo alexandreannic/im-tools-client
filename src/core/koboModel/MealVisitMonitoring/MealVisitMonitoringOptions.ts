@@ -122,7 +122,7 @@ sst: {
 },
 visp: {
 	'psea': `PSEA`,
-	'mof': `Misappropriation of funds/suspected corruption`,
+	'mof': `Misappropriation of funds/ suspected corruption`,
 	'fod': `Falsification of documents`,
 	'oth': `Other`
 },

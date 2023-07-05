@@ -77,6 +77,7 @@ export const en = Object.freeze({
     familyUnity: 'Family unity',
     city: 'City',
     no: 'No',
+    office: 'Office',
     question: 'Question',
     answer: 'Answer',
     calculations: 'Calculations',

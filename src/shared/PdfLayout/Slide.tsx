@@ -74,6 +74,7 @@ export const SlideContainer = ({
     <Box {...props} sx={{
       display: 'flex',
       width: '100%',
+      minWidth: 0,
       flex: 1,
       [theme.breakpoints.down('md')]: responsive ? {
         flexDirection: 'column',

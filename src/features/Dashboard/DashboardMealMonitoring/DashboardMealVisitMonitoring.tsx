@@ -65,21 +65,21 @@ const mapOblast: Record<string, OblastISOSVG> = {
 }
 
 const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOptions>()({
-  donor: {
-    icon: 'handshake',
-    property: 'mdd1',
-    multiple: true,
-    label: m => m.donor,
-  },
   oblast: {
     icon: 'location_on',
     property: 'mdro',
-    label: m => m.oblast,
+    label: m => m.office,
   },
   focalPoint: {
     icon: 'person',
     property: 'mdp',
     label: m => m.focalPoint,
+  },
+  donor: {
+    icon: 'handshake',
+    property: 'mdd1',
+    multiple: true,
+    label: m => m.donor,
   },
   activity: {
     icon: 'edit_calendar',
@@ -139,10 +139,7 @@ export const DashboardMealVisitMonitoring = () => {
       end: filter.end,
     }
   }).then(_ => _.data)
-  // .then(_ => _.filter(_ => {
-  //   return (!filter.start || _.end.getTime() > filter.start.getTime())
-  //     && (!filter.end || _.end.getTime() < filter.end.getTime())
-  // }))
+
   const _answers = useFetcher(request)
 
   useEffect(() => {
@@ -154,7 +151,7 @@ export const DashboardMealVisitMonitoring = () => {
 
   useEffect(() => {
     _answers.fetch({ force: true, clean: false }, periodFilter)
-  }, [optionFilter])
+  }, [periodFilter])
 
   const getChoices = <T extends keyof typeof MealVisitMonitoringOptions>(
     questionName: T, {
@@ -262,7 +259,7 @@ export const DashboardMealVisitMonitoring = () => {
                 </SlidePanel>
               </SlideContainer>
 
-              <SlideContainer column>
+              <SlideContainer column sx={{maxHeight: '33%'}}>
                 <SlidePanel title={m.mealMonitoringVisit.nfiDistribution}>
                   <MealVisitMonitoringBarChart data={data} question="pan" />
                 </SlidePanel>
@@ -284,7 +281,7 @@ export const DashboardMealVisitMonitoring = () => {
               </SlideContainer>
 
               <SlideContainer column>
-                <SlidePanel title={m.comments} BodyProps={{ sx: { pr: 0 } }}>
+                <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{ sx: { pr: 0 } }}>
                   <Box sx={{ maxHeight: '650px', overflowY: 'auto' }}>
                     {data.map(row => (
                       <Box key={row.id} sx={{

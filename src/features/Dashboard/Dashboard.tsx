@@ -4,6 +4,7 @@ export const dashboardModule = {
   basePath: '/dashboard',
   siteMap: {
     hhs: 'househould-survey',
+    mealVisitMonitoring: 'meal-visit-monitoring',
   }
 }
 

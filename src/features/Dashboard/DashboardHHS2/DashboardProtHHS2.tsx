@@ -106,10 +106,6 @@ export const DashboardProtHHS2 = () => {
     }
   })
     .then(_ => _.data)
-    .then(_ => _.filter(_ => {
-      return (!filter.start || _.end.getTime() > filter.start.getTime())
-        && (!filter.end || _.end.getTime() < filter.end.getTime())
-    }))
     .then(_ => _.map(enrichProtHHS_2_1))
 
   const _answers = useFetcher(request)

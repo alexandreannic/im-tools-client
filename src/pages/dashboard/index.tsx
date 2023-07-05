@@ -11,6 +11,7 @@ const Index = () => {
     <Layout title={m.dashboard}>
       <Page>
         <Link href={path('protection-monitoring')}>Protection Monitoring</Link>
+        <Link href={path('meal-visit-monitoring')}>MEAL Visit Monitoring</Link>
       </Page>
     </Layout>
   )
