@@ -46,6 +46,7 @@ const spyTitles = (sections: string[], fn: (sectionName: string) => void) => {
 
 export const DashboardLayout = ({
   sections,
+  hideEuLogo,
   header,
   action,
   loading = false,
@@ -54,6 +55,7 @@ export const DashboardLayout = ({
   beforeSection,
   subTitle,
 }: {
+  hideEuLogo?: boolean
   pageWidth?: number
   action?: ReactNode
   loading: boolean
@@ -94,6 +96,7 @@ export const DashboardLayout = ({
       <Layout
         header={
           <DashboardHeader
+            hideEuLogo={hideEuLogo}
             action={action}
             header={header}
             title={title}

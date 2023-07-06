@@ -56,10 +56,12 @@ export const DashboardHeader = ({
   title,
   subTitle,
   action,
+  hideEuLogo,
   header,
   id,
   ...props
 }: Omit<BoxProps, 'title'> & {
+  hideEuLogo?: boolean
   title: ReactNode
   subTitle: ReactNode
   action?: ReactNode
@@ -112,7 +114,9 @@ export const DashboardHeader = ({
             <Box className="header_title" sx={{mb: 1, flex: 1, whiteSpace: 'nowrap'}}>
               <Box sx={{display: 'flex', alignItems: 'center'}}>
                 <Typography className="header_title_main" variant="h1" sx={{flex: 1}}>{title}</Typography>
-                <EULogo height={26} sx={{mr: 1}}/>
+                {!hideEuLogo && (
+                  <EULogo height={26} sx={{mr: 1}}/>
+                )}
                 <DRCLogo height={24}/>
               </Box>
               <Typography className="header_title_sub" variant="subtitle1" sx={{color: t => t.palette.text.secondary}}>{subTitle}</Typography>

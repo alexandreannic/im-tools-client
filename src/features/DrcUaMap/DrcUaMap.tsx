@@ -98,8 +98,6 @@ const drawOffices = (selector: string) => {
     ...offices.map(o => [o.city, 100, 100]),
   ])
 
-  console.log(offices.map(o => [o.city, 100, 100]),)
-
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
     legend: 'none',
@@ -148,9 +146,7 @@ const drawUA = (selector: string, theme: Theme) => {
 }
 
 const drawOfficeMarkers = (selector: string, theme: Theme) => {
-  console.log('draw markers', document.querySelectorAll(`${selector} text[text-anchor=middle]`))
   document.querySelectorAll(`${selector} text[text-anchor=middle]`).forEach((marker: any) => {
-    console.log(marker)
     const office = offices.find(_ => _.city === marker.innerHTML.trim())
     if (!office) {
       return

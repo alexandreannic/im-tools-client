@@ -16,6 +16,7 @@ const maxAlpha = .8
 const medianAlpha = minAlpha + (maxAlpha - minAlpha) / 2
 
 const computeFill = (value: number, min: number, max: number) => {
+  if(max - min === 0) return medianAlpha
   return value > 0 ? (maxAlpha - minAlpha) * (value - min) / (max - min) + minAlpha : undefined
 }
 
@@ -93,9 +94,12 @@ export const UkraineMap = ({
               const value = filteredData[iso]!.value
               const _base = base ?? filteredData[iso]!.base
               const percent = _base ? value / _base : undefined
+              console.log('percent', percent)
               const fill = (percent && fillBaseOn === 'percent' && maxPercent && minPercent !== undefined)
                 ? computeFill(percent, minPercent, maxPercent)
                 : computeFill(value, min, max)
+              console.log('fill', minPercent, maxPercent)
+              console.log('fill', computeFill(value, min, max))
               return {value, base: _base, fill, percent}
             })() : undefined
             return (
