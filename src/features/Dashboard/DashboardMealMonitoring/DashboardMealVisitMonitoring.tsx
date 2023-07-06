@@ -12,7 +12,6 @@ import {koboFormId} from '@/koboFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoring'
 import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringOptions'
-import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {KoboImg} from '@/shared/TableImg/KoboImg'
@@ -20,14 +19,11 @@ import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
 import {Txt} from 'mui-extension'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Period} from '@/core/type'
-import {ModuleEvaluateOptions} from 'vm'
-import {formatDateTime} from '@/core/i18n/localization/en'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/core/chartTools'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
 import {OblastISOSVG} from '@/shared/UkraineMap/ukraineSvgPath'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {AaBtn} from '@/shared/Btn/AaBtn'
 
 export interface DashboardPageProps {
   filters: OptionFilters
@@ -178,6 +174,11 @@ export const DashboardMealVisitMonitoring = () => {
       loading={_answers.loading}
       title={m.ukraine}
       subTitle={m.mealVisitMonitoringDashboard}
+      action={
+        <a href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/Ee4lwQ1OMKhCkzyeza_UejoBVWdn-2zgxjoCbpPjN4DZZQ?e=zn5LHw" target="_blank">
+          <AaBtn variant="outlined" icon="open_in_new">Open Excel tracker</AaBtn>
+        </a>
+      }
       header={
         <Box sx={{
           pt: 1,
@@ -248,15 +249,15 @@ export const DashboardMealVisitMonitoring = () => {
                   <MealVisitMonitoringBarChart data={data} question="mdd1" questionType="multiple"/>
                 </SlidePanel>
                 <SlidePanel>
-                  <KoboPieChartIndicator title={m.mealMonitoringVisit.securityConcerns} question="ssy" filter={_ => _ === 'yes'} data={data}/>
+                  <KoboPieChartIndicator title={m.mealMonitoringVisit.securityConcerns} question="ssy" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
                   <MealVisitMonitoringBarChart data={data} question="sst"/>
                 </SlidePanel>
                 <SlidePanel>
-                  <KoboPieChartIndicator title={m.mealMonitoringVisit.concerns} question="sef" filter={_ => _ === 'yes'} data={data}/>
+                  <KoboPieChartIndicator title={m.mealMonitoringVisit.concerns} question="sef" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
                   <MealVisitMonitoringBarChart data={data} question="sei"/>
                 </SlidePanel>
                 <SlidePanel>
-                  <KoboPieChartIndicator title={m.mealMonitoringVisit.criticalConcern} question="visf" filter={_ => _ === 'yes'} data={data}/>
+                  <KoboPieChartIndicator title={m.mealMonitoringVisit.criticalConcern} question="visf" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
                   <MealVisitMonitoringBarChart data={data} question="visp"/>
                 </SlidePanel>
               </SlideContainer>

@@ -1,55 +1,71 @@
 import {IconBtn} from 'mui-extension'
-import {alpha, Box, BoxProps, GlobalStyles, Icon, Slide, Typography} from '@mui/material'
+import {alpha, Box, BoxProps, GlobalStyles, Icon, Typography} from '@mui/material'
 import {DRCLogo, EULogo} from '@/shared/logo/logo'
 import React, {ReactNode, useEffect} from 'react'
 import {useLayoutContext} from '@/shared/Layout/LayoutContext'
+import {AppHeaderContainer} from '@/shared/Layout/Header/AppHeaderContainer'
 
-export const dashboardHeaderId = 'aa-sidebar-id'
+export const dashboardHeaderId = 'aa-header-id'
 const headerStickyClass = 'sticky-header'
-let header$: HTMLElement | null = null
 
-const stickHeader = () => {
-  if (!header$) {
-    header$ = document.getElementById(dashboardHeaderId)!
-  }
-  if (window.scrollY > header$.offsetHeight) {
-    if (!header$.classList.contains(headerStickyClass)) {
-      header$.classList.add(headerStickyClass)
-    }
-  } else {
-    header$.classList.remove(headerStickyClass)
-  }
-}
+// const stickHeader = () => {
+//   if (!header$) {
+//     header$ = document.getElementById(dashboardHeaderId)!
+//   }
+//   if (window.scrollY > header$.offsetHeight) {
+//     if (!header$.classList.contains(headerStickyClass)) {
+//       header$.classList.add(headerStickyClass)
+//     }
+//   } else {
+//     header$.classList.remove(headerStickyClass)
+//   }s
+// }
+
+// const redesignHeaderOnTop = () => {
+//   if (!header$) {
+//     header$ = document.getElementById(dashboardHeaderId)!
+//   }
+//   if (header$.getBoundingClientRect().y === 0) {
+//     header$.classList.add(headerStickyClass)
+//   } else {
+//     header$.classList.remove(headerStickyClass)
+//
+//   }
+// }
 
 const generalStyles = <GlobalStyles styles={t => ({
-  '.header_content': {
-    flex: 1,
-  },
-  [`.${headerStickyClass} .header_content`]: {},
-  [`.${headerStickyClass} .header_title_main`]: {
-    fontSize: '1.4em',
-  },
-  [`.${headerStickyClass} .header_title_sub`]: {
-    fontSize: '1.1em',
-    // '&:before': {
-    //   content: '" - "',
-    // }
-  },
-  [`.${headerStickyClass} .header_title`]: {
-    // display: 'flex',
-    // alignItems: 'center',
-    marginBottom: t.spacing(0),
-  },
-  [`#${dashboardHeaderId}.${headerStickyClass}`]: {
-    border: 'none',
+  [`.${headerStickyClass}`]: {
     boxShadow: t.shadows[4],
     background: t.palette.background.paper,
-    padding: `${t.spacing(1)} ${t.spacing(0)} ${t.spacing(0)} ${t.spacing(2)}`,
-    position: 'fixed',
-    top: 0,
-    right: 0,
-    left: 0,
   }
+  // '.header_content': {
+  //   flex: 1,
+  // },
+  // [`.${headerStickyClass} .header_content`]: {},
+  // [`.${headerStickyClass} .header_title_main`]: {
+  //   fontSize: '1.4em',
+  // },
+  // [`.${headerStickyClass} .header_title_sub`]: {
+  //   fontSize: '1.1em',
+  //   // '&:before': {
+  //   //   content: '" - "',
+  //   // }
+  // },
+  // [`.${headerStickyClass} .header_title`]: {
+  //   // display: 'flex',
+  //   // alignItems: 'center',
+  //   marginBottom: t.spacing(0),
+  // },
+  // [`#${dashboardHeaderId}.${headerStickyClass}`]: {
+  //   border: 'none',
+  //   boxShadow: t.shadows[4],
+  //   background: t.palette.background.paper,
+  //   padding: `${t.spacing(1)} ${t.spacing(0)} ${t.spacing(0)} ${t.spacing(2)}`,
+  //   position: 'fixed',
+  //   top: 0,
+  //   right: 0,
+  //   left: 0,
+  // }
 })}/>
 
 export const DashboardHeader = ({
@@ -69,25 +85,24 @@ export const DashboardHeader = ({
 }) => {
   const {sidebarOpen, showSidebarButton, setSidebarOpen} = useLayoutContext()
 
-  useEffect(() => {
-    header$ = null
-    window.addEventListener('scroll', stickHeader)
-  }, [])
+  // useEffect(() => {
+  //   header$ = null
+  //   window.addEventListener('scroll', redesignHeaderOnTop)
+  //   return () => {
+  //     window.removeEventListener('scroll', redesignHeaderOnTop)
+  //   }
+  // }, [])
 
   return (
     <>
-      {generalStyles}
       <Box
-        id={id}
         sx={{
           transition: t => t.transitions.create('all'),
+          pl: 2,
           zIndex: 2,
           background: t => t.palette.background.default,
           pt: 2,
-          pl: 2,
           width: '100%',
-          mb: 2,
-          borderBottom: t => `1px solid ${t.palette.divider}`,
         }}
         {...props}
       >
@@ -112,8 +127,11 @@ export const DashboardHeader = ({
               </IconBtn>
             )}
             <Box className="header_title" sx={{mb: 1, flex: 1, whiteSpace: 'nowrap'}}>
-              <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <Box sx={{display: 'flex', alignItems: 'center', mr: 2}}>
                 <Typography className="header_title_main" variant="h1" sx={{flex: 1}}>{title}</Typography>
+                <Box sx={{ml: 'auto', mr: 2}}>
+                  {action}
+                </Box>
                 {!hideEuLogo && (
                   <EULogo height={26} sx={{mr: 1}}/>
                 )}
@@ -121,13 +139,12 @@ export const DashboardHeader = ({
               </Box>
               <Typography className="header_title_sub" variant="subtitle1" sx={{color: t => t.palette.text.secondary}}>{subTitle}</Typography>
             </Box>
-            <Box sx={{ml: 'auto', mr: 2}}>
-              {action}
-            </Box>
           </Box>
-          {header}
         </Box>
       </Box>
+      <AppHeaderContainer id={id}>
+        {header}
+      </AppHeaderContainer>
     </>
   )
 }

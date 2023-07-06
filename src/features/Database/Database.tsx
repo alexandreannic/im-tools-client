@@ -76,7 +76,9 @@ export const Database = () => {
                     <Skeleton/>
                   </>
                 ) : _forms.entity?.map(_ => (
-                  <SidebarItem key={_.id} to={databaseModule.siteMap.form(_.serverId, _.id)} component={NavLink}>{_.name}</SidebarItem>
+                  <NavLink to={databaseModule.siteMap.form(_.serverId, _.id)}>
+                    <SidebarItem key={_.id} onClick={() => {}}>{_.name}</SidebarItem>
+                  </NavLink>
                 ))}
               </SidebarBody>
             </Sidebar>

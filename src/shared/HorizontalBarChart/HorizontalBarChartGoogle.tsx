@@ -3,7 +3,7 @@ import {ReactNode, useMemo, useState} from 'react'
 import {alpha, Box, Icon, styled, Tooltip, tooltipClasses, TooltipProps} from '@mui/material'
 import {useTimeout} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '../../core/i18n'
-import {Txt} from 'mui-extension'
+import {Fender, Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
 
 export interface HorizontalBarChartGoogleData {
@@ -75,7 +75,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
   const sumValue = useMemo(() => values.reduce((sum, _) => _.value + sum, 0), [data])
   const percents = useMemo(() => values.map(_ => _.value / ((base ?? _.base) || sumValue) * 100), [data])
   const maxPercent = useMemo(() => Math.max(...percents), [percents])
-
+  const {m} = useI18n()
   const [appeared, setAppeared] = useState<boolean>(false)
   useTimeout(() => setAppeared(true), 200)
 
@@ -83,6 +83,12 @@ export const _HorizontalBarChartGoogle = <K extends string>({
 
   return (
     <Box sx={{overflow: 'hidden'}}>
+      {Enum.keys(data).length === 0 && (
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <Icon color="disabled" sx={{fontSize: 40, mb: 1}}>block</Icon>
+          <Txt block color="disabled">{m.noDataAtm}</Txt>
+        </Box>
+      )}
       {Enum.entries(data).map(([k, item], i) => {
         const percentOfMax = 100 * (item.base ? percents[i] / maxPercent : item.value / maxValue)
         return (

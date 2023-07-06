@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Box, BoxProps, Icon, Theme, useTheme} from '@mui/material'
+import {Box, BoxProps, ButtonBase, ButtonBaseProps, Icon, Theme, useTheme} from '@mui/material'
 import {alpha} from '@mui/material/styles'
 import {makeSx} from 'mui-extension'
 
@@ -16,7 +16,7 @@ const styleActive = (t: Theme) => ({
   background: alpha(t.palette.primary.main, 0.16),
 })
 
-export interface SidebarItemProps extends BoxProps {
+export interface SidebarItemProps extends ButtonBaseProps {
   icon?: string | ReactNode
   large?: boolean
   href?: string
@@ -35,18 +35,23 @@ export const SidebarItem = ({
 }: SidebarItemProps) => {
   const theme = useTheme()
   return (
-    <Box
+    <ButtonBase
+      disableRipple={!props.onClick || !props.href}
       sx={{
+        width: '100%',
         transition: t => t.transitions.create('all'),
         display: 'flex',
         alignItems: 'center',
         textDecoration: 'inherit',
         minHeight: 36,
+        overflow: 'hidden',
+        minWidth: 0,
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
         color: t => t.palette.text.secondary,
         pr: 1,
-        pl: 2,
+        pl: 1,
         my: 1 / 2,
-        mx: 1,
         borderRadius: 42,
         ...(large && {
           minHeight: 38,
@@ -54,12 +59,6 @@ export const SidebarItem = ({
         ...(active && {
           color: t => t.palette.primary.main,
           background: t => alpha(t.palette.primary.main, 0.16),
-        }),
-        ...((props.onClick) && {
-          cursor: 'pointer',
-          '&:hover': {
-            background: 'rgba(0, 0, 0, .05)',
-          },
         }),
         ...sx,
       }}
@@ -79,6 +78,6 @@ export const SidebarItem = ({
       >
         {children}
       </Box>
-    </Box>
+    </ButtonBase>
   )
 }

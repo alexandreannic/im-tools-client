@@ -26,7 +26,8 @@ const stickSidebarToHeader = (sidebarId: string, headerId: string) => {
   }
   setTimeout(() => {
     if (sidebar && header) {
-      sidebar.style.top = Math.max(header.offsetHeight < window.scrollY ? header.offsetHeight : header.offsetHeight - window.scrollY, 0) + 'px'
+      sidebar.style.top = (header.getBoundingClientRect().y + header.getBoundingClientRect().height) + 'px'
+      //Math.max(header.offsetHeight < window.scrollY ? header.offsetHeight : header.offsetHeight - window.scrollY, 0) + 'px'
     }
   }, 0)
 }
@@ -54,8 +55,10 @@ export const Sidebar = ({
   }, [isMobileWidth, sidebarPinned])
 
   useEffect(() => {
-    if (headerId)
+    if (headerId) {
       window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId))
+      stickSidebarToHeader(id, headerId)
+    }
   }, [])
 
   const isTemporary = isMobileWidth || !sidebarPinned

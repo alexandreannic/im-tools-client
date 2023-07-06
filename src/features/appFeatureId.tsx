@@ -55,3 +55,11 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
 }
 
 export const appFeatures = Enum.values(appFeaturesIndex)
+
+export const hiddenPlaygroundFeature: AppFeature = {
+  id: 'playground' as any,
+  color: 'black',
+  name: 'Playground',
+  path: '/playground',
+  materialIcons: 'admin',
+}

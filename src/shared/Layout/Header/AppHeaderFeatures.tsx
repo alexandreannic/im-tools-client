@@ -3,15 +3,17 @@ import React, {useMemo} from 'react'
 import {useSession} from '@/core/context/SessionContext'
 import {Box, Popover, useTheme} from '@mui/material'
 import {useI18n} from '@/core/i18n'
-import {appFeatures} from '@/features/appFeatureId'
+import {AppFeature, appFeatures, hiddenPlaygroundFeature} from '@/features/appFeatureId'
 import {FeatureLogo} from '@/features/FeatureLogo'
 
 const iconSize = 92
 
 export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'icon'>) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+  const {session} = useSession()
   const open = (!!anchorEl)
   const {m} = useI18n()
+  const features: AppFeature[] = [...appFeatures, ...(session?.email === 'alexandre.annic@drc.ngo' ? [hiddenPlaygroundFeature] : [])]
   return (
     <>
       <AAIconBtn
@@ -29,7 +31,7 @@ export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'icon'>) => {
         open={open}
       >
         <Box sx={{width: (iconSize + 8) * 3, p: .5}}>
-          {appFeatures.map(_ =>
+          {features.map(_ =>
             <FeatureLogo iconSize={40} key={_.id} feature={_} sx={{
               display: 'inline-block',
               height: iconSize,

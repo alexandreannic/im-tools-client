@@ -13,7 +13,7 @@ import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 import {ActivityInfoHelper} from '../shared/activityInfoHelper'
 import {addMonths, format, startOfMonth} from 'date-fns'
 import {useI18n} from '@/core/i18n'
-import {fixLocations} from './activityInfoNFIFix'
+import {fixLocations} from './activityInfoNfiHelper'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
@@ -181,7 +181,7 @@ export const ActivityInfoNFI = () => {
 
   const _data = useFetcher((period: Date) => {
     return Promise.all([
-      api.koboApi.getAnswersMPCA_NFI_Myko({filters}).then(_ => {
+      api.kobo.answer.searchBnre({filters}).then(_ => {
         return _.data.map(_ => ({
           file: 'Myko',
           id: _.id,
@@ -190,53 +190,15 @@ export const ActivityInfoNFI = () => {
           hromada: undefined as any,
           settlement: undefined!,
           start: _.start,
-          HKF_: _.HKF_ ?? 0,
-          HKMV_: _.HKMV_ ?? 0,
-          BK1: _.BK4_How_many ?? 0,
-          BK2: _.BK4_How_many ?? 0,
-          BK3: _.BK4_How_many ?? 0,
-          BK4: _.BK4_How_many ?? 0,
+          HKF_: _.nfi_dist_hkf ?? 0,
+          HKMV_: _.nfi_dist_hkmv ?? 0,
+          BK1: _.nfi_dist_wkb1 ?? 0 + _.nfi_dist_bk ?? 0,
+          BK2: _.nfi_dist_wkb2 ?? 0,
+          BK3: _.nfi_dist_wkb3 ?? 0,
+          BK4: _.nfi_dist_wkb4 ?? 0,
           group_in3fh72: _.group_in3fh72,
         }))
       }),
-      api.koboApi.getAnswersMPCA_NFI_NAA({filters}).then(_ => {
-        return _.data.map(_ => ({
-          file: 'NAA',
-          id: _.id,
-          oblast: 'kharkivska' as any,
-          raion: 'kharkivskyi' as any,
-          hromada: 'kharkivska_2' as any,
-          settlement: undefined!,
-          start: _.start,
-          HKF_: _.HKF_ ?? 0,
-          HKMV_: _.HKMV_ ?? 0,
-          BK1: _.BK1_How_many ?? 0,
-          BK2: _.BK2_How_many ?? 0,
-          BK3: _.BK3_How_many ?? 0,
-          BK4: _.BK4_How_many ?? 0,
-          group_in3fh72: _.group_in3fh72,
-        }))
-      }),
-      api.koboApi.getAnswersMPCA_NFI({filters})
-        .then(_ => fixLocations(_.data))
-        .then(_ => {
-          return _.map(_ => ({
-            file: 'Main',
-            id: _.id,
-            oblast: _.oblast,
-            hromada: _.hromada,
-            raion: _.raion,
-            settlement: _.settlement!,
-            start: _.start,
-            HKF_: _.HKF_ ?? 0,
-            HKMV_: _.HKMV_ ?? 0,
-            BK1: _.BK_Baby_Kit_ ?? 0,
-            BK2: _.BK_Baby_Kit ?? 0,
-            BK3: _.BK_Baby_Kit_001 ?? 0,
-            BK4: _.BK_Baby_Kit_002 ?? 0,
-            group_in3fh72: _.group_in3fh72,
-          }))
-        }),
     ]).then(([myko, naa, main]) => toFormData({
       formId: 'crvtph7lg6d5dhq2',
       answers: Arr([

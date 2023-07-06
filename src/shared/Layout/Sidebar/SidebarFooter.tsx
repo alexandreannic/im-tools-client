@@ -8,6 +8,7 @@ export const SidebarFooter = ({children, sx, ...props}: SidebarFooterProps) => {
     <Box
       sx={{
         py: 1 / 2,
+        pl: 1,
         borderTop: t => '1px solid ' + t.palette.divider,
         ...sx,
       }}

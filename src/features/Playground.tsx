@@ -6,6 +6,8 @@ import {Box, Divider} from '@mui/material'
 import {format} from 'date-fns'
 import {Layout} from '../shared/Layout'
 import {Txt} from 'mui-extension'
+import {useSession} from '@/core/context/SessionContext'
+import {koboFormId, koboServerId} from '@/koboFormId'
 
 // const survey = await form.fetch().then(_ => _.content.survey)
 // const bln = survey.find(_ => _.label?.includes('BLN High Thermal Blankets: How many?'))
@@ -188,7 +190,11 @@ const familyCompositionProperties = [
 const babyMaxYo = 1
 
 export const Playground = () => {
+  const {session} = useSession()
   const {api} = useAppSettings()
+
+  const shape = useFetcher(() => api.koboApi.getForm(koboServerId.prod, koboFormId.prod.BNRE))
+  const bnre = useFetcher(() => api.kobo.answer.searchBnre())
 
   const form = useFetcher(() => api.koboApi.getForm(KoboApiSdk.serverRefs.prod, KoboApiSdk.koboFormRefs.MPCA_NFI_NAA))
   const fetchMPCA_NFI = useFetcher(() => api.koboApi.getAnswersMPCA_NFI())
@@ -200,6 +206,9 @@ export const Playground = () => {
   const [blanketsByAgeGroup2, setBlanketsByAgeGroup] = useState<any>({})
 
   useEffect(() => {
+    shape.fetch().then(_ => console.log('SHAPE', _))
+    bnre.fetch().then(_ => console.log('bnre', _))
+
     const getGenderAges = (x: any, groupName: string): [string, number][] => {
       if (!x[groupName]) return []
       return (x[groupName] as Record<string, string>[]).map(x => {
@@ -273,10 +282,10 @@ export const Playground = () => {
 
           // const blnForMale = (BLN > 0 ? genderAge.filter(([gender]) => gender === 'male').length : 0)
           // const blnForFemale = (BLN > 0 ? genderAge.filter(([gender]) => gender === 'female').length : 0)
-          if(familyCompo.totalMale > 0 && genderAge.filter(([gender]) => gender === 'male').length > 0 && familyCompo.totalMale !== genderAge.filter(([gender]) => gender === 'male').length) {
+          if (familyCompo.totalMale > 0 && genderAge.filter(([gender]) => gender === 'male').length > 0 && familyCompo.totalMale !== genderAge.filter(([gender]) => gender === 'male').length) {
             console.error(x)
           }
-          const blnForMale = (BLN > 0 ?  genderAge.filter(([gender]) => gender === 'male').length || familyCompo.totalMale  : 0)
+          const blnForMale = (BLN > 0 ? genderAge.filter(([gender]) => gender === 'male').length || familyCompo.totalMale : 0)
           const blnForFemale = (BLN > 0 ? genderAge.filter(([gender]) => gender === 'female').length || familyCompo.totalFemale : 0)
 
           // if (BLN > 0) {
@@ -389,7 +398,7 @@ export const Playground = () => {
         )
       }))
       await fetchMPCA_NFI_Myko.fetch().then(_ => _.data.forEach(x => {
-        const oblast= 'mykolaivska'
+        const oblast = 'mykolaivska'
         oblasts.add(oblast)
         record(
           x,
@@ -454,6 +463,9 @@ export const Playground = () => {
   // console.log(form.entity?.content.survey)
   console.log(fetchMPCA_NFI.entity?.data)
 
+  if (session.email !== 'alexandre.annic@drc.ngo') {
+    return <></>
+  }
   return (
     <Layout>
       <div>{fetchMPCA_NFI.entity?.data.length}</div>

@@ -81,7 +81,7 @@ export const DashboardLayout = ({
       }
     })
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', (e) => {
         e.preventDefault()
         // @ts-ignore
         document.querySelector(this.getAttribute('href')).scrollIntoView({behavior: 'smooth'})
@@ -110,7 +110,6 @@ export const DashboardLayout = ({
               <SidebarItem
                 icon={s.icon}
                 key={s.name}
-                component="a"
                 href={'#' + s.name}
                 active={activeSection === s.name}
               >
