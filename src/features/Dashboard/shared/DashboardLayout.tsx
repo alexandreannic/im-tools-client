@@ -1,13 +1,13 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 import {Box, Collapse, LinearProgress, Typography} from '@mui/material'
-import {combineSx} from '../../core/theme'
-import {DashboardProvider} from './DashboardContext'
+import {combineSx} from '@/core/theme'
+import {DashboardProvider} from '../DashboardContext'
 import {makeSx} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useSetState} from '@alexandreannic/react-hooks-lib'
 import {Layout} from '@/shared/Layout'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
-import {DashboardHeader, dashboardHeaderId} from '@/features/Dashboard/DashboardHeader'
+import {DashboardHeader, dashboardHeaderId} from '@/features/Dashboard/shared/DashboardHeader'
 import {Page} from '@/shared/Page'
 import {map} from '@alexandreannic/ts-utils'
 
@@ -33,7 +33,6 @@ const style = makeSx({
     transform: 'rotate(180deg)',
   }
 })
-
 
 const spyTitles = (sections: string[], fn: (sectionName: string) => void) => {
   const sections$ = sections.map(_ => document.getElementById(_))
