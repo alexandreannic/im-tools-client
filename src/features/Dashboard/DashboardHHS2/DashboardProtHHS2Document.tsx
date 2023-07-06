@@ -92,11 +92,11 @@ export const DashboardProtHHS2Document = ({
         </SlideContainer>
         <SlideContainer column sx={{flex: 1}}>
           <SlidePanel>
-            <Lazy deps={[data, computed.lastMonth, computed.currentMonth]} fn={(x) => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartTools.percentage({
               data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
               value: _ => !_.includes('none')
             })}>
-              {(_, last, curr) => <PieChartIndicator sx={{mb: 2}} title={m.lackOfPersonalDoc} evolution={(curr?.percent ?? 1) - (last?.percent ?? 1)} percent={_.percent}/>}
+              {(_, last) => <PieChartIndicator sx={{mb: 2}} title={m.lackOfPersonalDoc} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} percent={_.percent}/>}
             </Lazy>
             <Lazy deps={[data]} fn={() => chain(ChartTools.multiple({
               data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),

@@ -10,8 +10,10 @@ export const KoboUkraineMap = <D extends Record<string, any>>({
   getOblast,
   value,
   base,
+  fillBaseOn = 'percent',
   ...props
 }: {
+  fillBaseOn?: 'percent' | 'value'
   value: (_: D) => boolean
   base: (_: D) => boolean
   getOblast: (_: D) => OblastISOSVG
@@ -26,6 +28,6 @@ export const KoboUkraineMap = <D extends Record<string, any>>({
     })
   }, [data, value, getOblast])
   return (
-    <UkraineMap data={res} fillBaseOn="percent" {...props}/>
+    <UkraineMap data={res} fillBaseOn={fillBaseOn} {...props}/>
   )
 }

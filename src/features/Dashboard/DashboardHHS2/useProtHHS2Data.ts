@@ -5,7 +5,7 @@ import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS2Enrich} from './DashboardProtHHS2'
 import {ageGroup, ageGroupBHA, groupByAgeGroup} from '../../../core/type'
-import {startOfMonth, sub} from 'date-fns'
+import {startOfMonth, sub, subDays} from 'date-fns'
 
 export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
 
@@ -19,8 +19,8 @@ export const useProtHHS2Data = ({
     const sorted = data.sort((a, b) => a.end.getTime() - b.end.getTime())
     const start = sorted[0].end
     const end = sorted[sorted.length - 1].end
-    const currentMonth = data.filter(_ => _.end >= startOfMonth(end))
-    const lastMonth = data.filter(_ => _.end < startOfMonth(end))
+    // const currentMonth = data.filter(_ => _.end >= startOfMonth(end))
+    const lastMonth = data.filter(_ => _.end < subDays(end, 30))
 
     const flatData = data.flatMap(_ => _.persons.map(p => ({..._, ...p})))
 
@@ -47,7 +47,7 @@ export const useProtHHS2Data = ({
     return {
       start,
       end,
-      currentMonth,
+      // currentMonth,
       lastMonth,
       flatData,
       individuals: data.sum(_ => _.persons.length),

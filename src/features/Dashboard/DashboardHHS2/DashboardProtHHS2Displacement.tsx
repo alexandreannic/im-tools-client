@@ -56,14 +56,14 @@ export const DashboardProtHHS2Displacement = ({
           />
         </SlidePanel>
         <SlidePanel>
-          <Lazy deps={[data]} fn={() => ChartTools.percentage({
+          <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartTools.percentage({
             value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,
-            data,
+            data: d,
             base: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns !== undefined
               && !_.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns.includes('unable_unwilling_to_answer'),
           })}>
-            {_ => (
-              <PieChartIndicator sx={{mb: 1}} percent={_.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
+            {(_, last) => (
+              <PieChartIndicator sx={{mb: 1}} percent={_.percent} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
             )}
           </Lazy>
           <ProtHHS2BarChart

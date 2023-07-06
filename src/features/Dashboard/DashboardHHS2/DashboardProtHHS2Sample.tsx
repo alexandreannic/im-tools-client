@@ -104,14 +104,14 @@ export const DashboardProtHHS2Sample = ({
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <Lazy deps={[data]} fn={() => ChartTools.percentage({
-              data: data
+            <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartTools.percentage({
+              data: d
                 .map(_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household)
                 .compact()
                 .filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('no_specific_needs'),
             })}>
-              {_ => <PieChartIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} percent={_.percent}/>}
+              {(_, last) => <PieChartIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} percent={_.percent} evolution={_.percent - last.percent}/>}
             </Lazy>
             <ProtHHS2BarChart
               data={data}

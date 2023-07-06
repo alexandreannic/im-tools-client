@@ -91,7 +91,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
               {icons && (
                 <Icon color="disabled" sx={{mr: 1}}>{icons[k]}</Icon>
               )}
-              <Box sx={{flex: 1}}>
+              <Box sx={{flex: 1, minWidth: 0}}>
                 <Box sx={{
                   mx: 0,
                   ...item.disabled ? {

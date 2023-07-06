@@ -221,6 +221,7 @@ export const DashboardMealVisitMonitoring = () => {
               <SlideContainer column>
                 <SlidePanel>
                   <KoboUkraineMap
+                    fillBaseOn="value"
                     data={data}
                     getOblast={_ => mapOblast[_.md_det_oblast!]}
                     value={_ => true}

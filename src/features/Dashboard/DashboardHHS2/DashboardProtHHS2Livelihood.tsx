@@ -1,17 +1,15 @@
 import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import React from 'react'
-import {useI18n} from '../../../core/i18n'
+import {useI18n} from '@/core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '../../../core/chartTools'
+import {ChartTools} from '@/core/chartTools'
 import {chain, mapObjectValue} from '@/utils/utils'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboLineChart} from '../shared/KoboLineChart'
-import {_Arr} from '@alexandreannic/ts-utils'
-import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {Divider} from '@mui/material'
 
 export const DashboardProtHHS2Livelihood = ({
@@ -26,40 +24,42 @@ export const DashboardProtHHS2Livelihood = ({
       <SlideContainer responsive>
         <SlideContainer>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.currentMonth, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
               value: _ => _.what_is_the_average_month_income_per_household === 'no_income',
               data: d,
               base: _ => _ !== undefined,
             })}>
-              {(_, curr, last) => <PieChartIndicator title={m.hhWithoutIncome} percent={_.percent} evolution={curr.percent - last.percent}/>}
+              {(_, last) => {
+                return <PieChartIndicator title={m.hhWithoutIncome} percent={_.percent} evolution={_.percent - last.percent}/>}
+              }
             </Lazy>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.currentMonth, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
               value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
               data: d,
               base: _ => _ !== undefined,
             })}>
-              {(_, curr, last) => <PieChartIndicator title={m.hhOutOfWork} percent={_.percent} evolution={curr.percent - last.percent}/>}
+              {(_, last) => <PieChartIndicator title={m.hhOutOfWork} percent={_.percent} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </SlideContainer>
         <SlideContainer>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.currentMonth, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
               value: _ => _.do_you_and_your_hh_members_receive_the_idp_allowance === 'yes',
               data: d,
               base: _ => _.do_you_identify_as_any_of_the_following === 'idp',
             })}>
-              {(_, curr, last) => <PieChartIndicator title={m.idpWithAllowance} percent={_.percent} evolution={curr.percent - last.percent}/>}
+              {(_, last) => <PieChartIndicator title={m.idpWithAllowance} percent={_.percent} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.currentMonth, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
               value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
               data: d,
             })}>
-              {(_, curr, last) => <PieChartIndicator title={m.hhWithGapMeetingBasicNeeds} percent={_.percent} evolution={curr.percent - last.percent}/>}
+              {(_, last) => <PieChartIndicator title={m.hhWithGapMeetingBasicNeeds} percent={_.percent} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </SlideContainer>

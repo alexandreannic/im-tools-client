@@ -94,12 +94,9 @@ export const UkraineMap = ({
               const value = filteredData[iso]!.value
               const _base = base ?? filteredData[iso]!.base
               const percent = _base ? value / _base : undefined
-              console.log('percent', percent)
               const fill = (percent && fillBaseOn === 'percent' && maxPercent && minPercent !== undefined)
                 ? computeFill(percent, minPercent, maxPercent)
                 : computeFill(value, min, max)
-              console.log('fill', minPercent, maxPercent)
-              console.log('fill', computeFill(value, min, max))
               return {value, base: _base, fill, percent}
             })() : undefined
             return (
