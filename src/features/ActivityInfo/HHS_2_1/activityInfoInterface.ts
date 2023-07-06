@@ -1,6 +1,6 @@
-import {aiOblasts} from '../uaLocation/aiOblasts'
-import {aiRaions} from '../uaLocation/aiRaions'
-import {aiHromadas} from '../uaLocation/aiHromadas'
+import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
+import {aiRaions} from '../../../core/uaLocation/aiRaions'
+import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
 
 /** @deprecated*/
 export namespace AiProtectionHhs {

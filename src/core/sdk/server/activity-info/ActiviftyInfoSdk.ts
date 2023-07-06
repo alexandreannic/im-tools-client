@@ -1,5 +1,5 @@
 import {ApiClient} from '../ApiClient'
-import {AiProtectionHhs} from '../../../activityInfo/AiProtectionHhs'
+import {AiProtectionHhs} from '../../../../features/ActivityInfo/HHS_2_1/activityInfoInterface'
 
 export class ActivityInfoSdk {
   constructor(private client: ApiClient) {

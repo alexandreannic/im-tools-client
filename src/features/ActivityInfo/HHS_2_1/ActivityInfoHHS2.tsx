@@ -1,10 +1,9 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {KoboFormProtHH} from '../../../core/koboModel/koboFormProtHH'
-import {useAppSettings} from '../../../core/context/ConfigContext'
+import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
+import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {AiProtectionHhs} from '../../../core/activityInfo/AiProtectionHhs'
-import {koboHromadaMapping} from '../HHS0/koboHromadaMapping'
+import {AiProtectionHhs} from '@/features/ActivityInfo/HHS_2_1/activityInfoInterface'
 import {chain} from '@/utils/utils'
 import {Page} from '@/shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
@@ -13,16 +12,16 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow, Tooltip} from '@mui/material'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
+import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {AaSelect} from '@/shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
-import {useAaToast} from '../../../core/useToast'
-import {koboFormId} from '../../../koboFormId'
-import {mapProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
+import {useAaToast} from '@/core/useToast'
+import {koboFormId} from '@/koboFormId'
+import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
-import {AILocationHelper} from '../../../core/uaLocation/_LocationHelper'
-import {useI18n} from '../../../core/i18n'
+import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
+import {useI18n} from '@/core/i18n'
 import {alreadySentKobosInApril} from './missSubmittedData'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
@@ -98,7 +97,6 @@ const _ActivityInfo = ({
     return chain(Arr(data))
       // .map(fillMissingSexOrGender)
       .map(x => x?.map(_ => ({..._})))
-      .map(data => data.map(_ => ({..._, ...koboHromadaMapping[_.id]})))
       .get
   }, [data])
 

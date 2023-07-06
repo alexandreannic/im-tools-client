@@ -229,7 +229,7 @@ export const DashboardMealVisitMonitoring = () => {
                   />
                 </SlidePanel>
                 <SlidePanel>
-                  <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
+                  <Box sx={{display: 'flex', '& > *': {flex: 1}}}>
                     <Lazy deps={[data]} fn={() => {
                       const base = data.map(_ => _.sew).compact()
                       return base.sum() / base.length / 100
@@ -301,7 +301,7 @@ export const DashboardMealVisitMonitoring = () => {
                         <Txt block color="hint" sx={{mb: 1}}>{row.fcpc ?? m.noComment}</Txt>
                         <Box sx={{display: 'flex', '& > *': {mr: 1}}}>
                           {row.fcpl && (
-                            <Box component="a" href={row.fcpl} sx={{
+                            <Box component="a" target="_blank" href={row.fcpl} sx={{
                               height: 50,
                               width: 50,
                               display: 'flex',
