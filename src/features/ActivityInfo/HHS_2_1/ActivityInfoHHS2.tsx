@@ -23,7 +23,7 @@ import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Option
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
 import {alreadySentKobosInApril} from './missSubmittedData'
-import {format} from 'date-fns'
+import {format, subMonths} from 'date-fns'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -35,7 +35,7 @@ const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify
 
 export const ActivityInfoHHS2 = () => {
   const {api} = useAppSettings()
-  const [period, setPeriod] = useState(format(new Date(), 'yyyy-MM'))
+  const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
 
   const request = (period: string) => {
     const [year, month] = period.split('-')
@@ -43,11 +43,7 @@ export const ActivityInfoHHS2 = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: new Date(parseInt(year), parseInt(month)),
     }
-    return api.kobo.answer.search({
-      formId: koboFormId.prod.protectionHh2,
-      fnMap: mapProtHHS_2_1,
-      filters,
-    }).then(_ => _.data.map(enrichProtHHS_2_1)).then(_ => {
+    return api.kobo.answer.searchProtHhs({filters}).then(_ => _.data.map(enrichProtHHS_2_1)).then(_ => {
       return _.filter(_ => {
         const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
         return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
