@@ -39,6 +39,7 @@
   ],
   "exclude": [
     "node_modules",
+    "src/features/ProtectionSnapshot/*",
     "src/core/uaLocation/*",
     "src/core/uaLocation/aiSettlement.js",
     "src/core/uaLocation/aiHromadas.ts",

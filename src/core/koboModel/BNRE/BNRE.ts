@@ -2,7 +2,7 @@ import {BNREOptions} from './BNREOptions'
 
 type Opt<T extends keyof typeof BNREOptions> = keyof (typeof BNREOptions)[T]
 
-export type BNRE = {
+export interface BNRE {
   start: string,
   end: string,
   // 1.1 Select Office
@@ -35,9 +35,11 @@ export type BNRE = {
   ben_det_raion: Opt<'ben_det_raion'>,
   // 2.5.3 Select hromada where registration is taking place
   ben_det_hromada: Opt<'ben_det_hromada'>,
-  // 2.5.4 Select residential status
+  // 2.5.4 Select settlement where registration is taking place
+  ben_det_settlement: string,
+  // 2.5.5 Select residential status
   ben_det_res_stat: Opt<'ben_det_res_stat'>,
-  // 2.5.5 What is your area of origin prior to displacement? (Select Oblast)
+  // 2.5.6 What is your area of origin prior to displacement? (Select Oblast)
   ben_det_prev_oblast: Opt<'ben_det_prev_oblast'>,
   // 2.6 What was the total value in UAH of all the resources your household received in the last one month?
   ben_det_income: number | undefined,
@@ -56,11 +58,7 @@ export type BNRE = {
   // 3.1.6 What is the civil status of the Head of Household?
   hh_char_civ_stat: Opt<'hh_char_civ_stat'>,
   // 3.1.7 HH Members
-  hh_char_hh_det?: {hh_char_hh_det_gender: string | undefined,hh_char_hh_det_age: string | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_preg: string | undefined}[],
-  // 3.1.7.1 Please select the GENDER of HH member
-  hh_char_hh_det_gender: Opt<'hh_char_hh_det_gender'>,
-  // 3.1.7.2 Please indicate the AGE of HH member
-  hh_char_hh_det_age: number | undefined,
+  hh_char_hh_det: {hh_char_hh_det_gender: Opt<'hh_char_hh_det_gender'> | undefined,hh_char_hh_det_age: number | undefined | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_baby_age: string | undefined,calc_preg: string | undefined}[] | undefined,
   // 3.2 Are any of the females in the household pregnat or lactating?
   hh_char_preg: Opt<'pay_det_tax_exempt'>,
   // 3.3.1 Please select any of the below that apply to you or a member of your household
@@ -69,10 +67,12 @@ export type BNRE = {
   hh_char_dis_level: Opt<'hh_char_dis_level'>,
   // Did you distribute the NFI Kits at the point of registration
   nfi_kit_disitrbuted: Opt<'pay_det_tax_exempt'>,
-  // Family Hygiene Kits distributed (HKMV)
-  nfi_dist_hkmv: number | undefined,
-  // Family NFI kits distributed (NFKF)
+  // Family Hygiene Kits (HKF)
   nfi_dist_hkf: number | undefined,
+  // Family Hygiene Kits for IDPs on the Move distributed (HKMV)
+  nfi_dist_hkmv: number | undefined,
+  // Family NFI kits distributed (NFKF + KS)
+  nfi_dist_hkf_001: number | undefined,
   // Baby Kits distributed (BK)
   nfi_dist_bk: number | undefined,
   // Baby Winter Kits S distributed (WKB1)

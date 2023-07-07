@@ -6,7 +6,6 @@ import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
-import json from './TODELETERAWDATA.json'
 import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
 
 interface KoboAnswerFilter {

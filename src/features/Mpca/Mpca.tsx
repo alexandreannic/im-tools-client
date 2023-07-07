@@ -31,10 +31,18 @@ const MPCASidebar = () => {
   return (
     <Sidebar>
       <SidebarBody>
-        <SidebarItem component={NavLink} icon="equalizer" to={path(mpcaModule.siteMap.dashboard)}>{m.dashboard}</SidebarItem>
-        <SidebarItem component={NavLink} icon="table_chart" to={path(mpcaModule.siteMap.data)}>{m.data}</SidebarItem>
-        <SidebarItem component={NavLink} icon="savings" to={path(mpcaModule.siteMap.paymentTools)}>{m.mpcaDb.paymentTools}</SidebarItem>
-        <SidebarItem component={NavLink} icon="join_left" to={path(mpcaModule.siteMap.deduplication)}>{m.wfpDeduplication}</SidebarItem>
+        <NavLink to={path(mpcaModule.siteMap.dashboard)}>
+          <SidebarItem icon="equalizer">{m.dashboard}</SidebarItem>
+        </NavLink>
+        <NavLink to={path(mpcaModule.siteMap.data)}>
+          <SidebarItem icon="table_chart">{m.data}</SidebarItem>
+        </NavLink>
+        <NavLink to={path(mpcaModule.siteMap.paymentTools)}>
+          <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>
+        </NavLink>
+        <NavLink to={path(mpcaModule.siteMap.deduplication)}>
+          <SidebarItem icon="join_left">{m.wfpDeduplication}</SidebarItem>
+        </NavLink>
       </SidebarBody>
     </Sidebar>
   )

@@ -36,27 +36,39 @@ export const elderlyLimitIncluded = 60
 
 export const isElderly = (age: number | string) => +age >= elderlyLimitIncluded
 
-export const ageGroupBHA = Object.freeze({
-  '0 - 4': [0, 4],
-  '5 - 9': [5, 9],
-  '10 - 14': [10, 14],
-  '15 - 17': [15, 17],
-  '18 - 29': [18, 29],
-  '30 - 59': [30, 59],
-  '60+': [elderlyLimitIncluded, Infinity],
-})
 export const ageGroup = Object.freeze({
-  '0 - 4': [0, 4],
-  '5 - 11': [5, 11],
-  '12 - 17': [12, 17],
-  '18 - 24': [18, 24],
-  '25 - 49': [25, 49],
-  '50 - 59': [50, 59],
-  '60+': [elderlyLimitIncluded, Infinity],
+  drc: {
+    '0 - 4': [0, 4],
+    '5 - 11': [5, 11],
+    '12 - 17': [12, 17],
+    '18 - 24': [18, 24],
+    '25 - 49': [25, 49],
+    '50 - 59': [50, 59],
+    '60+': [elderlyLimitIncluded, Infinity],
+  },
+  echo: {
+    '0 - 4': [0, 4],
+    '5 - 17': [5, 17],
+    '18 -49': [18, 49],
+    '50+': [50, Infinity],
+  },
+  bha: {
+    '0 - 4': [0, 4],
+    '5 - 9': [5, 9],
+    '10 - 14': [10, 14],
+    '15 - 17': [15, 17],
+    '18 - 29': [18, 29],
+    '30 - 59': [30, 59],
+    '60+': [elderlyLimitIncluded, Infinity],
+  }
 })
 
-export const groupByAgeGroup = <T>(p: T, getAge: (_: T) => number): keyof typeof ageGroupBHA | undefined => {
-  for (const [k, [min, max]] of Enum.entries(ageGroupBHA)) {
+export const groupByAgeGroup = <AG extends Record<string, number[]>>(
+  ag: AG = ageGroup.bha as unknown as AG,
+) => <T>(
+  p: T, getAge: (_: T) => number
+): keyof AG | undefined => {
+  for (const [k, [min, max]] of Enum.entries(ag)) {
     if (getAge(p) && getAge(p) >= min && getAge(p) <= max) return k
   }
 }

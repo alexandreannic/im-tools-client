@@ -7,6 +7,10 @@ back_office: {
 	'nlv': `Mykloaiv (NLV)`
 },
 back_enum: {
+	'oleksandr_havrylov': `Oleksandr Havrylov`,
+	'ievgen_kylymenniy': `Ievgen Kylymenniy`,
+	'oleksandr_shmunk': `Oleksandr Shmunk`,
+	'inna_kovalchuk': `Inna Kovalchuk`,
 	'dmytro_ivanov': `Dmytro Ivanov`,
 	'henadii_petrychenko': `Henadii Petrychenko`,
 	'nadiia_yudaieva': `Nadiia Yudaieva`,
@@ -19,10 +23,6 @@ back_enum: {
 	'artem_chernukha_1': `Artem Chernukha`,
 	'lwo_ex1': `Extra 1`,
 	'lwo_ex2': `Extra 2`,
-	'oleks_havrylov': `Oleks Havrylov`,
-	'vlad_zhukov': `Vlad Zhukov`,
-	'artem_chernukha': `Artem Chernukha`,
-	'maryna_dullovska': `Maryna Dullovska`,
 	'nlv_ex1': `Extra 1`,
 	'nlv_ex2': `Extra 2`,
 	'oleh_vyshnevskyi': `Oleh Vyshevskyi`,
@@ -58,6 +58,11 @@ back_enum: {
 	'chj_ex2': `Extra 2`
 },
 back_donor: {
+	'uhf_chj': `UHF-4`,
+	'uhf_dnk': `UHF-4`,
+	'uhf_hrk': `UHF-4`,
+	'uhf_lwo': `UHF-4`,
+	'uhf_nlv': `UHF-4`,
 	'bha_lwo': `BHA`,
 	'bha_chj': `BHA`,
 	'bha_dnk': `BHA`,
@@ -105,7 +110,8 @@ pay_det_tax_exempt: {
 },
 back_refer_who: {
 	'prot': `A = Protection`,
-	'legal': `B = Legal`
+	'legal': `B = Legal`,
+	'shelter': `C = Shelter`
 },
 ben_det_prev_oblast: {
 	'cherkaska': `Cherkaska`,

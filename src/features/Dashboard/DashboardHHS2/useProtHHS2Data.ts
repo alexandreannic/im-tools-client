@@ -4,8 +4,8 @@ import {chain} from '@/utils/utils'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
 import {ProtHHS2Enrich} from './DashboardProtHHS2'
-import {ageGroup, ageGroupBHA, groupByAgeGroup} from '../../../core/type'
-import {startOfMonth, sub, subDays} from 'date-fns'
+import {groupByAgeGroup} from '../../../core/type'
+import {subDays} from 'date-fns'
 
 export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
 
@@ -50,9 +50,9 @@ export const useProtHHS2Data = ({
       // currentMonth,
       lastMonth,
       flatData,
-      individuals: data.sum(_ => _.persons.length),
+      individualsCount: data.sum(_ => _.persons.length),
       categoryOblasts,
-      ageGroup: chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(_ => groupByAgeGroup(_, p => p.age!)))
+      ageGroup: (ageGroup: Record<string, number[]>) => chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(_ => groupByAgeGroup(ageGroup)(_, p => p.age!)))
         .map(_ => Enum.entries(_).map(([group, v]) => ({
             key: group,
             Male: v.filter(_ => _.gender === 'male').length,
@@ -60,7 +60,7 @@ export const useProtHHS2Data = ({
             Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length,
           })
         ))
-        .map(_ => _.sort((a, b) => Object.keys(ageGroupBHA).indexOf(b.key) - Object.keys(ageGroupBHA).indexOf(a.key)))
+        .map(_ => _.sort((a, b) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))
         .get
       ,
 

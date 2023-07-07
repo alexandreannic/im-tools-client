@@ -45,7 +45,7 @@ export const useBNREComputed = ({
   const flatData = data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))
   return {
     flatData,
-    ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => groupByAgeGroup(_, p => +p?.hh_char_hh_det_age!)))
+    ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => groupByAgeGroup()(_, p => +p?.hh_char_hh_det_age!)))
       .map(_ => Enum.entries(_).map(([group, v]) => ({
           key: group,
           Male: v.filter(_ => _.hh_char_hh_det_gender === 'male').length,
@@ -53,7 +53,7 @@ export const useBNREComputed = ({
           Other: v.filter(_ => _.hh_char_hh_det_gender === undefined).length,
         })
       ))
-      .map(_ => _.sort((a, b) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))
+      .map(_ => _.sort((a, b) => Object.keys(ageGroup.drc).indexOf(b.key) - Object.keys(ageGroup.drc).indexOf(a.key)))
       .get
     ,
   }

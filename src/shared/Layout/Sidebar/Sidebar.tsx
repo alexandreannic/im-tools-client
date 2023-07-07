@@ -56,8 +56,8 @@ export const Sidebar = ({
 
   useEffect(() => {
     if (headerId) {
-      window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId))
       stickSidebarToHeader(id, headerId)
+      window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId))
     }
   }, [])
 
@@ -71,6 +71,7 @@ export const Sidebar = ({
       PaperProps={{
         id,
         sx: {
+          top: layoutConfig.headerHeight,
           background: 'transparent',
           position: 'fixed',
           border: 'none',

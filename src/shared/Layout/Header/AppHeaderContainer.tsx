@@ -8,12 +8,14 @@ const headerStickyClass = 'sticky-header'
 
 const redesignHeaderOnTop = (headerId: string) => {
   if (!header$) {
-    header$ = document.getElementById(headerId)!
+    header$ = document.getElementById(headerId)
   }
-  if (header$.getBoundingClientRect().y === 0 && window.screenTop > 0) {
-    header$.classList.add(headerStickyClass)
-  } else {
-    header$.classList.remove(headerStickyClass)
+  if (header$) {
+    if (header$.getBoundingClientRect().y === 0 && window.screenTop > 0) {
+      header$.classList.add(headerStickyClass)
+    } else {
+      header$.classList.remove(headerStickyClass)
+    }
   }
 }
 

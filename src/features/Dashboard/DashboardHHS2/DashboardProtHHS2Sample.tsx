@@ -1,10 +1,10 @@
 import {SlideContainer, SlidePanel, SlideWidget} from '@/shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import React from 'react'
+import React, {useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
-import {useTheme} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
@@ -13,14 +13,33 @@ import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Panel} from '@/shared/Panel'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
+import {ageGroup} from '@/core/type'
+import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
+import {Enum} from '@alexandreannic/ts-utils'
+import {makeSx} from 'mui-extension'
 
+const css = makeSx({
+  table: {
+    borderRadius: t => t.shape.borderRadius + 'px',
+    border: t => `1px solid ${t.palette.divider}`,
+    width: '100%',
+    '& > tr:not(:last-of-type) > td': {
+      borderBottom: t => `1px solid ${t.palette.divider}`,
+    },
+    '& td': {
+      padding: .5,
+    },
+    '& > tr': {}
+  },
+})
 export const DashboardProtHHS2Sample = ({
   data,
   computed
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()
-
+  const [ag, setAg] = useState<keyof (typeof ageGroup)>('drc')
+  const [agDisplay, setAgDisplay] = useState<'chart' | 'table'>('chart')
   return (
     <SlideContainer column>
       <SlideContainer alignItems="flex-start" responsive>
@@ -30,10 +49,10 @@ export const DashboardProtHHS2Sample = ({
               {formatLargeNumber(data.length)}
             </SlideWidget>
             <SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>
-              {formatLargeNumber(computed.individuals)}
+              {formatLargeNumber(computed.individualsCount)}
             </SlideWidget>
             <SlideWidget sx={{flex: 1}} icon="group" title={m.hhSize}>
-              {(computed.individuals / data.length).toFixed(1)}
+              {(computed.individualsCount / data.length).toFixed(1)}
             </SlideWidget>
           </SlideContainer>
         </SlideContainer>
@@ -86,7 +105,40 @@ export const DashboardProtHHS2Sample = ({
             <UkraineMap data={computed.byCurrentOblast} sx={{mx: 3}} base={data.length}/>
           </SlidePanel>
           <SlidePanel title={m.ageGroup}>
-            <AAStackedBarChart data={computed.ageGroup} height={250}/>
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+              <ScRadioGroup value={ag} onChange={setAg} dense inline sx={{mb: 2}}>
+                {Enum.keys(ageGroup).map(_ =>
+                  <ScRadioGroupItem dense hideRadio key={_} value={_} title={_.toUpperCase()}/>
+                )}
+              </ScRadioGroup>
+              <ScRadioGroup value={agDisplay} onChange={setAgDisplay} dense inline sx={{mb: 2}}>
+                <ScRadioGroupItem dense hideRadio value="table" title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>calendar_view_month</Icon>}/>
+                <ScRadioGroupItem dense hideRadio value="chart"
+                                  title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>align_horizontal_left</Icon>}/>
+              </ScRadioGroup>
+            </Box>
+            <Lazy deps={[ag, data]} fn={() => computed.ageGroup(ageGroup[ag])}>
+              {_ => agDisplay === 'chart' ? (
+                <AAStackedBarChart data={_} height={250}/>
+              ) : (
+                <Box component="table" sx={css.table}>
+                  <tr>
+                    <td></td>
+                    <td>{m.female}</td>
+                    <td>{m.male}</td>
+                    <td>{m.other}</td>
+                  </tr>
+                  {_.map(k =>
+                    <tr key={k.key}>
+                      <td>{k.key}</td>
+                      <td>{k.Female}</td>
+                      <td>{k.Male}</td>
+                      <td>{k.Other}</td>
+                    </tr>
+                  )}
+                </Box>
+              )}
+            </Lazy>
           </SlidePanel>
         </SlideContainer>
         <SlideContainer column>
@@ -122,14 +174,14 @@ export const DashboardProtHHS2Sample = ({
           </SlidePanel>
 
           {/*<SlidePanel title={m.protHHS2.ethnicMinorities}>*/}
-            {/*<DashboardProtHHS2BarChart*/}
-            {/*  data={data}*/}
-            {/*  question="if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group"*/}
-            {/*  filterValue={[*/}
-            {/*    'no',*/}
-            {/*    'unable_unwilling_to_answer'*/}
-            {/*  ]}*/}
-            {/*/>*/}
+          {/*<DashboardProtHHS2BarChart*/}
+          {/*  data={data}*/}
+          {/*  question="if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group"*/}
+          {/*  filterValue={[*/}
+          {/*    'no',*/}
+          {/*    'unable_unwilling_to_answer'*/}
+          {/*  ]}*/}
+          {/*/>*/}
           {/*</SlidePanel>*/}
         </SlideContainer>
       </SlideContainer>

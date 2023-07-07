@@ -14,6 +14,7 @@ export interface ScRadioGroupItemProps<T> extends Omit<BoxProps, 'title'> {
   dense?: boolean
   inline?: boolean
   error?: boolean
+  hideRadio?: boolean
   multiple?: boolean
 }
 
@@ -28,6 +29,7 @@ export const ScRadioGroupItem = <T, >({
   children,
   selected,
   onClick,
+  hideRadio,
   className,
   multiple,
   sx,
@@ -101,25 +103,27 @@ export const ScRadioGroupItem = <T, >({
       onClick={onClick}
       {...rest}
     >
-      {multiple ? (
-        <Checkbox
-          disabled={disabled}
-          size={dense ? 'small' : undefined}
-          checked={selected}
-          sx={{
-            marginLeft: 1,
-            minHeight: minHeight,
-          }}/>
-      ) : (
-        <Radio
-          disabled={disabled}
-          size={dense ? 'small' : undefined}
-          checked={selected}
-          sx={{
-            marginLeft: 1,
-            minHeight: minHeight,
-          }}
-        />
+      {!hideRadio && (
+        multiple ? (
+          <Checkbox
+            disabled={disabled}
+            size={dense ? 'small' : undefined}
+            checked={selected}
+            sx={{
+              marginLeft: 1,
+              minHeight: minHeight,
+            }}/>
+        ) : (
+          <Radio
+            disabled={disabled}
+            size={dense ? 'small' : undefined}
+            checked={selected}
+            sx={{
+              marginLeft: 1,
+              minHeight: minHeight,
+            }}
+          />
+        )
       )}
       <Box
         sx={{
@@ -130,7 +134,7 @@ export const ScRadioGroupItem = <T, >({
           pb: 1.5,
           // minHeight: 42,
           flexDirection: 'column',
-          ml: .5,
+          ml: hideRadio ? 2 : .5,
           mr: 2,
           width: '100%',
           ...dense && {

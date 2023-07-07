@@ -23,6 +23,7 @@ import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Option
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
 import {alreadySentKobosInApril} from './missSubmittedData'
+import {format} from 'date-fns'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -33,9 +34,8 @@ const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify
 
 
 export const ActivityInfoHHS2 = () => {
-  const [period, setPeriod] = useState('2023-04')
   const {api} = useAppSettings()
-
+  const [period, setPeriod] = useState(format(new Date(), 'yyyy-MM'))
 
   const request = (period: string) => {
     const [year, month] = period.split('-')
@@ -69,6 +69,7 @@ export const ActivityInfoHHS2 = () => {
 
   return (
     <Page width={1200} loading={_hhCurrent.loading}>
+      <AaInput type="month" sx={{minWidth: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
       {map(_hhCurrent.entity, _ => <_ActivityInfo
         data={_}
         period={period}
@@ -167,7 +168,6 @@ const _ActivityInfo = ({
     <div>
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
         <Box sx={{display: 'flex', '& > *': {mr: 1}}}>
-          <AaInput type="month" sx={{minWidth: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
           <AaSelect
             sx={{minWidth: 200}}
             label="Oblast"

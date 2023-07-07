@@ -680,9 +680,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _8_individuals: (() => {
         const persons = data.flatMap(_ => _.persons)
-        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof ageGroup, {value: number}>>((p, acc) => {
-          const group = Enum.keys(ageGroup).find(k => {
-            const [min, max] = ageGroup[k]
+        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof ageGroup.bha, {value: number}>>((p, acc) => {
+          const group = Enum.keys(ageGroup.bha).find(k => {
+            const [min, max] = ageGroup.bha[k]
             return p.age && p.age >= min && p.age <= max
           })
           if (group) return [group, {value: (acc[group]?.value ?? 0) + 1}]

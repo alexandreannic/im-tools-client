@@ -22,7 +22,7 @@ import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {useAaToast} from '@/core/useToast'
 import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {DatabaseAccess} from '@/features/Database/DatabaseAccess/DatabaseAccess'
-import {KoboImg} from '@/shared/TableImg/KoboImg'
+import {getKoboUrl, KoboImg} from '@/shared/TableImg/KoboImg'
 import {usePersistentState} from 'react-persistent-state'
 import {removeHtml, slugify} from '@/utils/utils'
 import {AaSelect} from '@/shared/Select/Select'
@@ -77,7 +77,8 @@ export const Database = () => {
                   </>
                 ) : _forms.entity?.map(_ => (
                   <NavLink to={databaseModule.siteMap.form(_.serverId, _.id)}>
-                    <SidebarItem key={_.id} onClick={() => {}}>{_.name}</SidebarItem>
+                    <SidebarItem key={_.id} onClick={() => {
+                    }}>{_.name}</SidebarItem>
                   </NavLink>
                 ))}
               </SidebarBody>
@@ -186,61 +187,76 @@ export const DatabaseTable = ({
   }
 
   const columns = useMemo(() => {
-    const questions = form.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(q => {
-      const col: SheetColumnProps<KoboAnswer2<any>> = {
-        id: q.name,
-        head: map(langIndex, _ => map(q.label?.[_], removeHtml)) ?? q.name,
-        tooltip: row => fnSwitch(q.type, {
-          date: formatDateTime(row[q.name]),
-          select_one: getValue(row, q),
-          select_multiple: getValue(row, q),
-        }, () => row[q.name]),
-        type: fnSwitch<any, SheetColumnProps<any>['type']>(q.type, {
-          date: 'date',
-          integer: 'number',
-          text: 'string',
-          start: 'date',
-          end: 'date',
-          select_multiple: form.content.choices.filter(_ => _.list_name === q.select_from_list_name).map(_ => _.name),
-          select_one: form.content.choices.filter(_ => _.list_name === q.select_from_list_name).map(_ => _.name),
-        }, () => undefined),
-        render: row => fnSwitch(q.type, {
-          image: <KoboImg attachments={row.attachments} fileName={row[q.name]}/>,
-          text: row[q.name],
-          integer: row[q.name],
-          date: row[q.name] ? formatDate(new Date(row[q.name])) : '',
-          select_one: getValue(row, q),
-          select_multiple: getValue(row, q),
-          start: formatDateTime(row.start),
-          end: formatDateTime(row.end),
-        }, type => JSON.stringify(row[q.name])),
-        renderExport: row => JSON.stringify(row[q.name]),
-      }
-      return col
-    })
-    const metaColumn: SheetColumnProps<KoboAnswer2>[] = [
-      {
-        id: 'id',
-        head: 'ID',
-        render: (_: any) => _.id,
-        renderExport: _ => JSON.stringify(_.id),
-      },
-      {
-        id: 'submissionTime',
-        head: m.submissionTime,
-        render: _ => formatDateTime(_.submissionTime),
-        type: 'date',
-        renderExport: _ => JSON.stringify(_.submissionTime),
-      },
-      {
-        id: 'submittedBy',
-        head: m.submittedBy,
-        render: _ => _.submittedBy,
-        renderExport: _ => JSON.stringify(_.submittedBy),
-      },
-    ]
-    return [...metaColumn, ...questions ?? []]
-  }, [form, translations])
+      const questions = form.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(q => {
+        const col: SheetColumnProps<KoboAnswer2<any>> = {
+          id: q.name,
+          head: map(langIndex, _ => map(q.label?.[_], removeHtml)) ?? q.name,
+          tooltip: row => fnSwitch(q.type, {
+            date: formatDateTime(row[q.name]),
+            start: formatDateTime(row[q.name]),
+            end: formatDateTime(row[q.name]),
+            select_one: getValue(row, q),
+            select_multiple: getValue(row, q),
+          }, () => row[q.name]),
+          type: fnSwitch<any, SheetColumnProps<any>['type']>(q.type, {
+            date: 'date',
+            integer: 'number',
+            text: 'string',
+            start: 'date',
+            end: 'date',
+            calculate: 'number',
+            select_multiple: form.content.choices.filter(_ => _.list_name === q.select_from_list_name).map(_ => _.name),
+            select_one: form.content.choices.filter(_ => _.list_name === q.select_from_list_name).map(_ => _.name),
+          }, () => undefined),
+          render: row => fnSwitch(q.type, {
+            image: <KoboImg attachments={row.attachments} fileName={row[q.name]}/>,
+            text: row[q.name],
+            integer: row[q.name],
+            calculate: row[q.name],
+            date: row[q.name] ? formatDate(new Date(row[q.name])) : '',
+            select_one: getValue(row, q),
+            select_multiple: getValue(row, q),
+            select_one_from_file: row[q.name],
+            start: formatDate(row.start),
+            end: formatDate(row.end),
+          }, type => JSON.stringify(row[q.name])),
+          renderExport: row => fnSwitch(q.type, {
+            start: formatDateTime(row.start),
+            end: formatDateTime(row.start),
+            date: formatDateTime(row.end),
+            image: getKoboUrl(row.attachments, row[q.name]),
+            select_one: getValue(row, q),
+            select_multiple: getValue(row, q),
+            calculate: row[q.name],
+            integer: row[q.name],
+          }, () => row[q.name])
+        }
+        return col
+      })
+      const metaColumn: SheetColumnProps<KoboAnswer2>[] = [
+        {
+          id: 'id',
+          head: 'ID',
+          render: (_: any) => _.id,
+          renderExport: _ => JSON.stringify(_.id),
+        },
+        {
+          id: 'submissionTime',
+          head: m.submissionTime,
+          render: _ => formatDateTime(_.submissionTime),
+          type: 'date',
+          renderExport: _ => JSON.stringify(_.submissionTime),
+        },
+        {
+          id: 'submittedBy',
+          head: m.submittedBy,
+          render: _ => _.submittedBy,
+          renderExport: _ => JSON.stringify(_.submittedBy),
+        },
+      ]
+      return [...metaColumn, ...questions ?? []]
+    }, [form, translations]
+  )
 
   return (
     <Sheet

@@ -1,5 +1,5 @@
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
-import {ageGroupBHA, groupByAgeGroup} from '../core/type'
+import {ageGroup, groupByAgeGroup} from '../core/type'
 import {ChartTools} from '../core/chartTools'
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
 
@@ -31,8 +31,8 @@ export const getProtHhsIptData = (data?: _Arr<ProtHHS2Enrich>) => {
           ageGroup: 'total',
           total: genderV.length,
         })
-        const byAge = Arr(genderV).groupBy(_ => groupByAgeGroup(_, p => p.age!))
-        const byAgeSorted = ChartTools.sortBy.custom(Object.keys(ageGroupBHA))(byAge)
+        const byAge = Arr(genderV).groupBy(_ => groupByAgeGroup()(_, p => p.age!))
+        const byAgeSorted = ChartTools.sortBy.custom(Object.keys(ageGroup.bha))(byAge)
         Enum.entries(byAgeSorted).forEach(([ageGroup, ageV]) => {
           csv.push({
             base,

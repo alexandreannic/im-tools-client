@@ -1,6 +1,6 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
 import {Box, Icon} from '@mui/material'
@@ -11,17 +11,20 @@ import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {Datatable} from '@/shared/Datatable/Datatable'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 import {ActivityInfoHelper} from '../shared/activityInfoHelper'
-import {addMonths, format, startOfMonth} from 'date-fns'
+import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
-import {fixLocations} from './activityInfoNfiHelper'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
-import {Txt} from 'mui-extension'
+import {AaInput} from '@/shared/ItInput/AaInput'
+
+interface Person {
+  age: number
+  gender: 'male' | 'female'
+}
 
 interface Answer {
-  file: string
   id: string
   start: Date
   oblast: keyof typeof MPCA_NFIOptions['oblast'] | undefined
@@ -34,7 +37,7 @@ interface Answer {
   BK2: NonNullable<MPCA_NFI['BK_Baby_Kit']>
   BK3: NonNullable<MPCA_NFI['BK_Baby_Kit_001']>
   BK4: NonNullable<MPCA_NFI['BK_Baby_Kit_002']>
-  group_in3fh72: NonNullable<MPCA_NFI['group_in3fh72']>
+  hh_char_hh_det?: Partial<Person>[]
 }
 
 export const getLocation = <K extends string>(loc: Record<K, string>, name: string, type: string, rows: any): K => {
@@ -61,7 +64,7 @@ const toFormData = ({
 }: {
   formId: string
   answers: _Arr<Answer>
-  period: Date
+  period: string
 }) => {
   const activities: Row[] = []
   let index = 0
@@ -87,7 +90,7 @@ const toFormData = ({
     if (a['Total Reached (No Disaggregation)'] === 0) return
     index++
     const activity = Object.freeze({
-      'Reporting Month': format(period, 'yyyy-MM'),
+      'Reporting Month': 'yyyy-MM',
       'Reporting Against a plan?': 'Yes',
       'Location Type': 'Individuals/households',
       'Population Group': 'Overall (all groups)',
@@ -104,7 +107,7 @@ const toFormData = ({
       request: ActivityInfoHelper.generateRequest({
         activity: mapWashRMM(activity),
         formId,
-        activityIdPrefix: 'drcnfi' + format(period, 'yyyyMM') + 'i',
+        activityIdPrefix: 'drcnfi' + period + 'i',
         activityIndex: index
       })
     })
@@ -117,18 +120,15 @@ const toFormData = ({
       Enum.entries(byRaion.groupBy(_ => _.hromada)).forEach(([hromada, byHromada]) => {
         const enHromada = MPCA_NFIOptions.hromada[hromada]
         Enum.entries(byHromada.groupBy(_ => _.settlement)).forEach(([settlement, bySettlement]) => {
-          const planBK = bySettlement.filter(_ => _.BK1 > 0 || _.BK2 > 0 || _.BK3 > 0 || _.BK4 > 0)
-          const planHK = bySettlement.filter(_ => _.HKMV_ > 0 || _.HKF_ > 0)
-          const planBKPersons = planBK.flatMap(_ => _.group_in3fh72)
-            .filter(_ => _.AgeHH !== undefined && _.AgeHH < 3 && _.GenderHH !== undefined) as _Arr<{
-            AgeHH: number,
-            GenderHH: keyof typeof MPCA_NFIOptions['GenderHH']
-          }>
-          const planHKPersons = planHK.flatMap(_ => _.group_in3fh72)
-            .filter(_ => _.AgeHH !== undefined && _.GenderHH !== undefined) as _Arr<{
-            AgeHH: number,
-            GenderHH: keyof typeof MPCA_NFIOptions['GenderHH']
-          }>
+          const bySettlementWithPerson = bySettlement.map(_ => ({
+            ..._,
+            hh_char_hh_det: (_.hh_char_hh_det ?? []).filter(_ => _.age && _.gender)
+          })) as _Arr<Omit<Answer, 'hh_char_hh_det'> & {hh_char_hh_det: Person[]}>
+          const planBK = bySettlementWithPerson.filter(_ => _.BK1 > 0 || _.BK2 > 0 || _.BK3 > 0 || _.BK4 > 0)
+          const planHK = bySettlementWithPerson.filter(_ => _.HKMV_ > 0 || _.HKF_ > 0)
+          const planBKPersons = planBK.flatMap(_ => _.hh_char_hh_det).filter(_ => _ && _.age && _.gender)
+            .filter(_ => _.age < 3)
+          const planHKPersons = planHK.flatMap(_ => _.hh_char_hh_det).filter(_ => _ && _.age && _.gender)
           const location = {
             Oblast: AILocationHelper.findOblast(enOblast) ?? '⚠️' + enOblast,
             Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? '⚠️' + enRaion,
@@ -138,8 +138,8 @@ const toFormData = ({
           pushActivity(planBK, {
             ...location,
             'WASH - APM': 'DRC-00003',
-            'Boys': planBKPersons.filter(_ => _.GenderHH === 'male').length,
-            'Girls': planBKPersons.filter(_ => _.GenderHH === 'female').length,
+            'Boys': planBKPersons.filter(_ => _.gender === 'male').length,
+            'Girls': planBKPersons.filter(_ => _.gender === 'female').length,
             'Men': 0,
             'Women': 0,
             'Elderly Women': 0,
@@ -151,12 +151,12 @@ const toFormData = ({
             ...location,
             'WASH - APM': 'DRC-00001',
             'Total Reached (No Disaggregation)': planHKPersons.length,
-            'Boys': planHKPersons.count(_ => _.AgeHH < 18 && _.GenderHH === 'male'),
-            'Girls': planHKPersons.count(_ => _.AgeHH < 18 && _.GenderHH === 'female'),
-            'Men': planHKPersons.count(_ => _.AgeHH >= 18 && _.AgeHH < KoboFormProtHH.elderlyLimitIncluded && _.GenderHH === 'male'),
-            'Women': planHKPersons.count(_ => _.AgeHH >= 18 && _.AgeHH < KoboFormProtHH.elderlyLimitIncluded && _.GenderHH === 'female'),
-            'Elderly Men': planHKPersons.count(_ => _.AgeHH >= KoboFormProtHH.elderlyLimitIncluded && _.GenderHH === 'male'),
-            'Elderly Women': planHKPersons.count(_ => _.AgeHH >= KoboFormProtHH.elderlyLimitIncluded && _.GenderHH === 'female'),
+            'Boys': planHKPersons.count(_ => _.age < 18 && _.gender === 'male'),
+            'Girls': planHKPersons.count(_ => _.age < 18 && _.gender === 'female'),
+            'Men': planHKPersons.count(_ => _.age >= 18 && _.age < KoboFormProtHH.elderlyLimitIncluded && _.gender === 'male'),
+            'Women': planHKPersons.count(_ => _.age >= 18 && _.age < KoboFormProtHH.elderlyLimitIncluded && _.gender === 'female'),
+            'Elderly Men': planHKPersons.count(_ => _.age >= KoboFormProtHH.elderlyLimitIncluded && _.gender === 'male'),
+            'Elderly Women': planHKPersons.count(_ => _.age >= KoboFormProtHH.elderlyLimitIncluded && _.gender === 'female'),
             'People with disability': planHK.length,
           })
         })
@@ -166,48 +166,45 @@ const toFormData = ({
   return activities
 }
 
-const computePeriod = (date: Date) => {
-  const start = startOfMonth(date)
-  return {
-    start,
-    end: addMonths(start, 1)
-  }
-}
-
 export const ActivityInfoNFI = () => {
-  const [period, setPeriod] = useState(new Date(2023, 4, 1))
   const {api} = useAppSettings()
-  const filters = computePeriod(period)
+  const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
 
-  const _data = useFetcher((period: Date) => {
-    return Promise.all([
-      api.kobo.answer.searchBnre({filters}).then(_ => {
-        return _.data.map(_ => ({
-          file: 'Myko',
+  const _data = useFetcher((p) => {
+    const [year, month] = p.split('-')
+    const filters = (year === '2023' && month === '04') ? undefined : {
+      start: new Date(parseInt(year), parseInt(month) - 1),
+      end: new Date(parseInt(year), parseInt(month)),
+    }
+    return api.kobo.answer.searchBnre({filters})
+      .then(_ => {
+        return _.data.filter(_ => !!_.ben_det_settlement).map(_ => ({
           id: _.id,
-          oblast: 'mykolaivska' as any,
-          raion: undefined as any,
-          hromada: undefined as any,
-          settlement: undefined!,
+          oblast: _.ben_det_oblast,
+          raion: _.ben_det_raion,
+          hromada: _.ben_det_hromada,
+          settlement: _.ben_det_settlement,
           start: _.start,
           HKF_: _.nfi_dist_hkf ?? 0,
           HKMV_: _.nfi_dist_hkmv ?? 0,
-          BK1: _.nfi_dist_wkb1 ?? 0 + _.nfi_dist_bk ?? 0,
+          BK1: (_.nfi_dist_wkb1 ?? 0) + (_.nfi_dist_bk ?? 0),
           BK2: _.nfi_dist_wkb2 ?? 0,
           BK3: _.nfi_dist_wkb3 ?? 0,
           BK4: _.nfi_dist_wkb4 ?? 0,
-          group_in3fh72: _.group_in3fh72,
+          hh_char_hh_det: [
+            ...(_.hh_char_hhh_age || _.hh_char_res_gender) ? [{age: _.hh_char_hhh_age, gender: _.hh_char_res_gender}] : [],
+            ...(_.hh_char_hh_det ?? []).map(p => ({
+              age: p.hh_char_hh_det_age,
+              gender: p.hh_char_hh_det_gender,
+            }))
+          ],
         }))
-      }),
-    ]).then(([myko, naa, main]) => toFormData({
-      formId: 'crvtph7lg6d5dhq2',
-      answers: Arr([
-        ...myko,
-        ...main,
-        ...naa
-      ]),
-      period,
-    }))
+      })
+      .then(_ => toFormData({
+        formId: 'crvtph7lg6d5dhq2',
+        answers: Arr(_),
+        period,
+      }))
   })
 
   useEffect(() => {
@@ -216,12 +213,9 @@ export const ActivityInfoNFI = () => {
 
   return (
     <Page width={1200} loading={_data.loading}>
+      <AaInput type="month" sx={{minWidth: 200, width: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
       {map(_data.entity, _ => (
-        <_ActivityInfo
-          data={_}
-          period={period}
-          setPeriod={setPeriod}
-        />
+        <_ActivityInfo data={_}/>
       ))}
     </Page>
   )
@@ -229,12 +223,10 @@ export const ActivityInfoNFI = () => {
 
 const _ActivityInfo = ({
   data,
-  period,
-  setPeriod,
+  // period,
 }: {
   data: Row[]
-  period: Date
-  setPeriod: Dispatch<SetStateAction<Date>>
+  // period: Date
 }) => {
   const {toastHttpError} = useAaToast()
   const {formatDate} = useI18n()
@@ -246,11 +238,6 @@ const _ActivityInfo = ({
   return (
     <>
       <Box sx={{display: 'flex', mb: 3, alignItems: 'center', justifyContent: 'space-between'}}>
-        <Txt bold fontSize="big">
-          {formatDate(computePeriod(period).start)}
-          {' - '}
-          {formatDate(computePeriod(period).end)}
-        </Txt>
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
         }}>
@@ -300,3 +287,5 @@ const _ActivityInfo = ({
     </>
   )
 }
+
+

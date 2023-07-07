@@ -253,3 +253,14 @@ export const removeHtml = (_?: string) => _?.replace(/(<([^>]+)>)/gi, '')
 export const convertNumberIndexToLetter = (_: number) => {
   return (_ + 9).toString(36).toUpperCase()
 }
+
+export namespace Utils {
+
+  export const dateToPeriod = (date: Date) => {
+    const start = startOfMonth(date)
+    return {
+      start,
+      end: addMonths(start, 1)
+    }
+  }
+}
