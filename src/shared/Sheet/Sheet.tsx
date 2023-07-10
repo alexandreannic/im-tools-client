@@ -390,41 +390,17 @@ export const Sheet = <T extends Answer = Answer>({
               })}
             </tr>
             </thead>
-            <tbody>
-            {loading && (
-              <tr>
-                <td className="td-loading" colSpan={filteredColumns?.length ?? 1}>
-                  <LinearProgress/>
-                </td>
-              </tr>
-            )}
-            {filteredSortedAndPaginatedData?.data.map((item, i) => (
-              <tr
-                className="tr"
-                key={getRenderRowKey ? getRenderRowKey(item, i) : i}
-                onClick={e => onClickRows?.(item, e)}
-              >
-                {select?.getId && (
-                  <td className="td td-center">
-                    <Checkbox size="small" checked={_selected.has(select.getId(item))} onChange={() => _selected.toggle(select.getId(item))}/>
-                  </td>
-                )}
-                {filteredColumns.map((_, i) => (
-                  <td
-                    title={_.tooltip?.(item) ?? _.render(item) as any}
-                    key={i}
-                    onClick={_.onClick ? () => _.onClick?.(item) : undefined}
-                    className={'td td-clickable ' + fnSwitch(_.align!, {
-                      'center': 'td-center',
-                      'right': 'td-right'
-                    }, _ => '')}
-                  >
-                    {_.render(item)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-            </tbody>
+            <TableBody
+              loading={loading}
+              columns={filteredColumns}
+              data={filteredSortedAndPaginatedData?.data}
+              getRenderRowKey={getRenderRowKey}
+              select={{
+                is: _selected.has,
+                toggle: _selected.toggle,
+                getId: _selected.getId,
+              }}
+            />
           </Box>
           {!loading && (!filteredData || filteredData.length === 0) && (
             <div>
@@ -469,6 +445,62 @@ export const Sheet = <T extends Answer = Answer>({
         />
       )}
     </>
+  )
+}
+
+const TableBody = <T,>({
+  loading,
+  columns,
+  data,
+  getRenderRowKey,
+  select
+}: {
+  select?: {
+    is: any,
+    getId: (_: T) => string
+    onToggle: any,
+  }
+  getRenderRowKey?: (_: T, index: number) => string
+  data?: T[],
+  loading: any,
+  columns: any,
+}) => {
+  return (
+    <tbody>
+    {!data && loading && (
+      <tr>
+        <td className="td-loading" colSpan={columns?.length ?? 1}>
+          <LinearProgress/>
+        </td>
+      </tr>
+    )}
+    {data?.map((item, i) => (
+      <tr
+        className="tr"
+        key={getRenderRowKey ? getRenderRowKey(item, i) : i}
+        // onClick={e => onClickRows?.(item, e)}
+      >
+        {select && (
+          <td className="td td-center">
+            <Checkbox size="small" checked={select.is(select.getId(item))} onChange={() => select.onToggle(select.getId(item))}/>
+          </td>
+        )}
+        {columns.map((_, i) => (
+          <td
+            title={_.tooltip?.(item) ?? _.render(item) as any}
+            key={i}
+            onClick={_.onClick ? () => _.onClick?.(item) : undefined}
+            className={'td td-clickable ' + fnSwitch(_.align!, {
+              'center': 'td-center',
+              'right': 'td-right'
+            }, _ => '')}
+          >
+            {_.render(item)}
+          </td>
+        ))}
+      </tr>
+    ))}
+    </tbody>
   )
 }
 
