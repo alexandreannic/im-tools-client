@@ -50,7 +50,6 @@ export const DatabaseAccess = ({
     _access.fetch({}, koboFormId)
   }, [koboFormId])
 
-  console.log('schema', schema, questions)
   return (
     <Modal content={
       <>

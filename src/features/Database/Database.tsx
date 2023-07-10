@@ -1,13 +1,13 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {OrderBy, useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {Page, PageTitle} from '@/shared/Page'
 import {Sheet, SheetColumnProps, SheetTableProps} from '@/shared/Sheet/Sheet'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
 import {KoboAnswer2, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {Arr, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {KoboApiColType, KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Panel} from '@/shared/Panel'
@@ -24,7 +24,7 @@ import {DatabaseProvider, useDatabaseContext} from '@/features/Database/Database
 import {DatabaseAccess} from '@/features/Database/DatabaseAccess/DatabaseAccess'
 import {getKoboUrl, KoboImg} from '@/shared/TableImg/KoboImg'
 import {usePersistentState} from 'react-persistent-state'
-import {removeHtml, slugify} from '@/utils/utils'
+import {removeHtml, Utils} from '@/utils/utils'
 import {AaSelect} from '@/shared/Select/Select'
 
 const urlParamsValidation = yup.object({
@@ -43,7 +43,7 @@ const ignoredColType: KoboApiColType[] = [
   'end_group',
   'end_repeat',
   'begin_repeat',
-  'note',
+  // 'note',
 ]
 
 export const Database = () => {
@@ -71,9 +71,15 @@ export const Database = () => {
                 </DatabaseNew>
                 {_forms.loading ? (
                   <>
-                    <Skeleton/>
-                    <Skeleton/>
-                    <Skeleton/>
+                    <SidebarItem>
+                      <Skeleton sx={{height: 30}}/>
+                    </SidebarItem>
+                    <SidebarItem>
+                      <Skeleton sx={{height: 30}}/>
+                    </SidebarItem>
+                    <SidebarItem>
+                      <Skeleton sx={{height: 30}}/>
+                    </SidebarItem>
                   </>
                 ) : _forms.entity?.map(_ => (
                   <NavLink to={databaseModule.siteMap.form(_.serverId, _.id)}>
@@ -165,7 +171,7 @@ export const DatabaseTable = ({
   sort?: SheetTableProps<KoboAnswer2>['sort']
 }) => {
   const {m, formatDate, formatDateTime} = useI18n()
-  const [langIndex, setLangIndex] = usePersistentState<number>(0, `lang-index-${slugify(form.name)}`)
+  const [langIndex, setLangIndex] = usePersistentState<number>(0, `lang-index-${Utils.slugify(form.name)}`)
   const translations = useMemo(() => {
     const res: Record<string, Record<string, string>> = {}
     form.content.choices.forEach(choice => {
@@ -179,10 +185,8 @@ export const DatabaseTable = ({
     const value = row[q.name]
     if (!value) return ''
     return fnSwitch(q.type, {
-      select_multiple: () => {
-        return value.split(' ').map(_ => removeHtml(translations[q.select_from_list_name!][value])).join(', ')
-      },
-      select_one: () => removeHtml(translations[q.select_from_list_name!][value]),
+      select_multiple: () => value?.split(' ').map(_ => translations[q.select_from_list_name!][_]).join(' | '),
+      select_one: () => translations[q.select_from_list_name!][value],
     }, () => undefined)
   }
 
@@ -221,14 +225,14 @@ export const DatabaseTable = ({
             end: formatDate(row.end),
           }, type => JSON.stringify(row[q.name])),
           renderExport: row => fnSwitch(q.type, {
-            start: formatDateTime(row.start),
-            end: formatDateTime(row.start),
-            date: formatDateTime(row.end),
-            image: getKoboUrl(row.attachments, row[q.name]),
-            select_one: getValue(row, q),
-            select_multiple: getValue(row, q),
-            calculate: row[q.name],
-            integer: row[q.name],
+            start: () => row.start,
+            end: () => row.start,
+            date: () => row.end,
+            image: () => getKoboUrl(row.attachments, row[q.name]),
+            select_one: () => getValue(row, q),
+            select_multiple: () => getValue(row, q),
+            calculate: () => map(row[q.name], _ => isNaN(_) ? _ : +_),
+            integer: () => map(row[q.name], _ => +_),
           }, () => row[q.name])
         }
         return col
@@ -240,25 +244,26 @@ export const DatabaseTable = ({
           render: (_: any) => _.id,
           renderExport: _ => _.id,
         },
+        // {
+        //   id: 'uuid',
+        //   head: 'UUID',
+        //   render: (_: any) => _.uuid,
+        //   renderExport: _ => _.uuid,
+        // },
         {
-          id: 'uuid',
-          head: 'UUID',
-          render: (_: any) => _.uuid,
-          renderExport: _ => _.uuid,
+          id: 'submittedBy',
+          head: m.submittedBy,
+          render: _ => _.submittedBy,
+          renderExport: _ => _.submittedBy,
         },
         {
           id: 'submissionTime',
           head: m.submissionTime,
           render: _ => formatDateTime(_.submissionTime),
           type: 'date',
-          renderExport: _ => JSON.stringify(_.submissionTime),
+          renderExport: _ => _.submissionTime,
         },
-        {
-          id: 'submittedBy',
-          head: m.submittedBy,
-          render: _ => _.submittedBy,
-          renderExport: _ => JSON.stringify(_.submittedBy),
-        },
+
       ]
       return [...metaColumn, ...questions ?? []]
     }, [form, translations]
@@ -266,6 +271,7 @@ export const DatabaseTable = ({
 
   return (
     <Sheet
+      title={form.name}
       header={
         <AaSelect<number>
           value={langIndex}

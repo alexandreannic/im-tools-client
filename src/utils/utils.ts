@@ -246,8 +246,6 @@ export const downloadStringAsFile = (stringData: string, fileName: string) => {
   _.click()
 }
 
-export const slugify = (_?: string) => _?.replaceAll(/[^a-zA-Z0-9]/g, '')
-
 export const removeHtml = (_?: string) => _?.replace(/(<([^>]+)>)/gi, '')
 
 export const convertNumberIndexToLetter = (_: number) => {
@@ -255,6 +253,14 @@ export const convertNumberIndexToLetter = (_: number) => {
 }
 
 export namespace Utils {
+
+  interface Slugify {
+    (_: string): string
+    (_: undefined): undefined
+    (_?: string): string | undefined
+  }
+
+  export const slugify: Slugify = (_) => _?.replaceAll(' ', '_').replaceAll(/[^.a-zA-Z0-9]/g, '') as any
 
   export const dateToPeriod = (date: Date) => {
     const start = startOfMonth(date)

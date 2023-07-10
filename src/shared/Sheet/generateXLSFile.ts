@@ -1,7 +1,6 @@
-import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
-import {KoboApiForm, KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
 import ExcelJS from 'exceljs'
-import {downloadBufferAsFile, downloadStringAsFile} from '@/utils/utils'
+import {downloadBufferAsFile} from '@/utils/utils'
 
 const koboQuestionType: KoboQuestionType[] = [
   'text',
@@ -14,16 +13,17 @@ const koboQuestionType: KoboQuestionType[] = [
 ]
 
 export const generateXLSFromArray = async <T>({
-    schema,
-    data,
-  }: {
-    data: T[],
-    schema: {
-      name: string
-      render: (_: T) => string | number | undefined
-    }[]
-  }
-) => {
+  schema,
+  filename,
+  data,
+}: {
+  filename: string
+  data: T[]
+  schema: {
+    name: string
+    render: (_: T) => string | number | undefined | Date
+  }[]
+}) => {
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('data')
   sheet.addRow(schema.map(_ => _.name))
@@ -34,5 +34,5 @@ export const generateXLSFromArray = async <T>({
     {state: 'frozen', xSplit: 0, ySplit: 1}
   ]
   const buffer = await workbook.xlsx.writeBuffer()
-  downloadBufferAsFile(buffer as any, 'aa.xlsx')
+  downloadBufferAsFile(buffer as any, filename + '.xlsx')
 }
