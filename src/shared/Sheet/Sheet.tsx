@@ -3,7 +3,7 @@ import React, {ReactNode, useMemo, useState} from 'react'
 import {useI18n} from '../../core/i18n'
 import {Fender, IconBtn} from 'mui-extension'
 import {usePersistentState} from 'react-persistent-state'
-import {multipleFilters, paginateData, slugify, Utils} from '../../utils/utils'
+import {multipleFilters, paginateData, Utils} from '../../utils/utils'
 import {SheetFilterDialog} from './SheetFilterDialog'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
@@ -103,7 +103,7 @@ export interface SheetTableProps<T extends Answer> extends BoxProps {
   header?: ReactNode
   loading?: boolean
   total?: number
-  title: string
+  title?: string
   select?: {
     selectActions?: ReactNode
     getId: (_: T) => string
@@ -288,8 +288,8 @@ export const Sheet = <T extends Answer = Answer>({
 
   const exportToCSV = () => {
     if (filteredAndSortedData) {
-      const res = _generateXLSFromArray.call({
-        filename: Utils.slugify(title),
+      _generateXLSFromArray.call({
+        filename: Utils.slugify(title) ?? 'noname',
         data: filteredAndSortedData,
         schema: columns
           .filter(_ => _.renderExport)

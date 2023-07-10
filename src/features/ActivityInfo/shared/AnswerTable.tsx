@@ -10,6 +10,7 @@ export const AnswerTable = <T extends Record<string, any>, >({
 } & BoxProps) => {
   return (
     <Sheet<T>
+      title=""
       {...props}
       data={answers}
       columns={Object.keys(answers[0]).map(k => ({

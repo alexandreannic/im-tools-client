@@ -92,7 +92,8 @@ export const MpcaData = () => {
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
         <Sheet
-          header={<PanelTitle>{m.data}</PanelTitle>}
+          title={m.data}
+          // header={<PanelTitle>{m.data}</PanelTitle>}
           select={{
             getId: _ => _.id,
             onSelect: _ => setSelected(_),
