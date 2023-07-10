@@ -1,5 +1,5 @@
 import {Box, BoxProps, Checkbox, GlobalStyles, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
-import React, {ReactNode, useMemo, useState} from 'react'
+import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {useI18n} from '../../core/i18n'
 import {Fender, IconBtn} from 'mui-extension'
 import {usePersistentState} from 'react-persistent-state'
@@ -395,11 +395,11 @@ export const Sheet = <T extends Answer = Answer>({
               columns={filteredColumns}
               data={filteredSortedAndPaginatedData?.data}
               getRenderRowKey={getRenderRowKey}
-              select={{
+              select={select ? {
                 is: _selected.has,
-                toggle: _selected.toggle,
-                getId: _selected.getId,
-              }}
+                onToggle: _selected.toggle,
+                getId: select.getId,
+              } : undefined}
             />
           </Box>
           {!loading && (!filteredData || filteredData.length === 0) && (
@@ -448,59 +448,61 @@ export const Sheet = <T extends Answer = Answer>({
   )
 }
 
-const TableBody = <T,>({
-  loading,
-  columns,
-  data,
-  getRenderRowKey,
-  select
-}: {
-  select?: {
-    is: any,
-    getId: (_: T) => string
-    onToggle: any,
+const TableBody = (() => {
+  const Component = <T extends Answer>({
+    loading,
+    columns,
+    data,
+    getRenderRowKey,
+    select
+  }: {
+    select?: {
+      is: any,
+      getId: (_: T) => string
+      onToggle: any,
+    }
+    getRenderRowKey?: (_: T, index: number) => string
+    data?: T[],
+    loading?: boolean,
+    columns: SheetColumnProps<T>[],
+  }) => {
+    return (
+      <tbody>
+      {!data && loading && (
+        <tr>
+          <td className="td-loading" colSpan={columns?.length ?? 1}>
+            <LinearProgress/>
+          </td>
+        </tr>
+      )}
+      {data?.map((item, i) => (
+        <tr
+          className="tr"
+          key={getRenderRowKey ? getRenderRowKey(item, i) : i}
+          // onClick={e => onClickRows?.(item, e)}
+        >
+          {select && (
+            <td className="td td-center">
+              <Checkbox size="small" checked={select.is(select.getId(item))} onChange={() => select.onToggle(select.getId(item))}/>
+            </td>
+          )}
+          {columns.map((_, i) => (
+            <td
+              title={_.tooltip?.(item) ?? _.render(item) as any}
+              key={i}
+              onClick={_.onClick ? () => _.onClick?.(item) : undefined}
+              className={'td td-clickable ' + fnSwitch(_.align!, {
+                'center': 'td-center',
+                'right': 'td-right'
+              }, _ => '')}
+            >
+              {_.render(item)}
+            </td>
+          ))}
+        </tr>
+      ))}
+      </tbody>
+    )
   }
-  getRenderRowKey?: (_: T, index: number) => string
-  data?: T[],
-  loading: any,
-  columns: any,
-}) => {
-  return (
-    <tbody>
-    {!data && loading && (
-      <tr>
-        <td className="td-loading" colSpan={columns?.length ?? 1}>
-          <LinearProgress/>
-        </td>
-      </tr>
-    )}
-    {data?.map((item, i) => (
-      <tr
-        className="tr"
-        key={getRenderRowKey ? getRenderRowKey(item, i) : i}
-        // onClick={e => onClickRows?.(item, e)}
-      >
-        {select && (
-          <td className="td td-center">
-            <Checkbox size="small" checked={select.is(select.getId(item))} onChange={() => select.onToggle(select.getId(item))}/>
-          </td>
-        )}
-        {columns.map((_, i) => (
-          <td
-            title={_.tooltip?.(item) ?? _.render(item) as any}
-            key={i}
-            onClick={_.onClick ? () => _.onClick?.(item) : undefined}
-            className={'td td-clickable ' + fnSwitch(_.align!, {
-              'center': 'td-center',
-              'right': 'td-right'
-            }, _ => '')}
-          >
-            {_.render(item)}
-          </td>
-        ))}
-      </tr>
-    ))}
-    </tbody>
-  )
-}
-
+  return React.memo(Component) as typeof Component
+})()
