@@ -50,6 +50,7 @@ export type KoboAnswerMetaData = {
   submissionTime: Date
   submittedBy?: string
   id: string
+  uuid: string
   validationStatus?: 'validation_status_approved'
   validatedBy?: string
   lastValidatedTimestamp?: number
@@ -71,6 +72,7 @@ export type KoboAnswerMetaData = {
   // // _notes: KoboAnswerNotes[],
   // // _validation_status: any,
   // // _submitted_by: any
+  tags: any,
 }
 
 /** @deprecated*/
@@ -92,6 +94,7 @@ export class Kobo {
       validatedBy: k.validatedBy,
       lastValidatedTimestamp: k.lastValidatedTimestamp,
       geolocation: k.geolocation,
+      tags: k.tags
     }
   }
 }

@@ -2,7 +2,7 @@ import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import React, {useMemo} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps, ProtHHS2BarChart, ProtHHS2Enrich} from './DashboardProtHHS2'
+import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {Lazy} from '@/shared/Lazy'
@@ -13,6 +13,7 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {_Arr} from '@alexandreannic/ts-utils'
+import {ProtHHS2BarChart, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 const getIdpsAnsweringRegistrationQuestion = (base: _Arr<ProtHHS2Enrich>) => {
   return base
@@ -27,7 +28,6 @@ const getIdpsAnsweringRegistrationQuestion = (base: _Arr<ProtHHS2Enrich>) => {
 export const DashboardProtHHS2Document = ({
   data,
   computed,
-  filters,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()

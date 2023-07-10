@@ -103,7 +103,10 @@ export namespace AiProtectionHhs {
       'GP-DRC-00001': 'cfbgfipleo7dg222',
       'GP-DRC-00002': 'cy76ipoleo7ij1j3',
       'GP-DRC-00003': 'crsa7psleo7l08n4',
-      'GP-DRC-00004': 'cxf2j7kleo7mstp5'
+      'GP-DRC-00004': 'cxf2j7kleo7mstp5',
+      'GP-DRC-00005': 'cgoek15lgw7jc2u2',
+      'GP-DRC-00006': 'cbmqt7lgw7p3163',
+      'GP-DRC-00007': 'ca3hc2jlje85ybb2',
     },
     Oblast: aiOblasts,
     Raion: aiRaions,

@@ -1,12 +1,12 @@
-import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
+import {DashboardPageProps} from './DashboardProtHHS2'
 import {useI18n} from '../../../core/i18n'
 import {useTheme} from '@mui/material'
 import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2PN = ({
   data,
   computed,
-  filters,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()

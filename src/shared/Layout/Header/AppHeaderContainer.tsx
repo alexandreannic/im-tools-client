@@ -44,24 +44,23 @@ export const AppHeaderContainer = ({
   return (
     <>
       {generalStyles}
-      <Slide direction="down" in={true} mountOnEnter unmountOnExit>
-        <Box {...props} sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 2,
-          minHeight: layoutConfig.headerHeight,
-          px: layoutConfig.headerPx,
-          py: 0.5,
-          display: 'flex',
-          alignItems: 'center',
-          mb: 2,
-          pl: 2,
-          borderBottom: t => `1px solid ${t.palette.divider}`,
-          ...sx,
-        }}>
-          {children}
-        </Box>
-      </Slide>
+      {/*<Slide direction="down" in={true} mountOnEnter unmountOnExit>*/}
+      <Box {...props} sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+        minHeight: layoutConfig.headerHeight,
+        px: layoutConfig.headerPx,
+        display: 'flex',
+        alignItems: 'center',
+        // mb: 2,
+        pl: 2,
+        borderBottom: t => `1px solid ${t.palette.divider}`,
+        ...sx,
+      }}>
+        {children}
+      </Box>
+      {/*</Slide>*/}
     </>
   )
 

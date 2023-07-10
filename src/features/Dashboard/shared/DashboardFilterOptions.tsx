@@ -1,9 +1,10 @@
 import React, {ReactNode, useMemo} from 'react'
-import {Checkbox, FormControlLabel, FormGroup} from '@mui/material'
-import {makeSx, Txt} from 'mui-extension'
+import {Box, Checkbox, FormControlLabel, FormGroup, Icon} from '@mui/material'
+import {IconBtn, makeSx, Txt} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'
 import {useI18n} from '../../../core/i18n'
 import {combineSx} from '../../../core/theme'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 const css = makeSx({
   optionSelectAll: {
@@ -58,7 +59,12 @@ export const DashboardFilterOptions = ({
       <FormControlLabel
         onClick={toggleAll}
         control={<Checkbox checked={allChecked} indeterminate={!allChecked && someChecked}/>}
-        label={<Txt bold>{m.selectAll}</Txt>}
+        label={
+          // <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Txt bold sx={{mr: 1.5}}>{m.selectAll}</Txt>
+          // <AAIconBtn icon="clear" size="small" sx={{ml: 1.5}}/>
+          // </Box>
+        }
         sx={combineSx(css.option, css.optionSelectAll)}
       />
       <FormGroup onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

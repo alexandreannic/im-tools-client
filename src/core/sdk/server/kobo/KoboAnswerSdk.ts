@@ -7,6 +7,7 @@ import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
 import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
+import {startOfDay} from 'date-fns'
 
 interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -30,10 +31,10 @@ export class KoboAnswerSdk {
 
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
     if (formId === koboFormId.prod.protectionHh2) {
-      return Promise.resolve({start: new Date(2023, 3, 1), end: new Date()})
+      return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
     }
     if (formId === koboFormId.prod.mealVisitMonitoring) {
-      return Promise.resolve({start: new Date(2023, 5, 15), end: new Date()})
+      return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
     }
     throw new Error('To implement')
   }

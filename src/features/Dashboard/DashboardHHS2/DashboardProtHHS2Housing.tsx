@@ -1,15 +1,15 @@
 import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
+import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ChartTools} from '../../../core/chartTools'
+import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2Housing = ({
   data,
   computed,
-  filters,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()

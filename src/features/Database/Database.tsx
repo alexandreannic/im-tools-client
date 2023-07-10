@@ -238,7 +238,13 @@ export const DatabaseTable = ({
           id: 'id',
           head: 'ID',
           render: (_: any) => _.id,
-          renderExport: _ => JSON.stringify(_.id),
+          renderExport: _ => _.id,
+        },
+        {
+          id: 'uuid',
+          head: 'UUID',
+          render: (_: any) => _.uuid,
+          renderExport: _ => _.uuid,
         },
         {
           id: 'submissionTime',

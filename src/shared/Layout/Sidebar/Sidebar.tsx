@@ -24,12 +24,12 @@ const stickSidebarToHeader = (sidebarId: string, headerId: string) => {
   if (!header) {
     header = document.getElementById(headerId)
   }
-  setTimeout(() => {
+  // setTimeout(() => {
     if (sidebar && header) {
       sidebar.style.top = (header.getBoundingClientRect().y + header.getBoundingClientRect().height) + 'px'
       //Math.max(header.offsetHeight < window.scrollY ? header.offsetHeight : header.offsetHeight - window.scrollY, 0) + 'px'
     }
-  }, 0)
+  // }, 0)
 }
 
 export const Sidebar = ({
@@ -57,7 +57,10 @@ export const Sidebar = ({
   useEffect(() => {
     if (headerId) {
       stickSidebarToHeader(id, headerId)
-      window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId))
+      window.addEventListener('scroll', () => stickSidebarToHeader(id, headerId), {
+        capture: true,
+        passive: true
+      })
     }
   }, [])
 

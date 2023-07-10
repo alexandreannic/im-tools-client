@@ -63,54 +63,54 @@ const mapOblast: Record<string, OblastISOSVG> = {
 const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOptions>()({
   oblast: {
     icon: 'location_on',
-    property: 'mdro',
+    options: 'mdro',
     label: m => m.office,
   },
   focalPoint: {
     icon: 'person',
-    property: 'mdp',
+    options: 'mdp',
     label: m => m.focalPoint,
   },
   donor: {
     icon: 'handshake',
-    property: 'mdd1',
+    options: 'mdd1',
     multiple: true,
     label: m => m.donor,
   },
   activity: {
     icon: 'edit_calendar',
-    property: 'mdt',
+    options: 'mdt',
     label: m => m.project,
   },
   nfi: {
     multiple: true,
     // icon: 'edit_calendar',
-    property: 'pan',
+    options: 'pan',
     label: m => m.mealMonitoringVisit.nfiDistribution,
   },
   ecrec: {
     // icon: 'edit_calendar',
-    property: 'pae',
+    options: 'pae',
     label: m => m.mealMonitoringVisit.ecrec,
   },
   shelter: {
     // icon: 'edit_calendar',
-    property: 'pas',
+    options: 'pas',
     label: m => m.mealMonitoringVisit.shelter,
   },
   lau: {
     // icon: 'edit_calendar',
-    property: 'pal',
+    options: 'pal',
     label: m => m.mealMonitoringVisit.lau,
   },
   protection: {
     // icon: 'edit_calendar',
-    property: 'pap',
+    options: 'pap',
     label: m => m.mealMonitoringVisit.protection,
   },
   eore: {
     // icon: 'edit_calendar',
-    property: 'pao',
+    options: 'pao',
     label: m => m.mealMonitoringVisit.eore,
   },
 })
@@ -208,7 +208,7 @@ export const DashboardMealVisitMonitoring = () => {
               icon={shape.icon}
               value={optionFilter[k]}
               label={shape.label(m)}
-              options={getChoices(shape.property)}
+              options={getChoices(shape.options)}
               onChange={_ => setOptionFilters(prev => ({...prev, [k]: _}))}
             />
           )}

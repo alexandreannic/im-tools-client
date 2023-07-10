@@ -81,7 +81,7 @@ export const DashboardLayout = ({
       }
     })
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', (e) => {
+      anchor.addEventListener('click', function (e) {
         e.preventDefault()
         // @ts-ignore
         document.querySelector(this.getAttribute('href')).scrollIntoView({behavior: 'smooth'})

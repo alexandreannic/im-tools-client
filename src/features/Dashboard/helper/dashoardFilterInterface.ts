@@ -1,14 +1,18 @@
 import { Messages } from '@/core/i18n/localization/en'
 import { multipleFilters } from '@/utils/utils'
 import { Enum } from '@alexandreannic/ts-utils'
+import {property} from 'lodash'
+import {StringArrayKeys} from '@/core/type'
 
 export namespace DashboardFilterHelper {
 
   export interface Shape<T> {
     icon?: string
-    property: keyof T
+    options: keyof T
+    propertyIfDifferentThanOption?: string
     multiple?: boolean
     label: (_: Messages) => string
+    skipOption?: string[]
   }
 
   export const makeShape = <T>() => <K extends string>(filters: Record<K, Shape<T>>) => filters
@@ -22,11 +26,25 @@ export namespace DashboardFilterHelper {
   ): T[] => {
     return multipleFilters(d, Enum.entries(filters).map(([k, filterValue]) => {
       if (filterValue.length <= 0) return
-      const property = shape[k]!.property
+      const property = shape[k]!.propertyIfDifferentThanOption ?? shape[k]!.options
       if (shape[k]?.multiple)
         return _ => filterValue.includes((_ as any)[property] as any)
       return _ => !!filterValue.find(f => f.includes((_ as any)[property] as any))
     }))
+  }
+
+  export const filterDataFromLokiJs = <T extends object, O, K extends string>(
+    d: Collection<T>,
+    shape: Partial<Record<K, Shape<O>>>,
+    filters: Record<K, string[]>
+  ): T[] => {
+    const lokiFilters: any = {}
+    Enum.entries(filters).forEach(([k, filterValue]) => {
+      if (filterValue.length <= 0) return
+      const property = shape[k]!.propertyIfDifferentThanOption ?? shape[k]!.options
+      lokiFilters[property] = {$in: filterValue}
+    })
+    return d.find(lokiFilters)
   }
 }
 

@@ -3,9 +3,9 @@ import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
-import {ProtHHS2Enrich} from './DashboardProtHHS2'
 import {groupByAgeGroup} from '../../../core/type'
 import {subDays} from 'date-fns'
+import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
 

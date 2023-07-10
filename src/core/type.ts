@@ -57,7 +57,7 @@ export const ageGroup = Object.freeze({
     '5 - 9': [5, 9],
     '10 - 14': [10, 14],
     '15 - 18': [15, 18],
-    '18 - 29': [18, 29],
+    '19 - 29': [19, 29],
     '30 - 59': [30, 59],
     '60+': [elderlyLimitIncluded, Infinity],
   }

@@ -76,6 +76,10 @@ export class AILocationHelper {
     const hromada = AILocationHelper.findHromada(oblastName, raionName, hromadaName)
     if (!hromada) return
     const settlements = AILocationHelper.getSettlementsByHromadaIso(hromada.iso)
-    return settlements.find(_ => _.en === settlementName)
+    const match = settlements.find(_ => _.en.toLowerCase() === settlementName.toLowerCase())
+    if (match) return match
+    // return {
+    //   'Chernihivska': settlements.find(_ => _.en === 'Chernihiv')
+    // }[hromadaName]
   }
 }

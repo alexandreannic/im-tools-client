@@ -16,14 +16,13 @@ import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {AaSelect} from '@/shared/Select/Select'
 import {AnswerTable} from '../shared/AnswerTable'
 import {useAaToast} from '@/core/useToast'
-import {koboFormId} from '@/koboFormId'
-import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
-import {enrichProtHHS_2_1, ProtHHS2Enrich} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
+import {Donor} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
 import {alreadySentKobosInApril} from './missSubmittedData'
 import {format, subMonths} from 'date-fns'
+import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -32,6 +31,15 @@ const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify
   refugee: 'Non-Displaced',
 }, _ => 'Non-Displaced')
 
+const planCode: Record<Donor, AiProtectionHhs.GET<'Plan Code'>> = {
+  // [Donor.ECHO_UKR000322]: 'GP-DRC-00001',//ECHO
+  [Donor.NN2_UKR000298]: 'GP-DRC-00002',//Novo Nordisk ------
+  [Donor.BHA_UKR000284]: 'GP-DRC-00003',//BHA OK
+  [Donor.OKF_UKR000309]: 'GP-DRC-00004',//OKF ------
+  [Donor.UHF_IV_UKR000314]: 'GP-DRC-00005',//UHF
+  [Donor.ECHO_UKR000322]: 'GP-DRC-00006',//ECHO
+  // [Donor.D] MoF: 'GP-DRC-00007',//Danish
+}
 
 export const ActivityInfoHHS2 = () => {
   const {api} = useAppSettings()
@@ -43,7 +51,7 @@ export const ActivityInfoHHS2 = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: new Date(parseInt(year), parseInt(month)),
     }
-    return api.kobo.answer.searchProtHhs({filters}).then(_ => _.data.map(enrichProtHHS_2_1)).then(_ => {
+    return api.kobo.answer.searchProtHhs({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(_ => {
       return _.filter(_ => {
         const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
         return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
@@ -86,16 +94,11 @@ const _ActivityInfo = ({
   period,
   setPeriod,
 }: {
-  data: ProtHHS2Enrich[]
+  data: _Arr<ProtHHS2Enrich>
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {
-  const enrichedData = useMemo(() => {
-    return chain(Arr(data))
-      // .map(fillMissingSexOrGender)
-      .map(x => x?.map(_ => ({..._})))
-      .get
-  }, [data])
+  const enrichedData = data
 
   const {api} = useAppSettings()
   const _submit = useAsync((i: number, p: AiProtectionHhs.FormParams[]) => api.activityInfo.submitActivity(p), {
@@ -105,18 +108,20 @@ const _ActivityInfo = ({
   const formParams = useMemo(() => {
     const activities: Row[] = []
     let index = 0
-    Enum.entries(enrichedData.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
-      const middle = Math.ceil(byOblast.length / 2)
-      Enum.entries({
-        'GP-DRC-00001': Arr([...byOblast].splice(0, Math.ceil(middle))),
-        'GP-DRC-00003': Arr([...byOblast].splice(Math.ceil(middle), Math.ceil(byOblast.length))),
-      }).forEach(([planCode, byPlanCode]) => {
-        Enum.entries(byPlanCode.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
+    Enum.entries(enrichedData.groupBy(_ => {
+      if(!_.tags?.ai){
+        console.warn('No donor', _)
+        throw new Error('No donor')
+      }
+      return planCode[_.tags.ai]
+    })).forEach(([planCode, byPlanCode]) => {
+      Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
+        Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
           Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada)).forEach(([hromada, byHromada]) => {
             const enOblast = ProtHHS_2_1Options.what_is_your_area_of_origin_oblast[oblast]
             const enRaion = ProtHHS_2_1Options.what_is_your_area_of_origin_raion[raion]
             const enHromada = ProtHHS_2_1Options.what_is_your_area_of_origin_hromada[hromada]
-            const activity = {
+            const activity: AiProtectionHhs.FormParams = {
               'Plan Code': planCode,
               Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
               Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? (('⚠️' + enRaion) as any),
@@ -175,7 +180,7 @@ const _ActivityInfo = ({
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastHttpError)
         }}>
-          Submit {data.length}
+          {m.submitAll} {data.length}
         </AaBtn>
       </Box>
       <Panel sx={{overflowX: 'auto'}}>

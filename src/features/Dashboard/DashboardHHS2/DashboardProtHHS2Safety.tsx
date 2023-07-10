@@ -1,15 +1,15 @@
 import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
+import {DashboardPageProps} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {KoboLineChart} from '@/features/Dashboard/shared/KoboLineChart'
+import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2Safety = ({
   data,
   computed,
-  filters,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   return (

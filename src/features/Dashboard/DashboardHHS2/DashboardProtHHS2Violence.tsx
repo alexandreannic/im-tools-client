@@ -1,7 +1,7 @@
 import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
 import React, {useMemo} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
+import {DashboardPageProps} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
 import {KoboPieChartIndicator, KoboPieChartIndicatorMultiple} from '../shared/KoboPieChartIndicator'
 import {Lazy} from '@/shared/Lazy'
@@ -13,11 +13,11 @@ import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Panel} from '@/shared/Panel'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
+import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2Violence = ({
   data,
   computed,
-  filters,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const groupedIndividualsType = useMemo(() => {

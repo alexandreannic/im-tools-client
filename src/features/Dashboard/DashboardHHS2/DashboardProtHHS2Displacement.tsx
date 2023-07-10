@@ -1,19 +1,19 @@
 import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps, ProtHHS2BarChart} from './DashboardProtHHS2'
+import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
+import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 
 export const DashboardProtHHS2Displacement = ({
   data,
   computed,
-  filters,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
 

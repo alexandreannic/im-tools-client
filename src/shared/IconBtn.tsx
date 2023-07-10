@@ -11,12 +11,13 @@ export interface AAIconBtnProps extends Omit<IconBtnProps, 'children'> {
 export const AAIconBtn = ({
   title,
   icon,
+  size = "small",
   ...props
 }: AAIconBtnProps) => {
   return (
     <Tooltip title={title}>
-      <IconBtn {...props}>
-        <Icon>{icon}</Icon>
+      <IconBtn {...props} size={size}>
+        <Icon fontSize={size}>{icon}</Icon>
       </IconBtn>
     </Tooltip>
   )

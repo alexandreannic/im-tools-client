@@ -1,7 +1,8 @@
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {ageGroup, groupByAgeGroup} from '../core/type'
 import {ChartTools} from '../core/chartTools'
-import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
+
+import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const getProtHhsIptData = (data?: _Arr<ProtHHS2Enrich>) => {
   const csv: {base: string, gender: string, ageGroup: string, total: number}[] = []
@@ -11,29 +12,37 @@ export const getProtHhsIptData = (data?: _Arr<ProtHHS2Enrich>) => {
     dnipro: 'East',
     kharkiv: 'East',
     lviv: 'West',
+
     mykolaiv: 'South',
     sumy: 'East'
   }
 
   if (flatData) {
-    const byOffice = flatData?.groupBy(_ => mapOffice[_.staff_to_insert_their_DRC_office])
-    Enum.entries(ChartTools.sortBy.custom(['West', 'Central', 'East', 'South'])(byOffice)).forEach(([base, v]) => {
-      csv.push({
-        base,
-        gender: 'total',
-        ageGroup: 'total',
-        total: v.length,
-      })
-      Enum.entries(ChartTools.sortBy.custom(['male', 'female'])(Arr(v).groupBy(_ => _.gender))).forEach(([gender, genderV]) => {
-        csv.push({
-          base,
-          gender,
-          ageGroup: 'total',
-          total: genderV.length,
-        })
-        const byAge = Arr(genderV).groupBy(_ => groupByAgeGroup()(_, p => p.age!))
-        const byAgeSorted = ChartTools.sortBy.custom(Object.keys(ageGroup.bha))(byAge)
-        Enum.entries(byAgeSorted).forEach(([ageGroup, ageV]) => {
+    const byOffice = flatData
+      ?.filter(_ =>
+        _.staff_to_insert_their_DRC_office === 'chernihiv' ||
+        _.staff_to_insert_their_DRC_office === 'dnipro' ||
+        _.staff_to_insert_their_DRC_office === 'kharkiv' ||
+        _.staff_to_insert_their_DRC_office === 'lviv'
+      )
+      .groupBy(_ => _.staff_to_insert_their_DRC_office)
+    Enum.entries(ChartTools.sortBy.custom(['dnipro', 'kharkiv', 'chernihiv', 'lviv'])(byOffice)).forEach(([base, v]) => {
+      Enum.entries(ChartTools.sortBy.custom(['male', 'female'])(
+        Arr(v)
+          // .filter(_ => _.gender === 'male' || _.gender === 'female')
+        .groupBy(_ => _.gender))
+      ).forEach(([gender, genderV]) => {
+        const byAge = Arr(genderV).groupBy(_ => groupByAgeGroup(ageGroup.bha)(_, p => p.age!))
+        const byAgeFilled = {
+          '0 - 4': byAge['0 - 4'] ?? [],
+          '5 - 9': byAge['5 - 9'] ?? [],
+          '10 - 14': byAge['10 - 14'] ?? [],
+          '15 - 18': byAge['15 - 18'] ?? [],
+          '19 - 29': byAge['19 - 29'] ?? [],
+          '30 - 59': byAge['30 - 59'] ?? [],
+          '60+': byAge['60+'] ?? [],
+        }
+        Enum.entries(byAgeFilled).forEach(([ageGroup, ageV]) => {
           csv.push({
             base,
             gender,
@@ -41,6 +50,24 @@ export const getProtHhsIptData = (data?: _Arr<ProtHHS2Enrich>) => {
             total: ageV.length
           })
         })
+        csv.push({
+          base,
+          gender,
+          ageGroup: 'Disaggregates Not Available',
+          total: 0,
+        })
+        csv.push({
+          base,
+          gender,
+          ageGroup: 'total',
+          total: genderV.length,
+        })
+      })
+      csv.push({
+        base,
+        gender: 'total',
+        ageGroup: 'total',
+        total: v.length,
       })
     })
     csv.push({

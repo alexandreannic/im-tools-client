@@ -18,6 +18,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
 import {AaInput} from '@/shared/ItInput/AaInput'
+import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
 
 interface Person {
   age: number
@@ -40,16 +41,16 @@ interface Answer {
   hh_char_hh_det?: Partial<Person>[]
 }
 
-export const getLocation = <K extends string>(loc: Record<K, string>, name: string, type: string, rows: any): K => {
-  if (name === 'Cnernivetskyi') {
-    name = 'Chernivetskyi'
-  }
-  const mapped = Enum.keys(loc).find(_ => _.includes(name))
-  if (!mapped) {
-    console.error(`Cannot find location ${type} ${name}`, rows)
-  }
-  return mapped!
-}
+// export const getLocation = <K extends string>(loc: Record<K, string>, name: string, type: string, rows: any): K => {
+//   if (name === 'Cnernivetskyi') {
+//     name = 'Chernivetskyi'
+//   }
+//   const mapped = Enum.keys(loc).find(_ => _.includes(name))
+//   if (!mapped) {
+//     console.error(`Cannot find location ${type} ${name}`, rows)
+//   }
+//   return mapped!
+// }
 
 interface Row {
   rows: Answer[],
@@ -113,12 +114,13 @@ const toFormData = ({
     })
   }
 
+  console.log(answers.groupBy(_ => _.oblast))
   Enum.entries(answers.groupBy(_ => _.oblast)).forEach(([oblast, byOblast]) => {
-    const enOblast = MPCA_NFIOptions.oblast[oblast]
+    const enOblast = BNREOptions.ben_det_prev_oblast[oblast]
     Enum.entries(byOblast.groupBy(_ => _.raion)).forEach(([raion, byRaion]) => {
-      const enRaion = MPCA_NFIOptions.raion[raion]
+      const enRaion = BNREOptions.ben_det_raion[raion]
       Enum.entries(byRaion.groupBy(_ => _.hromada)).forEach(([hromada, byHromada]) => {
-        const enHromada = MPCA_NFIOptions.hromada[hromada]
+        const enHromada = BNREOptions.ben_det_hromada[hromada]
         Enum.entries(byHromada.groupBy(_ => _.settlement)).forEach(([settlement, bySettlement]) => {
           const bySettlementWithPerson = bySettlement.map(_ => ({
             ..._,
@@ -241,7 +243,7 @@ const _ActivityInfo = ({
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
         }}>
-          {m.submitAll}
+          {m.submitAll} {Arr(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
         </AaBtn>
       </Box>
       <Panel>
@@ -287,5 +289,3 @@ const _ActivityInfo = ({
     </>
   )
 }
-
-
