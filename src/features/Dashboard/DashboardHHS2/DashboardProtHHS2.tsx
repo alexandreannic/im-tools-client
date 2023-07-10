@@ -134,7 +134,9 @@ export const DashboardProtHHS2 = () => {
 
   const database = useMemo(() => {
     if (!_answers.entity) return
-    const loki = new LokiDb(koboFormId.prod.protectionHh2)
+    const loki = new LokiDb(koboFormId.prod.protectionHh2, {
+      persistenceMethod: 'memory',
+    })
     const table = loki.addCollection('data', {
       indices: Enum.values(filterShape).map(_ => _.options)
     })
