@@ -26,7 +26,12 @@ export const generateXLSFromArray = async <T>({
 }) => {
   const workbook = new ExcelJS.Workbook()
   const sheet = workbook.addWorksheet('data')
-  sheet.addRow(schema.map(_ => _.name))
+  const header = sheet.addRow(schema.map(_ => _.name))
+  header.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    bgColor: {argb: '#f2f2f2'},
+  }
   data.forEach(d => {
     sheet.addRow(schema.map(_ => _.render?.(d)))
   })
