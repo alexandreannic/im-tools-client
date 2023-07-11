@@ -5,95 +5,12 @@ import {Fender, IconBtn} from 'mui-extension'
 import {usePersistentState} from 'react-persistent-state'
 import {multipleFilters, paginateData, Utils} from '../../utils/utils'
 import {SheetFilterDialog} from './SheetFilterDialog'
-import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
 import {useAsync, useSetState} from '@alexandreannic/react-hooks-lib'
 import {orderBy} from 'lodash'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
-
-const generalStyles = <GlobalStyles
-  styles={t => ({
-    '.table': {
-      tableLayout: 'fixed',
-      // overflowX: 'auto',
-      borderCollapse: 'collapse',
-      borderSpacing: 0,
-      // borderTop: `1px solid ${t.palette.divider}`,
-      // borderLeft: `1px solid ${t.palette.divider}`,
-    },
-    // 'th:first-child': {
-    //   position: 'sticky',
-    //   left: 0,
-    //   zIndex: 2,
-    // },
-    '.th': {
-      position: 'relative',
-      // overflow: 'auto',
-    },
-    '.tr': {
-      // display: 'flex',
-      whiteSpace: 'nowrap',
-      // borderBottom: `1px solid ${t.palette.divider}`,
-    },
-    // '.th-action': {
-    //   position: 'absolute',
-    //   left: 0,
-    //   display: 'none',
-    // },
-    // '.th:hover .th-action': {
-    //   display: 'block',
-    // },
-    '.th-active': {
-      borderBottomColor: t.palette.primary.main,
-      boxShadow: `${t.palette.primary.main} 0 -1px 0 0 inset`,
-    },
-    '.td-clickable:hover': {
-      background: t.palette.action.hover,
-    },
-    '.td.fw': {
-      width: '100%',
-    },
-    '::-webkit-resizer': {
-      background: 'invisible',
-    },
-    '.td:first-of-type': {
-      paddingLeft: 8,
-    },
-    '.td-center': {
-      textAlign: 'center',
-    },
-    '.td-right': {
-      textAlign: 'right',
-    },
-    '.td-loading': {
-      padding: 0,
-      border: 'none',
-    },
-    '.td': {
-      // display: 'inline-flex',
-      alignItems: 'center',
-      height: 38,
-      resize: 'both',
-      padding: '2px 2px 2px 2px',
-      borderBottom: `1px solid ${t.palette.divider}`,
-      whiteSpace: 'nowrap',
-      // overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      // minWidth: 100,
-      // width: 100,
-    },
-    'thead .th': {
-      height: 42,
-      zIndex: 2,
-      background: t.palette.background.paper,
-      top: 0,
-      paddingTop: t.spacing(.25),
-      paddingBottom: t.spacing(.25),
-      position: 'sticky',
-      color: t.palette.text.secondary,
-    },
-  })}
-/>
+import {generalStyles} from '@/shared/Sheet/SheetStyle'
 
 type OrderBy = 'asc' | 'desc'
 
@@ -125,10 +42,33 @@ export interface SheetTableProps<T extends Answer> extends BoxProps {
   }
 }
 
+namespace ColumnType {
+  type Date = {
+    type: 'date'
+    min?: Date
+    max?: Date
+  }
+  type MultipleOptions = {
+    type: 'multiple_option'
+    options: string[]
+  }
+  type SingleOption = {
+    type: 'single_option'
+    options: string[]
+  }
+  type String = {
+    type: 'string',
+  }
+  // type = {
+
+  // }
+}
+
 export interface SheetColumnProps<T extends Answer> {
   id: string
   noSort?: boolean
   head?: string | ReactNode
+  subHead?: string | ReactNode
   align?: 'center' | 'right'
   onClick?: (_: T) => void
   render: (_: T) => ReactNode
@@ -136,7 +76,7 @@ export interface SheetColumnProps<T extends Answer> {
   hidden?: boolean
   alwaysVisible?: boolean
   tooltip?: (_: T) => string
-  type?: 'number' | 'date' | string[] | 'string' | 'stringOrUndefined'
+  type?: ColumnType
   className?: string | ((_: T) => string | undefined)
   // sx?: (_: T) => SxProps<Theme> | undefined
   // style?: CSSProperties
@@ -196,7 +136,6 @@ export const Sheet = <T extends Answer = Answer>({
   ...props
 }: SheetTableProps<T>) => {
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
-  console.log('render Sheet')
   const {m} = useI18n()
   const [sheetSearch, setSheetSearch] = useState({
     limit: 20,
@@ -232,11 +171,24 @@ export const Sheet = <T extends Answer = Answer>({
     setSheetSearch(prev => ({...prev, orderBy, sortBy: columnId}))
   }
 
+  // const columnTypeIndex = useMemo(() => {
+  //   return Arr(columns).reduceObject<Record<string, ColumnType>>(_ => [_.id, _.type])
+  // }, [columns])
+
   const filteredData = useMemo(() => {
     if (!data) return
     return multipleFilters(data, Enum.keys(filters).map(k => {
       const filter = filters[k]
       if (!filter || filter.length === 0) return undefined
+      // if (Array.isArray(columnTypeIndex[k])) {
+      //   return row => {
+      //     const v = row[k]
+      //     if (!v) return false
+      //     if (Array.isArray(v)) return !!(v as string[]).find(_ => filter.includes(_))
+      //     if (typeof v !== 'string') throw new Error(`Value of ${String(k)} is ${v} but string expected.`)
+      //     return filter.includes(v)
+      //   }
+      // }
       if (checkFilterType.isNumber(filter)) {
         return row => {
           const v = row[k]
@@ -247,13 +199,7 @@ export const Sheet = <T extends Answer = Answer>({
         }
       }
       if (checkFilterType.isForMultipleChoices(filter)) {
-        return row => {
-          const v = row[k]
-          if (!v) return false
-          if (Array.isArray(v)) return !!(v as string[]).find(_ => filter.includes(_))
-          if (typeof v !== 'string') throw new Error(`Value of ${String(k)} is ${v} but string expected.`)
-          return filter.includes(v)
-        }
+
       }
       if (checkFilterType.isForDate(filter)) {
         return row => {
