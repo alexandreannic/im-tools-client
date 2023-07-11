@@ -1,4 +1,4 @@
-import {Box, BoxProps, GlobalStyles, Slide} from '@mui/material'
+import {alpha, Box, BoxProps, GlobalStyles, Slide} from '@mui/material'
 import React, {useEffect} from 'react'
 import {layoutConfig} from '@/shared/Layout'
 import {map} from '@alexandreannic/ts-utils'
@@ -22,7 +22,7 @@ const redesignHeaderOnTop = (headerId: string) => {
 const generalStyles = <GlobalStyles styles={t => ({
   [`.${headerStickyClass}`]: {
     boxShadow: t.shadows[4],
-    background: t.palette.background.paper,
+    background: alpha(t.palette.background.paper, .5),
   }
 })}/>
 
@@ -52,6 +52,8 @@ export const AppHeaderContainer = ({
         minHeight: layoutConfig.headerHeight,
         px: layoutConfig.headerPx,
         display: 'flex',
+        backdropFilter: 'blur(12px)',
+
         alignItems: 'center',
         // mb: 2,
         pl: 2,

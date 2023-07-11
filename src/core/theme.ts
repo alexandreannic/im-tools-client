@@ -102,8 +102,8 @@ export const muiTheme = (dark?: boolean): Theme => {
       mode: dark ? 'dark' : 'light',
       background: {
         // default: dark ? 'black' : 'white',
-        default: dark ? 'black' : '#f8f9fa',
-        paper: dark ? '#1e1e22' : 'white',
+        default: dark ? '#000' : '#f8f9fa',
+        paper: dark ? '#1e1e22' : '#fff',
       }
     },
     shape: {

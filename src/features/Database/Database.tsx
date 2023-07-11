@@ -26,6 +26,7 @@ import {getKoboUrl, KoboImg} from '@/shared/TableImg/KoboImg'
 import {usePersistentState} from 'react-persistent-state'
 import {removeHtml, Utils} from '@/utils/utils'
 import {AaSelect} from '@/shared/Select/Select'
+import {useSession} from '@/core/context/SessionContext'
 
 const urlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -48,7 +49,8 @@ const ignoredColType: KoboApiColType[] = [
 
 export const Database = () => {
   const {m} = useI18n()
-  const {api} = useAppSettings()
+  const {session} = useSession()
+  const {api, conf} = useAppSettings()
   const _forms = useFetcher(api.kobo.form.getAll)
   const {toastHttpError} = useAaToast()
 
@@ -66,9 +68,11 @@ export const Database = () => {
           sidebar={
             <Sidebar headerId="app-header">
               <SidebarBody>
-                <DatabaseNew onAdded={() => _forms.fetch({force: true, clean: false})}>
-                  <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
-                </DatabaseNew>
+                {session.admin && (
+                  <DatabaseNew onAdded={() => _forms.fetch({force: true, clean: false})}>
+                    <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
+                  </DatabaseNew>
+                )}
                 {_forms.loading ? (
                   <>
                     <SidebarItem>
@@ -82,7 +86,7 @@ export const Database = () => {
                     </SidebarItem>
                   </>
                 ) : _forms.entity?.map(_ => (
-                  <NavLink to={databaseModule.siteMap.form(_.serverId, _.id)}>
+                  <NavLink key={_.id} to={databaseModule.siteMap.form(_.serverId, _.id)}>
                     <SidebarItem key={_.id} onClick={() => {
                     }}>{_.name}</SidebarItem>
                   </NavLink>
