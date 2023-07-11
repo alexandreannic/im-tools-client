@@ -31,12 +31,18 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
 }) => {
   const {m} = useI18n()
   const res = useMemo(() => {
-    const base = Arr(data).map(_ => (_ as any)[question]).compact()
+    const base = Arr(data).map(_ => _[question]).compact()
+      .filter(_ => {
+        return !filterValue || (questionType === 'single'
+            ? !filterValue.includes(_)
+            : Arr(filterValue).intersect(_).length === 0
+        )
+      })
     return {
       base: base.length,
       chart: chain(ChartTools[questionType]({
         data: base as any,
-        filterValue: filterValue as any,
+        // filterValue: filterValue as any,
       }))
         .map(ChartTools.setLabel({
           ...options[question],
@@ -48,7 +54,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
     }
   }, [data, question])
   return (
-    <HorizontalBarChartGoogle data={res.chart} base={res.base} onClickData={_ => onClickData?.(_ as K)} />
+    <HorizontalBarChartGoogle data={res.chart} base={res.base} onClickData={_ => onClickData?.(_ as K)}/>
   )
 }
 

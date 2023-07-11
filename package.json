@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@alexandreannic/react-hooks-lib": "^1.11.21",
-    "@alexandreannic/ts-utils": "1.7.38",
+    "@alexandreannic/react-hooks-lib": "^1.11.22",
+    "@alexandreannic/ts-utils": "1.7.39",
     "@azure/msal-browser": "^2.37.1",
     "@azure/msal-react": "^1.5.8",
     "@emotion/react": "^11.10.6",
