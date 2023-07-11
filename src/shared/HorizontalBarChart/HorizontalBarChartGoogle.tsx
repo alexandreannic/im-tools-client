@@ -78,7 +78,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
       {Enum.entries(data).map(([k, item], i) => {
         const percentOfMax = 100 * (item.base ? percents[i] / maxPercent : item.value / maxValue)
         return (
-          <TooltipWrapper percentOfBase={percents[i]} percentOfAll={base ? percents[i] : item.value / values.length} key={i} item={item}>
+          <TooltipWrapper percentOfBase={percents[i]} total={base ?? sumValue} percentOfAll={base ? percents[i] : item.value / values.length} key={i} item={item}>
             <Box sx={{display: 'flex', alignItems: 'center'}} onClick={() => onClickData?.(k, item)}>
               {icons && (
                 <Icon color="disabled" sx={{mr: 1}}>{icons[k]}</Icon>
@@ -145,17 +145,18 @@ export const _HorizontalBarChartGoogle = <K extends string>({
 }
 
 const TooltipWrapper = ({
-    children,
-    item,
-    percentOfAll,
-    percentOfBase,
-    ...props
-  }: {
-    percentOfBase: number
-    percentOfAll: number
-    item: HorizontalBarChartGoogleData
-  } & Omit<TooltipProps, 'title'>
-) => {
+  children,
+  item,
+  total,
+  percentOfAll,
+  percentOfBase,
+  ...props
+}: Omit<TooltipProps, 'title'> & {
+  total: number
+  percentOfBase: number
+  percentOfAll: number
+  item: HorizontalBarChartGoogleData
+}) => {
   const {formatLargeNumber} = useI18n()
   if (item.disabled) return children
   return (
@@ -173,7 +174,7 @@ const TooltipWrapper = ({
             </Txt>
           )}
           <Box sx={{mt: .5}}>
-            <TooltipRow label="Total" value={formatLargeNumber(item.value)}/>
+            <TooltipRow label="Total" value={<>{formatLargeNumber(item.value)} / {formatLargeNumber(total)}</>}/>
             <TooltipRow label="% of answers" value={Math.ceil(percentOfAll) + ' %'}/>
             {percentOfAll !== percentOfBase && (
               <TooltipRow label="% of peoples" value={Math.ceil(percentOfBase) + ' %'}/>
