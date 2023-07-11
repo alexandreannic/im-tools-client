@@ -1,13 +1,12 @@
-import {alpha, Box, BoxProps, GlobalStyles, Icon, Slide} from '@mui/material'
+import {alpha, BoxProps, Icon} from '@mui/material'
 import {IconBtn, Txt} from 'mui-extension'
 import {layoutConfig} from '../index'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {useLayoutContext} from '../LayoutContext'
 import {AppHeaderMenu} from '@/shared/Layout/Header/AppHeaderMenu'
 import {AppHeaderFeatures} from '@/shared/Layout/Header/AppHeaderFeatures'
 import {AAIconBtn} from '@/shared/IconBtn'
 import Link from 'next/link'
-import {dashboardHeaderId} from '@/features/Dashboard/shared/DashboardHeader'
 import {AppHeaderContainer} from '@/shared/Layout/Header/AppHeaderContainer'
 
 interface Props extends BoxProps {

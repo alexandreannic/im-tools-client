@@ -11,6 +11,7 @@ import {DashboardHeader, dashboardHeaderId} from '@/features/Dashboard/shared/Da
 import {Page} from '@/shared/Page'
 import {map} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
+import {appConfig} from '@/conf/AppConfig'
 
 const style = makeSx({
   sectionTitle: {
@@ -74,6 +75,7 @@ export const DashboardLayout = ({
   const [activeSection, setActiveSection] = useState(sections?.[0]?.name ?? '')
   const hiddenSections = useSetState()
   const {m} = useI18n()
+  const {contact} = appConfig
   useEffect(() => {
     if (!sections) return
     if (sections.length === 0) return
@@ -138,8 +140,9 @@ export const DashboardLayout = ({
             </Box>
           ))}
 
-          <Txt block color="disabled" sx={{mt: 8}}>
-            <div dangerouslySetInnerHTML={{__html: m.contactAdmin}}/>
+          <Txt block color="disabled" sx={{mt: 8, fontWeight: 'lighter'}}>
+            {m.contactAdmin}&nbsp;
+            <Box component="a" href={`mailto:${contact}`} sx={{fontWeight: 'normal'}}>{contact}</Box>
           </Txt>
         </Page>
       </Layout>
