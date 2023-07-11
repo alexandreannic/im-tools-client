@@ -2,6 +2,12 @@ import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/PieChartIndica
 import {useMemo} from 'react'
 import {_Arr} from '@alexandreannic/ts-utils'
 import {StringArrayKeys, StringKeys} from '../../../core/type'
+import {Txt} from 'mui-extension'
+import {Box, Tooltip} from '@mui/material'
+import * as React from 'react'
+import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
+import {formatLargeNumber} from '@/core/i18n/localization/en'
+import {toPercent} from '@/utils/utils'
 
 /** @deprecated*/
 export const KoboPieChartIndicatorMultiple = <T, K extends StringArrayKeys<T>>({
@@ -75,13 +81,27 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
   }, [compare, filter, filterBase])
 
   return (
-    <PieChartIndicator
-      title={title}
-      percent={percent(all)}
-      value={showValue ? all.res : undefined}
-      base={showBase ? all.base : undefined}
-      evolution={comparedData ? percent(comparedData.now ?? all) - percent(comparedData.before) : undefined}
-      {...props}
-    />
+    <LightTooltip title={
+      <>
+        <Txt size="big" block bold>
+          {title}
+        </Txt>
+        <Box sx={{mt: .5}}>
+          <TooltipRow label="" value={toPercent(percent(all))}/>
+          <TooltipRow label="Total" value={<>{formatLargeNumber(all.res)} / {formatLargeNumber(all.base)}</>}/>
+        </Box>
+      </>
+    }>
+      <div>
+        <PieChartIndicator
+          title={title}
+          percent={percent(all)}
+          value={showValue ? all.res : undefined}
+          base={showBase ? all.base : undefined}
+          evolution={comparedData ? percent(comparedData.now ?? all) - percent(comparedData.before) : undefined}
+          {...props}
+        />
+      </div>
+    </LightTooltip>
   )
 }

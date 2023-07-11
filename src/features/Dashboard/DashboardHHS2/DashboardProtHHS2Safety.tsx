@@ -6,6 +6,7 @@ import {KoboUkraineMap} from '../shared/KoboUkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {KoboLineChart} from '@/features/Dashboard/shared/KoboLineChart'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartTools} from '@/core/chartTools'
 
 export const DashboardProtHHS2Safety = ({
   data,
@@ -34,7 +35,20 @@ export const DashboardProtHHS2Safety = ({
             base={_ => _.please_rate_your_sense_of_safety_in_this_location !== 'unable_unwilling_to_answer' &&
               _.please_rate_your_sense_of_safety_in_this_location !== undefined}
           />
-          <SlidePanelTitle>{m.influencingFactors}</SlidePanelTitle>
+          <SlidePanelTitle>{m.details}</SlidePanelTitle>
+          <ProtHHS2BarChart
+            questionType="single"
+            data={data}
+            sortBy={ChartTools.sortBy.custom([
+              '_1_very_unsafe',
+              '_2_unsafe',
+              '_3_safe',
+              '_4_very_safe',
+            ])}
+            question="please_rate_your_sense_of_safety_in_this_location"
+            filterValue={['unable_unwilling_to_answer']}
+          />
+          <SlidePanelTitle sx={{mt: 4}}>{m.influencingFactors}</SlidePanelTitle>
           <ProtHHS2BarChart
             questionType="multiple"
             data={data}
@@ -63,7 +77,21 @@ export const DashboardProtHHS2Safety = ({
             base={_ => _.how_would_you_describe_the_relationship_between_member_of_the_host_community !== 'unable_unwilling_to_answer' &&
               _.how_would_you_describe_the_relationship_between_member_of_the_host_community !== undefined}
           />
-          <SlidePanelTitle>{m.influencingFactors}</SlidePanelTitle>
+          <SlidePanelTitle>{m.details}</SlidePanelTitle>
+          <ProtHHS2BarChart
+            questionType="single"
+            data={data}
+            sortBy={ChartTools.sortBy.custom([
+              '_1_very_bad',
+              '_2_bad',
+              '_3_acceptable',
+              '_4_good',
+              '_5_very_good',
+            ])}
+            question="how_would_you_describe_the_relationship_between_member_of_the_host_community"
+            filterValue={['unable_unwilling_to_answer']}
+          />
+          <SlidePanelTitle sx={{mt: 4}}>{m.influencingFactors}</SlidePanelTitle>
           <ProtHHS2BarChart
             questionType="multiple"
             data={data}

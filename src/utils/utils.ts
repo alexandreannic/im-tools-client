@@ -1,5 +1,6 @@
 import {Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
+import {AssertionError} from 'assert'
 
 export const generateId = () => ('' + Math.random()).split('.')[1]
 
@@ -253,6 +254,12 @@ export const convertNumberIndexToLetter = (_: number) => {
 }
 
 export namespace Utils {
+
+  export function assert(condition: any, msg?: string): asserts condition {
+    if (!condition) {
+      throw new Error(msg);
+    }
+  }
 
   interface Slugify {
     (_: string): string

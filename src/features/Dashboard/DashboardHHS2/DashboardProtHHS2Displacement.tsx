@@ -9,6 +9,8 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {chain} from '@/utils/utils'
 
 
 export const DashboardProtHHS2Displacement = ({
@@ -20,31 +22,40 @@ export const DashboardProtHHS2Displacement = ({
   return (
     <SlideContainer responsive>
       <SlideContainer column>
-        <SlidePanel title={m.displacementAndReturn}>
-          <KoboLineChartDate
-            data={data}
-            question={['when_did_you_first_leave_your_area_of_origin', 'when_did_you_return_to_your_area_of_origin']}
-            label={[m.departureFromAreaOfOrigin, m.returnToOrigin]}
-            translations={{
-              when_did_you_first_leave_your_area_of_origin: m.departureFromAreaOfOrigin,
-              when_did_you_return_to_your_area_of_origin: m.returnToOrigin,
-            }}
-            end={computed.end}
-          />
-        </SlidePanel>
         <SlidePanel title={m.idpPopulationByOblast}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <UkraineMap sx={{flex: 1}} data={computed.byOriginOblast} base={computed.flatData.length} title={m.originOblast}/>
+            <UkraineMap sx={{flex: 1}} data={computed.byOriginOblast} base={data.length} title={m.originOblast}/>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
               <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
               <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
               <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
             </Box>
-            <UkraineMap sx={{flex: 1}} data={computed.byCurrentOblast} base={computed.flatData.length} legend={false} title={m.currentOblast}/>
+            <UkraineMap sx={{flex: 1}} data={computed.byCurrentOblast} base={data.length} legend={false} title={m.currentOblast}/>
           </Box>
         </SlidePanel>
-      </SlideContainer>
-      <SlideContainer column>
+        <SlidePanel title={m.displacementAndReturn}>
+          <KoboLineChartDate
+            data={data}
+            start={new Date(2022, 0, 1)}
+            question={['when_did_you_leave_your_area_of_origin', 'when_did_you_return_to_your_area_of_origin']}
+            label={[m.departureFromAreaOfOrigin, m.returnToOrigin]}
+            translations={{
+              when_did_you_leave_your_area_of_origin: m.departureFromAreaOfOrigin,
+              when_did_you_return_to_your_area_of_origin: m.returnToOrigin,
+            }}
+            end={computed.end}
+          />
+        </SlidePanel>
+        <SlidePanel title={m.protHHS2.hhsAffectedByMultipleDisplacement}>
+          <Lazy deps={[data]} fn={() => chain(ChartTools.byCategory({
+            data,
+            categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
+            filter: _ => _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_2014' || _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_february_24_2022',
+            filterBase: _ => _.have_you_been_displaced_prior_to_your_current_displacement && _.have_you_been_displaced_prior_to_your_current_displacement !== 'unable_unwilling_to_answer'
+          })).get}>
+            {_ => <UkraineMap data={_} sx={{mx: 2}}/>}
+          </Lazy>
+        </SlidePanel>
         <SlidePanel title={m.intentions}>
           <ProtHHS2BarChart
             data={data}
@@ -53,6 +64,16 @@ export const DashboardProtHHS2Displacement = ({
             overrideLabel={{
               return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
             }}
+          />
+        </SlidePanel>
+      </SlideContainer>
+      <SlideContainer column>
+        <SlidePanel title={m.protHHS2.reasonForLeaving}>
+          <ProtHHS2BarChart
+            data={data}
+            question="why_did_you_leave_your_area_of_origin"
+            questionType="multiple"
+            filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>
         <SlidePanel>

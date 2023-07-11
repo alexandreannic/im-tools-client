@@ -1,10 +1,8 @@
-import {ChartTools} from '../../../core/chartTools'
 import {format} from 'date-fns'
-import {ScLineChart, ScLineChartProps} from '@/shared/Chart/ScLineChart'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
-import {set} from 'lodash'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
+import {Utils} from '@/utils/utils'
 
 export type DateKeys<T> = {
   [K in keyof T]: T[K] extends (Date | undefined) ? K : never;
@@ -14,28 +12,31 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
   data,
   question,
   label,
+  start,
   end = new Date(),
   translations,
 }: {
   label?: string | string[]
   question: K | K[]
   data: _Arr<T>
+  start?: Date
   end?: Date
   // @ts-ignore
   translations?: Partial<Record<T[K], string>>
 }) => {
-  const curve2 = useMemo(() => {
+  const curve = useMemo(() => {
     const questions = ([question].flat() as K[])
-    const _end = format(end, 'yyyy-MM')
+    // const _end = format(end, 'yyyy-MM')
     const res: Record<string, Record<K, number>> = {}
     data.forEach(d => {
       questions.map(q => {
         if (!d[q]) return
-        const date = format(d[q] as Date, 'yyyy-MM')
-        if (date.localeCompare(_end) > 0) return
-        if (!res[date]) res[date] = {} as any
-        if (!res[date][q]) res[date][q] = 0
-        res[date][q] += 1
+        const date = d[q] as Date
+        const yyyyMM = format(date, 'yyyy-MM')
+        if (date.getTime() > end.getTime() || (start && date.getTime() < start.getTime())) return
+        if (!res[yyyyMM]) res[yyyyMM] = {} as any
+        if (!res[yyyyMM][q]) res[yyyyMM][q] = 0
+        res[yyyyMM][q] += 1
       })
     })
     return Enum.entries(res)
@@ -47,14 +48,14 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
       })
       .map(([date, v]) => ({name: date, ...v}))
       .sort((a, b) => a.name.localeCompare(b.name))
-  }, [data, question, end, label])
+  }, [data, question, end])
 
   return (
     <>
       <ScLineChart2
         hideLabelToggle={true}
         height={220}
-        data={curve2}
+        data={curve}
         translation={translations as any}
       />
       {/*<Txt color="hint" size="small" sx={{display: 'flex', justifyContent: 'space-between'}}>*/}

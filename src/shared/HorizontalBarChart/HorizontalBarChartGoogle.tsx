@@ -1,10 +1,11 @@
 import * as React from 'react'
 import {ReactNode, useMemo, useState} from 'react'
-import {alpha, Box, Icon, styled, Tooltip, tooltipClasses, TooltipProps} from '@mui/material'
+import {alpha, Box, Icon, TooltipProps} from '@mui/material'
 import {useTimeout} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '../../core/i18n'
-import {Fender, Txt} from 'mui-extension'
+import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
+import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
 
 export interface HorizontalBarChartGoogleData {
   label?: ReactNode
@@ -26,21 +27,6 @@ interface Props<K extends string> {
   descs?: Record<K, ReactNode>
   data?: Record<K, HorizontalBarChartGoogleData>
   barHeight?: number
-}
-
-const TooltipRow = ({
-  label,
-  value,
-}: {
-  label: ReactNode
-  value: ReactNode
-}) => {
-  return (
-    <Txt size="big" sx={{mt: .5, display: 'flex', justifyContent: 'space-between'}}>
-      <Txt color="hint">{label}</Txt>
-      <Txt bold color="primary" sx={{ml: 2}}>{value}</Txt>
-    </Txt>
-  )
 }
 
 export const HorizontalBarChartGoogle = <K extends string>(props: Props<K>) => {
@@ -115,8 +101,8 @@ export const _HorizontalBarChartGoogle = <K extends string>({
                   <Box sx={{mt: .5, pt: .5, pb: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', mb: barHeight + 'px',}}>
                     <Txt sx={{p: 0, pr: .5, flex: 1}} truncate>
                       <Txt block truncate>
-                        {item.label ?? k}&nbsp;
                         {(labels && labels[k]) ?? ''}
+                        {item.label ?? k}&nbsp;
                       </Txt>
                       {(item.desc || descs) && <Txt block color="hint" truncate size="small">
                         {item.desc}
@@ -201,13 +187,3 @@ const TooltipWrapper = ({
   )
 }
 
-const LightTooltip = styled(({className, ...props}: TooltipProps) => (
-  <Tooltip {...props} classes={{popper: className}}/>
-))(({theme}) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[3],
-    fontSize: 11,
-  },
-}))

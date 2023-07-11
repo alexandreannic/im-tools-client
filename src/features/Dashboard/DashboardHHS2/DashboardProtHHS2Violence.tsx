@@ -1,5 +1,5 @@
 import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
-import React, {useMemo} from 'react'
+import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
@@ -14,12 +14,35 @@ import {Panel} from '@/shared/Panel'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {Box, Checkbox} from '@mui/material'
+import {Txt} from 'mui-extension'
 
 export const DashboardProtHHS2Violence = ({
   data,
   computed,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
+
+  const [category, setCategory] = useState({
+    has_any_adult_male_member_experienced_violence: true,
+    has_any_adult_female_member_experienced_violence: true,
+    has_any_boy_member_experienced_violence: true,
+    has_any_girl_member_experienced_violence: true,
+    has_any_other_member_experienced_violence: true,
+  })
+  const allChecked = useMemo(() => Enum.values(category).every(_ => _), [category])
+  const oneChecked = useMemo(() => !!Enum.values(category).find(_ => _), [category])
+
+  const updateAll = (checked: boolean) => {
+    setCategory({
+      has_any_adult_male_member_experienced_violence: checked,
+      has_any_adult_female_member_experienced_violence: checked,
+      has_any_boy_member_experienced_violence: checked,
+      has_any_girl_member_experienced_violence: checked,
+      has_any_other_member_experienced_violence: checked,
+    })
+  }
+
   const groupedIndividualsType = useMemo(() => {
     // Verbose but more performant than functional version
     const res = {
@@ -29,33 +52,32 @@ export const DashboardProtHHS2Violence = ({
     }
     data.forEach(_ => {
       res.type.push(...[
-        _.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence,
-        _.what_type_of_incidents_took_place_has_any_adult_female_member_experienced_violence,
-        _.what_type_of_incidents_took_place_has_any_boy_member_experienced_violence,
-        _.what_type_of_incidents_took_place_has_any_girl_member_experienced_violence,
-        _.what_type_of_incidents_took_place_has_any_other_member_experienced_violence,
+        ...category.has_any_adult_male_member_experienced_violence ? [_.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence] : [],
+        ...category.has_any_adult_female_member_experienced_violence ? [_.what_type_of_incidents_took_place_has_any_adult_female_member_experienced_violence] : [],
+        ...category.has_any_boy_member_experienced_violence ? [_.what_type_of_incidents_took_place_has_any_boy_member_experienced_violence] : [],
+        ...category.has_any_girl_member_experienced_violence ? [_.what_type_of_incidents_took_place_has_any_girl_member_experienced_violence] : [],
+        ...category.has_any_other_member_experienced_violence ? [_.what_type_of_incidents_took_place_has_any_other_member_experienced_violence] : [],
       ])
       res.when.push(...[
-        _.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence,
-        _.when_did_the_incidents_occur_has_any_adult_female_member_experienced_violence,
-        _.when_did_the_incidents_occur_has_any_boy_member_experienced_violence,
-        _.when_did_the_incidents_occur_has_any_girl_member_experienced_violence,
-        _.when_did_the_incidents_occur_has_any_other_member_experienced_violence,
+        ...category.has_any_adult_male_member_experienced_violence ? [_.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence] : [],
+        ...category.has_any_adult_female_member_experienced_violence ? [_.when_did_the_incidents_occur_has_any_adult_female_member_experienced_violence] : [],
+        ...category.has_any_boy_member_experienced_violence ? [_.when_did_the_incidents_occur_has_any_boy_member_experienced_violence] : [],
+        ...category.has_any_girl_member_experienced_violence ? [_.when_did_the_incidents_occur_has_any_girl_member_experienced_violence] : [],
+        ...category.has_any_other_member_experienced_violence ? [_.when_did_the_incidents_occur_has_any_other_member_experienced_violence] : [],
       ])
       res.who.push(...[
-        _.who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence,
-        _.who_were_the_perpetrators_of_the_incident_has_any_adult_female_member_experienced_violence,
-        _.who_were_the_perpetrators_of_the_incident_has_any_boy_member_experienced_violence,
-        _.who_were_the_perpetrators_of_the_incident_has_any_girl_member_experienced_violence,
-        _.who_were_the_perpetrators_of_the_incident_has_any_other_member_experienced_violence,
+        ...category.has_any_adult_male_member_experienced_violence ? [_.who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence] : [],
+        ...category.has_any_adult_female_member_experienced_violence ? [_.who_were_the_perpetrators_of_the_incident_has_any_adult_female_member_experienced_violence] : [],
+        ...category.has_any_boy_member_experienced_violence ? [_.who_were_the_perpetrators_of_the_incident_has_any_boy_member_experienced_violence] : [],
+        ...category.has_any_girl_member_experienced_violence ? [_.who_were_the_perpetrators_of_the_incident_has_any_girl_member_experienced_violence] : [],
+        ...category.has_any_other_member_experienced_violence ? [_.who_were_the_perpetrators_of_the_incident_has_any_other_member_experienced_violence] : [],
       ])
     })
     return res
-  }, [data])
+  }, [data, category])
   return (
-    <SlideContainer column>
-      <SlidePanelTitle>Reported incidents over the last 6 months</SlidePanelTitle>
-      <SlideContainer>
+    <SlideContainer responsive>
+      <SlideContainer column>
         <Lazy deps={[data]} fn={() => {
           const questions = forceArrayStringInference([
             'has_any_adult_male_member_experienced_violence',
@@ -96,79 +118,110 @@ export const DashboardProtHHS2Violence = ({
               }
             })
           })
-          return res
+          return ChartTools.setLabel({
+            has_any_adult_female_member_experienced_violence: m.adultWomen,
+            has_any_adult_male_member_experienced_violence: m.adultMen,
+            has_any_boy_member_experienced_violence: m.boy,
+            has_any_girl_member_experienced_violence: m.girl,
+            has_any_other_member_experienced_violence: m.other,
+          })(res)
         }}>
-          {_ => Enum.entries(_).map(([k, v]) => (
-            <SlidePanel key={k} sx={{flex: 1, m: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-              <PieChartIndicator sx={{minWidth: 160}} value={v.value} base={v.base} percent={v.value / v.base} title={fnSwitch(k, {
-                has_any_adult_female_member_experienced_violence: m.adultWomen,
-                has_any_adult_male_member_experienced_violence: m.adultMen,
-                has_any_boy_member_experienced_violence: m.boy,
-                has_any_girl_member_experienced_violence: m.girl,
-                has_any_other_member_experienced_violence: m.other,
-              })}/>
+          {_ =>
+            <SlidePanel title={m.protHHS2.reportedIncidents}>
+              <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <Checkbox indeterminate={!allChecked && oneChecked} checked={allChecked} onClick={() => {
+                  updateAll(!allChecked)
+                }}/>
+                <Txt bold size="big">{m.selectAll}</Txt>
+              </Box>
+              <HorizontalBarChartGoogle
+                data={_}
+                labels={{
+                  has_any_adult_male_member_experienced_violence: <Checkbox
+                    size="small"
+                    checked={category.has_any_adult_male_member_experienced_violence}
+                    onChange={e => setCategory(prev => ({...prev, has_any_adult_male_member_experienced_violence: e.target.checked}))}
+                  />,
+                  has_any_adult_female_member_experienced_violence: <Checkbox
+                    size="small"
+                    checked={category.has_any_adult_female_member_experienced_violence}
+                    onChange={e => setCategory(prev => ({...prev, has_any_adult_female_member_experienced_violence: e.target.checked}))}
+                  />,
+                  has_any_boy_member_experienced_violence: <Checkbox
+                    size="small"
+                    checked={category.has_any_boy_member_experienced_violence}
+                    onChange={e => setCategory(prev => ({...prev, has_any_boy_member_experienced_violence: e.target.checked}))}
+                  />,
+                  has_any_girl_member_experienced_violence: <Checkbox
+                    size="small"
+                    checked={category.has_any_girl_member_experienced_violence}
+                    onChange={e => setCategory(prev => ({...prev, has_any_girl_member_experienced_violence: e.target.checked}))}
+                  />,
+                  has_any_other_member_experienced_violence: <Checkbox
+                    size="small"
+                    checked={category.has_any_other_member_experienced_violence}
+                    onChange={e => setCategory(prev => ({...prev, has_any_other_member_experienced_violence: e.target.checked}))}
+                  />,
+                }}
+              />
             </SlidePanel>
-          ))}
+          }
         </Lazy>
+        <SlidePanel title={m.majorStressFactors}>
+          <ProtHHS2BarChart
+            data={data}
+            questionType="multiple"
+            filterValue={['unable_unwilling_to_answer']}
+            question="what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members"
+          />
+        </SlidePanel>
       </SlideContainer>
-      <SlideContainer responsive>
-        <SlideContainer column>
-          <Lazy deps={[groupedIndividualsType.type]} fn={() =>
-            chain(ChartTools.multiple({
-              data: groupedIndividualsType.type,
-              filterValue: ['unable_unwilling_to_answer']
-            }))
-              .map(ChartTools.setLabel(ProtHHS_2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
-              .map(ChartTools.sortBy.value)
-              .get
-          }>
-            {_ => (
-              <SlidePanel title={m.protHHS2.typeOfIncident}>
-                <HorizontalBarChartGoogle data={_}/>
-              </SlidePanel>
-            )}
-          </Lazy>
-          <Lazy deps={[groupedIndividualsType.when]} fn={() =>
-            chain(ChartTools.multiple({
-              data: groupedIndividualsType.when,
-              filterValue: ['unable_unwilling_to_answer']
-            }))
-              .map(ChartTools.setLabel(ProtHHS_2_1Options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence))
-              .map(ChartTools.sortBy.value)
-              .get
-          }>
-            {_ => (
-              <SlidePanel title={m.protHHS2.timelineOfIncident}>
-                <HorizontalBarChartGoogle data={_}/>
-              </SlidePanel>
-            )}
-          </Lazy>
-        </SlideContainer>
-        <SlideContainer column>
-          <Lazy deps={[groupedIndividualsType.who]} fn={() =>
-            chain(ChartTools.multiple({
-              data: groupedIndividualsType.who,
-              filterValue: ['unable_unwilling_to_answer']
-            }))
-              .map(ChartTools.setLabel(ProtHHS_2_1Options.who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence))
-              .map(ChartTools.sortBy.value)
-              .get
-          }>
-            {_ => (
-              <SlidePanel title={m.perpetrators}>
-                <HorizontalBarChartGoogle data={_}/>
-              </SlidePanel>
-            )}
-          </Lazy>
-          <SlidePanel title={m.majorStressFactors}>
-            <ProtHHS2BarChart
-              data={data}
-              questionType="multiple"
-              filterValue={['unable_unwilling_to_answer']}
-              question="what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members"
-            />
-          </SlidePanel>
-        </SlideContainer>
+      <SlideContainer column>
+        <Lazy deps={[groupedIndividualsType.type]} fn={() =>
+          chain(ChartTools.multiple({
+            data: groupedIndividualsType.type,
+            filterValue: ['unable_unwilling_to_answer']
+          }))
+            .map(ChartTools.setLabel(ProtHHS_2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
+            .map(ChartTools.sortBy.value)
+            .get
+        }>
+          {_ => (
+            <SlidePanel title={m.protHHS2.typeOfIncident}>
+              <HorizontalBarChartGoogle data={_}/>
+            </SlidePanel>
+          )}
+        </Lazy>
+        <Lazy deps={[groupedIndividualsType.when]} fn={() =>
+          chain(ChartTools.multiple({
+            data: groupedIndividualsType.when,
+            filterValue: ['unable_unwilling_to_answer']
+          }))
+            .map(ChartTools.setLabel(ProtHHS_2_1Options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence))
+            .map(ChartTools.sortBy.value)
+            .get
+        }>
+          {_ => (
+            <SlidePanel title={m.protHHS2.timelineOfIncident}>
+              <HorizontalBarChartGoogle data={_}/>
+            </SlidePanel>
+          )}
+        </Lazy>
+        <Lazy deps={[groupedIndividualsType.who]} fn={() =>
+          chain(ChartTools.multiple({
+            data: groupedIndividualsType.who,
+            filterValue: ['unable_unwilling_to_answer']
+          }))
+            .map(ChartTools.setLabel(ProtHHS_2_1Options.who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence))
+            .map(ChartTools.sortBy.value)
+            .get
+        }>
+          {_ => (
+            <SlidePanel title={m.perpetrators}>
+              <HorizontalBarChartGoogle data={_}/>
+            </SlidePanel>
+          )}
+        </Lazy>
       </SlideContainer>
     </SlideContainer>
   )

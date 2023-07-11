@@ -1,7 +1,7 @@
-import { format, formatDistance, formatDuration as formatDurationFns, sub } from 'date-fns'
-import { externalLinks } from '../../externalLinks'
-import { KoboFormProtHH } from '../../koboModel/koboFormProtHH'
-import { Period } from '../../type'
+import {format, formatDistance, formatDuration as formatDurationFns, sub} from 'date-fns'
+import {externalLinks} from '../../externalLinks'
+import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
+import {Period} from '../../type'
 import Status = KoboFormProtHH.Status
 
 const invalidDate = '-'
@@ -26,7 +26,7 @@ export const formatDateTime = (d?: Date): string => {
 }
 
 export const dateFromNow = (d?: Date): string | undefined => {
-  return d ? formatDistance(d, new Date(), { addSuffix: true }) : undefined
+  return d ? formatDistance(d, new Date(), {addSuffix: true}) : undefined
 }
 
 export const formatLargeNumber = (n?: number): string => {
@@ -108,6 +108,7 @@ export const en = Object.freeze({
     confirm: 'Confirm',
     downloadAsPdf: 'Download as PDF',
     all: 'All',
+    details: 'Details',
     toggleDatatableColumns: 'Toggle',
     areas: {
       north: 'North',
@@ -253,6 +254,8 @@ export const en = Object.freeze({
       hasPriorityQueuesForVulnerableIndividuals: 'Priority queues for vulnerable individuals',
     },
     protHHS2: {
+      reportedIncidents: 'Reported incidents over the last 6 months',
+      hhsAffectedByMultipleDisplacement: 'Multiple time displaced by current location population',
       barriersToAccessHealth: 'Barriers to access healthcare',
       hhWithMemberHavingDifficulties: 'HHs reporting member(s) with disability',
       wg_using_your_usual_language_have_difficulty_communicating: 'Using your usual (customary) language',
@@ -274,6 +277,7 @@ export const en = Object.freeze({
       typeOfIncident: 'Type of incident',
       poorRelationshipWithHostCommunity: 'Poor intercommunity relationships',
       poorSenseOfSafety: 'Poor sense of safety',
+      reasonForLeaving: 'Factors influencing departure',
       safetyAndSecurity: 'Safety & Security',
       reasonForRemainInOrigin: 'Reason for remaining in the area of origin',
       familyMemberSeparated: 'HHs with separated member(s)',
@@ -825,7 +829,7 @@ export const en = Object.freeze({
           DRC protection monitoring targeted Internally Displaced Persons (IDPs)
           and people directly exposed to and affected by the current armed conflict.
         `,
-        previousPeriodNote: (period: Period) => `<sup>(1)</sup> Compared to the previous period of ${format(period.start, 'LLL yyyy')} - ${format(sub(period.end, { days: 1 }),
+        previousPeriodNote: (period: Period) => `<sup>(1)</sup> Compared to the previous period of ${format(period.start, 'LLL yyyy')} - ${format(sub(period.end, {days: 1}),
           'LLL yyyy')}`,
         dataAccuracy: `<sup>(1)</sup> Due to uneven monitoring across the oblasts, values does not reflect the exact proportions; however, they reveal trend insights.`,
       },
@@ -857,7 +861,7 @@ export const en = Object.freeze({
     validFrom: 'Valid from',
     expiry: 'Expiry',
     departureFromAreaOfOrigin: `Displacement from area of origin`,
-    displacementAndReturn: 'Displacement & Return',
+    displacementAndReturn: 'Number of Displacement & Return ',
     returnToOrigin: `Return to area of origin`,
     dateOfDeparture: `Date of departure`,
     pin: 'Pin',
