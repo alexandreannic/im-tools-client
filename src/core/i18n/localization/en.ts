@@ -75,6 +75,7 @@ export const en = Object.freeze({
     familyUnity: 'Family unity',
     city: 'City',
     no: 'No',
+    contactAdmin: 'Contact: <a href="mailto:alexandre.annic@drc.ngo">alexandre.annic@drc.ngo</a>.',
     office: 'Office',
     drcOffice: 'DRC office',
     question: 'Question',

@@ -23,7 +23,7 @@ export const KoboPieChartIndicatorMultiple = <T, K extends StringArrayKeys<T>>({
   filter: (_: T[K]) => boolean
   filterBase?: (_: T[K]) => boolean
   data: _Arr<T>
-} & Omit<PieChartIndicatorProps, 'percent'>) => {
+} & Omit<PieChartIndicatorProps, 'value' | 'base'>) => {
   const baseData = useMemo(() => {
     const t = data.map(_ => _[question]).compact()
     // @ts-ignore
@@ -35,7 +35,7 @@ export const KoboPieChartIndicatorMultiple = <T, K extends StringArrayKeys<T>>({
   }, [baseData, filter])
 
   return (
-    <PieChartIndicator title={title} value={res.length} percent={res.length / data.length} {...props}/>
+    <PieChartIndicator title={title} value={res.length} base={data.length} {...props}/>
   )
 }
 
@@ -46,8 +46,6 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
   data,
   filter,
   filterBase,
-  showValue,
-  showBase,
   ...props
 }: {
   compare?: {before: _Arr<T>, now?: _Arr<T>}
@@ -58,7 +56,7 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
   data: _Arr<T>
   showValue?: boolean
   showBase?: boolean
-} & Omit<PieChartIndicatorProps, 'percent'>) => {
+} & Omit<PieChartIndicatorProps, 'base' | 'value'>) => {
 
   const percent = ({res, base}: {res: number, base: number}) => res / base
 
@@ -81,27 +79,12 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
   }, [compare, filter, filterBase])
 
   return (
-    <LightTooltip title={
-      <>
-        <Txt size="big" block bold>
-          {title}
-        </Txt>
-        <Box sx={{mt: .5}}>
-          <TooltipRow label="" value={toPercent(percent(all))}/>
-          <TooltipRow label="Total" value={<>{formatLargeNumber(all.res)} / {formatLargeNumber(all.base)}</>}/>
-        </Box>
-      </>
-    }>
-      <div>
-        <PieChartIndicator
-          title={title}
-          percent={percent(all)}
-          value={showValue ? all.res : undefined}
-          base={showBase ? all.base : undefined}
-          evolution={comparedData ? percent(comparedData.now ?? all) - percent(comparedData.before) : undefined}
-          {...props}
-        />
-      </div>
-    </LightTooltip>
+    <PieChartIndicator
+      title={title}
+      value={all.res}
+      base={all.base}
+      evolution={comparedData ? percent(comparedData.now ?? all) - percent(comparedData.before) : undefined}
+      {...props}
+    />
   )
 }

@@ -70,7 +70,7 @@ export const DashboardProtHHS2Sample = ({
                 value: _ => _.gender === 'female'
               })}>
                 {_ => (
-                  <PieChartIndicator percent={_.percent} title={m.females}/>
+                  <PieChartIndicator value={_.value} base={_.base} title={m.females}/>
                 )}
               </Lazy>
             </Panel>
@@ -164,7 +164,7 @@ export const DashboardProtHHS2Sample = ({
                 .filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('no_specific_needs'),
             })}>
-              {(_, last) => <PieChartIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} percent={_.percent} evolution={_.percent - last.percent}/>}
+              {(_, last) => <PieChartIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
             <ProtHHS2BarChart
               data={data}

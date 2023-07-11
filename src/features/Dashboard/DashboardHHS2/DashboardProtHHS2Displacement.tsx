@@ -84,7 +84,7 @@ export const DashboardProtHHS2Displacement = ({
               && !_.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns.includes('unable_unwilling_to_answer'),
           })}>
             {(_, last) => (
-              <PieChartIndicator sx={{mb: 1}} percent={_.percent} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
+              <PieChartIndicator sx={{mb: 1}} value={_.value} base={_.base} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
             )}
           </Lazy>
           <ProtHHS2BarChart

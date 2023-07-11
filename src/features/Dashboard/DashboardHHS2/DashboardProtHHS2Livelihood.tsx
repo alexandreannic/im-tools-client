@@ -30,7 +30,7 @@ export const DashboardProtHHS2Livelihood = ({
               base: _ => _ !== undefined,
             })}>
               {(_, last) => {
-                return <PieChartIndicator title={m.hhWithoutIncome} percent={_.percent} evolution={_.percent - last.percent}/>}
+                return <PieChartIndicator title={m.hhWithoutIncome} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
               }
             </Lazy>
           </SlidePanel>
@@ -40,7 +40,7 @@ export const DashboardProtHHS2Livelihood = ({
               data: d,
               base: _ => _ !== undefined,
             })}>
-              {(_, last) => <PieChartIndicator title={m.hhOutOfWork} percent={_.percent} evolution={_.percent - last.percent}/>}
+              {(_, last) => <PieChartIndicator title={m.hhOutOfWork} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </SlideContainer>
@@ -51,7 +51,7 @@ export const DashboardProtHHS2Livelihood = ({
               data: d,
               base: _ => _.do_you_identify_as_any_of_the_following === 'idp',
             })}>
-              {(_, last) => <PieChartIndicator title={m.idpWithAllowance} percent={_.percent} evolution={_.percent - last.percent}/>}
+              {(_, last) => <PieChartIndicator title={m.idpWithAllowance} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
@@ -59,7 +59,7 @@ export const DashboardProtHHS2Livelihood = ({
               value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
               data: d,
             })}>
-              {(_, last) => <PieChartIndicator title={m.hhWithGapMeetingBasicNeeds} percent={_.percent} evolution={_.percent - last.percent}/>}
+              {(_, last) => <PieChartIndicator title={m.hhWithGapMeetingBasicNeeds} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </SlideContainer>

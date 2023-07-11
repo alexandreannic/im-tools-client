@@ -233,15 +233,15 @@ export const DashboardMealVisitMonitoring = () => {
                   <Box sx={{display: 'flex', '& > *': {flex: 1}}}>
                     <Lazy deps={[data]} fn={() => {
                       const base = data.map(_ => _.sew).compact()
-                      return base.sum() / base.length / 100
+                      return {value: base.sum(), base: base.length * 100}
                     }}>
-                      {_ => <PieChartIndicator titleIcon="female" title={m.women} percent={_}/>}
+                      {_ => <PieChartIndicator titleIcon="female" title={m.women} value={_.value} base={_.base}/>}
                     </Lazy>
                     <Lazy deps={[data]} fn={() => {
                       const base = data.map(_ => _.sem).compact()
-                      return base.sum() / base.length / 100
+                      return {value: base.sum(), base: base.length * 100}
                     }}>
-                      {_ => <PieChartIndicator titleIcon="male" title={m.men} percent={_}/>}
+                      {_ => <PieChartIndicator titleIcon="male" title={m.men} value={_.value} base={_.base}/>}
                     </Lazy>
                   </Box>
                 </SlidePanel>

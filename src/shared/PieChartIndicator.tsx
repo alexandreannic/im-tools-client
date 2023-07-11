@@ -5,6 +5,9 @@ import {AaPieChart} from './Chart/AaPieChart'
 import {SlidePanelTitle} from './PdfLayout/Slide'
 import {PanelProps} from './Panel/Panel'
 import {useI18n} from '@/core/i18n'
+import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
+import {toPercent} from '@/utils/utils'
+import {formatLargeNumber} from '@/core/i18n/localization/en'
 
 const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
   return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value
@@ -48,9 +51,10 @@ export interface PieChartIndicatorProps extends Omit<PanelProps, 'title'> {
   noWrap?: boolean
   titleIcon?: string
   title?: ReactNode
-  value?: number
-  base?: number
-  percent: number
+  value: number
+  base: number
+  showValue?: number
+  showBase?: number
   evolution?: number
   tooltip?: string
 }
@@ -58,12 +62,13 @@ export interface PieChartIndicatorProps extends Omit<PanelProps, 'title'> {
 export const PieChartIndicator = ({
   titleIcon,
   title,
-  percent,
   evolution,
   noWrap,
   children,
   dense,
   value,
+  showValue,
+  showBase,
   base,
   tooltip,
   fractionDigits = 0,
@@ -72,49 +77,61 @@ export const PieChartIndicator = ({
 }: PieChartIndicatorProps) => {
   const {m} = useI18n()
   return (
-    <Box sx={{
-      display: 'flex',
-      alignItems: 'center',
-      ...sx,
-    }}>
-      <Donut percent={percent} size={dense ? 50 : 55}/>
-      <Box sx={{ml: dense ? .75 : 1.5}}>
-        <SlidePanelTitle icon={titleIcon} noWrap={noWrap}>
+    <LightTooltip title={
+      <>
+        <Txt size="big" block bold>
           {title}
-        </SlidePanelTitle>
-        <Box sx={{display: 'inline-flex', lineHeight: 1, alignItems: 'flex-start'}}>
-          <Txt bold sx={{fontSize: '1.7em'}}>{renderPercent(percent, true, fractionDigits)}</Txt>
-          {value !== undefined && (
-            <Txt color="disabled" sx={{ml: .5, fontWeight: '400'}}>
+        </Txt>
+        <Box sx={{mt: .5}}>
+          <TooltipRow label="" value={toPercent(value / base)}/>
+          <TooltipRow label="Total" value={<>{formatLargeNumber(value)} / {formatLargeNumber(base)}</>}/>
+        </Box>
+      </>
+    }>
+      <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        ...sx,
+      }}>
+        <Donut percent={value / base} size={dense ? 50 : 55}/>
+        <Box sx={{ml: dense ? .75 : 1.5}}>
+          <SlidePanelTitle icon={titleIcon} noWrap={noWrap}>
+            {title}
+          </SlidePanelTitle>
+          <Box sx={{display: 'inline-flex', lineHeight: 1, alignItems: 'flex-start'}}>
+            <Txt bold sx={{fontSize: '1.7em'}}>{renderPercent(value / base, true, fractionDigits)}</Txt>
+            {showValue !== undefined && (
+              <Txt color="disabled" sx={{ml: .5, fontWeight: '400'}}>
               <span style={{fontSize: '1.6em', letterSpacing: '2px'}}>
                 &nbsp;{value}
               </span>
-              {base !== undefined && (
-                <span style={{fontSize: '1.2em'}}>/{base}</span>
-              )}
-              {/*<Txt color="disabled" sx={{fontSize: '1.4em', fontWeight: 'lighter'}}>)</Txt>*/}
-            </Txt>
-          )}
-          {evolution && (
-            <>
-              <Txt sx={{
-                fontSize: '1.7em',
-                color: t => evolution > 0 ? t.palette.success.main : t.palette.error.main,
-                display: 'inline-flex', alignItems: 'center'
-              }}>
-                <Icon sx={{ml: 1.5}} fontSize="inherit">{evolution > 0 ? 'north' : 'south'}</Icon>
-                <Box sx={{ml: .25}}>
-                  {evolution >= 0 && '+'}{(evolution * 100).toFixed(Math.abs(evolution) > 0.1 ? fractionDigits : 1)}
-                </Box>
-                {children}
+                {showBase !== undefined && (
+                  <span style={{fontSize: '1.2em'}}>/{base}</span>
+                )}
+                {/*<Txt color="disabled" sx={{fontSize: '1.4em', fontWeight: 'lighter'}}>)</Txt>*/}
               </Txt>
-              <Tooltip title={tooltip ?? m.comparedToPreviousMonth}>
-                <Icon sx={{fontSize: '15px !important'}} color="disabled">info</Icon>
-              </Tooltip>
-            </>
-          )}
+            )}
+            {evolution && (
+              <>
+                <Txt sx={{
+                  fontSize: '1.7em',
+                  color: t => evolution > 0 ? t.palette.success.main : t.palette.error.main,
+                  display: 'inline-flex', alignItems: 'center'
+                }}>
+                  <Icon sx={{ml: 1.5}} fontSize="inherit">{evolution > 0 ? 'north' : 'south'}</Icon>
+                  <Box sx={{ml: .25}}>
+                    {evolution >= 0 && '+'}{(evolution * 100).toFixed(Math.abs(evolution) > 0.1 ? fractionDigits : 1)}
+                  </Box>
+                  {children}
+                </Txt>
+                <Tooltip title={tooltip ?? m.comparedToPreviousMonth}>
+                  <Icon sx={{fontSize: '15px !important'}} color="disabled">info</Icon>
+                </Tooltip>
+              </>
+            )}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </LightTooltip>
   )
 }

@@ -2,7 +2,7 @@ import React, {ReactNode, useEffect, useState} from 'react'
 import {Box, Collapse, LinearProgress, Typography} from '@mui/material'
 import {combineSx} from '@/core/theme'
 import {DashboardProvider} from '../DashboardContext'
-import {makeSx} from 'mui-extension'
+import {makeSx, Txt} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useSetState} from '@alexandreannic/react-hooks-lib'
 import {Layout} from '@/shared/Layout'
@@ -10,6 +10,7 @@ import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {DashboardHeader, dashboardHeaderId} from '@/features/Dashboard/shared/DashboardHeader'
 import {Page} from '@/shared/Page'
 import {map} from '@alexandreannic/ts-utils'
+import {useI18n} from '@/core/i18n'
 
 const style = makeSx({
   sectionTitle: {
@@ -72,6 +73,7 @@ export const DashboardLayout = ({
 }) => {
   const [activeSection, setActiveSection] = useState(sections?.[0]?.name ?? '')
   const hiddenSections = useSetState()
+  const {m} = useI18n()
   useEffect(() => {
     if (!sections) return
     if (sections.length === 0) return
@@ -135,6 +137,10 @@ export const DashboardLayout = ({
               </Collapse>
             </Box>
           ))}
+
+          <Txt block color="disabled" sx={{mt: 8}}>
+            <div dangerouslySetInnerHTML={{__html: m.contactAdmin}}/>
+          </Txt>
         </Page>
       </Layout>
     </DashboardProvider>
