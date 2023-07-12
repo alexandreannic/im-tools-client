@@ -1,4 +1,4 @@
-import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {ProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {Arr, mapFor} from '@alexandreannic/ts-utils'
 import {Donor} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
@@ -12,7 +12,7 @@ export interface ProtHHS2Person {
   isIdpRegistered: ProtHHS_2_1['is_member_1_registered']
 }
 
-export const enrichProtHHS_2_1 = (a: KoboAnswer2<ProtHHS_2_1>) => {
+export const enrichProtHHS_2_1 = (a: KoboAnswer<ProtHHS_2_1>) => {
   const maxHHNumber = 12
   const mapPerson = (a: ProtHHS_2_1) => {
     const fields = [

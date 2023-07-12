@@ -12,7 +12,7 @@ import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
 import {koboServerId} from '@/koboFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {TableImg} from '@/shared/TableImg/TableImg'
 
@@ -30,7 +30,7 @@ export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${koboServerId.prod}/attachment?path=${url.split('api')[1]}`
 }
 
-export const mapMpcaKoboAnswer = () => (_: KoboAnswer2<BNRE>) => {
+export const mapMpcaKoboAnswer = () => (_: KoboAnswer<BNRE>) => {
   // TODO(Alex)
   // const deduplication = deduplicationDb && _.pay_det_tax_id_num ? deduplicationDb.search({
   //   taxId: [_.pay_det_tax_id_num],

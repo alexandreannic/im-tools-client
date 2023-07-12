@@ -1,6 +1,6 @@
 import {BNRE} from '../../core/koboModel/BNRE/BNRE'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
-import {KoboAnswer2} from '../../core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '../../core/sdk/server/kobo/Kobo'
 import {useMemo} from 'react'
 import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
@@ -39,7 +39,7 @@ export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 export const useBNREComputed = ({
   data,
 }: {
-  data?: _Arr<KoboAnswer2<BNRE>> | undefined
+  data?: _Arr<KoboAnswer<BNRE>> | undefined
 }) => useMemo(() => {
   if (!data) return
   const flatData = data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))

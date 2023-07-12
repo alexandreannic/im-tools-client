@@ -1,7 +1,7 @@
 import {Arr, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {Messages} from '../i18n/localization/en'
-import {KoboAnswer2} from '../sdk/server/kobo/Kobo'
+import {KoboAnswer} from '../sdk/server/kobo/Kobo'
 
 export namespace KoboFormProtHH {
 
@@ -21,7 +21,7 @@ export namespace KoboFormProtHH {
     idp_returnee = 'idp_returnee',
   }
 
-  export type Answer = KoboAnswer2<ReturnType<typeof mapAnswers>>
+  export type Answer = KoboAnswer<ReturnType<typeof mapAnswers>>
 
   const mapGender = (g?: any): Gender | undefined => {
     if (g && g !== 'prefer_not_to_answer' && g !== 'don_t_know') return Gender[g as Gender]

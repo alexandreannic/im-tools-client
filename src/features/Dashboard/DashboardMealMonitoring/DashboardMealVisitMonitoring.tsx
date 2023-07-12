@@ -15,7 +15,7 @@ import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/M
 import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {KoboImg} from '@/shared/TableImg/KoboImg'
-import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Txt} from 'mui-extension'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Period} from '@/core/type'
@@ -27,7 +27,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 
 export interface DashboardPageProps {
   filters: OptionFilters
-  data: Arr<KoboAnswer2<MealVisitMonitoring>>
+  data: Arr<KoboAnswer<MealVisitMonitoring>>
 }
 
 const mapOblast: Record<string, OblastISOSVG> = {

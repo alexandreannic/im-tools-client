@@ -4,7 +4,7 @@ import {useI18n} from '../../../core/i18n'
 import {useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {SlideContainer, SlidePanel, SlideWidget} from '@/shared/PdfLayout/Slide'
 import {BNREOblastToISO, UseBNREComputed, useBNREComputed} from '../useBNREComputed'
-import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '../../../core/sdk/server/kobo/Kobo'
 import {BNRE} from '../../../core/koboModel/BNRE/BNRE'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Lazy} from '@/shared/Lazy'
@@ -37,7 +37,7 @@ export const _MPCADashboard = ({
   data,
   computed,
 }: {
-  data: _Arr<KoboAnswer2<BNRE>>
+  data: _Arr<KoboAnswer<BNRE>>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const {m, formatDate, formatLargeNumber} = useI18n()

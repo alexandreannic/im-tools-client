@@ -4,13 +4,13 @@ import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-
 import {koboFormId, koboServerId} from '@/koboFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
-import {KoboAnswer2} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPaymentSdk'
 
 export interface MpcaDeduplicationContext {
-  _koboAnswers: UseFetcher<() => Promise<_Arr<KoboAnswer2<BNRE>>>>
+  _koboAnswers: UseFetcher<() => Promise<_Arr<KoboAnswer<BNRE>>>>
   _form: UseFetcher<() => Promise<KoboApiForm>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
   _create: UseAsync<(_: string[]) => Promise<MpcaPayment>>

@@ -4,6 +4,8 @@ export type KoboQuestionSchema = KoboApiForm['content']['survey'][0]
 
 export type KoboQuestionType = KoboQuestionSchema['type']
 
+export type KoboQuestionChoice = KoboApiForm['content']['choices'][0]
+
 export interface KoboApiForm {
   name: string
   content: {
@@ -42,6 +44,6 @@ export interface KoboApiForm {
       select_from_list_name?: string
     }[]
     translated: ['hint', 'label', 'media::image']
-    translations: [string, string]
+    translations: string[]
   }
 }

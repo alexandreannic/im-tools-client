@@ -16,26 +16,6 @@ export interface KoboForm {
   uploadedBy?: string
 }
 
-export enum KoboQuestionType {
-  SelectOne = 'select_one',
-  Text = 'text',
-}
-
-export type SelectFromListName = string
-
-export interface KoboQuestion {
-  name: string
-  type: KoboQuestionType
-  $kuid: string
-  label: string[],
-  $qpath: string,
-  $xpath: string,
-  required: boolean,
-  $autoname: string,
-  appearance: 'minimal' | 'horizontal',
-  select_from_list_name: SelectFromListName
-}
-
 export type KoboAttachment = {
   download_url: string
   filename: string
@@ -75,13 +55,10 @@ export type KoboAnswerMetaData = {
   tags: any,
 }
 
-/** @deprecated*/
-export type KoboAnswer = (KoboAnswerMetaData & {[key: string]: any})
-
-export type KoboAnswer2<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
+export type KoboAnswer<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
 
 export class Kobo {
-  static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer2<any> => {
+  static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer<any> => {
     delete (k as any)['deviceid']
     return {
       ...k,
@@ -98,7 +75,6 @@ export class Kobo {
     }
   }
 }
-
 
 export interface ApiKoboForm {
   // access_types: null
