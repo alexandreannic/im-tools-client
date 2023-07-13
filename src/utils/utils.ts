@@ -247,13 +247,19 @@ export const downloadStringAsFile = (stringData: string, fileName: string) => {
   _.click()
 }
 
-export const removeHtml = (_?: string) => _?.replace(/(<([^>]+)>)/gi, '')
 
 export const convertNumberIndexToLetter = (_: number) => {
   return (_ + 9).toString(36).toUpperCase()
 }
 
 export namespace Utils {
+
+  interface RemoveHtml {
+    (_: string): string
+    (_: undefined): undefined
+    (_?: string): string | undefined
+  }
+  export const removeHtml: RemoveHtml = (_) => _?.replace(/(<([^>]+)>)/gi, '') as any
 
   export function assert(condition: any, msg?: string): asserts condition {
     if (!condition) {
@@ -267,7 +273,7 @@ export namespace Utils {
     (_?: string): string | undefined
   }
 
-  export const slugify: Slugify = (_) => _?.replaceAll(' ', '_').replaceAll(/[^.a-zA-Z0-9]/g, '') as any
+  export const slugify: Slugify = (_) => _?.replaceAll(/\s/g, '_').replaceAll(/[^.a-zA-Z0-9]/g, '') as any
 
   export const dateToPeriod = (date: Date) => {
     const start = startOfMonth(date)

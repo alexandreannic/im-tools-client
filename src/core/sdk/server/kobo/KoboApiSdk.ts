@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
-import {ApiKoboForm, Kobo, KoboAnswer2, KoboId} from './Kobo'
+import {ApiKoboForm, Kobo, KoboAnswer, KoboId} from './Kobo'
 import {mapMPCA_NFI} from '../../../koboModel/MPCA_NFI/MPCA_NFIMapping'
 import {mapMPCA_NFI_Myko} from '../../../koboModel/MPCA_NFI_Myko/MPCA_NFI_MykoMapping'
 import {mapMPCA_NFI_NAA} from '../../../koboModel/MPCA_NFI_NAA/MPCA_NFI_NAAMapping'
@@ -48,7 +48,7 @@ export class KoboApiSdk {
     fnMap = (_: any) => _,
   }: {
     formId: UUID,
-  } & FiltersProps & FnMap<T>): Promise<ApiPaginate<KoboAnswer2<T>>> => {
+  } & FiltersProps & FnMap<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
     return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo-api/local-form`, {qs: {...filters, ...paginate}})
       .then(_ => {
           return ({
@@ -76,8 +76,8 @@ export class KoboApiSdk {
   }: {
     serverId: UUID,
     formId: UUID,
-  } & FiltersProps & FnMap<T>): Promise<ApiPaginate<KoboAnswer2<T>>> => {
-    return this.client.get<ApiPaginate<KoboAnswer2<T>>>(`/kobo-api/${serverId}/${formId}/answers`, {qs: filters})
+  } & FiltersProps & FnMap<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
+    return this.client.get<ApiPaginate<KoboAnswer<T>>>(`/kobo-api/${serverId}/${formId}/answers`, {qs: filters})
       .then(_ => {
           return ({
             ..._,

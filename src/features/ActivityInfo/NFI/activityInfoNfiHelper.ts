@@ -1,4 +1,4 @@
-import {KoboAnswer2} from '../../../core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '../../../core/sdk/server/kobo/Kobo'
 import {MPCA_NFI} from '../../../core/koboModel/MPCA_NFI/MPCA_NFI'
 import {format, subDays} from 'date-fns'
 import {MPCA_NFIOptions} from '../../../core/koboModel/MPCA_NFI/MPCA_NFIOptions'
@@ -77,7 +77,7 @@ const fixWrongLocationByDate = [
   {date: '2023-04-28', oblast: 'Kharkivska', raion: 'Kharkivskyi', hromada: 'Kharkivska', settlement: 'Kharkiv',},
 ]
 // 23-04-28ChernihivskaChernihivskyiKyselivska
-export const fixLocations = (answers: KoboAnswer2<MPCA_NFI>[]): KoboAnswer2<MPCA_NFI & {settlement?: string}>[] => {
+export const fixLocations = (answers: KoboAnswer<MPCA_NFI>[]): KoboAnswer<MPCA_NFI & {settlement?: string}>[] => {
   return answers.map(a => {
     const fixById: (typeof fixWrongLocationById)[keyof typeof fixWrongLocationById] = (fixWrongLocationById as any)[a.id]
     if (fixById) {

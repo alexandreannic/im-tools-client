@@ -48,7 +48,8 @@ export const MultipleChoices = <T extends string, V extends string = string>({
   initialValue,
   onChange,
   options,
-  children
+  children,
+  sx
 }: MultipleChoices<T, V>) => {
 
   const [innerValue, setInnerValue] = useState<T[]>(initialValue ?? [])
