@@ -18,16 +18,7 @@ export class AILocationHelper {
     }
     return res
   }
-
-  /** @deprecated */
-  static readonly searchRaionByHromada = (name: string): string | undefined => {
-    const parent = Enum.values(hromadas).find(_ => _.en === name)?.parent as keyof typeof raions | undefined
-    if (parent) {
-      const enLabel = raions[parent]?.en
-      return Enum.keys(aiRaions).find(_ => _.includes(enLabel))
-    }
-  }
-
+  
   private static readonly settlementsIndex = (() => {
     const index: Record<string, number[]> = {}
     for (var k in settlements) {
