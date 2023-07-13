@@ -254,7 +254,12 @@ export const convertNumberIndexToLetter = (_: number) => {
 
 export namespace Utils {
 
-  export const removeHtml = (_?: string) => _?.replace(/(<([^>]+)>)/gi, '')
+  interface RemoveHtml {
+    (_: string): string
+    (_: undefined): undefined
+    (_?: string): string | undefined
+  }
+  export const removeHtml: RemoveHtml = (_) => _?.replace(/(<([^>]+)>)/gi, '') as any
 
   export function assert(condition: any, msg?: string): asserts condition {
     if (!condition) {

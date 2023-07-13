@@ -40,7 +40,7 @@ export const useKoboDatabaseHelper = (_form: KoboApiForm) => {
         },
         ..._form.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(_ => ({
           ..._,
-          label: _.label?.map(Utils.removeHtml)
+          label: _.label?.map(_ => Utils.removeHtml(_))
         })),
       ]
     }

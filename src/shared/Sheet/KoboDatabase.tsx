@@ -261,7 +261,7 @@ export const KoboDatabase = (props: {
           {/*</tr>*/}
           {/*</thead>*/}
           {map(filteredSortedAndPaginatedData?.data, _ =>
-            <TableBody form={form} data={_} langIndex={langIndex}/>
+            <TableBody form={form} data={_} langIndex={langIndex} setOpenBeginRepeat={setOpenBeginRepeat}/>
           )}
         </table>
       </Box>
