@@ -14,7 +14,7 @@ import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisi
 import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringOptions'
 import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {KoboImg} from '@/shared/TableImg/KoboImg'
+import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Txt} from 'mui-extension'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
@@ -316,7 +316,7 @@ export const DashboardMealVisitMonitoring = () => {
                             </Box>
                           )}
                           {mapFor(10, i =>
-                            <KoboImg key={i} attachments={row.attachments} size={50} fileName={(row as any)['fcp' + (i + 1)]}/>
+                            <KoboAttachedImg key={i} attachments={row.attachments} size={50} fileName={(row as any)['fcp' + (i + 1)]}/>
                           )}
                         </Box>
                       </Box>

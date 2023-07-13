@@ -247,13 +247,14 @@ export const downloadStringAsFile = (stringData: string, fileName: string) => {
   _.click()
 }
 
-export const removeHtml = (_?: string) => _?.replace(/(<([^>]+)>)/gi, '')
 
 export const convertNumberIndexToLetter = (_: number) => {
   return (_ + 9).toString(36).toUpperCase()
 }
 
 export namespace Utils {
+
+  export const removeHtml = (_?: string) => _?.replace(/(<([^>]+)>)/gi, '')
 
   export function assert(condition: any, msg?: string): asserts condition {
     if (!condition) {

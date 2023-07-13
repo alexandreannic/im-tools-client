@@ -18,6 +18,7 @@ import {getKoboLabel} from '@/shared/Sheet/KoboDatabase'
 
 interface PropsBase {
   orderBy?: OrderBy
+  sortBy?: string
   onOrderByChange?: (_?: OrderBy) => void
   onClose?: () => void
   onClear?: () => void
@@ -53,6 +54,7 @@ type Props = PropsBase// PropsMultiple | PropsSingle | PropsDate
 
 export const SheetFilterDialog = ({
   orderBy,
+  sortBy,
   onOrderByChange,
   value,
   onChange,
@@ -69,9 +71,6 @@ export const SheetFilterDialog = ({
     value && setInnerValue(value)
   }, [value])
 
-  // console.log('schema', schema)
-  // console.log('choicesIndex', choicesIndex)
-  // console.log('langIndex', langIndex)
   if (!schema) return <></>
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
@@ -81,16 +80,20 @@ export const SheetFilterDialog = ({
           setInnerValue(undefined)
         }}/>
       }>
-        {getKoboLabel(schema, langIndex)}
+        <Txt block sx={{maxWidth: 400}} truncate>{getKoboLabel(schema, langIndex)}</Txt>
       </PanelHead>
       <PanelBody>
         <Box sx={{display: 'flex', alignItems: 'center', borderBottom: t => `1px solid ${t.palette.divider}`, mb: 1}}>
           <Txt color="hint" sx={{flex: 1}}>{m.sort}</Txt>
           <MenuItem onClick={() => onOrderByChange?.(orderBy === 'desc' ? undefined : 'desc')}>
-            <Icon fontSize="small" color={orderBy === 'desc' ? 'primary' : undefined}>south</Icon>
+            <Icon fontSize="small" color={sortBy === schema.name && orderBy === 'desc' ? 'primary' : undefined}>
+              south
+            </Icon>
           </MenuItem>
           <MenuItem onClick={() => onOrderByChange?.(orderBy === 'asc' ? undefined : 'asc')}>
-            <Icon fontSize="small" color={orderBy === 'asc' ? 'primary' : undefined}>north</Icon>
+            <Icon fontSize="small" color={sortBy === schema.name && orderBy === 'asc' ? 'primary' : undefined}>
+              north
+            </Icon>
           </MenuItem>
         </Box>
         {(() => {
@@ -142,7 +145,7 @@ export const SheetFilterDialog = ({
           }
         })()}
       </PanelBody>
-      <PanelFoot sx={{pb: 0}} alignEnd>
+      <PanelFoot alignEnd>
         <AaBtn color="primary" onClick={onClose}>
           {m.close}
         </AaBtn>

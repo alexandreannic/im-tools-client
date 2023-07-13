@@ -3,6 +3,8 @@ import React from 'react'
 
 export const koboDatabaseStyle = <GlobalStyles styles={t => ({
   '.table': {
+    minWidth: '100%',
+    width: 'max-content',
     borderTop: '1px solid ' + t.palette.divider,
     tableLayout: 'fixed',
     borderCollapse: 'collapse',
@@ -13,6 +15,12 @@ export const koboDatabaseStyle = <GlobalStyles styles={t => ({
   },
   '.table .td-clickable:hover': {
     background: t.palette.action.hover,
+  },
+  '.th-resize': {
+    display: 'flex', overflow: 'hidden',
+    resize: 'horizontal',
+    minWidth: 102,
+    width: 102,
   },
   'td.fw': {
     width: '100%',
@@ -33,19 +41,24 @@ export const koboDatabaseStyle = <GlobalStyles styles={t => ({
     padding: 0,
     border: 'none',
   },
+  '.table td': {
+    maxWidth: 102,
+  },
   '.table td, .table th': {
     alignItems: 'center',
-    height: 34,
-    resize: 'both',
-    padding: '2px 2px 2px 2px',
+    height: 32,
+    padding: '2px 0px 2px 3px',
     borderRight: `1px solid ${t.palette.divider}`,
     borderBottom: `1px solid ${t.palette.divider}`,
+    overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   },
   '.table th': {
-    height: 42,
+    height: 40,
     zIndex: 2,
+    minWidth: 0,
+    width: 0,
     background: t.palette.background.paper,
     top: 0,
     paddingTop: t.spacing(.25),

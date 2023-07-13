@@ -50,7 +50,7 @@ export const SidebarItem = ({
         textOverflow: 'ellipsis',
         color: t => t.palette.text.secondary,
         pr: 1,
-        pl: 1,
+        pl: 2,
         my: 1 / 2,
         borderRadius: 42,
         ...(large && {

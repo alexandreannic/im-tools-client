@@ -117,3 +117,43 @@ export const MultipleChoicesPopover = <T, >({
     </Popover>
   )
 }
+
+// export const MultipleChoicesPopover = <T, >({
+//   question,
+//   data,
+//   anchorEl,
+//   onClose,
+//   multiple,
+//   langIndex,
+//   translations,
+// }: {
+//   langIndex?: number
+//   translations: KoboQuestionChoice[]
+//   multiple?: boolean
+//   question: keyof T
+//   data: T[]
+// } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
+//   const {m} = useI18n()
+//   const chart = useMemo(() => {
+//     const mapped = Arr(data).map(_ => _[question] as any).compact()
+//     const chart = (multiple)
+//       ? ChartTools.multiple({data: mapped})
+//       : ChartTools.single({data: mapped})
+//     return ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.name, getKoboLabel(_, langIndex)]))(ChartTools.sortBy.value(chart))
+//   }, [question, data, langIndex, translations])
+//   return (
+//     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
+//       <PanelHead>
+//         {question as string}
+//       </PanelHead>
+//       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
+//         <HorizontalBarChartGoogle data={chart}/>
+//       </PanelBody>
+//       <PanelFoot alignEnd>
+//         <AaBtn color="primary" onClick={onClose as any}>
+//           {m.close}
+//         </AaBtn>
+//       </PanelFoot>
+//     </Popover>
+//   )
+// }

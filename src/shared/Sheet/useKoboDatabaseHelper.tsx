@@ -3,6 +3,7 @@ import {useMemo} from 'react'
 import {Arr, mapFor} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {ignoredColType} from '@/features/Database/Database'
+import {Utils} from '@/utils/utils'
 
 export const useKoboDatabaseHelper = (_form: KoboApiForm) => {
   const {m} = useI18n()
@@ -37,7 +38,10 @@ export const useKoboDatabaseHelper = (_form: KoboApiForm) => {
           $qpath: 'submission_time',
           $xpath: 'submission_time',
         },
-        ..._form.content.survey.filter(_ => !ignoredColType.includes(_.type)),
+        ..._form.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(_ => ({
+          ..._,
+          label: _.label?.map(Utils.removeHtml)
+        })),
       ]
     }
     const choicesIndex = Arr(form.choices).groupBy(_ => _.list_name)

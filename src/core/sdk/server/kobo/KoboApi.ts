@@ -26,6 +26,7 @@ export interface KoboApiForm {
       label?: string[]
       name: string
       type:
+        'deviceid' |
         'end_repeat' |
         'begin_repeat' |
         'begin_group' |

@@ -14,7 +14,7 @@ export const getKoboPath = (attachments: KoboAttachment[], fileName?: string) =>
   return fileName ? attachments.find(_ => _.filename.includes(fileName))?.download_small_url.split('api')[1] : undefined
 }
 
-export const KoboImg = ({
+export const KoboAttachedImg = ({
   fileName,
   serverId,
   attachments,

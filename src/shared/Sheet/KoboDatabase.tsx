@@ -6,7 +6,7 @@ import {orderBy} from 'lodash'
 import {multipleFilters, paginateData, Utils} from '@/utils/utils'
 import {OrderBy, useAsync} from '@alexandreannic/react-hooks-lib'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {getKoboPath, KoboImg} from '@/shared/TableImg/KoboImg'
+import {getKoboPath, KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Box, TablePagination} from '@mui/material'
 import {koboDatabaseStyle} from '@/shared/Sheet/SheetStyle'
 import {MultipleChoicesPopover, NumberChoicesPopover, SheetIcon} from '@/features/Database/DatabaseSubHeader'
@@ -16,8 +16,8 @@ import {AaSelect} from '@/shared/Select/Select'
 import {KoboDatabaseBtn} from '@/shared/Sheet/koboDatabaseShared'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
 import {getKoboImagePath} from '@/features/Mpca/MpcaData/MpcaData'
-import {type} from 'os'
 import {AAIconBtnProps} from '@/shared/IconBtn'
+import {AaBtn} from '@/shared/Btn/AaBtn'
 
 interface Search {
   limit: number
@@ -72,6 +72,11 @@ export const KoboDatabase = (props: {
     }
   }, [form])
 
+  const [openBeginRepeat, setOpenBeginRepeat] = useState<{
+    anchorEl: HTMLElement
+    group: Record<string, any>[]
+  } | undefined>()
+
   const [openColumnConfig, setOpenColumnConfig] = useState<{
     anchorEl: HTMLElement
     schema: KoboQuestionSchema
@@ -92,6 +97,7 @@ export const KoboDatabase = (props: {
     if (!props.data) return
     return multipleFilters(props.data, Enum.keys(filters).map(k => {
       const filter = filters[k]
+      if (filter === undefined) return
       const type = questionIndex[k].type
       switch (type) {
         case 'date':
@@ -180,6 +186,7 @@ export const KoboDatabase = (props: {
           <SheetFilterDialog
             anchorEl={c.anchorEl}
             orderBy={sheetSearch.orderBy}
+            sortBy={sheetSearch.sortBy}
             onOrderByChange={_ => onOrderBy(c.schema.name, _)}
             value={filters[c.schema.name] as any}
             langIndex={langIndex}
@@ -201,6 +208,9 @@ export const KoboDatabase = (props: {
             }}
           />
         )}
+        {map(openBeginRepeat, c =>
+          <Box></Box>
+        )}
         {map(openIntegerChartDialog, c =>
           <NumberChoicesPopover
             anchorEl={c.anchorEl}
@@ -219,7 +229,7 @@ export const KoboDatabase = (props: {
             onClose={() => setOpenSelectChartDialog(undefined)}
           />
         )}
-        <Box component="table" className="table" sx={{minWidth: '100%'}}>
+        <table className="table">
           <TableHead
             setOpenIntegerChartDialog={setOpenIntegerChartDialog}
             setOpenSelectChartDialog={setOpenSelectChartDialog}
@@ -253,7 +263,7 @@ export const KoboDatabase = (props: {
           {map(filteredSortedAndPaginatedData?.data, _ =>
             <TableBody form={form} data={_} langIndex={langIndex}/>
           )}
-        </Box>
+        </table>
       </Box>
       <TablePagination
         rowsPerPageOptions={[20, 100, 500, 1000]}
@@ -295,7 +305,11 @@ const TableHead = memo(({
     <thead>
     <tr className="tr trh">
       {form.survey.map(q =>
-        <th key={q.name}>{getKoboLabel(q, langIndex)}</th>
+        <th key={q.name} title={getKoboLabel(q, langIndex)}>
+          <Box className="th-resize">
+            {getKoboLabel(q, langIndex)}
+          </Box>
+        </th>
       )}
     </tr>
     <tr>
@@ -373,6 +387,16 @@ const TableHead = memo(({
                     </>
                   )
                 }
+                case 'begin_repeat': {
+                  return (
+                    <SheetIcon icon="repeat" {...commonProps}/>
+                  )
+                }
+                case 'select_one_from_file': {
+                  return (
+                    <SheetIcon icon="attach_file" {...commonProps}/>
+                  )
+                }
                 case 'image': {
                   return (
                     <SheetIcon icon="image" {...commonProps}/>
@@ -411,7 +435,9 @@ const TableBody = memo(({
   form,
   data,
   langIndex,
+  setOpenBeginRepeat,
 }: {
+  setOpenBeginRepeat: any
   langIndex?: number
   form: KoboApiForm['content']
   data: KoboAnswer<Record<string, any>>[],
@@ -425,52 +451,56 @@ const TableBody = memo(({
     })
     return res
   }, [form, langIndex])
+
   return (
     <tbody>
     {data.map(row =>
       <tr key={row.id}>
         {form.survey.map(q =>
           <td key={q.name}>
-            {fnSwitch(q.type, {
-              image: () => (
-                <KoboImg attachments={row.attachments} fileName={row[q.name]}/>
-              ),
-              integer: () => (
-                row[q.name]
-              ),
-              calculate: () => (
-                row[q.name]
-              ),
-              date: () => (
-                map(row[q.name], (_: Date) => (
-                  <span title={formatDateTime(_)}>{formatDate(_)}</span>
-                ))
-              ),
-              select_one: () => (
-                map(row[q.name], v => {
-                  return optionsTranslations[q.select_from_list_name!][v]
-                })
-              ),
-              select_multiple: () => (
-                map(row[q.name], (v: string) => {
-                  const render = v.split(' ').map(_ => optionsTranslations[q.select_from_list_name!][_]).join(' | ')
+            {(() => {
+              switch (q.type) {
+                case 'image': {
+                  return (
+                    <KoboAttachedImg attachments={row.attachments} fileName={row[q.name]}/>
+                  )
+                }
+                case 'calculate':
+                case 'select_one_from_file':
+                case 'text':
+                case 'integer': {
+                  return <span title={row[q.name]}>{row[q.name]}</span>
+                }
+                case 'date':
+                case 'start':
+                case 'end': {
+                  return map(row[q.name], (_: Date) => (
+                    <span title={formatDateTime(_)}>{formatDate(_)}</span>
+                  ))
+                }
+                case 'begin_repeat': {
+                  return map(row[q.name], group =>
+                    <AaBtn onClick={() => setOpenBeginRepeat(group)}>{group.length}</AaBtn>
+                  ) ?? <></>
+                }
+                case 'select_one': {
+                  return map(row[q.name], v => {
+                    const render = optionsTranslations[q.select_from_list_name!][v]
+                    return <span title={render}>{render}</span>
+                  })
+                }
+                case 'select_multiple': {
+                  return map(row[q.name], (v: string) => {
+                    const render = v.split(' ').map(_ => optionsTranslations[q.select_from_list_name!][_]).join(' | ')
+                    return <span title={render}>{render}</span>
+                  })
+                }
+                default: {
+                  const render = JSON.stringify(row[q.name])
                   return <span title={render}>{render}</span>
-                })
-              ),
-              select_one_from_file: () => (
-                row[q.name]
-              ),
-              start: () => (
-                map(row[q.name], (_: Date) => (
-                  <span title={formatDateTime(_)}>{formatDate(_)}</span>
-                ))
-              ),
-              end: () => (
-                map(row[q.name], (_: Date) => (
-                  <span title={formatDateTime(_)}>{formatDate(_)}</span>
-                ))
-              ),
-            }, type => JSON.stringify(row[q.name]))}
+                }
+              }
+            })()}
           </td>
         )}
       </tr>

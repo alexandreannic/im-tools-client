@@ -2,14 +2,14 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {OrderBy, useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Page, PageTitle} from '@/shared/Page'
-import {Sheet, SheetColumnProps, SheetTableProps} from '@/shared/Sheet/Sheet'
+import {SheetTableProps} from '@/shared/Sheet/Sheet'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
 import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {fnSwitch, map} from '@alexandreannic/ts-utils'
+import {map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {KoboApiColType, KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiColType, KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {Panel} from '@/shared/Panel'
 import {databaseModule} from '@/features/Database/databaseModule'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
@@ -22,11 +22,7 @@ import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {useAaToast} from '@/core/useToast'
 import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {DatabaseAccess} from '@/features/Database/DatabaseAccess/DatabaseAccess'
-import {getKoboPath, KoboImg} from '@/shared/TableImg/KoboImg'
-import {removeHtml} from '@/utils/utils'
-import {AaSelect} from '@/shared/Select/Select'
 import {useSession} from '@/core/context/SessionContext'
-import {DatabaseSubHeader, Logo} from '@/features/Database/DatabaseSubHeader'
 import {KoboDatabase} from '@/shared/Sheet/KoboDatabase'
 
 const urlParamsValidation = yup.object({
@@ -43,6 +39,7 @@ const sortFnByType: Record<any, (a: any, b: any) => number> = {
 export const ignoredColType: KoboApiColType[] = [
   'begin_group',
   'end_group',
+  'deviceid',
   'end_repeat',
   // 'begin_repeat',
   // 'note',
@@ -68,31 +65,30 @@ export const Database = () => {
         <Layout
           sidebar={
             <Sidebar headerId="app-header">
-              <SidebarBody>
-                {session.admin && (
-                  <DatabaseNew onAdded={() => _forms.fetch({force: true, clean: false})}>
-                    <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
-                  </DatabaseNew>
-                )}
-                {_forms.loading ? (
-                  <>
-                    <SidebarItem>
-                      <Skeleton sx={{height: 30}}/>
-                    </SidebarItem>
-                    <SidebarItem>
-                      <Skeleton sx={{height: 30}}/>
-                    </SidebarItem>
-                    <SidebarItem>
-                      <Skeleton sx={{height: 30}}/>
-                    </SidebarItem>
-                  </>
-                ) : _forms.entity?.map(_ => (
-                  <NavLink key={_.id} to={databaseModule.siteMap.form(_.serverId, _.id)}>
-                    <SidebarItem key={_.id} onClick={() => {
-                    }}>{_.name}</SidebarItem>
-                  </NavLink>
-                ))}
-              </SidebarBody>
+              {session.admin && (
+                <DatabaseNew onAdded={() => _forms.fetch({force: true, clean: false})}>
+                  <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
+                </DatabaseNew>
+              )}
+              {_forms.loading ? (
+                <>
+                  <SidebarItem>
+                    <Skeleton sx={{height: 30}}/>
+                  </SidebarItem>
+                  <SidebarItem>
+                    <Skeleton sx={{height: 30}}/>
+                  </SidebarItem>
+                  <SidebarItem>
+                    <Skeleton sx={{height: 30}}/>
+                  </SidebarItem>
+                </>
+              ) : _forms.entity?.map(_ => (
+                <NavLink key={_.id} to={databaseModule.siteMap.form(_.serverId, _.id)}>
+                  {({isActive, isPending}) => (
+                    <SidebarItem key={_.id} active={isActive}>{_.name}</SidebarItem>
+                  )}
+                </NavLink>
+              ))}
             </Sidebar>
           }
           header={<AppHeader id="app-header"/>}
