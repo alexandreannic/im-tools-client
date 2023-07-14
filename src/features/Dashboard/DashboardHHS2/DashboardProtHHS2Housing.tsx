@@ -62,7 +62,6 @@ export const DashboardProtHHS2Housing = ({
           <SlidePanel title={m.accommodationCondition}>
             <ProtHHS2BarChart
               data={data}
-              questionType="multiple"
               question="what_is_the_general_condition_of_your_accommodation"
               sortBy={ChartTools.sortBy.custom([
                 'sound_condition',

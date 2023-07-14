@@ -103,7 +103,7 @@ export const DashboardProtHHS2Sample = ({
       <SlideContainer alignItems="flex-start" responsive>
         <SlideContainer column>
           <SlidePanel title={m.HHsLocation}>
-            <UkraineMap data={computed.byCurrentOblast} sx={{mx: 3}} base={data.length}/>
+            <UkraineMap data={computed.byCurrentOblast} sx={{mx: 1}} base={data.length}/>
           </SlidePanel>
           <SlidePanel title={m.ageGroup}>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
@@ -171,6 +171,13 @@ export const DashboardProtHHS2Sample = ({
               question="do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household"
               questionType="multiple"
               filterValue={['no_specific_needs', 'unable_unwilling_to_answer', 'other_specify']}
+            />
+          </SlidePanel>
+          <SlidePanel title={m.protHHS2.hhTypes}>
+            <ProtHHS2BarChart
+              data={data}
+              question="what_is_the_type_of_your_household"
+              questionType="single"
             />
           </SlidePanel>
 

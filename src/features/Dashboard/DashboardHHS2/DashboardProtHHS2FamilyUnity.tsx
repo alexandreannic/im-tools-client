@@ -1,5 +1,5 @@
 import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
-import React from 'react'
+import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
@@ -9,13 +9,52 @@ import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {chain} from '@/utils/utils'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
+import {Box, Checkbox} from '@mui/material'
+import {Txt} from 'mui-extension'
+import {_Arr, Enum} from '@alexandreannic/ts-utils'
 
+type Filters = Pick<Record<keyof typeof ProtHHS_2_1Options['are_you_separated_from_any_of_your_households_members'], boolean>,
+  'partner' |
+  'child_lt_18' |
+  'child_gte_18' |
+  'mother' |
+  'father' |
+  'caregiver' |
+  'other_relative'
+>
 
 export const DashboardProtHHS2FamilyUnity = ({
   data,
   computed,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
+
+  const [category, setCategory] = useState<Filters>({
+    partner: true,
+    child_lt_18: true,
+    child_gte_18: true,
+    mother: true,
+    father: true,
+    caregiver: true,
+    other_relative: true,
+  })
+
+  const allChecked = useMemo(() => Enum.values(category).every(_ => _), [category])
+  const oneChecked = useMemo(() => !!Enum.values(category).find(_ => _), [category])
+
+  const updateAll = (checked: boolean) => {
+    setCategory({
+      partner: checked,
+      child_lt_18: checked,
+      child_gte_18: checked,
+      mother: checked,
+      father: checked,
+      caregiver: checked,
+      other_relative: checked,
+    })
+  }
+
   return (
     <>
       <SlideContainer responsive>
@@ -26,46 +65,99 @@ export const DashboardProtHHS2FamilyUnity = ({
               title={m.protHHS2.familyMemberSeparated}
               question="are_you_separated_from_any_of_your_households_members"
               filter={_ => !_.includes('no') && !_.includes('unable_unwilling_to_answer')}
-              sx={{mb: 1}}
-              data={data}/>
-            <ProtHHS2BarChart
+              sx={{mb: 2}}
               data={data}
-              questionType="multiple"
-              question="are_you_separated_from_any_of_your_households_members"
-              filterValue={['unable_unwilling_to_answer', 'no']}/>
+            />
+            <Box sx={{display: 'flex', alignItems: 'center'}}>
+              <Checkbox indeterminate={!allChecked && oneChecked} checked={allChecked} onClick={() => {
+                updateAll(!allChecked)
+              }}/>
+              <Txt bold size="big">{m.selectAll}</Txt>
+            </Box>
+            <Lazy deps={[data]} fn={() =>
+              chain(ChartTools.multiple({
+                filterValue: ['unable_unwilling_to_answer', 'no'],
+                base: 'percentOfTotalAnswers',
+                data: data.map(_ => _.are_you_separated_from_any_of_your_households_members).compact()
+              }))
+                .map(ChartTools.setLabel(ProtHHS_2_1Options.are_you_separated_from_any_of_your_households_members))
+                .get
+            }>
+              {_ => <HorizontalBarChartGoogle
+                data={_}
+                labels={{
+                  partner: <Checkbox
+                    size="small"
+                    checked={category.partner}
+                    onChange={e => setCategory(prev => ({...prev, partner: e.target.checked}))}
+                  />,
+                  child_lt_18: <Checkbox
+                    size="small"
+                    checked={category.child_lt_18}
+                    onChange={e => setCategory(prev => ({...prev, child_lt_18: e.target.checked}))}
+                  />,
+                  child_gte_18: <Checkbox
+                    size="small"
+                    checked={category.child_gte_18}
+                    onChange={e => setCategory(prev => ({...prev, child_gte_18: e.target.checked}))}
+                  />,
+                  mother: <Checkbox
+                    size="small"
+                    checked={category.mother}
+                    onChange={e => setCategory(prev => ({...prev, mother: e.target.checked}))}
+                  />,
+                  father: <Checkbox
+                    size="small"
+                    checked={category.father}
+                    onChange={e => setCategory(prev => ({...prev, father: e.target.checked}))}
+                  />,
+                  caregiver: <Checkbox
+                    size="small"
+                    checked={category.caregiver}
+                    onChange={e => setCategory(prev => ({...prev, caregiver: e.target.checked}))}
+                  />,
+                  other_relative: <Checkbox
+                    size="small"
+                    checked={category.other_relative}
+                    onChange={e => setCategory(prev => ({...prev, other_relative: e.target.checked}))}
+                  />,
+                } as any}
+              />
+              }
+            </Lazy>
           </SlidePanel>
 
         </SlideContainer>
         <SlideContainer column>
           <SlidePanel title={m.protHHS2.locationOfSeparatedFamilyMembers}>
-            <Lazy deps={[data]} fn={() => chain(ChartTools.single({
+            <Lazy deps={[data, category]} fn={() => chain(ChartTools.single({
               data: data.flatMap(_ => [
-                _.where_is_your_partner,
-                _.where_is_your_child_lt_18,
-                _.where_is_your_child_gte_18,
-                _.where_is_your_mother,
-                _.where_is_your_father,
-                _.where_is_your_caregiver,
-                _.where_is_your_other_relative,
+                ...category.partner ? [_.where_is_your_partner] : [],
+                ...category.child_lt_18 ? [_.where_is_your_child_lt_18] : [],
+                ...category.child_gte_18 ? [_.where_is_your_child_gte_18] : [],
+                ...category.mother ? [_.where_is_your_mother] : [],
+                ...category.father ? [_.where_is_your_father] : [],
+                ...category.caregiver ? [_.where_is_your_caregiver] : [],
+                ...category.other_relative ? [_.where_is_your_other_relative] : [],
               ]).compact(),
-              filterValue: ['unable_unwilling_to_answer']
+              // filterValue: ['unable_unwilling_to_answer']
             })).map(ChartTools.setLabel(ProtHHS_2_1Options.where_is_your_partner)).get
             }>
               {_ => <HorizontalBarChartGoogle data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.reasonForRemainInOrigin}>
-            <Lazy deps={[data]} fn={() => chain(ChartTools.single({
+            <Lazy deps={[data, category]} fn={() => chain(ChartTools.single({
               data: data.flatMap(_ => [
-                _.where_is_your_partner_remain_behind_in_the_area_of_origin,
-                _.where_is_your_child_lt_18_remain_behind_in_the_area_of_origin,
-                _.where_is_your_child_gte_18_remain_behind_in_the_area_of_origin,
-                _.where_is_your_mother_remain_behind_in_the_area_of_origin,
-                _.where_is_your_father_remain_behind_in_the_area_of_origin,
-                _.where_is_your_caregiver_remain_behind_in_the_area_of_origin,
-                _.where_is_your_other_relative_remain_behind_in_the_area_of_origin,
+                ...category.partner ? [_.where_is_your_partner_remain_behind_in_the_area_of_origin] : [],
+                ...category.child_lt_18 ? [_.where_is_your_child_lt_18_remain_behind_in_the_area_of_origin] : [],
+                ...category.child_gte_18 ? [_.where_is_your_child_gte_18_remain_behind_in_the_area_of_origin] : [],
+                ...category.mother ? [_.where_is_your_mother_remain_behind_in_the_area_of_origin] : [],
+                ...category.father ? [_.where_is_your_father_remain_behind_in_the_area_of_origin] : [],
+                ...category.caregiver ? [_.where_is_your_caregiver_remain_behind_in_the_area_of_origin] : [],
+                ...category.other_relative ? [_.where_is_your_other_relative_remain_behind_in_the_area_of_origin] : [],
               ]).compact(),
-              filterValue: ['unable_unwilling_to_answer']
+              // filterValue: ['unable_unwilling_to_answer']
             })).map(ChartTools.setLabel(ProtHHS_2_1Options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
             }>
               {_ => <HorizontalBarChartGoogle data={_}/>}

@@ -19,6 +19,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
   overrideLabel = {},
   filterValue,
   questionType = 'single',
+  base = 'percentOfTotalAnswers'
 }: {
   onClickData?: (_: K) => void
   limit?: number
@@ -27,34 +28,32 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
   data: _Arr<D>,
   overrideLabel?: Partial<Record<keyof O[K], string>>
   filterValue?: (keyof O[K])[]
-  question: K
+  question: K,
+  base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
 }) => {
   const {m} = useI18n()
   const res = useMemo(() => {
-    const base = Arr(data).map(_ => _[question]).compact()
-      .filter(_ => {
-        return !filterValue || (questionType === 'single'
-            ? !filterValue.includes(_)
-            : Arr(filterValue).intersect(_).length === 0
-        )
+    const source = Arr(data).map(_ => _[question]).compact()
+    const chart = questionType === 'multiple'
+      ? ChartTools.multiple({
+        data: source,
+        filterValue,
+        base,
       })
-    return {
-      base: base.length,
-      chart: chain(ChartTools[questionType]({
-        data: base as any,
-        // filterValue: filterValue as any,
-      }))
-        .map(ChartTools.setLabel({
-          ...options[question],
-          ...overrideLabel,
-        }))
-        .map(sortBy ?? ChartTools.sortBy.value)
-        .map(limit ? ChartTools.take(limit) : _ => _)
-        .get
-    }
+      : ChartTools.single({
+        data: source,
+        filterValue,
+      })
+    return chain(chart).map(ChartTools.setLabel({
+      ...options[question],
+      ...overrideLabel,
+    }))
+      .map(sortBy ?? ChartTools.sortBy.value)
+      .map(limit ? ChartTools.take(limit) : _ => _)
+      .get
   }, [data, question])
   return (
-    <HorizontalBarChartGoogle data={res.chart} base={res.base} onClickData={_ => onClickData?.(_ as K)}/>
+    <HorizontalBarChartGoogle data={res} onClickData={_ => onClickData?.(_ as K)}/>
   )
 }
 

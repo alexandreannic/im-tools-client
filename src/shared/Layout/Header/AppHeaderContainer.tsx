@@ -22,7 +22,7 @@ const redesignHeaderOnTop = (headerId: string) => {
 const generalStyles = <GlobalStyles styles={t => ({
   [`.${headerStickyClass}`]: {
     boxShadow: t.shadows[4],
-    background: alpha(t.palette.background.paper, .5),
+    background: alpha(t.palette.background.paper, .55),
   }
 })}/>
 
@@ -53,7 +53,6 @@ export const AppHeaderContainer = ({
         px: layoutConfig.headerPx,
         display: 'flex',
         backdropFilter: 'blur(12px)',
-
         alignItems: 'center',
         // mb: 2,
         pl: 2,

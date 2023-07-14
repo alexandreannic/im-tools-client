@@ -262,6 +262,7 @@ export const en = Object.freeze({
       hasPriorityQueuesForVulnerableIndividuals: 'Priority queues for vulnerable individuals',
     },
     protHHS2: {
+      hhTypes: 'HH types',
       reportedIncidents: 'Reported incidents over the last 6 months',
       hhsAffectedByMultipleDisplacement: 'Multiple time displaced by current location population',
       barriersToAccessHealth: 'Barriers to access healthcare',
@@ -298,7 +299,7 @@ export const en = Object.freeze({
       registrationAndDocumention: 'Registration & Documentation',
       missingDocumentationByOblastPopulation: 'Missing Documentation by Oblast Population',
       HHSwSN: 'Head of HH with specific needs',
-      specificNeedsToHHS: 'Specific needs applying to HH',
+      specificNeedsToHHS: 'Specific needs of HH',
       safetyOrSecurityConcernsDuringDisplacement: 'HHs reporting security concerns during displacement',
       HHs: 'HHs',
       AvgHHSize: 'AvgHHSize',

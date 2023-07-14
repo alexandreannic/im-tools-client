@@ -63,7 +63,7 @@ const filterShape = DashboardFilterHelper.makeShape<typeof ProtHHS_2_1Options>()
   specificNeeds: {
     options: 'do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household',
     icon: 'support',
-    label: m => m.specificNeeds,
+    label: m => m.protHHS2.specificNeedsToHHS,
     skipOption: ['unable_unwilling_to_answer', 'other_specify']
   }
 })

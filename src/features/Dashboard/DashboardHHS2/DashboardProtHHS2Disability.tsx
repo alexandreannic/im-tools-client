@@ -1,18 +1,8 @@
-import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
-import React, {useMemo} from 'react'
+import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {KoboPieChartIndicator, KoboPieChartIndicatorMultiple} from '../shared/KoboPieChartIndicator'
-import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '../../../core/chartTools'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {chain, forceArrayStringInference} from '@/utils/utils'
-import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {Panel} from '@/shared/Panel'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
-import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
+import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2Disability = ({
@@ -41,6 +31,18 @@ export const DashboardProtHHS2Disability = ({
             }}
             filterValue={['no', 'unable_unwilling_to_answer']}
           />
+        </SlidePanel>
+        <SlidePanel>
+          <KoboPieChartIndicator
+            title={m.protHHS2.hhWithMemberHavingDifficulties}
+            question="do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov"
+            filter={_ => _ === 'yes_all'}
+            compare={{before: computed.lastMonth}}
+            filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+            data={data}
+            sx={{mb: 1}}
+          />
+          <ProtHHS2BarChart data={data} question="why_dont_they_have_status"/>
         </SlidePanel>
       </SlideContainer>
       <SlideContainer column>

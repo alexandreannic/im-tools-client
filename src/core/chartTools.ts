@@ -64,36 +64,36 @@ export namespace ChartTools {
     const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
       return [curr, (acc[curr] ?? 0) + 1]
     })
-    const res: ChartData = {}
+    const res = {} as ChartData<A>
     Enum.keys(obj).forEach(k => {
       res[k] = {value: obj[k] / (percent ? data.length : 1)}
     })
-    return res
+    return ChartTools.sortBy.value(res)
   }
 
   export const multiple = <A extends string>({
     data,
-    type,
+    base,
     filterValue,
   }: {
     data: _Arr<A[] | undefined>,
     filterValue?: A[],
-    type?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
+    base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
   }): ChartData<A> => {
-    const flatData: A[] = data.flatMap(_ => _).compact()
-    const all = flatData.filter(_ => filterValue ? !filterValue.includes(_) : true)
-    const obj = Arr(all).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
-    const base = fnSwitch(type!, {
-      percentOfTotalAnswers: data.length,
-      percentOfTotalChoices: all.length,
+    const filteredData = data.compact().filter(_ => filterValue ? Arr(_).intersect(filterValue).length === 0 : true)
+    const flatData: A[] = filteredData.flatMap(_ => _)
+    const obj = Arr(flatData).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
+    const baseCount = fnSwitch(base!, {
+      percentOfTotalAnswers: filteredData.length,
+      percentOfTotalChoices: flatData.length,
     }, _ => undefined)
-    const res: ChartData = {}
+    const res = {} as ChartData<A>
     Enum.keys(obj).forEach(k => {
       if (!res[k]) res[k] = {value: 0, base: 0}
-      // res[k].value = obj[k]
-      res[k].value = obj[k] / (base ?? 1)
+      res[k].value = obj[k]
+      res[k].base = baseCount
     })
-    return res
+    return ChartTools.sortBy.value(res)
   }
 
   export const groupBy = <A extends Record<string, any>, K extends string>({
@@ -224,7 +224,7 @@ export namespace ChartTools {
     data: A[],
     value: (a: A) => boolean,
     base?: (a: A) => boolean,
-  }): ChartDataVal & {percent: number} => {
+  }): ChartDataValPercent => {
     const v = Arr(data).count(value)
     const b = (base ? Arr(data).count(base) : data.length) || 1
     return {value: v, base: b, percent: v / b}

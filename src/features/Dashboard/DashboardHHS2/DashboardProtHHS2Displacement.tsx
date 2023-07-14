@@ -9,7 +9,6 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {chain} from '@/utils/utils'
 
 
