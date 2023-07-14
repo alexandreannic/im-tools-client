@@ -1,19 +1,100 @@
-import {Box, BoxProps, Checkbox, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
+import {Box, BoxProps, Checkbox, GlobalStyles, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
 import React, {ReactNode, useMemo, useState} from 'react'
 import {useI18n} from '../../core/i18n'
 import {Fender, IconBtn} from 'mui-extension'
 import {usePersistentState} from 'react-persistent-state'
 import {multipleFilters, paginateData, Utils} from '../../utils/utils'
-import {SheetFilterDialog} from './SheetFilterDialog'
+import {SheetFilterDialog, SheetFilterDialogProps} from './SheetFilterDialog'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
 import {useAsync, useSetState} from '@alexandreannic/react-hooks-lib'
 import {orderBy} from 'lodash'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
-import {koboDatabaseStyle} from '@/shared/Sheet/SheetStyle'
-import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
-import {MultipleChoicesPopover, NumberChoicesPopover, SheetIcon} from '@/features/Database/DatabaseSubHeader'
-import {SheetSelectToolbar} from '@/shared/Sheet/SheetSelectToolbar'
+import {koboTypeToFilterType} from '@/shared/Sheet/koboDatabaseShared'
+
+const generalStyles = <GlobalStyles
+  styles={t => ({
+    '.table': {
+      tableLayout: 'fixed',
+      // overflowX: 'auto',
+      borderCollapse: 'collapse',
+      borderSpacing: 0,
+      // borderTop: `1px solid ${t.palette.divider}`,
+      // borderLeft: `1px solid ${t.palette.divider}`,
+    },
+    // 'th:first-child': {
+    //   position: 'sticky',
+    //   left: 0,
+    //   zIndex: 2,
+    // },
+    '.th': {
+      position: 'relative',
+      // overflow: 'auto',
+    },
+    '.tr': {
+      // display: 'flex',
+      whiteSpace: 'nowrap',
+      // borderBottom: `1px solid ${t.palette.divider}`,
+    },
+    // '.th-action': {
+    //   position: 'absolute',
+    //   left: 0,
+    //   display: 'none',
+    // },
+    // '.th:hover .th-action': {
+    //   display: 'block',
+    // },
+    '.th-active': {
+      borderBottomColor: t.palette.primary.main,
+      boxShadow: `${t.palette.primary.main} 0 -1px 0 0 inset`,
+    },
+    '.td-clickable:hover': {
+      background: t.palette.action.hover,
+    },
+    '.td.fw': {
+      width: '100%',
+    },
+    '::-webkit-resizer': {
+      background: 'invisible',
+    },
+    '.td:first-of-type': {
+      paddingLeft: 8,
+    },
+    '.td-center': {
+      textAlign: 'center',
+    },
+    '.td-right': {
+      textAlign: 'right',
+    },
+    '.td-loading': {
+      padding: 0,
+      border: 'none',
+    },
+    '.td': {
+      // display: 'inline-flex',
+      alignItems: 'center',
+      height: 38,
+      resize: 'both',
+      padding: '2px 2px 2px 2px',
+      borderBottom: `1px solid ${t.palette.divider}`,
+      whiteSpace: 'nowrap',
+      // overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      // minWidth: 100,
+      // width: 100,
+    },
+    'thead .th': {
+      height: 42,
+      zIndex: 2,
+      background: t.palette.background.paper,
+      top: 0,
+      paddingTop: t.spacing(.25),
+      paddingBottom: t.spacing(.25),
+      position: 'sticky',
+      color: t.palette.text.secondary,
+    },
+  })}
+/>
 
 type OrderBy = 'asc' | 'desc'
 
@@ -45,54 +126,10 @@ export interface SheetTableProps<T extends Answer> extends BoxProps {
   }
 }
 
-// namespace ColumnType {
-//   interface Type {
-//     type: KoboQuestionType
-//   }
-//
-//   export interface Date extends Type {
-//     type: 'date'
-//     min?: Date
-//     max?: Date
-//   }
-//
-//   export interface SelectMultiple extends Type {
-//     type: 'select_multiple'
-//     options: string[]
-//   }
-//
-//   export interface SelectOne extends Type {
-//     type: 'select_one'
-//     options: string[]
-//   }
-//
-//   export interface Text extends Type {
-//     type: 'text',
-//   }
-//
-//   export interface Integer extends Type {
-//     type: 'integer',
-//   }
-//
-//   export interface Calculate extends Type {
-//     type: 'calculate',
-//   }
-//
-//   // type = {
-//
-//   // }
-// }
-// type ColumnTypes = ColumnType.Date |
-//   ColumnType.SelectMultiple |
-//   ColumnType.SelectOne |
-//   ColumnType.Integer |
-//   ColumnType.String
-
 export interface SheetColumnProps<T extends Answer> {
   id: string
   noSort?: boolean
   head?: string | ReactNode
-  // subHead?: (filteredData: T[]) => string | ReactNode
   align?: 'center' | 'right'
   onClick?: (_: T) => void
   render: (_: T) => ReactNode
@@ -100,7 +137,7 @@ export interface SheetColumnProps<T extends Answer> {
   hidden?: boolean
   alwaysVisible?: boolean
   tooltip?: (_: T) => string
-  type?: KoboQuestionType
+  type?: 'number' | 'date' | string[] | 'string'
   className?: string | ((_: T) => string | undefined)
   // sx?: (_: T) => SxProps<Theme> | undefined
   // style?: CSSProperties
@@ -120,7 +157,6 @@ type Filter = string
   | [Date | undefined, Date | undefined]
   | [number | undefined, number | undefined]
 
-/** @deprecated*/
 const checkFilterType = (() => {
   const isForDate = (f: Filter): f is [Date | undefined, Date | undefined] => {
     return Array.isArray(f) && (f[0] instanceof Date)
@@ -161,6 +197,7 @@ export const Sheet = <T extends Answer = Answer>({
   ...props
 }: SheetTableProps<T>) => {
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
+  console.log('render Sheet')
   const {m} = useI18n()
   const [sheetSearch, setSheetSearch] = useState({
     limit: 20,
@@ -172,20 +209,11 @@ export const Sheet = <T extends Answer = Answer>({
   const _selected = useSetState<string>()
   useMemo(() => select?.onSelect(_selected.toArray), [_selected.get])
 
-  const [openIntegerChartDialog, setOpenIntegerChartDialog] = useState<{
-    anchorEl: HTMLElement
-    columnId: string
-  } | undefined>()
-  const [openSelectChartDialog, setOpenSelectChartDialog] = useState<{
-    anchorEl: HTMLElement
-    columnId: string
-    multiple?: boolean
-  } | undefined>()
   const [openColumnConfig, setOpenColumnConfig] = useState<{
     anchorEl: HTMLElement
     columnId: string
+    type: SheetFilterDialogProps['type']
   } | undefined>()
-
   // const [filteringProperty, setFilteringProperty] = useState<keyof T | undefined>(undefined)
   const [filters, setFilters] = useState<Record<keyof T, Filter>>({} as any)
   const displayableColumns: SheetColumnProps<T>[] = useMemo(() => {
@@ -206,24 +234,11 @@ export const Sheet = <T extends Answer = Answer>({
     setSheetSearch(prev => ({...prev, orderBy, sortBy: columnId}))
   }
 
-  // const columnTypeIndex = useMemo(() => {
-  //   return Arr(columns).reduceObject<Record<string, ColumnType>>(_ => [_.id, _.type])
-  // }, [columns])
-
   const filteredData = useMemo(() => {
     if (!data) return
     return multipleFilters(data, Enum.keys(filters).map(k => {
       const filter = filters[k]
       if (!filter || filter.length === 0) return undefined
-      // if (Array.isArray(columnTypeIndex[k])) {
-      //   return row => {
-      //     const v = row[k]
-      //     if (!v) return false
-      //     if (Array.isArray(v)) return !!(v as string[]).find(_ => filter.includes(_))
-      //     if (typeof v !== 'string') throw new Error(`Value of ${String(k)} is ${v} but string expected.`)
-      //     return filter.includes(v)
-      //   }
-      // }
       if (checkFilterType.isNumber(filter)) {
         return row => {
           const v = row[k]
@@ -234,7 +249,13 @@ export const Sheet = <T extends Answer = Answer>({
         }
       }
       if (checkFilterType.isForMultipleChoices(filter)) {
-
+        return row => {
+          const v = row[k]
+          if (!v) return false
+          if (Array.isArray(v)) return !!(v as string[]).find(_ => filter.includes(_))
+          if (typeof v !== 'string') throw new Error(`Value of ${String(k)} is ${v} but string expected.`)
+          return filter.includes(v)
+        }
       }
       if (checkFilterType.isForDate(filter)) {
         return row => {
@@ -285,20 +306,45 @@ export const Sheet = <T extends Answer = Answer>({
         {header}
         <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
         {_selected.size > 0 && (
-          <SheetSelectToolbar>
-            <Box sx={{flex: 1,}}>
-              {_selected.size} {m.selected}.
+          <Box sx={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0,
+            background: t => t.palette.background.paper,
+          }}>
+            <Box sx={{
+              position: 'absolute',
+              top: -1,
+              right: -1,
+              left: -1,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              border: t => `2px solid ${t.palette.primary.main}`,
+              color: t => t.palette.primary.main,
+              fontWeight: t => t.typography.fontWeightBold,
+              background: t => t.palette.action.focus,
+              borderTopLeftRadius: t => t.shape.borderRadius + 'px',
+              borderTopRightRadius: t => t.shape.borderRadius + 'px',
+              px: 2,
+            }}>
+              <Box sx={{flex: 1,}}>
+                {_selected.size} {m.selected}.
+              </Box>
+              {select?.selectActions}
+              <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
             </Box>
-            {select?.selectActions}
-            <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
-          </SheetSelectToolbar>
+          </Box>
         )}
       </Box>
       <Box sx={{overflowX: 'auto'}}>
         <Box sx={{
           // width: 'max-content'
         }}>
-          {koboDatabaseStyle}
+          {generalStyles}
+
           <Box component="table" {...props} className="table" sx={{minWidth: '100%'}}>
             <thead>
             <tr className="tr trh">
@@ -316,75 +362,43 @@ export const Sheet = <T extends Answer = Answer>({
                   />
                 </th>
               ))}
-              {filteredColumns.map((_, i) =>
-                <th
-                  key={_.id}
-                  className={'td th' + (fnSwitch(_.align!, {
-                    'center': ' td-center',
-                    'right': ' td-right'
-                  }, _ => ''))}
-                >
-                  {_.head}
-                </th>
-              )}
-            </tr>
-            </thead>
-            <tbody>
-            <tr className="tr">
               {filteredColumns.map((_, i) => {
                 const sortedByThis = sort?.sortBy === _.id ?? true
                 const active = sortedByThis || filters[_.id]
                 return (
-                  <td key={_.id} className="td">
-                    {fnSwitch(_.type!, {
-                      date: type => (
-                        <>
-                          <SheetIcon icon="event" tooltip={type} disabled/>
-                        </>
-                      ),
-                      integer: type => (
-                        <>
-                          <SheetIcon icon="tag" tooltip={type} disabled/>
-                          <SheetIcon icon="bar_chart" onClick={e => {
-                            setOpenIntegerChartDialog({
-                              anchorEl: e.currentTarget,
-                              columnId: _.id,
-                            })
-                          }}/>
-                        </>
-                      ),
-                      select_multiple: type => (
-                        <>
-                          <SheetIcon icon="check_box" tooltip={type} disabled/>
-                          <SheetIcon icon="bar_chart" onClick={e => {
-                            setOpenSelectChartDialog({
-                              anchorEl: e.currentTarget,
-                              columnId: _.id,
-                              multiple: true,
-                            })
-                          }}/>
-                        </>
-                      ),
-                      select_one: type => (
-                        <>
-                          <SheetIcon icon="radio_button_checked" tooltip={type} disabled/>
-                          <SheetIcon icon="bar_chart" onClick={e => {
-                            setOpenSelectChartDialog({
-                              anchorEl: e.currentTarget,
-                              columnId: _.id,
-                              multiple: false,
-                            })
-                          }}/>
-                        </>
-                      ),
-                    }, () => <></>)}
-                    <SheetIcon color={active ? 'primary' : undefined} icon="keyboard_arrow_down" onClick={e => {
-                      setOpenColumnConfig({anchorEl: e.currentTarget, columnId: _.id})
-                    }}/>
-                  </td>
+                  <th
+                    key={_.id}
+                    // onClick={() => onSortBy(_.id)}
+                    className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
+                      'center': ' td-center',
+                      'right': ' td-right'
+                    }, _ => ''))}
+                  >
+                    {_.head}
+                    <IconBtn size="small" sx={{mx: .5}} className="th-action">
+                      <Icon
+                        fontSize="small"
+                        color={active ? 'primary' : 'disabled'}
+                        sx={{verticalAlign: 'middle'}}
+                        onClick={e => {
+                          setOpenColumnConfig({
+                            anchorEl: e.currentTarget,
+                            columnId: _.id,
+                            type: (() => {
+                              if (Array.isArray(_.type)) return 'list'
+                              return _.type
+                            })(),
+                          })
+                        }}
+                      >
+                        keyboard_arrow_down
+                      </Icon>
+                    </IconBtn>
+                  </th>
                 )
               })}
             </tr>
+            </thead>
             <TableBody
               loading={loading}
               columns={filteredColumns}
@@ -396,7 +410,6 @@ export const Sheet = <T extends Answer = Answer>({
                 getId: select.getId,
               } : undefined}
             />
-            </tbody>
           </Box>
           {!loading && (!filteredData || filteredData.length === 0) && (
             <div>
@@ -418,30 +431,15 @@ export const Sheet = <T extends Answer = Answer>({
           setSheetSearch(prev => ({...prev, limit: event.target.value as any}))
         }}
       />
-      {map(openIntegerChartDialog, c =>
-        <NumberChoicesPopover
-          anchorEl={c.anchorEl}
-          question={c.columnId}
-          data={filteredData ?? []}
-          onClose={() => setOpenSelectChartDialog(undefined)}
-        />
-      )}
-      {map(openSelectChartDialog, c =>
-        <MultipleChoicesPopover
-          anchorEl={c.anchorEl}
-          question={c.columnId}
-          data={filteredData ?? []}
-          onClose={() => setOpenSelectChartDialog(undefined)}
-        />
-      )}
       {map(openColumnConfig, c =>
         <SheetFilterDialog
+          title={c.columnId}
           anchorEl={c.anchorEl}
           orderBy={sheetSearch.orderBy}
           onOrderByChange={_ => onOrderBy(c.columnId, _)}
           value={filters[c.columnId] as any}
-          schema={propertyTypes[c.columnId]}
-          property={c.columnId}
+          columnId={c.columnId}
+          type={c.type}
           onClose={() => setOpenColumnConfig(undefined)}
           onClear={() => setFilters(prev => {
             if (prev) {
@@ -450,7 +448,7 @@ export const Sheet = <T extends Answer = Answer>({
             // setFilteringProperty(undefined)
             return {...prev}
           })}
-          onChange={(p: string, v: string | string[]) => {
+          onChange={(p: string, v: string | string[] | [Date, Date]) => {
             setFilters(_ => ({..._, [p]: v}))
             setOpenColumnConfig(undefined)
           }}
@@ -478,43 +476,42 @@ const TableBody = (() => {
     loading?: boolean,
     columns: SheetColumnProps<T>[],
   }) => {
-    console.log('renderbody')
     return (
-      <>
-        {!data && loading && (
-          <tr>
-            <td className="td-loading" colSpan={columns?.length ?? 1}>
-              <LinearProgress/>
+      <tbody>
+      {!data && loading && (
+        <tr>
+          <td className="td-loading" colSpan={columns?.length ?? 1}>
+            <LinearProgress/>
+          </td>
+        </tr>
+      )}
+      {data?.map((item, i) => (
+        <tr
+          className="tr"
+          key={getRenderRowKey ? getRenderRowKey(item, i) : i}
+          // onClick={e => onClickRows?.(item, e)}
+        >
+          {select && (
+            <td className="td td-center">
+              <Checkbox size="small" checked={select.is(select.getId(item))} onChange={() => select.onToggle(select.getId(item))}/>
             </td>
-          </tr>
-        )}
-        {data?.map((item, i) => (
-          <tr
-            className="tr"
-            key={getRenderRowKey ? getRenderRowKey(item, i) : i}
-            // onClick={e => onClickRows?.(item, e)}
-          >
-            {select && (
-              <td className="td td-center">
-                <Checkbox size="small" checked={select.is(select.getId(item))} onChange={() => select.onToggle(select.getId(item))}/>
-              </td>
-            )}
-            {columns.map((_, i) => (
-              <td
-                title={_.tooltip?.(item) ?? _.render(item) as any}
-                key={i}
-                onClick={_.onClick ? () => _.onClick?.(item) : undefined}
-                className={'td td-clickable ' + fnSwitch(_.align!, {
-                  'center': 'td-center',
-                  'right': 'td-right'
-                }, _ => '')}
-              >
-                {_.render(item)}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </>
+          )}
+          {columns.map((_, i) => (
+            <td
+              title={_.tooltip?.(item) ?? _.render(item) as any}
+              key={i}
+              onClick={_.onClick ? () => _.onClick?.(item) : undefined}
+              className={'td td-clickable ' + fnSwitch(_.align!, {
+                'center': 'td-center',
+                'right': 'td-right'
+              }, _ => '')}
+            >
+              {_.render(item)}
+            </td>
+          ))}
+        </tr>
+      ))}
+      </tbody>
     )
   }
   return React.memo(Component) as typeof Component

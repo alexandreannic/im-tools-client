@@ -1,33 +1,28 @@
-import {Box, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps} from '@mui/material'
+import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps} from '@mui/material'
 import {AaBtn} from '../Btn/AaBtn'
 import {useI18n} from '../../core/i18n'
 import React, {useEffect, useState} from 'react'
 import {AaInput} from '../ItInput/AaInput'
-import {SheetColumnProps} from './Sheet'
 import {MultipleChoices} from '../MultipleChoices'
-import {fnSwitch} from '@alexandreannic/ts-utils'
 import {PeriodPicker} from '../PeriodPicker/PeriodPicker'
 import {AAIconBtn} from '../IconBtn'
 import {Txt} from 'mui-extension'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
-import {Panel, PanelBody, PanelHead, PanelTitle} from '@/shared/Panel'
+import {PanelBody, PanelHead} from '@/shared/Panel'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
-import {property} from 'lodash'
-import {getKoboLabel} from '@/shared/Sheet/KoboDatabase'
 
-interface PropsBase {
+export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   orderBy?: OrderBy
   sortBy?: string
   onOrderByChange?: (_?: OrderBy) => void
   onClose?: () => void
   onClear?: () => void
-  schema: KoboQuestionSchema
-  langIndex?: number
-  form: KoboApiForm['content']
-  choicesIndex: Record<string, KoboApiForm['content']['choices'][0][]>
   value?: string[] | string | [Date, Date]
   onChange?: (columnName: string, value: string[] | string | [Date, Date]) => void
+  columnId: string
+  title: string
+  type?: 'date' | 'string' | 'list' | 'number'
+  options?: {value: string, label: string}[]
 }
 
 //
@@ -50,28 +45,27 @@ interface PropsBase {
 //   value?: string
 // }
 
-type Props = PropsBase// PropsMultiple | PropsSingle | PropsDate
-
 export const SheetFilterDialog = ({
   orderBy,
   sortBy,
   onOrderByChange,
   value,
   onChange,
-  choicesIndex,
   onClear,
   onClose,
   anchorEl,
-  schema,
-  langIndex,
-}: Props & Pick<PopoverProps, 'anchorEl'>) => {
+  // schema,
+  columnId,
+  title,
+  options,
+  type,
+}: SheetFilterDialogProps) => {
   const {m} = useI18n()
   const [innerValue, setInnerValue] = useState<any>()
   useEffect(() => {
     value && setInnerValue(value)
   }, [value])
 
-  if (!schema) return <></>
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead action={
@@ -80,37 +74,33 @@ export const SheetFilterDialog = ({
           setInnerValue(undefined)
         }}/>
       }>
-        <Txt block sx={{maxWidth: 400}} truncate>{getKoboLabel(schema, langIndex)}</Txt>
+        <Txt block sx={{maxWidth: 400}} truncate>{title}</Txt>
       </PanelHead>
       <PanelBody>
         <Box sx={{display: 'flex', alignItems: 'center', borderBottom: t => `1px solid ${t.palette.divider}`, mb: 1}}>
           <Txt color="hint" sx={{flex: 1}}>{m.sort}</Txt>
           <MenuItem onClick={() => onOrderByChange?.(orderBy === 'desc' ? undefined : 'desc')}>
-            <Icon fontSize="small" color={sortBy === schema.name && orderBy === 'desc' ? 'primary' : undefined}>
+            <Icon fontSize="small" color={sortBy === columnId && orderBy === 'desc' ? 'primary' : undefined}>
               south
             </Icon>
           </MenuItem>
           <MenuItem onClick={() => onOrderByChange?.(orderBy === 'asc' ? undefined : 'asc')}>
-            <Icon fontSize="small" color={sortBy === schema.name && orderBy === 'asc' ? 'primary' : undefined}>
+            <Icon fontSize="small" color={sortBy === columnId && orderBy === 'asc' ? 'primary' : undefined}>
               north
             </Icon>
           </MenuItem>
         </Box>
-        {(() => {
-          switch (schema.type) {
-            case 'start':
-            case 'end':
-            case 'date': {
+        {type && (() => {
+          switch (type) {
+            case 'date':
               return <PeriodPicker value={innerValue} onChange={setInnerValue}/>
-            }
-            case 'select_one':
-            case 'select_multiple': {
+            case 'list':
               return (
                 <MultipleChoices
-                  options={choicesIndex[schema.select_from_list_name!]?.map(_ => ({
-                    value: _.name,
-                    children: getKoboLabel(_, langIndex)
-                  }))}
+                  options={options?.map(_ => ({
+                    value: _.value,
+                    children: _.label
+                  })) ?? []}
                   initialValue={value as any}
                   onChange={_ => _.length === 0 ? setInnerValue(undefined) : setInnerValue(_)}
                 >
@@ -137,7 +127,6 @@ export const SheetFilterDialog = ({
                   )}
                 </MultipleChoices>
               )
-            }
             default:
               return (
                 <AaInput value={innerValue} onChange={e => setInnerValue(e.target.value)}/>
@@ -149,7 +138,7 @@ export const SheetFilterDialog = ({
         <AaBtn color="primary" onClick={onClose}>
           {m.close}
         </AaBtn>
-        <AaBtn color="primary" onClick={() => onChange && onChange(schema.name, innerValue)}>
+        <AaBtn color="primary" onClick={() => onChange && onChange(columnId, innerValue)}>
           {m.filter}
         </AaBtn>
       </PanelFoot>

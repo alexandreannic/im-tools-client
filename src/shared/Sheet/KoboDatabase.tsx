@@ -1,35 +1,24 @@
 import {useI18n} from '@/core/i18n'
-import React, {memo, useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {orderBy} from 'lodash'
 import {multipleFilters, paginateData, Utils} from '@/utils/utils'
 import {OrderBy, useAsync} from '@alexandreannic/react-hooks-lib'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {getKoboPath, KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
+import {getKoboPath} from '@/shared/TableImg/KoboAttachedImg'
 import {Box, TablePagination} from '@mui/material'
 import {koboDatabaseStyle} from '@/shared/Sheet/SheetStyle'
-import {MultipleChoicesPopover, NumberChoicesPopover, SheetIcon} from '@/features/Database/DatabaseSubHeader'
+import {MultipleChoicesPopover, NumberChoicesPopover} from '@/features/Database/DatabaseSubHeader'
 import {SheetFilterDialog} from '@/shared/Sheet/SheetFilterDialog'
 import {useKoboDatabaseHelper} from '@/shared/Sheet/useKoboDatabaseHelper'
 import {AaSelect} from '@/shared/Select/Select'
-import {KoboDatabaseBtn} from '@/shared/Sheet/koboDatabaseShared'
+import {KoboDatabaseBtn, koboTypeToFilterType} from '@/shared/Sheet/koboDatabaseShared'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
 import {getKoboImagePath} from '@/features/Mpca/MpcaData/MpcaData'
-import {AAIconBtnProps} from '@/shared/IconBtn'
-import {AaBtn} from '@/shared/Btn/AaBtn'
-
-interface Search {
-  limit: number
-  offset: number
-  sortBy: keyof KoboAnswer
-  orderBy: OrderBy
-}
-
-type Filter = string
-  | string[]
-  | [Date | undefined, Date | undefined]
-  | [number | undefined, number | undefined]
+import {KoboDatabaseType} from '@/shared/Sheet/koboDatabaseType'
+import {KoboDatabaseHead} from '@/shared/Sheet/KoboDatabaseHead'
+import {KoboDatabaseBody} from '@/shared/Sheet/KoboDatabaseBody'
 
 export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number) => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
@@ -43,8 +32,8 @@ export const KoboDatabase = (props: {
   const {m, formatDate, formatDateTime} = useI18n()
   const [langIndex, setLangIndex] = useState<number>(0)//, `lang-index-${Utils.slugify(form.name)}`)
   console.log('langIndex', langIndex)
-  const [filters, setFilters] = useState<Record<string, Filter>>({} as any)
-  const [sheetSearch, setSheetSearch] = useState<Search>({
+  const [filters, setFilters] = useState<Record<string, KoboDatabaseType.Filter>>({} as any)
+  const [sheetSearch, setSheetSearch] = useState<KoboDatabaseType.Search>({
     limit: 20,
     offset: 0,
     sortBy: 'end',
@@ -77,22 +66,20 @@ export const KoboDatabase = (props: {
     group: Record<string, any>[]
   } | undefined>()
 
-  const [openColumnConfig, setOpenColumnConfig] = useState<{
-    anchorEl: HTMLElement
-    schema: KoboQuestionSchema
-  } | undefined>()
+  const [openColumnConfig, setOpenColumnConfig] = useState<KoboDatabaseType.ColumnConfigPopoverParams | undefined>()
 
-  const [openIntegerChartDialog, setOpenIntegerChartDialog] = useState<{
-    anchorEl: HTMLElement
-    columnId: string
-  } | undefined>()
+  const [openIntegerChartDialog, setOpenIntegerChartDialog] = useState<KoboDatabaseType.PopoverParams | undefined>()
 
-  const [openSelectChartDialog, setOpenSelectChartDialog] = useState<{
-    anchorEl: HTMLElement
-    columnId: string
-    multiple?: boolean
-  } | undefined>()
+  const [openSelectChartDialog, setOpenSelectChartDialog] = useState<KoboDatabaseType.SelectChartPopoverParams | undefined>()
 
+  const onOpenColumnConfig = (q: KoboQuestionSchema, target: any) => {
+    setOpenColumnConfig({
+      anchorEl: target,
+      columnId: q.name,
+      type: koboTypeToFilterType(q.type),
+      options: choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: getKoboLabel(_, langIndex)})),
+    })
+  }
   const filteredData = useMemo(() => {
     if (!props.data) return
     return multipleFilters(props.data, Enum.keys(filters).map(k => {
@@ -184,19 +171,19 @@ export const KoboDatabase = (props: {
         {koboDatabaseStyle}
         {map(openColumnConfig, c =>
           <SheetFilterDialog
+            title={getKoboLabel(questionIndex[c.columnId], langIndex)}
             anchorEl={c.anchorEl}
+            columnId={c.columnId}
+            options={c.options}
+            type={c.type}
             orderBy={sheetSearch.orderBy}
             sortBy={sheetSearch.sortBy}
-            onOrderByChange={_ => onOrderBy(c.schema.name, _)}
-            value={filters[c.schema.name] as any}
-            langIndex={langIndex}
-            schema={c.schema}
-            choicesIndex={choicesIndex}
-            form={form}
+            onOrderByChange={_ => onOrderBy(c.columnId, _)}
+            value={filters[c.columnId] as any}
             onClose={() => setOpenColumnConfig(undefined)}
             onClear={() => setFilters(prev => {
               if (prev) {
-                delete prev[c.schema.name!]
+                delete prev[c.columnId!]
               }
               // setFilteringProperty(undefined)
               return {...prev}
@@ -230,12 +217,12 @@ export const KoboDatabase = (props: {
           />
         )}
         <table className="table">
-          <TableHead
+          <KoboDatabaseHead
             setOpenIntegerChartDialog={setOpenIntegerChartDialog}
             setOpenSelectChartDialog={setOpenSelectChartDialog}
             setOpenCalculate={setOpenCalculate}
             form={form}
-            setOpenColumnConfig={setOpenColumnConfig}
+            onOpenColumnConfig={onOpenColumnConfig}
             sheetSearch={sheetSearch}
             filters={filters}
             langIndex={langIndex}
@@ -261,7 +248,7 @@ export const KoboDatabase = (props: {
           {/*</tr>*/}
           {/*</thead>*/}
           {map(filteredSortedAndPaginatedData?.data, _ =>
-            <TableBody form={form} data={_} langIndex={langIndex} setOpenBeginRepeat={setOpenBeginRepeat}/>
+            <KoboDatabaseBody form={form} data={_} langIndex={langIndex} setOpenBeginRepeat={setOpenBeginRepeat}/>
           )}
         </table>
       </Box>
@@ -282,229 +269,3 @@ export const KoboDatabase = (props: {
   )
 }
 
-const TableHead = memo(({
-  form,
-  sheetSearch,
-  filters,
-  setOpenColumnConfig,
-  setOpenIntegerChartDialog,
-  setOpenSelectChartDialog,
-  langIndex,
-  setOpenCalculate,
-}: {
-  sheetSearch: any
-  filters: any
-  setOpenColumnConfig: any
-  setOpenIntegerChartDialog: any
-  setOpenCalculate: any
-  setOpenSelectChartDialog: any
-  form: KoboApiForm['content'],
-  langIndex?: number
-}) => {
-  return (
-    <thead>
-    <tr className="tr trh">
-      {form.survey.map(q =>
-        <th key={q.name} title={getKoboLabel(q, langIndex)}>
-          <Box className="th-resize">
-            {getKoboLabel(q, langIndex)}
-          </Box>
-        </th>
-      )}
-    </tr>
-    <tr>
-      {form.survey.map(q => {
-        const sortedByThis = sheetSearch.sortBy === q.name ?? false
-        const active = sortedByThis || filters[q.name]
-        const commonProps: Partial<AAIconBtnProps> = {
-          disabled: true,
-          sx: {marginRight: 'auto'},
-          tooltip: q.type
-        }
-        return (
-          <td key={q.name} className="td-right">
-            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
-            {(() => {
-              switch (q.type) {
-                case 'start':
-                case 'end':
-                case 'date': {
-                  return (
-                    <SheetIcon icon="event" {...commonProps}/>
-                  )
-                }
-                case 'select_multiple': {
-                  return (
-                    <>
-                      <SheetIcon icon="check_box" {...commonProps}/>
-                      <SheetIcon icon="bar_chart" onClick={e => {
-                        setOpenSelectChartDialog({
-                          anchorEl: e.currentTarget,
-                          columnId: q.name,
-                          multiple: true,
-                        })
-                      }}/>
-                    </>
-                  )
-                }
-                case 'select_one': {
-                  return (
-                    <>
-                      <SheetIcon icon="radio_button_checked" {...commonProps}/>
-                      <SheetIcon icon="bar_chart" onClick={e => {
-                        setOpenSelectChartDialog({
-                          anchorEl: e.currentTarget,
-                          columnId: q.name,
-                          multiple: false,
-                        })
-                      }}/>
-                    </>
-                  )
-                }
-                case 'integer': {
-                  return (
-                    <>
-                      <SheetIcon icon="tag" {...commonProps}/>
-                      <SheetIcon icon="bar_chart" onClick={e => {
-                        setOpenIntegerChartDialog({
-                          anchorEl: e.currentTarget,
-                          columnId: q.name,
-                        })
-                      }}/>
-                    </>
-                  )
-                }
-                case 'calculate': {
-                  return (
-                    <>
-                      <SheetIcon icon="functions" {...commonProps}/>
-                      <SheetIcon icon="bar_chart" onClick={e => {
-                        setOpenCalculate({
-                          anchorEl: e.currentTarget,
-                          columnId: q.name,
-                        })
-                      }}/>
-                    </>
-                  )
-                }
-                case 'begin_repeat': {
-                  return (
-                    <SheetIcon icon="repeat" {...commonProps}/>
-                  )
-                }
-                case 'select_one_from_file': {
-                  return (
-                    <SheetIcon icon="attach_file" {...commonProps}/>
-                  )
-                }
-                case 'image': {
-                  return (
-                    <SheetIcon icon="image" {...commonProps}/>
-                  )
-                }
-                case 'text': {
-                  return (
-                    <SheetIcon icon="short_text" {...commonProps}/>
-                  )
-                }
-                case 'note': {
-                  return (
-                    <SheetIcon icon="info" {...commonProps}/>
-                  )
-                }
-                default: {
-                  return (
-                    q.type
-                  )
-                }
-              }
-            })()}
-              <SheetIcon color={active ? 'primary' : undefined} icon="filter_alt" onClick={e => {
-                setOpenColumnConfig({anchorEl: e.currentTarget, schema: q})
-              }}/>
-            </span>
-          </td>
-        )
-      })}
-    </tr>
-    </thead>
-  )
-})
-
-const TableBody = memo(({
-  form,
-  data,
-  langIndex,
-  setOpenBeginRepeat,
-}: {
-  setOpenBeginRepeat: any
-  langIndex?: number
-  form: KoboApiForm['content']
-  data: KoboAnswer<Record<string, any>>[],
-}) => {
-  const {formatDateTime, formatDate} = useI18n()
-  const optionsTranslations = useMemo(() => {
-    const res: Record<string, Record<string, string>> = {}
-    form.choices.forEach(choice => {
-      if (!res[choice.list_name]) res[choice.list_name] = {}
-      res[choice.list_name][choice.name] = getKoboLabel(choice, langIndex)
-    })
-    return res
-  }, [form, langIndex])
-
-  return (
-    <tbody>
-    {data.map(row =>
-      <tr key={row.id}>
-        {form.survey.map(q =>
-          <td key={q.name}>
-            {(() => {
-              switch (q.type) {
-                case 'image': {
-                  return (
-                    <KoboAttachedImg attachments={row.attachments} fileName={row[q.name]}/>
-                  )
-                }
-                case 'calculate':
-                case 'select_one_from_file':
-                case 'text':
-                case 'integer': {
-                  return <span title={row[q.name]}>{row[q.name]}</span>
-                }
-                case 'date':
-                case 'start':
-                case 'end': {
-                  return map(row[q.name], (_: Date) => (
-                    <span title={formatDateTime(_)}>{formatDate(_)}</span>
-                  ))
-                }
-                case 'begin_repeat': {
-                  return map(row[q.name], group =>
-                    <AaBtn onClick={() => setOpenBeginRepeat(group)}>{group.length}</AaBtn>
-                  ) ?? <></>
-                }
-                case 'select_one': {
-                  return map(row[q.name], v => {
-                    const render = optionsTranslations[q.select_from_list_name!][v]
-                    return <span title={render}>{render}</span>
-                  })
-                }
-                case 'select_multiple': {
-                  return map(row[q.name], (v: string) => {
-                    const render = v.split(' ').map(_ => optionsTranslations[q.select_from_list_name!][_]).join(' | ')
-                    return <span title={render}>{render}</span>
-                  })
-                }
-                default: {
-                  const render = JSON.stringify(row[q.name])
-                  return <span title={render}>{render}</span>
-                }
-              }
-            })()}
-          </td>
-        )}
-      </tr>
-    )}
-    </tbody>
-  )
-})
