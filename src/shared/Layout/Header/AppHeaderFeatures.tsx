@@ -1,6 +1,6 @@
 import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
 import React, {useMemo} from 'react'
-import {useSession} from '@/core/context/SessionContext'
+import {useSession} from '@/core/Session/SessionContext'
 import {Box, Popover, useTheme} from '@mui/material'
 import {useI18n} from '@/core/i18n'
 import {AppFeature, appFeatures, hiddenPlaygroundFeature} from '@/features/appFeatureId'

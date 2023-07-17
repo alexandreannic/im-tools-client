@@ -1,6 +1,6 @@
 import {AAIconBtn} from '@/shared/IconBtn'
 import React, {useState} from 'react'
-import {useSession} from '@/core/context/SessionContext'
+import {useSession} from '@/core/Session/SessionContext'
 import {Box, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'

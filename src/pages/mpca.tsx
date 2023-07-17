@@ -1,6 +1,6 @@
 import {Mpca} from '@/features/Mpca/Mpca'
 import React from 'react'
-import {SessionProvider} from '@/core/context/SessionContext'
+import {SessionProvider} from '@/core/Session/SessionContext'
 
 const MpcaPage = () => {
 

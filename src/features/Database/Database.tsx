@@ -22,7 +22,7 @@ import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {useAaToast} from '@/core/useToast'
 import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {DatabaseAccess} from '@/features/Database/DatabaseAccess/DatabaseAccess'
-import {useSession} from '@/core/context/SessionContext'
+import {useSession} from '@/core/Session/SessionContext'
 import {KoboDatabase} from '@/shared/Sheet/KoboDatabase'
 
 const urlParamsValidation = yup.object({

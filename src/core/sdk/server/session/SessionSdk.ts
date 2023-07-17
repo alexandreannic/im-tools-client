@@ -12,7 +12,10 @@ export class SessionSdk {
   }
 
   readonly login = (body: LoginRequest) => {
-    return this.client.post<UserSession>(`/session/login`, {body})
+    return this.client.post<UserSession>(`/session/login`, {body}).then(x => {
+      console.log('LOGIN', x)
+      return x
+    })
   }
 
   readonly logout = () => {

@@ -10,7 +10,7 @@ import {MpcaPaymentTools} from '@/features/Mpca/PaymentTools/MpcaPaymentTools'
 import {MpcaPaymentTool} from '@/features/Mpca/PaymentTool/MpcaPaymentTool'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {WfpDeduplicationData} from '@/features/WfpDeduplication/WfpDeduplicationData'
-import {useSession} from '@/core/context/SessionContext'
+import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 

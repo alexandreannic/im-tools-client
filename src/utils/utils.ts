@@ -259,11 +259,12 @@ export namespace Utils {
     (_: undefined): undefined
     (_?: string): string | undefined
   }
+
   export const removeHtml: RemoveHtml = (_) => _?.replace(/(<([^>]+)>)/gi, '') as any
 
   export function assert(condition: any, msg?: string): asserts condition {
     if (!condition) {
-      throw new Error(msg);
+      throw new Error(msg)
     }
   }
 
@@ -281,5 +282,10 @@ export namespace Utils {
       start,
       end: addMonths(start, 1)
     }
+  }
+
+  export const logThen = (log: string) => <T>(args: T): T => {
+    console.log(log, args)
+    return args
   }
 }

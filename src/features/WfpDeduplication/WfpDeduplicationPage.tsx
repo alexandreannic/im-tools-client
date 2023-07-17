@@ -8,7 +8,7 @@ import {useI18n} from '@/core/i18n'
 import {useAaToast} from '@/core/useToast'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
-import {useSession} from '@/core/context/SessionContext'
+import {useSession} from '@/core/Session/SessionContext'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 

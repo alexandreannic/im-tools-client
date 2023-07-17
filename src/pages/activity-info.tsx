@@ -1,5 +1,5 @@
 import React from 'react'
-import {SessionProvider} from '@/core/context/SessionContext'
+import {SessionProvider} from '@/core/Session/SessionContext'
 import {ActivityInfo} from '@/features/ActivityInfo/ActivityInfo'
 
 const _ = () => {

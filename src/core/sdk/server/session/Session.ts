@@ -1,6 +1,10 @@
-export interface UserSession {
-  email: string
-  name: string
+import {User} from '@/core/sdk/server/user/User'
+
+export interface UserSession extends User{
+  // email: string
+  // name: string
   accessToken: string
-  admin?: boolean
+  // admin?: boolean
+  // drcJobTitle?: string
+  // drcOffice?: string
 }

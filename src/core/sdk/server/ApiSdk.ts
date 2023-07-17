@@ -10,6 +10,7 @@ import {KoboServerSdk} from '@/core/sdk/server/kobo/KoboServerSdk'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {WfpDeduplicationSdk} from '@/core/sdk/server/wfpDeduplication/WfpDeduplicationSdk'
 import {AccessSdk} from '@/core/sdk/server/access/AccessSdk'
+import {UserSdk} from '@/core/sdk/server/user/UserSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -40,4 +41,5 @@ export class ApiSdk {
   readonly mpcaPayment = new MpcaPaymentSdk(this.client)
   readonly wfpDeduplication = new WfpDeduplicationSdk(this.client)
   readonly access = new AccessSdk(this.client)
+  readonly user = new UserSdk(this.client)
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {SessionProvider} from '@/core/context/SessionContext'
+import {SessionProvider} from '@/core/Session/SessionContext'
 import {WfpDeduplicationPage} from '@/features/WfpDeduplication/WfpDeduplicationPage'
 
 const _ = () => {

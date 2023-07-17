@@ -6,7 +6,7 @@ import {Box, Divider} from '@mui/material'
 import {format} from 'date-fns'
 import {Layout} from '../shared/Layout'
 import {Txt} from 'mui-extension'
-import {useSession} from '@/core/context/SessionContext'
+import {useSession} from '@/core/Session/SessionContext'
 import {koboFormId, koboServerId} from '@/koboFormId'
 
 // const survey = await form.fetch().then(_ => _.content.survey)
