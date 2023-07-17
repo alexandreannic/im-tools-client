@@ -73,7 +73,7 @@ export namespace ChartTools {
 
   export const multiple = <A extends string>({
     data,
-    base,
+    base = 'percentOfTotalAnswers',
     filterValue,
   }: {
     data: _Arr<A[] | undefined>,
