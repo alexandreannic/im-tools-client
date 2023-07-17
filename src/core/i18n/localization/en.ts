@@ -234,6 +234,8 @@ export const en = Object.freeze({
     poc: 'Person of concern',
     global: 'Global',
     donor: 'Donor',
+    gender: 'Gender',
+    respondentGender: 'Respondent gender',
     program: 'Program',
     noIdps: 'Non-IDPs',
     selectForm: 'Select form',

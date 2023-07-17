@@ -50,6 +50,11 @@ const filterShape = DashboardFilterHelper.makeShape<typeof ProtHHS_2_1Options>()
     icon: 'location_city',
     label: m => m.typeOfSite
   },
+  gender: {
+    options: 'hh_sex_1',
+    icon: 'female',
+    label: m => m.gender
+  },
   poc: {
     options: 'do_you_identify_as_any_of_the_following',
     icon: 'directions_run',
