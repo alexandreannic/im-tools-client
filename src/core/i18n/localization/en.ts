@@ -269,6 +269,7 @@ export const en = Object.freeze({
       hhsAffectedByMultipleDisplacement: 'Multiple time displaced by current location population',
       barriersToAccessHealth: 'Barriers to access healthcare',
       hhWithMemberHavingDifficulties: 'HHs reporting member(s) with disability',
+      unregisteredDisability: 'Unregistered disability',
       wg_using_your_usual_language_have_difficulty_communicating: 'Using your usual (customary) language',
       reducing_consumption_of_food: 'Reducing consumption of food',
       unemploymentFactors: 'Unemployment factors',
