@@ -77,7 +77,6 @@ export const DashboardProtHHS2FamilyUnity = ({
             <Lazy deps={[data]} fn={() =>
               chain(ChartTools.multiple({
                 filterValue: ['unable_unwilling_to_answer', 'no'],
-                base: 'percentOfTotalAnswers',
                 data: data.map(_ => _.are_you_separated_from_any_of_your_households_members).compact()
               }))
                 .map(ChartTools.setLabel(ProtHHS_2_1Options.are_you_separated_from_any_of_your_households_members))

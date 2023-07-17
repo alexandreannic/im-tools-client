@@ -1,4 +1,3 @@
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {ChartTools} from '../../../core/chartTools'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../../core/i18n'
@@ -19,7 +18,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
   overrideLabel = {},
   filterValue,
   questionType = 'single',
-  base = 'percentOfTotalAnswers'
+  base
 }: {
   onClickData?: (_: K) => void
   limit?: number
