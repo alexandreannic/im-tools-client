@@ -163,6 +163,7 @@ export const en = Object.freeze({
     lastName: 'Last name',
     housing: 'Housing',
     table: 'Table',
+    comparedToTotalAnswers: 'Based on total answers:',
     chart: 'Chart',
     group: 'Group',
     firstName: 'First name',

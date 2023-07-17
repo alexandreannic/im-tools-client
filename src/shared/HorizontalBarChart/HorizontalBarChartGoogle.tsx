@@ -6,6 +6,8 @@ import {useI18n} from '../../core/i18n'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
 import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
+import {base} from 'next/dist/build/webpack/config/blocks/base'
+import {toPercent} from '@/utils/utils'
 
 export interface HorizontalBarChartGoogleData {
   label?: ReactNode
@@ -21,7 +23,7 @@ interface Props<K extends string> {
   showLastBorder?: boolean
   hideValue?: boolean
   dense?: boolean
-  base?: number
+  // base?: number
   icons?: Record<K, string>
   labels?: Record<K, ReactNode>
   descs?: Record<K, ReactNode>
@@ -47,7 +49,7 @@ export const HorizontalBarChartGoogle = <K extends string>(props: Props<K>) => {
 
 export const _HorizontalBarChartGoogle = <K extends string>({
   data,
-  base,
+  // base,
   icons,
   labels,
   descs,
@@ -56,10 +58,30 @@ export const _HorizontalBarChartGoogle = <K extends string>({
   onClickData,
   showLastBorder,
 }: Omit<Props<K>, 'data'> & {data: NonNullable<Props<K>['data']>}) => {
-  const values: HorizontalBarChartGoogleData[] = useMemo(() => Enum.values(data), [data])
-  const maxValue = useMemo(() => Math.max(...values.map(_ => _.value)), [data])
-  const sumValue = useMemo(() => values.reduce((sum, _) => _.value + sum, 0), [data])
-  const percents = useMemo(() => values.map(_ => _.value / ((base ?? _.base) || sumValue) * 100), [data])
+  const {
+    values,
+    maxValue,
+    sumValue,
+    base,
+    percents,
+  } = useMemo(() => {
+    const values = Enum.values(data) as HorizontalBarChartGoogleData[]
+    const maxValue = Math.max(...values.map(_ => _.value))
+    const sumValue = values.reduce((sum, _) => _.value + sum, 0)
+    const base = values[0]?.base ?? sumValue
+    const percents = values.map(_ => _.value / base * 100)
+    return {
+      values,
+      maxValue,
+      sumValue,
+      base,
+      percents,
+    }
+  }, [data])
+  // const values: HorizontalBarChartGoogleData[] = useMemo(() => Enum.values(data), [data])
+  // const maxValue = useMemo(() => Math.max(...values.map(_ => _.value)), [data])
+  // const sumValue = useMemo(() => values.reduce((sum, _) => _.value + sum, 0), [data])
+  // const percents = useMemo(() => values.map(_ => _.value / ((base ?? _.base) || sumValue) * 100), [data])
   const maxPercent = useMemo(() => Math.max(...percents), [percents])
   const {m} = useI18n()
   const [appeared, setAppeared] = useState<boolean>(false)
@@ -78,7 +100,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
       {Enum.entries(data).map(([k, item], i) => {
         const percentOfMax = 100 * (item.base ? percents[i] / maxPercent : item.value / maxValue)
         return (
-          <TooltipWrapper percentOfBase={percents[i]} total={base ?? sumValue} percentOfAll={base ? percents[i] : item.value / values.length} key={i} item={item}>
+          <TooltipWrapper item={item} base={base} sumValue={sumValue} key={i}>
             <Box sx={{display: 'flex', alignItems: 'center'}} onClick={() => onClickData?.(k, item)}>
               {icons && (
                 <Icon color="disabled" sx={{mr: 1}}>{icons[k]}</Icon>
@@ -147,18 +169,17 @@ export const _HorizontalBarChartGoogle = <K extends string>({
 const TooltipWrapper = ({
   children,
   item,
-  total,
-  percentOfAll,
-  percentOfBase,
+  base,
+  sumValue,
   ...props
 }: Omit<TooltipProps, 'title'> & {
-  total: number
-  percentOfBase: number
-  percentOfAll: number
+  base: number
+  sumValue: number
   item: HorizontalBarChartGoogleData
 }) => {
   const {formatLargeNumber} = useI18n()
   if (item.disabled) return children
+  const {m} = useI18n()
   return (
     <LightTooltip
       {...props}
@@ -174,11 +195,14 @@ const TooltipWrapper = ({
             </Txt>
           )}
           <Box sx={{mt: .5}}>
-            <TooltipRow label="Total" value={<>{formatLargeNumber(item.value)} / {formatLargeNumber(total)}</>}/>
-            <TooltipRow label="% of answers" value={Math.ceil(percentOfAll) + ' %'}/>
-            {percentOfAll !== percentOfBase && (
-              <TooltipRow label="% of peoples" value={Math.ceil(percentOfBase) + ' %'}/>
+            <TooltipRow hint={<>{formatLargeNumber(item.value)} / {formatLargeNumber(base)}</>} value={toPercent(item.value / base)}/>
+            {base !== sumValue && (
+              <TooltipRow label={m.comparedToTotalAnswers} hint={<>{formatLargeNumber(item.value)} / {formatLargeNumber(sumValue)}</>} value={toPercent(item.value / sumValue)}/>
             )}
+            {/*<TooltipRow label="% of answers" value={Math.ceil(percentOfAll) + ' %'}/>*/}
+            {/*{sumValue !== percentOfBase && (*/}
+            {/*  <TooltipRow label="% of peoples" value={Math.ceil(percentOfBase) + ' %'}/>*/}
+            {/*)}*/}
           </Box>
         </>
       }

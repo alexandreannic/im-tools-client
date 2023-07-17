@@ -83,8 +83,7 @@ export const PieChartIndicator = ({
           {title}
         </Txt>
         <Box sx={{mt: .5}}>
-          <TooltipRow label="" value={toPercent(value / base)}/>
-          <TooltipRow label="Total" value={<>{formatLargeNumber(value)} / {formatLargeNumber(base)}</>}/>
+          <TooltipRow hint={<>{formatLargeNumber(value)} / {formatLargeNumber(base)}</>} value={toPercent(value / base)}/>
         </Box>
       </>
     }>
