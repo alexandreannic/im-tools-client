@@ -196,7 +196,7 @@ export const en = Object.freeze({
     lackOfHousingDoc: 'HHs lacking HLP documentation',
     sample: 'Sample overview',
     documentation: 'Documentation',
-    livelihood: 'Livelihood',
+    livelihoods: 'Livelihoods',
     priorityNeeds: 'Priority Needs',
     hhWithoutIncome: 'No income',
     hhOutOfWork: 'Out of work',

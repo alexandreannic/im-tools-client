@@ -4,7 +4,6 @@ import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '@/features/ActivityInfo/HHS_2_1/activityInfoInterface'
-import {chain} from '@/utils/utils'
 import {Page} from '@/shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
 import {Panel} from '@/shared/Panel'
@@ -172,7 +171,7 @@ const _ActivityInfo = ({
           <AaSelect
             sx={{minWidth: 200}}
             label="Oblast"
-            value={selectedOblast?.split('_')[0] ?? ''}
+            defaultValue={selectedOblast?.split('_')[0] ?? ''}
             onChange={_ => setSelectedOblast(_)}
             options={Object.keys(aiOblasts).map(_ => ({value: _, children: _.split('_')[0]}))}
           />

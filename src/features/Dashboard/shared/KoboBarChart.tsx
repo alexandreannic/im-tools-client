@@ -37,7 +37,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
     const chart = questionType === 'multiple'
       ? ChartTools.multiple({
         data: source,
-        filterValue,
+        filterValue: filterValue as string[],
         base,
       })
       : ChartTools.single({

@@ -1,6 +1,7 @@
 import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
+import {SheetFilterDialogProps} from '@/shared/Sheet/SheetFilterDialog'
 
 export const KoboDatabaseBtn = ({
   ...props
@@ -12,7 +13,7 @@ export const KoboDatabaseBtn = ({
   )
 }
 
-export const koboTypeToFilterType = (type?: KoboQuestionType) => fnSwitch(type!, {
+export const koboTypeToFilterType = (type?: KoboQuestionType): SheetFilterDialogProps['type'] => fnSwitch(type!, {
   date: 'date',
   start: 'date',
   end: 'date',

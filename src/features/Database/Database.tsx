@@ -131,11 +131,11 @@ export const DatabaseLayout = () => {
     <Page loading={_formSchemas.getLoading(formId)} width="full">
       <PageTitle action={
         <>
-          <DatabaseAccess serverId={serverId} koboFormId={formId}>
-            <AaBtn variant="outlined" icon="person_add">
-              {m.grantAccess}
-            </AaBtn>
-          </DatabaseAccess>
+          {/*<DatabaseAccess serverId={serverId} koboFormId={formId}>*/}
+          {/*  <AaBtn variant="outlined" icon="person_add">*/}
+          {/*    {m.grantAccess}*/}
+          {/*  </AaBtn>*/}
+          {/*</DatabaseAccess>*/}
           <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={async () => {
             await _refresh.call()
             await _answers.fetch({force: true, clean: false}, formId)

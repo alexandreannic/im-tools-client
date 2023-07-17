@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
-import {Kobo, KoboAnswer, KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {koboFormId} from '@/koboFormId'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'

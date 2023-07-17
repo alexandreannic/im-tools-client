@@ -64,7 +64,7 @@ export const MpcaPaymentToolForm = ({
           name="city"
           defaultValue={tool.city}
           control={control}
-          render={({field}) => <AaSelect value={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={[
+          render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={[
             {value: '', children: ''},
             {value: 'Kyiv', children: m.kyiv},
             {value: 'Mykolaiv', children: m.mykolaiv},
@@ -76,7 +76,7 @@ export const MpcaPaymentToolForm = ({
           name="budgetLineCFR"
           defaultValue={tool.budgetLineCFR}
           control={control}
-          render={({field}) => <AaSelect value={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
+          render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
       </Row>
       <Row icon={''} noBorder label={m.mpcaDb.budgetLineMPCA}>
@@ -84,7 +84,7 @@ export const MpcaPaymentToolForm = ({
           name="budgetLineMPCA"
           defaultValue={tool.budgetLineMPCA}
           control={control}
-          render={({field}) => <AaSelect value={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
+          render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
       </Row>
       <Row icon={''} label={m.mpcaDb.budgetLineStartUp}>
@@ -92,7 +92,7 @@ export const MpcaPaymentToolForm = ({
           name="budgetLineStartUp"
           defaultValue={tool.budgetLineStartUp}
           control={control}
-          render={({field}) => <AaSelect value={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
+          render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
       </Row>
     </>

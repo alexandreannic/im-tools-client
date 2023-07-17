@@ -62,7 +62,7 @@ export const DatabaseAccess = ({
             render={({field}) => (
               <AaSelect<AccessLevel>
                 multiple={false}
-                value={field.value as AccessLevel ?? ''}
+                defaultValue={field.value as AccessLevel ?? ''}
                 onChange={_ => field.onChange({target: {value: _}} as any)}
                 options={Enum.values(AccessLevel).map(_ => ({children: _, value: _}))}/>
             )}
