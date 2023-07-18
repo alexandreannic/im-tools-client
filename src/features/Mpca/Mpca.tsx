@@ -49,9 +49,9 @@ const MPCASidebar = () => {
 }
 
 export const Mpca = () => {
-  const {accesses} = useSession()
+  const {session, accesses} = useSession()
   const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.mpca.id), [accesses])
-  if (access.length === 0) {
+  if (!session.admin && access.length === 0) {
     return (
       <NoFeatureAccessPage/>
     )
