@@ -3,7 +3,6 @@ import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Box} from '@mui/material'
 import {AAIconBtnProps} from '@/shared/IconBtn'
 import {SheetIcon} from '@/features/Database/DatabaseSubHeader'
-import {fnSwitch} from '@alexandreannic/ts-utils'
 import {getKoboLabel} from '@/shared/Sheet/KoboDatabase'
 
 export const KoboDatabaseHead = memo(({

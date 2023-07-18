@@ -44,6 +44,7 @@ export const SessionProvider = ({
     setSession(undefined)
   }
 
+  console.log(session)
   useEffect(() => {
     if (session?.email)
       _access.fetch({force: true, clean: true}, {email: session.email})
@@ -57,14 +58,14 @@ export const SessionProvider = ({
   useEffectFn(_getSession.getError(), () => toastError(m.youDontHaveAccess))
   console.log('session', session)
 
-  if (!session) {
-    if (_getSession.getLoading()) {
-      return (
-        <CenteredContent>
-          <CircularProgress/>
-        </CenteredContent>
-      )
-    }
+  if (_getSession.getLoading() || _access.loading) {
+    return (
+      <CenteredContent>
+        <CircularProgress/>
+      </CenteredContent>
+    )
+  }
+  if (!session || !_access.entity) {
     return (
       <CenteredContent>
         <SessionLoginForm setSession={setSession}/>

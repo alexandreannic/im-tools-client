@@ -1,4 +1,5 @@
 import {getOverlapMonths} from '@/utils/utils'
+import {DrcOffice} from '@/core/drcJobTitle'
 
 export enum WfpDeduplicationStatus {
   Deduplicated = 'Deduplicated',
@@ -10,6 +11,7 @@ export enum WfpDeduplicationStatus {
 export interface WfpDeduplication {
   id: string
   amount: number
+  office?: DrcOffice
   wfpId: number
   createdAt: Date
   validFrom: Date

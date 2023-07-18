@@ -31,7 +31,6 @@ export const KoboDatabase = (props: {
   const {form, choicesIndex, questionIndex} = useKoboDatabaseHelper(props.form)
   const {m, formatDate, formatDateTime} = useI18n()
   const [langIndex, setLangIndex] = useState<number>(0)//, `lang-index-${Utils.slugify(form.name)}`)
-  console.log('langIndex', langIndex)
   const [filters, setFilters] = useState<Record<string, KoboDatabaseType.Filter>>({} as any)
   const [sheetSearch, setSheetSearch] = useState<KoboDatabaseType.Search>({
     limit: 20,
@@ -108,7 +107,8 @@ export const KoboDatabase = (props: {
         case 'select_multiple': {
           return row => {
             const v = row[k] as string[]
-            return !!v.find(_ => (filter as string[]).includes(_))
+            const vArray = Array.isArray(v) ? v : [v]
+            return !!vArray.find(_ => (filter as string[]).includes(_))
           }
         }
         default: {

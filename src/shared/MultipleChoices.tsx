@@ -1,7 +1,5 @@
 import {ReactNode, useEffect, useMemo, useState} from 'react'
 import {SxProps, Theme} from '@mui/material'
-import {ChartTools} from '../core/chartTools'
-
 
 interface MultipleChoicesBase<T, V> {
   label?: ReactNode
@@ -79,6 +77,7 @@ export const MultipleChoices = <T extends string, V extends string = string>({
     toggleAll,
     options: options.map(_ => ({
       ..._,
+      key: _.key ?? _.value,
       checked: innerValue.includes(_.value),
       onChange: () => onClick(_.value)
     }))

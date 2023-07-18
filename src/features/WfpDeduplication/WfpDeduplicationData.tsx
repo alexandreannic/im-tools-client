@@ -9,6 +9,7 @@ import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wf
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {Icon} from '@mui/material'
 import {BtnUploader, Txt} from 'mui-extension'
+import {DrcOffice} from '@/core/drcJobTitle'
 
 export const WfpDeduplicationData = () => {
   const {api} = useAppSettings()
@@ -28,6 +29,7 @@ export const WfpDeduplicationData = () => {
           loading={_search.loading}
           columns={[
             {id: 'createdAt', head: m.createdAt, render: _ => formatDate(_.createdAt), type: 'date'},
+            {id: 'office', head: m.office, render: _ => _.office, type: Enum.values(DrcOffice)},
             {id: 'taxId', head: m.taxId, render: _ => _.taxId ?? <Txt color="error">{m.mpcaDb.uploadWfpTaxIdMapping}</Txt>, type: 'string'},
             {id: 'amount', head: m.amount, align: 'right', render: _ => formatLargeNumber(_.amount)},
             {id: 'validFrom', head: m.validFrom, render: _ => formatDate(_.validFrom)},
