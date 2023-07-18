@@ -56,7 +56,6 @@ export const SessionProvider = ({
   }, [])
 
   useEffectFn(_getSession.getError(), () => toastError(m.youDontHaveAccess))
-  console.log('session', session)
 
   if (_getSession.getLoading() || _access.loading) {
     return (

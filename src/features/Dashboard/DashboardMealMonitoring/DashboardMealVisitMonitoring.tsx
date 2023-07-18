@@ -73,7 +73,7 @@ const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOp
   },
   donor: {
     icon: 'handshake',
-    options: 'mdd1',
+    options: 'mdd_001',
     multiple: true,
     label: m => m.donor,
   },
@@ -246,7 +246,7 @@ export const DashboardMealVisitMonitoring = () => {
                   </Box>
                 </SlidePanel>
                 <SlidePanel title={m.donor}>
-                  <MealVisitMonitoringBarChart data={data} question="mdd1" questionType="multiple"/>
+                  <MealVisitMonitoringBarChart data={data} question="mdd_001" questionType="multiple"/>
                 </SlidePanel>
                 <SlidePanel>
                   <KoboPieChartIndicator title={m.mealMonitoringVisit.securityConcerns} question="ssy" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
@@ -300,7 +300,7 @@ export const DashboardMealVisitMonitoring = () => {
                           <Txt color="hint">{formatDate(row.mdd ?? row.end)}</Txt>
                         </Box>
                         <Txt block color="hint" sx={{mb: 1}}>{row.fcpc ?? m.noComment}</Txt>
-                        <Box sx={{display: 'flex', '& > *': {mr: 1}}}>
+                        <Box sx={{display: 'flex', flexWrap: 'wrap', '& > *': {mb: 1, mr: 1}}}>
                           {row.fcpl && (
                             <Box component="a" target="_blank" href={row.fcpl} sx={{
                               height: 50,

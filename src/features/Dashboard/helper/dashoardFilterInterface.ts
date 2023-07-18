@@ -1,6 +1,6 @@
-import { Messages } from '@/core/i18n/localization/en'
-import { multipleFilters } from '@/utils/utils'
-import { Enum } from '@alexandreannic/ts-utils'
+import {Messages} from '@/core/i18n/localization/en'
+import {multipleFilters} from '@/utils/utils'
+import {Enum} from '@alexandreannic/ts-utils'
 import {property} from 'lodash'
 import {StringArrayKeys} from '@/core/type'
 
@@ -28,8 +28,8 @@ export namespace DashboardFilterHelper {
       if (filterValue.length <= 0) return
       const property = shape[k]!.propertyIfDifferentThanOption ?? shape[k]!.options
       if (shape[k]?.multiple)
-        return _ => filterValue.includes((_ as any)[property] as any)
-      return _ => !!filterValue.find(f => f.includes((_ as any)[property] as any))
+        return _ => !!filterValue.find(f => f.includes((_ as any)[property] as any))
+      return _ => filterValue.includes((_ as any)[property] as any)
     }))
   }
 
