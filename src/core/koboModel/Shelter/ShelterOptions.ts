@@ -1,162 +1,153 @@
-export const MealVisitMonitoringOptions = {
-mda: {
-	'we': `West`,
-	'ea': `East`,
-	'no': `North`,
-	'so': `South`
+export const ShelterOptions = {
+ben_det_res_stat: {
+	'idp': `A = Internally Displaced Person (IDP)`,
+	'long_res': `B = Long - Term Resident`,
+	'ret': `C = Returnee`,
+	'ref_asy': `D = Refugee/asylum seeker`
 },
-mdro: {
-	'Ky': `Kyiv`,
-	'Lv': `Lviv`,
-	'Dn': `Dnipro`,
-	'Kh': `Kharkiv ( Merefa)`,
-	'Ch': `Chernihiv`,
-	'Su': `Sumy`,
-	'My': `Mykolaiv`
+hh_char_civ_stat: {
+	'single': `A = Single (Never Married)`,
+	'dom_part': `B = Not Married but Living in Domestic Partnership`,
+	'married': `C = Married`,
+	'div_sep': `D = Divorced/Seperated`,
+	'widow': `E = Widowed`,
+	'abandoned': `F = Abandoned`
 },
-mdp: {
-	'YP': `Yuliia Plesak`,
-	'NL': `Nataliya Ilkiv`,
-	'IS': `Isabel Mary Pearson`,
-	'OR': `Oleksii Reshetnikov`,
-	'AK': `Artem Koniev`,
-	'ISM': `Isabel Mary Pearson`,
-	'IB': `Iryna Bidna`,
-	'ISMA': `Isabel Mary Pearson`,
-	'AC': `Anna Chuprina`
+hh_char_hh_det_gender: {
+	'male': `A = Male`,
+	'female': `B = Female`
 },
-mdd_001: {
-	'bha': `BHA (UKR-000284)`,
-	'echo1': `ECHO (UKR-000269)`,
-	'echo2': `ECHO (UKR-000322)`,
-	'sdc': `SDC (UKR-000226)`,
-	'fcdo': `FCDO (UKR-000247)`,
-	'okf': `OKF (UKR-000309)`,
-	'pspu': `PSPU (UKR- 000304)`,
-	'pofu': `Pooled Funds (UKR-000270)`,
-	'finm': `Finnish MFA (UKR-000249)`,
-	'frem': `French MFA (UKR-000293)`,
-	'euic': `EU IcSP (UKR-000255)`,
-	'pmra': `PM WRA (UKR-000230)`,
-	'pmka': `PM WKA (UKR-000231)`,
-	'sida': `SIDA 518-570A`,
-	'uhf3': `UHF3 (UKR-000276)`,
-	'uhf4': `UHF4 (UKR-000314)`,
-	'unhc': `UNHCR (UKR-000308)`,
-	'dani': `DANIDA (UKR-000267)`,
-	'dut1': `Dutch Ⅰ (UKR-000294)`,
-	'dut2': `Dutch Ⅱ (UKR-000306)`,
-	'nono': `Novo-Nordisk (UKR-000298)`,
-	'sdcs': `SDC Shelter (UKR-000290)`
-},
-mdt: {
-	'nfi': `NFI`,
-	'ecrec': `EcRec`,
-	'shelter': `Shelter`,
-	'lau': `LAU`,
-	'prote': `Protection`,
-	'eore': `EORE`,
-	'cbte': `CB team`,
-	'pate': `Partnership team`,
-	'gbv': `GBV`,
-	'oth': `Other:`
-},
-pan: {
-	'mpca': `MPCA`,
-	'hkmv': `HKMV (Family Hygiene Kits on the Move)`,
-	'hkf': `HKF (Family Hygiene Kits)`,
-	'wkb': `WKB (Baby winter kits)`,
-	'cfr': `CFR (Cash for Rent)`,
-	'bk': `BK (Baby Hygiene Kits)`,
-	'ks': `KS (Kitchen sets)`,
-	'nfkf': `NFKF (Family NFI kits + kitchen set (KS))`,
-	'bln': `BLN (High thermal blanket)`,
-	'nficc': `NFICC (NFI kit for the Collective Center)`,
-	'esk': `ESK (Emergency Shelter kit)`,
-	'hkcc': `HKCC (Insitutional Hygiene kit for Collective Center)`
-},
-pae: {
-	'mmg': `Monitoring Micro grants`,
-	'msg': `Monitoring SME grants`,
-	'mag': `Monitoring Agro grants`,
-	'mvg': `Monitoring VET grant`
-},
-pas: {
-	'har': `House/ apartment repair (mid-term assessment of the repair work)`,
-	'harm': `House/ apartment repair (Handover completion visit)`,
-	'ipb': `Institution/ public building repair (mid-term assessment of the repair work)`,
-	'ipbm': `Institution/ public building repair (Handover completion visit)`
-},
-pal: {
-	'mc': `Mobile Clinic`
-},
-pap: {
-	'pss': `PSS`,
-	'obse': `Observation`,
-	'cbp': `Community based Protection`
-},
-pao: {
-	'eose': `EORE session / ToT`
+hh_char_dis_select: {
+	'diff_see': `A = Have difficulty seeing, even if wearing glasses`,
+	'diff_hear': `B = Have difficulty hearing, even if using a hearing aid`,
+	'diff_walk': `C = Have difficulty walking or climbing steps`,
+	'diff_medical': `D = Have a critical medical condition`,
+	'diff_mental': `E = Have a mental/ chronic illness`,
+	'diff_none': `G = None of the above apply`
 },
 undefined: {
-	'men': `Men`,
-	'women': `Women`
+	'zero': `A = No, no difficulty`,
+	'one': `B = Yes, some difficulty`,
+	'two': `C = Yes, a lot of difficulty`,
+	'fri': `D = Cannot do at all`
 },
-visf: {
+return_time: {
+	'last_3_months': `Within the last 3 months`,
+	'3_6_months': `Within the last 3-6 months`,
+	'more_6_months': `More than 6 months ago`
+},
+roof_type: {
+	'flat': `Flat`,
+	'non_flat': `Non-flat`
+},
+rehab_solo: {
+	'yes': `Yes`,
+	'no': `No`,
+	'i_dont_know': `I don't know`
+},
+doc_available: {
+	'yes': `Yes`,
+	'provide_later': `Provide Later`
+},
+owner_tenant_type: {
+	'owner': `Owner`,
+	'tenant': `Tenant`
+},
+dwelling_type: {
+	'house': `House`,
+	'apartment': `Apartment`
+},
+What_is_your_relatio_he_head_of_household: {
+	'spouse': `Spouse`,
+	'child': `Child`,
+	'sibling': `Sibling`,
+	'other_relative': `Other Relative`,
+	'uncle': `Uncle`,
+	'aunt': `Aunt`,
+	'grandparent': `Grandparent`
+},
+document_type: {
+	'ownership_certificate': `Ownership Certificate`,
+	'contract_of_purchase': `Contract of Purchase`,
+	'certificate_of_inheritance': `Certificate of Inheritance`,
+	'document_from_local_authorities': `Document from Local Authorities`,
+	'oth': `Other:`
+},
+pregnant_lac: {
 	'yes': `Yes`,
 	'no': `No`
 },
-sei: {
-	'ssc': `Safety & security concerns`,
-	'cca': `Code of Conduct & Accountability`,
-	'pmi': `Protection Mainstreaming improvements`,
-	'qti': `Quality & Timeliness`,
-	'vis': `Visibility`
+what_income: {
+	'ff': `< 5.400 per HH member`,
+	'ffeo': `Between 5.400 – 8.100 per HH member`,
+	'eope': `> 8.100 per HH member`
 },
-sst: {
-	'taa': `There was an air alarm`,
-	'tns': `There was no shelter`,
-	'fdd': `Fray during distribution`,
-	'tsc': `The space wasnt suitable to such a crowd: people were pushing and quarreling`,
-	'bwc': `Bad weather conditions`,
-	'oth': `Other:`
+back_office: {
+	'umy': `Sumy (UMY)`,
+	'cej': `Chernihiv (CEJ)`,
+	'dnk': `Dnipro (DNK)`,
+	'hrk': `Kharkiv (HRK)`,
+	'nlv': `Mykolaiv (NLV)`
 },
-visp: {
-	'psea': `PSEA`,
-	'mof': `Misappropriation of funds/ suspected corruption`,
-	'fod': `Falsification of documents`,
-	'oth': `Other`
+enum_name: {
+	'1': `1`,
+	'2': `2`,
+	'MM': `Maksym Mordovets`,
+	'AG': `Anastasia Zhelezko`,
+	'KG': `Kateryna Garnaga`,
+	'DP': `Dmytro Petrusevych`,
+	'OP': `Oleksandr Plyushch`,
+	'IR': `Igor Rebenko`,
+	'OM': `Alexander Malakhov`,
+	'AX': `Andriy Khimchenko`,
+	'Omu': `Oleksandr Chikunov`,
+	'VN': `Valerii Necheporenko`,
+	'dp': `Dmytro Prokopenko`,
+	'AS': `Andrii Stovpchenko`,
+	'OHS': `Oleksandr Honcharov`,
+	'VS': `Viktoriia Stepanenko`,
+	'VS1': `Valeriy Shapovalov`,
+	'OH': `Oleh Hryshchenko`,
+	'ex1': `extra1`,
+	'ex2': `extra2`,
+	'ext1': `extra1`,
+	'ext2': `extra2`,
+	'KL': `Klym Oleksandr`,
+	'FS': `Fedorov Serhii`,
+	'YV': `Yevhenii Vasiukov`,
+	'AD': `Anna Demianenko`,
+	'TD': `Taras Dubenko`,
+	'x1': `extra1`,
+	'x2': `extra2`
 },
-md_det_oblast: {
-	'aroc': `Autonomous Republic of Crimea`,
-	'vinnytska': `Vinnytsia`,
-	'volynska': `Volyn`,
+ben_det_oblast: {
+	'cherkaska': `Cherkasy`,
+	'chernihivska': `Chernihiv`,
+	'chernivetska': `Chernivtsi`,
 	'dnipropetrovska': `Dnipropetrovsk`,
 	'donetska': `Donetsk`,
-	'zhytomyrska': `Zhytomyr`,
-	'zakarpatska': `Zakarpattia`,
-	'zaporizka': `Zaporizhzhia`,
 	'ivano-frankivska': `Ivano-Frankivsk`,
-	'kyivska': `Kyiv`,
+	'kharkivska': `Kharkiv`,
+	'khersonska': `Kherson`,
+	'khmelnytska': `Khmelnytskyi`,
 	'kirovohradska': `Kirovohrad`,
+	'kyivska': `Kyiv`,
 	'luhanska': `Luhansk`,
 	'lvivska': `Lviv`,
 	'mykolaivska': `Mykolaiv`,
 	'odeska': `Odesa`,
 	'poltavska': `Poltava`,
 	'rivnenska': `Rivne`,
+	'sevastopilska': `Sevastopil`,
 	'sumska': `Sumy`,
 	'ternopilska': `Ternopil`,
-	'kharkivska': `Kharkiv`,
-	'khersonska': `Kherson`,
-	'khmelnytska': `Khmelnytskyi`,
-	'cherkaska': `Cherkasy`,
-	'chernivetska': `Chernivtsi`,
-	'chernihivska': `Chernihiv`,
-	'citykyiv': `City Kyiv`,
-	'sevastopilska': `City Sevastopil`
+	'vinnytska': `Vinnytsia`,
+	'volynska': `Volyn`,
+	'zakarpatska': `Zakarpattia`,
+	'zaporizka': `Zaporizhzhia`,
+	'zhytomyrska': `Zhytomyr`
 },
-md_det_raion: {
+ben_det_raion: {
 	'zvenyhorodskyi': `Zvenyhorodskyi`,
 	'zolotoniskyi': `Zolotoniskyi`,
 	'umanskyi': `Umanskyi`,
@@ -252,6 +243,7 @@ md_det_raion: {
 	'dubenskyi': `Dubenskyi`,
 	'rivnenskyi': `Rivnenskyi`,
 	'sarnenskyi': `Sarnenskyi`,
+	'sevastopilska': `Sevastopilska`,
 	'konotopskyi': `Konotopskyi`,
 	'okhtyrskyi': `Okhtyrskyi`,
 	'romenskyi': `Romenskyi`,
@@ -286,7 +278,7 @@ md_det_raion: {
 	'korostenskyi': `Korostenskyi`,
 	'novohrad-volynskyi': `Novohrad-Volynskyi`
 },
-md_det_hromada: {
+ben_det_hromada: {
 	'abrykosivska': `Abrykosivska`,
 	'abrykosivska_2': `Abrykosivska`,
 	'adzhamska': `Adzhamska`,

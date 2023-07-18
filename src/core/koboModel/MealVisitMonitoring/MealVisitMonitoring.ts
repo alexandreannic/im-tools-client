@@ -22,7 +22,7 @@ export interface MealVisitMonitoring {
   // MEAL Focal Point
   mdp: Opt<'mdp'>,
   // DONOR:
-  mdd1: Opt<'mdd1'>[],
+  mdd_001: Opt<'mdd_001'>[],
   // With which team was conducted visit?
   mdt: Opt<'mdt'>[],
   // Name of collective center?

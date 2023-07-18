@@ -14,7 +14,7 @@ const extractQuestionName = (_: Record<string, any>) => {
 export const mapMealVisitMonitoring = (_: Record<keyof MealVisitMonitoring, any>): MealVisitMonitoring => ({
 	..._,
 	mdd: _.mdd ? new Date(_.mdd) : undefined,
-	mdd1: _.mdd1?.split(' '),
+	mdd_001: _.mdd_001?.split(' '),
 	mdt: _.mdt?.split(' '),
 	pan: _.pan?.split(' '),
 	sem: _.sem ? +_.sem : undefined,
