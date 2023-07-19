@@ -288,4 +288,16 @@ export namespace Utils {
     console.log(log, args)
     return args
   }
+
+  export const openCanvasInNewTab = (canvas: HTMLCanvasElement, name: string) => {
+    setTimeout(() => {
+      // w.document.write('<static src="' + canvas.toDataURL('png') + '" />')
+      canvas.toBlob((blob) => {
+        const w = window.open(URL.createObjectURL(blob!), '_blank')!
+        w.document.title = name
+      })
+      document.body.appendChild(canvas)
+    }, 1000)
+  }
+
 }

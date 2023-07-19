@@ -1,8 +1,8 @@
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
-import React from 'react'
+import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
+import React, {useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {Box, Icon} from '@mui/material'
+import {Box, Divider, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
@@ -10,14 +10,15 @@ import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboLineChartDate} from '../shared/KoboLineChartDate'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {chain} from '@/utils/utils'
-
+import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Enum} from '@alexandreannic/ts-utils'
 
 export const DashboardProtHHS2Displacement = ({
   data,
   computed,
 }: DashboardPageProps) => {
-  const {formatLargeNumber, m} = useI18n()
-
+  const {m} = useI18n()
+  const [intentionFilters, setIntentionFilters] = useState<Record<string, any>>({})
   return (
     <SlideContainer responsive>
       <SlideContainer column>
@@ -52,21 +53,9 @@ export const DashboardProtHHS2Displacement = ({
             filter: _ => _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_2014' || _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_february_24_2022',
             filterBase: _ => _.have_you_been_displaced_prior_to_your_current_displacement && _.have_you_been_displaced_prior_to_your_current_displacement !== 'unable_unwilling_to_answer'
           })).get}>
-            {_ => <UkraineMap data={_} sx={{mx: 2}}/>}
+            {_ => <UkraineMap data={_} sx={{mx: 2}} fillBaseOn="percent"/>}
           </Lazy>
         </SlidePanel>
-        <SlidePanel title={m.intentions}>
-          <ProtHHS2BarChart
-            data={data}
-            filterValue={['unable_unwilling_to_answer']}
-            question="what_are_your_households_intentions_in_terms_of_place_of_residence"
-            overrideLabel={{
-              return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
-            }}
-          />
-        </SlidePanel>
-      </SlideContainer>
-      <SlideContainer column>
         <SlidePanel title={m.protHHS2.reasonForLeaving}>
           <ProtHHS2BarChart
             data={data}
@@ -75,6 +64,8 @@ export const DashboardProtHHS2Displacement = ({
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>
+      </SlideContainer>
+      <SlideContainer column>
         <SlidePanel>
           <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartTools.percentage({
             value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,
@@ -92,6 +83,51 @@ export const DashboardProtHHS2Displacement = ({
             filterValue={['unable_unwilling_to_answer', 'none', 'other_specify']}
             question="did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns"
           />
+        </SlidePanel>
+        <SlidePanel title={m.intentions}>
+          <ProtHHS2BarChart
+            data={data}
+            filterValue={['unable_unwilling_to_answer']}
+            question="what_are_your_households_intentions_in_terms_of_place_of_residence"
+            checked={intentionFilters}
+            onToggle={_ => setIntentionFilters(prev => ({...prev, [_]: prev[_] ? !prev[_] : true}))}
+            overrideLabel={{
+              return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
+            }}
+          />
+          <Lazy deps={[data, intentionFilters]} fn={() => {
+            return data.filter(_ => {
+              const checked = Enum.entries(intentionFilters).filter(([, v]) => !!v).map(([k]) => k)
+              return checked.length === 0 || checked.includes(_.what_are_your_households_intentions_in_terms_of_place_of_residence)
+            })
+          }}>
+            {filteredData => (
+              <>
+                <Divider sx={{mt: 3, mb: 3, mx: -2}}/>
+                <SlidePanelTitle>{m.protHHS2.factorToHelpIntegration}</SlidePanelTitle>
+                <ProtHHS2BarChart
+                  data={filteredData}
+                  filterValue={['unable_unwilling_to_answer']}
+                  questionType="multiple"
+                  question="what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community"
+                />
+                <SlidePanelTitle sx={{mt: 4}}>{m.protHHS2.factorToReturn}</SlidePanelTitle>
+                <ProtHHS2BarChart
+                  data={filteredData}
+                  filterValue={['unable_unwilling_to_answer']}
+                  questionType="multiple"
+                  question="what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin"
+                />
+                <SlidePanelTitle sx={{mt: 4}}>{m.protHHS2.reasonForRelocate}</SlidePanelTitle>
+                <ProtHHS2BarChart
+                  data={filteredData}
+                  filterValue={['unable_unwilling_to_answer']}
+                  questionType="multiple"
+                  question="why_are_planning_to_relocate_from_your_current_place_of_residence"
+                />
+              </>
+            )}
+          </Lazy>
         </SlidePanel>
       </SlideContainer>
     </SlideContainer>

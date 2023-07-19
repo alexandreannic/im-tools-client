@@ -34,7 +34,7 @@ export const DashboardProtHHS2Disability = ({
         </SlidePanel>
         <SlidePanel>
           <KoboPieChartIndicator
-            title={m.protHHS2.hhWithMemberHavingDifficulties}
+            title={m.protHHS2.unregisteredDisability}
             question="do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov"
             filter={_ => _ !== 'yes_all'}
             compare={{before: computed.lastMonth}}
