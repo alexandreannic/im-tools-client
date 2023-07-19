@@ -157,33 +157,6 @@ export const SlidePanel = ({savableAsImg = true, expendable = true, children, sx
     </Panel>
   )
 }
-/** @deprecated*/
-export const SlidePanelDepreacted = ({children, title, sx, noBackground, ...props}: Omit<BoxProps, 'title'> & {
-  title?: ReactNode,
-  noBackground?: boolean
-}) => {
-  return (
-    <Box
-      {...props}
-      sx={{
-        ...sx,
-        p: 1.5,
-        background: t => noBackground ? undefined : t.palette.background.default,
-        borderRadius: t => t.shape.borderRadius,
-        '&:last-child': {
-          mb: 0
-        },
-      }}
-    >
-      {title && (typeof title === 'string' ? (
-        <SlidePanelTitle dangerouslySetInnerHTML={{__html: title}}/>
-      ) : (
-        <SlidePanelTitle>{title}</SlidePanelTitle>
-      ))}
-      {children}
-    </Box>
-  )
-}
 
 export const SlideWidget = ({
   sx,
