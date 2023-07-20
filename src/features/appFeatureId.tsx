@@ -2,7 +2,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 
 export enum AppFeatureId {
   dashboards = 'dashboards',
-  databases = 'databases',
+  kobo_database = 'kobo_database',
   mpca = 'mpca',
   wfp_deduplication = 'wfp_deduplication',
   activity_info = 'activity_info',
@@ -24,8 +24,8 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: 'red',
     path: '/dashboard',
   },
-  databases: {
-    id: AppFeatureId.databases,
+  kobo_database: {
+    id: AppFeatureId.kobo_database,
     name: 'Databases',
     materialIcons: 'fact_check',
     color: '#0052bc',

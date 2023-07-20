@@ -74,6 +74,7 @@ export const Sidebar = ({
       PaperProps={{
         id,
         sx: {
+          mr: 2,
           top: layoutConfig.headerHeight,
           background: 'transparent',
           position: 'fixed',

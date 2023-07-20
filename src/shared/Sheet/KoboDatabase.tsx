@@ -1,5 +1,5 @@
 import {useI18n} from '@/core/i18n'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {ReactNode, useCallback, useMemo, useState} from 'react'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {orderBy} from 'lodash'
@@ -20,13 +20,14 @@ import {KoboDatabaseType} from '@/shared/Sheet/koboDatabaseType'
 import {KoboDatabaseHead} from '@/shared/Sheet/KoboDatabaseHead'
 import {KoboDatabaseBody} from '@/shared/Sheet/KoboDatabaseBody'
 
-export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number) => {
+export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
 }
 
 export const KoboDatabase = (props: {
   form: KoboApiForm
   data: KoboAnswer<any>[]
+  header?: ReactNode
 }) => {
   const {form, choicesIndex, questionIndex} = useKoboDatabaseHelper(props.form)
   const {m, formatDate, formatDateTime} = useI18n()
@@ -71,12 +72,12 @@ export const KoboDatabase = (props: {
 
   const [openSelectChartDialog, setOpenSelectChartDialog] = useState<KoboDatabaseType.SelectChartPopoverParams | undefined>()
 
-  const onOpenColumnConfig = (q: KoboQuestionSchema, target: any) => {
+  const onOpenColumnConfig = (q: KoboQuestionSchema, event: any) => {
     setOpenColumnConfig({
-      anchorEl: target,
+      anchorEl: event.currentTarget,
       columnId: q.name,
       type: koboTypeToFilterType(q.type),
-      options: choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: getKoboLabel(_, langIndex)})),
+      options: choicesIndex[q.select_from_list_name!]?.map(_ => ({value: _.name, label: getKoboLabel(_, langIndex)})),
     })
   }
   const filteredData = useMemo(() => {
@@ -159,14 +160,17 @@ export const KoboDatabase = (props: {
 
   return (
     <Box>
-      <AaSelect<number>
-        sx={{maxWidth: 128}}
-        defaultValue={langIndex}
-        onChange={setLangIndex}
-        options={['xml', ...form.translations].map((_, i) => ({children: _, value: i - 1}))}
-      />
-      <KoboDatabaseBtn icon="filter_alt_off" tooltip={m.clearFilter} onClick={() => setFilters({})}/>
-      <KoboDatabaseBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+      <Box sx={{p: 1}}>
+        <AaSelect<number>
+          sx={{maxWidth: 128, mr: 1}}
+          defaultValue={langIndex}
+          onChange={setLangIndex}
+          options={['xml', ...form.translations].map((_, i) => ({children: _, value: i - 1}))}
+        />
+        <KoboDatabaseBtn icon="filter_alt_off" tooltip={m.clearFilter} onClick={() => setFilters({})}/>
+        <KoboDatabaseBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+        {props.header}
+      </Box>
       <Box sx={{overflowX: 'auto'}}>
         {koboDatabaseStyle}
         {map(openColumnConfig, c =>
