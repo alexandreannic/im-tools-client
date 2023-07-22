@@ -12,6 +12,7 @@ import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelp
 import {chain} from '@/utils/utils'
 import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {Enum} from '@alexandreannic/ts-utils'
+import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 
 export const DashboardProtHHS2Displacement = ({
   data,
@@ -46,14 +47,23 @@ export const DashboardProtHHS2Displacement = ({
             end={computed.end}
           />
         </SlidePanel>
-        <SlidePanel title={m.protHHS2.hhsAffectedByMultipleDisplacement}>
+        <SlidePanel>
+          <KoboPieChartIndicator
+            showValue showBase
+            title={m.protHHS2.hhsAffectedByMultipleDisplacement}
+            question="have_you_been_displaced_prior_to_your_current_displacement"
+            data={data}
+            filter={_ => _ === 'yes_after_february_24_2022'}
+            filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+          />
           <Lazy deps={[data]} fn={() => chain(ChartTools.byCategory({
             data,
             categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
-            filter: _ => _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_2014' || _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_february_24_2022',
+            filter: _ => _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_february_24_2022',
             filterBase: _ => _.have_you_been_displaced_prior_to_your_current_displacement && _.have_you_been_displaced_prior_to_your_current_displacement !== 'unable_unwilling_to_answer'
-          })).get}>
-            {_ => <UkraineMap data={_} sx={{mx: 2}} fillBaseOn="percent"/>}
+          })).get
+          }>
+            {_ => <UkraineMap omitValueLt={5} data={_} sx={{mx: 2}} fillBaseOn="percent"/>}
           </Lazy>
         </SlidePanel>
         <SlidePanel title={m.protHHS2.reasonForLeaving}>

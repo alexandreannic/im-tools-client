@@ -186,6 +186,26 @@ export const DashboardProtHHS2 = () => {
           overflowX: 'auto',
           whiteSpace: 'nowrap',
           alignItems: 'center',
+          scrollbarWidth: 'tin',
+          // '&::-webkit-scrollbar-track': {
+          //   boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
+          // },
+          '&::-webkit-scrollbar': {
+            width: '10px',
+            height: '10px',
+          },
+          '&::-webkit-scrollbar-track': {
+            borderTop: t => '1px solid ' + t.palette.divider,
+            // borderRadius: 40,
+          },
+          '&::-webkit-scrollbar-thumb': {
+            border: '3px solid transparent',
+            height: '4px',
+            borderRadius: 40,
+            background: t => t.palette.text.disabled,
+            backgroundClip: 'content-box',
+            // backgroundColor: 'darkgrey',
+          },
           '& > :not(:last-child)': {mr: 1}
         }}>
           <DebouncedInput<[Date | undefined, Date | undefined]>
