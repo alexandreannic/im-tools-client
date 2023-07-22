@@ -6,11 +6,11 @@ import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
 import {KoboApiColType} from '@/core/sdk/server/kobo/KoboApi'
 import {databaseModule} from '@/features/Database/databaseModule'
-import {HashRouter as Router, NavLink, Outlet, Route, Routes} from 'react-router-dom'
+import {HashRouter as Router, Navigate, NavLink, Outlet, Route, Routes} from 'react-router-dom'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
 import {Skeleton, Tab, Tabs} from '@mui/material'
-import {useLocation, useParams} from 'react-router'
+import {useLocation, useNavigate, useParams} from 'react-router'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {useAaToast} from '@/core/useToast'
@@ -97,6 +97,10 @@ export const DatabaseHome = () => {
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
   const {m} = useI18n()
   const {pathname} = useLocation()
+  const navigate = useNavigate()
+  useEffect(() => {
+    navigate(databaseModule.siteMap.database.absolute(serverId, formId))
+  }, [formId])
   return (
     <>
       <Tabs

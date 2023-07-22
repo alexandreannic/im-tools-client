@@ -128,11 +128,11 @@ export interface SheetTableProps<T extends Answer> extends BoxProps {
 
 export interface SheetColumnProps<T extends Answer> {
   id: string
+  render: (_: T) => ReactNode
   noSort?: boolean
   head?: string | ReactNode
   align?: 'center' | 'right'
   onClick?: (_: T) => void
-  render: (_: T) => ReactNode
   renderExport?: (_: T) => string | number | undefined | Date
   hidden?: boolean
   alwaysVisible?: boolean

@@ -5,6 +5,6 @@ export interface User {
   name: string
   accessToken: string
   admin?: boolean
-  drcJobTitle?: string
+  drcJob?: string
   drcOffice?: DrcOffice
 }

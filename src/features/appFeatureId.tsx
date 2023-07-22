@@ -1,4 +1,6 @@
 import {Enum} from '@alexandreannic/ts-utils'
+import {UserSession} from '@/core/sdk/server/session/Session'
+import {appConfig} from '@/conf/AppConfig'
 
 export enum AppFeatureId {
   dashboards = 'dashboards',
@@ -6,6 +8,8 @@ export enum AppFeatureId {
   mpca = 'mpca',
   wfp_deduplication = 'wfp_deduplication',
   activity_info = 'activity_info',
+  admin = 'admin',
+  playground = 'playground',
 }
 
 export interface AppFeature {
@@ -14,9 +18,18 @@ export interface AppFeature {
   materialIcons: string
   color: string
   path: string
+  showIf?: (_?: UserSession) => boolean | undefined
 }
 
 export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
+  admin: {
+    id: AppFeatureId.admin,
+    name: 'Admin',
+    materialIcons: 'admin_panel_settings',
+    color: 'silver',
+    path: '/admin',
+    showIf: _ => _ && _?.admin
+  },
   dashboards: {
     id: AppFeatureId.dashboards,
     name: 'Dashboards',
@@ -52,14 +65,14 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: 'orange',
     path: '/wfp-deduplication',
   },
+  playground: {
+    id: 'playground' as any,
+    color: 'black',
+    name: 'Playground',
+    path: '/playground',
+    materialIcons: 'admin',
+    showIf: _ => _ && _?.email === appConfig.contact
+  }
 }
 
 export const appFeatures = Enum.values(appFeaturesIndex)
-
-export const hiddenPlaygroundFeature: AppFeature = {
-  id: 'playground' as any,
-  color: 'black',
-  name: 'Playground',
-  path: '/playground',
-  materialIcons: 'admin',
-}
