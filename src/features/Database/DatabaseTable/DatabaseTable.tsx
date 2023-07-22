@@ -13,6 +13,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
+import {useSession} from '@/core/Session/SessionContext'
 
 const sortFnByType: Record<any, (a: any, b: any) => number> = {
   string: (a: any, b: any) => a.localeCompare(b),
@@ -23,13 +24,19 @@ const sortFnByType: Record<any, (a: any, b: any) => number> = {
 export const DatabaseTableRoute = () => {
   const _formSchemas = useDatabaseContext().formSchemas
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
-  const {api} = useAppSettings()
+
   const {m, formatDate, formatLargeNumber} = useI18n()
+  const {api} = useAppSettings()
+  const {session} = useSession()
+
   const _refresh = useAsync(() => api.koboApi.synchronizeAnswers(serverId, formId))
-  const _answers = useFetcher((id: KoboId) => api.kobo.answer.search({
+  const _answers = useFetcher((id: KoboId) => api.kobo.answer.searchByAccess({
     formId: id,
+    user: session,
   }))
+
   const [sort, setSort] = useState<{sortBy?: keyof KoboAnswer, orderBy?: OrderBy}>()
+
   const data = useMemo(() => {
     return map(sort?.sortBy, sortBy => {
       const sortFn = sortFnByType[typeof _answers.entity?.data[0][sortBy]]

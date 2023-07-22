@@ -15,13 +15,14 @@ import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {useParams} from 'react-router'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {useSession} from '@/core/Session/SessionContext'
 import {Page} from '@/shared/Page'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
 import {getKoboLabel} from '@/shared/Sheet/KoboDatabase'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAsync} from '@/features/useAsync'
+import {Sheet} from '@/shared/Sheet/Sheet'
+import {DatabaseAccessForm} from '@/features/Database/DatabaseAccess/DatabaseAccessForm'
 
 interface Form {
   selectBy?: 'email' | 'job'
@@ -65,12 +66,17 @@ export const DatabaseAccess = ({
   const survey = form.content.survey
   const {m} = useI18n()
   const {api} = useAppSettings()
-  const {accesses} = useSession()
-  const _formSchemas = useDatabaseContext().formSchemas
+
   const _addAccess = useAsync(api.access.add)
+
   const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.searchByFeature(AppFeatureId.kobo_database)
-    .then(_ => _.filter(_ => _.params?.database === databaseId))
+    .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
   const _access = useFetchers(requestInConstToFixTsInference)
+
+  useEffect(() => {
+    _access.fetch({}, formId)
+  }, [formId])
+
   const {
     control,
     register,
@@ -117,190 +123,35 @@ export const DatabaseAccess = ({
       })
     })
   }
+  console.log('_access.list', _access.list)
 
   return (
     <Box>
-      <form onSubmit={handleSubmit(submit)}>
-        <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.Access.giveAccessBy}</Txt>
-        <Controller
-          name="selectBy"
-          rules={{required: {value: true, message: m.required}}}
-          control={control}
-          render={({field}) => (
-            <ScRadioGroup
-              sx={{mb: 2.5}}
-              dense
-              error={!!errors.selectBy}
-              {...field}
-              onChange={e => {
-                setValue('drcJob', undefined)
-                setValue('drcOffice', undefined)
-                setValue('email', undefined)
-                field.onChange(e)
-              }}
-            >
-              <ScRadioGroupItem value="email" title={m.email}/>
-              <ScRadioGroupItem value="job" title={m.Access.jobAndOffice}/>
-            </ScRadioGroup>
-          )}
-        />
-        {watch('selectBy') === 'job' && (
-          <>
-            <Controller
-              name="drcJob"
-              rules={{required: {value: true, message: m.required}}}
-              control={control}
-              render={({field: {onChange, ...field}}) => (
-                <Autocomplete
-                  {...field}
-                  onChange={(e: any, _) => _ && onChange(_)}
-                  sx={{mb: 2.5}}
-                  loading={!questions}
-                  options={Enum.values(DrcJob) ?? []}
-                  // renderOption={(props, _) => <Txt truncate>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
-                  renderInput={({InputProps, ...props}) => <AaInput label={m.drcJob} {...InputProps} {...props}/>}
-                />
-              )}
-            />
-            <Controller
-              name="drcOffice"
-              rules={{required: {value: true, message: m.required}}}
-              control={control}
-              render={({field: {onChange, ...field}}) => (
-                <AaSelect<DrcOffice>
-                  {...field}
-                  label={m.drcOffice}
-                  onChange={_ => onChange(_)}
-                  options={Enum.values(DrcOffice)}
-                  sx={{mb: 2.5}}
-                />
-              )}
-            />
-          </>
-        )}
-        {watch('selectBy') === 'email' && (
-          <AaInput
-            sx={{mb: 2.5}}
-            label={m.drcEmail}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            {...register('email', {required: false, pattern: {value: /(@drc.ngo$|\s)/, message: m.invalidEmail}})}
-          />
-        )}
-        <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.accessLevel}</Txt>
-        <Controller
-          name="accessLevel"
-          defaultValue={AccessLevel.Read}
-          control={control}
-          render={({field}) => (
-            <ScRadioGroup<AccessLevel>
-              sx={{mb: 2.5}}
-              error={!!errors.accessLevel}
-              dense
-              {...field}
-              // onChange={_ => field.onChange({target: {value: _}} as any)}
-            >
-              {Enum.values(AccessLevel).map(level =>
-                <ScRadioGroupItem value={level} key={level} title={level}/>
-              )}
-            </ScRadioGroup>
-          )}
-        />
-        <Controller
-          name="question"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({field: {onChange, value, ...field}}) => (
-            <Autocomplete<string>
-              {...field}
-              sx={{mb: 2.5}}
-              value={value}
-              filterOptions={filterOptions(indexQuestion)}
-              onChange={(e, _) => {
-                if (_) {
-                  onChange(_)
-                  setValue('questionAnswer', [])
-                }
-              }}
-              loading={!questions}
-              options={questions?.map(_ => _.name) ?? []}
-              renderInput={({InputProps, ...props}) => <AaInput
-                {...InputProps}
-                {...props}
-                label={m.question}
-                error={!!errors.question}
-                helperText={errors.question && m.required}
-              />}
-              renderOption={(props, option) => (
-                <Box component="li" key={option} {...props}>
-                  <div>
-                    <Txt block>{getKoboLabel(indexQuestion[option][0], langIndex).replace(/<[^>]+>/g, '') ?? option}</Txt>
-                    <Txt color="disabled">{option}</Txt>
-                  </div>
-                </Box>
-              )}
-            />
-          )}
-        />
-        {map(watch('question'), question => {
-          const listName = indexQuestion[question][0].select_from_list_name
-          const options = indexOptionsByListName[listName!]
-          return (
-            <Controller
-              name="questionAnswer"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({field}) => (
-                <Autocomplete
-                  {...field}
-                  freeSolo
-                  sx={{mb: 2.5}}
-                  filterOptions={filterOptions(indexOptionsByName)}
-                  multiple
-                  onChange={(e, _) => _ && field.onChange(_)}
-                  loading={!questions}
-                  disableCloseOnSelect
-                  options={options?.map(_ => _.name) ?? []}
-                  // options={options?.map(_ => ({children: getKoboLabel(_, langIndex), value: _.name}))}
-                  renderInput={({InputProps, ...props}) => <AaInput
-                    {...InputProps}
-                    {...props}
-                    label={m.answer}
-                    error={!!errors.questionAnswer}
-                    helperText={errors.questionAnswer && m.required}
-                  />}
-                  renderTags={(value: string[], getTagProps) =>
-                    value.map((option: string, index: number) => (
-                      <Chip
-                        size="small"
-                        variant="outlined"
-                        label={option}
-                        {...getTagProps({index})}
-                      />
-                    ))
-                  }
-                  renderOption={(props, option) => (
-                    <Box component="li" key={option} {...props}>
-                      <div>
-                        <Txt block>{getKoboLabel(indexOptionsByName[option][0], langIndex).replace(/<[^>]+>/g, '') ?? option}</Txt>
-                        <Txt color="disabled">{option}</Txt>
-                      </div>
-                    </Box>
-                  )}
-                />
-              )}
-            />
-          )
-        })}
-        <AaBtn type="submit" variant="contained">{m.grantAccess}</AaBtn>
-      </form>
-      {_access.get()?.map(_ =>
-        <Box key={_.id}></Box>
-      )}
+      <DatabaseAccessForm formId={formId} form={form}>
+        <AaBtn>{m.grantAccess}</AaBtn>
+      </DatabaseAccessForm>
+      <Sheet data={_access.get()} columns={[
+        {
+          id: 'drcJob',
+          head: m.drcJob,
+          render: _ => _.drcJob,
+        },
+        {
+          id: 'drcOffice',
+          head: m.drcOffice,
+          render: _ => _.drcOffice,
+        },
+        {
+          id: 'email',
+          head: m.email,
+          render: _ => _.email,
+        },
+        {
+          id: 'accessLevel',
+          head: m.accessLevel,
+          render: _ => _.accessLevel,
+        },
+      ]}/>
     </Box>
   )
 }

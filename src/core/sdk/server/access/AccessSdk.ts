@@ -4,7 +4,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 
 export interface DatabaseFeatureParams {
-  database: KoboId,
+  koboFormId: KoboId,
   filters: Record<string, string[]>
 }
 

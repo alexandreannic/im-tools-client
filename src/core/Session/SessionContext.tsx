@@ -48,7 +48,6 @@ export const SessionProvider = ({
     setSession(undefined)
   }
 
-  console.log(session)
   useEffect(() => {
     if (session?.email)
       _access.fetch({force: true, clean: true}, {email: session.email})
