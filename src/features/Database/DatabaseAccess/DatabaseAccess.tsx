@@ -23,6 +23,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAsync} from '@/features/useAsync'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {DatabaseAccessForm} from '@/features/Database/DatabaseAccess/DatabaseAccessForm'
+import {Panel, PanelHead} from '@/shared/Panel'
 
 interface Form {
   selectBy?: 'email' | 'job'
@@ -46,7 +47,7 @@ export const DatabaseAccessRoute = () => {
   }, [serverId, formId])
 
   return (
-    <Page>
+    <Page width="lg" loading={_formSchemas.getLoading(formId)}>
       {form && (
         <DatabaseAccess formId={formId} form={form}/>
       )}
@@ -62,12 +63,8 @@ export const DatabaseAccess = ({
   formId: KoboId,
   form: KoboApiForm
 }) => {
-  const langIndex = 0
-  const survey = form.content.survey
   const {m} = useI18n()
   const {api} = useAppSettings()
-
-  const _addAccess = useAsync(api.access.add)
 
   const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.searchByFeature(AppFeatureId.kobo_database)
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
@@ -77,81 +74,46 @@ export const DatabaseAccess = ({
     _access.fetch({}, formId)
   }, [formId])
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: {errors},
-  } = useForm<Form>()
-
-  const {
-    indexQuestion,
-    indexOptionsByListName,
-    indexOptionsByName,
-  } = useMemo(() => {
-    return {
-      indexQuestion: Arr(survey).groupBy(_ => _.name),
-      indexOptionsByListName: Arr(form.content.choices).groupBy(_ => _.list_name),
-      indexOptionsByName: Arr(form.content.choices).groupBy(_ => _.name),
-    }
-  }, [form])
-
-  const questions = useMemo(() => {
-    return map(survey, schema => schema.filter(_ =>
-      _.type === 'text' ||
-      _.type === 'select_multiple' ||
-      _.type === 'select_one'
-    ))
-  }, [survey])
-
-  const filterOptions = useCallback((index: Record<string, {name: string, label?: string[]}[]>) => createFilterOptions({
-    stringify: (optionName: string) => getKoboLabel(index[optionName][0], langIndex)
-  }), [form])
-
-  const submit = (f: Form) => {
-    _addAccess.call({
-      accessLevel: f.accessLevel,
-      drcJob: f.drcJob,
-      drcOffice: f.drcOffice,
-      email: f.email,
-      featureId: AppFeatureId.kobo_database,
-      params: KoboDatabaseFeatureParams.create({
-        koboFormId: formId,
-        filters: {[f.question]: f.questionAnswer}
-      })
-    })
-  }
-  console.log('_access.list', _access.list)
-
   return (
     <Box>
-      <DatabaseAccessForm formId={formId} form={form}>
-        <AaBtn>{m.grantAccess}</AaBtn>
-      </DatabaseAccessForm>
-      <Sheet data={_access.get()} columns={[
-        {
-          id: 'drcJob',
-          head: m.drcJob,
-          render: _ => _.drcJob,
-        },
-        {
-          id: 'drcOffice',
-          head: m.drcOffice,
-          render: _ => _.drcOffice,
-        },
-        {
-          id: 'email',
-          head: m.email,
-          render: _ => _.email,
-        },
-        {
-          id: 'accessLevel',
-          head: m.accessLevel,
-          render: _ => _.accessLevel,
-        },
-      ]}/>
+      <Panel>
+        {/*<PanelHead action={*/}
+        {/*}/>*/}
+        <Sheet
+          header={
+            <DatabaseAccessForm formId={formId} form={form}>
+              <AaBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</AaBtn>
+            </DatabaseAccessForm>
+          }
+          data={_access.get()}
+          columns={[
+            {
+              id: 'drcJob',
+              head: m.drcJob,
+              render: _ => _.drcJob,
+            },
+            {
+              id: 'drcOffice',
+              head: m.drcOffice,
+              render: _ => _.drcOffice,
+            },
+            {
+              id: 'email',
+              head: m.email,
+              render: _ => _.email,
+            },
+            {
+              id: 'accessLevel',
+              head: m.accessLevel,
+              render: _ => _.accessLevel,
+            },
+            {
+              id: 'params',
+              head: m.filter,
+              render: _ => JSON.stringify(_.params?.filters),
+            },
+          ]}/>
+      </Panel>
     </Box>
   )
 }

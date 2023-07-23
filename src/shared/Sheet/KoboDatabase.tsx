@@ -19,6 +19,7 @@ import {getKoboImagePath} from '@/features/Mpca/MpcaData/MpcaData'
 import {KoboDatabaseType} from '@/shared/Sheet/koboDatabaseType'
 import {KoboDatabaseHead} from '@/shared/Sheet/KoboDatabaseHead'
 import {KoboDatabaseBody} from '@/shared/Sheet/KoboDatabaseBody'
+import {Fender} from 'mui-extension'
 
 export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
@@ -255,6 +256,9 @@ export const KoboDatabase = (props: {
             <KoboDatabaseBody form={form} data={_} langIndex={langIndex} setOpenBeginRepeat={setOpenBeginRepeat}/>
           )}
         </table>
+        {filteredSortedAndPaginatedData?.data.length === 0 && (
+          <Fender sx={{my: 2}} title={m.noDataAtm} icon="highlight_off"/>
+        )}
       </Box>
       <TablePagination
         rowsPerPageOptions={[20, 100, 500, 1000]}

@@ -45,13 +45,11 @@ export class KoboAnswerSdk {
     filters = {},
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
-    user,
-  }: KoboAnswerSearch<T> & {
-    user: UserSession
-  }): Promise<ApiPaginate<KoboAnswer<T>>> => {
-    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {user, ...filters, ...paginate}})
+  }: KoboAnswerSearch<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
+    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {...filters, ...paginate}})
       .then(Kobo.mapPaginateAnswerMetaData(fnMap))
   }
+
   readonly search = <T extends Record<string, any> = Record<string, string | undefined>>({
     formId,
     filters = {},

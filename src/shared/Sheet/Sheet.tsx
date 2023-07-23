@@ -413,7 +413,7 @@ export const Sheet = <T extends Answer = Answer>({
           </Box>
           {!loading && (!filteredData || filteredData.length === 0) && (
             <div>
-              {renderEmptyState ? renderEmptyState : <Fender title={m.noDataAtm} icon="highlight_off"/>}
+              {renderEmptyState ? renderEmptyState : <Fender sx={{my: 2}} title={m.noDataAtm} icon="highlight_off"/>}
             </div>
           )}
         </Box>
