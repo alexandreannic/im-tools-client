@@ -1,73 +1,74 @@
 import {GlobalStyles} from '@mui/material'
 import React from 'react'
 
-export const koboDatabaseStyle = <GlobalStyles styles={t => ({
-  '.table': {
-    minWidth: '100%',
-    width: 'max-content',
-    borderTop: '1px solid ' + t.palette.divider,
-    tableLayout: 'fixed',
-    borderCollapse: 'collapse',
-    borderSpacing: 0,
-  },
-  '.table tr': {
-    whiteSpace: 'nowrap',
-  },
-  '.table .td-clickable:hover': {
-    background: t.palette.action.hover,
-  },
-  '.th-resize': {
-    display: 'flex', overflow: 'hidden',
-    resize: 'horizontal',
-    minWidth: 102,
-    width: 102,
-  },
-  'td.fw': {
-    width: '100%',
-  },
-  '::-webkit-resizer': {
-    background: 'invisible',
-  },
-  '.table td:first-of-type': {
-    paddingLeft: 8,
-  },
-  '.td-center': {
-    textAlign: 'center',
-  },
-  '.td-right': {
-    textAlign: 'right',
-  },
-  '.td-loading': {
-    padding: 0,
-    border: 'none',
-  },
-  '.table td': {
-    maxWidth: 102,
-  },
-  '.table td, .table th': {
-    alignItems: 'center',
-    height: 32,
-    padding: '2px 0px 2px 3px',
-    borderRight: `1px solid ${t.palette.divider}`,
-    borderBottom: `1px solid ${t.palette.divider}`,
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  },
-  '.table th': {
-    height: 40,
-    zIndex: 2,
-    minWidth: 0,
-    width: 0,
-    background: t.palette.background.paper,
-    top: 0,
-    paddingTop: t.spacing(.25),
-    paddingBottom: t.spacing(.25),
-    position: 'sticky',
-    color: t.palette.text.secondary,
-  },
-})}
-/>
+/** @deprecated integrated in theme.ts*/
+// export const koboDatabaseStyle = <GlobalStyles styles={t => ({
+//   '.table': {
+//     minWidth: '100%',
+//     width: 'max-content',
+//     borderTop: '1px solid ' + t.palette.divider,
+//     tableLayout: 'fixed',
+//     borderCollapse: 'collapse',
+//     borderSpacing: 0,
+//   },
+//   '.table tr': {
+//     whiteSpace: 'nowrap',
+//   },
+//   '.table .td-clickable:hover': {
+//     background: t.palette.action.hover,
+//   },
+//   '.th-resize': {
+//     display: 'flex', overflow: 'hidden',
+//     resize: 'horizontal',
+//     minWidth: 102,
+//     width: 102,
+//   },
+//   'td.fw': {
+//     width: '100%',
+//   },
+//   '::-webkit-resizer': {
+//     background: 'invisible',
+//   },
+//   '.table td:first-of-type': {
+//     paddingLeft: 8,
+//   },
+//   '.td-center': {
+//     textAlign: 'center',
+//   },
+//   '.td-right': {
+//     textAlign: 'right',
+//   },
+//   '.td-loading': {
+//     padding: 0,
+//     border: 'none',
+//   },
+//   '.table td': {
+//     maxWidth: 102,
+//   },
+//   '.table td, .table th': {
+//     alignItems: 'center',
+//     height: 32,
+//     padding: '2px 0px 2px 3px',
+//     borderRight: `1px solid ${t.palette.divider}`,
+//     borderBottom: `1px solid ${t.palette.divider}`,
+//     overflow: 'hidden',
+//     whiteSpace: 'nowrap',
+//     textOverflow: 'ellipsis',
+//   },
+//   '.table th': {
+//     height: 40,
+//     zIndex: 2,
+//     minWidth: 0,
+//     width: 0,
+//     background: t.palette.background.paper,
+//     top: 0,
+//     paddingTop: t.spacing(.25),
+//     paddingBottom: t.spacing(.25),
+//     position: 'sticky',
+//     color: t.palette.text.secondary,
+//   },
+// })}
+// />
 //
 // export const koboDatabaseStyle = <GlobalStyles styles={t => ({
 //   '.table': {
