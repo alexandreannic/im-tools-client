@@ -189,6 +189,7 @@ export const en = Object.freeze({
     vulnerabilities: 'Vulnerabilities',
     selectAll: 'Select all',
     ageGroup: 'Age groups',
+    contact: (_: string) => `Contact <b>${_}</b>.`,
     intentions: 'Intentions',
     sex: 'Sex',
     createdAt: 'Created at',
@@ -944,5 +945,8 @@ export const en = Object.freeze({
         Error: 'Error',
       }
     },
+    _koboDatabase: {
+      noAccessToForm: `You don't have access to any databases.`
+    }
   },
 })

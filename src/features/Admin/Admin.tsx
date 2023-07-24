@@ -9,7 +9,7 @@ import {Layout} from '@/shared/Layout'
 export const adminModule = {
   basePath: '/admin',
   siteMap: {
-    users: '/users',
+    users: '/',
   }
 }
 
@@ -20,7 +20,9 @@ const AdminSidebar = () => {
     <Sidebar>
       <SidebarBody>
         <NavLink to={path(adminModule.siteMap.users)}>
-          <SidebarItem icon="group">{m.users}</SidebarItem>
+          {({isActive}) =>
+            <SidebarItem icon="group" active={isActive}>{m.users}</SidebarItem>
+          }
         </NavLink>
       </SidebarBody>
     </Sidebar>
@@ -35,7 +37,7 @@ export const Admin = () => {
         header={<AppHeader id="app-header"/>}
       >
         <Routes>
-          <Route index path={adminModule.siteMap.users} element={<AdminUsers/>}/>
+          <Route index element={<AdminUsers/>}/>
         </Routes>
       </Layout>
     </Router>

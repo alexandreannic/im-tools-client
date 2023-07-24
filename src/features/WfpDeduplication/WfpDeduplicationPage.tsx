@@ -13,12 +13,11 @@ import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {WfpDeduplicationAccess} from '@/features/WfpDeduplication/WfpDeduplicationAccess'
-import {adminModule} from '@/features/Admin/Admin'
 
 export const wfpDeduplicationModule = {
   basePath: '/wfp-deduplication',
   siteMap: {
-    data: '/data',
+    data: '/',
     access: '/access',
   }
 }
@@ -97,8 +96,8 @@ export const WfpDeduplicationPage = () => {
     <Router>
       <Layout title={appFeaturesIndex.wfp_deduplication.name} sidebar={<WpfDeduplicationSidebar/>}>
         <Routes>
-          <Route index path={wfpDeduplicationModule.siteMap.data} element={<WfpDeduplicationData/>}/>
-          <Route index path={wfpDeduplicationModule.siteMap.access} element={<WfpDeduplicationAccess/>}/>
+          <Route index element={<WfpDeduplicationData/>}/>
+          <Route path={wfpDeduplicationModule.siteMap.access} element={<WfpDeduplicationAccess/>}/>
         </Routes>
       </Layout>
     </Router>

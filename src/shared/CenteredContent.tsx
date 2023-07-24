@@ -14,7 +14,7 @@ export const CenteredContent = ({xCenter = true, children, offset = 0}: Props) =
         minHeight: `calc(100vh - ${offset}px)`,
         position: 'relative',
         display: 'flex',
-        justifyContent: xCenter ? 'center' : undefined,
+        alignItems: xCenter ? 'center' : undefined,
         flexDirection: 'column',
         '&:before, &:after': {
           content: '" "',

@@ -41,7 +41,18 @@ export interface AccessSearch {
   featureId?: AppFeatureId
 }
 
+interface FilterByFeature {
+  (f: AppFeatureId.kobo_database): (_: Access<any>) => _ is Access<KoboDatabaseAccessParams>
+  (f: AppFeatureId.wfp_deduplication): (_: Access<any>) => _ is Access<WfpDeduplicationAccessParams>
+  (f: AppFeatureId): (_: Access<any>) => _ is Access<any>
+}
+
 export class Access {
+
+  // @ts-ignore
+  static readonly filterByFeature: FilterByFeature = (f) => (_) => {
+    return _.featureId === f
+  }
 
   static readonly map = (_: Record<keyof Access, any>): Access => {
     _.createdAt = new Date(_.createdAt)

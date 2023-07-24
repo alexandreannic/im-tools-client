@@ -115,9 +115,10 @@ export const useFetchers: UseFetchersFn = <F extends Func<Promise<any>>, K exten
     loadings.clear()
   }
 
+  console.log('errors', errors.values())
   return {
     list,
-    loading: loadings.values().every(_ => !_),
+    loading: !!loadings.values().find(_ => _),
     error: errors.size > 0,
     get: (k?: K) => entities.get(k ? k : defaultKey),
     getLoading: (k?: K) => loadings.get(k ? k : defaultKey) ?? false,

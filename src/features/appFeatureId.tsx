@@ -1,6 +1,7 @@
 import {Enum} from '@alexandreannic/ts-utils'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {appConfig} from '@/conf/AppConfig'
+import {Access} from '@/core/sdk/server/access/Access'
 
 export enum AppFeatureId {
   dashboards = 'dashboards',
@@ -18,7 +19,7 @@ export interface AppFeature {
   materialIcons: string
   color: string
   path: string
-  showIf?: (_?: UserSession) => boolean | undefined
+  showIf?: (_?: UserSession, a?: Access[]) => boolean | undefined
 }
 
 export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
@@ -42,6 +43,9 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'savings',
     color: 'green',
     path: '/mpca',
+    showIf: (u, accesses) => {
+      return u?.admin ||accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
+    }
   },
   activity_info: {
     materialIcons: 'group_work',
@@ -49,6 +53,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     name: 'Activity Info',
     color: '#00e6b8',
     path: '/activity-info',
+    showIf: _ => _ && _?.admin,
   },
   wfp_deduplication: {
     id: AppFeatureId.wfp_deduplication,
@@ -56,6 +61,9 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'join_left',
     color: 'orange',
     path: '/wfp-deduplication',
+    showIf: (u, accesses) => {
+      return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.wfp_deduplication)
+    }
   },
   admin: {
     id: AppFeatureId.admin,

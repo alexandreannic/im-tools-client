@@ -1,12 +1,12 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import React, {useEffect} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
 import {KoboApiColType} from '@/core/sdk/server/kobo/KoboApi'
 import {databaseModule} from '@/features/Database/databaseModule'
-import {HashRouter as Router, Navigate, NavLink, Outlet, Route, Routes} from 'react-router-dom'
+import {HashRouter as Router, NavLink, Outlet, Route, Routes} from 'react-router-dom'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
 import {Skeleton, Tab, Tabs} from '@mui/material'
@@ -18,6 +18,9 @@ import {DatabaseProvider} from '@/features/Database/DatabaseContext'
 import {useSession} from '@/core/Session/SessionContext'
 import {DatabaseAccessRoute} from '@/features/Database/DatabaseAccess/DatabaseAccess'
 import {DatabaseTableRoute} from '@/features/Database/DatabaseTable/DatabaseTable'
+import {AppFeatureId} from '@/features/appFeatureId'
+import {Access} from '@/core/sdk/server/access/Access'
+import {Fender, Txt} from 'mui-extension'
 
 export const databaseUrlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -35,7 +38,7 @@ export const ignoredColType: KoboApiColType[] = [
 
 export const Database = () => {
   const {m} = useI18n()
-  const {session} = useSession()
+  const {session, accesses} = useSession()
   const {api, conf} = useAppSettings()
   const _forms = useFetcher(api.kobo.form.getAll)
   const {toastHttpError} = useAaToast()
@@ -45,6 +48,14 @@ export const Database = () => {
   useEffect(() => {
     _forms.fetch()
   }, [])
+
+  const koboAccesses = useMemo(() => {
+    return accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).map(_ => _.params?.koboFormId)
+  }, [accesses])
+
+  const formAccess = useMemo(() => {
+    return _forms.entity?.filter(_ => session.admin || koboAccesses.includes(_.id))
+  }, [koboAccesses, _forms.entity])
 
   // const {serverId, formId} = urlParamsValidation.validateSync(useParams())
   return (
@@ -61,16 +72,16 @@ export const Database = () => {
               {_forms.loading ? (
                 <>
                   <SidebarItem>
-                    <Skeleton sx={{height: 30}}/>
+                    <Skeleton sx={{width: 160, height: 30}}/>
                   </SidebarItem>
                   <SidebarItem>
-                    <Skeleton sx={{height: 30}}/>
+                    <Skeleton sx={{width: 160, height: 30}}/>
                   </SidebarItem>
                   <SidebarItem>
-                    <Skeleton sx={{height: 30}}/>
+                    <Skeleton sx={{width: 160, height: 30}}/>
                   </SidebarItem>
                 </>
-              ) : _forms.entity?.map(_ => (
+              ) : formAccess?.map(_ => (
                 <NavLink key={_.id} to={databaseModule.siteMap.home(_.serverId, _.id)}>
                   {({isActive, isPending}) => (
                     <SidebarItem key={_.id} active={isActive}>{_.name}</SidebarItem>
@@ -81,6 +92,12 @@ export const Database = () => {
           }
           header={<AppHeader id="app-header"/>}
         >
+          {formAccess?.length === 0 && (
+            <Fender type="empty" sx={{mt: 2}}>
+              <Txt block color="disabled" size="big">{m._koboDatabase.noAccessToForm}</Txt>
+              <Txt block color="disabled" dangerouslySetInnerHTML={{__html: m.contact(conf.contact)}}/>
+            </Fender>
+          )}
           <Routes>
             <Route path={databaseModule.siteMap.home()} element={<DatabaseHome/>}>
               <Route path={databaseModule.siteMap.database.absolute()} element={<DatabaseTableRoute/>}/>

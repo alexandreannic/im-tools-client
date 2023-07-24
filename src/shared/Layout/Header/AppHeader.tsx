@@ -65,7 +65,7 @@ export const AppHeader = ({children, sx, id = 'aa-header-id', ...props}: Props) 
         {children}
       </div>
       <Link href="/">
-        <AAIconBtn icon="home"/>
+        <AAIconBtn icon="home" size="medium"/>
       </Link>
       <AppHeaderFeatures sx={{mr: 1}}/>
       <AppHeaderMenu/>

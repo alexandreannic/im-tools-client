@@ -26,9 +26,9 @@ export const DatabaseNew = ({
   const [selectedForm, setSelectedForm] = useState<KoboFormCreate & {uid: string} | undefined>()
   const {toastHttpError} = useAaToast()
 
-  // useEffectFn(_server.error, toastHttpError)
+  useEffectFn(_server.error, toastHttpError)
   // useEffectFn(_form.error, toastHttpError)
-  // useEffectFn(_create.getError(), toastHttpError)
+  useEffectFn(_create.getError(), toastHttpError)
 
   useEffect(() => {
     _server.fetch()

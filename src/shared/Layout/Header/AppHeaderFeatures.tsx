@@ -1,23 +1,24 @@
 import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
-import React, {useMemo} from 'react'
+import React from 'react'
 import {useSession} from '@/core/Session/SessionContext'
-import {Box, Popover, useTheme} from '@mui/material'
+import {Box, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
-import {AppFeature, appFeatures, hiddenPlaygroundFeature} from '@/features/appFeatureId'
+import {AppFeature, appFeatures} from '@/features/appFeatureId'
 import {FeatureLogo} from '@/features/FeatureLogo'
 
 const iconSize = 92
 
 export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'icon'>) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
-  const {session} = useSession()
+  const {session, accesses} = useSession()
   const open = (!!anchorEl)
   const {m} = useI18n()
-  const features: AppFeature[] = appFeatures.filter(_ => !_.showIf || _.showIf(session))
+  const features: AppFeature[] = appFeatures.filter(_ => !_.showIf || _.showIf(session, accesses))
   return (
     <>
       <AAIconBtn
         icon="apps"
+        size="medium"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         {...props}
       />
