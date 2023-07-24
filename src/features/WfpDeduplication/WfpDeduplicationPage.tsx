@@ -11,14 +11,27 @@ import {appFeaturesIndex} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {AaBtn} from '@/shared/Btn/AaBtn'
+import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
+import {WfpDeduplicationAccess} from '@/features/WfpDeduplication/WfpDeduplicationAccess'
+import {adminModule} from '@/features/Admin/Admin'
 
+export const wfpDeduplicationModule = {
+  basePath: '/wfp-deduplication',
+  siteMap: {
+    data: '/data',
+    access: '/access',
+  }
+}
 
 const WpfDeduplicationSidebar = () => {
   const {api} = useAppSettings()
+  const {session} = useSession()
+
   const _uploadTaxIdMapping = useAsync(api.wfpDeduplication.uploadTaxIdsMapping)
   const _refreshData = useAsync(api.wfpDeduplication.refresh)
   const {m} = useI18n()
   const {toastHttpError} = useAaToast()
+  const path = (page: string) => '' + page
 
   useEffectFn(_uploadTaxIdMapping.getError(), toastHttpError)
   useEffectFn(_refreshData.getError(), toastHttpError)
@@ -26,35 +39,47 @@ const WpfDeduplicationSidebar = () => {
   return (
     <Sidebar headerId="app-header">
       <SidebarBody>
-        <SidebarItem>
-          <BtnUploader
-            fullWidth
-            variant="outlined"
-            uploading={_uploadTaxIdMapping.getLoading()}
-            onUpload={_uploadTaxIdMapping.call}
-            onDelete={console.log}
-            msg={{
-              invalidSize: m.error,
-              loading: m.loading,
-              upload: m.mpcaDb.uploadWfpTaxIdMapping,
-            }}
-          />
-        </SidebarItem>
-        <SidebarItem>
-          <AaBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.getLoading()}>
-            {m.refresh}
-          </AaBtn>
-        </SidebarItem>
-        <SidebarHr sx={{my: 2}}/>
-        <SidebarItem icon="list_alt">
-          {m.data}
-        </SidebarItem>
-        <SidebarItem icon="bar_chart">
-          {m.dashboard}
-        </SidebarItem>
-        <SidebarItem icon="person_add">
-          {m.grantAccess}
-        </SidebarItem>
+        {session.admin && (
+          <>
+            <SidebarItem>
+              <BtnUploader
+                fullWidth
+                variant="outlined"
+                uploading={_uploadTaxIdMapping.getLoading()}
+                onUpload={_uploadTaxIdMapping.call}
+                onDelete={console.log}
+                msg={{
+                  invalidSize: m.error,
+                  loading: m.loading,
+                  upload: m.mpcaDb.uploadWfpTaxIdMapping,
+                }}
+              />
+            </SidebarItem>
+            <SidebarItem>
+              <AaBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.getLoading()}>
+                {m.refresh}
+              </AaBtn>
+            </SidebarItem>
+            <SidebarHr sx={{my: 2}}/>
+          </>
+        )}
+        <NavLink to={path(wfpDeduplicationModule.siteMap.data)}>
+          {({isActive}) =>
+            <SidebarItem icon="list_alt" active={isActive}>
+              {m.data}
+            </SidebarItem>
+          }
+        </NavLink>
+        {/*<SidebarItem icon="bar_chart">*/}
+        {/*  {m.dashboard}*/}
+        {/*</SidebarItem>*/}
+        <NavLink to={path(wfpDeduplicationModule.siteMap.access)}>
+          {({isActive}) =>
+            <SidebarItem icon="person_add" active={isActive}>
+              {m.grantAccess}
+            </SidebarItem>
+          }
+        </NavLink>
       </SidebarBody>
     </Sidebar>
   )
@@ -69,8 +94,13 @@ export const WfpDeduplicationPage = () => {
     )
   }
   return (
-    <Layout title={appFeaturesIndex.wfp_deduplication.name} sidebar={<WpfDeduplicationSidebar/>}>
-      <WfpDeduplicationData/>
-    </Layout>
+    <Router>
+      <Layout title={appFeaturesIndex.wfp_deduplication.name} sidebar={<WpfDeduplicationSidebar/>}>
+        <Routes>
+          <Route index path={wfpDeduplicationModule.siteMap.data} element={<WfpDeduplicationData/>}/>
+          <Route index path={wfpDeduplicationModule.siteMap.access} element={<WfpDeduplicationAccess/>}/>
+        </Routes>
+      </Layout>
+    </Router>
   )
 }

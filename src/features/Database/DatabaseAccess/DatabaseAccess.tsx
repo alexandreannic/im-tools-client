@@ -7,7 +7,7 @@ import {Autocomplete, Box, Chip, createFilterOptions} from '@mui/material'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {AaSelect} from '@/shared/Select/Select'
 import {Controller, useForm} from 'react-hook-form'
-import {Access, AccessLevel, KoboDatabaseFeatureParams} from '@/core/sdk/server/access/Access'
+import {Access, AccessLevel, KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/features/Database/DatabaseMerge/useFetchersFn'
@@ -26,6 +26,7 @@ import {DatabaseAccessForm} from '@/features/Database/DatabaseAccess/DatabaseAcc
 import {Panel, PanelHead} from '@/shared/Panel'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useSession} from '@/core/Session/SessionContext'
+import {AccessTable} from '@/features/Access/AccessTable'
 
 interface Form {
   selectBy?: 'email' | 'job'
@@ -69,68 +70,33 @@ export const DatabaseAccess = ({
   const {api} = useAppSettings()
   const {session} = useSession()
 
-  const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.search({featureId: AppFeatureId.kobo_database})
-    .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
+  const requestInConstToFixTsInference = () => api.access.search({featureId: AppFeatureId.kobo_database})
+    .then(_ => _.filter(_ => _.params?.koboFormId === formId))
   const _get = useFetchers(requestInConstToFixTsInference)
   const _remove = useAsync(api.access.remove)
 
   const refresh = () => {
-    _get.fetch({force: true, clean: false}, formId)
+    _get.fetch({force: true, clean: false})
   }
 
   useEffect(() => {
-    _get.fetch({}, formId)
+    _get.fetch({})
   }, [formId])
 
   return (
     <Box>
       <Panel>
-        {/*<PanelHead action={*/}
-        {/*}/>*/}
-        <Sheet<Access>
+        <AccessTable
+          _remove={_remove}
+          _data={_get}
+          onRemoved={refresh}
           header={
             session.admin && (
               <DatabaseAccessForm formId={formId} form={form} onAdded={refresh}>
                 <AaBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</AaBtn>
               </DatabaseAccessForm>
             )
-          }
-          data={_get.get()}
-          columns={[
-            {
-              id: 'drcJob',
-              head: m.drcJob,
-              render: _ => _.drcJob,
-            },
-            {
-              id: 'drcOffice',
-              head: m.drcOffice,
-              render: _ => _.drcOffice,
-            },
-            {
-              id: 'email',
-              head: m.email,
-              render: _ => _.email,
-            },
-            {
-              id: 'accessLevel',
-              head: m.accessLevel,
-              render: _ => _.level,
-            },
-            {
-              id: 'params',
-              head: m.filter,
-              render: _ => JSON.stringify(_.params?.filters),
-            },
-            {
-              id: 'actions',
-              head: '',
-              align: 'right',
-              render: _ => (
-                <AAIconBtn loading={_remove.loading} onClick={() => _remove.call(_.id).then(refresh)} icon="delete"/>
-              ),
-            },
-          ]}/>
+          }/>
       </Panel>
     </Box>
   )

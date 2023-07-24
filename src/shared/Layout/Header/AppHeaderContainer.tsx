@@ -22,7 +22,7 @@ const redesignHeaderOnTop = (headerId: string) => {
 const generalStyles = <GlobalStyles styles={t => ({
   [`.${headerStickyClass}`]: {
     boxShadow: t.shadows[4],
-    background: alpha(t.palette.background.paper, .55),
+    background: alpha(t.palette.background.paper, .50),
   }
 })}/>
 

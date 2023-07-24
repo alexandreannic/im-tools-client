@@ -5,31 +5,21 @@ import React, {ReactElement, useCallback, useMemo} from 'react'
 import {Modal, Txt} from 'mui-extension'
 import {Autocomplete, Box, Chip, createFilterOptions} from '@mui/material'
 import {AaInput} from '@/shared/ItInput/AaInput'
-import {AaSelect} from '@/shared/Select/Select'
 import {Controller, useForm} from 'react-hook-form'
-import {AccessLevel, KoboDatabaseFeatureParams} from '@/core/sdk/server/access/Access'
-import {Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
+import {Arr, map} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/features/Database/DatabaseMerge/useFetchersFn'
-import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {useSession} from '@/core/Session/SessionContext'
-import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
 import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 import {useAsync} from '@/features/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
+import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 
-interface Form {
-  selectBy?: 'email' | 'job'
-  email?: string
-  drcOffice?: DrcOffice
-  drcJob?: DrcJob
-  accessLevel: AccessLevel
+interface Form extends IAccessForm {
   question: string
   questionAnswer: string[]
-  // filters: Record<string, string[]>
 }
 
 export const DatabaseAccessForm = ({
@@ -51,21 +41,14 @@ export const DatabaseAccessForm = ({
   const {api} = useAppSettings()
 
   const _addAccess = useAsync(api.access.add)
-  const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.searchByFeature(AppFeatureId.kobo_database)
+  const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
   const _access = useFetchers(requestInConstToFixTsInference)
 
   useEffectFn(_addAccess.getError(), toastHttpError)
   useEffectFn(_access.getError(), toastHttpError)
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: {errors, isValid},
-  } = useForm<Form>()
+  const accessForm = useForm<Form>()
 
   const {
     indexQuestion,
@@ -93,12 +76,12 @@ export const DatabaseAccessForm = ({
 
   const submit = (f: Form) => {
     _addAccess.call({
-      level: f.accessLevel,
+      level: f.level,
       drcJob: f.drcJob,
       drcOffice: f.drcOffice,
       email: f.email,
       featureId: AppFeatureId.kobo_database,
-      params: KoboDatabaseFeatureParams.create({
+      params: KoboDatabaseAccessParams.create({
         koboFormId: formId,
         filters: {[f.question]: f.questionAnswer}
       })
@@ -108,102 +91,17 @@ export const DatabaseAccessForm = ({
   return (
     <Modal
       loading={_addAccess.getLoading()}
-      confirmDisabled={!isValid}
-      onConfirm={(_, close) => handleSubmit(_ => {
+      confirmDisabled={!accessForm.formState.isValid}
+      onConfirm={(_, close) => accessForm.handleSubmit(_ => {
         submit(_)
         close()
       })()}
       content={
         <Box sx={{width: 400}}>
-          {isValid ? 'true' : 'false'}
-          <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.Access.giveAccessBy}</Txt>
-          <Controller
-            name="selectBy"
-            rules={{required: {value: true, message: m.required}}}
-            control={control}
-            render={({field}) => (
-              <ScRadioGroup
-                sx={{mb: 2.5}}
-                dense
-                error={!!errors.selectBy}
-                {...field}
-                onChange={e => {
-                  setValue('drcJob', undefined)
-                  setValue('drcOffice', undefined)
-                  setValue('email', undefined)
-                  field.onChange(e)
-                }}
-              >
-                <ScRadioGroupItem value="email" title={m.email}/>
-                <ScRadioGroupItem value="job" title={m.Access.jobAndOffice}/>
-              </ScRadioGroup>
-            )}
-          />
-          {watch('selectBy') === 'job' && (
-            <>
-              <Controller
-                name="drcJob"
-                rules={{required: {value: true, message: m.required}}}
-                control={control}
-                render={({field: {onChange, ...field}}) => (
-                  <Autocomplete
-                    {...field}
-                    onChange={(e: any, _) => _ && onChange(_)}
-                    sx={{mb: 2.5}}
-                    loading={!questions}
-                    options={Enum.values(DrcJob) ?? []}
-                    // renderOption={(props, _) => <Txt truncate>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
-                    renderInput={({InputProps, ...props}) => <AaInput label={m.drcJob} {...InputProps} {...props}/>}
-                  />
-                )}
-              />
-              <Controller
-                name="drcOffice"
-                rules={{required: {value: true, message: m.required}}}
-                control={control}
-                render={({field: {onChange, ...field}}) => (
-                  <AaSelect<DrcOffice>
-                    {...field}
-                    label={m.drcOffice}
-                    onChange={_ => onChange(_)}
-                    options={Enum.values(DrcOffice)}
-                    sx={{mb: 2.5}}
-                  />
-                )}
-              />
-            </>
-          )}
-          {watch('selectBy') === 'email' && (
-            <AaInput
-              sx={{mb: 2.5}}
-              label={m.drcEmail}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              {...register('email', {required: false, pattern: {value: /(@drc.ngo$|\s)/, message: m.invalidEmail}})}
-            />
-          )}
-          <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.accessLevel}</Txt>
-          <Controller
-            name="accessLevel"
-            defaultValue={AccessLevel.Read}
-            control={control}
-            render={({field}) => (
-              <ScRadioGroup<AccessLevel>
-                sx={{mb: 2.5}}
-                error={!!errors.accessLevel}
-                dense
-                {...field}
-                // onChange={_ => field.onChange({target: {value: _}} as any)}
-              >
-                {Enum.values(AccessLevel).map(level =>
-                  <ScRadioGroupItem value={level} key={level} title={level}/>
-                )}
-              </ScRadioGroup>
-            )}
-          />
+          <AccessForm form={accessForm}/>
           <Controller
             name="question"
-            control={control}
+            control={accessForm.control}
             rules={{
               required: true,
             }}
@@ -216,7 +114,7 @@ export const DatabaseAccessForm = ({
                 onChange={(e, _) => {
                   if (_) {
                     onChange(_)
-                    setValue('questionAnswer', [])
+                    accessForm.setValue('questionAnswer', [])
                   }
                 }}
                 loading={!questions}
@@ -225,8 +123,8 @@ export const DatabaseAccessForm = ({
                   {...InputProps}
                   {...props}
                   label={m.question}
-                  error={!!errors.question}
-                  helperText={errors.question && m.required}
+                  error={!!accessForm.formState.errors.question}
+                  helperText={accessForm.formState.errors.question && m.required}
                 />}
                 renderOption={(props, option) => (
                   <Box component="li" key={option} {...props}>
@@ -239,7 +137,7 @@ export const DatabaseAccessForm = ({
               />
             )}
           />
-          {map(watch('question'), question => {
+          {map(accessForm.watch('question'), question => {
             const listName = indexQuestion[question][0].select_from_list_name
             const options = indexOptionsByListName[listName!]
             return (
@@ -248,7 +146,7 @@ export const DatabaseAccessForm = ({
                 rules={{
                   required: true,
                 }}
-                control={control}
+                control={accessForm.control}
                 render={({field}) => (
                   <Autocomplete
                     {...field}
@@ -265,8 +163,8 @@ export const DatabaseAccessForm = ({
                       {...InputProps}
                       {...props}
                       label={m.answer}
-                      error={!!errors.questionAnswer}
-                      helperText={errors.questionAnswer && m.required}
+                      error={!!accessForm.formState.errors.questionAnswer}
+                      helperText={accessForm.formState.errors.questionAnswer && m.required}
                     />}
                     renderTags={(value: string[], getTagProps) =>
                       value.map((option: string, index: number) => (

@@ -351,7 +351,7 @@ const tableTheme = (t: Theme) => ({
   '.table tr': {
     whiteSpace: 'nowrap',
   },
-  '.table .td-clickable:hover': {
+  '.table tr:hover': {
     background: t.palette.action.hover,
   },
   '.th-resize': {

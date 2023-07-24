@@ -22,14 +22,6 @@ export interface AppFeature {
 }
 
 export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
-  admin: {
-    id: AppFeatureId.admin,
-    name: 'Admin',
-    materialIcons: 'admin_panel_settings',
-    color: 'silver',
-    path: '/admin',
-    showIf: _ => _ && _?.admin
-  },
   dashboards: {
     id: AppFeatureId.dashboards,
     name: 'Dashboards',
@@ -64,6 +56,14 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'join_left',
     color: 'orange',
     path: '/wfp-deduplication',
+  },
+  admin: {
+    id: AppFeatureId.admin,
+    name: 'Admin',
+    materialIcons: 'admin_panel_settings',
+    color: 'silver',
+    path: '/admin',
+    showIf: _ => _ && _?.admin
   },
   playground: {
     id: 'playground' as any,
