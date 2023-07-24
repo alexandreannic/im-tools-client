@@ -80,6 +80,7 @@ export const AaSelect = <T extends string | number>({
   // const displayedValue = useMemo(() => options.find(_ => _.value === innerValue)?.children, [options, innerValue])
   // console.log('select', options, innerValue)
 
+  console.log('defaultValue', defaultValue, defaultValue ?? multiple ? [] : '')
   return (
     <FormControl size="small" sx={{width: '100%', ...sx}}>
       <InputLabel htmlFor={id}>{label}</InputLabel>

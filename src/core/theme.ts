@@ -162,15 +162,6 @@ export const muiTheme = (dark?: boolean): Theme => {
             margin: 0,
             boxSizing: 'border-box',
           },
-          'table.sheet': {
-            borderCollapse: 'collapse',
-            borderSpacing: 0,
-          },
-          '.sheet td': {
-            padding: '2px',
-            border: `1px solid ${baseTheme.palette.divider}`
-            // background: 'red',
-          },
           ul: {
             marginTop: '.5em',
           },
@@ -189,6 +180,7 @@ export const muiTheme = (dark?: boolean): Theme => {
           ':focus': {
             outline: 0,
           },
+          ...tableTheme(baseTheme),
         },
       },
       MuiButton: {
@@ -347,3 +339,87 @@ export const muiTheme = (dark?: boolean): Theme => {
   })
 }
 
+const tableTheme = (t: Theme) => ({
+  '.table': {
+    minWidth: '100%',
+    width: 'max-content',
+    borderTop: '1px solid ' + t.palette.divider,
+    tableLayout: 'fixed',
+    borderCollapse: 'collapse',
+    borderSpacing: 0,
+  },
+  '.table tr': {
+    whiteSpace: 'nowrap',
+  },
+  '.table .td-clickable:hover': {
+    background: t.palette.action.hover,
+  },
+  '.th-resize': {
+    display: 'flex',
+    overflow: 'hidden',
+    resize: 'horizontal',
+    minWidth: 102,
+    width: 102,
+  },
+  'td.fw': {
+    width: '100%',
+  },
+  '::-webkit-resizer': {
+    background: 'invisible',
+  },
+  '.table td:first-of-type, .table th:first-of-type': {
+    paddingLeft: 8,
+  },
+  '.td-center': {
+    textAlign: 'center !important',
+  },
+  '.td-right': {
+    textAlign: 'right !important',
+  },
+  '.td-loading': {
+    padding: 0,
+    border: 'none',
+  },
+  '.table td': {
+    maxWidth: 102,
+  },
+  '.table td, .table th': {
+    alignItems: 'left',
+    textAlign: 'left',
+    height: 32,
+    padding: '2px 0px 2px 3px',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    borderBottom: `1px solid ${t.palette.divider}`,
+    textOverflow: 'ellipsis',
+  },
+  '.table.borderY td, .table.borderY th': {
+    borderRight: `1px solid ${t.palette.divider}`,
+    borderBottom: `1px solid ${t.palette.divider}`,
+  },
+  '.table th': {
+    height: 40,
+    zIndex: 2,
+    minWidth: 0,
+    width: 0,
+    background: t.palette.background.paper,
+    top: 0,
+    paddingTop: t.spacing(.25),
+    paddingBottom: t.spacing(.25),
+    position: 'sticky',
+    color: t.palette.text.secondary,
+  },
+  //
+  // 'table.sheet': {
+  //   borderCollapse: 'collapse',
+  //   borderSpacing: 0,
+  // },
+  // '.sheet th': {
+  //   textAlign: 'left',
+  // },
+  // '.sheet td': {
+  //   padding: '2px',
+  //   borderBottom: `1px solid ${baseTheme.palette.divider}`
+  //   // background: 'red',
+  // },
+})

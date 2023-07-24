@@ -36,7 +36,7 @@ export const SessionProvider = ({
   const [session, setSession] = useState<UserSession | undefined>()
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
-  const _access = useFetcher<any>(api.access.search)
+  const _access = useFetcher<any>(api.access.searchForConnectedUser)
 
   const _getSession = useAsync(mapPromise({
     promise: api.session.get,
@@ -50,7 +50,7 @@ export const SessionProvider = ({
 
   useEffect(() => {
     if (session?.email)
-      _access.fetch({force: true, clean: true}, {email: session.email})
+      _access.fetch({force: true, clean: true})
   }, [session?.email])
 
   useEffect(() => {

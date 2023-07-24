@@ -41,6 +41,8 @@ export const KoboDatabase = (props: {
     orderBy: 'desc',
   })
 
+  console.log('langIndex', langIndex)
+
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
 
   const onOrderBy = (columnId: string, orderBy?: OrderBy) => {
@@ -173,7 +175,6 @@ export const KoboDatabase = (props: {
         {props.header}
       </Box>
       <Box sx={{overflowX: 'auto'}}>
-        {koboDatabaseStyle}
         {map(openColumnConfig, c =>
           <SheetFilterDialog
             title={getKoboLabel(questionIndex[c.columnId], langIndex)}
@@ -221,7 +222,7 @@ export const KoboDatabase = (props: {
             onClose={() => setOpenSelectChartDialog(undefined)}
           />
         )}
-        <table className="table">
+        <table className="table borderY">
           <KoboDatabaseHead
             setOpenIntegerChartDialog={setOpenIntegerChartDialog}
             setOpenSelectChartDialog={setOpenSelectChartDialog}

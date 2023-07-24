@@ -36,7 +36,9 @@ export const DatabaseAccessForm = ({
   formId,
   children,
   form,
+  onAdded,
 }: {
+  onAdded?: () => void,
   children: ReactElement,
   formId: KoboId,
   form: KoboApiForm
@@ -91,7 +93,7 @@ export const DatabaseAccessForm = ({
 
   const submit = (f: Form) => {
     _addAccess.call({
-      accessLevel: f.accessLevel,
+      level: f.accessLevel,
       drcJob: f.drcJob,
       drcOffice: f.drcOffice,
       email: f.email,
@@ -100,7 +102,7 @@ export const DatabaseAccessForm = ({
         koboFormId: formId,
         filters: {[f.question]: f.questionAnswer}
       })
-    })
+    }).then(onAdded)
   }
 
   return (

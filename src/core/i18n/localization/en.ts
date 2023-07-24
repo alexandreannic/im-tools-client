@@ -286,7 +286,7 @@ export const en = Object.freeze({
     protHHS2: {
       factorToHelpIntegration: 'Factors helping integration',
       factorToReturn: 'Factors to return',
-      reasonForRelocate: 'Reason for relocate',
+      reasonForRelocate: 'Reasons for relocating',
       hhTypes: 'HH types',
       reportedIncidents: 'Reported incidents over the last 6 months',
       hhsAffectedByMultipleDisplacement: 'Multiple displacements since February 24 2022 by current oblast',

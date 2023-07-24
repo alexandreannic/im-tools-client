@@ -12,7 +12,7 @@ export interface Access<T = any> {
   id: string
   featureId?: AppFeatureId
   params?: T
-  accessLevel: AccessLevel
+  level: AccessLevel
   email?: string
   drcJob?: DrcJob
   drcOffice?: DrcOffice
@@ -30,7 +30,6 @@ export class KoboDatabaseFeatureParams {
 }
 
 export interface AccessSearch {
-  email?: string
   featureId?: AppFeatureId
 }
 
