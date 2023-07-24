@@ -11,7 +11,7 @@ interface SearchByFeature {
 
 type FeatureCreateBase = Omit<Access, 'id' | 'createdAt' | 'updatedAt' | 'featureId' | 'params'>
 
-interface AcceessCreate {
+interface AccessCreate {
   (_: FeatureCreateBase & {featureId: AppFeatureId.kobo_database, params: KoboDatabaseAccessParams}): Promise<Access<KoboDatabaseAccessParams>[]>
   (_: FeatureCreateBase & {featureId: AppFeatureId.wfp_deduplication, params: KoboDatabaseAccessParams}): Promise<Access<WfpDeduplicationAccessParams>[]>
   (_: {featureId?: AppFeatureId, email?: string}): Promise<Access<any>[]>
@@ -22,7 +22,7 @@ export class AccessSdk {
   constructor(private client: ApiClient) {
   }
 
-  readonly add = (body: AcceessCreate) => {
+  readonly add = (body: AccessCreate) => {
     return this.client.put<Access>(`/access`, {body})
   }
 
