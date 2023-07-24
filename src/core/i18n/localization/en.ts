@@ -901,6 +901,9 @@ export const en = Object.freeze({
     returnToOrigin: `Return to area of origin`,
     dateOfDeparture: `Date of departure`,
     pin: 'Pin',
+    _wfpDeduplication: {
+      filterByDrcOffice: 'Filter by DRC office',
+    },
     mpcaDb: {
       drcSupportSuggestion: {
         ThreeMonthsUnAgency: 'Three Months Assistance - UN Agency',

@@ -10,6 +10,7 @@ import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {Icon} from '@mui/material'
 import {BtnUploader, Txt} from 'mui-extension'
 import {DrcOffice} from '@/core/drcJobTitle'
+import {TableIcon} from '@/features/Mpca/MpcaData/MpcaData'
 
 export const WfpDeduplicationData = () => {
   const {api} = useAppSettings()
@@ -41,10 +42,10 @@ export const WfpDeduplicationData = () => {
               tooltip: _ => m.mpcaDb.status[_.status],
               render: _ => (
                 fnSwitch(_.status, {
-                  Deduplicated: <Icon color="warning">join_full</Icon>,
-                  PartiallyDeduplicated: <Icon color="info">join_left</Icon>,
-                  NotDeduplicated: <Icon color="success">check_circle</Icon>,
-                  Error: <Icon color="error">error</Icon>,
+                  Deduplicated: <TableIcon color="warning">join_full</TableIcon>,
+                  PartiallyDeduplicated: <TableIcon color="info">join_left</TableIcon>,
+                  NotDeduplicated: <TableIcon color="success">check_circle</TableIcon>,
+                  Error: <TableIcon color="error">error</TableIcon>,
                 }, () => <></>)
               ),
             },

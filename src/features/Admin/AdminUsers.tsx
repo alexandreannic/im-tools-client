@@ -24,7 +24,7 @@ export const AdminUsers = () => {
   }, [])
 
   const connectAs = (email: string) => {
-    _connectAs.fetch({force: true, clean: true}, email).then(_ => setSession(_.email))
+    _connectAs.fetch({force: true, clean: true}, email).then(setSession)
   }
 
   return (

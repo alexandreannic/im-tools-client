@@ -20,13 +20,21 @@ export interface Access<T = any> {
   updatedAt?: Date
 }
 
-export interface KoboDatabaseFeatureParams {
+export interface WfpDeduplicationAccessParams {
+  filters?: Record<string, string[]>
+}
+
+export interface KoboDatabaseAccessParams {
   koboFormId: KoboId,
   filters?: Record<string, string[]>
 }
 
-export class KoboDatabaseFeatureParams {
-  static readonly create = (_: KoboDatabaseFeatureParams): any => _
+export class WfpDeduplicationAccessParams {
+  static readonly create = (_: WfpDeduplicationAccessParams): any => _
+}
+
+export class KoboDatabaseAccessParams {
+  static readonly create = (_: KoboDatabaseAccessParams): any => _
 }
 
 export interface AccessSearch {

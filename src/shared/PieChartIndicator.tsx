@@ -53,8 +53,8 @@ export interface PieChartIndicatorProps extends Omit<PanelProps, 'title'> {
   title?: ReactNode
   value: number
   base: number
-  showValue?: number
-  showBase?: number
+  showValue?: boolean
+  showBase?: boolean
   evolution?: number
   tooltip?: string
 }
