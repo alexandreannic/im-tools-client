@@ -24,13 +24,13 @@ export const DatabaseSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarItem to={path(databaseModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.protectionHh2))}>
+      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, koboFormId.prod.protectionHh2))}>
         HHS v2
       </SidebarItem>
-      <SidebarItem to={path(databaseModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.BNRE))}>
+      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, koboFormId.prod.BNRE))}>
         BNRE
       </SidebarItem>
-      <SidebarItem to={path(databaseModule.siteMap.form(KoboApiSdk.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
+      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
         fcrmMpcaNAA
       </SidebarItem>
       <Divider/>

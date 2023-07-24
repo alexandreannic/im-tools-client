@@ -13,7 +13,7 @@ export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'icon'>) => {
   const {session} = useSession()
   const open = (!!anchorEl)
   const {m} = useI18n()
-  const features: AppFeature[] = [...appFeatures, ...(session?.email === 'alexandre.annic@drc.ngo' ? [hiddenPlaygroundFeature] : [])]
+  const features: AppFeature[] = appFeatures.filter(_ => !_.showIf || _.showIf(session))
   return (
     <>
       <AAIconBtn

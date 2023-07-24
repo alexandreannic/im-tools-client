@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useState} from 'react'
+import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react'
 import {useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -10,11 +10,13 @@ import {Access} from '@/core/sdk/server/access/Access'
 import {SessionLoginForm} from '@/core/Session/SessionLoginForm'
 import {SessionInitForm} from '@/core/Session/SessionInitForm'
 import {CenteredContent} from '@/shared/CenteredContent'
+import {Fender} from 'mui-extension'
 
 export interface SessionContext {
   session: UserSession
   accesses: Access[]
   logout: () => void
+  setSession: Dispatch<SetStateAction<UserSession | undefined>>
 }
 
 export const Context = React.createContext({} as SessionContext)
@@ -23,7 +25,9 @@ export const useSession = () => useContext(Context)
 
 export const SessionProvider = ({
   children,
+  adminOnly
 }: {
+  adminOnly?: boolean
   children: ReactNode
 }) => {
   const {m} = useI18n()
@@ -32,7 +36,7 @@ export const SessionProvider = ({
   const [session, setSession] = useState<UserSession | undefined>()
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
-  const _access = useFetcher<any>(api.access.search)
+  const _access = useFetcher<any>(api.access.searchForConnectedUser)
 
   const _getSession = useAsync(mapPromise({
     promise: api.session.get,
@@ -44,10 +48,9 @@ export const SessionProvider = ({
     setSession(undefined)
   }
 
-  console.log(session)
   useEffect(() => {
     if (session?.email)
-      _access.fetch({force: true, clean: true}, {email: session.email})
+      _access.fetch({force: true, clean: true})
   }, [session?.email])
 
   useEffect(() => {
@@ -71,18 +74,26 @@ export const SessionProvider = ({
       </CenteredContent>
     )
   }
+  if (adminOnly && !session.admin) {
+    return (
+      <CenteredContent>
+        <Fender type="error"/>
+      </CenteredContent>
+    )
+  }
   return (
     !session.drcOffice ? (
       <CenteredContent>
         <SessionInitForm
           user={session}
           onChangeAccount={logout}
-          onSelectOffice={drcOffice => setSession(prev => ({...prev, drcOffice: drcOffice}))}
+          onSelectOffice={drcOffice => setSession(prev => prev && ({...prev, drcOffice: drcOffice}))}
         />
       </CenteredContent>
     ) : (
       <Context.Provider value={{
         session,
+        setSession,
         accesses: _access.entity,
         logout,
       }}>

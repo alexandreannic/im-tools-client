@@ -4,15 +4,17 @@ import {Box} from '@mui/material'
 interface Props {
   children: ReactNode
   offset?: number
+  xCenter?: boolean
 }
 
-export const CenteredContent = ({children, offset = 0}: Props) => {
+export const CenteredContent = ({xCenter = true, children, offset = 0}: Props) => {
   return (
     <Box
       sx={{
         minHeight: `calc(100vh - ${offset}px)`,
         position: 'relative',
         display: 'flex',
+        justifyContent: xCenter ? 'center' : undefined,
         flexDirection: 'column',
         '&:before, &:after': {
           content: '" "',

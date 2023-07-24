@@ -1,3 +1,5 @@
+import {ApiPaginate} from '@/core/type'
+
 export type KoboId = string
 
 export type KoboServer = {
@@ -58,6 +60,17 @@ export type KoboAnswerMetaData = {
 export type KoboAnswer<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
 
 export class Kobo {
+
+  static readonly mapPaginateAnswerMetaData = (fnMap: (x: any) => any) => (_: ApiPaginate<Record<string, any>>): ApiPaginate<KoboAnswer<any>> => {
+    return ({
+      ..._,
+      data: _.data.map(({answers, ...meta}) => ({
+        ...Kobo.mapAnswerMetaData(meta),
+        ...fnMap(answers) as any
+      }))
+    })
+  }
+
   static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer<any> => {
     delete (k as any)['deviceid']
     return {

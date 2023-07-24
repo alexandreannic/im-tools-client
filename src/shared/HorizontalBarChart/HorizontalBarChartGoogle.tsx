@@ -62,19 +62,19 @@ export const _HorizontalBarChartGoogle = <K extends string>({
     values,
     maxValue,
     sumValue,
-    base,
+    // base,
     percents,
   } = useMemo(() => {
     const values = Enum.values(data) as HorizontalBarChartGoogleData[]
     const maxValue = Math.max(...values.map(_ => _.value))
     const sumValue = values.reduce((sum, _) => _.value + sum, 0)
-    const base = values[0]?.base ?? sumValue
-    const percents = values.map(_ => _.value / base * 100)
+    // const base = values[0]?.base ?? sumValue
+    const percents = values.map(_ => _.value / (_.base ?? sumValue) * 100)
     return {
       values,
       maxValue,
       sumValue,
-      base,
+      // base,
       percents,
     }
   }, [data])
@@ -100,7 +100,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
       {Enum.entries(data).map(([k, item], i) => {
         const percentOfMax = 100 * (item.base ? percents[i] / maxPercent : item.value / maxValue)
         return (
-          <TooltipWrapper item={item} base={base} sumValue={sumValue} key={i}>
+          <TooltipWrapper item={item} base={item.base ?? sumValue} sumValue={sumValue} key={i}>
             <Box sx={{display: 'flex', alignItems: 'center'}} onClick={() => onClickData?.(k, item)}>
               {icons && (
                 <Icon color="disabled" sx={{mr: 1}}>{icons[k]}</Icon>
@@ -178,8 +178,8 @@ const TooltipWrapper = ({
   item: HorizontalBarChartGoogleData
 }) => {
   const {formatLargeNumber} = useI18n()
-  if (item.disabled) return children
   const {m} = useI18n()
+  if (item.disabled) return children
   return (
     <LightTooltip
       {...props}

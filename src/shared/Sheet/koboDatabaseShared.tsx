@@ -5,9 +5,7 @@ import {SheetFilterDialogProps} from '@/shared/Sheet/SheetFilterDialog'
 
 export const KoboDatabaseBtn = ({
   ...props
-}: {
-  tooltip: string
-} & Omit<AAIconBtnProps, 'tooltip'>) => {
+}: AAIconBtnProps) => {
   return (
     <AAIconBtn {...props}/>
   )

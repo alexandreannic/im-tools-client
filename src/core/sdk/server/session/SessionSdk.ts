@@ -12,10 +12,7 @@ export class SessionSdk {
   }
 
   readonly login = (body: LoginRequest) => {
-    return this.client.post<UserSession>(`/session/login`, {body}).then(x => {
-      console.log('LOGIN', x)
-      return x
-    })
+    return this.client.post<UserSession>(`/session/login`, {body})
   }
 
   readonly logout = () => {
@@ -24,5 +21,9 @@ export class SessionSdk {
 
   readonly get = () => {
     return this.client.get<UserSession>(`/session`)
+  }
+
+  readonly connectAs = (email: string) => {
+    return this.client.post<UserSession>(`/session/connect-as`, {body: {email}})
   }
 }

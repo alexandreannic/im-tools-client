@@ -45,7 +45,7 @@ export const SessionInitForm = ({
         textAlign: 'center',
       }}>
         <Txt block noWrap sx={{fontSize: '3em', fontWeight: 'lighter'}} bold>{user.name}</Txt>
-        <Txt block noWrap sx={{fontSize: '1.4em', fontWeight: 'lighter'}} color="hint">{user.drcJobTitle}</Txt>
+        <Txt block noWrap sx={{fontSize: '1.4em', fontWeight: 'lighter'}} color="hint">{user.drcJob}</Txt>
       </Box>
       <Box sx={{width: '100%', maxWidth: 400}}>
         <Txt block sx={{fontSize: '1.2em', mb: 1}}>{m.welcomePleaseSelectOffice}</Txt>

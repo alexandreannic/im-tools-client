@@ -8,4 +8,8 @@ export class UserSdk {
   readonly update = (user: Partial<User>) => {
     return this.client.post<User>(`/user/me`, {body: user})
   }
+
+  readonly search = () => {
+    return this.client.get<User[]>(`/user`)
+  }
 }

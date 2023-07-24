@@ -4,21 +4,23 @@ import React from 'react'
 import {IconBtn} from 'mui-extension'
 
 export interface AAIconBtnProps extends Omit<IconBtnProps, 'children'> {
-  title?: string
+  tooltip?: string
   icon: string
 }
 
 export const AAIconBtn = ({
-  title,
+  tooltip,
   icon,
   size,
   ...props
 }: AAIconBtnProps) => {
   return (
-    <Tooltip title={title}>
-      <IconBtn {...props} size={size}>
-        <Icon fontSize={size}>{icon}</Icon>
-      </IconBtn>
+    <Tooltip title={tooltip}>
+      <span>
+        <IconBtn {...props} size={size}>
+          <Icon fontSize={size}>{icon}</Icon>
+        </IconBtn>
+      </span>
     </Tooltip>
   )
 }

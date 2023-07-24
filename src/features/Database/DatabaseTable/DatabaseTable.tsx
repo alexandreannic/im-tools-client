@@ -1,10 +1,96 @@
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetTableProps} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {KoboDatabase} from '@/shared/Sheet/KoboDatabase'
 import {KoboDatabaseBtn} from '@/shared/Sheet/koboDatabaseShared'
-import React from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
+import {useDatabaseContext} from '@/features/Database/DatabaseContext'
+import {useParams} from 'react-router'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {OrderBy, useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {map} from '@alexandreannic/ts-utils'
+import {Page} from '@/shared/Page'
+import {Panel} from '@/shared/Panel'
+import {databaseUrlParamsValidation} from '@/features/Database/Database'
+import {useSession} from '@/core/Session/SessionContext'
+
+const sortFnByType: Record<any, (a: any, b: any) => number> = {
+  string: (a: any, b: any) => a.localeCompare(b),
+  number: (a: any, b: any) => a - b,
+  object: (a: Date, b: Date) => a.getTime() - b.getTime(),
+}
+
+export const DatabaseTableRoute = () => {
+  const _formSchemas = useDatabaseContext().formSchemas
+  const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
+
+  const {m, formatDate, formatLargeNumber} = useI18n()
+  const {api} = useAppSettings()
+  const {session} = useSession()
+
+  const _refresh = useAsync(() => api.koboApi.synchronizeAnswers(serverId, formId))
+  const _answers = useFetcher((id: KoboId) => api.kobo.answer.searchByAccess({
+    formId: id,
+    user: session,
+  }))
+
+  const [sort, setSort] = useState<{sortBy?: keyof KoboAnswer, orderBy?: OrderBy}>()
+
+  const data = useMemo(() => {
+    return map(sort?.sortBy, sortBy => {
+      const sortFn = sortFnByType[typeof _answers.entity?.data[0][sortBy]]
+      return _answers.entity?.data.sort((a, b) => {
+        return sortFn ? sortFn(a[sortBy], b[sortBy]) : 0
+      })
+    }) ?? _answers.entity?.data
+  }, [_answers.entity, sort])
+
+  const refresh = async () => {
+    await _refresh.call()
+    await _answers.fetch({force: true, clean: false}, formId)
+  }
+
+  useEffect(() => {
+    _formSchemas.fetch({}, serverId, formId)
+    _answers.fetch({}, formId)
+  }, [serverId, formId])
+
+  return (
+    <Page loading={_formSchemas.getLoading(formId)} width="full">
+      {/*<PageTitle action={*/}
+      {/*  <>*/}
+      {/*    /!*<DatabaseAccess serverId={serverId} koboFormId={formId}>*!/*/}
+      {/*    /!*  <AaBtn variant="outlined" icon="person_add">*!/*/}
+      {/*    /!*    {m.grantAccess}*!/*/}
+      {/*    /!*  </AaBtn>*!/*/}
+      {/*    /!*</DatabaseAccess>*!/*/}
+      {/*    <AAIconBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={async () => {*/}
+      {/*      await _refresh.call()*/}
+      {/*      await _answers.fetch({force: true, clean: false}, formId)*/}
+      {/*    }}/>*/}
+      {/*  </>*/}
+      {/*}>{_formSchemas.get(formId)?.name}</PageTitle>*/}
+      <Panel>
+        {data && map(_formSchemas.get(formId), schema => (
+          <DatabaseTable
+            refreshing={_refresh.getLoading()}
+            onRefresh={refresh}
+            form={schema}
+            loading={_answers.loading}
+            data={data}
+            sort={{
+              sortBy: sort?.sortBy,
+              orderBy: sort?.orderBy,
+              onSortChange: setSort,
+            }}
+          />
+        ))}
+      </Panel>
+    </Page>
+  )
+}
+
 
 export const DatabaseTable = ({
   loading,

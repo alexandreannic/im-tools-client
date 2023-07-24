@@ -1,4 +1,6 @@
-import {AppFeature, AppFeatureId} from '@/features/appFeatureId'
+import {AppFeatureId} from '@/features/appFeatureId'
+import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
+import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 
 export enum AccessLevel {
   Read = 'Read',
@@ -8,16 +10,26 @@ export enum AccessLevel {
 
 export interface Access<T = any> {
   id: string
-  featureId?: string
+  featureId?: AppFeatureId
   params?: T
-  accessLevel: AccessLevel
-  email: string
+  level: AccessLevel
+  email?: string
+  drcJob?: DrcJob
+  drcOffice?: DrcOffice
   createdAt: Date
   updatedAt?: Date
 }
 
+export interface KoboDatabaseFeatureParams {
+  koboFormId: KoboId,
+  filters?: Record<string, string[]>
+}
+
+export class KoboDatabaseFeatureParams {
+  static readonly create = (_: KoboDatabaseFeatureParams): any => _
+}
+
 export interface AccessSearch {
-  email?: string
   featureId?: AppFeatureId
 }
 
