@@ -52,7 +52,8 @@ export const SidebarItem = ({
         pr: 1,
         pl: 2,
         my: 1 / 2,
-        borderRadius: 42,
+        borderTopRightRadius: 42,
+        borderBottomRightRadius: 42,
         ...(large && {
           minHeight: 38,
         }),

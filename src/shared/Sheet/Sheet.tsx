@@ -10,7 +10,8 @@ import {AAIconBtn} from '../IconBtn'
 import {useAsync, useSetState} from '@alexandreannic/react-hooks-lib'
 import {orderBy} from 'lodash'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
-import {koboTypeToFilterType} from '@/shared/Sheet/koboDatabaseShared'
+import {koboTypeToFilterType} from '@/features/Database/DatabaseTable/koboDatabaseShared'
+import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
 
 // const generalStyles = <GlobalStyles
 //   styles={t => ({
@@ -197,7 +198,6 @@ export const Sheet = <T extends Answer = Answer>({
   ...props
 }: SheetTableProps<T>) => {
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
-  console.log('render Sheet')
   const {m} = useI18n()
   const [sheetSearch, setSheetSearch] = useState({
     limit: 20,
@@ -212,7 +212,7 @@ export const Sheet = <T extends Answer = Answer>({
   const [openColumnConfig, setOpenColumnConfig] = useState<{
     anchorEl: HTMLElement
     columnId: string
-    type: SheetFilterDialogProps['type']
+    type: KoboQuestionType
   } | undefined>()
   // const [filteringProperty, setFilteringProperty] = useState<keyof T | undefined>(undefined)
   const [filters, setFilters] = useState<Record<keyof T, Filter>>({} as any)

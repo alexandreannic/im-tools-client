@@ -5,7 +5,7 @@ import {useI18n} from '@/core/i18n'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {map} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {getKoboLabel} from '@/shared/Sheet/KoboDatabase'
+import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 
 export const KoboDatabaseBody = memo(({
   form,
@@ -66,8 +66,8 @@ export const KoboDatabaseBody = memo(({
                   })
                 }
                 case 'select_multiple': {
-                  return map(row[q.name], (v: string) => {
-                    const render = v.split(' ').map(_ => optionsTranslations[q.select_from_list_name!][_]).join(' | ')
+                  return map(row[q.name], (v: string[]) => {
+                    const render = v.map(_ => optionsTranslations[q.select_from_list_name!][_]).join(' | ')
                     return <span title={render}>{render}</span>
                   })
                 }

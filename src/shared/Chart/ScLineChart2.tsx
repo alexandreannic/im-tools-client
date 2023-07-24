@@ -1,12 +1,12 @@
 import {CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
 import * as React from 'react'
 import {memo, useState} from 'react'
-import {Box, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
+import {Box, BoxProps, Checkbox, SxProps, Theme, useTheme} from '@mui/material'
 import {map} from '@alexandreannic/ts-utils'
 import {styleUtils} from '@/core/theme'
 import {chartConfig} from '@/shared/Chart/chartConfig'
 
-export interface ScLineChartPropsBase {
+export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
   /**
    * This props may be needed because sometimes label are not showing because of animation.
    * https://github.com/recharts/recharts/issues/1135
@@ -15,7 +15,6 @@ export interface ScLineChartPropsBase {
   hideLabelToggle?: boolean
   translation?: Record<string, string>
   height?: number
-  sx?: SxProps
   hideYTicks?: boolean
   hideXTicks?: boolean
   percent?: boolean
@@ -89,7 +88,7 @@ export const ScLineChart2 = ({
                       fontSize: styleUtils(theme).fontSize.small,
                     }}
                   />
-                  )}
+                )}
               </Line>
             ))}
           </LineChart>

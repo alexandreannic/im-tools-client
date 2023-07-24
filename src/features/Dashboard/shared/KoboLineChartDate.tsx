@@ -3,6 +3,7 @@ import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {Utils} from '@/utils/utils'
+import {BoxProps} from '@mui/material'
 
 export type DateKeys<T> = {
   [K in keyof T]: T[K] extends (Date | undefined) ? K : never;
@@ -15,15 +16,16 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
   start,
   end = new Date(),
   translations,
+  ...props
 }: {
   label?: string | string[]
   question: K | K[]
-  data: _Arr<T>
+  data: T[]
   start?: Date
   end?: Date
   // @ts-ignore
   translations?: Partial<Record<T[K], string>>
-}) => {
+} & Pick<BoxProps, 'sx'>) => {
   const curve = useMemo(() => {
     const questions = ([question].flat() as K[])
     // const _end = format(end, 'yyyy-MM')
@@ -53,6 +55,7 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
   return (
     <>
       <ScLineChart2
+        {...props}
         hideLabelToggle={true}
         height={220}
         data={curve}

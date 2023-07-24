@@ -99,7 +99,7 @@ export const DatabaseHome = () => {
   const {pathname} = useLocation()
   const navigate = useNavigate()
   useEffect(() => {
-    navigate(databaseModule.siteMap.access.absolute(serverId, formId))
+    navigate(databaseModule.siteMap.database.absolute(serverId, formId))
   }, [formId])
   return (
     <>

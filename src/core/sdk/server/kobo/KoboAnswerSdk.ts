@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
-import {Kobo, KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboId, KoboMappedAnswerType} from '@/core/sdk/server/kobo/Kobo'
 import {koboFormId} from '@/koboFormId'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
@@ -50,7 +50,7 @@ export class KoboAnswerSdk {
       .then(Kobo.mapPaginateAnswerMetaData(fnMap))
   }
 
-  readonly search = <T extends Record<string, any> = Record<string, string | undefined>>({
+  readonly search = <T extends Record<string, any> = Record<string, KoboMappedAnswerType>>({
     formId,
     filters = {},
     paginate = {offset: 0, limit: 100000},

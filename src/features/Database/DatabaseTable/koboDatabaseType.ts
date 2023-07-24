@@ -1,6 +1,7 @@
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {SheetFilterDialogProps} from '@/shared/Sheet/SheetFilterDialog'
+import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
 
 export namespace KoboDatabaseType {
   export interface Search {
@@ -9,7 +10,6 @@ export namespace KoboDatabaseType {
     sortBy: keyof KoboAnswer
     orderBy: OrderBy
   }
-
 
   export type Filter = string
     | string[]
@@ -22,11 +22,11 @@ export namespace KoboDatabaseType {
   }
 
   export interface ColumnConfigPopoverParams extends PopoverParams {
-    type: SheetFilterDialogProps['type']
+    type: KoboQuestionType
     options?: NonNullable<SheetFilterDialogProps['options']>
   }
 
-  export interface SelectChartPopoverParams extends PopoverParams {
-    multiple?: boolean
-  }
+  // export interface SelectChartPopoverParams extends PopoverParams {
+  //   multiple?: boolean
+  // }
 }

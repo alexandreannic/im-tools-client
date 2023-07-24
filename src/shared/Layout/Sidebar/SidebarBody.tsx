@@ -10,7 +10,7 @@ export const SidebarBody = ({children, sx, ...props}: SidebarBodyProps) => {
       sx={{
         py: 1,
         flex: 1,
-        pl: 1,
+        // pl: 1,
         overflowY: 'auto',
         ...sx,
       }}

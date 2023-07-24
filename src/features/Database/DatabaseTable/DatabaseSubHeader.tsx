@@ -10,7 +10,9 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useI18n} from '@/core/i18n'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
-import {getKoboLabel} from '@/shared/Sheet/KoboDatabase'
+import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
+import {format} from 'date-fns'
+import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 
 export const SheetIcon = ({
   sx,
@@ -96,7 +98,7 @@ export const MultipleChoicesPopover = <T, >({
   const {m} = useI18n()
   const chart = useMemo(() => {
     const mapped = Arr(data).map(_ => _[question] as any).compact()
-    const chart = (multiple)
+    const chart = multiple
       ? ChartTools.multiple({data: mapped})
       : ChartTools.single({data: mapped})
     return ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.name, getKoboLabel(_, langIndex)]))(ChartTools.sortBy.value(chart))
@@ -118,42 +120,40 @@ export const MultipleChoicesPopover = <T, >({
   )
 }
 
-// export const MultipleChoicesPopover = <T, >({
-//   question,
-//   data,
-//   anchorEl,
-//   onClose,
-//   multiple,
-//   langIndex,
-//   translations,
-// }: {
-//   langIndex?: number
-//   translations: KoboQuestionChoice[]
-//   multiple?: boolean
-//   question: keyof T
-//   data: T[]
-// } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
-//   const {m} = useI18n()
-//   const chart = useMemo(() => {
-//     const mapped = Arr(data).map(_ => _[question] as any).compact()
-//     const chart = (multiple)
-//       ? ChartTools.multiple({data: mapped})
-//       : ChartTools.single({data: mapped})
-//     return ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.name, getKoboLabel(_, langIndex)]))(ChartTools.sortBy.value(chart))
-//   }, [question, data, langIndex, translations])
-//   return (
-//     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
-//       <PanelHead>
-//         {question as string}
-//       </PanelHead>
-//       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-//         <HorizontalBarChartGoogle data={chart}/>
-//       </PanelBody>
-//       <PanelFoot alignEnd>
-//         <AaBtn color="primary" onClick={onClose as any}>
-//           {m.close}
-//         </AaBtn>
-//       </PanelFoot>
-//     </Popover>
-//   )
-// }
+export const DatesPopover = <T, >({
+  question,
+  data,
+  anchorEl,
+  onClose,
+}: {
+  question: keyof T
+  data: T[]
+} & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
+  const {m} = useI18n()
+  // const chart = useMemo(() => {
+  //   const res: Record<string, Record<K, number>> = {}
+  //   data.forEach(d => {
+  //     if (!d[question]) return
+  //     const date = d[q] as Date
+  //     const yyyyMM = format(date, 'yyyy-MM')
+  //     if (!res[yyyyMM]) res[yyyyMM] = 0
+  //     res[yyyyMM] += 1
+  //   })
+  //   return res
+  // }, [question, data])
+  return (
+    <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
+      <PanelHead>
+        {question as string}
+      </PanelHead>
+      <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
+        <KoboLineChartDate data={data} question={question as any} sx={{minWidth: 360}}/>
+      </PanelBody>
+      <PanelFoot alignEnd>
+        <AaBtn color="primary" onClick={onClose as any}>
+          {m.close}
+        </AaBtn>
+      </PanelFoot>
+    </Popover>
+  )
+}

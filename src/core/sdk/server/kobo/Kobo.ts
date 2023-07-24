@@ -1,4 +1,6 @@
 import {ApiPaginate} from '@/core/type'
+import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {Enum} from '@alexandreannic/ts-utils'
 
 export type KoboId = string
 
@@ -57,7 +59,10 @@ export type KoboAnswerMetaData = {
   tags: any,
 }
 
+export type KoboMappedAnswerType = string | string[] | Date | number | undefined
+
 export type KoboAnswer<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
+export type KoboMappedAnswer<T extends Record<string, any> = Record<string, KoboMappedAnswerType>> = (KoboAnswerMetaData & T)
 
 export class Kobo {
 
@@ -69,6 +74,27 @@ export class Kobo {
         ...fnMap(answers) as any
       }))
     })
+  }
+
+  static readonly mapAnswerBySchema = (indexedSchema: Record<string, KoboQuestionSchema>, answers: KoboAnswer): KoboMappedAnswer => {
+    const mapped = {...answers}
+    Enum.entries(mapped).forEach(([question, answer]) => {
+      const type = indexedSchema[question]?.type
+      if (!type || !answer) return
+      switch (type) {
+        case 'date': {
+          (mapped as any)[question] = new Date(answer)
+          break
+        }
+        case 'select_multiple': {
+          mapped[question] = answer.split(' ')
+          break
+        }
+        default:
+          break
+      }
+    })
+    return mapped
   }
 
   static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer<any> => {

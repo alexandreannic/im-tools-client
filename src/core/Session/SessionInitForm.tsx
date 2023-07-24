@@ -30,7 +30,6 @@ export const SessionInitForm = ({
   useEffectFn(_updateUser.error, toastHttpError)
 
   useEffect(() => {
-    console.log('update', _updateUser.entity)
     map(_updateUser.entity?.drcOffice, _ => onSelectOffice(_ as DrcOffice))
   }, [_updateUser.entity])
 
