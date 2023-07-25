@@ -16,6 +16,9 @@ import {useAsync} from '@/features/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
+import {config} from 'exceljs/index'
+import setValue = config.setValue
+
 
 interface Form extends IAccessForm {
   question: string
@@ -99,17 +102,22 @@ export const DatabaseAccessForm = ({
       content={
         <Box sx={{width: 400}}>
           <AccessForm form={accessForm}/>
+          <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.filter}</Txt>
           <Controller
             name="question"
             control={accessForm.control}
-            rules={{
-              required: true,
-            }}
             render={({field: {onChange, value, ...field}}) => (
               <Autocomplete<string>
                 {...field}
                 sx={{mb: 2.5}}
                 value={value}
+                onInputChange={(event, newInputValue, reason) => {
+                  if (reason === 'reset') {
+                    onChange('')
+                  } else {
+                    onChange(newInputValue)
+                  }
+                }}
                 filterOptions={filterOptions(indexQuestion)}
                 onChange={(e, _) => {
                   if (_) {
@@ -138,18 +146,20 @@ export const DatabaseAccessForm = ({
             )}
           />
           {map(accessForm.watch('question'), question => {
+            if (question === '') return
             const listName = indexQuestion[question][0].select_from_list_name
             const options = indexOptionsByListName[listName!]
+            console.log('accessForm.watch(\'question\')', accessForm.watch('question'))
             return (
               <Controller
                 name="questionAnswer"
-                rules={{
-                  required: true,
-                }}
+                // rules={{
+                //   required: accessForm.watch('question') !== undefined && accessForm.watch('question') === '',
                 control={accessForm.control}
                 render={({field}) => (
                   <Autocomplete
                     {...field}
+                    onReset={() => accessForm.setValue('questionAnswer', [])}
                     freeSolo
                     sx={{mb: 2.5}}
                     filterOptions={filterOptions(indexOptionsByName)}

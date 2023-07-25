@@ -1,6 +1,6 @@
 import {useI18n} from '@/core/i18n'
 import React, {ReactNode, useCallback, useMemo, useState} from 'react'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Kobo, KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {orderBy} from 'lodash'
 import {multipleFilters, paginateData} from '@/utils/utils'
@@ -16,6 +16,7 @@ import {KoboDatabaseBody} from '@/features/Database/DatabaseTable/KoboDatabaseBo
 import {Fender} from 'mui-extension'
 import {KoboDatabaseExportBtn} from '@/features/Database/DatabaseTable/KoboDatabaseExportBtn'
 import {useKoboDatabaseContext} from '@/features/Database/DatabaseTable/KoboDatabaseContext'
+import {KoboRepeatGroupDetails} from '@/features/Database/DatabaseTable/KoboRepeatGroupDetails'
 
 export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
@@ -42,11 +43,20 @@ export const KoboDatabase = (props: {
 
   const [openBeginRepeat, setOpenBeginRepeat] = useState<{
     anchorEl: HTMLElement
+    columnId: string
     group: Record<string, any>[]
   } | undefined>()
 
   const [openFilterPopover, setOpenFilterPopover] = useState<KoboDatabaseType.ColumnConfigPopoverParams | undefined>()
   const [openStatsPopover, setOpenStatsPopover] = useState<KoboDatabaseType.ColumnConfigPopoverParams | undefined>()
+
+  const onOpenBeginRepeat = useCallback((questionName: string, group: Record<string, any>[], event: any) => {
+    setOpenBeginRepeat({
+      anchorEl: event.currentTarget,
+      columnId: questionName,
+      group,
+    })
+  }, [choicesIndex])
 
   const onOpenStatsConfig = useCallback((q: KoboQuestionSchema, event: any) => {
     // const firstDefinedValue = props.data.find(_ => !!_[columnId])
@@ -166,7 +176,12 @@ export const KoboDatabase = (props: {
           />
         )}
         {map(openBeginRepeat, c =>
-          <Box></Box>
+          <KoboRepeatGroupDetails
+            anchorEl={c.anchorEl}
+            group={c.group}
+            form={form}
+            onClose={() => setOpenBeginRepeat(undefined)}
+          />
         )}
         {map(openStatsPopover, c => {
           console.log('open', c)
@@ -235,7 +250,7 @@ export const KoboDatabase = (props: {
           {/*</tr>*/}
           {/*</thead>*/}
           {map(filteredSortedAndPaginatedData?.data, _ =>
-            <KoboDatabaseBody form={form} data={_} langIndex={langIndex} setOpenBeginRepeat={setOpenBeginRepeat}/>
+            <KoboDatabaseBody form={form} data={_} langIndex={langIndex} onOpenBeginRepeat={onOpenBeginRepeat}/>
           )}
         </table>
         {filteredSortedAndPaginatedData?.data.length === 0 && (

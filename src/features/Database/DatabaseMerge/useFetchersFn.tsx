@@ -115,7 +115,6 @@ export const useFetchers: UseFetchersFn = <F extends Func<Promise<any>>, K exten
     loadings.clear()
   }
 
-  console.log('errors', errors.values())
   return {
     list,
     loading: !!loadings.values().find(_ => _),

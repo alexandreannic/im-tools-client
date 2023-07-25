@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import React, {Dispatch, memo, SetStateAction, useMemo} from 'react'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {useI18n} from '@/core/i18n'
@@ -11,9 +11,9 @@ export const KoboDatabaseBody = memo(({
   form,
   data,
   langIndex,
-  setOpenBeginRepeat,
+  onOpenBeginRepeat,
 }: {
-  setOpenBeginRepeat: any
+  onOpenBeginRepeat: (questionName: string, group: Record<string, any>[], event: any) => void
   langIndex?: number
   form: KoboApiForm['content']
   data: KoboAnswer<Record<string, any>>[],
@@ -56,7 +56,7 @@ export const KoboDatabaseBody = memo(({
                 }
                 case 'begin_repeat': {
                   return map(row[q.name], group =>
-                    <AaBtn onClick={() => setOpenBeginRepeat(group)}>{group.length}</AaBtn>
+                    <AaBtn onClick={(e) => onOpenBeginRepeat(q.name, group, e)}>{group.length}</AaBtn>
                   ) ?? <></>
                 }
                 case 'select_one': {

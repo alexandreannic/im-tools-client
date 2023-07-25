@@ -68,11 +68,11 @@ export const AccessForm = ({
           />
           <Controller
             name="drcOffice"
-            rules={{required: {value: true, message: m.required}}}
             control={form.control}
             render={({field: {onChange, ...field}}) => (
               <AaSelect<DrcOffice>
                 {...field}
+                showUndefinedOption
                 label={m.drcOffice}
                 onChange={_ => onChange(_)}
                 options={Enum.values(DrcOffice)}
