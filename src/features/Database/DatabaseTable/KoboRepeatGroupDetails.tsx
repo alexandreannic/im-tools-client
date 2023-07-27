@@ -12,13 +12,13 @@ export const KoboRepeatGroupDetails = ({
   form,
   group,
 }: {
-  form: KoboApiForm['content']
+  form: KoboApiForm
   group: Record<string, any>[]
   title?: string
   onClose: () => void
   anchorEl: any,
 }) => {
-  console.log('-----------', group, form.survey)
+  console.log('-----------', group, form.content.survey)
   useMemo(() => {
     // return Enum.keys(group).map(questionName => questionName.spl)
 

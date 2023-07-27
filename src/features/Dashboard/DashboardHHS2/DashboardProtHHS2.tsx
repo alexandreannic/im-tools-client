@@ -117,10 +117,7 @@ export const DashboardProtHHS2 = () => {
 
   useEffect(() => {
     if (periodFilter.start || periodFilter.end)
-      _answers.fetch({force: true, clean: false}, {
-        start: map(periodFilter.start, startOfDay),
-        end: map(periodFilter.end, endOfDay),
-      })
+      _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
   const getChoices = <T extends keyof typeof ProtHHS_2_1Options>(

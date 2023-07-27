@@ -11,6 +11,7 @@ export enum WfpDeduplicationStatus {
 export interface WfpDeduplication {
   id: string
   amount: number
+  fileName?: string
   office?: DrcOffice
   wfpId: number
   createdAt: Date
@@ -29,6 +30,7 @@ export interface WfpDeduplication {
 
 export class WfpDeduplication {
   static readonly map = (_: Record<keyof WfpDeduplication, any> & {beneficiary?: {taxId?: string}}): WfpDeduplication => {
+    _.fileName = _.fileName?.replace('.gpg', '')
     _.createdAt = new Date(_.createdAt)
     _.validFrom = new Date(_.validFrom)
     _.expiry = new Date(_.expiry)

@@ -89,6 +89,7 @@ export const DatabaseAccess = ({
         <AccessTable
           _remove={_remove}
           _data={_get}
+          renderParams={(_: KoboDatabaseAccessParams) => JSON.stringify(_.filters)}
           onRemoved={refresh}
           header={
             session.admin && (

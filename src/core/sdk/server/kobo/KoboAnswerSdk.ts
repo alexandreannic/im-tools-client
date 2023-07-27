@@ -7,8 +7,9 @@ import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
 import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
-import {startOfDay} from 'date-fns'
+import {endOfDay, startOfDay} from 'date-fns'
 import {UserSession} from '@/core/sdk/server/session/Session'
+import {map} from '@alexandreannic/ts-utils'
 
 interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -40,13 +41,20 @@ export class KoboAnswerSdk {
     throw new Error('To implement')
   }
 
+  private static mapFilters = (_: AnswersFilters): AnswersFilters => {
+    return {
+      ..._,
+      start: map(_.start, startOfDay),
+      end: map(_.end, endOfDay),
+    }
+  }
   readonly searchByAccess = <T extends Record<string, any> = Record<string, string | undefined>>({
     formId,
     filters = {},
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
   }: KoboAnswerSearch<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
-    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {...filters, ...paginate}})
+    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
       .then(Kobo.mapPaginateAnswerMetaData(fnMap))
   }
 
@@ -56,7 +64,7 @@ export class KoboAnswerSdk {
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
   }: KoboAnswerSearch<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
-    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}`, {qs: {...filters, ...paginate}})
+    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
       .then(Kobo.mapPaginateAnswerMetaData(fnMap))
   }
 

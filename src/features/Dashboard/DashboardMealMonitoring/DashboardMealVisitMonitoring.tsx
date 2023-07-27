@@ -31,26 +31,26 @@ export interface DashboardPageProps {
 }
 
 const mapOblast: Record<string, OblastISOSVG> = {
-  aroc: 'UA43',
+  aroc: 'UA43',//'UA01',
   cherkaska: 'UA71',
   chernihivska: 'UA74',
-  chernivetska: 'UA77',
-  citykyiv: 'UA12',
-  dnipropetrovska: 'UA14',
-  donetska: 'UA26',
-  'ivano-frankivska': 'UA63',
-  kharkivska: 'UA65',
-  khersonska: 'UA68',
-  khmelnytska: 'UA35',
+  chernivetska: 'UA77',// 'UA73',
+  dnipropetrovska: 'UA12',
+  donetska: 'UA14',
+  'ivano-frankivska': 'UA26',
+  kharkivska: 'UA63',
+  khersonska: 'UA65',
+  khmelnytska: 'UA68',
   kirovohradska: 'UA35',
+  citykyiv: 'UA32',//'UA80',
   kyivska: 'UA32',
-  luhanska: 'UA09',
+  luhanska: 'UA09',//'UA44',
   lvivska: 'UA46',
   mykolaivska: 'UA48',
   odeska: 'UA51',
   poltavska: 'UA53',
   rivnenska: 'UA56',
-  sevastopilska: 'UA40',
+  sevastopilska: 'UA40',//'UA85',
   sumska: 'UA59',
   ternopilska: 'UA61',
   vinnytska: 'UA05',
@@ -264,7 +264,7 @@ export const DashboardMealVisitMonitoring = () => {
 
               <SlideContainer column sx={{maxHeight: '33%'}}>
                 <SlidePanel title={m.mealMonitoringVisit.nfiDistribution}>
-                  <MealVisitMonitoringBarChart data={data} question="pan"/>
+                  <MealVisitMonitoringBarChart data={data} question="pan" questionType="multiple"/>
                 </SlidePanel>
                 <SlidePanel title={m.mealMonitoringVisit.ecrec}>
                   <MealVisitMonitoringBarChart data={data} question="pae"/>

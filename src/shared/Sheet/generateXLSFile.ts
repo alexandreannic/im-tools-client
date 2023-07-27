@@ -1,16 +1,6 @@
 import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
-import ExcelJS from 'exceljs'
+import * as ExcelJS from 'exceljs'
 import {downloadBufferAsFile} from '@/utils/utils'
-
-const koboQuestionType: KoboQuestionType[] = [
-  'text',
-  'start',
-  'end',
-  'integer',
-  'select_one',
-  'select_multiple',
-  'date',
-]
 
 export const generateXLSFromArray = async <T>({
   schema,

@@ -7,7 +7,7 @@ interface Props {
   xCenter?: boolean
 }
 
-export const CenteredContent = ({xCenter = true, children, offset = 0}: Props) => {
+export const CenteredContent = ({xCenter = true, children, offset = 48}: Props) => {
   return (
     <Box
       sx={{

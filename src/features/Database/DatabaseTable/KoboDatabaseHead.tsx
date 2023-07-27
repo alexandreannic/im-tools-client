@@ -24,13 +24,13 @@ export const KoboDatabaseHead = memo(({
   // setOpenIntegerChartDialog: any
   // setOpenCalculate: any
   // setOpenSelectChartDialog: any
-  form: KoboApiForm['content'],
+  form: KoboApiForm
   langIndex?: number
 }) => {
   return (
     <thead>
     <tr className="tr trh">
-      {form.survey.map(q =>
+      {form.content.survey.map(q =>
         <th key={q.name} title={getKoboLabel(q, langIndex)}>
           <Box className="th-resize">
             {getKoboLabel(q, langIndex)}
@@ -39,7 +39,7 @@ export const KoboDatabaseHead = memo(({
       )}
     </tr>
     <tr>
-      {form.survey.map(q => {
+      {form.content.survey.map(q => {
         const sortedByThis = sheetSearch.sortBy === q.name ?? false
         const active = sortedByThis || filters[q.name]
         const commonProps: Partial<AAIconBtnProps> = {
@@ -63,6 +63,7 @@ export const KoboDatabaseHead = memo(({
                 case 'select_one': {
                   return <SheetIcon icon="radio_button_checked" {...commonProps}/>
                 }
+                case 'decimal':
                 case 'integer': {
                   return <SheetIcon icon="tag" {...commonProps}/>
                 }
@@ -89,7 +90,7 @@ export const KoboDatabaseHead = memo(({
                 }
               }
             })()}
-              {['calculate', 'integer', 'select_multiple', 'select_one', 'start', 'end', 'date',].includes(q.type) && (
+              {['calculate', 'integer', 'decimal', 'select_multiple', 'select_one', 'start', 'end', 'date',].includes(q.type) && (
                 <SheetIcon icon="bar_chart" onClick={e => onOpenStats(q, e)}/>
               )}
               <SheetIcon

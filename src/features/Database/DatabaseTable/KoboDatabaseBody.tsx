@@ -15,13 +15,13 @@ export const KoboDatabaseBody = memo(({
 }: {
   onOpenBeginRepeat: (questionName: string, group: Record<string, any>[], event: any) => void
   langIndex?: number
-  form: KoboApiForm['content']
+  form: KoboApiForm
   data: KoboAnswer<Record<string, any>>[],
 }) => {
   const {formatDateTime, formatDate} = useI18n()
   const optionsTranslations = useMemo(() => {
     const res: Record<string, Record<string, string>> = {}
-    form.choices.forEach(choice => {
+    form.content.choices.forEach(choice => {
       if (!res[choice.list_name]) res[choice.list_name] = {}
       res[choice.list_name][choice.name] = getKoboLabel(choice, langIndex)
     })
@@ -32,7 +32,7 @@ export const KoboDatabaseBody = memo(({
     <tbody>
     {data.map(row =>
       <tr key={row.id}>
-        {form.survey.map(q =>
+        {form.content.survey.map(q =>
           <td key={q.name}>
             {(() => {
               switch (q.type) {
@@ -44,6 +44,7 @@ export const KoboDatabaseBody = memo(({
                 case 'calculate':
                 case 'select_one_from_file':
                 case 'text':
+                case 'decimal':
                 case 'integer': {
                   return <span title={row[q.name]}>{row[q.name]}</span>
                 }

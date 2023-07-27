@@ -10,6 +10,7 @@ import {useAaToast} from '@/core/useToast'
 import {mapPromise} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
+import {CenteredContent} from '@/shared/CenteredContent'
 
 export const SessionLoginForm = ({
   setSession
@@ -33,7 +34,7 @@ export const SessionLoginForm = ({
   useEffectFn(_saveSession.getError(), () => toastError(m.youDontHaveAccess))
 
   return (
-    <Box sx={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+    <CenteredContent>
       <Box sx={{
         border: t => `1px solid ${t.palette.divider}`,
         padding: 4,
@@ -71,6 +72,6 @@ export const SessionLoginForm = ({
           </Box>
         </ButtonBase>
       </Box>
-    </Box>
+    </CenteredContent>
   )
 }

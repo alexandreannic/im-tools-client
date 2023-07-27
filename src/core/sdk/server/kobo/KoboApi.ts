@@ -37,6 +37,7 @@ export interface KoboApiForm {
         'text' |
         'calculate' |
         'integer' |
+        'decimal' |
         'select_multiple' |
         'select_one_from_file' |
         'date' |

@@ -98,6 +98,7 @@ export const SheetFilterDialog = ({
             case 'end':
             case 'date':
               return <PeriodPicker value={innerValue} onChange={setInnerValue}/>
+            case 'select_one':
             case 'select_multiple':
               return (
                 <MultipleChoices

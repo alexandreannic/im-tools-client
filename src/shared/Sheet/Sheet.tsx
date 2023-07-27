@@ -131,6 +131,7 @@ export interface SheetColumnProps<T extends Answer> {
   id: string
   render: (_: T) => ReactNode
   noSort?: boolean
+  width?: number
   head?: string | ReactNode
   align?: 'center' | 'right'
   onClick?: (_: T) => void
@@ -366,6 +367,7 @@ export const Sheet = <T extends Answer = Answer>({
                 return (
                   <th
                     key={_.id}
+                    style={{width: _.width}}
                     // onClick={() => onSortBy(_.id)}
                     className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
                       'center': ' td-center',

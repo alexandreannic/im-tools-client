@@ -29,13 +29,14 @@ export const WfpDeduplicationData = () => {
         <Sheet
           loading={_search.loading}
           columns={[
+            {id: 'fileName', head: m.fileName, render: _ => _.fileName, width: 146},
             {id: 'createdAt', head: m.createdAt, render: _ => formatDate(_.createdAt), type: 'date'},
             {id: 'office', head: m.office, render: _ => _.office, type: Enum.values(DrcOffice)},
             {id: 'taxId', head: m.taxId, render: _ => _.taxId ?? <Txt color="error">{m.mpcaDb.uploadWfpTaxIdMapping}</Txt>, type: 'string'},
             {id: 'amount', head: m.amount, align: 'right', render: _ => formatLargeNumber(_.amount)},
             {id: 'validFrom', head: m.validFrom, render: _ => formatDate(_.validFrom)},
             {id: 'expiry', head: m.expiry, render: _ => formatDate(_.expiry)},
-            {id: 'suggestion', head: '', render: _ => m.mpcaDb.drcSupportSuggestion[_.suggestion], type: Enum.keys(DrcSupportSuggestion)},
+            {id: 'suggestion', head: m.suggestion, render: _ => m.mpcaDb.drcSupportSuggestion[_.suggestion], width: 246, type: Enum.keys(DrcSupportSuggestion)},
             {
               id: 'status', align: 'center', head: m.status,
               type: Enum.keys(WfpDeduplicationStatus),

@@ -8,17 +8,26 @@ import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 import {KoboDatabaseBtn} from '@/features/Database/DatabaseTable/koboDatabaseShared'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
+import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 
-export const KoboDatabaseExportBtn = () => {
+export const KoboDatabaseExportBtn = <T, >({
+  data,
+  langIndex,
+  form,
+}: {
+  langIndex?: number
+  form: KoboApiForm
+  data: T[] | undefined
+}) => {
   const {m} = useI18n()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
 
   const exportToCSV = () => {
-    if (filteredAndSortedData) {
+    if (data) {
       _generateXLSFromArray.call({
-        filename: Utils.slugify(props.form.name),
-        data: props.data,
-        schema: form.survey.map(q => {
+        filename: Utils.slugify(form.name),
+        data: data,
+        schema: form.content.survey.map(q => {
           return {
             name: q.name,
             render: (row: any) => fnSwitch(q.type, {

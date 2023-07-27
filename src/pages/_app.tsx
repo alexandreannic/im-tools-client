@@ -15,6 +15,7 @@ import {getMsalInstance} from '@/core/msal'
 import {DRCLogo} from '@/shared/logo/logo'
 import {CacheProvider, EmotionCache} from '@emotion/react'
 import createEmotionCache from '@/core/createEmotionCache'
+import {CenteredContent} from '@/shared/CenteredContent'
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
@@ -60,7 +61,7 @@ const AppWithBaseContext = ({Component, pageProps}: AppProps) => {
   const {m} = useI18n()
   if (settings.conf.appOff) {
     return (
-      <Box sx={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <CenteredContent>
         <Box sx={{
           border: t => `1px solid ${t.palette.divider}`,
           padding: 4,
@@ -78,7 +79,7 @@ const AppWithBaseContext = ({Component, pageProps}: AppProps) => {
           <Box>
           </Box>
         </Box>
-      </Box>
+      </CenteredContent>
     )
   }
   return (

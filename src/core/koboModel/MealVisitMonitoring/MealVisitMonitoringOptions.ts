@@ -14,119 +14,6 @@ mdro: {
 	'Su': `Sumy`,
 	'My': `Mykolaiv`
 },
-mdp: {
-	'YP': `Yuliia Plesak`,
-	'NL': `Nataliya Ilkiv`,
-	'IS': `Isabel Mary Pearson`,
-	'OR': `Oleksii Reshetnikov`,
-	'AK': `Artem Koniev`,
-	'ISM': `Isabel Mary Pearson`,
-	'IB': `Iryna Bidna`,
-	'ISMA': `Isabel Mary Pearson`,
-	'AC': `Anna Chuprina`
-},
-mdd_001: {
-	'bha': `BHA (UKR-000284)`,
-	'echo1': `ECHO (UKR-000269)`,
-	'echo2': `ECHO (UKR-000322)`,
-	'sdc': `SDC (UKR-000226)`,
-	'fcdo': `FCDO (UKR-000247)`,
-	'okf': `OKF (UKR-000309)`,
-	'pspu': `PSPU (UKR- 000304)`,
-	'pofu': `Pooled Funds (UKR-000270)`,
-	'finm': `Finnish MFA (UKR-000249)`,
-	'frem': `French MFA (UKR-000293)`,
-	'euic': `EU IcSP (UKR-000255)`,
-	'pmra': `PM WRA (UKR-000230)`,
-	'pmka': `PM WKA (UKR-000231)`,
-	'sida': `SIDA 518-570A`,
-	'uhf3': `UHF3 (UKR-000276)`,
-	'uhf4': `UHF4 (UKR-000314)`,
-	'unhc': `UNHCR (UKR-000308)`,
-	'dani': `DANIDA (UKR-000267)`,
-	'dut1': `Dutch Ⅰ (UKR-000294)`,
-	'dut2': `Dutch Ⅱ (UKR-000306)`,
-	'nono': `Novo-Nordisk (UKR-000298)`,
-	'sdcs': `SDC Shelter (UKR-000290)`
-},
-mdt: {
-	'nfi': `NFI`,
-	'ecrec': `EcRec`,
-	'shelter': `Shelter`,
-	'lau': `LAU`,
-	'prote': `Protection`,
-	'eore': `EORE`,
-	'cbte': `CB team`,
-	'pate': `Partnership team`,
-	'gbv': `GBV`,
-	'oth': `Other:`
-},
-pan: {
-	'mpca': `MPCA`,
-	'hkmv': `HKMV (Family Hygiene Kits on the Move)`,
-	'hkf': `HKF (Family Hygiene Kits)`,
-	'wkb': `WKB (Baby winter kits)`,
-	'cfr': `CFR (Cash for Rent)`,
-	'bk': `BK (Baby Hygiene Kits)`,
-	'ks': `KS (Kitchen sets)`,
-	'nfkf': `NFKF (Family NFI kits + kitchen set (KS))`,
-	'bln': `BLN (High thermal blanket)`,
-	'nficc': `NFICC (NFI kit for the Collective Center)`,
-	'esk': `ESK (Emergency Shelter kit)`,
-	'hkcc': `HKCC (Insitutional Hygiene kit for Collective Center)`
-},
-pae: {
-	'mmg': `Monitoring Micro grants`,
-	'msg': `Monitoring SME grants`,
-	'mag': `Monitoring Agro grants`,
-	'mvg': `Monitoring VET grant`
-},
-pas: {
-	'har': `House/ apartment repair (mid-term assessment of the repair work)`,
-	'harm': `House/ apartment repair (Handover completion visit)`,
-	'ipb': `Institution/ public building repair (mid-term assessment of the repair work)`,
-	'ipbm': `Institution/ public building repair (Handover completion visit)`
-},
-pal: {
-	'mc': `Mobile Clinic`
-},
-pap: {
-	'pss': `PSS`,
-	'obse': `Observation`,
-	'cbp': `Community based Protection`
-},
-pao: {
-	'eose': `EORE session / ToT`
-},
-undefined: {
-	'men': `Men`,
-	'women': `Women`
-},
-visf: {
-	'yes': `Yes`,
-	'no': `No`
-},
-sei: {
-	'ssc': `Safety & security concerns`,
-	'cca': `Code of Conduct & Accountability`,
-	'pmi': `Protection Mainstreaming improvements`,
-	'qti': `Quality & Timeliness`,
-	'vis': `Visibility`
-},
-sst: {
-	'taa': `There was an air alarm`,
-	'tns': `There was no shelter`,
-	'fdd': `Fray during distribution`,
-	'tsc': `The space wasnt suitable to such a crowd: people were pushing and quarreling`,
-	'bwc': `Bad weather conditions`,
-	'oth': `Other:`
-},
-visp: {
-	'psea': `PSEA`,
-	'mof': `Misappropriation of funds/ suspected corruption`,
-	'fod': `Falsification of documents`,
-	'oth': `Other`
-},
 md_det_oblast: {
 	'aroc': `Autonomous Republic of Crimea`,
 	'vinnytska': `Vinnytsia`,
@@ -2057,4 +1944,116 @@ md_det_hromada: {
 	'zymnovodivska': `Zymnovodivska`,
 	'zymohirivska': `Zymohirivska`,
 	'zymynska': `Zymynska`
+},
+mdp: {
+	'YP': `Yuliia Plesak`,
+	'NL': `Nataliya Ilkiv`,
+	'IS': `Isabel Mary Pearson`,
+	'OR': `Oleksii Reshetnikov`,
+	'AK': `Artem Koniev`,
+	'ISM': `Isabel Mary Pearson`,
+	'IB': `Iryna Bidna`,
+	'ISMA': `Isabel Mary Pearson`,
+	'AC': `Anna Chuprina`,
+	'OO': `Oleksandr Oleksandrov`
+},
+mdd_001: {
+	'bha': `BHA (UKR-000284)`,
+	'echo1': `ECHO (UKR-000269)`,
+	'echo2': `ECHO (UKR-000322)`,
+	'sdc': `SDC (UKR-000226)`,
+	'fcdo': `FCDO (UKR-000247)`,
+	'okf': `OKF (UKR-000309)`,
+	'pspu': `PSPU (UKR- 000304)`,
+	'pofu': `Pooled Funds (UKR-000270)`,
+	'finm': `Finnish MFA (UKR-000249)`,
+	'frem': `French MFA (UKR-000293)`,
+	'euic': `EU IcSP (UKR-000255)`,
+	'pmra': `PM WRA (UKR-000230)`,
+	'pmka': `PM WKA (UKR-000231)`,
+	'sida': `SIDA 518-570A`,
+	'uhf3': `UHF3 (UKR-000276)`,
+	'uhf4': `UHF4 (UKR-000314)`,
+	'unhc': `UNHCR (UKR-000308)`,
+	'dani': `DANIDA (UKR-000267)`,
+	'dut1': `Dutch Ⅰ (UKR-000294)`,
+	'dut2': `Dutch Ⅱ (UKR-000306)`,
+	'nono': `Novo-Nordisk (UKR-000274)`,
+	'sdcs': `SDC Shelter (UKR-000290)`,
+	'mofa': `DANISH MoFA (UKR-000301)`
+},
+mdt: {
+	'nfi': `NFI`,
+	'ecrec': `EcRec`,
+	'shelter': `Shelter`,
+	'lau': `LAU`,
+	'prote': `Protection`,
+	'eore': `EORE`,
+	'cbte': `CB team`,
+	'pate': `Partnership team`,
+	'gbv': `GBV`,
+	'oth': `Other:`
+},
+pan: {
+	'mpca': `MPCA`,
+	'hkmv': `HKMV (Family Hygiene Kits on the Move)`,
+	'hkf': `HKF (Family Hygiene Kits)`,
+	'wkb': `WKB (Baby winter kits)`,
+	'cfr': `CFR (Cash for Rent)`,
+	'bk': `BK (Baby Hygiene Kits)`,
+	'ks': `KS (Kitchen sets)`,
+	'nfkf': `NFKF (Family NFI kits + kitchen set (KS))`,
+	'bln': `BLN (High thermal blanket)`,
+	'nficc': `NFICC (NFI kit for the Collective Center)`,
+	'esk': `ESK (Emergency Shelter kit)`,
+	'hkcc': `HKCC (Insitutional Hygiene kit for Collective Center)`
+},
+pae: {
+	'mmg': `Monitoring Micro grants`,
+	'msg': `Monitoring SME grants`,
+	'mag': `Monitoring Agro grants`,
+	'mvg': `Monitoring VET grant`
+},
+pas: {
+	'har': `House/ apartment repair (mid-term assessment of the repair work)`,
+	'harm': `House/ apartment repair (Handover completion visit)`,
+	'ipb': `Institution/ public building repair (mid-term assessment of the repair work)`,
+	'ipbm': `Institution/ public building repair (Handover completion visit)`,
+	'cfr': `Cash for Repair (cash for building repair registration)`
+},
+pal: {
+	'mc': `Mobile Clinic`
+},
+pap: {
+	'pss': `PSS`,
+	'obse': `Observation`,
+	'cbp': `Community based Protection`
+},
+pao: {
+	'eose': `EORE session / ToT`
+},
+visf: {
+	'yes': `Yes`,
+	'no': `No`
+},
+sei: {
+	'ssc': `Safety & security concerns`,
+	'cca': `Code of Conduct & Accountability`,
+	'pmi': `Protection Mainstreaming improvements`,
+	'qti': `Quality & Timeliness`,
+	'vis': `Visibility`
+},
+sst: {
+	'taa': `There was an air alarm`,
+	'tns': `There was no shelter`,
+	'fdd': `Fray during distribution`,
+	'tsc': `The space wasnt suitable to such a crowd: people were pushing and quarreling`,
+	'bwc': `Bad weather conditions`,
+	'oth': `Other:`
+},
+visp: {
+	'psea': `PSEA`,
+	'mof': `Misappropriation of funds/ suspected corruption`,
+	'fod': `Falsification of documents`,
+	'oth': `Other`
 }}

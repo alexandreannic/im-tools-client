@@ -17,6 +17,7 @@ import {Fender} from 'mui-extension'
 import {KoboDatabaseExportBtn} from '@/features/Database/DatabaseTable/KoboDatabaseExportBtn'
 import {useKoboDatabaseContext} from '@/features/Database/DatabaseTable/KoboDatabaseContext'
 import {KoboRepeatGroupDetails} from '@/features/Database/DatabaseTable/KoboRepeatGroupDetails'
+import {endOfDay, startOfDay} from 'date-fns'
 
 export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
@@ -96,7 +97,9 @@ export const KoboDatabase = (props: {
             const v = row[k] as Date | undefined
             if (!v) return false
             if (!((v as any) instanceof Date)) throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
-            const [min, max] = filter as [Date, Date]
+            const [_min, _max] = filter as [Date, Date]
+            const min = startOfDay(_min)
+            const max = endOfDay(_max)
             return (!min || v.getTime() >= min.getTime()) && (!max || v.getTime() <= max.getTime())
           }
         }
@@ -143,9 +146,13 @@ export const KoboDatabase = (props: {
           sx={{maxWidth: 128, mr: 1}}
           defaultValue={langIndex}
           onChange={setLangIndex}
-          options={['xml', ...form.translations].map((_, i) => ({children: _, value: i - 1}))}
+          options={['xml', ...form.content.translations].map((_, i) => ({children: _, value: i - 1}))}
         />
-        <KoboDatabaseExportBtn/>
+        <KoboDatabaseExportBtn
+          data={filteredAndSortedData}
+          form={form}
+          langIndex={langIndex}
+        />
         {props.header}
       </Box>
       <Box sx={{overflowX: 'auto'}}>
@@ -186,6 +193,7 @@ export const KoboDatabase = (props: {
         {map(openStatsPopover, c => {
           console.log('open', c)
           switch (c.type) {
+            case 'decimal':
             case 'integer':
               return <NumberChoicesPopover
                 anchorEl={c.anchorEl}

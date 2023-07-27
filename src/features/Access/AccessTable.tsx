@@ -5,17 +5,19 @@ import React, {ReactNode} from 'react'
 import {useI18n} from '@/core/i18n'
 import {UUID} from '@/core/type'
 import {UseAsync} from '@/features/useAsync'
-import {UseFetchersMultiple, UseFetchersSimple} from '@/features/Database/DatabaseMerge/useFetchersFn'
+import {UseFetchersSimple} from '@/features/Database/DatabaseMerge/useFetchersFn'
 import {useSession} from '@/core/Session/SessionContext'
 
 export const AccessTable = ({
   header,
   onRemoved,
+  renderParams = _ => JSON.stringify(_),
   _data,
   _remove,
 }: {
   _data: UseFetchersSimple<() => Promise<Access[]>>
   _remove: UseAsync<(_: UUID) => Promise<any>>
+  renderParams?: (_: any) => ReactNode
   onRemoved?: (_: UUID) => void
   // data: Access[] | undefined
   header?: ReactNode
@@ -51,7 +53,7 @@ export const AccessTable = ({
         {
           id: 'params',
           head: m.filter,
-          render: _ => JSON.stringify(_.params),
+          render: _ => renderParams(_.params),
         },
         ...session.admin ? [{
           id: 'actions',

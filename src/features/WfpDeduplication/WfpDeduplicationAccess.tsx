@@ -10,6 +10,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {WfpDeduplicationAccessForm} from '@/features/WfpDeduplication/WfpDeduplicationAccessForm'
 import {useI18n} from '@/core/i18n'
 import {Page} from '@/shared/Page'
+import {WfpDeduplicationAccessParams} from '@/core/sdk/server/access/Access'
 
 export const WfpDeduplicationAccess = () => {
   const {api} = useAppSettings()
@@ -33,6 +34,7 @@ export const WfpDeduplicationAccess = () => {
         <AccessTable
           _remove={_remove}
           _data={_get}
+          renderParams={(_: WfpDeduplicationAccessParams) => JSON.stringify(_.filters)}
           onRemoved={refresh}
           header={
             session.admin && (
