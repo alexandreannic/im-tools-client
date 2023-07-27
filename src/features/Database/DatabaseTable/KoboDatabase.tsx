@@ -60,8 +60,6 @@ export const KoboDatabase = (props: {
   }, [choicesIndex])
 
   const onOpenStatsConfig = useCallback((q: KoboQuestionSchema, event: any) => {
-    // const firstDefinedValue = props.data.find(_ => !!_[columnId])
-    // if (isNaN(firstDefinedValue[columnId])) {
     setOpenStatsPopover({
       anchorEl: event.currentTarget,
       columnId: q.name,
@@ -98,8 +96,8 @@ export const KoboDatabase = (props: {
             if (!v) return false
             if (!((v as any) instanceof Date)) throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
             const [_min, _max] = filter as [Date, Date]
-            const min = startOfDay(_min)
-            const max = endOfDay(_max)
+            const min = map(_min, startOfDay)
+            const max = map(_max, endOfDay)
             return (!min || v.getTime() >= min.getTime()) && (!max || v.getTime() <= max.getTime())
           }
         }
