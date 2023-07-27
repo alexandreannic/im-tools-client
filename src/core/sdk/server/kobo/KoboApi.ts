@@ -33,7 +33,10 @@ export interface KoboApiForm {
         'select_one' |
         'note' |
         'end_group' |
+        'username' |
+        'geopoint' |
         'image' |
+        'today' |
         'text' |
         'calculate' |
         'integer' |

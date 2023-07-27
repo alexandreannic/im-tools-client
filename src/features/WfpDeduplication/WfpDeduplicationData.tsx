@@ -10,7 +10,8 @@ import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {Icon} from '@mui/material'
 import {BtnUploader, Txt} from 'mui-extension'
 import {DrcOffice} from '@/core/drcJobTitle'
-import {TableIcon} from '@/features/Mpca/MpcaData/MpcaData'
+
+import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 
 export const WfpDeduplicationData = () => {
   const {api} = useAppSettings()

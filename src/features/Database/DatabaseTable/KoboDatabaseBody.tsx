@@ -7,6 +7,9 @@ import {map} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 
+import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {render} from 'react-dom'
+
 export const KoboDatabaseBody = memo(({
   form,
   data,
@@ -18,6 +21,7 @@ export const KoboDatabaseBody = memo(({
   form: KoboApiForm
   data: KoboAnswer<Record<string, any>>[],
 }) => {
+  const {m} = useI18n()
   const {formatDateTime, formatDate} = useI18n()
   const optionsTranslations = useMemo(() => {
     const res: Record<string, Record<string, string>> = {}
@@ -43,12 +47,14 @@ export const KoboDatabaseBody = memo(({
                 }
                 case 'calculate':
                 case 'select_one_from_file':
+                case 'username':
                 case 'text':
                 case 'decimal':
                 case 'integer': {
                   return <span title={row[q.name]}>{row[q.name]}</span>
                 }
                 case 'date':
+                case 'today':
                 case 'start':
                 case 'end': {
                   return map(row[q.name], (_: Date) => (
@@ -63,12 +69,25 @@ export const KoboDatabaseBody = memo(({
                 case 'select_one': {
                   return map(row[q.name], v => {
                     const render = optionsTranslations[q.select_from_list_name!][v]
-                    return <span title={render}>{render}</span>
+                    if (render)
+                      return <span title={render}>{render}</span>
+                    return (
+                      <span title={row[q.name]}>
+                        <TableIcon color="disabled" tooltip={m._koboDatabase.valueNoLongerInOption} sx={{mr: 1}}>error</TableIcon>
+                        {row[q.name]}
+                      </span>
+                    )
                   })
                 }
                 case 'select_multiple': {
                   return map(row[q.name], (v: string[]) => {
                     const render = v.map(_ => optionsTranslations[q.select_from_list_name!][_]).join(' | ')
+                    return <span title={render}>{render}</span>
+                  })
+                }
+                case 'geopoint': {
+                  return map(row[q.name], (x: any) => {
+                    const render = JSON.stringify(x)
                     return <span title={render}>{render}</span>
                   })
                 }

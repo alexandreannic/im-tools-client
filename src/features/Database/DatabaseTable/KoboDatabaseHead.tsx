@@ -2,8 +2,10 @@ import React, {memo} from 'react'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Box} from '@mui/material'
 import {AAIconBtnProps} from '@/shared/IconBtn'
-import {SheetIcon} from '@/features/Database/DatabaseTable/DatabaseSubHeader'
+import {SheetIconBtn} from '@/features/Database/DatabaseTable/DatabaseSubHeader'
 import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
+
+import {TableIcon, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
 
 export const KoboDatabaseHead = memo(({
   form,
@@ -42,48 +44,52 @@ export const KoboDatabaseHead = memo(({
       {form.content.survey.map(q => {
         const sortedByThis = sheetSearch.sortBy === q.name ?? false
         const active = sortedByThis || filters[q.name]
-        const commonProps: Partial<AAIconBtnProps> = {
-          disabled: true,
+        const commonProps: Partial<TableIconProps> = {
+          color: 'disabled',
           sx: {marginRight: 'auto'},
           tooltip: q.type
         }
         return (
           <td key={q.name} className="td-right">
-            <span style={{display: 'flex', justifyContent: 'flex-end'}}>
+            <span style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
             {(() => {
               switch (q.type) {
                 case 'start':
                 case 'end':
+                case 'today':
                 case 'date':
-                  return <SheetIcon icon="event" {...commonProps}/>
-
+                  return <TableIcon children="event" {...commonProps}/>
+                case 'geopoint':
+                  return <TableIcon children="location_on" {...commonProps}/>
+                case 'username':
+                  return <TableIcon children="person" {...commonProps}/>
                 case 'select_multiple': {
-                  return <SheetIcon icon="check_box" {...commonProps}/>
+                  return <TableIcon children="check_box" {...commonProps}/>
                 }
                 case 'select_one': {
-                  return <SheetIcon icon="radio_button_checked" {...commonProps}/>
+                  return <TableIcon children="radio_button_checked" {...commonProps}/>
                 }
                 case 'decimal':
                 case 'integer': {
-                  return <SheetIcon icon="tag" {...commonProps}/>
+                  return <TableIcon children="tag" {...commonProps}/>
                 }
                 case 'calculate': {
-                  return <SheetIcon icon="functions" {...commonProps}/>
+                  return <TableIcon children="functions" {...commonProps}/>
                 }
                 case 'begin_repeat': {
-                  return <SheetIcon icon="repeat" {...commonProps}/>
+                  return <TableIcon children="repeat" {...commonProps}/>
                 }
                 case 'select_one_from_file': {
-                  return <SheetIcon icon="attach_file" {...commonProps}/>
+                  return <TableIcon children="attach_file" {...commonProps}/>
                 }
                 case 'image': {
-                  return <SheetIcon icon="image" {...commonProps}/>
+                  return <TableIcon children="image" {...commonProps}/>
                 }
                 case 'text': {
-                  return <SheetIcon icon="short_text" {...commonProps}/>
+                  return <TableIcon children="short_text" {...commonProps}/>
                 }
                 case 'note': {
-                  return <SheetIcon icon="info" {...commonProps}/>
+                  return <TableIcon children="info" {...commonProps}/>
                 }
                 default: {
                   return q.type
@@ -91,9 +97,9 @@ export const KoboDatabaseHead = memo(({
               }
             })()}
               {['calculate', 'integer', 'decimal', 'select_multiple', 'select_one', 'start', 'end', 'date',].includes(q.type) && (
-                <SheetIcon icon="bar_chart" onClick={e => onOpenStats(q, e)}/>
+                <SheetIconBtn icon="bar_chart" onClick={e => onOpenStats(q, e)}/>
               )}
-              <SheetIcon
+              <SheetIconBtn
                 color={active ? 'primary' : undefined}
                 icon="filter_alt"
                 onClick={e => onOpenColumnConfig(q, e)}

@@ -948,6 +948,7 @@ export const en = Object.freeze({
       }
     },
     _koboDatabase: {
+      valueNoLongerInOption: 'This value is no longer in the options list',
       noAccessToForm: `You don't have access to any databases.`
     }
   },

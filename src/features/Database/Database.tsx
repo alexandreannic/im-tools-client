@@ -21,6 +21,7 @@ import {DatabaseTableRoute} from '@/features/Database/DatabaseTable/DatabaseTabl
 import {AppFeatureId} from '@/features/appFeatureId'
 import {Access} from '@/core/sdk/server/access/Access'
 import {Fender, Txt} from 'mui-extension'
+import {DatabaseEntry} from '@/features/Database/DatabaseEntry/DatabaseEntry'
 
 export const databaseUrlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -102,6 +103,7 @@ export const Database = () => {
             <Route path={databaseModule.siteMap.home()} element={<DatabaseHome/>}>
               <Route path={databaseModule.siteMap.database.absolute()} element={<DatabaseTableRoute/>}/>
               <Route path={databaseModule.siteMap.access.absolute()} element={<DatabaseAccessRoute/>}/>
+              <Route path={databaseModule.siteMap.entry.absolute()} element={<DatabaseEntry/>}/>
             </Route>
           </Routes>
         </Layout>

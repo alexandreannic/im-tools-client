@@ -5,12 +5,16 @@ export const databaseModule = {
   basePath,
   siteMap: {
     home: base,
+    entry: {
+      // relative: `:id`,
+      absolute: (serverId = ':serverId', formId = ':formId') => base(serverId, formId) + `/:id`
+    },
     database: {
-      relative: `database`,
+      // relative: `database`,
       absolute: (serverId = ':serverId', formId = ':formId') => base(serverId, formId) + '/database'
     },
     access: {
-      relative: `database`,
+      // relative: `access`,
       absolute: (serverId = ':serverId', formId = ':formId') => base(serverId, formId) + '/access'
     },
     // database: (serverId = ':serverId', formId = ':formId') => `form/${serverId}/${formId}/database`,

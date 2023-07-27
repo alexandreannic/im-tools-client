@@ -14,7 +14,7 @@ import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 import {format} from 'date-fns'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 
-export const SheetIcon = ({
+export const SheetIconBtn = ({
   sx,
   color,
   ...props

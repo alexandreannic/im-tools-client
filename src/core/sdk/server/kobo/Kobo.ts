@@ -82,6 +82,7 @@ export class Kobo {
       const type = indexedSchema[question]?.type
       if (!type || !answer) return
       switch (type) {
+        case 'today':
         case 'date': {
           (mapped as any)[question] = new Date(answer)
           break
