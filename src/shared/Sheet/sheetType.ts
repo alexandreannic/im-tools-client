@@ -39,7 +39,7 @@ export interface SheetOptions {
 export interface SheetSearch<T = any> {
   limit: number
   offset: number
-  sortBy?: KeyOf<T>
+  sortBy?: string
   orderBy?: OrderBy
 }
 
@@ -50,7 +50,7 @@ export type SheetFilter = string
 
 export interface SheetPopoverParams<T = any> {
   anchorEl: HTMLElement
-  columnId: KeyOf<T>
+  columnId: string
 }
 
 export interface SheetColumnConfigPopoverParams<T = any, TType = SheetPropertyType> extends SheetPopoverParams<T> {

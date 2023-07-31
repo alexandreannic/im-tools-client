@@ -2,19 +2,18 @@ import {Box, BoxProps, LinearProgress, SxProps, TablePagination, Theme,} from '@
 import React, {ReactNode, useCallback, useContext, useMemo, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Fender} from 'mui-extension'
-import {usePersistentState} from 'react-persistent-state'
 import {KeyOf, Utils} from '@/utils/utils'
 import {SheetFilterDialog} from './SheetFilterDialog'
 import {Arr, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
 import {useAsync, useSetState} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
-import {useSheetData} from '@/shared/Sheet/useSheetData'
-import {SheetBody} from '@/shared/Sheet/SheetBody'
-import {SheetHead} from '@/shared/Sheet/SheetHead'
+import {useSheetData} from './useSheetData'
+import {SheetBody} from './SheetBody'
+import {SheetHead} from './SheetHead'
 import {SheetColumnConfigPopoverParams, SheetContext, SheetOptions, SheetPropertyType, SheetSearch} from '@/shared/Sheet/sheetType'
-import {NumberChoicesPopover} from '@/features/Database/DatabaseTable/DatabasePopover'
-import {format, parse} from 'date-fns'
+import {NumberChoicesPopover} from '@/shared/Sheet/SheetPopover'
+import {format} from 'date-fns'
 
 type OrderBy = 'asc' | 'desc'
 
@@ -51,7 +50,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
 }
 
 export interface SheetColumnProps<T extends SheetRow> {
-  id: KeyOf<T>
+  id: string
   render: (_: T) => ReactNode
   noSort?: boolean
   width?: number
@@ -118,14 +117,14 @@ export const Sheet = <T extends SheetRow = SheetRow>({
 
   // const [filteringProperty, setFilteringProperty] = useState<KeyOf<T> | undefined>(undefined)
   const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilter>>({} as any)
-  const displayableColumns: SheetColumnProps<T>[] = useMemo(() => {
-    return columns.filter(_ => !_.hidden)
-  }, [columns])
 
-  const [hiddenColumns, setHiddenColumns] = usePersistentState<(KeyOf<T>)[]>([], id)
-  const filteredColumns = useMemo(() => displayableColumns.filter(_ => !hiddenColumns.includes(_.id)), [columns, hiddenColumns])
+  // const displayableColumns: SheetColumnProps<T>[] = useMemo(() => {
+  //   return columns.filter(_ => !_.hidden)
+  // }, [columns])
+  // const [hiddenColumns, setHiddenColumns] = usePersistentState<(KeyOf<T>)[]>([], id)
+  // const filteredColumns = useMemo(() => displayableColumns.filter(_ => !hiddenColumns.includes(_.id)), [columns, hiddenColumns])
 
-  const onOrderBy = (columnId: KeyOf<T>, orderBy?: OrderBy) => {
+  const onOrderBy = (columnId: string, orderBy?: OrderBy) => {
     setSearch(prev => ({...prev, orderBy, sortBy: columnId}))
   }
 

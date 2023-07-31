@@ -105,7 +105,7 @@ export const DatabaseAccessForm = ({
             name="question"
             control={accessForm.control}
             render={({field: {onChange, value, ...field}}) => (
-              <Autocomplete<string>
+              <Autocomplete
                 {...field}
                 sx={{mb: 2.5}}
                 value={value}
@@ -147,7 +147,6 @@ export const DatabaseAccessForm = ({
             if (question === '') return
             const listName = indexQuestion[question][0].select_from_list_name
             const options = indexOptionsByListName[listName!]
-            console.log('accessForm.watch(\'question\')', accessForm.watch('question'))
             return (
               <Controller
                 name="questionAnswer"

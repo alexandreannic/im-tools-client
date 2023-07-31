@@ -3,7 +3,7 @@ import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
 import {AccessLevel} from '@/core/sdk/server/access/Access'
 import {Txt} from 'mui-extension'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {Autocomplete} from '@mui/material'
+import {Autocomplete, Chip} from '@mui/material'
 import {Enum} from '@alexandreannic/ts-utils'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {AaSelect} from '@/shared/Select/Select'
@@ -14,7 +14,7 @@ export interface IAccessForm {
   selectBy?: 'email' | 'job'
   email?: string
   drcOffice?: DrcOffice
-  drcJob?: DrcJob
+  drcJob?: DrcJob[]
   level: AccessLevel
 }
 
@@ -58,6 +58,17 @@ export const AccessForm = ({
             render={({field: {onChange, ...field}}) => (
               <Autocomplete
                 {...field}
+                multiple
+                renderTags={(value: string[], getTagProps) =>
+                  value.map((option: string, index: number) => (
+                    <Chip
+                      size="small"
+                      variant="outlined"
+                      label={option}
+                      {...getTagProps({index})}
+                    />
+                  ))
+                }
                 onChange={(e: any, _) => _ && onChange(_)}
                 sx={{mb: 2.5}}
                 options={Enum.values(DrcJob) ?? []}
