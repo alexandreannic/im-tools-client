@@ -148,6 +148,7 @@ export const en = Object.freeze({
     taxID: 'Tax ID',
     id: 'ID',
     access: 'Access',
+    accesses: 'Accesses',
     mainConcerns: 'Main concern',
     accommodationCondition: 'Accommodation condition',
     tenureOfAccommodation: 'Accommodation tenure',

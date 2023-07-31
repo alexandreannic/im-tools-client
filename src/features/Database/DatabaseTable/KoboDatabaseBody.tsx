@@ -1,4 +1,4 @@
-import React, {Dispatch, memo, SetStateAction, useMemo} from 'react'
+import React, {memo, useMemo} from 'react'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {useI18n} from '@/core/i18n'
@@ -6,9 +6,7 @@ import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {map} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
-
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
-import {render} from 'react-dom'
 
 export const KoboDatabaseBody = memo(({
   form,

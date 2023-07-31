@@ -75,7 +75,7 @@ const WpfDeduplicationSidebar = () => {
         <NavLink to={path(wfpDeduplicationModule.siteMap.access)}>
           {({isActive}) =>
             <SidebarItem icon="person_add" active={isActive}>
-              {m.grantAccess}
+              {m.accesses}
             </SidebarItem>
           }
         </NavLink>

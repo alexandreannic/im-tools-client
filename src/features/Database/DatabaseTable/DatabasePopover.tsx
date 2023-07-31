@@ -1,7 +1,5 @@
 import {Box, Popover, PopoverProps} from '@mui/material'
-import {KoboQuestionChoice} from '@/core/sdk/server/kobo/KoboApi'
 import React, {ReactNode, useMemo} from 'react'
-import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
 import {ChartTools} from '@/core/chartTools'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Arr} from '@alexandreannic/ts-utils'
@@ -10,24 +8,8 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useI18n} from '@/core/i18n'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
-import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
-import {format} from 'date-fns'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
-
-export const SheetIconBtn = ({
-  sx,
-  color,
-  ...props
-}: AAIconBtnProps) => {
-  return (
-    <AAIconBtn
-      color={color}
-      size="small"
-      sx={{verticalAlign: 'middle', fontSize: '20px !important', ...sx}}
-      {...props}
-    />
-  )
-}
+import {SheetOptions} from '@/shared/Sheet/sheetType'
 
 const RenderRow = ({label, value}: {
   label: ReactNode
@@ -81,32 +63,34 @@ export const NumberChoicesPopover = <T, >({
 }
 
 export const MultipleChoicesPopover = <T, >({
-  question,
+  property,
+  title,
   data,
   anchorEl,
   onClose,
   multiple,
-  langIndex,
   translations,
 }: {
-  langIndex?: number
-  translations: KoboQuestionChoice[]
+  title?: ReactNode
+  translations?: SheetOptions[]
   multiple?: boolean
-  question: keyof T
+  property: keyof T
   data: T[]
 } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
   const {m} = useI18n()
   const chart = useMemo(() => {
-    const mapped = Arr(data).map(_ => _[question] as any).compact()
+    const mapped = Arr(data).map(_ => _[property] as any).compact()
     const chart = multiple
       ? ChartTools.multiple({data: mapped})
       : ChartTools.single({data: mapped})
-    return ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.name, getKoboLabel(_, langIndex)]))(ChartTools.sortBy.value(chart))
-  }, [question, data, langIndex, translations])
+    return translations
+      ? ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.name, _.label]))(ChartTools.sortBy.value(chart))
+      : ChartTools.sortBy.value(chart)
+  }, [property, data, translations])
   return (
-    <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
+    <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose} slotProps={{paper: {sx: {minWidth: 400, maxWidth: 500}}}}>
       <PanelHead>
-        {question as string}
+        <Txt truncate>{title ?? property as string}</Txt>
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
         <HorizontalBarChartGoogle data={chart}/>

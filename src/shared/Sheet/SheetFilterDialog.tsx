@@ -10,8 +10,8 @@ import {Txt} from 'mui-extension'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
-import {KoboForm} from '@/core/sdk/server/kobo/Kobo'
 import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
+import {SheetOptions} from '@/shared/Sheet/sheetType'
 
 export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   orderBy?: OrderBy
@@ -24,7 +24,7 @@ export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   columnId: string
   title: string
   type?: KoboQuestionType //'date' | 'string' | 'list' | 'number' | 'list_multiple'
-  options?: {value: string, label: string}[]
+  options?: SheetOptions[]
 }
 
 //
@@ -103,7 +103,7 @@ export const SheetFilterDialog = ({
               return (
                 <MultipleChoices
                   options={options?.map(_ => ({
-                    value: _.value,
+                    value: _.name,
                     children: _.label
                   })) ?? []}
                   initialValue={value as any}

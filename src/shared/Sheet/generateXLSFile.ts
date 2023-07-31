@@ -28,6 +28,7 @@ export const generateXLSFromArray = async <T>({
   sheet.views = [
     {state: 'frozen', xSplit: 0, ySplit: 1}
   ]
+  console.log(sheet)
   const buffer = await workbook.xlsx.writeBuffer()
   downloadBufferAsFile(buffer as any, filename + '.xlsx')
 }
