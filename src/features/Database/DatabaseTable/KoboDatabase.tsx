@@ -1,16 +1,15 @@
 import {useI18n} from '@/core/i18n'
 import React, {ReactNode, useCallback, useMemo, useState} from 'react'
-import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionSchema, KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
 import {Kobo, KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {orderBy} from 'lodash'
 import {multipleFilters, paginateData} from '@/utils/utils'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {Enum, map} from '@alexandreannic/ts-utils'
 import {Box, TablePagination} from '@mui/material'
-import {DatesPopover, MultipleChoicesPopover, NumberChoicesPopover} from '@/features/Database/DatabaseTable/DatabaseSubHeader'
+import {DatesPopover, MultipleChoicesPopover, NumberChoicesPopover} from '@/features/Database/DatabaseTable/DatabasePopover'
 import {SheetFilterDialog} from '@/shared/Sheet/SheetFilterDialog'
 import {AaSelect} from '@/shared/Select/Select'
-import {KoboDatabaseType} from '@/features/Database/DatabaseTable/koboDatabaseType'
 import {KoboDatabaseHead} from '@/features/Database/DatabaseTable/KoboDatabaseHead'
 import {KoboDatabaseBody} from '@/features/Database/DatabaseTable/KoboDatabaseBody'
 import {Fender} from 'mui-extension'
@@ -18,6 +17,7 @@ import {KoboDatabaseExportBtn} from '@/features/Database/DatabaseTable/KoboDatab
 import {useKoboDatabaseContext} from '@/features/Database/DatabaseTable/KoboDatabaseContext'
 import {KoboRepeatGroupDetails} from '@/features/Database/DatabaseTable/KoboRepeatGroupDetails'
 import {endOfDay, startOfDay} from 'date-fns'
+import {SheetColumnConfigPopoverParams, SheetFilter, SheetSearch} from '@/shared/Sheet/sheetType'
 
 export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
@@ -30,8 +30,8 @@ export const KoboDatabase = (props: {
   const {sanitizedForm: form, choicesIndex, questionIndex} = useKoboDatabaseContext()
   const {m, formatDate, formatDateTime} = useI18n()
   const [langIndex, setLangIndex] = useState<number>(0)//, `lang-index-${Utils.slugify(form.name)}`)
-  const [filters, setFilters] = useState<Record<string, KoboDatabaseType.Filter>>({} as any)
-  const [sheetSearch, setSheetSearch] = useState<KoboDatabaseType.Search>({
+  const [filters, setFilters] = useState<Record<string, SheetFilter>>({} as any)
+  const [sheetSearch, setSheetSearch] = useState<SheetSearch<KoboAnswer>>({
     limit: 20,
     offset: 0,
     sortBy: 'end',
@@ -48,8 +48,8 @@ export const KoboDatabase = (props: {
     group: Record<string, any>[]
   } | undefined>()
 
-  const [openFilterPopover, setOpenFilterPopover] = useState<KoboDatabaseType.ColumnConfigPopoverParams | undefined>()
-  const [openStatsPopover, setOpenStatsPopover] = useState<KoboDatabaseType.ColumnConfigPopoverParams | undefined>()
+  const [openFilterPopover, setOpenFilterPopover] = useState<SheetColumnConfigPopoverParams<KoboAnswer, KoboQuestionType> | undefined>()
+  const [openStatsPopover, setOpenStatsPopover] = useState<SheetColumnConfigPopoverParams<KoboAnswer, KoboQuestionType> | undefined>()
 
   const onOpenBeginRepeat = useCallback((questionName: string, group: Record<string, any>[], event: any) => {
     setOpenBeginRepeat({
@@ -64,16 +64,16 @@ export const KoboDatabase = (props: {
       anchorEl: event.currentTarget,
       columnId: q.name,
       type: q.type,
-      options: choicesIndex[q.select_from_list_name!]?.map(_ => ({value: _.name, label: getKoboLabel(_, langIndex)})),
+      // options: choicesIndex[q.select_from_list_name!]?.map(_ => ({value: _.name, label: getKoboLabel(_, langIndex)})),
     })
   }, [choicesIndex])
 
-  const onOpenColumnConfig = useCallback((q: KoboQuestionSchema, event: any) => {
+  const onOpenFilterConfig = useCallback((q: KoboQuestionSchema, event: any) => {
     setOpenFilterPopover({
       anchorEl: event.currentTarget,
       columnId: q.name,
       type: q.type,
-      options: choicesIndex[q.select_from_list_name!]?.map(_ => ({value: _.name, label: getKoboLabel(_, langIndex)})),
+      options: choicesIndex[q.select_from_list_name!]?.map(_ => ({name: _.name, label: getKoboLabel(_, langIndex)})),
     })
   }, [choicesIndex])
 
@@ -189,7 +189,6 @@ export const KoboDatabase = (props: {
           />
         )}
         {map(openStatsPopover, c => {
-          console.log('open', c)
           switch (c.type) {
             case 'decimal':
             case 'integer':
@@ -214,11 +213,10 @@ export const KoboDatabase = (props: {
             case 'select_multiple':
             case 'calculate':
               return <MultipleChoicesPopover
-                langIndex={langIndex}
-                translations={choicesIndex[questionIndex[c.columnId].select_from_list_name!]}
+                translations={choicesIndex[questionIndex[c.columnId].select_from_list_name!].map(_ => ({name: _.name, label: getKoboLabel(_, langIndex)}))}
                 anchorEl={c.anchorEl}
                 multiple={c.type === 'select_multiple'}
-                question={c.columnId}
+                property={c.columnId}
                 data={filteredData ?? []}
                 onClose={() => setOpenStatsPopover(undefined)}
               />
@@ -230,7 +228,7 @@ export const KoboDatabase = (props: {
           <KoboDatabaseHead
             form={form}
             onOpenStats={onOpenStatsConfig}
-            onOpenColumnConfig={onOpenColumnConfig}
+            onOpenColumnConfig={onOpenFilterConfig}
             sheetSearch={sheetSearch}
             filters={filters}
             langIndex={langIndex}

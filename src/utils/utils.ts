@@ -2,6 +2,8 @@ import {Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
 import {AssertionError} from 'assert'
 
+export type KeyOf<T> = Extract<keyof T, string>
+
 export const generateId = () => ('' + Math.random()).split('.')[1]
 
 export type ValueOf<T> = T[keyof T];
