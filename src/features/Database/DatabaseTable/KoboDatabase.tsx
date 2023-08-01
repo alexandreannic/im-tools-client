@@ -4,9 +4,9 @@ import {KoboQuestionSchema, KoboQuestionType} from '@/core/sdk/server/kobo/KoboA
 import {Kobo, KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {orderBy} from 'lodash'
 import {multipleFilters, paginateData} from '@/utils/utils'
-import {OrderBy} from '@alexandreannic/react-hooks-lib'
+import {OrderBy, useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {Enum, map} from '@alexandreannic/ts-utils'
-import {Box, TablePagination} from '@mui/material'
+import {Badge, Box, TablePagination} from '@mui/material'
 import {DatesPopover, MultipleChoicesPopover, NumberChoicesPopover} from '@/shared/Sheet/SheetPopover'
 import {SheetFilterDialog} from '@/shared/Sheet/SheetFilterDialog'
 import {AaSelect} from '@/shared/Select/Select'
@@ -18,6 +18,7 @@ import {useKoboDatabaseContext} from '@/features/Database/DatabaseTable/KoboData
 import {KoboRepeatGroupDetails} from '@/features/Database/DatabaseTable/KoboRepeatGroupDetails'
 import {endOfDay, startOfDay} from 'date-fns'
 import {SheetColumnConfigPopoverParams, SheetFilter, SheetSearch} from '@/shared/Sheet/sheetType'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
@@ -137,6 +138,8 @@ export const KoboDatabase = (props: {
     return paginateData<KoboMappedAnswer>(sheetSearch.limit, sheetSearch.offset)(filteredAndSortedData)
   }, [sheetSearch.limit, sheetSearch.offset, filteredAndSortedData])
 
+  const filterCount = useMemoFn(filters, _ => Enum.keys(_).length || undefined)
+
   return (
     <Box>
       <Box sx={{p: 1}}>
@@ -146,6 +149,9 @@ export const KoboDatabase = (props: {
           onChange={setLangIndex}
           options={['xml', ...form.content.translations].map((_, i) => ({children: _, value: i - 1}))}
         />
+        <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => setFilters({})}>
+          <AAIconBtn icon="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
+        </Badge>
         <KoboDatabaseExportBtn
           data={filteredAndSortedData}
           form={form}
