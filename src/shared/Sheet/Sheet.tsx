@@ -132,7 +132,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
     console.log('_data.filteredAndSortedData', _data.filteredAndSortedData)
     if (_data.filteredAndSortedData) {
       _generateXLSFromArray.call({
-        filename: Utils.slugify(title) ?? 'noname',
+        sheetName: Utils.slugify(title) ?? 'noname',
         data: _data.filteredAndSortedData,
         schema: columns
           .filter(_ => _.renderExport)

@@ -29,7 +29,7 @@ export const KoboDatabaseExportBtn = <T extends KoboMappedAnswer, >({
   const exportToCSV = () => {
     if (data) {
       _generateXLSFromArray.call({
-        filename: Utils.slugify(form.name),
+        sheetName: Utils.slugify(form.name),
         data: data,
         schema: form.content.survey.map(q => {
           const name = q.name as KeyOf<T>
