@@ -1,8 +1,7 @@
-import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
 import * as ExcelJS from 'exceljs'
 import {downloadBufferAsFile} from '@/utils/utils'
 
-interface Params<T> {
+export interface GenerateXlsFromArrayParams<T> {
   sheetName: string
   data: T[]
   schema: {
@@ -11,12 +10,12 @@ interface Params<T> {
   }[]
 }
 
-export const generateXLSFromArray = async <T>(fileName: string, params: Params<T>[] | Params<T>) => {
+export const generateXLSFromArray = async <T>(fileName: string, params: GenerateXlsFromArrayParams<T>[] | GenerateXlsFromArrayParams<T>) => {
   const workbook = new ExcelJS.Workbook();
   [params].flatMap(_ => _).map(({
     data, schema, sheetName
   }) => {
-    const sheet = workbook.addWorksheet('data')
+    const sheet = workbook.addWorksheet(sheetName)
     const header = sheet.addRow(schema.map(_ => _.name))
     // header.fill = {
     //   type: 'pattern',
@@ -24,12 +23,13 @@ export const generateXLSFromArray = async <T>(fileName: string, params: Params<T
     // bgColor: {argb: '#f2f2f2'},
     // }
     data.forEach(d => {
-      sheet.addRow(schema.map(_ => _.render?.(d)))
+      sheet.addRow(schema.map(_ => {
+        return _.render?.(d)
+      }))
     })
     sheet.views = [
       {state: 'frozen', xSplit: 0, ySplit: 1}
     ]
-    console.log(sheet)
   })
   const buffer = await workbook.xlsx.writeBuffer()
   downloadBufferAsFile(buffer as any, fileName + '.xlsx')

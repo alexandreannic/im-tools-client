@@ -34,7 +34,7 @@ export const KoboDatabaseProvider = ({
           {
             name: 'id',
             label: mapFor(form.content.translations.length, () => 'ID'),
-            type: 'text' as KoboQuestionType,
+            type: 'text' as const,
             $kuid: 'id',
             $autoname: 'id',
             $qpath: 'id',
@@ -43,7 +43,7 @@ export const KoboDatabaseProvider = ({
           {
             name: 'submission_time',
             label: mapFor(form.content.translations.length, () => m.submissionTime),
-            type: 'date' as KoboQuestionType,
+            type: 'date' as const,
             $kuid: 'submission_time',
             $autoname: 'submission_time',
             $qpath: 'submission_time',
@@ -56,7 +56,7 @@ export const KoboDatabaseProvider = ({
           {
             name: 'submitted_by',
             label: mapFor(form.content.translations.length, () => m.submittedBy),
-            type: 'text' as KoboQuestionType,
+            type: 'text' as const,
             $kuid: 'submitted_by',
             $autoname: 'submitted_by',
             $qpath: 'submitted_by',
@@ -92,7 +92,10 @@ export const KoboDatabaseProvider = ({
           if (choiceName)
             return getKoboLabel(optionsTranslations[listName!][choiceName], langIndex)
         } catch (e) {
-          console.log({question: helper.questionIndex[questionName], listName, choiceName, optionsTranslations})
+          console.warn(
+            'Cannot translate this options. Maybe the question type has changed?',
+            {question: helper.questionIndex[questionName], listName, choiceName, optionsTranslations}
+          )
         }
         return ''
       }
