@@ -3,7 +3,6 @@ import {PanelBody, Txt} from 'mui-extension'
 import React, {useMemo} from 'react'
 import {Popover} from '@mui/material'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {Enum} from '@alexandreannic/ts-utils'
 
 export const KoboRepeatGroupDetails = ({
   anchorEl,

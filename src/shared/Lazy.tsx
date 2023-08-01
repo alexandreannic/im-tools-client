@@ -16,7 +16,3 @@ export const Lazy: Type = ({
   const res = useMemo(() => deps.map(fn), deps)
   return children(...res)
 }
-// , (prev, curr) => {
-//   console.log('memo', prev, curr)
-//   return !!prev.deps.find(p => !!curr.deps.filter(c => c !== p))
-// })
