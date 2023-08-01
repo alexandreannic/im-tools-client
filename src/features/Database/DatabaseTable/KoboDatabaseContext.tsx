@@ -4,11 +4,13 @@ import {Arr, mapFor} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {ignoredColType} from '@/features/Database/Database'
 import {Utils} from '@/utils/utils'
+import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 
 export interface KoboDatabaseContext {
   sanitizedForm: KoboApiForm
   choicesIndex: Record<string, KoboQuestionChoice[]>
   questionIndex: Record<string, KoboQuestionSchema>
+  translateOption: (_: {questionName: string, choiceName?: string, langIndex?: number}) => string | ''
 }
 
 const _KoboDatabaseContext = React.createContext({} as KoboDatabaseContext)
@@ -72,8 +74,29 @@ export const KoboDatabaseProvider = ({
     }
   }, [form])
 
+  const optionsTranslations = useMemo(() => {
+    const res: Record<string, Record<string, KoboQuestionChoice>> = {}
+    form.content.choices.forEach(choice => {
+      if (!res[choice.list_name]) res[choice.list_name] = {}
+      res[choice.list_name][choice.name] = choice
+    })
+    return res
+  }, [form])
+
   return (
-    <_KoboDatabaseContext.Provider value={helper}>
+    <_KoboDatabaseContext.Provider value={{
+      ...helper,
+      translateOption: ({questionName, choiceName, langIndex}) => {
+        const listName = helper.questionIndex[questionName].select_from_list_name
+        try {
+          if (choiceName)
+            return getKoboLabel(optionsTranslations[listName!][choiceName], langIndex)
+        } catch (e) {
+          console.log({question: helper.questionIndex[questionName], listName, choiceName, optionsTranslations})
+        }
+        return ''
+      }
+    }}>
       {children}
     </_KoboDatabaseContext.Provider>
   )

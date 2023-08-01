@@ -1,12 +1,12 @@
-import React, {memo, useMemo} from 'react'
+import React, {memo} from 'react'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {useI18n} from '@/core/i18n'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {map} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {useKoboDatabaseContext} from '@/features/Database/DatabaseTable/KoboDatabaseContext'
 
 export const KoboDatabaseBody = memo(({
   form,
@@ -21,15 +21,7 @@ export const KoboDatabaseBody = memo(({
 }) => {
   const {m} = useI18n()
   const {formatDateTime, formatDate} = useI18n()
-  const optionsTranslations = useMemo(() => {
-    const res: Record<string, Record<string, string>> = {}
-    form.content.choices.forEach(choice => {
-      if (!res[choice.list_name]) res[choice.list_name] = {}
-      res[choice.list_name][choice.name] = getKoboLabel(choice, langIndex)
-    })
-    return res
-  }, [form, langIndex])
-
+  const {translateOption} = useKoboDatabaseContext()
   return (
     <tbody>
     {data.map(row =>
@@ -66,12 +58,12 @@ export const KoboDatabaseBody = memo(({
                 }
                 case 'select_one': {
                   return map(row[q.name], v => {
-                    const render = optionsTranslations[q.select_from_list_name!][v]
+                    const render = translateOption({questionName: q.name, choiceName: row[q.name], langIndex})
                     if (render)
                       return <span title={render}>{render}</span>
                     return (
                       <span title={row[q.name]}>
-                        <TableIcon color="disabled" tooltip={m._koboDatabase.valueNoLongerInOption} sx={{mr: 1}}>error</TableIcon>
+                        <TableIcon color="disabled" tooltip={m._koboDatabase.valueNoLongerInOption} sx={{mr: 1}} icon="error"/>
                         {row[q.name]}
                       </span>
                     )
@@ -79,7 +71,7 @@ export const KoboDatabaseBody = memo(({
                 }
                 case 'select_multiple': {
                   return map(row[q.name], (v: string[]) => {
-                    const render = v.map(_ => optionsTranslations[q.select_from_list_name!][_]).join(' | ')
+                    const render = v.map(_ => translateOption({questionName: q.name, choiceName: _, langIndex})).join(' | ')
                     return <span title={render}>{render}</span>
                   })
                 }
