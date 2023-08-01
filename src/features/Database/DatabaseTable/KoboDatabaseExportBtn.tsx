@@ -2,7 +2,7 @@ import {useAsync} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
 import {KeyOf, Utils} from '@/utils/utils'
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
-import {getKoboPath} from '@/shared/TableImg/KoboAttachedImg'
+import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'
 import {getKoboImagePath} from '@/features/Mpca/MpcaData/MpcaData'
 import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 import {KoboDatabaseBtn} from '@/features/Database/DatabaseTable/koboDatabaseShared'
@@ -44,7 +44,7 @@ export const KoboDatabaseExportBtn = <T extends KoboMappedAnswer, >({
                 case 'date':
                   return row.end
                 case 'image':
-                  return map(getKoboPath(row.attachments, row[name] as string), getKoboImagePath)
+                  return map(getKoboPath(row.attachments, row[name] as string), getUnsecureKoboImgUrl)
                 case 'select_one':
                   return translateOption({questionName: q.name, choiceName: row[q.name] as string, langIndex})
                 case 'select_multiple':

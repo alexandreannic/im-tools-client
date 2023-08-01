@@ -54,6 +54,9 @@ export const SheetHeadContent = ({
           case 'text': {
             return <TableIcon icon="short_text" {...commonProps}/>
           }
+          case 'geopoint': {
+            return <TableIcon icon="location_on" {...commonProps}/>
+          }
           case 'note': {
             return <TableIcon icon="info" {...commonProps}/>
           }
