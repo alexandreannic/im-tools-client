@@ -47,7 +47,7 @@ export const DatabaseTableRoute = () => {
         {data && map(_formSchemas.get(formId), schema => (
           <KoboDatabaseProvider form={schema}>
             <KoboDatabase data={data.data} header={
-              <KoboDatabaseBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m.refresh} onClick={refresh}/>
+              <KoboDatabaseBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m._koboDatabase.pullData} onClick={refresh}/>
             }/>
           </KoboDatabaseProvider>
         ))}
