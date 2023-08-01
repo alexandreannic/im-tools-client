@@ -252,6 +252,7 @@ export const en = Object.freeze({
     monthlyIncomePerHH: 'Monthly income per HH',
     HHsLocation: 'HHs Location',
     idp: 'IDP',
+    selectADatabase: 'Select a database',
     noIdp: 'Non-IDP',
     comparedToPreviousMonth: 'Compared to 30 days ago',
     idps: 'IDPs',

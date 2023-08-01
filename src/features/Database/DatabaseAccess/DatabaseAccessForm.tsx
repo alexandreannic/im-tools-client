@@ -175,6 +175,7 @@ export const DatabaseAccessForm = ({
                     />}
                     renderTags={(value: string[], getTagProps) =>
                       value.map((option: string, index: number) => (
+                        // eslint-disable-next-line react/jsx-key
                         <Chip
                           size="small"
                           variant="outlined"

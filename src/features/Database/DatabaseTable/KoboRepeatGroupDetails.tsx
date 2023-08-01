@@ -18,10 +18,7 @@ export const KoboRepeatGroupDetails = ({
   onClose: () => void
   anchorEl: any,
 }) => {
-  console.log('-----------', group, form.content.survey)
   useMemo(() => {
-    // return Enum.keys(group).map(questionName => questionName.spl)
-
   }, [group, form])
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
