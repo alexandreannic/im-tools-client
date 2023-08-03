@@ -48,11 +48,18 @@ export const WfpDeduplicationData = () => {
               renderExport: true,
               render: _ => _.office, type: 'select_one', options: Enum.values(DrcOffice).map(_ => ({label: _, name: _}))
             },
+            // {
+            //   id: 'beneficiaryId',
+            //   head: 'beneficiaryId',
+            //   renderExport: true,
+            //   render: _ => _.beneficiaryId, type: 'text'
+            // },
             {
               id: 'taxId',
               head: m.taxId,
               renderExport: true,
-              render: _ => _.taxId ?? <Txt color="error">{m.mpcaDb.uploadWfpTaxIdMapping}</Txt>, type: 'text'
+              render: _ => _.taxId ?? <Txt color="error">{m.mpcaDb.uploadWfpTaxIdMapping}</Txt>,
+              type: 'text'
             },
             {
               id: 'amount',

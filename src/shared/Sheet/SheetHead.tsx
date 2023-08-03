@@ -115,16 +115,15 @@ export const SheetHead = <T extends SheetRow>({
         return (
           <th
             key={_.id}
-            style={{width: _.width}}
             // onClick={() => onSortBy(_.id)}
             className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
               'center': ' td-center',
               'right': ' td-right'
             }, _ => ''))}
           >
-            <Box className="th-resize">
+            <div className="th-resize" style={{width: _.width}}>
               {_.head}
-            </Box>
+            </div>
           </th>
         )
       })}

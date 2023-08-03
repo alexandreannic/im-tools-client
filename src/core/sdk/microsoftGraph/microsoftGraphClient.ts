@@ -5,7 +5,8 @@ export interface ExcelWorksheet {
   text: string[][]
 }
 
-export enum MPCADeduplicationResult {
+/** @deprecated use WfpDeduplication SDK*/
+enum MPCADeduplicationResult {
   Removed = 'Assistance Removed',
   Deduplicated = 'Deduplicated - see deduplication report.',
   Failed = 'Failed - Transaction and beneficiary update skipped. ID is expected to be in 0123456789 format.',
@@ -13,9 +14,11 @@ export enum MPCADeduplicationResult {
   Success = 'Success - loaded using incremental delta option with keep option',
 }
 
-export type MPCADeduplicationOffice = 'HRK' | 'DNK' | 'CEJ'
+/** @deprecated use WfpDeduplication SDK*/
+type MPCADeduplicationOffice = 'HRK' | 'DNK' | 'CEJ'
 
-export interface MPCASheetDeduplication {
+/** @deprecated use WfpDeduplication SDK*/
+interface MPCASheetDeduplication {
   list: string
   taxId: string
   deduplicatedAmount: number
@@ -29,7 +32,8 @@ export interface MPCASheetDeduplication {
   type: 'HoH Tax ID'
 }
 
-export interface MPCASheetTransaction {
+/** @deprecated use WfpDeduplication SDK*/
+interface MPCASheetTransaction {
   list: string
   taxId: string
   res: MPCADeduplicationResult
@@ -46,6 +50,7 @@ export interface MPCASheetTransaction {
 
 const parseMsDate = (date: string) => date as any//parse(date, 'yyyyMMdd', new Date())
 
+  /** @deprecated use WfpDeduplication SDK*/
 const excelIds = {
   HRK: '01CKP6OHZNTVVLUNB7HNCLMK2FYE7MQ32N',
   DNK: '01CKP6OHZNTVVLUNB7HNCLMK2FYE7MQ32N',
@@ -72,16 +77,9 @@ export class MicrosoftGraphClient {
     return this.client.get<ExcelWorksheet>(`/me/drive/items/01CKP6OH3VP5DKGSHMEREZELJDANZDU6UJ/workbook/worksheets('Trans_Res')/usedRange`)
   }
 
-  private readonly id = {
-    HRK: '01CKP6OHZNTVVLUNB7HNCLMK2FYE7MQ32N',
-    DNK: '01CKP6OHZNTVVLUNB7HNCLMK2FYE7MQ32N',
-    CEJ: '01CKP6OHZNTVVLUNB7HNCLMK2FYE7MQ32N',
-    // HRK: '01CKP6OHZBQZ3EAACYB5GJDYAC27AZ3ZE5',
-    // DNK: '01CKP6OH6UKUSLHRW2TBGZHZJG7R4OKFTJ',
-    // CEJ: '01CKP6OH7HGOLS3C7YIRG2FYUHFG6XRWPX',
-  }
 
-  readonly fetchMPCATransaction = (office: 'HRK' | 'DNK' | 'CEJ', sheetName = 'Trans_Res'): Promise<MPCASheetTransaction[]> => {
+  /** @deprecated use WfpDeduplication SDK*/
+  private readonly fetchMPCATransaction = (office: 'HRK' | 'DNK' | 'CEJ', sheetName = 'Trans_Res'): Promise<MPCASheetTransaction[]> => {
     return this.fetchExcelData(excelIds[office], sheetName).then(_ => {
       const z: MPCASheetTransaction[] = _.text.map(row => ({
         list: row[2],
@@ -102,7 +100,8 @@ export class MicrosoftGraphClient {
     })
   }
 
-  readonly fetchMPCADeduplication = (office: 'HRK' | 'DNK' | 'CEJ', sheetName = 'DeDup_Res'): Promise<MPCASheetDeduplication[]> => {
+  /** @deprecated use WfpDeduplication SDK*/
+  private readonly fetchMPCADeduplication = (office: 'HRK' | 'DNK' | 'CEJ', sheetName = 'DeDup_Res'): Promise<MPCASheetDeduplication[]> => {
     return this.fetchExcelData(excelIds[office], sheetName).then(_ => {
       const z: MPCASheetDeduplication[] = _.text.map(row => ({
         list: row[2],
