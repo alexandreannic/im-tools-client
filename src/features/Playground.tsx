@@ -437,7 +437,6 @@ export const Playground = () => {
       console.warn('More BLN', moreBLN.map(extractRelevantProperty))
       console.warn('Less BLN', lessBLN.map(extractRelevantProperty))
       console.warn('Missing WK', missingWK.map(extractRelevantProperty))
-      console.log(res)
       console.log(format(new Date(minDate), 'yyyy-MM-dd'), '-', format(new Date(maxDate), 'yyyy-MM-dd'))
       // console.log('oblasts', oblasts)
       console.log(blanketsByAgeGroup)

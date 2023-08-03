@@ -370,6 +370,14 @@ const tableTheme = (t: Theme) => ({
   '.table td:first-of-type, .table th:first-of-type': {
     paddingLeft: 8,
   },
+  '.td-sticky-end': {
+    boxShadow: t.shadows[1],
+    borderLeft: `1px solid ${t.palette.divider}`,
+    paddingTop: '1px',
+    position: 'sticky',
+    right: 0,
+    background: t.palette.background.paper,
+  },
   '.td-center': {
     textAlign: 'center !important',
   },

@@ -34,19 +34,23 @@ export const WfpDeduplicationData = () => {
               id: 'fileName',
               head: m.fileName,
               renderExport: true,
-              render: _ => _.fileName, width: 146
+              render: _ => _.fileName,
+              type: 'text',
             },
             {
               id: 'createdAt',
               head: m.createdAt,
               renderExport: true,
-              render: _ => formatDate(_.createdAt), type: 'date'
+              render: _ => formatDate(_.createdAt),
+              type: 'date'
             },
             {
               id: 'office',
               head: m.office,
               renderExport: true,
-              render: _ => _.office, type: 'select_one', options: Enum.values(DrcOffice).map(_ => ({label: _, name: _}))
+              render: _ => _.office,
+              type: 'select_one',
+              options: Enum.values(DrcOffice).map(_ => ({label: _, value: _}))
             },
             // {
             //   id: 'beneficiaryId',
@@ -59,10 +63,11 @@ export const WfpDeduplicationData = () => {
               head: m.taxId,
               renderExport: true,
               render: _ => _.taxId ?? <Txt color="error">{m.mpcaDb.uploadWfpTaxIdMapping}</Txt>,
-              type: 'text'
+              type: 'text',
             },
             {
               id: 'amount',
+              type: 'integer',
               head: m.amount,
               align: 'right', renderExport: true,
               render: _ => formatLargeNumber(_.amount)
@@ -70,6 +75,7 @@ export const WfpDeduplicationData = () => {
             {
               id: 'validFrom',
               head: m.validFrom,
+              type: 'date',
               renderExport: true,
               render: _ => formatDate(_.validFrom)
             },
@@ -77,6 +83,7 @@ export const WfpDeduplicationData = () => {
               id: 'expiry',
               head: m.expiry,
               renderExport: true,
+              type: 'date',
               render: _ => formatDate(_.expiry)
             },
             {
@@ -86,14 +93,14 @@ export const WfpDeduplicationData = () => {
               render: _ => m.mpcaDb.drcSupportSuggestion[_.suggestion],
               width: 246,
               type: 'select_one',
-              options: Enum.keys(DrcSupportSuggestion).map(_ => ({label: m.mpcaDb.drcSupportSuggestion[_], name: _})),
+              options: Enum.keys(DrcSupportSuggestion).map(_ => ({label: m.mpcaDb.drcSupportSuggestion[_], value: _})),
             },
             {
               id: 'status',
               align: 'center',
               head: m.status,
               type: 'select_one',
-              options: Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, name: _})),
+              options: Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})),
               tooltip: _ => m.mpcaDb.status[_.status],
               renderExport: false,
               render: _ => (
@@ -109,25 +116,29 @@ export const WfpDeduplicationData = () => {
               id: 'existingOrga',
               head: m.mpcaDb.existingOrga,
               renderExport: true,
-              render: _ => _.existingOrga
+              render: _ => _.existingOrga,
+              type: 'text',
             },
             {
               id: 'existingAmount',
               head: m.mpcaDb.existingAmount,
               align: 'right', renderExport: true,
-              render: _ => _.existingAmount && formatLargeNumber(_.existingAmount)
+              render: _ => _.existingAmount && formatLargeNumber(_.existingAmount),
+              type: 'integer',
             },
             {
               id: 'existingStart',
               head: m.mpcaDb.existingStart,
               renderExport: true,
-              render: _ => _.existingStart && formatDate(_.existingStart)
+              render: _ => _.existingStart && formatDate(_.existingStart),
+              type: 'date',
             },
             {
               id: 'existingEnd',
               head: m.mpcaDb.existingEnd,
               renderExport: true,
-              render: _ => _.existingEnd && formatDate(_.existingEnd)
+              render: _ => _.existingEnd && formatDate(_.existingEnd),
+              type: 'date',
             },
           ]}
           data={_search.entity?.data}

@@ -1,22 +1,28 @@
 import {Checkbox} from '@mui/material'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import React from 'react'
-import {SheetRow, useSheetContext} from '@/shared/Sheet/Sheet'
+import {SheetRow} from '@/shared/Sheet/Sheet'
+import {SheetContext} from '@/shared/Sheet/context/SheetContext'
 
 export const SheetBody = (() => {
-  const Component = <T extends SheetRow>({}: {}) => {
-    const {
-      loading,
-      _data,
-      select,
-      columns,
-      getRenderRowKey,
-      _selected,
-    } = useSheetContext()
-
+  const Component = <T extends SheetRow>({
+    data,
+    select,
+    columns,
+    getRenderRowKey,
+    selected,
+  }: Pick<SheetContext<T>,
+    'selected' |
+    'select' |
+    'columns' |
+    'getRenderRowKey'
+  > & {
+    loading?: boolean
+    data: T[]
+  }) => {
     return (
       <>
-        {_data.filteredSortedAndPaginatedData?.data.map((item, i) => (
+        {data.map((item, i) => (
           <tr
             className="tr"
             key={getRenderRowKey ? getRenderRowKey(item, i) : i}
@@ -24,7 +30,7 @@ export const SheetBody = (() => {
           >
             {select && (
               <td className="td td-center">
-                <Checkbox size="small" checked={_selected.has(select.getId(item))} onChange={() => _selected.toggle(select.getId(item))}/>
+                <Checkbox size="small" checked={selected.has(select.getId(item))} onChange={() => selected.toggle(select.getId(item))}/>
               </td>
             )}
             {columns.map((_, i) => (

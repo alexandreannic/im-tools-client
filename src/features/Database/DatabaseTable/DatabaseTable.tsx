@@ -11,8 +11,9 @@ import {map} from '@alexandreannic/ts-utils'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
-import {KoboDatabaseProvider} from '@/features/Database/DatabaseTable/KoboDatabaseContext'
+import {KoboDatabaseProvider} from '@/features/Database/DatabaseTable/Context/KoboDatabaseContext'
 import {useAaToast} from '@/core/useToast'
+import {KoboDatabase2} from '@/features/Database/KoboDatabase2/KoboDatabase2'
 
 export const DatabaseTableRoute = () => {
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
@@ -21,17 +22,15 @@ export const DatabaseTableRoute = () => {
   const {toastHttpError} = useAaToast()
 
   const _formSchemas = useDatabaseContext().formSchemas
-  const _refresh = useAsync(() => api.koboApi.synchronizeAnswers(serverId, formId))
   const _answers = useFetcher((id: KoboId) => api.kobo.answer.searchByAccess({
     formId: id,
   }))
+  const _refresh = useAsync(async () => {
+    await api.koboApi.synchronizeAnswers(serverId, formId)
+    await _answers.fetch({force: true, clean: false}, formId)
+  })
 
   const data = _answers.entity
-
-  const refresh = async () => {
-    await _refresh.call()
-    await _answers.fetch({force: true, clean: false}, formId)
-  }
 
   useEffect(() => {
     _formSchemas.fetch({}, serverId, formId)
@@ -45,11 +44,12 @@ export const DatabaseTableRoute = () => {
     <Page loading={_formSchemas.getLoading(formId)} width="full">
       <Panel>
         {data && map(_formSchemas.get(formId), schema => (
-          <KoboDatabaseProvider form={schema}>
-            <KoboDatabase data={data.data} header={
-              <KoboDatabaseBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m._koboDatabase.pullData} onClick={refresh}/>
-            }/>
-          </KoboDatabaseProvider>
+          <KoboDatabase2 data={data.data} schema={schema} _refresh={_refresh}/>
+          // <KoboDatabaseProvider data={data.data} form={schema}>
+          //   <KoboDatabase header={
+          //     <KoboDatabaseBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m._koboDatabase.pullData} onClick={refresh}/>
+          //   }/>
+          // </KoboDatabaseProvider>
         ))}
       </Panel>
     </Page>
