@@ -43,10 +43,10 @@ export const AaSelect = <T extends string | number>({
   sx,
   ...props
 }: AaSelect<T>) => {
+  console.log('defaultValue', defaultValue)
   const {m} = useI18n()
   const [innerValue, setInnerValue] = useState<undefined | T | T[]>()
   const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE'
-  // const id = useMemo(() => Math.random() + ''
 
   const options = useMemo(() => {
     const _options = props.options ?? []
@@ -55,10 +55,6 @@ export const AaSelect = <T extends string | number>({
     }
     return _options as Option<T>[]
   }, [props.options])
-
-  useEffect(() => {
-    setInnerValue(innerValue)
-  }, [defaultValue])
 
   useEffect(() => {
     if (innerValue !== undefined)
@@ -77,9 +73,6 @@ export const AaSelect = <T extends string | number>({
     }
   }
 
-  // const displayedValue = useMemo(() => options.find(_ => _.value === innerValue)?.children, [options, innerValue])
-  // console.log('select', options, innerValue)
-
   return (
     <FormControl size="small" sx={{width: '100%', ...sx}}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
@@ -88,7 +81,7 @@ export const AaSelect = <T extends string | number>({
         size="small"
         margin="dense"
         id={id}
-        defaultValue={defaultValue ?? multiple ? [] : ''}
+        defaultValue={defaultValue ?? (multiple ? [] : '')}
         multiple={multiple}
         onChange={e => {
           const value = e.target.value

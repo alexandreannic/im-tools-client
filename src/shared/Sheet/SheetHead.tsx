@@ -1,17 +1,96 @@
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Box, Checkbox} from '@mui/material'
-import React from 'react'
-import {SheetColumnProps, SheetRow, useSheetContext} from '@/shared/Sheet/Sheet'
+import React, {useEffect} from 'react'
+import {SheetColumnProps, SheetRow} from '@/shared/Sheet/Sheet'
 import {TableIcon, TableIconBtn, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
+import {SheetContext} from '@/shared/Sheet/context/SheetContext'
+
+export const SheetHead = (() => {
+  const Component = <T extends SheetRow>({
+    onOpenStats,
+    data,
+    selected,
+    select,
+    columns,
+    filters,
+    search,
+    onOpenFilter,
+  }: {
+    onOpenFilter: (_: SheetColumnProps<T>, event: any) => void
+    onOpenStats: (_: SheetColumnProps<T>, event: any) => void
+  } & Pick<SheetContext<T>, 'selected' | 'columns' | 'columnsIndex' | 'select'> & {
+    data?: T[]
+    search: SheetContext<T>['data']['search']
+    filters: SheetContext<T>['data']['filters']
+  }) => {
+    return (
+      <thead>
+      <tr className="tr trh">
+        {map(select?.getId, getId => (
+          <th className="td th td-center">
+            <Checkbox
+              size="small"
+              checked={selected.size === data?.length}
+              indeterminate={selected.size !== data?.length && selected.size !== 0}
+              onChange={() => {
+                if (!data) return
+                // @ts-ignore
+                if (selected.size === 0 && data) selected.add(data.map(getId))
+                else selected.clear()
+              }}
+            />
+          </th>
+        ))}
+        {columns.map((_, i) => {
+          const sortedByThis = search?.sortBy === _.id ?? true
+          const active = sortedByThis || filters[_.id]
+          return (
+            <th
+              key={_.id}
+              style={{width: _.width}}
+              // onClick={() => onSortBy(_.id)}
+              className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
+                'center': ' td-center',
+                'right': ' td-right'
+              }, _ => ''))}
+            >
+              <Box className="th-resize">
+                {_.head}
+              </Box>
+            </th>
+          )
+        })}
+      </tr>
+      <tr>
+        {columns.map(q => {
+          const sortedByThis = search.sortBy === q.id ?? false
+          const active = sortedByThis || !!filters[q.id]
+          return (
+            <td key={q.id} className="td-right">
+              <SheetHeadContent
+                type={q.type}
+                active={active}
+                onOpenStats={e => onOpenStats(q, e)}
+                onOpenFilter={e => onOpenFilter(q, e)}
+              />
+            </td>
+          )
+        })}
+      </tr>
+      </thead>
+    )
+  }
+  return React.memo(Component) as typeof Component
+})()
 
 export const SheetHeadContent = ({
   active,
   type,
-  onOpenConfig,
+  onOpenFilter,
   onOpenStats,
 }: {
   type: SheetColumnProps<any>['type']
-  onOpenConfig: (e: any) => void
+  onOpenFilter: (e: any) => void
   onOpenStats: (e: any) => void
   active?: boolean
 }) => {
@@ -71,80 +150,8 @@ export const SheetHeadContent = ({
       <TableIconBtn
         color={active ? 'primary' : undefined}
         icon="filter_alt"
-        onClick={e => onOpenConfig(e)}
+        onClick={e => onOpenFilter(e)}
       />
     </span>
-  )
-}
-
-export const SheetHead = <T extends SheetRow>({
-  onOpenStats,
-  onOpenColumnConfig,
-}: {
-  onOpenColumnConfig: (_: SheetColumnProps<T>, event: any) => void
-  onOpenStats: (_: SheetColumnProps<T>, event: any) => void
-}) => {
-  const {
-    _data,
-    _selected,
-    select,
-    filters,
-    columns,
-    search
-  } = useSheetContext()
-  return (
-    <thead>
-    <tr className="tr trh">
-      {map(select?.getId, getId => (
-        <th className="td th td-center">
-          <Checkbox
-            size="small"
-            checked={_selected.size === _data?.data?.length}
-            indeterminate={_selected.size !== _data.data?.length && _selected.size !== 0}
-            onChange={() => {
-              if (!_data) return
-              if (_selected.size === 0 && _data.data) _selected.add(_data.data.map(getId))
-              else _selected.clear()
-            }}
-          />
-        </th>
-      ))}
-      {columns.map((_, i) => {
-        const sortedByThis = search?.sortBy === _.id ?? true
-        const active = sortedByThis || filters[_.id]
-        return (
-          <th
-            key={_.id}
-            style={{width: _.width}}
-            // onClick={() => onSortBy(_.id)}
-            className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
-              'center': ' td-center',
-              'right': ' td-right'
-            }, _ => ''))}
-          >
-            <Box className="th-resize">
-              {_.head}
-            </Box>
-          </th>
-        )
-      })}
-    </tr>
-    <tr>
-      {columns.map(q => {
-        const sortedByThis = search.sortBy === q.id ?? false
-        const active = sortedByThis || !!filters[q.id]
-        return (
-          <td key={q.id} className="td-right">
-            <SheetHeadContent
-              type={q.type}
-              active={active}
-              onOpenStats={e => onOpenStats(q, e)}
-              onOpenConfig={e => onOpenColumnConfig(q, e)}
-            />
-          </td>
-        )
-      })}
-    </tr>
-    </thead>
   )
 }
