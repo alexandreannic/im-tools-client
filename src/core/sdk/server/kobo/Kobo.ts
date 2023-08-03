@@ -59,7 +59,7 @@ export type KoboAnswerMetaData = {
   tags: any,
 }
 
-export type KoboMappedAnswerType = string | string[] | Date | number | undefined
+export type KoboMappedAnswerType = string | string[] | Date | number | undefined | KoboAnswer<any>[]
 
 export type KoboAnswer<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
 export type KoboMappedAnswer<T extends Record<string, any> = Record<string, KoboMappedAnswerType>> = (KoboAnswerMetaData & T)

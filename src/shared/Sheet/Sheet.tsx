@@ -1,33 +1,31 @@
-import {Box, BoxProps, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
-import React, {ReactNode, useCallback, useContext, useMemo, useState} from 'react'
+import {Badge, Box, BoxProps, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
+import React, {ReactNode, useCallback, useEffect, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Fender} from 'mui-extension'
 import {KeyOf, Utils} from '@/utils/utils'
-import {SheetFilterDialog} from './SheetFilterDialog'
-import {Arr, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
-import {useAsync, useSetState} from '@alexandreannic/react-hooks-lib'
+import {useAsync, useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
-import {useSheetData} from './useSheetData'
 import {SheetBody} from './SheetBody'
 import {SheetHead} from './SheetHead'
-import {SheetColumnConfigPopoverParams, SheetContext, SheetOptions, SheetPropertyType, SheetSearch} from '@/shared/Sheet/sheetType'
-import {NumberChoicesPopover} from '@/shared/Sheet/SheetPopover'
+import {SheetColumnConfigPopoverParams, SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
 import {format} from 'date-fns'
+import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
 
 type OrderBy = 'asc' | 'desc'
 
-export type SheetRow = {[key: string]: any}// Record<string, any/* string | number[] | string[] | Date | number | undefined*/>
+export type SheetRow = Record<string, any>// Record<string, any/* string | number[] | string[] | Date | number | undefined*/>
 
 export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onSelect'> {
   header?: ReactNode
   loading?: boolean
   total?: number
   title?: string
-  select?: {
-    onSelect: (_: string[]) => void
-    getId: (_: T) => string
-    selectActions?: ReactNode
+  readonly select?: {
+    readonly onSelect: (_: string[]) => void
+    readonly getId: (_: T) => string
+    readonly selectActions?: ReactNode
   }
   // select?: {
   //   getId: (_: T) => string
@@ -40,6 +38,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   columns: SheetColumnProps<T>[]
   showColumnsToggle?: boolean
   showColumnsToggleBtnTooltip?: string
+  showExportBtn?: boolean
   renderEmptyState?: ReactNode
   sort?: {
     sortableColumns?: string[]
@@ -81,15 +80,13 @@ export type SheetFilter = string
   | [Date | undefined, Date | undefined]
   | [number | undefined, number | undefined]
 
-const Context = React.createContext<SheetContext<any>>({} as SheetContext<any>)
-export const useSheetContext = <T extends SheetRow>() => useContext<SheetContext<T>>(Context as any)
-
 export const Sheet = <T extends SheetRow = SheetRow>({
   id,
   loading,
   total,
   data,
   title,
+  showExportBtn,
   columns,
   getRenderRowKey,
   header,
@@ -103,37 +100,67 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   ...props
 }: SheetTableProps<T>) => {
   const {m} = useI18n()
+
+
+  const [openFilterPopover, setOpenFilterPopover] = useState<SheetColumnConfigPopoverParams<T> | undefined>()
+  const [openStatsPopover, setOpenStatsPopover] = useState<SheetColumnConfigPopoverParams<T> | undefined>()
+
+  // const onOpenFilterConfig = useCallback((q: SheetColumnProps<T>, event: any) => {
+  //   setOpenFilterPopover({
+  //     anchorEl: event.currentTarget,
+  //     columnId: q.id,
+  //     type: q.type!,
+  //     options: q.options,
+  //   })
+  // }, [])
+
+  // const onOpenStatsConfig = useCallback((q: SheetColumnProps<T>, event: any) => {
+  //   setOpenStatsPopover({
+  //     anchorEl: event.currentTarget,
+  //     columnId: q.id,
+  //     type: q.type!,
+  //     options: q.options,
+  //   })
+  // }, [])
+
+
+  return (
+    <SheetProvider
+      columns={columns}
+      data={data}
+      select={select}
+      getRenderRowKey={getRenderRowKey}
+    >
+      <_Sheet
+        showExportBtn={showExportBtn}
+        renderEmptyState={renderEmptyState}
+        header={header}
+        sx={props.sx}
+        loading={loading}
+      />
+    </SheetProvider>
+  )
+}
+
+const _Sheet = <T extends SheetRow>({
+  header,
+  sx,
+  showExportBtn,
+  renderEmptyState,
+  loading,
+  rowsPerPageOptions,
+}: Pick<SheetTableProps<T>, 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
+  const ctx = useSheetContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
-  const [search, setSearch] = useState<SheetSearch<T>>({
-    limit: 20,
-    offset: 0,
-    sortBy: sort?.sortBy,
-    orderBy: sort?.orderBy,
-  })
-  const columnsIndex = useMemo(() => Arr(columns).reduceObject<Record<KeyOf<T>, SheetColumnProps<T>>>(_ => [_.id, _]), [columns])
-  const _selected = useSetState<string>()
-  useMemo(() => select?.onSelect(_selected.toArray), [_selected.get])
-
-
-  // const [filteringProperty, setFilteringProperty] = useState<KeyOf<T> | undefined>(undefined)
-  const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilter>>({} as any)
-
-  // const displayableColumns: SheetColumnProps<T>[] = useMemo(() => {
-  //   return columns.filter(_ => !_.hidden)
-  // }, [columns])
-  // const [hiddenColumns, setHiddenColumns] = usePersistentState<(KeyOf<T>)[]>([], id)
-  // const filteredColumns = useMemo(() => displayableColumns.filter(_ => !hiddenColumns.includes(_.id)), [columns, hiddenColumns])
-
-  const onOrderBy = (columnId: string, orderBy?: OrderBy) => {
-    setSearch(prev => ({...prev, orderBy, sortBy: columnId}))
-  }
+  useEffect(() => ctx.select?.onSelect(ctx.selected.toArray), [ctx.selected.get])
+  const {m} = useI18n()
 
   const exportToCSV = () => {
-    if (_data.filteredAndSortedData) {
-      _generateXLSFromArray.call(Utils.slugify(title) ?? 'noname', {
+    if (ctx.data.filteredAndSortedData) {
+      _generateXLSFromArray.call(Utils.slugify('TODO') ?? 'noname', {
         sheetName: 'data',
-        data: _data.filteredAndSortedData,
-        schema: columns
+        data: ctx.data.filteredAndSortedData,
+        schema: ctx.columns
           .filter(_ => _.renderExport)
           .map(q => ({
             name: q.head as string ?? q.id,
@@ -151,53 +178,19 @@ export const Sheet = <T extends SheetRow = SheetRow>({
     }
   }
 
-  const [openFilterPopover, setOpenFilterPopover] = useState<SheetColumnConfigPopoverParams<T> | undefined>()
-  const [openStatsPopover, setOpenStatsPopover] = useState<SheetColumnConfigPopoverParams<T> | undefined>()
-
-  const onOpenFilterConfig = useCallback((q: SheetColumnProps<T>, event: any) => {
-    setOpenFilterPopover({
-      anchorEl: event.currentTarget,
-      columnId: q.id,
-      type: q.type!,
-      options: q.options,
-    })
-  }, [])
-
-  const onOpenStatsConfig = useCallback((q: SheetColumnProps<T>, event: any) => {
-    setOpenStatsPopover({
-      anchorEl: event.currentTarget,
-      columnId: q.id,
-      type: q.type!,
-      options: q.options,
-    })
-  }, [])
-
-  const _data = useSheetData<T>({
-    loading,
-    columnsIndex,
-    data: data,
-    search: search,
-    filters,
-  })
-
+  const filterCount = useMemoFn(ctx.data.filters, _ => Enum.keys(_).length)
 
   return (
-    <Context.Provider value={{
-      _selected,
-      _data: _data as any,
-      search,
-      filters,
-      setFilters,
-      columnsIndex,
-      columns,
-      select,
-      getRenderRowKey,
-      setSearch,
-    }}>
-      <Box sx={{position: 'relative', p: 2}}>
+    <>
+      <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center'}}>
+        <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
+          <AAIconBtn sx={{mr: 1}} icon="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
+        </Badge>
         {header}
-        <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
-        {_selected.size > 0 && (
+        {showExportBtn && (
+          <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+        )}
+        {ctx.selected.size > 0 && (
           <Box sx={{
             position: 'absolute',
             top: 0,
@@ -223,97 +216,113 @@ export const Sheet = <T extends SheetRow = SheetRow>({
               px: 2,
             }}>
               <Box sx={{flex: 1,}}>
-                {_selected.size} {m.selected}.
+                {ctx.selected.size} {m.selected}.
               </Box>
-              {select?.selectActions}
-              <AAIconBtn color="primary" icon="clear" onClick={_selected.clear}/>
+              {ctx.select?.selectActions}
+              <AAIconBtn color="primary" icon="clear" onClick={ctx.selected.clear}/>
             </Box>
           </Box>
         )}
       </Box>
-      {map(openStatsPopover, c => {
-        switch (c.type) {
-          case 'decimal':
-          case 'integer':
-            return <NumberChoicesPopover
-              anchorEl={c.anchorEl}
-              question={c.columnId}
-              data={_data.filteredData ?? []}
-              onClose={() => setOpenStatsPopover(undefined)}
-            />
-          case 'date':
-          case 'select_one':
-          case 'select_multiple':
-          default:
-            return undefined
-        }
-      })}
+      {/*{map(openStatsPopover, c => {*/}
+      {/*  switch (c.type) {*/}
+      {/*    case 'decimal':*/}
+      {/*    case 'integer':*/}
+      {/*      return <NumberChoicesPopover*/}
+      {/*        anchorEl={c.anchorEl}*/}
+      {/*        question={c.columnId}*/}
+      {/*        data={_data.filteredData ?? []}*/}
+      {/*        onClose={() => setOpenStatsPopover(undefined)}*/}
+      {/*      />*/}
+      {/*    case 'date':*/}
+      {/*    case 'select_one':*/}
+      {/*    case 'select_multiple':*/}
+      {/*    default:*/}
+      {/*      return undefined*/}
+      {/*  }*/}
+      {/*})}*/}
       <Box sx={{overflowX: 'auto'}}>
         <Box sx={{
-          // width: 'max-content'
+          // width: 'max-coontent'
         }}>
-          <Box component="table" {...props} className="borderY table" sx={{minWidth: '100%'}}>
+          <Box component="table" className="borderY table" sx={{...sx, minWidth: '100%'}}>
             <SheetHead
-              onOpenColumnConfig={onOpenFilterConfig}
-              onOpenStats={onOpenStatsConfig}
+              data={ctx.data.filteredSortedAndPaginatedData?.data}
+              search={ctx.data.search}
+              filters={ctx.data.filters}
+              columns={ctx.columns}
+              columnsIndex={ctx.columnsIndex}
+              select={ctx.select}
+              selected={ctx.selected}
+              onOpenFilter={ctx.modal.filterPopover.open}
+              onOpenStats={ctx.modal.statsPopover.open}
             />
             <tbody>
-            {!_data.filteredSortedAndPaginatedData && loading && (
+            </tbody>
+            {map(ctx.data.filteredSortedAndPaginatedData, data => {
+              return data.data.length > 0 ? (
+                <SheetBody
+                  loading={loading}
+                  data={data.data}
+                  select={ctx.select}
+                  columns={ctx.columns}
+                  getRenderRowKey={ctx.getRenderRowKey}
+                  selected={ctx.selected}
+                />
+              ) : (
+                <div>
+                  {renderEmptyState ? renderEmptyState : <Fender sx={{my: 2}} title={m.noDataAtm} icon="highlight_off"/>}
+                </div>
+              )
+            }) ?? (loading && (
               <tr>
-                <td className="td-loading" colSpan={columns?.length ?? 1}>
+                <td className="td-loading" colSpan={ctx.columns?.length ?? 1}>
                   <LinearProgress/>
                 </td>
               </tr>
-            )}
-            </tbody>
-            <SheetBody/>
+            ))}
           </Box>
-          {!loading && (!_data.filteredData || _data.filteredData.length === 0) && (
-            <div>
-              {renderEmptyState ? renderEmptyState : <Fender sx={{my: 2}} title={m.noDataAtm} icon="highlight_off"/>}
-            </div>
-          )}
         </Box>
       </Box>
       <TablePagination
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
-        count={_data.filteredData?.length ?? 0}
-        rowsPerPage={search.limit}
-        page={search.offset / search.limit}
+        count={ctx.data.filteredData?.length ?? 0}
+        rowsPerPage={ctx.data.search.limit}
+        page={ctx.data.search.offset / ctx.data.search.limit}
         onPageChange={(event: unknown, newPage: number) => {
-          setSearch(prev => ({...prev, offset: newPage * search.limit}))
+          ctx.data.setSearch(prev => ({...prev, offset: newPage * ctx.data.search.limit}))
         }}
         onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setSearch(prev => ({...prev, limit: event.target.value as any}))
+          ctx.data.setSearch(prev => ({...prev, limit: event.target.value as any}))
         }}
       />
-      {map(openFilterPopover, c =>
-        <SheetFilterDialog
-          title={c.columnId}
-          anchorEl={c.anchorEl}
-          sortBy={search.sortBy}
-          orderBy={search.orderBy}
-          onOrderByChange={_ => onOrderBy(c.columnId, _)}
-          value={filters[c.columnId] as any}
-          columnId={c.columnId}
-          type={c.type}
-          options={c.options}
-          onClose={() => setOpenFilterPopover(undefined)}
-          onClear={() => setFilters(prev => {
-            if (prev) {
-              delete prev[c.columnId!]
-            }
-            // setFilteringProperty(undefined)
-            return {...prev}
-          })}
-          onChange={(p: string, v: string | string[] | [Date, Date]) => {
-            setFilters(_ => ({..._, [p]: v}))
-            setOpenFilterPopover(undefined)
-          }}
-        />
-      )}
-    </Context.Provider>
+      {/*{map(openFilterPopover, c =>*/}
+      {/*    <SheetFilterDialog*/}
+      {/*      title={c.columnId}*/}
+      {/*      anchorEl={c.anchorEl}*/}
+      {/*      sortBy={data.search.sortBy}*/}
+      {/*      orderBy={data.search.orderBy}*/}
+      {/*      onOrderByChange={_ => data.onOrderBy(c.columnId, _)}*/}
+      {/*      value={filters[c.columnId] as any}*/}
+      {/*      columnId={c.columnId}*/}
+      {/*      type={c.type}*/}
+      {/*      options={c.options}*/}
+      {/*      onClose={() => setOpenFilterPopover(undefined)}*/}
+      {/*      onClear={() => setFilters(prev => {*/}
+      {/*        if (prev) {*/}
+      {/*          delete prev[c.columnId!]*/}
+      {/*        }*/}
+      {/*        // setFilteringProperty(undefined)*/}
+      {/*        return {...prev}*/}
+      {/*      })}*/}
+      {/*      onChange={(p: string, v: string | string[] | [Date, Date]) => {*/}
+      {/*        setFilters(_ => ({..._, [p]: v}))*/}
+      {/*        setOpenFilterPopover(undefined)*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*  )}*/}
+    </>
   )
 }
 

@@ -1,7 +1,7 @@
 import {OrderBy, UseSetState} from '@alexandreannic/react-hooks-lib'
-import {Dispatch, SetStateAction} from 'react'
+import {Dispatch, ReactNode, SetStateAction} from 'react'
 import {SheetColumnProps, SheetRow, SheetTableProps} from '@/shared/Sheet/Sheet'
-import {UseSheetData} from '@/shared/Sheet/useSheetData'
+import {UseSheetData} from '@/shared/Sheet/context/useSheetData'
 import {KeyOf} from '@/utils/utils'
 import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
 import {SheetFilterDialogProps} from '@/shared/Sheet/SheetFilterDialog'
@@ -32,7 +32,7 @@ export interface SheetContext<T extends SheetRow> extends Pick<SheetTableProps<T
 }
 
 export interface SheetOptions {
-  name: string
+  value: string
   label: string
 }
 
@@ -51,6 +51,7 @@ export type SheetFilter = string
 export interface SheetPopoverParams<T = any> {
   anchorEl: HTMLElement
   columnId: string
+  title: ReactNode
 }
 
 export interface SheetColumnConfigPopoverParams<T = any, TType = SheetPropertyType> extends SheetPopoverParams<T> {

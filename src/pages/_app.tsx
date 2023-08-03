@@ -16,6 +16,7 @@ import {DRCLogo} from '@/shared/logo/logo'
 import {CacheProvider, EmotionCache} from '@emotion/react'
 import createEmotionCache from '@/core/createEmotionCache'
 import {CenteredContent} from '@/shared/CenteredContent'
+import {ModalProvider} from '@/shared/Modal/ModalProvider'
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
@@ -50,6 +51,7 @@ const AppWithConfig = (props: AppProps) => {
       _ => <I18nProvider children={_}/>,
       _ => <MsalProvider children={_} instance={msal}/>,
       _ => <NfiProvider children={_}/>,
+      _ => <ModalProvider children={_}/>,
     ]}>
       <AppWithBaseContext {...props}/>
     </Provide>

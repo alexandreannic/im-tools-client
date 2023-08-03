@@ -1,7 +1,7 @@
 import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps} from '@mui/material'
 import {AaBtn} from '../Btn/AaBtn'
 import {useI18n} from '../../core/i18n'
-import React, {useEffect, useState} from 'react'
+import React, {ReactNode, useEffect, useState} from 'react'
 import {AaInput} from '../ItInput/AaInput'
 import {MultipleChoices} from '../MultipleChoices'
 import {PeriodPicker} from '../PeriodPicker/PeriodPicker'
@@ -22,7 +22,7 @@ export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   value?: string[] | string | [Date, Date]
   onChange?: (columnName: string, value: string[] | string | [Date, Date]) => void
   columnId: string
-  title: string
+  title: ReactNode
   type?: KoboQuestionType //'date' | 'string' | 'list' | 'number' | 'list_multiple'
   options?: SheetOptions[]
 }
@@ -103,7 +103,7 @@ export const SheetFilterDialog = ({
               return (
                 <MultipleChoices
                   options={options?.map(_ => ({
-                    value: _.name,
+                    value: _.value,
                     children: _.label
                   })) ?? []}
                   initialValue={value as any}

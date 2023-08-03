@@ -1,25 +1,31 @@
-import {useMemo} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {orderBy} from 'lodash'
 import {KeyOf, multipleFilters, paginateData} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
 import {SheetColumnProps, SheetFilter, SheetRow} from '@/shared/Sheet/Sheet'
 import {SheetSearch} from '@/shared/Sheet/sheetType'
+import {OrderBy} from '@alexandreannic/react-hooks-lib'
 
 export type UseSheetData = ReturnType<typeof useSheetData>
 
 export const useSheetData = <T extends SheetRow>({
   data,
-  filters,
-  search,
   columnsIndex,
-  loading,
 }: {
-  loading?: boolean
-  search: SheetSearch<T>
-  filters: Record<KeyOf<T>, SheetFilter>
   data?: T[]
   columnsIndex: Record<KeyOf<T>, SheetColumnProps<T>>
 }) => {
+  const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilter>>({} as any)
+
+  const [search, setSearch] = useState<SheetSearch<any>>({
+    limit: 20,
+    offset: 0,
+  })
+
+  const onOrderBy = useCallback((columnId: string, orderBy?: OrderBy) => {
+    setSearch(prev => ({...prev, orderBy, sortBy: columnId}))
+  }, [])
+
   const filteredData = useMemo(() => {
     if (!data) return
     return multipleFilters(data, Enum.keys(filters).map(k => {
@@ -73,11 +79,14 @@ export const useSheetData = <T extends SheetRow>({
   }, [search.limit, search.offset, filteredAndSortedData])
 
   return {
-    loading,
-    columnsIndex,
+    filters,
+    setFilters,
+    search,
+    setSearch,
     data,
+    onOrderBy,
     filteredData,
     filteredAndSortedData,
-    filteredSortedAndPaginatedData
+    filteredSortedAndPaginatedData,
   }
 }

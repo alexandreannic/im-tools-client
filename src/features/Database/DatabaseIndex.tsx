@@ -14,7 +14,9 @@ export const DatabaseIndex = ({
   const navigate = useNavigate()
   return (
     <Page width="xs">
-      <PageTitle>{m.selectADatabase}</PageTitle>
+      {forms && forms.length > 0 && (
+        <PageTitle>{m.selectADatabase}</PageTitle>
+      )}
       <ScRadioGroup>
         {forms?.map(form =>
           <ScRadioGroupItem
