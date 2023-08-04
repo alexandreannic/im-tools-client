@@ -10,8 +10,7 @@ import {Txt} from 'mui-extension'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
-import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
-import {SheetOptions} from '@/shared/Sheet/sheetType'
+import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
 
 export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   orderBy?: OrderBy
@@ -23,7 +22,7 @@ export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   onChange?: (columnName: string, value: string[] | string | [Date, Date]) => void
   columnId: string
   title: ReactNode
-  type?: KoboQuestionType //'date' | 'string' | 'list' | 'number' | 'list_multiple'
+  type?: SheetPropertyType
   options?: SheetOptions[]
 }
 
@@ -94,8 +93,6 @@ export const SheetFilterDialog = ({
         </Box>
         {type && (() => {
           switch (type) {
-            case 'start':
-            case 'end':
             case 'date':
               return <PeriodPicker value={innerValue} onChange={setInnerValue}/>
             case 'select_one':

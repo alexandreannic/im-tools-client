@@ -9,13 +9,14 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {useNavigate} from 'react-router'
 import {adminModule} from '@/features/Admin/Admin'
 import {Panel} from '@/shared/Panel'
+import {Arr} from '@alexandreannic/ts-utils'
 
 export const AdminUsers = () => {
   const {api} = useAppSettings()
   const {setSession} = useSession()
   const _connectAs = useFetcher(api.session.connectAs)
   const _users = useFetcher(api.user.search)
-  const {m} = useI18n()
+  const {m, formatDate} = useI18n()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -42,16 +43,26 @@ export const AdminUsers = () => {
               id: 'email',
               head: m.email,
               render: _ => _.email,
+              type: 'string',
+            },
+            {
+              id: 'lastConnectedAt',
+              head: m.lastConnectedAt,
+              render: _ => formatDate(_.lastConnectedAt),
+              type: 'date',
             },
             {
               id: 'drcJob',
               head: m.drcJob,
               render: _ => _.drcJob,
+              type: 'select_one',
+              options: () => Arr(_users.entity?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
               id: 'drcOffice',
               head: m.drcOffice,
               render: _ => _.drcOffice,
+              options: () => Arr(_users.entity?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
               id: 'action',

@@ -86,6 +86,7 @@ export const en = Object.freeze({
     answer: 'Answer',
     calculations: 'Calculations',
     mykolaiv: 'Mykolaiv',
+    lastConnectedAt: 'Last connection',
     perpetrators: 'Perpetrators',
     kyiv: 'Kyiv',
     viewData: 'View data',

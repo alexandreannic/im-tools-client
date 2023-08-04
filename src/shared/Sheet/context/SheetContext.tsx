@@ -4,7 +4,7 @@ import {UseSetState, useSetState} from '@alexandreannic/react-hooks-lib'
 import {UseSheetData, useSheetData} from '@/shared/Sheet/context/useSheetData'
 import {Arr} from '@alexandreannic/ts-utils'
 import {useSheetModal} from '@/shared/Sheet/context/useSheetModal'
-import {useSetState2} from '@/shared/Sheet/context/useSetState2'
+import {useSetState2} from '@/alexlib-labo/useSetState2'
 
 export interface SheetContext<T extends SheetRow> {
   data: UseSheetData

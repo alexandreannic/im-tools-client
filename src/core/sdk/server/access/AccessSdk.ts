@@ -2,6 +2,7 @@ import {ApiClient} from '../ApiClient'
 import {Access, AccessSearch, KoboDatabaseAccessParams, WfpDeduplicationAccessParams} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {UUID} from '@/core/type'
+import {DrcJob} from '@/core/drcJobTitle'
 
 interface SearchByFeature {
   ({featureId, email}: {featureId: AppFeatureId.kobo_database, email?: string}): Promise<Access<KoboDatabaseAccessParams>[]>
@@ -9,12 +10,14 @@ interface SearchByFeature {
   ({featureId, email}: {featureId?: AppFeatureId, email?: string}): Promise<Access<any>[]>
 }
 
-type FeatureCreateBase = Omit<Access, 'id' | 'createdAt' | 'updatedAt' | 'featureId' | 'params'>
+type FeatureCreateBase = Omit<Access, 'drcJob' | 'id' | 'createdAt' | 'updatedAt' | 'featureId' | 'params'> & {
+  drcJob?: DrcJob[]
+}
 
 interface AccessCreate {
-  (_: FeatureCreateBase & {featureId: AppFeatureId.kobo_database, params: KoboDatabaseAccessParams}): Promise<Access<KoboDatabaseAccessParams>[]>
-  (_: FeatureCreateBase & {featureId: AppFeatureId.wfp_deduplication, params: KoboDatabaseAccessParams}): Promise<Access<WfpDeduplicationAccessParams>[]>
-  (_: {featureId?: AppFeatureId, email?: string}): Promise<Access<any>[]>
+  (_: FeatureCreateBase & {featureId: AppFeatureId.kobo_database, params: KoboDatabaseAccessParams}): Promise<Access<KoboDatabaseAccessParams>>
+  (_: FeatureCreateBase & {featureId: AppFeatureId.wfp_deduplication, params: KoboDatabaseAccessParams}): Promise<Access<WfpDeduplicationAccessParams>>
+  (_: FeatureCreateBase & {featureId?: AppFeatureId, params?: any}): Promise<Access<any>>
 }
 
 export class AccessSdk {
@@ -22,7 +25,7 @@ export class AccessSdk {
   constructor(private client: ApiClient) {
   }
 
-  readonly add = (body: AccessCreate) => {
+  readonly add: AccessCreate = (body) => {
     return this.client.put<Access>(`/access`, {body})
   }
 

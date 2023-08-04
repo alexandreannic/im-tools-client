@@ -4,23 +4,23 @@ import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {map} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import React, {useMemo, useState} from 'react'
 import {formatDate, formatDateTime} from '@/core/i18n/localization/en'
-import {useKoboSchema} from '@/features/Database/DatabaseTable/Context/useKoboSchema'
-import {KoboDatabaseBtn} from '@/features/Database/DatabaseTable/koboDatabaseShared'
-import {UseAsync} from '@/features/useAsync'
+import {useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
+import {UseAsync} from '@/alexlib-labo/useAsync'
 import {useI18n} from '@/core/i18n'
 import {I18nContextProps} from '@/core/i18n/I18n'
 import {AaSelect} from '@/shared/Select/Select'
-import {KoboDatabaseExportBtn} from '@/features/Database/DatabaseTable/KoboDatabaseExportBtn'
+import {DatabaseKoboTableExportBtn} from '@/features/Database/KoboTable/DatabaseKoboTableExportBtn'
 import {useModal} from '@/shared/Modal/useModal'
-import {KoboRepeatGroupDetailsPopover} from '@/features/Database/DatabaseTable/Popover/KoboRepeatGroupDetailsPopover'
+import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
+import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
 
-export const KoboDatabase2 = ({
+export const DatabaseKoboTableContent = ({
   schema,
   data,
   _refresh,
@@ -49,7 +49,7 @@ export const KoboDatabase2 = ({
     group: KoboAnswer[],
     event: any
   }) => (
-    <KoboRepeatGroupDetailsPopover
+    <DatabaseKoboTableGroupModal
       title={translateQuestion(columnId)}
       anchorEl={event.currentTarget}
       group={group}
@@ -81,14 +81,14 @@ export const KoboDatabase2 = ({
             ..._schema.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
           ]}
         />
-        <KoboDatabaseExportBtn
+        <DatabaseKoboTableExportBtn
           translateQuestion={translateQuestion}
           translateChoice={translateChoice}
           data={mappedData}
           formGroups={_schema.formGroups}
           form={_schema.sanitizedSchema}
         />
-        <KoboDatabaseBtn
+        <TableIconBtn
           loading={_refresh.getLoading()}
           color="primary"
           icon="refresh"
@@ -99,7 +99,7 @@ export const KoboDatabase2 = ({
   )
 }
 
-const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
+export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: number): string => {
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
 }
 
@@ -164,18 +164,34 @@ const getColumnBySchema = ({
       switch (q.type) {
         case 'image': {
           return {
-            type: 'text',
+            type: 'string',
             id: q.name,
             head: translateQuestion(q.name),
             render: row => <KoboAttachedImg attachments={row.attachments} fileName={row[q.name] as string}/>
           }
         }
-        case 'calculate':
-        case 'select_one_from_file':
+        case 'calculate': {
+          return {
+            type: 'string',
+            typeIcon: <SheetHeadTypeIcon children="functions" tooltip="calculate"/>,
+            id: q.name,
+            head: translateQuestion(q.name),
+            render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
+          }
+        }
+        case 'select_one_from_file': {
+          return {
+            type: 'string',
+            typeIcon: <SheetHeadTypeIcon children="attach_file" tooltip="select_one_from_file"/>,
+            id: q.name,
+            head: translateQuestion(q.name),
+            render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
+          }
+        }
         case 'username':
         case 'text': {
           return {
-            type: 'text',
+            type: 'string',
             id: q.name,
             head: translateQuestion(q.name),
             render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
@@ -184,10 +200,19 @@ const getColumnBySchema = ({
         case 'decimal':
         case 'integer': {
           return {
-            type: 'integer',
+            type: 'number',
             id: q.name,
             head: translateQuestion(q.name),
             render: row => <span title={row[q.name] as string}>{row[q.name] as number}</span>
+          }
+        }
+        case 'note': {
+          return {
+            type: 'string',
+            typeIcon: <SheetHeadTypeIcon children="info" tooltip="note"/>,
+            id: q.name,
+            head: translateQuestion(q.name),
+            render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
           }
         }
         case 'date':
@@ -205,7 +230,8 @@ const getColumnBySchema = ({
         }
         case 'begin_repeat': {
           return {
-            type: 'integer',
+            type: 'number',
+            typeIcon: <SheetHeadTypeIcon children="repeat" tooltip="begin_repeat"/>,
             id: q.name,
             head: translateQuestion(q.name),
             render: row => map(row[q.name] as KoboAnswer[] | undefined, group =>
@@ -218,14 +244,14 @@ const getColumnBySchema = ({
             type: 'select_one',
             id: q.name,
             head: translateQuestion(q.name),
-            options: choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
+            options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
             render: row => map(row[q.name] as string | undefined, v => {
               const render = translateChoice(q.name, v)
               if (render)
                 return <span title={render}>{render}</span>
               return (
                 <span title={v}>
-                  <TableIcon color="disabled" tooltip={m._koboDatabase.valueNoLongerInOption} sx={{mr: 1}} icon="error"/>
+                  <TableIcon color="disabled" tooltip={m._koboDatabase.valueNoLongerInOption} sx={{mr: 1}} children="error"/>
                   {v}
                 </span>
               )
@@ -237,7 +263,7 @@ const getColumnBySchema = ({
             type: 'select_multiple',
             id: q.name,
             head: translateQuestion(q.name),
-            options: choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
+            options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
             render: row => map(row[q.name] as string[] | undefined, v => {
               try {
                 const render = v.map(_ => translateChoice(q.name, _,)).join(' | ')
@@ -251,7 +277,8 @@ const getColumnBySchema = ({
         }
         case 'geopoint': {
           return {
-            type: 'text',
+            type: 'string',
+            typeIcon: <SheetHeadTypeIcon children="location_on" tooltip="geopoint"/>,
             id: q.name,
             head: translateQuestion(q.name),
             render: row => map(row[q.name], (x: any) => {
@@ -262,7 +289,7 @@ const getColumnBySchema = ({
         }
         default: {
           return {
-            type: 'text',
+            type: 'string',
             id: q.name,
             head: translateQuestion(q.name),
             render: row => {

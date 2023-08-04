@@ -5,9 +5,8 @@ import {useAppSettings} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {SlidePanel} from '@/shared/PdfLayout/Slide'
 import {Panel} from '@/shared/Panel'
-import {borderColor} from '@mui/system'
+import {getGoogle} from '@/core/google'
 
 const mapTheme = {
   occupiedColor: '#ffd0c4',
@@ -64,6 +63,8 @@ const offices: Office[] = [
   {city: 'Mariupol', closed: true},
 ]
 
+let google: any
+
 const drawMaps = async ({
   apiKey,
   theme,
@@ -75,12 +76,7 @@ const drawMaps = async ({
   apiKey: string
   theme: Theme
 }) => {
-  let trys = 0
-  while (!google) {
-    await sleep(200 + (100 * trys))
-    trys++
-    if (trys > 140) break
-  }
+  google = await getGoogle()
   google.charts.load('current', {
     'packages': ['geochart'],
     'mapsApiKey': apiKey

@@ -1,7 +1,5 @@
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useI18n} from '@/core/i18n'
-import {KoboDatabase} from '@/features/Database/DatabaseTable/KoboDatabase'
-import {KoboDatabaseBtn} from '@/features/Database/DatabaseTable/koboDatabaseShared'
 import React, {useEffect} from 'react'
 import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {useParams} from 'react-router'
@@ -11,9 +9,8 @@ import {map} from '@alexandreannic/ts-utils'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
-import {KoboDatabaseProvider} from '@/features/Database/DatabaseTable/Context/KoboDatabaseContext'
 import {useAaToast} from '@/core/useToast'
-import {KoboDatabase2} from '@/features/Database/KoboDatabase2/KoboDatabase2'
+import {DatabaseKoboTableContent} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 
 export const DatabaseTableRoute = () => {
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
@@ -44,12 +41,7 @@ export const DatabaseTableRoute = () => {
     <Page loading={_formSchemas.getLoading(formId)} width="full">
       <Panel>
         {data && map(_formSchemas.get(formId), schema => (
-          <KoboDatabase2 data={data.data} schema={schema} _refresh={_refresh}/>
-          // <KoboDatabaseProvider data={data.data} form={schema}>
-          //   <KoboDatabase header={
-          //     <KoboDatabaseBtn loading={_refresh.getLoading()} color="primary" icon="refresh" tooltip={m._koboDatabase.pullData} onClick={refresh}/>
-          //   }/>
-          // </KoboDatabaseProvider>
+          <DatabaseKoboTableContent data={data.data} schema={schema} _refresh={_refresh}/>
         ))}
       </Panel>
     </Page>

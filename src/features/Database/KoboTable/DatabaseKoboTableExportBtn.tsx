@@ -3,13 +3,13 @@ import {generateXLSFromArray, GenerateXlsFromArrayParams} from '@/shared/Sheet/g
 import {Utils} from '@/utils/utils'
 import {Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'
-import {KoboDatabaseBtn} from '@/features/Database/DatabaseTable/koboDatabaseShared'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {UseKoboSchema} from '@/features/Database/DatabaseTable/Context/useKoboSchema'
-import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboDatabase2/KoboDatabase2'
+import {UseKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
+import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 
 const renderExportSchema = <T extends KoboMappedAnswer>({
   schema,
@@ -52,7 +52,7 @@ const renderExportSchema = <T extends KoboMappedAnswer>({
   })
 
 }
-export const KoboDatabaseExportBtn = <T extends KoboMappedAnswer, >({
+export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
   data,
   form,
   formGroups,
@@ -96,6 +96,6 @@ export const KoboDatabaseExportBtn = <T extends KoboMappedAnswer, >({
     }
   }
   return (
-    <KoboDatabaseBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+    <TableIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
   )
 }

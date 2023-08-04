@@ -1,8 +1,8 @@
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Box, Checkbox} from '@mui/material'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {SheetColumnProps, SheetRow} from '@/shared/Sheet/Sheet'
-import {TableIcon, TableIconBtn, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
+import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {SheetContext} from '@/shared/Sheet/context/SheetContext'
 
 export const SheetHead = (() => {
@@ -62,16 +62,16 @@ export const SheetHead = (() => {
         })}
       </tr>
       <tr>
-        {columns.map(q => {
-          const sortedByThis = search.sortBy === q.id ?? false
-          const active = sortedByThis || !!filters[q.id]
+        {columns.map(c => {
+          const sortedByThis = search.sortBy === c.id ?? false
+          const active = sortedByThis || !!filters[c.id]
           return (
-            <td key={q.id} className="td-right">
+            <td key={c.id} className="td-right">
               <SheetHeadContent
-                type={q.type}
+                column={c}
                 active={active}
-                onOpenStats={e => onOpenStats(q, e)}
-                onOpenFilter={e => onOpenFilter(q, e)}
+                onOpenStats={e => onOpenStats(c, e)}
+                onOpenFilter={e => onOpenFilter(c, e)}
               />
             </td>
           )
@@ -83,68 +83,44 @@ export const SheetHead = (() => {
   return React.memo(Component) as typeof Component
 })()
 
+export const SheetHeadTypeIcon = (props: {
+  tooltip: string,
+  children: string,
+}) => {
+  return <TableIcon sx={{marginRight: 'auto'}} color="disabled" {...props}/>
+}
+
 export const SheetHeadContent = ({
   active,
-  type,
+  column,
   onOpenFilter,
   onOpenStats,
 }: {
-  type: SheetColumnProps<any>['type']
+  column: SheetColumnProps<any>
   onOpenFilter: (e: any) => void
   onOpenStats: (e: any) => void
   active?: boolean
 }) => {
-  const commonProps: Partial<TableIconProps> = {
-    color: 'disabled',
-    sx: {marginRight: 'auto'},
-    tooltip: type
-  }
   return (
     <span style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
       {(() => {
-        switch (type) {
-          case 'start':
-          case 'end':
+        if (column.typeIcon) return column.typeIcon
+        switch (column.type) {
           case 'date':
-            return <TableIcon icon="event" {...commonProps}/>
-
-          case 'select_multiple': {
-            return <TableIcon icon="check_box" {...commonProps}/>
-          }
-          case 'select_one': {
-            return <TableIcon icon="radio_button_checked" {...commonProps}/>
-          }
-          case 'decimal':
-          case 'integer': {
-            return <TableIcon icon="tag" {...commonProps}/>
-          }
-          case 'calculate': {
-            return <TableIcon icon="functions" {...commonProps}/>
-          }
-          case 'begin_repeat': {
-            return <TableIcon icon="repeat" {...commonProps}/>
-          }
-          case 'select_one_from_file': {
-            return <TableIcon icon="attach_file" {...commonProps}/>
-          }
-          case 'image': {
-            return <TableIcon icon="image" {...commonProps}/>
-          }
-          case 'text': {
-            return <TableIcon icon="short_text" {...commonProps}/>
-          }
-          case 'geopoint': {
-            return <TableIcon icon="location_on" {...commonProps}/>
-          }
-          case 'note': {
-            return <TableIcon icon="info" {...commonProps}/>
-          }
-          default: {
-            return type
-          }
+            return <SheetHeadTypeIcon children="event" tooltip={column.type}/>
+          case 'select_multiple':
+            return <SheetHeadTypeIcon children="check_box" tooltip={column.type}/>
+          case 'select_one':
+            return <SheetHeadTypeIcon children="radio_button_checked" tooltip={column.type}/>
+          case 'number':
+            return <SheetHeadTypeIcon children="tag" tooltip={column.type}/>
+          case 'string':
+            return <SheetHeadTypeIcon children="short_text" tooltip={column.type}/>
+          default:
+            return column.type
         }
       })()}
-      {type && ['calculate', 'integer', 'decimal', 'select_multiple', 'select_one', 'start', 'end', 'date',].includes(type) && (
+      {(column.options || ['date', 'number'].includes(column.type!)) && (
         <TableIconBtn icon="bar_chart" onClick={e => onOpenStats(e)}/>
       )}
       <TableIconBtn

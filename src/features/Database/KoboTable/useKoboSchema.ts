@@ -1,10 +1,9 @@
-import {useCallback, useMemo} from 'react'
+import {useMemo} from 'react'
 import {Arr, mapFor} from '@alexandreannic/ts-utils'
-import {KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {ignoredColType} from '@/features/Database/Database'
 import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
-import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
 
 export type UseKoboSchema = ReturnType<typeof useKoboSchema>
 
@@ -69,32 +68,11 @@ export const useKoboSchema = ({
     const choicesIndex = Arr(sanitizedForm.content.choices).groupBy(_ => _.list_name)
     const questionIndex = Arr(sanitizedForm.content.survey).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
 
-    // const choicesTranslation: Record<string, Record<string, KoboQuestionChoice>> = {}
-    // form.content.choices.forEach(choice => {
-    //   if (!choicesTranslation[choice.list_name]) choicesTranslation[choice.list_name] = {}
-    //   choicesTranslation[choice.list_name][choice.name] = choice
-    // })
-
-    // const translateOption = ({questionName, choiceName, langIndex}: {questionName: string, choiceName?: string, langIndex?: number}) => {
-    //   const listName = questionIndex[questionName].select_from_list_name
-    //   try {
-    //     if (choiceName)
-    //       return getKoboLabel(choicesTranslation[listName!][choiceName], langIndex)
-    //   } catch (e) {
-    //     console.warn(
-    //       'Cannot translate this options. Maybe the question type has changed?',
-    //       {question: questionIndex[questionName], listName, choiceName, choicesTranslation}
-    //     )
-    //   }
-    //   return ''
-    // }
-
     return {
       formGroups,
       sanitizedSchema: sanitizedForm,
       choicesIndex,
       questionIndex,
-      // translateOption,
     }
   }, [form])
 }
