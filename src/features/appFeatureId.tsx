@@ -2,11 +2,13 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {appConfig} from '@/conf/AppConfig'
 import {Access} from '@/core/sdk/server/access/Access'
+import {koboFormId} from '@/koboFormId'
 
 export enum AppFeatureId {
   dashboards = 'dashboards',
   kobo_database = 'kobo_database',
   mpca = 'mpca',
+  shelter = 'shelter',
   wfp_deduplication = 'wfp_deduplication',
   activity_info = 'activity_info',
   admin = 'admin',
@@ -32,10 +34,22 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
   },
   kobo_database: {
     id: AppFeatureId.kobo_database,
-    name: 'Databases',
+    name: 'Kobo Databases',
     materialIcons: 'fact_check',
-    color: '#0052bc',
+    color: '#259af4',
     path: '/database',
+  },
+  shelter: {
+    id: AppFeatureId.shelter,
+    name: 'Shelter',
+    materialIcons: 'home_work',
+    color: 'brown',
+    path: '/shelter',
+    showIf: (u, accesses) => {
+      return u?.admin || accesses && !!accesses
+        .filter(Access.filterByFeature(AppFeatureId.kobo_database))
+        .find(_ => _.params?.koboFormId === koboFormId.prod.shelterNTA)
+    }
   },
   mpca: {
     id: AppFeatureId.mpca,
@@ -44,7 +58,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: 'green',
     path: '/mpca',
     showIf: (u, accesses) => {
-      return u?.admin ||accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
+      return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },
   activity_info: {

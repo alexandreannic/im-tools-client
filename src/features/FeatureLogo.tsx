@@ -30,7 +30,7 @@ export const FeatureLogo = ({
         <Icon sx={{color: feature.color, fontSize: iconSize + 'px !important'}}>
           {feature.materialIcons}
         </Icon>
-        <Txt block bold sx={{mt: 1}} truncate>{feature.name}</Txt>
+        <Txt block fontSize="big" bold sx={{mt: 1}} truncate>{feature.name}</Txt>
       </ButtonBase>
     </Link>
   )
