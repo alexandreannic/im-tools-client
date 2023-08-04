@@ -10,6 +10,7 @@ import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {SheetOptions} from '@/shared/Sheet/sheetType'
+import {KeyOf} from '@/utils/utils'
 
 const RenderRow = ({label, value}: {
   label: ReactNode
@@ -26,15 +27,17 @@ const RenderRow = ({label, value}: {
 export const NumberChoicesPopover = <T, >({
   question,
   data,
+  mapValues = _ => _,
   anchorEl,
   onClose,
 }: {
-  question: keyof T
+  mapValues?: (_: any) => any
+  question: KeyOf<T>
   data: T[]
 } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
   const {m, formatLargeNumber} = useI18n()
   const chart = useMemo(() => {
-    const mapped = Arr(data).map(_ => _[question]).compact().map(_ => +_)
+    const mapped = Arr(data).map(_ => mapValues? mapValues(_) : _[question]).compact().map(_ => +_)
     const min = Math.min(...mapped)
     const max = Math.max(...mapped)
     const sum = mapped.sum()

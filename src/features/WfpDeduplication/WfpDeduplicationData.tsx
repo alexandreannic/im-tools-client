@@ -35,7 +35,7 @@ export const WfpDeduplicationData = () => {
               head: m.fileName,
               renderExport: true,
               render: _ => _.fileName,
-              type: 'text',
+              type: 'string',
             },
             {
               id: 'createdAt',
@@ -50,24 +50,24 @@ export const WfpDeduplicationData = () => {
               renderExport: true,
               render: _ => _.office,
               type: 'select_one',
-              options: Enum.values(DrcOffice).map(_ => ({label: _, value: _}))
+              options: () => Enum.values(DrcOffice).map(_ => ({label: _, value: _}))
             },
             // {
             //   id: 'beneficiaryId',
             //   head: 'beneficiaryId',
             //   renderExport: true,
-            //   render: _ => _.beneficiaryId, type: 'text'
+            //   render: _ => _.beneficiaryId, type: 'string'
             // },
             {
               id: 'taxId',
               head: m.taxId,
               renderExport: true,
               render: _ => _.taxId ?? <Txt color="error">{m.mpcaDb.uploadWfpTaxIdMapping}</Txt>,
-              type: 'text',
+              type: 'string',
             },
             {
               id: 'amount',
-              type: 'integer',
+              type: 'number',
               head: m.amount,
               align: 'right', renderExport: true,
               render: _ => formatLargeNumber(_.amount)
@@ -93,22 +93,22 @@ export const WfpDeduplicationData = () => {
               render: _ => m.mpcaDb.drcSupportSuggestion[_.suggestion],
               width: 246,
               type: 'select_one',
-              options: Enum.keys(DrcSupportSuggestion).map(_ => ({label: m.mpcaDb.drcSupportSuggestion[_], value: _})),
+              options: () => Enum.keys(DrcSupportSuggestion).map(_ => ({label: m.mpcaDb.drcSupportSuggestion[_], value: _})),
             },
             {
               id: 'status',
               align: 'center',
               head: m.status,
               type: 'select_one',
-              options: Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})),
+              options: () => Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})),
               tooltip: _ => m.mpcaDb.status[_.status],
               renderExport: false,
               render: _ => (
                 fnSwitch(_.status, {
-                  Deduplicated: <TableIcon color="warning" icon="join_full"/>,
-                  PartiallyDeduplicated: <TableIcon color="info" icon="join_left"/>,
-                  NotDeduplicated: <TableIcon color="success" icon="check_circle"/>,
-                  Error: <TableIcon color="error" icon="error"/>,
+                  Deduplicated: <TableIcon color="warning" children="join_full"/>,
+                  PartiallyDeduplicated: <TableIcon color="info" children="join_left"/>,
+                  NotDeduplicated: <TableIcon color="success" children="check_circle"/>,
+                  Error: <TableIcon color="error" children="error"/>,
                 }, () => <></>)
               ),
             },
@@ -117,14 +117,14 @@ export const WfpDeduplicationData = () => {
               head: m.mpcaDb.existingOrga,
               renderExport: true,
               render: _ => _.existingOrga,
-              type: 'text',
+              type: 'string',
             },
             {
               id: 'existingAmount',
               head: m.mpcaDb.existingAmount,
               align: 'right', renderExport: true,
               render: _ => _.existingAmount && formatLargeNumber(_.existingAmount),
-              type: 'integer',
+              type: 'number',
             },
             {
               id: 'existingStart',

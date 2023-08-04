@@ -9,14 +9,13 @@ import {Controller, useForm} from 'react-hook-form'
 import {KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {Arr, map} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
-import {useFetchers} from '@/features/Database/DatabaseMerge/useFetchersFn'
+import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
-import {useAsync} from '@/features/useAsync'
+import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
-
+import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 
 interface Form extends IAccessForm {
   question: string

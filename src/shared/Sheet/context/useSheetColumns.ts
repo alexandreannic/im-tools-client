@@ -4,7 +4,7 @@ import {KeyOf} from '@/utils/utils'
 export const useSheetColumns = <T extends SheetRow>({
   columnsIndex,
 }: {
-  columns: Record<KeyOf<T>, SheetColumnProps<T>>
+  columnsIndex: Record<KeyOf<T>, SheetColumnProps<T>>
 }) => {
 
 }

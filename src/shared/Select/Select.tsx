@@ -43,7 +43,6 @@ export const AaSelect = <T extends string | number>({
   sx,
   ...props
 }: AaSelect<T>) => {
-  console.log('defaultValue', defaultValue)
   const {m} = useI18n()
   const [innerValue, setInnerValue] = useState<undefined | T | T[]>()
   const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE'

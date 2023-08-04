@@ -1,27 +1,34 @@
 import React, {useCallback} from 'react'
 import {useModal} from '@/shared/Modal/useModal'
-import {SheetColumnConfigPopoverParams} from '@/shared/Sheet/sheetType'
-import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
+import {SheetColumnConfigPopoverParams, SheetOptions} from '@/shared/Sheet/sheetType'
 import {SheetFilterDialog} from '@/shared/Sheet/SheetFilterDialog'
 import {SheetContext} from '@/shared/Sheet/context/SheetContext'
 import {SheetColumnProps, SheetRow} from '@/shared/Sheet/Sheet'
 import {DatesPopover, MultipleChoicesPopover, NumberChoicesPopover} from '@/shared/Sheet/SheetPopover'
-import {getKoboLabel} from '@/features/Database/DatabaseTable/KoboDatabase'
+import {useMap2} from '@/alexlib-labo/useMap'
 
 export const useSheetModal = <T extends SheetRow>({
   data,
 }: {
   data: SheetContext<T>['data']
 }) => {
-  const [filterPopoverOpen, filterPopoverClose] = useModal((c: SheetColumnConfigPopoverParams<KoboAnswer, KoboQuestionType>) => {
+  const optionsRef = useMap2<string, SheetOptions[]>()
+
+  const getOption = useCallback((columnId: string, options?: () => SheetOptions[]) => {
+    if (!options) return
+    if (!optionsRef.has(columnId))
+      optionsRef.set(columnId, options())
+    return optionsRef.get(columnId)
+  }, [optionsRef.keys])
+
+  const [filterPopoverOpen, filterPopoverClose] = useModal((c: SheetColumnConfigPopoverParams) => {
     return (
       <SheetFilterDialog
         title={c.title}
         anchorEl={c.anchorEl}
         columnId={c.columnId}
         options={c.options}
-        type={c.type}
+        type={c.type!}
         orderBy={data.search.orderBy}
         sortBy={data.search.sortBy}
         onOrderByChange={_ => data.onOrderBy(c.columnId, _)}
@@ -41,21 +48,19 @@ export const useSheetModal = <T extends SheetRow>({
         }}
       />
     )
-  })
+  }, [data.search, data.filters])
 
-  const [statsPopoverOpen, statsPopoverClose] = useModal((c: SheetColumnConfigPopoverParams<KoboAnswer, KoboQuestionType>) => {
+  const [statsPopoverOpen, statsPopoverClose] = useModal((c: SheetColumnConfigPopoverParams & {renderValue?: SheetColumnProps<T>['renderValue']}) => {
     switch (c.type) {
-      case 'decimal':
-      case 'integer':
+      case 'number':
         return <NumberChoicesPopover
           anchorEl={c.anchorEl}
           question={c.columnId}
+          mapValues={c.renderValue}
           data={data.filteredData ?? []}
           onClose={statsPopoverClose}
         />
       case 'date':
-      case 'start':
-      case 'end':
         return (
           <DatesPopover
             anchorEl={c.anchorEl}
@@ -64,21 +69,20 @@ export const useSheetModal = <T extends SheetRow>({
             onClose={statsPopoverClose}
           />
         )
-      case 'select_one':
-      case 'select_multiple':
-      case 'calculate':
-        return <MultipleChoicesPopover
-          translations={c.options}
-          anchorEl={c.anchorEl}
-          multiple={c.type === 'select_multiple'}
-          property={c.columnId}
-          data={data.filteredData ?? []}
-          onClose={statsPopoverClose}
-        />
-      default:
+      default: {
+        if (c.options)
+          return <MultipleChoicesPopover
+            translations={c.options}
+            anchorEl={c.anchorEl}
+            multiple={c.type === 'select_multiple'}
+            property={c.columnId}
+            data={data.filteredData ?? []}
+            onClose={statsPopoverClose}
+          />
         return undefined
+      }
     }
-  })
+  }, [data.filteredData])
 
 
   const _filterPopoverOpen = useCallback((a: SheetColumnProps<T>, e: any) => filterPopoverOpen({
@@ -86,15 +90,16 @@ export const useSheetModal = <T extends SheetRow>({
     columnId: a.id,
     title: a.head,
     anchorEl: e.currentTarget,
-    options: a.options,
+    options: getOption(a.id, a.options),
   }), [])
 
   const _statsPopoverOpen = useCallback((a: SheetColumnProps<T>, e: any) => statsPopoverOpen({
     type: a.type!,
     columnId: a.id,
+    renderValue: a.renderValue,
     title: a.head,
     anchorEl: e.currentTarget,
-    options: a.options,
+    options: getOption(a.id, a.options),
   }), [])
 
   return {

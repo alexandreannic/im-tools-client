@@ -4,15 +4,15 @@ import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
 
 export interface TableIconProps extends IconProps {
   tooltip?: string
-  icon: string
+  children: string
 }
 
-export const TableIcon = ({tooltip, icon, sx, ...props}: TableIconProps) => {
+export const TableIcon = ({tooltip, children, sx, ...props}: TableIconProps) => {
   const body = <Icon sx={{
     verticalAlign: 'middle',
     // fontSize: '20px !important',
     ...sx
-  }} fontSize="medium" {...props}>{icon}</Icon>
+  }} fontSize="medium" {...props}>{children}</Icon>
   return tooltip
     ? <Tooltip title={tooltip}>{body}</Tooltip>
     : body

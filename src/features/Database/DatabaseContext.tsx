@@ -1,5 +1,5 @@
 import React, {ReactNode, useContext} from 'react'
-import {useFetchers, UseFetchersMultiple} from '@/features/Database/DatabaseMerge/useFetchersFn'
+import {useFetchers, UseFetchersMultiple} from '@/alexlib-labo/useFetchersFn'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 

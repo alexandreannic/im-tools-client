@@ -3,9 +3,8 @@ import {PanelBody, Txt} from 'mui-extension'
 import React from 'react'
 import {Box, Popover} from '@mui/material'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {useKoboDatabaseContext} from '@/features/Database/DatabaseTable/Context/KoboDatabaseContext'
 
-export const KoboRepeatGroupDetailsPopover = ({
+export const DatabaseKoboTableGroupModal = ({
   anchorEl,
   title,
   onClose,
@@ -18,7 +17,6 @@ export const KoboRepeatGroupDetailsPopover = ({
   onClose: () => void
   anchorEl: any,
 }) => {
-  const {schema, langIndex} = useKoboDatabaseContext()
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead>

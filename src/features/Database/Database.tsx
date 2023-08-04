@@ -16,13 +16,13 @@ import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {useAaToast} from '@/core/useToast'
 import {DatabaseProvider} from '@/features/Database/DatabaseContext'
 import {useSession} from '@/core/Session/SessionContext'
-import {DatabaseAccessRoute} from '@/features/Database/DatabaseAccess/DatabaseAccess'
-import {DatabaseTableRoute} from '@/features/Database/DatabaseTable/DatabaseTable'
+import {DatabaseAccessRoute} from '@/features/Database/Access/DatabaseAccess'
+import {DatabaseTableRoute} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {Access} from '@/core/sdk/server/access/Access'
 import {Fender, Txt} from 'mui-extension'
-import {DatabaseEntry} from '@/features/Database/DatabaseEntry/DatabaseEntry'
 import {DatabaseIndex} from '@/features/Database/DatabaseIndex'
+import {DatabaseKoboEntry} from '@/features/Database/KoboEntry/DatabaseKoboEntry'
 
 export const databaseUrlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -105,7 +105,7 @@ export const Database = () => {
             <Route path={databaseModule.siteMap.home()} element={<DatabaseHome/>}>
               <Route path={databaseModule.siteMap.database.absolute()} element={<DatabaseTableRoute/>}/>
               <Route path={databaseModule.siteMap.access.absolute()} element={<DatabaseAccessRoute/>}/>
-              <Route path={databaseModule.siteMap.entry.absolute()} element={<DatabaseEntry/>}/>
+              <Route path={databaseModule.siteMap.entry.absolute()} element={<DatabaseKoboEntry/>}/>
             </Route>
           </Routes>
         </Layout>

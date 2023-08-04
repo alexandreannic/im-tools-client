@@ -124,13 +124,15 @@ export const MpcaData = () => {
             {
               id: 'deduplicationFile',
               head: 'deduplicationFile',
-              type: getAllPossibleValues('deduplicationFile'),
+              type: 'select_one',
+              options: () => getAllPossibleValues('deduplicationFile').map(_ => ({value: _, label: _})),
               render: _ => <Txt skeleton={50}/>
             },
             {
               id: 'duplication',
+              type: 'select_one',
               head: <TableIcon>content_copy</TableIcon>,
-              type: Enum.keys(DeduplicationStatus),
+              options: () => Enum.keys(DeduplicationStatus).map(_ => ({value: _, label: _})),
               align: 'center',
               render: _ => fnSwitch(_.duplication!, {
                 duplicate: <TableIcon color="warning" children="content_copy"/>,
@@ -151,7 +153,13 @@ export const MpcaData = () => {
                 <TableImg url={getKoboImagePath(url.download_small_url)}/>
               )
             },
-            {id: 'status', head: m.status, render: _ => _.status, type: getAllPossibleValues('status')},
+            {
+              id: 'status',
+              head: m.status,
+              render: _ => _.status,
+              type: 'select_one',
+              options: () => getAllPossibleValues('status').map(_ => ({value: _, label: _})),
+            },
             {id: 'lastName', head: m.lastName, render: _ => _.lastName},
             {id: 'firstName', head: m.firstName, render: _ => _.firstName},
             {id: 'patronyme', head: m.patronyme, render: _ => _.patronyme},

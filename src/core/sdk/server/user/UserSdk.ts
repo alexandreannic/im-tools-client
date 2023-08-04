@@ -10,6 +10,6 @@ export class UserSdk {
   }
 
   readonly search = () => {
-    return this.client.get<User[]>(`/user`)
+    return this.client.get<any[]>(`/user`).then(_ => _.map(User.map))
   }
 }

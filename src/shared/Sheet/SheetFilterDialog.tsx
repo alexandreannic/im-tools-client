@@ -10,8 +10,7 @@ import {Txt} from 'mui-extension'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
-import {KoboQuestionType} from '@/core/sdk/server/kobo/KoboApi'
-import {SheetOptions} from '@/shared/Sheet/sheetType'
+import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
 
 export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   orderBy?: OrderBy
@@ -23,7 +22,7 @@ export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
   onChange?: (columnName: string, value: string[] | string | [Date, Date]) => void
   columnId: string
   title: ReactNode
-  type?: KoboQuestionType //'date' | 'string' | 'list' | 'number' | 'list_multiple'
+  type?: SheetPropertyType
   options?: SheetOptions[]
 }
 
@@ -82,20 +81,22 @@ export const SheetFilterDialog = ({
         <Box sx={{display: 'flex', alignItems: 'center', borderBottom: t => `1px solid ${t.palette.divider}`, mb: 1}}>
           <Txt color="hint" sx={{flex: 1}}>{m.sort}</Txt>
           <MenuItem onClick={() => onOrderByChange?.(orderBy === 'desc' ? undefined : 'desc')}>
-            <Icon fontSize="small" color={sortBy === columnId && orderBy === 'desc' ? 'primary' : undefined}>
-              south
-            </Icon>
+            <Icon
+              fontSize="small"
+              color={sortBy === columnId && orderBy === 'desc' ? 'primary' : undefined}
+              children="south"
+            />
           </MenuItem>
           <MenuItem onClick={() => onOrderByChange?.(orderBy === 'asc' ? undefined : 'asc')}>
-            <Icon fontSize="small" color={sortBy === columnId && orderBy === 'asc' ? 'primary' : undefined}>
-              north
-            </Icon>
+            <Icon
+              fontSize="small"
+              color={sortBy === columnId && orderBy === 'asc' ? 'primary' : undefined}
+              children="north"
+            />
           </MenuItem>
         </Box>
         {type && (() => {
           switch (type) {
-            case 'start':
-            case 'end':
             case 'date':
               return <PeriodPicker value={innerValue} onChange={setInnerValue}/>
             case 'select_one':
@@ -103,7 +104,7 @@ export const SheetFilterDialog = ({
               return (
                 <MultipleChoices
                   options={options?.map(_ => ({
-                    value: _.value,
+                    value: _.value ?? '',
                     children: _.label
                   })) ?? []}
                   initialValue={value as any}
