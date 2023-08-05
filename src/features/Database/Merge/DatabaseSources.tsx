@@ -1,6 +1,6 @@
 import {Page} from '../../../shared/Page'
 import {useAppSettings} from '../../../core/context/ConfigContext'
-import {koboServerId} from '../../../koboFormId'
+import {kobo, koboServerId} from '../../../koboDrcUaFormId'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useEffect, useState} from 'react'
 import {KoboFormListButton} from './KoboFormList'
@@ -11,8 +11,8 @@ import {Box} from '@mui/material'
 
 export const DatabaseSources = () => {
   const {api} = useAppSettings()
-  const _allKoboForm = useFetcher(() => api.koboApi.getForms(koboServerId.prod))
-  const _sources = useFetchers((formId: UUID) => api.koboApi.getForm(koboServerId.prod, formId), {
+  const _allKoboForm = useFetcher(() => api.koboApi.getForms(kobo.drcUa.server.prod))
+  const _sources = useFetchers((formId: UUID) => api.koboApi.getForm(kobo.drcUa.server.prod, formId), {
     requestKey: ([_]) => _
   })
   const [mainSource, setMainSource] = useState<UUID | undefined>()

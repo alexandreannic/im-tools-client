@@ -1,5 +1,5 @@
 import {ApiPaginate} from '@/core/type'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Enum} from '@alexandreannic/ts-utils'
 
 export type KoboId = string

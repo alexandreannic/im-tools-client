@@ -2,7 +2,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {appConfig} from '@/conf/AppConfig'
 import {Access} from '@/core/sdk/server/access/Access'
-import {koboFormId} from '@/koboFormId'
+import {kobo, koboDrcUaFormId} from '@/koboDrcUaFormId'
 
 export enum AppFeatureId {
   dashboards = 'dashboards',
@@ -48,7 +48,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     showIf: (u, accesses) => {
       return u?.admin || accesses && !!accesses
         .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-        .find(_ => _.params?.koboFormId === koboFormId.prod.shelterNTA)
+        .find(_ => _.params?.koboFormId === kobo.drcUa.form.shelterNTA)
     }
   },
   mpca: {

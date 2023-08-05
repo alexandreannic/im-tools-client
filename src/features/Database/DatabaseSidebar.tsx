@@ -4,7 +4,7 @@ import {Sidebar, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Fragment, useEffect, useState} from 'react'
 import {CircularProgress, Divider} from '@mui/material'
 import {databaseModule} from './databaseModule'
-import {koboFormId} from '@/koboFormId'
+import {koboDrcUaFormId} from '@/koboDrcUaFormId'
 import {KoboApiSdk} from '@/core/sdk/server/kobo/KoboApiSdk'
 
 /**@deprecated*/
@@ -24,13 +24,13 @@ export const DatabaseSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, koboFormId.prod.protectionHh2))}>
+      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, kobo.drcUa.form.protectionHh2))}>
         HHS v2
       </SidebarItem>
-      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, koboFormId.prod.BNRE))}>
+      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, kobo.drcUa.form.BNRE))}>
         BNRE
       </SidebarItem>
-      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, koboFormId.prod.fcrmMpcaNAA))}>
+      <SidebarItem to={path(databaseModule.siteMap.home(KoboApiSdk.serverRefs.prod, kobo.drcUa.form.fcrmMpcaNAA))}>
         fcrmMpcaNAA
       </SidebarItem>
       <Divider/>

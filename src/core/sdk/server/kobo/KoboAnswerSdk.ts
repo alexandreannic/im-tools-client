@@ -1,7 +1,7 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
 import {Kobo, KoboAnswer, KoboId, KoboMappedAnswerType} from '@/core/sdk/server/kobo/Kobo'
-import {koboFormId} from '@/koboFormId'
+import {kobo, koboDrcUaFormId} from '@/koboDrcUaFormId'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
@@ -31,10 +31,10 @@ export class KoboAnswerSdk {
   }
 
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
-    if (formId === koboFormId.prod.protectionHh2) {
+    if (formId === kobo.drcUa.form.protectionHh2) {
       return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
     }
-    if (formId === koboFormId.prod.mealVisitMonitoring) {
+    if (formId === kobo.drcUa.form.mealVisitMonitoring) {
       return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
     }
     throw new Error('To implement')
@@ -69,7 +69,7 @@ export class KoboAnswerSdk {
 
   readonly searchBnre = (filters: KoboAnswerFilter = {}) => {
     return this.search<BNRE>({
-      formId: koboFormId.prod.BNRE,
+      formId: kobo.drcUa.form.BNRE,
       fnMap: mapBNRE,
       ...filters,
     })
@@ -77,7 +77,7 @@ export class KoboAnswerSdk {
 
   readonly searchMealVisitMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: koboFormId.prod.mealVisitMonitoring,
+      formId: kobo.drcUa.form.mealVisitMonitoring,
       fnMap: mapMealVisitMonitoring,
       ...filters,
     })
@@ -85,7 +85,7 @@ export class KoboAnswerSdk {
 
   readonly searchProtHhs = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: koboFormId.prod.protectionHh2,
+      formId: kobo.drcUa.form.protectionHh2,
       fnMap: mapProtHHS_2_1,
       ...filters,
     })

@@ -99,6 +99,14 @@ export class KoboApiSdk {
       ...filters,
     })
   }
+  readonly getAnswersShelterNTA = (filters: FiltersProps = {}) => {
+    return this.getAnswersFromKoboApi({
+      serverId: KoboApiSdk.serverRefs.prod,
+      formId: KoboApiSdk.koboFormRefs.ProtHHS_2_1,
+      fnMap: mapProtHHS_2_1,
+      ...filters,
+    })
+  }
 
   readonly getAnswersMPCA_NFI_Old = (filters: FiltersProps = {}) => {
     return this.getAnswersFromKoboApi({
