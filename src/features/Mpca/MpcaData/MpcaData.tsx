@@ -9,7 +9,7 @@ import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
-import {koboServerId} from '@/koboFormId'
+import {kobo, koboServerId} from '@/koboDrcUaFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
@@ -23,7 +23,7 @@ enum DeduplicationStatus {
 }
 
 export const getKoboImagePath = (url: string): string => {
-  return appConfig.apiURL + `/kobo-api/${koboServerId.prod}/attachment?path=${url.split('api')[1]}`
+  return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
 }
 
 export const mapMpcaKoboAnswer = () => (_: KoboAnswer<BNRE>) => {
