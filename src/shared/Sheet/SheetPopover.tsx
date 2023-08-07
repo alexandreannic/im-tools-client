@@ -27,7 +27,7 @@ const RenderRow = ({label, value}: {
 export const NumberChoicesPopover = <T, >({
   question,
   data,
-  mapValues = _ => _,
+  mapValues,
   anchorEl,
   onClose,
 }: {

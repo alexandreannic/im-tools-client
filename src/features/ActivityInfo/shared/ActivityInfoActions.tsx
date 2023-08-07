@@ -5,6 +5,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {useI18n} from '../../../core/i18n'
 import {IconBtn} from 'mui-extension'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 export const ActivityInfoActions = <T extends Record<string, any>, >({
   answers,
@@ -35,10 +36,10 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
       maxWidth={'lg'}
       title={m.koboData}
       PaperProps={{}}
-      content={<AnswerTable answers={answers}/>}>
-      <Tooltip title="DatabaseLayout data">
-        <AaBtn icon="table_view" variant="outlined" size="small">{m.viewDate}</AaBtn>
-      </Tooltip>
+      cancelLabel={m.close}
+      content={<AnswerTable answers={answers}/>}
+    >
+      <AAIconBtn tooltip="View related Kobo data" children="table_view" color="primary"/>
     </Confirm>
   )
 }

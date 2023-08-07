@@ -8,7 +8,6 @@ import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
 import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
 import {endOfDay, startOfDay} from 'date-fns'
-import {UserSession} from '@/core/sdk/server/session/Session'
 import {map} from '@alexandreannic/ts-utils'
 
 interface KoboAnswerFilter {

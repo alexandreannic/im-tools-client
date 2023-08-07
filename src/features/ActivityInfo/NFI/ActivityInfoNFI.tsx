@@ -252,6 +252,7 @@ const _ActivityInfo = ({
             id: 'actions', head: '', render: (_, i) =>
               <>
                 <AaBtn
+                  tooltip="Submit 🚀"
                   loading={_submit.getLoading(i)}
                   variant="contained"
                   size="small"
