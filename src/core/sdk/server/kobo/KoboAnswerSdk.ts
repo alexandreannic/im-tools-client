@@ -9,8 +9,10 @@ import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
 import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
 import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
+import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
+import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
 
-interface KoboAnswerFilter {
+export interface KoboAnswerFilter {
   paginate?: ApiPagination
   filters?: AnswersFilters
 }
@@ -79,6 +81,22 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.mealVisitMonitoring,
       fnMap: mapMealVisitMonitoring,
+      ...filters,
+    })
+  }
+
+  readonly searchShelterTA = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.shelterTA,
+      fnMap: mapShelter_TA,
+      ...filters,
+    })
+  }
+
+  readonly searchShelterNTA = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.shelterNTA,
+      fnMap: mapShelter_NTA,
       ...filters,
     })
   }

@@ -2,7 +2,6 @@ import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
-import {ShelterDeduplicationProvider} from './MpcaDeduplicationContext'
 import React, {useMemo} from 'react'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {useSession} from '@/core/Session/SessionContext'
@@ -41,16 +40,14 @@ export const Shelter = () => {
   }
   return (
     <Router>
-      <ShelterDeduplicationProvider>
-        <Layout
-          sidebar={<ShelterSidebar/>}
-          header={<AppHeader id="app-header"/>}
-        >
-          <Routes>
-            <Route path={shelterModule.siteMap.data} element={<ShelterData/>}/>
-          </Routes>
-        </Layout>
-      </ShelterDeduplicationProvider>
+      <Layout
+        sidebar={<ShelterSidebar/>}
+        header={<AppHeader id="app-header"/>}
+      >
+        <Routes>
+          <Route path={shelterModule.siteMap.data} element={<ShelterData/>}/>
+        </Routes>
+      </Layout>
     </Router>
   )
 }
