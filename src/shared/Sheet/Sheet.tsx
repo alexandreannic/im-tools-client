@@ -1,7 +1,7 @@
 import {Badge, Box, BoxProps, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
 import React, {ReactNode, useEffect} from 'react'
 import {useI18n} from '@/core/i18n'
-import {Fender, Txt} from 'mui-extension'
+import {Txt} from 'mui-extension'
 import {KeyOf, Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
@@ -159,11 +159,11 @@ const _Sheet = <T extends SheetRow>({
     <>
       <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center'}}>
         <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
-          <AAIconBtn sx={{mr: 1}} icon="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
+          <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
         </Badge>
         {header}
         {showExportBtn && (
-          <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+          <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
         )}
         {ctx.selected.size > 0 && (
           <Box sx={{
@@ -194,7 +194,7 @@ const _Sheet = <T extends SheetRow>({
                 {ctx.selected.size} {m.selected}.
               </Box>
               {ctx.select?.selectActions}
-              <AAIconBtn color="primary" icon="clear" onClick={ctx.selected.clear}/>
+              <AAIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
             </Box>
           </Box>
         )}

@@ -1,9 +1,8 @@
 import {appConfig} from '@/conf/AppConfig'
-import {kobo, koboServerId} from '@/koboDrcUaFormId'
+import {kobo} from '@/koboDrcUaFormId'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {useMemo} from 'react'
-import {lazy} from '@alexandreannic/ts-utils'
 
 export const getUnsecureKoboImgUrl = (url: string, serverId: string = kobo.drcUa.server.prod): string => {
   return appConfig.apiURL + `/kobo-api/${serverId}/attachment?path=${url}`

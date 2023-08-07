@@ -1,5 +1,5 @@
 import {AAIconBtn} from '@/shared/IconBtn'
-import React, {useState} from 'react'
+import React from 'react'
 import {useSession} from '@/core/Session/SessionContext'
 import {Box, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
@@ -18,7 +18,7 @@ export const AppHeaderMenu = () => {
   return (
     <>
       <AAIconBtn
-        icon="person"
+        children="person"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         sx={{
           '&:hover': {

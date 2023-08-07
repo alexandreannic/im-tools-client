@@ -1,4 +1,4 @@
-import {alpha, Box, BoxProps, GlobalStyles, Slide} from '@mui/material'
+import {alpha, Box, BoxProps, GlobalStyles} from '@mui/material'
 import React, {useEffect} from 'react'
 import {layoutConfig} from '@/shared/Layout'
 import {map} from '@alexandreannic/ts-utils'

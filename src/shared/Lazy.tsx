@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {useMemo} from 'react'
 
 interface Type {
   <T, D extends any>(_: {

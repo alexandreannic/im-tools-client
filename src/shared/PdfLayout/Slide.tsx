@@ -6,8 +6,7 @@ import {Panel, PanelBody} from '../Panel'
 import {PanelProps} from '../Panel/Panel'
 import {DRCLogo, EULogo} from '../logo/logo'
 import {uppercaseHandlingAcronyms} from '@/utils/utils'
-import {useLayoutContext} from '@/shared/Layout/LayoutContext'
-import { PanelBodyProps } from '../Panel/PanelBody'
+import {PanelBodyProps} from '../Panel/PanelBody'
 
 export const Slide = (props: BoxProps) => {
   return (

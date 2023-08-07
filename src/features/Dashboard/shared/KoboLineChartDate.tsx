@@ -1,8 +1,7 @@
 import {format} from 'date-fns'
-import {_Arr, Enum} from '@alexandreannic/ts-utils'
+import {Enum} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
-import {Utils} from '@/utils/utils'
 import {BoxProps} from '@mui/material'
 
 export type DateKeys<T> = {

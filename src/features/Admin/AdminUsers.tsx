@@ -69,7 +69,7 @@ export const AdminUsers = () => {
               align: 'right',
               render: _ => (
                 <AAIconBtn
-                  icon="visibility"
+                  children="visibility"
                   loading={_connectAs.loading}
                   onClick={() => connectAs(_.email)}
                   tooltip={m.connectAs}

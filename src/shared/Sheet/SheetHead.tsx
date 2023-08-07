@@ -121,11 +121,11 @@ export const SheetHeadContent = ({
         }
       })()}
       {(column.options || ['date', 'number'].includes(column.type!)) && (
-        <TableIconBtn icon="bar_chart" onClick={e => onOpenStats(e)}/>
+        <TableIconBtn children="bar_chart" onClick={e => onOpenStats(e)}/>
       )}
       <TableIconBtn
         color={active ? 'primary' : undefined}
-        icon="filter_alt"
+        children="filter_alt"
         onClick={e => onOpenFilter(e)}
       />
     </span>

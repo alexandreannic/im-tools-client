@@ -48,15 +48,15 @@ export const MpcaPaymentToolForm = ({
   return (
     <>
       <Row icon="person" noBorder label={m.mpcaDb.headOfOperations}>
-        <AAIconBtn sx={{ml: 1}} icon="gesture" color="primary"/>
+        <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.headOfOperation} {...register('headOfOperation')}/>
       </Row>
       <Row icon="" noBorder label={m.mpcaDb.financeAndAdministrationOfficer}>
-        <AAIconBtn sx={{ml: 1}} icon="gesture" color="primary"/>
+        <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.financeAndAdministrationOfficer} {...register('financeAndAdministrationOfficer')}/>
       </Row>
       <Row icon="" label={m.mpcaDb.cashAndVoucherAssistanceAssistant}>
-        <AAIconBtn sx={{ml: 1}} icon="gesture" color="primary"/>
+        <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.cashAndVoucherAssistanceAssistant} {...register('cashAndVoucherAssistanceAssistant')}/>
       </Row>
       <Row icon="place" label={m.city}>

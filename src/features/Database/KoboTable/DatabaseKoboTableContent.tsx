@@ -92,7 +92,7 @@ export const DatabaseKoboTableContent = ({
         <TableIconBtn
           loading={_refresh.getLoading()}
           color="primary"
-          icon="refresh"
+          children="refresh"
           tooltip={m._koboDatabase.pullData} onClick={_refresh.call}
         />
       </>

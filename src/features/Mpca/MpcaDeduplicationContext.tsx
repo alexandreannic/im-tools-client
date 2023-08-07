@@ -1,7 +1,7 @@
 import React, {ReactNode, useContext, useEffect} from 'react'
 import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClient'
 import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo, koboDrcUaFormId, koboServerId} from '@/koboDrcUaFormId'
+import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'

@@ -7,7 +7,7 @@ import {format} from 'date-fns'
 import {Layout} from '../shared/Layout'
 import {Txt} from 'mui-extension'
 import {useSession} from '@/core/Session/SessionContext'
-import {kobo, koboDrcUaFormId, koboServerId} from '@/koboDrcUaFormId'
+import {kobo} from '@/koboDrcUaFormId'
 
 // const survey = await form.fetch().then(_ => _.content.survey)
 // const bln = survey.find(_ => _.label?.includes('BLN High Thermal Blankets: How many?'))

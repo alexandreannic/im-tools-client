@@ -1,4 +1,4 @@
-import {defaultValue, env, bool, required} from '@alexandreannic/ts-utils'
+import {bool, defaultValue, env, required} from '@alexandreannic/ts-utils'
 
 enum Env {
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = 'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',

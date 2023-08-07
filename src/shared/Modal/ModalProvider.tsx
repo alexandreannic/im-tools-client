@@ -1,6 +1,6 @@
-import {useCallback, useState, useMemo, ReactNode} from 'react'
 import * as React from 'react'
-import {ModalType, ModalContext} from './ModalContext'
+import {ReactNode, useCallback, useMemo, useState} from 'react'
+import {ModalContext, ModalType} from './ModalContext'
 import {ModalRoot} from './ModalRoot'
 
 /**

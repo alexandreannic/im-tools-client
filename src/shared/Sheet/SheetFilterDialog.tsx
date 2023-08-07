@@ -70,7 +70,7 @@ export const SheetFilterDialog = ({
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead action={
-        <AAIconBtn icon="filter_alt_off" onClick={() => {
+        <AAIconBtn children="filter_alt_off" onClick={() => {
           onClear?.()
           setInnerValue(undefined)
         }}/>

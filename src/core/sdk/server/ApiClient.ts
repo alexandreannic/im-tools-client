@@ -1,7 +1,6 @@
 import axios, {AxiosError, AxiosResponse, ResponseType} from 'axios'
 import * as qs from 'qs'
 import {objectToQueryString} from '@/utils/utils'
-import {formatDate} from '@/core/i18n/localization/en'
 
 export interface RequestOption {
   readonly qs?: any

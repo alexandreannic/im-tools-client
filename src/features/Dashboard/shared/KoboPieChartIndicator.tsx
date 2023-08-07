@@ -1,13 +1,8 @@
 import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/PieChartIndicator'
+import * as React from 'react'
 import {useMemo} from 'react'
 import {_Arr} from '@alexandreannic/ts-utils'
 import {StringArrayKeys, StringKeys} from '../../../core/type'
-import {Txt} from 'mui-extension'
-import {Box, Tooltip} from '@mui/material'
-import * as React from 'react'
-import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
-import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {toPercent} from '@/utils/utils'
 
 /** @deprecated*/
 export const KoboPieChartIndicatorMultiple = <T, K extends StringArrayKeys<T>>({

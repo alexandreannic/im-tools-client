@@ -6,7 +6,6 @@ import {useI18n} from '../../core/i18n'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
 import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
-import {base} from 'next/dist/build/webpack/config/blocks/base'
 import {toPercent} from '@/utils/utils'
 
 export interface HorizontalBarChartGoogleData {

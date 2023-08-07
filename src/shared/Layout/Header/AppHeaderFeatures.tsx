@@ -8,7 +8,7 @@ import {FeatureLogo} from '@/features/FeatureLogo'
 
 const iconSize = 92
 
-export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'icon'>) => {
+export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'children'>) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const {session, accesses} = useSession()
   const open = (!!anchorEl)
@@ -17,7 +17,7 @@ export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'icon'>) => {
   return (
     <>
       <AAIconBtn
-        icon="apps"
+        children="apps"
         size="medium"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         {...props}
