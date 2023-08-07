@@ -44,6 +44,7 @@ const planCode: Record<Donor, AiProtectionHhs.GET<'Plan Code'>> = {
 export const ActivityInfoHHS2 = () => {
   const {api} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
+  const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
 
   const request = (period: string) => {
     const [year, month] = period.split('-')
@@ -51,14 +52,17 @@ export const ActivityInfoHHS2 = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: subDays(new Date(parseInt(year), parseInt(month)), 1),
     }
-    return api.kobo.answer.searchProtHhs({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(_ => {
-      return _.filter(_ => {
-        const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
-        return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
-      })
+    return api.kobo.answer.searchProtHhs({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(res => {
+      return res
+        .filter(_ => {
+          const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
+          return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
+        })
     })
   }
-  // const request = (period: string) => {
+
+  // c
+  // onst request = (period: string) => {
   //   const [year, month] = period.split('-')
   //   return api.koboModel.getAnswers(serverId, formId, {
   //     start: new Date(parseInt(year), parseInt(month) - 1),
@@ -71,11 +75,25 @@ export const ActivityInfoHHS2 = () => {
     _hhCurrent.fetch({clean: false}, period)
   }, [period])
 
+  const filteredData = useMemo(() => {
+    return _hhCurrent.entity?.filter(_ => !selectedOblast || _.staff_to_insert_their_DRC_office === selectedOblast)
+  }, [selectedOblast, _hhCurrent.entity])
+
   return (
     <Page width={1200} loading={_hhCurrent.loading}>
-      {map(_hhCurrent.entity, _ => <_ActivityInfo
+      {map(filteredData, _ => <_ActivityInfo
         action={
-          <AaInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+          <>
+            <AaInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+            <AaSelect
+              sx={{width: 200}}
+              label="Oblast"
+              defaultValue={selectedOblast?.split('_')[0] ?? ''}
+              onChange={_ => setSelectedOblast(_)}
+              options={Object.keys(ProtHHS_2_1Options.staff_to_insert_their_DRC_office).map(_ => ({value: _, children: _.split('_')[0]}))}
+            />
+          </>
+
         }
         data={_}
         period={period}
@@ -166,7 +184,6 @@ const _ActivityInfo = ({
   }, [data])
 
   const {m} = useI18n()
-  const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
   const {toastHttpError} = useAaToast()
 
   return (
@@ -175,18 +192,9 @@ const _ActivityInfo = ({
         <AaBtn sx={{marginRight: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastHttpError)
         }}>
-          {m.submitAll} {data.length}
+          {m.submitAll} {data.length} {data.sum(_ => _.how_many_ind ?? 0)}
         </AaBtn>
         {action}
-        <Box sx={{display: 'flex', '& > *': {mr: 1}}}>
-          <AaSelect
-            sx={{minWidth: 200}}
-            label="Oblast"
-            defaultValue={selectedOblast?.split('_')[0] ?? ''}
-            onChange={_ => setSelectedOblast(_)}
-            options={Object.keys(aiOblasts).map(_ => ({value: _, children: _.split('_')[0]}))}
-          />
-        </Box>
       </Box>
       <Panel sx={{overflowX: 'auto'}}>
         <Table>
@@ -206,7 +214,7 @@ const _ActivityInfo = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {formParams.filter(_ => !selectedOblast || _.activity.Oblast === selectedOblast).map((a, i) => a.activity.subActivities.map((sa, j) =>
+            {formParams.map((a, i) => a.activity.subActivities.map((sa, j) =>
               <TableRow key={j}>
                 {j === 0 && (
                   <>
