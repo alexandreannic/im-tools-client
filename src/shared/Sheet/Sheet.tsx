@@ -48,7 +48,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
 export interface SheetColumnProps<T extends SheetRow> {
   id: string
   renderValue?: (_: T) => string | number | undefined
-  render: (_: T) => ReactNode
+  render: (_: T, i: index) => ReactNode
   noSort?: boolean
   width?: number
   head?: string | ReactNode

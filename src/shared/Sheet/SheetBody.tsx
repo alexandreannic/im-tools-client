@@ -33,19 +33,22 @@ export const SheetBody = (() => {
                 <Checkbox size="small" checked={selected.has(select.getId(item))} onChange={() => selected.toggle(select.getId(item))}/>
               </td>
             )}
-            {columns.map((_, i) => (
-              <td
-                title={_.tooltip?.(item) ?? _.render(item) as any}
-                key={i}
-                onClick={_.onClick ? () => _.onClick?.(item) : undefined}
-                className={'td td-clickable ' + fnSwitch(_.align!, {
-                  'center': 'td-center',
-                  'right': 'td-right'
-                }, _ => '')}
-              >
-                {_.render(item)}
-              </td>
-            ))}
+            {columns.map((_, i) => {
+              const render = _.render(item, i)
+              return (
+                <td
+                  title={_.tooltip?.(item) ?? render as any}
+                  key={i}
+                  onClick={_.onClick ? () => _.onClick?.(item) : undefined}
+                  className={'td td-clickable ' + fnSwitch(_.align!, {
+                    'center': 'td-center',
+                    'right': 'td-right'
+                  }, _ => '')}
+                >
+                  {render}
+                </td>
+              )
+            })}
           </tr>
         ))}
       </>
