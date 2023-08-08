@@ -37,12 +37,15 @@ export const DashboardProtHHS2Displacement = ({
           <KoboLineChartDate
             data={data}
             start={new Date(2022, 0, 1)}
+            curves={{
+              [m.departureFromAreaOfOrigin]: _ => _.when_did_you_leave_your_area_of_origin,
+              [m.returnToOrigin]: _ => _.when_did_you_return_to_your_area_of_origin,
+            }}
             question={['when_did_you_leave_your_area_of_origin', 'when_did_you_return_to_your_area_of_origin']}
             label={[m.departureFromAreaOfOrigin, m.returnToOrigin]}
-            translations={{
-              when_did_you_leave_your_area_of_origin: m.departureFromAreaOfOrigin,
-              when_did_you_return_to_your_area_of_origin: m.returnToOrigin,
-            }}
+            // translations={{
+            //   when_did_you_leave_your_area_of_origin: m.departureFromAreaOfOrigin,
+            //   when_did_you_return_to_your_area_of_origin: m.returnToOrigin,
             end={computed.end}
           />
         </SlidePanel>

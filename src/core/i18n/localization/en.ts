@@ -263,6 +263,8 @@ export const en = Object.freeze({
     gender: 'Gender',
     respondentGender: 'Respondent gender',
     program: 'Program',
+    raion: 'Raion',
+    hromada: 'Hromada',
     noIdps: 'Non-IDPs',
     selectForm: 'Select form',
     register: 'Register',

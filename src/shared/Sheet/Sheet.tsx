@@ -45,20 +45,32 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   }
 }
 
-export interface SheetColumnProps<T extends SheetRow> {
-  id: string
+interface SheetColumnPropsSelectOne<T extends SheetRow> extends SheetColumnPropsBase<T> {
+  type?: Exclude<SheetPropertyType, 'date'>
   renderValue?: (_: T) => string | number | undefined
-  render: (_: T, i: index) => ReactNode
+}
+
+interface SheetColumnPropsDate<T extends SheetRow> extends SheetColumnPropsBase<T> {
+  type: 'date'
+  renderValue?: (_: T) => Date | undefined
+}
+
+export type SheetColumnProps<T extends SheetRow> = SheetColumnPropsSelectOne<T> | SheetColumnPropsDate<T>
+
+export interface SheetColumnPropsBase<T extends SheetRow> {
+  id: string
+  // type?: SheetPropertyType//'number' | 'date' | 'string' | 'select_one' | 'select_multiple'
+  // renderValue?: (_: T) => string | number | undefined
+  render: (_: T, i: number) => ReactNode
   noSort?: boolean
   width?: number
-  head?: string | ReactNode
+  head?: string
   align?: 'center' | 'right'
   onClick?: (_: T) => void
   renderExport?: boolean | ((_: T) => string | number | undefined | Date)
   hidden?: boolean
   alwaysVisible?: boolean
   tooltip?: (_: T) => string
-  type?: SheetPropertyType//'number' | 'date' | 'string' | 'select_one' | 'select_multiple'
   typeIcon?: ReactNode
   options?: () => SheetOptions[]
   className?: string | ((_: T) => string | undefined)
@@ -235,7 +247,8 @@ const _Sheet = <T extends SheetRow>({
                     </Box>
                   </td>
                 </tr>
-              )}) ?? (loading && (
+              )
+            }) ?? (loading && (
               <tr>
                 <td className="td-loading" colSpan={ctx.columns?.length ?? 1}>
                   <LinearProgress/>

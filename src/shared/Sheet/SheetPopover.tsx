@@ -11,6 +11,7 @@ import {Txt} from 'mui-extension'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {SheetOptions} from '@/shared/Sheet/sheetType'
 import {KeyOf} from '@/utils/utils'
+import {SheetRow} from '@/shared/Sheet/Sheet'
 
 const RenderRow = ({label, value}: {
   label: ReactNode
@@ -37,7 +38,7 @@ export const NumberChoicesPopover = <T, >({
 } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
   const {m, formatLargeNumber} = useI18n()
   const chart = useMemo(() => {
-    const mapped = Arr(data).map(_ => mapValues? mapValues(_) : _[question]).compact().map(_ => +_)
+    const mapped = Arr(data).map(_ => mapValues ? mapValues(_) : _[question]).compact().map(_ => +_)
     const min = Math.min(...mapped)
     const max = Math.max(...mapped)
     const sum = mapped.sum()
@@ -65,8 +66,8 @@ export const NumberChoicesPopover = <T, >({
   )
 }
 
-export const MultipleChoicesPopover = <T, >({
-  property,
+export const MultipleChoicesPopover = <T extends SheetRow, >({
+  getValue,
   title,
   data,
   anchorEl,
@@ -76,24 +77,35 @@ export const MultipleChoicesPopover = <T, >({
 }: {
   title?: ReactNode
   translations?: SheetOptions[]
-  multiple?: boolean
-  property: keyof T
+  // multiple?: boolean
+  // getValue: (_: T) => string[] | string
   data: T[]
-} & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
+} & Pick<PopoverProps, 'anchorEl' | 'onClose'> & ({
+  multiple: true
+  getValue: (_: T) => string[]
+} | {
+  multiple?: false
+  getValue: (_: T) => string
+})) => {
   const {m} = useI18n()
   const chart = useMemo(() => {
-    const mapped = Arr(data).map(_ => _[property] as any).compact()
-    const chart = multiple
-      ? ChartTools.multiple({data: mapped})
-      : ChartTools.single({data: mapped})
+    const chart = (() => {
+      if (multiple) {
+        const mapped = Arr(data).map(getValue).compact()
+        return ChartTools.multiple({data: mapped})
+      } else {
+        const mapped = Arr(data).map(getValue).compact()
+        return ChartTools.single({data: mapped})
+      }
+    })()
     return translations
       ? ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.value!, _.label!]))(ChartTools.sortBy.value(chart))
       : ChartTools.sortBy.value(chart)
-  }, [property, data, translations])
+  }, [getValue, data, translations])
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose} slotProps={{paper: {sx: {minWidth: 400, maxWidth: 500}}}}>
       <PanelHead>
-        <Txt truncate>{title ?? property as string}</Txt>
+        <Txt truncate>{title}</Txt>
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
         <HorizontalBarChartGoogle data={chart}/>
@@ -108,13 +120,15 @@ export const MultipleChoicesPopover = <T, >({
 }
 
 export const DatesPopover = <T, >({
-  question,
+  getValue,
   data,
   anchorEl,
   onClose,
+  title,
 }: {
-  question: keyof T
+  getValue: (_: T) => Date | undefined
   data: T[]
+  title: string
 } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
   const {m} = useI18n()
   // const chart = useMemo(() => {
@@ -131,10 +145,10 @@ export const DatesPopover = <T, >({
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead>
-        {question as string}
+        {title}
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-        <KoboLineChartDate data={data} question={question as any} sx={{minWidth: 360}}/>
+        <KoboLineChartDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
       </PanelBody>
       <PanelFoot alignEnd>
         <AaBtn color="primary" onClick={onClose as any}>

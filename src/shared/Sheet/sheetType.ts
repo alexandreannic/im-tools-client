@@ -24,7 +24,7 @@ export type SheetFilter = string
 export interface SheetPopoverParams {
   anchorEl: HTMLElement
   columnId: string
-  title: ReactNode
+  title: string
 }
 
 export interface SheetColumnConfigPopoverParams extends SheetPopoverParams {
