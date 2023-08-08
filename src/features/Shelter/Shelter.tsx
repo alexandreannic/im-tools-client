@@ -16,6 +16,18 @@ export const shelterModule = {
   }
 }
 
+export enum ShelterProgress {
+  ContractorVisitDone = 'ContractorVisitDone',
+  WorkEstimatesReceived = 'WorkEstimatesReceived',
+  PurchaseRequestDone = 'PurchaseRequestDone',
+  WorkOrderDone = 'WorkOrderDone',
+  RepairWorksStarted = 'RepairWorksStarted',
+  RepairWorksCompleted = 'RepairWorksCompleted',
+  ContractorInvoiceReceived = 'ContractorInvoiceReceived',
+  HandoverCertificateOfCompletionSigned = 'HandoverCertificateOfCompletionSigned',
+  InvoicePaymentProcessed = 'InvoicePaymentProcessed',
+}
+
 const ShelterSidebar = () => {
   const path = (page: string) => '' + page
   const {m} = useI18n()

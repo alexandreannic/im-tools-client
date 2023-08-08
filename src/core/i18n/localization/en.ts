@@ -956,6 +956,19 @@ export const en = Object.freeze({
       pullData: 'Synchronize last Kobo data',
       valueNoLongerInOption: 'This value is no longer in the options list',
       noAccessToForm: `You don't have access to any databases.`
+    },
+    _shelter: {
+      progress: {
+        ContractorVisitDone: 'Contractor visit done',
+        WorkEstimatesReceived: 'Work estimates received',
+        PurchaseRequestDone: 'Purchase Request Done',
+        WorkOrderDone: 'Work Order Done',
+        RepairWorksStarted: 'Repair works Started',
+        RepairWorksCompleted: 'Repair works completed',
+        ContractorInvoiceReceived: 'Contractor invoice received',
+        HandoverCertificateOfCompletionSigned: 'Handover/Certificate of completion signed',
+        InvoicePaymentProcessed: 'Invoice payment processed',
+      }
     }
   },
 })

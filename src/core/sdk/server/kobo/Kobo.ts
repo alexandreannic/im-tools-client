@@ -56,12 +56,15 @@ export type KoboAnswerMetaData = {
   // // _notes: KoboAnswerNotes[],
   // // _validation_status: any,
   // // _submitted_by: any
-  tags: any,
 }
 
 export type KoboMappedAnswerType = string | string[] | Date | number | undefined | KoboAnswer<any>[]
 
-export type KoboAnswer<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
+export type KoboAnswer<
+  TQuestion extends Record<string, any> = Record<string, string | undefined>,
+  TTags extends Record<string, any> | undefined = undefined
+> = (KoboAnswerMetaData & TQuestion & {tags: TTags})
+
 export type KoboMappedAnswer<T extends Record<string, any> = Record<string, KoboMappedAnswerType>> = (KoboAnswerMetaData & T)
 
 export class Kobo {

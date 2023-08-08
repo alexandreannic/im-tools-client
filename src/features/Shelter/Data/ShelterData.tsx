@@ -11,6 +11,7 @@ import {kobo} from '@/koboDrcUaFormId'
 import {Enum} from '@alexandreannic/ts-utils'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
+import {ShelterProgress} from '@/features/Shelter/Shelter'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 
@@ -78,6 +79,12 @@ export const ShelterData = () => {
             head: 'TA',
             render: _ => _.ta ? '✅' : '🛑',
             renderValue: _ => _.ta ? 'true' : 'false',
+          },
+          {
+            id: 'progress',
+            type: 'select_one',
+            options: () => Enum.keys(ShelterProgress).map(_ => ({value: _, label: _})),
+            render: _ => m.
           },
           {
             id: 'oblast',
