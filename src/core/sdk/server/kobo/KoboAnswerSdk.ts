@@ -11,15 +11,20 @@ import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
 import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
 import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
+import {ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
   filters?: AnswersFilters
 }
 
-interface KoboAnswerSearch<T> extends KoboAnswerFilter {
+interface KoboAnswerSearch<
+  TAnswer extends Record<string, any> = Record<string, string | undefined>,
+  TTags extends Record<string, any> | undefined = undefined
+> extends KoboAnswerFilter {
   formId: UUID,
-  fnMap?: (_: Record<string, string | undefined>) => T
+  fnMap?: (_: Record<string, string | undefined>) => TAnswer
+  fnMapTags?: (_?: any) => TTags,
 }
 
 export class KoboAnswerSdk {
@@ -49,24 +54,32 @@ export class KoboAnswerSdk {
       end: map(_.end, endOfDay),
     }
   }
-  readonly searchByAccess = <T extends Record<string, any> = Record<string, string | undefined>>({
+  readonly searchByAccess = <
+    TQuestion extends Record<string, any> = Record<string, string | undefined>,
+    TTags extends Record<string, any> | undefined = undefined
+  >({
     formId,
     filters = {},
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
-  }: KoboAnswerSearch<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
+    fnMapTags = (_?: any) => _,
+  }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<T>>> => {
     return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
-      .then(Kobo.mapPaginateAnswerMetaData(fnMap))
+      .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }
 
-  readonly search = <T extends Record<string, any> = Record<string, KoboMappedAnswerType>>({
+  readonly search = <
+    TQuestion extends Record<string, any> = Record<string, string | undefined>,
+    TTags extends Record<string, any> | undefined = undefined
+  >({
     formId,
     filters = {},
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
-  }: KoboAnswerSearch<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
+    fnMapTags = (_?: any) => _,
+  }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<TQuestion, TTags>>> => {
     return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
-      .then(Kobo.mapPaginateAnswerMetaData(fnMap))
+      .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }
 
   readonly searchBnre = (filters: KoboAnswerFilter = {}) => {
@@ -89,6 +102,9 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.shelterTA,
       fnMap: mapShelter_TA,
+      fnMapTags: _ => {
+        return _ as ShelterTaTags
+      },
       ...filters,
     })
   }

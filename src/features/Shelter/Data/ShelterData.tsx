@@ -8,14 +8,17 @@ import React, {useEffect} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {kobo} from '@/koboDrcUaFormId'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, map} from '@alexandreannic/ts-utils'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
-import {ShelterProgress} from '@/features/Shelter/Shelter'
+import {ShelterProgress, ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
+import {AaSelect} from '@/shared/Select/Select'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 
 }
+
+const shelterProgressKeys = Enum.keys(ShelterProgress)
 
 export const ShelterData = () => {
   const {api} = useAppSettings()
@@ -30,7 +33,7 @@ export const ShelterData = () => {
   const _data = useFetcher(async (filters?: ShelterDataFilters) => {
     const index: Record<string, {
       nta: KoboAnswer<Shelter_NTA>,
-      ta?: KoboAnswer<Shelter_TA>,
+      ta?: KoboAnswer<Shelter_TA, ShelterTaTags>,
     }> = {} as any
     await Promise.all([
       api.kobo.answer.searchShelterNTA(filters).then(_ => _.data.forEach(d => {
@@ -83,8 +86,13 @@ export const ShelterData = () => {
           {
             id: 'progress',
             type: 'select_one',
-            options: () => Enum.keys(ShelterProgress).map(_ => ({value: _, label: _})),
-            render: _ => m.
+            options: () => shelterProgressKeys.map(_ => ({value: _, label: _})),
+            render: _ => (
+              <AaSelect sx={{border: 'none'}} onChange={console.log} options={shelterProgressKeys.map(_ => ({
+                value: _, children: m._shelter.progress[_],
+              }))}
+              />
+            ),
           },
           {
             id: 'oblast',
@@ -104,7 +112,6 @@ export const ShelterData = () => {
           }
         ]}
       />
-
     </Page>
   )
 }

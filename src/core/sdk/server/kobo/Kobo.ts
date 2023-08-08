@@ -69,12 +69,16 @@ export type KoboMappedAnswer<T extends Record<string, any> = Record<string, Kobo
 
 export class Kobo {
 
-  static readonly mapPaginateAnswerMetaData = (fnMap: (x: any) => any) => (_: ApiPaginate<Record<string, any>>): ApiPaginate<KoboAnswer<any>> => {
+  static readonly mapPaginateAnswerMetaData = <TAnswer extends Record<string, any>, TTag extends Record<string, any> | undefined = undefined>(
+    fnMap: (x: any) => TAnswer,
+    fnMapTags: (x: any) => TTag
+  ) => (_: ApiPaginate<Record<string, any>>): ApiPaginate<KoboAnswer<TAnswer, TTag>> => {
     return ({
       ..._,
-      data: _.data.map(({answers, ...meta}) => ({
+      data: _.data.map(({answers, tags, ...meta}) => ({
         ...Kobo.mapAnswerMetaData(meta),
-        ...fnMap(answers) as any
+        ...fnMap(answers),
+        ...fnMapTags(tags),
       }))
     })
   }

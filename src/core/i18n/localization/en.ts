@@ -955,7 +955,7 @@ export const en = Object.freeze({
     _koboDatabase: {
       pullData: 'Synchronize last Kobo data',
       valueNoLongerInOption: 'This value is no longer in the options list',
-      noAccessToForm: `You don't have access to any databases.`
+      noAccessToForm: `You don't have access to any database.`
     },
     _shelter: {
       progress: {
