@@ -8,7 +8,7 @@ import {ActivityInfoNFI} from '@/features/ActivityInfo/NFI/ActivityInfoNFI'
 export const activityInfoModule = {
   basePath: '/activity-info',
   siteMap: {
-    hhs2: '/hhs2',
+    protection_monotoring: '/protection-monitoring',
     nfi: '/nfi'
   }
 }
@@ -29,7 +29,7 @@ export const ActivityInfo = () => {
     <Router>
       <Layout sidebar={<ActivityInfoSidebar/>}>
         <Routes>
-          <Route path={activityInfoModule.siteMap.hhs2} element={<ActivityInfoHHS2/>}/>
+          <Route path={activityInfoModule.siteMap.protection_monotoring} element={<ActivityInfoHHS2/>}/>
           <Route path={activityInfoModule.siteMap.nfi} element={<ActivityInfoNFI/>}/>
         </Routes>
       </Layout>

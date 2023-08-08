@@ -12,6 +12,7 @@ import {SheetHead} from './SheetHead'
 import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
 import {format} from 'date-fns'
 import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
+import {id} from 'date-fns/locale'
 
 type OrderBy = 'asc' | 'desc'
 
@@ -47,7 +48,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
 export interface SheetColumnProps<T extends SheetRow> {
   id: string
   renderValue?: (_: T) => string | number | undefined
-  render: (_: T) => ReactNode
+  render: (_: T, i: number) => ReactNode
   noSort?: boolean
   width?: number
   head?: string | ReactNode
@@ -105,6 +106,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
       getRenderRowKey={getRenderRowKey}
     >
       <_Sheet
+        id={id}
         showExportBtn={showExportBtn}
         renderEmptyState={renderEmptyState}
         header={header}
@@ -118,11 +120,12 @@ export const Sheet = <T extends SheetRow = SheetRow>({
 const _Sheet = <T extends SheetRow>({
   header,
   sx,
+  id,
   showExportBtn,
   renderEmptyState,
   loading,
   rowsPerPageOptions,
-}: Pick<SheetTableProps<T>, 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
+}: Pick<SheetTableProps<T>, 'id' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
   const ctx = useSheetContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   useEffect(() => ctx.select?.onSelect(ctx.selected.toArray), [ctx.selected.get])
@@ -200,7 +203,7 @@ const _Sheet = <T extends SheetRow>({
         <Box sx={{
           // width: 'max-coontent'
         }}>
-          <Box component="table" className="borderY table" sx={{...sx, minWidth: '100%'}}>
+          <Box id={id} component="table" className="borderY table" sx={{...sx, minWidth: '100%'}}>
             <SheetHead
               data={ctx.data.filteredSortedAndPaginatedData?.data}
               search={ctx.data.search}

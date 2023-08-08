@@ -2,7 +2,7 @@ import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
+import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '@/features/ActivityInfo/HHS_2_1/activityInfoInterface'
 import {Page} from '@/shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
@@ -20,8 +20,9 @@ import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Option
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
 import {alreadySentKobosInApril} from './missSubmittedData'
-import {format, subMonths} from 'date-fns'
+import {format, subDays, subMonths} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -43,21 +44,25 @@ const planCode: Record<Donor, AiProtectionHhs.GET<'Plan Code'>> = {
 export const ActivityInfoHHS2 = () => {
   const {api} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
+  const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
 
   const request = (period: string) => {
     const [year, month] = period.split('-')
     const filters = (year === '2023' && month === '04') ? undefined : {
       start: new Date(parseInt(year), parseInt(month) - 1),
-      end: new Date(parseInt(year), parseInt(month)),
+      end: subDays(new Date(parseInt(year), parseInt(month)), 1),
     }
-    return api.kobo.answer.searchProtHhs({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(_ => {
-      return _.filter(_ => {
-        const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
-        return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
-      })
+    return api.kobo.answer.searchProtHhs({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(res => {
+      return res
+        .filter(_ => {
+          const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
+          return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
+        })
     })
   }
-  // const request = (period: string) => {
+
+  // c
+  // onst request = (period: string) => {
   //   const [year, month] = period.split('-')
   //   return api.koboModel.getAnswers(serverId, formId, {
   //     start: new Date(parseInt(year), parseInt(month) - 1),
@@ -70,10 +75,26 @@ export const ActivityInfoHHS2 = () => {
     _hhCurrent.fetch({clean: false}, period)
   }, [period])
 
+  const filteredData = useMemo(() => {
+    return _hhCurrent.entity?.filter(_ => !selectedOblast || _.staff_to_insert_their_DRC_office === selectedOblast)
+  }, [selectedOblast, _hhCurrent.entity])
+
   return (
     <Page width={1200} loading={_hhCurrent.loading}>
-      <AaInput type="month" sx={{minWidth: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
-      {map(_hhCurrent.entity, _ => <_ActivityInfo
+      {map(filteredData, _ => <_ActivityInfo
+        action={
+          <>
+            <AaInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+            <AaSelect
+              sx={{width: 200}}
+              label="Oblast"
+              defaultValue={selectedOblast?.split('_')[0] ?? ''}
+              onChange={_ => setSelectedOblast(_)}
+              options={Object.keys(ProtHHS_2_1Options.staff_to_insert_their_DRC_office).map(_ => ({value: _, children: _.split('_')[0]}))}
+            />
+          </>
+
+        }
         data={_}
         period={period}
         setPeriod={setPeriod}
@@ -92,7 +113,9 @@ const _ActivityInfo = ({
   data,
   period,
   setPeriod,
+  action,
 }: {
+  action?: ReactNode
   data: _Arr<ProtHHS2Enrich>
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
@@ -108,11 +131,11 @@ const _ActivityInfo = ({
     const activities: Row[] = []
     let index = 0
     Enum.entries(enrichedData.groupBy(_ => {
-      if(!_.tags?.ai){
+      if (!_.tags?.ai) {
         console.warn('No donor', _)
-        throw new Error('No donor')
+        // throw new Error('No donor')
       }
-      return planCode[_.tags.ai]
+      return planCode[_.tags?.ai]
     })).forEach(([planCode, byPlanCode]) => {
       Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
         Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
@@ -161,26 +184,17 @@ const _ActivityInfo = ({
   }, [data])
 
   const {m} = useI18n()
-  const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
   const {toastHttpError} = useAaToast()
 
   return (
     <div>
-      <Box sx={{mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-        <Box sx={{display: 'flex', '& > *': {mr: 1}}}>
-          <AaSelect
-            sx={{minWidth: 200}}
-            label="Oblast"
-            defaultValue={selectedOblast?.split('_')[0] ?? ''}
-            onChange={_ => setSelectedOblast(_)}
-            options={Object.keys(aiOblasts).map(_ => ({value: _, children: _.split('_')[0]}))}
-          />
-        </Box>
-        <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+      <Box sx={{mb: 2, display: 'flex', alignItems: 'center'}}>
+        <AaBtn sx={{marginRight: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastHttpError)
         }}>
-          {m.submitAll} {data.length}
+          {m.submitAll} {data.length} {data.sum(_ => _.how_many_ind ?? 0)}
         </AaBtn>
+        {action}
       </Box>
       <Panel sx={{overflowX: 'auto'}}>
         <Table>
@@ -200,50 +214,28 @@ const _ActivityInfo = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {formParams.filter(_ => !selectedOblast || _.activity.Oblast === selectedOblast).map((a, i) => a.activity.subActivities.map((sa, j) =>
+            {formParams.map((a, i) => a.activity.subActivities.map((sa, j) =>
               <TableRow key={j}>
                 {j === 0 && (
                   <>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
-                      <Tooltip title="Submit!!">
-                        <AaBtn
-                          loading={_submit.getLoading(i)}
-                          variant="contained"
-                          size="small"
-                          sx={{minWidth: 50, mr: .5}}
-                          onClick={() => {
-                            _submit.call(i, [a.request]).catch(toastHttpError)
-                          }}
-                        >
-                          <Icon>send</Icon>
-                        </AaBtn>
-                      </Tooltip>
-                      <Confirm
-                        maxWidth={'lg'}
-                        title="DatabaseLayout data"
-                        content={<AnswerTable answers={a.rows}/>}>
-                        <Tooltip title="DatabaseLayout data">
-                          <AaBtn icon="table_view" variant="outlined" size="small">{m.viewData}</AaBtn>
-                        </Tooltip>
-                      </Confirm>
-                      <Confirm title="Preview activity" content={
-                        <pre>{JSON.stringify(a.activity, null, 2)}</pre>
-                      }>
-                        <Tooltip title="Preview parsed data">
-                          <IconBtn color="primary">
-                            <Icon>preview</Icon>
-                          </IconBtn>
-                        </Tooltip>
-                      </Confirm>
-                      <Confirm title="Preview request body code" content={
-                        <pre>{JSON.stringify(a.request, null, 2)}</pre>
-                      }>
-                        <Tooltip title="Preview request body code">
-                          <IconBtn color="primary">
-                            <Icon>data_object</Icon>
-                          </IconBtn>
-                        </Tooltip>
-                      </Confirm>
+                      <AaBtn
+                        tooltip="Submit 🚀"
+                        loading={_submit.getLoading(i)}
+                        variant="contained"
+                        size="small"
+                        sx={{minWidth: 50, mr: .5}}
+                        onClick={() => {
+                          _submit.call(i, [a.request]).catch(toastHttpError)
+                        }}
+                      >
+                        <Icon>send</Icon>
+                      </AaBtn>
+                      <ActivityInfoActions
+                        answers={a.rows}
+                        activity={a.activity}
+                        requestBody={a.request}
+                      />
                     </TableCell>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
                       {AILocationHelper.print5w(a.activity.Oblast)}

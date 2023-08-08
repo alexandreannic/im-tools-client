@@ -203,21 +203,21 @@ export const DashboardProtHHS2Violence = ({
             </SlidePanel>
           )}
         </Lazy>
-        <Lazy deps={[groupedIndividualsType.who]} fn={() =>
-          chain(ChartTools.multiple({
-            data: groupedIndividualsType.who,
-            filterValue: ['unable_unwilling_to_answer']
-          }))
-            .map(ChartTools.setLabel(ProtHHS_2_1Options.who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence))
-            .map(ChartTools.sortBy.value)
-            .get
-        }>
-          {_ => (
-            <SlidePanel title={m.perpetrators}>
-              <HorizontalBarChartGoogle data={_}/>
-            </SlidePanel>
-          )}
-        </Lazy>
+        {/*<Lazy deps={[groupedIndividualsType.who]} fn={() =>*/}
+        {/*  chain(ChartTools.multiple({*/}
+        {/*    data: groupedIndividualsType.who,*/}
+        {/*    filterValue: ['unable_unwilling_to_answer']*/}
+        {/*  }))*/}
+        {/*    .map(ChartTools.setLabel(ProtHHS_2_1Options.who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence))*/}
+        {/*    .map(ChartTools.sortBy.value)*/}
+        {/*    .get*/}
+        {/*}>*/}
+        {/*  {_ => (*/}
+        {/*    <SlidePanel title={m.perpetrators}>*/}
+        {/*      <HorizontalBarChartGoogle data={_}/>*/}
+        {/*    </SlidePanel>*/}
+        {/*  )}*/}
+        {/*</Lazy>*/}
       </SlideContainer>
     </SlideContainer>
   )

@@ -19,6 +19,7 @@ import {useAaToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
+import {Sheet} from '@/shared/Sheet/Sheet'
 
 interface Person {
   age: number
@@ -91,7 +92,7 @@ const toFormData = ({
     if (a['Total Reached (No Disaggregation)'] === 0) return
     index++
     const activity = Object.freeze({
-      'Reporting Month': 'yyyy-MM',
+      'Reporting Month': period,
       'Reporting Against a plan?': 'Yes',
       'Location Type': 'Individuals/households',
       'Population Group': 'Overall (all groups)',
@@ -108,7 +109,7 @@ const toFormData = ({
       request: ActivityInfoHelper.generateRequest({
         activity: mapWashRMM(activity),
         formId,
-        activityIdPrefix: 'drcnfi' + period + 'i',
+        activityIdPrefix: 'drcnfi' + period.replace('-', '') + 'i',
         activityIndex: index
       })
     })
@@ -247,11 +248,12 @@ const _ActivityInfo = ({
         </AaBtn>
       </Box>
       <Panel>
-        <Datatable<Row> data={data} columns={[
+        <Sheet<Row> data={data} columns={[
           {
-            id: 'actions', head: '', render: (_, i) =>
+            id: 'actions', head: '', width: 200, render: (_, i) =>
               <>
                 <AaBtn
+                  tooltip="Submit 🚀"
                   loading={_submit.getLoading(i)}
                   variant="contained"
                   size="small"
@@ -270,20 +272,20 @@ const _ActivityInfo = ({
               </>
           },
           {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
-          {id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.print5w(_.activity['Oblast'])}</>},
-          {id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.print5w(_.activity['Raion'])}</>},
-          {id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.print5w(_.activity['Hromada'])}</>},
-          {id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.print5w(_.activity['Settlement'])}</>},
-          {id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
-          {id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
-          {id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
-          {id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
-          {id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
-          {id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
-          {id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
-          {id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
-          {id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
-          {id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
+          {type: 'string', id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.print5w(_.activity['Oblast'])}</>},
+          {type: 'string', id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.print5w(_.activity['Raion'])}</>},
+          {type: 'string', id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.print5w(_.activity['Hromada'])}</>},
+          {type: 'string', id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.print5w(_.activity['Settlement'])}</>},
+          {type: 'string', id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
+          {type: 'string', id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
+          {type: 'number', id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
+          {type: 'number', id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
+          {type: 'number', id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
+          {type: 'number', id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
+          {type: 'number', id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
+          {type: 'number', id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
+          {type: 'number', id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
+          {type: 'number', id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
         ]}/>
       </Panel>
     </>

@@ -32,7 +32,7 @@ export const useSheetData = <T extends SheetRow>({
       const filter = filters[k]
       if (filter === undefined) return
       const type = columnsIndex[k].type
-      const renderValue = columnsIndex[k].renderValue ?? ((_: T) => _)
+      const renderValue = columnsIndex[k].renderValue ?? ((_: T) => _[k])
       switch (type) {
         case 'date': {
           return row => {
@@ -61,7 +61,10 @@ export const useSheetData = <T extends SheetRow>({
           return row => {
             const v = renderValue(row)
             if (!v) return false
-            if (typeof v !== 'string' && typeof v !== 'number') throw new Error(`Value of ${String(k)} is ${v} but expected string.`)
+            if (typeof v !== 'string' && typeof v !== 'number') {
+              console.warn('Value of ${String(k)} is', v)
+              throw new Error(`Value of ${String(k)} is ${v} but expected string.`)
+            }
             return ('' + v).includes(filter as string)
           }
         }

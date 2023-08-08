@@ -27,7 +27,7 @@ const RenderRow = ({label, value}: {
 export const NumberChoicesPopover = <T, >({
   question,
   data,
-  mapValues = _ => _,
+  mapValues,
   anchorEl,
   onClose,
 }: {
@@ -87,7 +87,7 @@ export const MultipleChoicesPopover = <T, >({
       ? ChartTools.multiple({data: mapped})
       : ChartTools.single({data: mapped})
     return translations
-      ? ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.value, _.label]))(ChartTools.sortBy.value(chart))
+      ? ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.value as any, _.label as any]))(ChartTools.sortBy.value(chart))
       : ChartTools.sortBy.value(chart)
   }, [property, data, translations])
   return (
