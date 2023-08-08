@@ -51,7 +51,7 @@ export const SessionProvider = ({
   useEffect(() => {
     if (session?.email)
       _access.fetch({force: true, clean: true})
-  }, [session?.email])
+  }, [session?.email, session?.drcOffice, session?.drcJob])
 
   useEffect(() => {
     _getSession.call()
