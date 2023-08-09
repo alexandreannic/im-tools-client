@@ -49,6 +49,8 @@ export const en = Object.freeze({
     others: 'Others',
     other: 'Other',
     majorStressFactors: 'Major stress factors',
+    exist: 'Exist',
+    notExist: 'Not exist',
     area: 'Area',
     men: 'Men',
     activities: 'Activities',
@@ -958,7 +960,18 @@ export const en = Object.freeze({
       noAccessToForm: `You don't have access to any database.`
     },
     _shelter: {
+      validationStatus: 'Accepted?',
+      documentType: 'Doc type',
+      owner: 'Tenant',
+      ownershipDocumentExist: 'Ownership docs exist',
+      ownershipDocument: 'Ownership docs',
+      accommodation: 'Accommodation',
+      total: 'Total',
+      scoreDamage: 'Damage',
+      scoreSocio: 'Socio',
+      scoreDisplacement: 'Displ.',
       progress: {
+        None: '',
         ContractorVisitDone: 'Contractor visit done',
         WorkEstimatesReceived: 'Work estimates received',
         PurchaseRequestDone: 'Purchase Request Done',

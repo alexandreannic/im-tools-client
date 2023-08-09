@@ -4,6 +4,7 @@ import {Arr, mapFor} from '@alexandreannic/ts-utils'
 import {Donor} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {makeKoboBarChartComponent} from '@/features/Dashboard/shared/KoboBarChart'
 import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {ProtHhsTags} from '@/core/sdk/server/kobo/KoboProtHhs'
 
 export interface ProtHHS2Person {
   age: ProtHHS_2_1['hh_age_1']
@@ -12,7 +13,7 @@ export interface ProtHHS2Person {
   isIdpRegistered: ProtHHS_2_1['is_member_1_registered']
 }
 
-export const enrichProtHHS_2_1 = (a: KoboAnswer<ProtHHS_2_1>) => {
+export const enrichProtHHS_2_1 = (a: KoboAnswer<ProtHHS_2_1, ProtHhsTags>) => {
   const maxHHNumber = 12
   const mapPerson = (a: ProtHHS_2_1) => {
     const fields = [
@@ -37,7 +38,6 @@ export const enrichProtHHS_2_1 = (a: KoboAnswer<ProtHHS_2_1>) => {
   return {
     ...a,
     persons: mapPerson(a),
-    tags: a.tags as {'ai': Donor, 'ipt': Donor[]}
   }
 }
 

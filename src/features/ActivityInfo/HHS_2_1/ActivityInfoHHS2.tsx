@@ -2,7 +2,7 @@ import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
+import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiProtectionHhs} from '@/features/ActivityInfo/HHS_2_1/activityInfoInterface'
 import {Page} from '@/shared/Page'
 import {IconBtn, Txt} from 'mui-extension'
@@ -112,7 +112,9 @@ const _ActivityInfo = ({
   data,
   period,
   setPeriod,
+  action,
 }: {
+  action?: ReactNode
   data: _Arr<ProtHHS2Enrich>
   period: string
   setPeriod: Dispatch<SetStateAction<string>>

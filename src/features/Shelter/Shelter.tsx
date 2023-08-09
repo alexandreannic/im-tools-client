@@ -45,6 +45,7 @@ export const Shelter = () => {
         header={<AppHeader id="app-header"/>}
       >
         <Routes>
+          <Route index element={<ShelterData/>}/>
           <Route path={shelterModule.siteMap.data} element={<ShelterData/>}/>
         </Routes>
       </Layout>

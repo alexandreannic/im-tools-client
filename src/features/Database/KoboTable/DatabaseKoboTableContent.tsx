@@ -30,7 +30,7 @@ export const DatabaseKoboTableContent = ({
   data: KoboAnswer<any>[]
 }) => {
   const {m} = useI18n()
-  const _schema = useKoboSchema({form: schema})
+  const _schema = useKoboSchema({schema: schema})
   const [langIndex, setLangIndex] = useState<number>(0)
   const mappedData = useMemo(() => data.map(_ => Kobo.mapAnswerBySchema(_schema.questionIndex, _)), [data])
 
@@ -104,7 +104,7 @@ export const getKoboLabel = (q: {name: string, label?: string[]}, langIndex?: nu
   return q.label !== undefined ? (q.label as any)[langIndex as any] ?? q.name : q.name
 }
 
-const getKoboTranslations = ({
+export const getKoboTranslations = ({
   schema,
   langIndex,
   questionIndex,

@@ -39,7 +39,6 @@ export const MpcaPaymentToolForm = ({
 
   useEffect(() => {
     const subscription = watch(_ => {
-      console.log(_)
       onChange(_)
     })
     return () => subscription.unsubscribe()

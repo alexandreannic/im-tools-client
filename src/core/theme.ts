@@ -361,12 +361,17 @@ const tableTheme = (t: Theme) => ({
   '.table tr:hover': {
     background: t.palette.action.hover,
   },
+  '.td-sub-head': {
+    textAlign: 'right',
+    padding: 0,
+  },
   '.th-resize': {
     display: 'flex',
     overflow: 'hidden',
     resize: 'horizontal',
-    minWidth: 102,
-    width: 102,
+    minWidth: 74,
+    // width: 102,
+    width: '100%',
   },
   'td.fw': {
     width: '100%',
@@ -396,7 +401,7 @@ const tableTheme = (t: Theme) => ({
     border: 'none',
   },
   '.table td': {
-    maxWidth: 102,
+    // maxWidth: 102,
   },
   '.table td, .table th': {
     alignItems: 'left',

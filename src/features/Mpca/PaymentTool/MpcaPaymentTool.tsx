@@ -7,7 +7,7 @@ import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {map} from '@alexandreannic/ts-utils'
 import {getKoboImagePath, mapMpcaKoboAnswer} from '@/features/Mpca/MpcaData/MpcaData'
 import {MpcaPaymentToolForm} from './MpcaPaymentToolForm'
@@ -32,7 +32,7 @@ export const MpcaPaymentTool = () => {
   const {m, formatLargeNumber, formatDate} = useI18n()
   const _getPayment = useFetcher(api.mpcaPayment.get)
   const _update = useAsync(api.mpcaPayment.update)
-  const _answers = useFetcher((ids: KoboId[]) => {
+  const _answers = useFetcher((ids: KoboAnswerId[]) => {
       const fnMap = mapMpcaKoboAnswer()
       return api.kobo.answer.searchBnre()
         .then(_ => _.data.filter(_ => ids.includes(_.id)).map(fnMap))

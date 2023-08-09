@@ -93,9 +93,11 @@ export const AaSelect = <T extends string | number>({
             setInnerValue(value as any)
           }
         }}
-        input={<OutlinedInput label={label} endAdornment={
-          <CircularProgress size={24} color="secondary"/>
-        }/>}
+        input={<OutlinedInput
+          label={label}
+          // endAdornment={
+          //   <CircularProgress size={24} color="secondary"/>
+        />}
         {...props}
       >
         {isMultiple && options.length > 5 && (

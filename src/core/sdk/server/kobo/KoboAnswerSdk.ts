@@ -11,7 +11,9 @@ import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
 import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
 import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
-import {ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
+import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
+import {Donor} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
+import {ProtHhsTags} from '@/core/sdk/server/kobo/KoboProtHhs'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -39,7 +41,7 @@ export class KoboAnswerSdk {
 
   readonly getAllFromLocalForm = (filters: AnswersFilters = {}) => {
     return this.client.get<KoboAnswer[]>(`/kobo/local-form`, {qs: filters})
-      .then(_ => _.map(Kobo.mapAnswerMetaData))
+      .then(_ => _.map(x => Kobo.mapAnswerMetaData(x)))
   }
 
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
@@ -103,21 +105,20 @@ export class KoboAnswerSdk {
     })
   }
 
-  readonly searchShelterTA = (filters: KoboAnswerFilter = {}) => {
+  readonly searchShelterTa = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.shelterTA,
       fnMap: mapShelter_TA,
-      fnMapTags: _ => {
-        return _ as ShelterTaTags
-      },
+      fnMapTags: _ =>  _ as ShelterTaTags,
       ...filters,
     })
   }
 
-  readonly searchShelterNTA = (filters: KoboAnswerFilter = {}) => {
+  readonly searchShelterNta = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.shelterNTA,
       fnMap: mapShelter_NTA,
+      fnMapTags: _ =>  _ as ShelterNtaTags,
       ...filters,
     })
   }
@@ -126,6 +127,7 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.protectionHh2,
       fnMap: mapProtHHS_2_1,
+      fnMapTags: _ => _ as ProtHhsTags,
       ...filters,
     })
     // TODO DELETE !!!!

@@ -12,7 +12,7 @@ export const TableImg = ({
     <a href={url} target="_blank">
       <Box component="span" sx={{
         '&:hover': {
-          transform: 'scale(1.1)'
+          transform: 'scale(1.2)'
           // height: 32,
           // width: 32,
         },

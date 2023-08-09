@@ -66,7 +66,7 @@ export type KoboMappedAnswerType = string | string[] | Date | number | undefined
 export type KoboAnswer<
   TQuestion extends Record<string, any> = Record<string, string | undefined>,
   TTags extends Record<string, any> | undefined = undefined
-> = (KoboAnswerMetaData & TQuestion & {tags: TTags})
+> = (KoboAnswerMetaData<TTags> & TQuestion)
 
 export type KoboMappedAnswer<T extends Record<string, any> = Record<string, KoboMappedAnswerType>> = (KoboAnswerMetaData & T)
 
@@ -78,10 +78,9 @@ export class Kobo {
   ) => (_: ApiPaginate<Record<string, any>>): ApiPaginate<KoboAnswer<TAnswer, TTag>> => {
     return ({
       ..._,
-      data: _.data.map(({answers, tags, ...meta}) => ({
-        ...Kobo.mapAnswerMetaData(meta),
+      data: _.data.map(({answers, ...meta}) => ({
+        ...Kobo.mapAnswerMetaData(meta, fnMapTags),
         ...fnMap(answers),
-        ...fnMapTags(tags),
       }))
     })
   }
@@ -108,7 +107,10 @@ export class Kobo {
     return mapped
   }
 
-  static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer<any> => {
+  static readonly mapAnswerMetaData = (
+    k: Partial<Record<keyof KoboAnswerMetaData, any>>,
+    fnMapTags: (x: any) => any = _ => _
+  ): KoboAnswer<any> => {
     delete (k as any)['deviceid']
     return {
       ...k,
@@ -121,7 +123,7 @@ export class Kobo {
       validatedBy: k.validatedBy,
       lastValidatedTimestamp: k.lastValidatedTimestamp,
       geolocation: k.geolocation,
-      tags: k.tags
+      tags: fnMapTags(k.tags),
     }
   }
 }

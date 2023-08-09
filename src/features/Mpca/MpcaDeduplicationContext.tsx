@@ -7,7 +7,7 @@ import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPaymentSdk'
+import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 
 export interface MpcaDeduplicationContext {
   _koboAnswers: UseFetcher<() => Promise<_Arr<KoboAnswer<BNRE>>>>

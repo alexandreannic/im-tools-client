@@ -91,7 +91,7 @@ export const MpcaData = () => {
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}
           select={{
-            getId: _ => _.id,
+            getId: _ => '' + _.id,
             onSelect: _ => setSelected(_),
             selectActions: (
               <>
@@ -117,7 +117,7 @@ export const MpcaData = () => {
               </>
             )
           }}
-          getRenderRowKey={_ => _.id}
+          getRenderRowKey={_ => '' + _.id}
           data={enhancedData}
           columns={[
             {id: 'date', head: m.date, type: 'date', render: _ => formatDate(_.date)},
@@ -131,7 +131,7 @@ export const MpcaData = () => {
             {
               id: 'duplication',
               type: 'select_one',
-              head: <TableIcon>content_copy</TableIcon>,
+              head: m.status,
               options: () => Enum.keys(DeduplicationStatus).map(_ => ({value: _, label: _})),
               align: 'center',
               render: _ => fnSwitch(_.duplication!, {

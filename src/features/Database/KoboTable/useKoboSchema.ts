@@ -8,15 +8,15 @@ import {useI18n} from '@/core/i18n'
 export type UseKoboSchema = ReturnType<typeof useKoboSchema>
 
 export const useKoboSchema = ({
-  form
+  schema
 }: {
-  form: KoboApiForm
+  schema: KoboApiForm
 }) => {
   const {m} = useI18n()
   return useMemo(() => {
     const idSchema = {
       name: 'id',
-      label: mapFor(form.content.translations.length, () => 'ID'),
+      label: mapFor(schema.content.translations.length, () => 'ID'),
       type: 'text' as const,
       $kuid: 'id',
       $autoname: 'id',
@@ -24,27 +24,27 @@ export const useKoboSchema = ({
       $xpath: 'id',
     }
     const sanitizedForm: KoboApiForm = {
-      ...form,
+      ...schema,
       content: {
-        ...form.content,
+        ...schema.content,
         survey: [
           idSchema,
           {
             name: 'submission_time',
-            label: mapFor(form.content.translations.length, () => m.submissionTime),
+            label: mapFor(schema.content.translations.length, () => m.submissionTime),
             type: 'date' as const,
             $kuid: 'submission_time',
             $autoname: 'submission_time',
             $qpath: 'submission_time',
             $xpath: 'submission_time',
           },
-          ...form.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(_ => ({
+          ...schema.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(_ => ({
             ..._,
             label: _.label?.map(_ => Utils.removeHtml(_))
           })),
           {
             name: 'submitted_by',
-            label: mapFor(form.content.translations.length, () => m.submittedBy),
+            label: mapFor(schema.content.translations.length, () => m.submittedBy),
             type: 'text' as const,
             $kuid: 'submitted_by',
             $autoname: 'submitted_by',
@@ -54,7 +54,7 @@ export const useKoboSchema = ({
         ]
       }
     }
-    const formGroups = form.content.survey.reduce<Record<string, KoboQuestionSchema[]>>((acc, _, i, arr) => {
+    const formGroups = schema.content.survey.reduce<Record<string, KoboQuestionSchema[]>>((acc, _, i, arr) => {
       if (_.type === 'begin_repeat') {
         const groupQuestion: KoboQuestionSchema[] = [idSchema]
         for (let j = i + 1; arr[j].$xpath?.includes(_.name + '/') && j <= arr.length; j++) {
@@ -74,5 +74,5 @@ export const useKoboSchema = ({
       choicesIndex,
       questionIndex,
     }
-  }, [form])
+  }, [schema])
 }
