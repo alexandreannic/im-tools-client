@@ -4,6 +4,8 @@ import {Enum} from '@alexandreannic/ts-utils'
 
 export type KoboId = string
 
+export type KoboAnswerId = number
+
 export type KoboServer = {
   id: string
   url: string
@@ -27,18 +29,19 @@ export type KoboAttachment = {
   id: string
 }
 
-export type KoboAnswerMetaData = {
+export type KoboAnswerMetaData<TTag = any> = {
   start: Date
   end: Date
   version: string
   submissionTime: Date
   submittedBy?: string
-  id: string
+  id: KoboAnswerId
   uuid: string
   validationStatus?: 'validation_status_approved'
   validatedBy?: string
   lastValidatedTimestamp?: number
   geolocation?: [number, number]
+  tags: TTag
   //
   // _id: number,
   // // 'formhub/uuid': string,
@@ -84,18 +87,18 @@ export class Kobo {
   }
 
   static readonly mapAnswerBySchema = (indexedSchema: Record<string, KoboQuestionSchema>, answers: KoboAnswer): KoboMappedAnswer => {
-    const mapped = {...answers}
+    const mapped: KoboMappedAnswer = {...answers}
     Enum.entries(mapped).forEach(([question, answer]) => {
       const type = indexedSchema[question]?.type
       if (!type || !answer) return
       switch (type) {
         case 'today':
         case 'date': {
-          (mapped as any)[question] = new Date(answer)
+          (mapped as any)[question] = new Date(answer as Date)
           break
         }
         case 'select_multiple': {
-          mapped[question] = answer.split(' ')
+          mapped[question] = (answer as string).split(' ')
           break
         }
         default:

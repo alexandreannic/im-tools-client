@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
-import {Kobo, KoboAnswer, KoboId, KoboMappedAnswerType} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboAnswerId, KoboId, KoboMappedAnswerType} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/koboDrcUaFormId'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
@@ -30,6 +30,11 @@ interface KoboAnswerSearch<
 export class KoboAnswerSdk {
 
   constructor(private client: ApiClient) {
+  }
+
+
+  readonly update = ({formId, answerId, tags}: {formId: KoboId, answerId: KoboAnswerId, tags: Record<string, any>}) => {
+    return this.client.post(`/kobo/answer/${formId}/${answerId}/tag`, {body: {tags}})
   }
 
   readonly getAllFromLocalForm = (filters: AnswersFilters = {}) => {
@@ -63,7 +68,7 @@ export class KoboAnswerSdk {
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
     fnMapTags = (_?: any) => _,
-  }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<T>>> => {
+  }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<TQuestion, TTags>>> => {
     return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
       .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }

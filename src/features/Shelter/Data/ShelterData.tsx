@@ -2,9 +2,9 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
-import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
-import React, {useEffect} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {kobo} from '@/koboDrcUaFormId'
@@ -13,6 +13,7 @@ import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOption
 import {useI18n} from '@/core/i18n'
 import {ShelterProgress, ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
 import {AaSelect} from '@/shared/Select/Select'
+import {useAsync} from '@/alexlib-labo/useAsync'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 
@@ -29,9 +30,10 @@ export const ShelterData = () => {
   //     api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelterNTA),
   //   ])
   // })
+  const _update = useAsync(api.kobo.answer.update)
 
   const _data = useFetcher(async (filters?: ShelterDataFilters) => {
-    const index: Record<string, {
+    const index: Record<KoboAnswerId, {
       nta: KoboAnswer<Shelter_NTA>,
       ta?: KoboAnswer<Shelter_TA, ShelterTaTags>,
     }> = {} as any
@@ -56,6 +58,7 @@ export const ShelterData = () => {
   useEffect(() => {
     _data.fetch()
   }, [])
+
 
   return (
     <Page width="lg">
@@ -88,9 +91,17 @@ export const ShelterData = () => {
             type: 'select_one',
             options: () => shelterProgressKeys.map(_ => ({value: _, label: _})),
             render: _ => (
-              <AaSelect sx={{border: 'none'}} onChange={console.log} options={shelterProgressKeys.map(_ => ({
-                value: _, children: m._shelter.progress[_],
-              }))}
+              <AaSelect
+                sx={{border: 'none'}}
+                onChange={(progress) => _update.call({
+                  formId: kobo.drcUa.form.shelterTA,
+                  answerId: _.id,
+                  tags: {progress}
+                })}
+                options={shelterProgressKeys.map(_ => ({
+                  value: _, children: m._shelter.progress[_],
+                }))
+                }
               />
             ),
           },

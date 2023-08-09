@@ -1,4 +1,4 @@
-import {Checkbox, FormControl, FormControlProps, InputLabel, MenuItem, OutlinedInput, Select, SxProps, Theme} from '@mui/material'
+import {Checkbox, CircularProgress, FormControl, FormControlProps, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, SxProps, Theme} from '@mui/material'
 import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {useI18n} from '../../core/i18n'
 import {makeSx} from '@/core/theme'
@@ -76,6 +76,11 @@ export const AaSelect = <T extends string | number>({
     <FormControl size="small" sx={{width: '100%', ...sx}}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <Select
+        // endAdornment={
+        //   // <InputAdornment position="start">
+        //     <CircularProgress size={20}/>
+        //   // </InputAdornment>
+        // }
         label={label}
         size="small"
         margin="dense"
@@ -88,7 +93,9 @@ export const AaSelect = <T extends string | number>({
             setInnerValue(value as any)
           }
         }}
-        input={<OutlinedInput label={label}/>}
+        input={<OutlinedInput label={label} endAdornment={
+          <CircularProgress size={24} color="secondary"/>
+        }/>}
         {...props}
       >
         {isMultiple && options.length > 5 && (
