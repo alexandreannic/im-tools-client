@@ -24,6 +24,8 @@ export const useProtHHS2Data = ({
 
     const flatData = data.flatMap(_ => _.persons.map(p => ({..._, ...p})))
 
+    const idps = data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
+
     const categoryOblasts = (
       column: 'where_are_you_current_living_oblast' | 'what_is_your_area_of_origin_oblast' = 'where_are_you_current_living_oblast'
     ) => Enum.keys(ukraineSvgPath)
@@ -41,6 +43,12 @@ export const useProtHHS2Data = ({
     const byOriginOblast = ChartTools.byCategory({
       categories: categoryOblasts('what_is_your_area_of_origin_oblast'),
       data: data,
+      filter: _ => true,
+    })
+
+    const idpsByOriginOblast = ChartTools.byCategory({
+      categories: categoryOblasts('what_is_your_area_of_origin_oblast'),
+      data: idps,
       filter: _ => true,
     })
 
@@ -73,6 +81,7 @@ export const useProtHHS2Data = ({
 
       byCurrentOblast,
       byOriginOblast,
+      idpsByOriginOblast,
     }
   }, [data])
 }

@@ -24,7 +24,7 @@ export const DashboardProtHHS2Displacement = ({
       <SlideContainer column>
         <SlidePanel title={m.idpPopulationByOblast}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <UkraineMap sx={{flex: 1}} data={computed.byOriginOblast} base={data.length} title={m.originOblast}/>
+            <UkraineMap sx={{flex: 1}} data={computed.idpsByOriginOblast} base={data.length} title={m.originOblast}/>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
               <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
               <Icon color="disabled" fontSize="large" sx={{mx: 1}}>arrow_forward</Icon>
