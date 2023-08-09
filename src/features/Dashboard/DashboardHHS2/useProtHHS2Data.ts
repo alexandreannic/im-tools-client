@@ -46,6 +46,12 @@ export const useProtHHS2Data = ({
       filter: _ => true,
     })
 
+    const idpsByCurrentOblast = ChartTools.byCategory({
+      categories: categoryOblasts('where_are_you_current_living_oblast'),
+      data: idps,
+      filter: _ => true,
+    })
+
     const idpsByOriginOblast = ChartTools.byCategory({
       categories: categoryOblasts('what_is_your_area_of_origin_oblast'),
       data: idps,
@@ -79,9 +85,11 @@ export const useProtHHS2Data = ({
         .map(ChartTools.mapValue(_ => _.value))
         .get,
 
+      idps,
       byCurrentOblast,
       byOriginOblast,
       idpsByOriginOblast,
+      idpsByCurrentOblast,
     }
   }, [data])
 }

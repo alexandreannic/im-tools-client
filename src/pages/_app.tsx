@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import type {AppProps} from 'next/app'
 import {Provide} from '@/shared/Provide'
-import {Box, CssBaseline, Icon, StyledEngineProvider, ThemeProvider} from '@mui/material'
+import {Box, CssBaseline, Icon, ThemeProvider} from '@mui/material'
 import {muiTheme} from '@/core/theme'
 import {I18nProvider, useI18n} from '@/core/i18n'
 import {ToastProvider, Txt} from 'mui-extension'
@@ -14,25 +14,25 @@ import {MsalProvider} from '@azure/msal-react'
 import {getMsalInstance} from '@/core/msal'
 import {DRCLogo} from '@/shared/logo/logo'
 import {CacheProvider, EmotionCache} from '@emotion/react'
-import createEmotionCache from '@/core/createEmotionCache'
 import {CenteredContent} from '@/shared/CenteredContent'
 import {ModalProvider} from '@/shared/Modal/ModalProvider'
+import createEmotionCache from '@/core/createEmotionCache'
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
 }))
 
-// const clientSideEmotionCache = createEmotionCache()
+const clientSideEmotionCache = createEmotionCache()
 
 const App = ({
-  // emotionCache = clientSideEmotionCache,
+  emotionCache = clientSideEmotionCache,
   ...props
 }: AppProps & {
   emotionCache?: EmotionCache
 }) => {
   return (
     <Provide providers={[
-      // _ => <CacheProvider value={emotionCache} children={_}/>,
+      _ => <CacheProvider value={emotionCache} children={_}/>,
       _ => <AppSettingsProvider api={api} children={_}/>,
     ]}>
       <AppWithConfig {...props}/>
