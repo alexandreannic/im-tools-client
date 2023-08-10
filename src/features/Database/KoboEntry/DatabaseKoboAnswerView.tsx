@@ -7,7 +7,6 @@ import React, {useState} from 'react'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {Txt} from 'mui-extension'
-import {useSetState} from '@alexandreannic/react-hooks-lib'
 
 export const DatabaseKoboAnswerView = ({
   onClose,

@@ -105,7 +105,7 @@ export const Database = () => {
             <Route path={databaseModule.siteMap.home()} element={<DatabaseHome/>}>
               <Route path={databaseModule.siteMap.database.absolute()} element={<DatabaseTableRoute/>}/>
               <Route path={databaseModule.siteMap.access.absolute()} element={<DatabaseAccessRoute/>}/>
-              <Route path={databaseModule.siteMap.entry.absolute()} element={<DatabaseKoboAnswerView/>}/>
+              {/*<Route path={databaseModule.siteMap.entry.absolute()} element={<DatabaseKoboAnswerView/>}/>*/}
             </Route>
           </Routes>
         </Layout>

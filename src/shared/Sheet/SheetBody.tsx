@@ -37,7 +37,7 @@ export const SheetBody = (() => {
               const render = _.render(item, i)
               return (
                 <td
-                  title={_.tooltip?.(item) ?? render as any}
+                  title={_.tooltip?.(item) ?? (_.type ? render as any : '')}
                   key={i}
                   onClick={_.onClick ? () => _.onClick?.(item) : undefined}
                   className={'td td-clickable ' + fnSwitch(_.align!, {
