@@ -4,6 +4,7 @@ import {appConfig} from '@/conf/AppConfig'
 import createEmotionCache from '@/core/createEmotionCache'
 import createEmotionServer from '@emotion/server/create-instance'
 import {AppType} from 'next/app'
+import {MyAppProps} from '@/pages/_app'
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: JSX.Element[];
@@ -16,8 +17,9 @@ export default function MyDocument({emotionStyleTags}: MyDocumentProps) {
         <meta charSet="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <base href="/"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+        {/*<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>*/}
         <link rel="icon" type="image/x-icon" href="/static/favicon.svg"/>
         {emotionStyleTags}
         <meta name="emotion-insertion-point" content=""/>
@@ -32,6 +34,8 @@ export default function MyDocument({emotionStyleTags}: MyDocumentProps) {
   )
 }
 
+// `getInitialProps` belongs to `_document` (instead of `_app`),
+// it's compatible with static-site generation (SSG).
 MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   // Resolution order
   //
@@ -64,7 +68,7 @@ MyDocument.getInitialProps = async (ctx: DocumentContext) => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App: React.ComponentType<React.ComponentProps<AppType> & any>) =>
+      enhanceApp: (App: React.ComponentType<React.ComponentProps<AppType> & MyAppProps>) =>
         function EnhanceApp(props) {
           return <App emotionCache={cache} {...props} />
         },

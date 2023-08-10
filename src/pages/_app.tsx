@@ -17,6 +17,7 @@ import {CacheProvider, EmotionCache} from '@emotion/react'
 import {CenteredContent} from '@/shared/CenteredContent'
 import {ModalProvider} from '@/shared/Modal/ModalProvider'
 import createEmotionCache from '@/core/createEmotionCache'
+import Head from 'next/head'
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
@@ -24,18 +25,25 @@ const api = new ApiSdk(new ApiClient({
 
 const clientSideEmotionCache = createEmotionCache()
 
+export interface MyAppProps extends AppProps {
+  emotionCache?: EmotionCache
+}
+
 const App = ({
   emotionCache = clientSideEmotionCache,
   ...props
-}: AppProps & {
-  emotionCache?: EmotionCache
-}) => {
+}: MyAppProps) => {
   return (
     <Provide providers={[
       _ => <CacheProvider value={emotionCache} children={_}/>,
       _ => <AppSettingsProvider api={api} children={_}/>,
     ]}>
-      <AppWithConfig {...props}/>
+      <>
+        <Head>
+          <meta name="viewport" content="initial-scale=1, width=device-width"/>
+        </Head>
+        <AppWithConfig {...props}/>
+      </>
     </Provide>
   )
 }

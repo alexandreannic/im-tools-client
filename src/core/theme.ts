@@ -138,8 +138,26 @@ export const muiTheme = (dark?: boolean): Theme => {
           '*': {
             boxSizing: 'border-box',
           },
+          '@font-face': {
+            fontFamily: 'Material Icons',
+            fontStyle: 'normal',
+            fontWeight: 400,
+            src: 'url(https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format("woff2")',
+          },
           '.material-icons': {
-            // display: 'inherit',
+            fontFamily: 'Material Icons',
+            fontWeight: 'normal',
+            fontStyle: 'normal',
+            fontSize: 24,
+            lineHeight: 1,
+            letterSpacing: 'normal',
+            textTransform: 'none',
+            display: 'inline-block',
+            whiteSpace: 'nowrap',
+            wordWrap: 'normal',
+            direction: 'ltr',
+            WebkitFontFeatureSettings: '"liga"',
+            WebkitFontSmoothing: 'antialiased',
           },
           '.recharts-surface': {
             overflow: 'visible',
