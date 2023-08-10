@@ -97,6 +97,6 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
     }
   }
   return (
-    <AAIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+    <AAIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
   )
 }

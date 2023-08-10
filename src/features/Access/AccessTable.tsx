@@ -68,7 +68,7 @@ export const AccessTable = ({
           head: '',
           align: 'right',
           render: (_: Access) => (
-            <AAIconBtn loading={_remove.loading.get(_.id)} onClick={() => _remove.call(_.id).then(() => onRemoved?.(_.id))} icon="delete"/>
+            <AAIconBtn loading={_remove.loading.get(_.id)} onClick={() => _remove.call(_.id).then(() => onRemoved?.(_.id))} children="delete"/>
           ),
         } as const] : [],
       ]}

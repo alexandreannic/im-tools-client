@@ -29,7 +29,7 @@ export const Panel = forwardRef(({
   return (
     <Card
       ref={ref}
-      // elevation={elevation}
+      elevation={elevation}
       sx={{
         position: 'relative',
         background: t => t.palette.background.paper,
@@ -48,8 +48,8 @@ export const Panel = forwardRef(({
           flexDirection: 'column',
           height: t => `calc(100% - ${t.spacing(2)})`,
         }),
-        ...(elevation === 0 && {
-          border: t => `1px solid ${t.palette.divider}`,
+        ...(elevation && elevation > 0 && {
+          border: 'none',
         }),
         '&:hover .panel-actions': {
           display: 'block',

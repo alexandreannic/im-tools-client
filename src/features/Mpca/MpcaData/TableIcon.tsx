@@ -21,12 +21,13 @@ export const TableIcon = ({tooltip, children, sx, ...props}: TableIconProps) => 
 export const TableIconBtn = ({
   sx,
   color,
+  size = 'small',
   ...props
 }: AAIconBtnProps) => {
   return (
     <AAIconBtn
       color={color}
-      size="small"
+      size={size}
       sx={{
         verticalAlign: 'middle',
         // fontSize: '20px !important',

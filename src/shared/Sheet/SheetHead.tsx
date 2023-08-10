@@ -126,7 +126,7 @@ export const SheetHeadContent = ({
       {column.type && (
         <TableIconBtn
           color={active ? 'primary' : undefined}
-          icon="filter_alt"
+          children="filter_alt"
           onClick={e => onOpenFilter(e)}
         />
       )}

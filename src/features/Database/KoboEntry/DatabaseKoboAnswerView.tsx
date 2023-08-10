@@ -23,7 +23,7 @@ export const DatabaseKoboAnswerView = ({
   open: boolean
 }) => {
   const {m} = useI18n()
-  const [showQuestionWithoutAnswer, setShowQuestionWithoutAnswer] = useState(true)
+  const [showQuestionWithoutAnswer, setShowQuestionWithoutAnswer] = useState(false)
   return (
     <Dialog open={true}>
       <DialogTitle>
@@ -113,7 +113,7 @@ const KoboAnswerQuestionView = ({
     case 'note': {
       return <>
         <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="label">{row[schema.name]}</KoboQuestionAnswerView>
+        <KoboQuestionAnswerView icon="information">{row[schema.name]}</KoboQuestionAnswerView>
       </>
     }
     case 'begin_repeat': {

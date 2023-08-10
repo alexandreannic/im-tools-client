@@ -214,7 +214,7 @@ export const muiTheme = (dark?: boolean): Theme => {
       },
       MuiCard: {
         defaultProps: {
-          elevation: 0,
+          elevation: 1,
         },
         styleOverrides: {
           root: {
@@ -383,13 +383,17 @@ const tableTheme = (t: Theme) => ({
     textAlign: 'right',
     padding: 0,
   },
+  '.th': {
+    width: 80,
+  },
   '.th-resize': {
     display: 'flex',
     overflow: 'hidden',
     resize: 'horizontal',
-    minWidth: 74,
+    width: 80,
     // width: 102,
-    width: '100%',
+    minWidth: '100%',
+    // minWidth: 74,
   },
   'td.fw': {
     width: '100%',
@@ -408,6 +412,12 @@ const tableTheme = (t: Theme) => ({
     right: 0,
     background: t.palette.background.paper,
   },
+  thead: {
+    background: alpha(t.palette.divider, .02),
+  },
+  tbody: {
+    background: t.palette.background.paper,
+  },
   '.td-center': {
     textAlign: 'center !important',
   },
@@ -419,31 +429,29 @@ const tableTheme = (t: Theme) => ({
     border: 'none',
   },
   '.table td': {
-    // maxWidth: 102,
+    borderBottom: `1px solid ${t.palette.divider}`,
+    maxWidth: 80,
   },
   '.table td, .table th': {
     alignItems: 'left',
     textAlign: 'left',
-    minHeight: 32,
-    padding: '0 0px 0 3px',
+    height: 30,
+    padding: '0 0px 0 4px',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    borderBottom: `1px solid ${t.palette.divider}`,
     textOverflow: 'ellipsis',
   },
   '.table.borderY td, .table.borderY th': {
     borderRight: `1px solid ${t.palette.divider}`,
-    borderBottom: `1px solid ${t.palette.divider}`,
   },
   '.table th': {
-    height: 40,
+    height: 34,
     zIndex: 2,
     minWidth: 0,
     width: 0,
-    background: t.palette.background.paper,
     top: 0,
     paddingTop: t.spacing(.25),
-    paddingBottom: t.spacing(.25),
+    paddingBottom: 0,
     position: 'sticky',
     color: t.palette.text.secondary,
   },

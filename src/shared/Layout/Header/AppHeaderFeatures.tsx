@@ -17,7 +17,7 @@ export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'children'>) => {
   return (
     <>
       <AAIconBtn
-        icon="apps"
+        children="apps"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         {...props}
       />

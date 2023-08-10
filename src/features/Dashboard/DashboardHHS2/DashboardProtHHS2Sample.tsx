@@ -64,7 +64,7 @@ export const DashboardProtHHS2Sample = ({
                 {_ => _.toFixed(1)}
               </Lazy>
             </SlideWidget>
-            <Panel sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
               <Lazy deps={[data]} fn={() => ChartTools.percentage({
                 data: computed.flatData,
                 value: _ => _.gender === 'female'
@@ -73,8 +73,8 @@ export const DashboardProtHHS2Sample = ({
                   <PieChartIndicator value={_.value} base={_.base} title={m.females}/>
                 )}
               </Lazy>
-            </Panel>
-            <Panel sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            </SlidePanel>
+            <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
               <KoboPieChartIndicator
                 title={m.uaCitizen}
                 data={data}
@@ -90,7 +90,7 @@ export const DashboardProtHHS2Sample = ({
               {/*    <PieChartIndicator value={_.percent} title={m.uaCitizenShip}/>*/}
               {/*  )}*/}
               {/*</Lazy>*/}
-            </Panel>
+            </SlidePanel>
 
             {/*<SlideWidget sx={{flex: 1}} icon="my_location" title={m.coveredOblasts}>*/}
             {/*  <Lazy deps={[data]} fn={() => data.distinct(_ => _.where_are_you_current_living_oblast).length}>*/}

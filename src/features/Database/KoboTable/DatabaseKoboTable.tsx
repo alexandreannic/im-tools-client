@@ -26,7 +26,7 @@ export const DatabaseTableRoute = () => {
   const access = useMemo(() => {
     const list = accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId)
     const admin = session.admin || !!list.find(_ => _.level === AccessLevel.Admin)
-    const write = admin || !!list.find(_ => _.level === AccessLevel.Admin)
+    const write = admin || !!list.find(_ => _.level === AccessLevel.Write)
     const read = write || list.length > 0
     return {admin, write, read}
   }, [accesses])

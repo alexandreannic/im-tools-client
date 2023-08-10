@@ -94,8 +94,8 @@ export const DatabaseKoboTableContent = ({
       head: '',
       render: _ => (
         <>
-          <TableIconBtn tooltip={m.view} icon="visibility" onClick={() => openModalAnswer(_)}/>
-          <TableIconBtn disabled={!canEdit} tooltip={m.edit} loading={_edit.loading.has(_.id)} onClick={() => _edit.call(_.id)} icon="edit"/>
+          <TableIconBtn tooltip={m.view} children="visibility" onClick={() => openModalAnswer(_)}/>
+          <TableIconBtn disabled={!canEdit} tooltip={m.edit} loading={_edit.loading.has(_.id)} onClick={() => _edit.call(_.id)} children="edit"/>
         </>
       )
     }
@@ -125,7 +125,7 @@ export const DatabaseKoboTableContent = ({
         <AAIconBtn
           loading={_refresh.loading.size > 0}
           color="primary"
-          icon="refresh"
+          children="refresh"
           tooltip={m._koboDatabase.pullData}
           onClick={_refresh.call}
         />

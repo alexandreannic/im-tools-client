@@ -1,7 +1,6 @@
 import React from 'react'
 import {Icon, Tooltip} from '@mui/material'
 import {AnswerTable} from './AnswerTable'
-import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Confirm} from 'mui-extension/lib/Confirm'
 import {useI18n} from '../../../core/i18n'
 import {IconBtn} from 'mui-extension'
@@ -39,7 +38,7 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
       cancelLabel={m.close}
       content={<AnswerTable answers={answers}/>}
     >
-      <AAIconBtn tooltip="View related Kobo data" icon="table_view" color="primary"/>
+      <AAIconBtn tooltip="View related Kobo data" children="table_view" color="primary"/>
     </Confirm>
   )
 }
