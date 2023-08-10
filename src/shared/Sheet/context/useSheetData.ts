@@ -36,16 +36,19 @@ export const useSheetData = <T extends SheetRow>({
       switch (type) {
         case 'date': {
           return row => {
-            const v = row[k] as Date | undefined
+            const v = renderValue(row) as Date | undefined
             if (!v) return false
-            if (!((v as any) instanceof Date)) throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
+            if (!((v as any) instanceof Date)) {
+              console.warn(`Value of ${String(k)} is`, v, `but Date expected.`)
+              throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
+            }
             const [min, max] = filter as [Date, Date]
             return (!min || v.getTime() >= min.getTime()) && (!max || v.getTime() <= max.getTime())
           }
         }
         case 'select_one': {
           return row => {
-            const v = row[k] as string
+            const v = renderValue(row) as string
             if (!v) return false
             return (filter as string[]).includes(v)
           }

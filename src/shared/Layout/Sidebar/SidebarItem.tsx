@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Box, BoxProps, ButtonBase, ButtonBaseProps, Icon, Theme, useTheme} from '@mui/material'
+import {Box, ButtonBase, ButtonBaseProps, Icon, Theme, useTheme} from '@mui/material'
 import {alpha} from '@mui/material/styles'
 import {makeSx} from 'mui-extension'
 

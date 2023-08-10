@@ -1,4 +1,4 @@
-import {NavLink, Route, HashRouter as Router, Routes} from 'react-router-dom'
+import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import React from 'react'
 import {AdminUsers} from '@/features/Admin/AdminUsers'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'

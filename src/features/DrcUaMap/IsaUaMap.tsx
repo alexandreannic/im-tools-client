@@ -1,4 +1,4 @@
-import {Enum, sleep} from '@alexandreannic/ts-utils'
+import {Enum} from '@alexandreannic/ts-utils'
 import React, {useEffect} from 'react'
 import {Box, GlobalStyles, useTheme} from '@mui/material'
 import {useAppSettings} from '../../core/context/ConfigContext'
@@ -123,7 +123,6 @@ const drawUA = (selector: string, theme: Theme) => {
     ...Enum.keys(OblastIndex.oblastByISO).map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
 
-  console.log(theme.palette.primary.light, ',color')
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)
   chart.draw(data, {
     legend: 'none',

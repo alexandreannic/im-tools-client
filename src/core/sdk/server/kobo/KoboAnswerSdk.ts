@@ -1,7 +1,7 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
-import {Kobo, KoboAnswer, KoboId, KoboMappedAnswerType} from '@/core/sdk/server/kobo/Kobo'
-import {koboFormId} from '@/koboFormId'
+import {Kobo, KoboAnswer, KoboAnswerId, KoboId, KoboMappedAnswerType} from '@/core/sdk/server/kobo/Kobo'
+import {kobo} from '@/koboDrcUaFormId'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
@@ -9,15 +9,24 @@ import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
 import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
 import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
+import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
+import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
+import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
+import {Donor} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
+import {ProtHhsTags} from '@/core/sdk/server/kobo/KoboProtHhs'
 
-interface KoboAnswerFilter {
+export interface KoboAnswerFilter {
   paginate?: ApiPagination
   filters?: AnswersFilters
 }
 
-interface KoboAnswerSearch<T> extends KoboAnswerFilter {
+interface KoboAnswerSearch<
+  TAnswer extends Record<string, any> = Record<string, string | undefined>,
+  TTags extends Record<string, any> | undefined = undefined
+> extends KoboAnswerFilter {
   formId: UUID,
-  fnMap?: (_: Record<string, string | undefined>) => T
+  fnMap?: (_: Record<string, string | undefined>) => TAnswer
+  fnMapTags?: (_?: any) => TTags,
 }
 
 export class KoboAnswerSdk {
@@ -25,16 +34,21 @@ export class KoboAnswerSdk {
   constructor(private client: ApiClient) {
   }
 
+
+  readonly update = ({formId, answerId, tags}: {formId: KoboId, answerId: KoboAnswerId, tags: Record<string, any>}) => {
+    return this.client.post(`/kobo/answer/${formId}/${answerId}/tag`, {body: {tags}})
+  }
+
   readonly getAllFromLocalForm = (filters: AnswersFilters = {}) => {
     return this.client.get<KoboAnswer[]>(`/kobo/local-form`, {qs: filters})
-      .then(_ => _.map(Kobo.mapAnswerMetaData))
+      .then(_ => _.map(x => Kobo.mapAnswerMetaData(x)))
   }
 
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
-    if (formId === koboFormId.prod.protectionHh2) {
+    if (formId === kobo.drcUa.form.protectionHh2) {
       return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
     }
-    if (formId === koboFormId.prod.mealVisitMonitoring) {
+    if (formId === kobo.drcUa.form.mealVisitMonitoring) {
       return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
     }
     throw new Error('To implement')
@@ -47,29 +61,37 @@ export class KoboAnswerSdk {
       end: map(_.end, endOfDay),
     }
   }
-  readonly searchByAccess = <T extends Record<string, any> = Record<string, string | undefined>>({
+  readonly searchByAccess = <
+    TQuestion extends Record<string, any> = Record<string, string | undefined>,
+    TTags extends Record<string, any> | undefined = undefined
+  >({
     formId,
     filters = {},
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
-  }: KoboAnswerSearch<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
+    fnMapTags = (_?: any) => _,
+  }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<TQuestion, TTags>>> => {
     return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
-      .then(Kobo.mapPaginateAnswerMetaData(fnMap))
+      .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }
 
-  readonly search = <T extends Record<string, any> = Record<string, KoboMappedAnswerType>>({
+  readonly search = <
+    TQuestion extends Record<string, any> = Record<string, string | undefined>,
+    TTags extends Record<string, any> | undefined = undefined
+  >({
     formId,
     filters = {},
     paginate = {offset: 0, limit: 100000},
     fnMap = (_: any) => _,
-  }: KoboAnswerSearch<T>): Promise<ApiPaginate<KoboAnswer<T>>> => {
+    fnMapTags = (_?: any) => _,
+  }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<TQuestion, TTags>>> => {
     return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
-      .then(Kobo.mapPaginateAnswerMetaData(fnMap))
+      .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }
 
   readonly searchBnre = (filters: KoboAnswerFilter = {}) => {
     return this.search<BNRE>({
-      formId: koboFormId.prod.BNRE,
+      formId: kobo.drcUa.form.BNRE,
       fnMap: mapBNRE,
       ...filters,
     })
@@ -77,16 +99,35 @@ export class KoboAnswerSdk {
 
   readonly searchMealVisitMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: koboFormId.prod.mealVisitMonitoring,
+      formId: kobo.drcUa.form.mealVisitMonitoring,
       fnMap: mapMealVisitMonitoring,
+      ...filters,
+    })
+  }
+
+  readonly searchShelterTa = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.shelterTA,
+      fnMap: mapShelter_TA,
+      fnMapTags: _ =>  _ as ShelterTaTags,
+      ...filters,
+    })
+  }
+
+  readonly searchShelterNta = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.shelterNTA,
+      fnMap: mapShelter_NTA,
+      fnMapTags: _ =>  _ as ShelterNtaTags,
       ...filters,
     })
   }
 
   readonly searchProtHhs = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: koboFormId.prod.protectionHh2,
+      formId: kobo.drcUa.form.protectionHh2,
       fnMap: mapProtHHS_2_1,
+      fnMapTags: _ => _ as ProtHhsTags,
       ...filters,
     })
     // TODO DELETE !!!!

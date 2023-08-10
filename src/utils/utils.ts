@@ -1,6 +1,5 @@
 import {Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
-import {AssertionError} from 'assert'
 
 export type KeyOf<T> = Extract<keyof T, string>
 

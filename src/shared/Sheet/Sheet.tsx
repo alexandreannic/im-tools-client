@@ -1,7 +1,7 @@
 import {Badge, Box, BoxProps, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
 import React, {ReactNode, useEffect} from 'react'
 import {useI18n} from '@/core/i18n'
-import {Fender, Txt} from 'mui-extension'
+import {Txt} from 'mui-extension'
 import {KeyOf, Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
@@ -45,20 +45,32 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   }
 }
 
-export interface SheetColumnProps<T extends SheetRow> {
-  id: string
+interface SheetColumnPropsSelectOne<T extends SheetRow> extends SheetColumnPropsBase<T> {
+  type?: Exclude<SheetPropertyType, 'date'>
   renderValue?: (_: T) => string | number | undefined
+}
+
+interface SheetColumnPropsDate<T extends SheetRow> extends SheetColumnPropsBase<T> {
+  type: 'date'
+  renderValue?: (_: T) => Date | undefined
+}
+
+export type SheetColumnProps<T extends SheetRow> = SheetColumnPropsSelectOne<T> | SheetColumnPropsDate<T>
+
+export interface SheetColumnPropsBase<T extends SheetRow> {
+  id: string
+  // type?: SheetPropertyType//'number' | 'date' | 'string' | 'select_one' | 'select_multiple'
+  // renderValue?: (_: T) => string | number | undefined
   render: (_: T, i: number) => ReactNode
   noSort?: boolean
   width?: number
-  head?: string | ReactNode
+  head?: string
   align?: 'center' | 'right'
   onClick?: (_: T) => void
   renderExport?: boolean | ((_: T) => string | number | undefined | Date)
   hidden?: boolean
   alwaysVisible?: boolean
   tooltip?: (_: T) => string
-  type?: SheetPropertyType//'number' | 'date' | 'string' | 'select_one' | 'select_multiple'
   typeIcon?: ReactNode
   options?: () => SheetOptions[]
   className?: string | ((_: T) => string | undefined)
@@ -159,11 +171,11 @@ const _Sheet = <T extends SheetRow>({
     <>
       <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center'}}>
         <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
-          <AAIconBtn sx={{mr: 1}} icon="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
+          <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
         </Badge>
         {header}
         {showExportBtn && (
-          <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+          <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
         )}
         {ctx.selected.size > 0 && (
           <Box sx={{
@@ -194,7 +206,7 @@ const _Sheet = <T extends SheetRow>({
                 {ctx.selected.size} {m.selected}.
               </Box>
               {ctx.select?.selectActions}
-              <AAIconBtn color="primary" icon="clear" onClick={ctx.selected.clear}/>
+              <AAIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
             </Box>
           </Box>
         )}
@@ -235,7 +247,8 @@ const _Sheet = <T extends SheetRow>({
                     </Box>
                   </td>
                 </tr>
-              )}) ?? (loading && (
+              )
+            }) ?? (loading && (
               <tr>
                 <td className="td-loading" colSpan={ctx.columns?.length ?? 1}>
                   <LinearProgress/>

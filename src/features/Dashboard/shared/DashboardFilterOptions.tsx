@@ -1,10 +1,9 @@
 import React, {ReactNode, useMemo} from 'react'
-import {Box, Checkbox, FormControlLabel, FormGroup, Icon} from '@mui/material'
-import {IconBtn, makeSx, Txt} from 'mui-extension'
+import {Checkbox, FormControlLabel, FormGroup} from '@mui/material'
+import {makeSx, Txt} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'
 import {useI18n} from '../../../core/i18n'
 import {combineSx} from '../../../core/theme'
-import {AAIconBtn} from '@/shared/IconBtn'
 
 const css = makeSx({
   optionSelectAll: {

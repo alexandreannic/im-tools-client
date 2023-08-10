@@ -1,6 +1,6 @@
 import React, {ReactNode, useContext, useMemo} from 'react'
 import {SheetColumnProps, SheetRow, SheetTableProps} from '@/shared/Sheet/Sheet'
-import {UseSetState, useSetState} from '@alexandreannic/react-hooks-lib'
+import {UseSetState} from '@alexandreannic/react-hooks-lib'
 import {UseSheetData, useSheetData} from '@/shared/Sheet/context/useSheetData'
 import {Arr} from '@alexandreannic/ts-utils'
 import {useSheetModal} from '@/shared/Sheet/context/useSheetModal'

@@ -20,6 +20,7 @@ import {Panel} from '@/shared/Panel'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
 import {Sheet} from '@/shared/Sheet/Sheet'
+import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 
 interface Person {
   age: number
@@ -27,7 +28,7 @@ interface Person {
 }
 
 interface Answer {
-  id: string
+  id: KoboAnswerId
   start: Date
   oblast: keyof typeof MPCA_NFIOptions['oblast'] | undefined
   raion: keyof typeof MPCA_NFIOptions['raion'] | undefined

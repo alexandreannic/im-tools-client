@@ -1,4 +1,4 @@
-import {Shelter} from './Shelter'
+import {Shelter_NTA} from './Shelter_NTA'
 
 
 const extractQuestionName = (_: Record<string, any>) => {
@@ -11,7 +11,7 @@ const extractQuestionName = (_: Record<string, any>) => {
   return output
 }
 
-export const mapShelter = (_: Record<keyof Shelter, any>): Shelter => ({
+export const mapShelter_NTA = (_: Record<keyof Shelter_NTA, any>): Shelter_NTA => ({
 	..._,
 	hh_char_res_age: _.hh_char_res_age ? +_.hh_char_res_age : undefined,
 	hh_char_hhh_age: _.hh_char_hhh_age ? +_.hh_char_hhh_age : undefined,
@@ -34,4 +34,4 @@ export const mapShelter = (_: Record<keyof Shelter, any>): Shelter => ({
 	mental_number: _.mental_number ? +_.mental_number : undefined,
 	how_u18_notrelated: _.how_u18_notrelated ? +_.how_u18_notrelated : undefined,
 	pregnant_count: _.pregnant_count ? +_.pregnant_count : undefined,
-}) as Shelter
+}) as Shelter_NTA

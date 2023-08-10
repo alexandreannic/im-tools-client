@@ -49,6 +49,8 @@ export const en = Object.freeze({
     others: 'Others',
     other: 'Other',
     majorStressFactors: 'Major stress factors',
+    exist: 'Exist',
+    notExist: 'Not exist',
     area: 'Area',
     men: 'Men',
     activities: 'Activities',
@@ -265,6 +267,8 @@ export const en = Object.freeze({
     gender: 'Gender',
     respondentGender: 'Respondent gender',
     program: 'Program',
+    raion: 'Raion',
+    hromada: 'Hromada',
     noIdps: 'Non-IDPs',
     selectForm: 'Select form',
     register: 'Register',
@@ -956,7 +960,31 @@ export const en = Object.freeze({
       showAllQuestions: 'Show unanswered questions',
       pullData: 'Synchronize last Kobo data',
       valueNoLongerInOption: 'This value is no longer in the options list',
-      noAccessToForm: `You don't have access to any databases.`
+      noAccessToForm: `You don't have access to any database.`
+    },
+    _shelter: {
+      validationStatus: 'Accepted?',
+      documentType: 'Doc type',
+      owner: 'Tenant',
+      ownershipDocumentExist: 'Ownership docs exist',
+      ownershipDocument: 'Ownership docs',
+      accommodation: 'Accommodation',
+      total: 'Total',
+      scoreDamage: 'Damage',
+      scoreSocio: 'Socio',
+      scoreDisplacement: 'Displ.',
+      progress: {
+        None: '',
+        ContractorVisitDone: 'Contractor visit done',
+        WorkEstimatesReceived: 'Work estimates received',
+        PurchaseRequestDone: 'Purchase Request Done',
+        WorkOrderDone: 'Work Order Done',
+        RepairWorksStarted: 'Repair works Started',
+        RepairWorksCompleted: 'Repair works completed',
+        ContractorInvoiceReceived: 'Contractor invoice received',
+        HandoverCertificateOfCompletionSigned: 'Handover/Certificate of completion signed',
+        InvoicePaymentProcessed: 'Invoice payment processed',
+      }
     }
   },
 })

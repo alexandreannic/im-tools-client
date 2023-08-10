@@ -1,6 +1,5 @@
 import {FormControl, FormHelperText, InputLabel, OutlinedInput, OutlinedInputProps, TextFieldProps} from '@mui/material'
-import React, {ReactNode, useEffect, useMemo, useRef} from 'react'
-import {id} from 'date-fns/locale'
+import React, {ReactNode, useEffect, useRef} from 'react'
 
 export interface AaInputProps extends OutlinedInputProps, Pick<TextFieldProps, 'InputLabelProps'> {
   small?: boolean

@@ -129,7 +129,7 @@ export const DashboardLayout = ({
               <Typography id={s.name} variant="h2" sx={combineSx(style.sectionTitle, hiddenSections.has(s.name) && style.sectionShrinked)}>
                 {s.title}
                 <AAIconBtn
-                  icon="expand_less"
+                  children="expand_less"
                   sx={combineSx(style.iconExpand, hiddenSections.has(s.name) && style.iconExpendShrinked)}
                   onClick={() => hiddenSections.toggle(s.name)}
                 />

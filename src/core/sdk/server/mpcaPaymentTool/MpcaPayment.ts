@@ -1,4 +1,4 @@
-import {KoboId} from '../kobo/Kobo'
+import {KoboAnswerId} from '../kobo/Kobo'
 
 export interface MpcaPayment {
   id: string
@@ -13,7 +13,7 @@ export interface MpcaPayment {
   city?: string
   createdAt: Date
   updatedAt: Date
-  answers: KoboId[]
+  answers: KoboAnswerId[]
 }
 
 export interface MpcaPaymentUpdate {
@@ -25,4 +25,14 @@ export interface MpcaPaymentUpdate {
   cashAndVoucherAssistanceAssistant?: string
   financeAndAdministrationOfficer?: string
   city?: string
+}
+
+export class MpcaPayment {
+  static readonly mapEntity = (_: Record<keyof MpcaPayment, any>): MpcaPayment => {
+    return {
+      ..._,
+      createdAt: new Date(_.createdAt),
+      updatedAt: new Date(_.updatedAt),
+    }
+  }
 }

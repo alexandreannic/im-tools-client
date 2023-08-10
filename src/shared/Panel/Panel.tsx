@@ -1,9 +1,7 @@
 import * as React from 'react'
-import {forwardRef, ReactNode, useRef, useState} from 'react'
-import {Box, Card, CardProps, Icon, LinearProgress} from '@mui/material'
+import {forwardRef, ReactNode} from 'react'
+import {Box, Card, CardProps, LinearProgress} from '@mui/material'
 import {PanelHead} from './PanelHead'
-import {IconBtn} from 'mui-extension'
-import html2canvas from 'html2canvas'
 import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
 
 export interface PanelProps extends Omit<CardProps, 'title'> {

@@ -8,11 +8,9 @@ import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {chain} from '@/utils/utils'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {ProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {Box, Checkbox} from '@mui/material'
 import {Txt} from 'mui-extension'
-import {_Arr, Enum} from '@alexandreannic/ts-utils'
+import {Enum} from '@alexandreannic/ts-utils'
 
 type Filters = Pick<Record<keyof typeof ProtHHS_2_1Options['are_you_separated_from_any_of_your_households_members'], boolean>,
   'partner' |

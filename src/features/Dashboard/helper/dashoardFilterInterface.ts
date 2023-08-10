@@ -1,8 +1,6 @@
 import {Messages} from '@/core/i18n/localization/en'
 import {multipleFilters} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
-import {property} from 'lodash'
-import {StringArrayKeys} from '@/core/type'
 
 export namespace DashboardFilterHelper {
 

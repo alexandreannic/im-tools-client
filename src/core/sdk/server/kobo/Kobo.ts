@@ -1,5 +1,5 @@
 import {ApiPaginate} from '@/core/type'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Enum} from '@alexandreannic/ts-utils'
 
 export type KoboId = string
@@ -29,18 +29,19 @@ export type KoboAttachment = {
   id: string
 }
 
-export type KoboAnswerMetaData = {
+export type KoboAnswerMetaData<TTag = any> = {
   start: Date
   end: Date
   version: string
   submissionTime: Date
   submittedBy?: string
-  id: string
+  id: KoboAnswerId
   uuid: string
   validationStatus?: 'validation_status_approved'
   validatedBy?: string
   lastValidatedTimestamp?: number
   geolocation?: [number, number]
+  tags: TTag
   //
   // _id: number,
   // // 'formhub/uuid': string,
@@ -58,40 +59,45 @@ export type KoboAnswerMetaData = {
   // // _notes: KoboAnswerNotes[],
   // // _validation_status: any,
   // // _submitted_by: any
-  tags: any,
 }
 
 export type KoboMappedAnswerType = string | string[] | Date | number | undefined | KoboAnswer<any>[]
 
-export type KoboAnswer<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
+export type KoboAnswer<
+  TQuestion extends Record<string, any> = Record<string, string | undefined>,
+  TTags extends Record<string, any> | undefined = undefined
+> = (KoboAnswerMetaData<TTags> & TQuestion)
 
 export type KoboMappedAnswer<T extends Record<string, any> = Record<string, KoboMappedAnswerType>> = (KoboAnswerMetaData & T)
 
 export class Kobo {
 
-  static readonly mapPaginateAnswerMetaData = (fnMap: (x: any) => any) => (_: ApiPaginate<Record<string, any>>): ApiPaginate<KoboAnswer<any>> => {
+  static readonly mapPaginateAnswerMetaData = <TAnswer extends Record<string, any>, TTag extends Record<string, any> | undefined = undefined>(
+    fnMap: (x: any) => TAnswer,
+    fnMapTags: (x: any) => TTag
+  ) => (_: ApiPaginate<Record<string, any>>): ApiPaginate<KoboAnswer<TAnswer, TTag>> => {
     return ({
       ..._,
       data: _.data.map(({answers, ...meta}) => ({
-        ...Kobo.mapAnswerMetaData(meta),
-        ...fnMap(answers) as any
+        ...Kobo.mapAnswerMetaData(meta, fnMapTags),
+        ...fnMap(answers),
       }))
     })
   }
 
   static readonly mapAnswerBySchema = (indexedSchema: Record<string, KoboQuestionSchema>, answers: KoboAnswer): KoboMappedAnswer => {
-    const mapped = {...answers}
+    const mapped: KoboMappedAnswer = {...answers}
     Enum.entries(mapped).forEach(([question, answer]) => {
       const type = indexedSchema[question]?.type
       if (!type || !answer) return
       switch (type) {
         case 'today':
         case 'date': {
-          (mapped as any)[question] = new Date(answer)
+          (mapped as any)[question] = new Date(answer as Date)
           break
         }
         case 'select_multiple': {
-          mapped[question] = answer.split(' ')
+          mapped[question] = (answer as string).split(' ')
           break
         }
         default:
@@ -101,7 +107,10 @@ export class Kobo {
     return mapped
   }
 
-  static readonly mapAnswerMetaData = (k: Partial<Record<keyof KoboAnswerMetaData, any>>): KoboAnswer<any> => {
+  static readonly mapAnswerMetaData = (
+    k: Partial<Record<keyof KoboAnswerMetaData, any>>,
+    fnMapTags: (x: any) => any = _ => _
+  ): KoboAnswer<any> => {
     delete (k as any)['deviceid']
     return {
       ...k,
@@ -114,7 +123,7 @@ export class Kobo {
       validatedBy: k.validatedBy,
       lastValidatedTimestamp: k.lastValidatedTimestamp,
       geolocation: k.geolocation,
-      tags: k.tags
+      tags: fnMapTags(k.tags),
     }
   }
 }

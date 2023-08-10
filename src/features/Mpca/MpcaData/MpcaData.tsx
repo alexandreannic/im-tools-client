@@ -9,7 +9,7 @@ import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
-import {koboServerId} from '@/koboFormId'
+import {kobo} from '@/koboDrcUaFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
@@ -23,7 +23,7 @@ enum DeduplicationStatus {
 }
 
 export const getKoboImagePath = (url: string): string => {
-  return appConfig.apiURL + `/kobo-api/${koboServerId.prod}/attachment?path=${url.split('api')[1]}`
+  return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
 }
 
 export const mapMpcaKoboAnswer = () => (_: KoboAnswer<BNRE>) => {
@@ -91,7 +91,7 @@ export const MpcaData = () => {
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}
           select={{
-            getId: _ => _.id,
+            getId: _ => '' + _.id,
             onSelect: _ => setSelected(_),
             selectActions: (
               <>
@@ -117,7 +117,7 @@ export const MpcaData = () => {
               </>
             )
           }}
-          getRenderRowKey={_ => _.id}
+          getRenderRowKey={_ => '' + _.id}
           data={enhancedData}
           columns={[
             {id: 'date', head: m.date, type: 'date', render: _ => formatDate(_.date)},
@@ -131,7 +131,7 @@ export const MpcaData = () => {
             {
               id: 'duplication',
               type: 'select_one',
-              head: <TableIcon>content_copy</TableIcon>,
+              head: m.status,
               options: () => Enum.keys(DeduplicationStatus).map(_ => ({value: _, label: _})),
               align: 'center',
               render: _ => fnSwitch(_.duplication!, {

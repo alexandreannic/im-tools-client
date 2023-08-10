@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {useEffect} from 'react'
-import {Box, BoxProps, Icon, SwipeableDrawer, Switch} from '@mui/material'
+import {Box, BoxProps, SwipeableDrawer, Switch} from '@mui/material'
 import {useLayoutContext} from '../LayoutContext'
 import {layoutConfig} from '../index'
 import {SidebarFooter} from './SidebarFooter'

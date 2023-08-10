@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState, useCallback, useMemo, DependencyList} from 'react'
+import {DependencyList, useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {ModalContext, ModalType} from './ModalContext'
 
 /**

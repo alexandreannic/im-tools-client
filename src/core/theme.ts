@@ -366,18 +366,30 @@ const tableTheme = (t: Theme) => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
   },
+  '.table .MuiOutlinedInput-notchedOutline': {
+    border: 'none',
+    borderRadius: 0,
+  },
   '.table tr': {
     whiteSpace: 'nowrap',
   },
+  'table .td:has(.MuiOutlinedInput-notchedOutline)': {
+    padding: 0,
+  },
   '.table tr:hover': {
     background: t.palette.action.hover,
+  },
+  '.td-sub-head': {
+    textAlign: 'right',
+    padding: 0,
   },
   '.th-resize': {
     display: 'flex',
     overflow: 'hidden',
     resize: 'horizontal',
-    minWidth: 102,
-    width: 102,
+    minWidth: 74,
+    // width: 102,
+    width: '100%',
   },
   'td.fw': {
     width: '100%',
@@ -407,13 +419,13 @@ const tableTheme = (t: Theme) => ({
     border: 'none',
   },
   '.table td': {
-    maxWidth: 102,
+    // maxWidth: 102,
   },
   '.table td, .table th': {
     alignItems: 'left',
     textAlign: 'left',
-    height: 32,
-    padding: '2px 0px 2px 3px',
+    minHeight: 32,
+    padding: '0 0px 0 3px',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     borderBottom: `1px solid ${t.palette.divider}`,
@@ -449,3 +461,4 @@ const tableTheme = (t: Theme) => ({
   //   // background: 'red',
   // },
 })
+

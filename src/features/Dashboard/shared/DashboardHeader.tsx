@@ -1,7 +1,7 @@
 import {IconBtn} from 'mui-extension'
 import {alpha, Box, BoxProps, GlobalStyles, Icon, Typography} from '@mui/material'
 import {DRCLogo, EULogo} from '@/shared/logo/logo'
-import React, {ReactNode, useEffect} from 'react'
+import React, {ReactNode} from 'react'
 import {useLayoutContext} from '@/shared/Layout/LayoutContext'
 import {AppHeaderContainer} from '@/shared/Layout/Header/AppHeaderContainer'
 

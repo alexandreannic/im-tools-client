@@ -51,6 +51,7 @@ export const useSheetModal = <T extends SheetRow>({
   }, [data.search, data.filters])
 
   const [statsPopoverOpen, statsPopoverClose] = useModal((c: SheetColumnConfigPopoverParams & {renderValue?: SheetColumnProps<T>['renderValue']}) => {
+    const getValue = c.renderValue ?? (_ => _[c.columnId])
     switch (c.type) {
       case 'number':
         return <NumberChoicesPopover
@@ -64,8 +65,9 @@ export const useSheetModal = <T extends SheetRow>({
         return (
           <DatesPopover
             anchorEl={c.anchorEl}
-            question={c.columnId}
-            data={data.filteredData ?? []}
+            title={c.title}
+            getValue={getValue}
+            data={data.filteredData as T[] ?? []}
             onClose={statsPopoverClose}
           />
         )
@@ -75,8 +77,9 @@ export const useSheetModal = <T extends SheetRow>({
             translations={c.options}
             anchorEl={c.anchorEl}
             multiple={c.type === 'select_multiple'}
-            property={c.columnId}
-            data={data.filteredData ?? []}
+            getValue={getValue}
+            title={c.title}
+            data={data.filteredData as T[] ?? []}
             onClose={statsPopoverClose}
           />
         return undefined
@@ -88,7 +91,7 @@ export const useSheetModal = <T extends SheetRow>({
   const _filterPopoverOpen = useCallback((a: SheetColumnProps<T>, e: any) => filterPopoverOpen({
     type: a.type!,
     columnId: a.id,
-    title: a.head,
+    title: a.head ?? a.id,
     anchorEl: e.currentTarget,
     options: getOption(a.id, a.options),
   }), [])
@@ -97,7 +100,7 @@ export const useSheetModal = <T extends SheetRow>({
     type: a.type!,
     columnId: a.id,
     renderValue: a.renderValue,
-    title: a.head,
+    title: a.head  ?? a.id,
     anchorEl: e.currentTarget,
     options: getOption(a.id, a.options),
   }), [])

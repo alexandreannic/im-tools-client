@@ -47,14 +47,14 @@ export const SheetHead = (() => {
           return (
             <th
               key={_.id}
-              style={{width: _.width}}
+              title={_.head}
               // onClick={() => onSortBy(_.id)}
               className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
                 'center': ' td-center',
                 'right': ' td-right'
               }, _ => ''))}
             >
-              <Box className="th-resize">
+              <Box className="th-resize" style={{width: _.width}}>
                 {_.head}
               </Box>
             </th>
@@ -66,7 +66,7 @@ export const SheetHead = (() => {
           const sortedByThis = search.sortBy === c.id ?? false
           const active = sortedByThis || !!filters[c.id]
           return (
-            <td key={c.id} className="td-right">
+            <td key={c.id} className="td-sub-head">
               <SheetHeadContent
                 column={c}
                 active={active}
@@ -87,7 +87,7 @@ export const SheetHeadTypeIcon = (props: {
   tooltip: string,
   children: string,
 }) => {
-  return <TableIcon sx={{marginRight: 'auto'}} color="disabled" {...props}/>
+  return <TableIcon sx={{marginRight: 'auto'}} fontSize="small" color="disabled" {...props}/>
 }
 
 export const SheetHeadContent = ({
@@ -121,7 +121,7 @@ export const SheetHeadContent = ({
         }
       })()}
       {(column.options || ['date', 'number'].includes(column.type!)) && (
-        <TableIconBtn icon="bar_chart" onClick={e => onOpenStats(e)}/>
+        <TableIconBtn children="bar_chart" onClick={e => onOpenStats(e)}/>
       )}
       {column.type && (
         <TableIconBtn

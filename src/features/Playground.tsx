@@ -7,7 +7,7 @@ import {format} from 'date-fns'
 import {Layout} from '../shared/Layout'
 import {Txt} from 'mui-extension'
 import {useSession} from '@/core/Session/SessionContext'
-import {koboFormId, koboServerId} from '@/koboFormId'
+import {kobo} from '@/koboDrcUaFormId'
 
 // const survey = await form.fetch().then(_ => _.content.survey)
 // const bln = survey.find(_ => _.label?.includes('BLN High Thermal Blankets: How many?'))
@@ -193,7 +193,7 @@ export const Playground = () => {
   const {session} = useSession()
   const {api} = useAppSettings()
 
-  const shape = useFetcher(() => api.koboApi.getForm(koboServerId.prod, koboFormId.prod.BNRE))
+  const shape = useFetcher(() => api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.BNRE))
   const bnre = useFetcher(() => api.kobo.answer.searchBnre())
 
   const form = useFetcher(() => api.koboApi.getForm(KoboApiSdk.serverRefs.prod, KoboApiSdk.koboFormRefs.MPCA_NFI_NAA))

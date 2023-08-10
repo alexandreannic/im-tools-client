@@ -1,7 +1,6 @@
-import {memo, useState, useEffect, ReactNode} from 'react'
 import * as React from 'react'
+import {memo, ReactNode, useEffect, useState} from 'react'
 import * as ReactDOM from 'react-dom'
-import {ModalType} from './ModalContext'
 
 /**
  * Modal Root Props

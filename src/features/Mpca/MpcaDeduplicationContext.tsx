@@ -1,13 +1,13 @@
 import React, {ReactNode, useContext, useEffect} from 'react'
 import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClient'
 import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {koboFormId, koboServerId} from '@/koboFormId'
+import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPaymentSdk'
+import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 
 export interface MpcaDeduplicationContext {
   _koboAnswers: UseFetcher<() => Promise<_Arr<KoboAnswer<BNRE>>>>
@@ -29,7 +29,7 @@ export const MPCADeduplicationProvider = ({
 }) => {
   const {api} = useAppSettings()
 
-  const _form = useFetcher(() => api.koboApi.getForm(koboServerId.prod, koboFormId.prod.BNRE))
+  const _form = useFetcher(() => api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.BNRE))
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)
 

@@ -8,7 +8,7 @@ import {Box, Icon} from '@mui/material'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {makeKoboBarChartComponent} from '../shared/KoboBarChart'
 import {DebouncedInput} from '@/shared/DebouncedInput'
-import {koboFormId} from '@/koboFormId'
+import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoring'
 import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringOptions'
@@ -125,7 +125,7 @@ export const DashboardMealVisitMonitoring = () => {
   const {api} = useAppSettings()
   const {m, formatDateTime, formatDate} = useI18n()
 
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(koboFormId.prod.mealVisitMonitoring))
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.mealVisitMonitoring))
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
 
