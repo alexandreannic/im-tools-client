@@ -1,8 +1,9 @@
 import {Func, useMap} from '@alexandreannic/react-hooks-lib'
+import {UseMap2, useMap2} from '@/alexlib-labo/useMap'
 
 export interface UseAsync<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> {
-  getLoading: (k?: K) => boolean,
-  getError: (k?: K) => E
+  loading: UseMap2<K, boolean>,
+  errors: UseMap2<K, E>
   call: F,
 }
 
@@ -13,22 +14,14 @@ export interface UseAsyncFn {
       mapError?: (_: any) => E,
       requestKey: (_: Parameters<F>) => K,
     }
-  ): {
-    getLoading: (k: K) => boolean,
-    getError: (k: K) => E
-    call: F,
-  }
+  ): UseAsync<F, K, E>
   <F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any>(
     caller: F,
     params?: {
       mapError?: (_: any) => E,
       requestKey?: undefined,
     }
-  ): {
-    getLoading: () => boolean,
-    getError: () => E
-    call: F,
-  }
+  ): UseAsync<F, K, E>
 }
 
 const defaultKey: any = 1
@@ -46,26 +39,26 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
     requestKey?: (_: Parameters<F>) => K,
   } = {} as any
 ) => {
-  const loading = useMap<K, boolean>()
-  const error = useMap<K, E>()
+  const loading = useMap2<K, boolean>()
+  const errors = useMap2<K, E>()
 
   const call = (...args: Parameters<F>) => {
     loading.set(requestKey(args), true)
     return caller(...args)
       .then(_ => {
-        loading.set(requestKey(args), false)
+        loading.delete(requestKey(args))
         return _
       })
       .catch((e: E) => {
-        loading.set(requestKey(args), false)
-        error.set(requestKey(args), mapError(e))
+        loading.delete(requestKey(args))
+        errors.set(requestKey(args), mapError(e))
         throw e
       })
   }
 
   return {
-    getLoading: (k?: K) => loading.get(k ? k : defaultKey),
-    getError: (k?: K) => error.get(k ? k : defaultKey),
+    loading,
+    errors,
     call,
   } as any
 }

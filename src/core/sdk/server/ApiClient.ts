@@ -41,13 +41,13 @@ export class ApiError extends Error {
   constructor(public params: {
     code: string,
     message: string,
-    request: {
+    request?: {
       method: Method
       url: string
       qs?: any
       body?: any
     },
-    error: Error
+    error?: Error
   }) {
     super(params.message)
   }

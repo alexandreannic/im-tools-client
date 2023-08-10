@@ -10,6 +10,7 @@ import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UseKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 const renderExportSchema = <T extends KoboMappedAnswer>({
   schema,
@@ -96,6 +97,6 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
     }
   }
   return (
-    <TableIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
+    <AAIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} icon="download"/>
   )
 }

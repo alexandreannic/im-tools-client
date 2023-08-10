@@ -38,7 +38,7 @@ export const useKoboSchema = ({
             $qpath: 'submission_time',
             $xpath: 'submission_time',
           },
-          ...form.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(_ => ({
+          ...form.content.survey.map(_ => ({
             ..._,
             label: _.label?.map(_ => Utils.removeHtml(_))
           })),

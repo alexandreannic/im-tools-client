@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '../../../type'
-import {ApiKoboForm, Kobo, KoboAnswer, KoboId} from './Kobo'
+import {ApiKoboForm, Kobo, KoboAnswer, KoboAnswerId, KoboId} from './Kobo'
 import {mapMPCA_NFI} from '../../../koboModel/MPCA_NFI/MPCA_NFIMapping'
 import {mapMPCA_NFI_Myko} from '../../../koboModel/MPCA_NFI_Myko/MPCA_NFI_MykoMapping'
 import {mapMPCA_NFI_NAA} from '../../../koboModel/MPCA_NFI_NAA/MPCA_NFI_NAAMapping'
@@ -61,6 +61,10 @@ export class KoboApiSdk {
           })
         }
       )
+  }
+
+  readonly editAnswer = (serverId: KoboId, formId: KoboId, answerId: number) => {
+    return this.client.post(`/kobo-api/${serverId}/${formId}/${answerId}`)
   }
 
   readonly synchronizeAnswers = (serverId: KoboId, formId: KoboId) => {
@@ -136,8 +140,12 @@ export class KoboApiSdk {
     })
   }
 
-  readonly getForm = (serverId: UUID, formId: UUID): Promise<KoboApiForm> => {
+  readonly getForm = (serverId: UUID, formId: KoboId): Promise<KoboApiForm> => {
     return this.client.get(`/kobo-api/${serverId}/${formId}`)
+  }
+
+  readonly getEditUrl = (serverId: UUID, formId: KoboId, answerId: KoboAnswerId): Promise<{url: string, detail?: string}> => {
+    return this.client.get(`/kobo-api/${serverId}/${formId}/${answerId}/edit-url`)
   }
 
   readonly getForms = (serverId: UUID): Promise<ApiKoboForm[]> => {

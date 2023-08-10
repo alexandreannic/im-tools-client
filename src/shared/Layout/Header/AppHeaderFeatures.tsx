@@ -18,7 +18,6 @@ export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'icon'>) => {
     <>
       <AAIconBtn
         icon="apps"
-        size="medium"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         {...props}
       />

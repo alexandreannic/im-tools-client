@@ -58,6 +58,7 @@ export const en = Object.freeze({
     users: 'Users',
     select3Outcomes: `Please, select 3 outcomes`,
     oblast: 'Oblast',
+    edit: 'Edit',
     close: 'Close',
     connectAs: 'Connect as',
     focalPoint: 'Focal point',
@@ -89,6 +90,7 @@ export const en = Object.freeze({
     lastConnectedAt: 'Last connection',
     perpetrators: 'Perpetrators',
     kyiv: 'Kyiv',
+    view: 'View',
     viewData: 'View data',
     theme: 'Dark theme',
     previous: 'Previous',
@@ -951,6 +953,7 @@ export const en = Object.freeze({
       }
     },
     _koboDatabase: {
+      showAllQuestions: 'Show unanswered questions',
       pullData: 'Synchronize last Kobo data',
       valueNoLongerInOption: 'This value is no longer in the options list',
       noAccessToForm: `You don't have access to any databases.`

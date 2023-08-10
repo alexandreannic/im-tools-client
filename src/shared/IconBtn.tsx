@@ -14,11 +14,14 @@ export const AAIconBtn = ({
   size,
   ...props
 }: AAIconBtnProps) => {
-  return (
-    <Tooltip title={tooltip}>
-      <IconBtn {...props} size={size}>
-        <Icon fontSize={size}>{icon}</Icon>
-      </IconBtn>
-    </Tooltip>
+  const content = (
+    <IconBtn {...props} size={size}>
+      <Icon fontSize={size}>{icon}</Icon>
+    </IconBtn>
   )
+  return tooltip ? (
+    <Tooltip title={tooltip}>
+      {content}
+    </Tooltip>
+  ) : content
 }

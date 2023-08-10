@@ -35,7 +35,7 @@ export const WfpDeduplicationAccessForm = ({
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
   const _access = useFetchers(requestInConstToFixTsInference)
 
-  useEffectFn(_addAccess.getError(), toastHttpError)
+  useEffectFn(_addAccess.errors.size, _ => _ > 1 && toastHttpError)
   useEffectFn(_access.getError(), toastHttpError)
 
   const accessForm = useForm<Form>()
@@ -53,7 +53,7 @@ export const WfpDeduplicationAccessForm = ({
 
   return (
     <Modal
-      loading={_addAccess.getLoading()}
+      loading={_addAccess.loading.size > 0}
       confirmDisabled={!accessForm.formState.isValid}
       onConfirm={(_, close) => accessForm.handleSubmit(_ => {
         submit(_)

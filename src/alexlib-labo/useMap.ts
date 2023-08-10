@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 
-export interface UseMap<K, V> {
+export interface UseMap2<K, V> {
   set: (k: K, v: V) => void
   has: (k: K) => boolean
   values: V[]
@@ -12,7 +12,7 @@ export interface UseMap<K, V> {
   reset: (arr: V[], getKey: (v: V) => K) => void
 }
 
-export const useMap2 = <K, V>(initialValue: Map<K, V> = new Map()): UseMap<K, V> => {
+export const useMap2 = <K, V>(initialValue: Map<K, V> = new Map()): UseMap2<K, V> => {
   const [map, setMap] = useState<Map<K, V>>(initialValue)
 
   return useMemo(() => ({

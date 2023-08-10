@@ -1,11 +1,11 @@
 import {KoboApiForm, KoboQuestionChoice} from '@/core/sdk/server/kobo/KoboApi'
-import {Kobo, KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboAnswerId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Arr, map} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
-import React, {useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {formatDate, formatDateTime} from '@/core/i18n/localization/en'
 import {useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {UseAsync} from '@/alexlib-labo/useAsync'
@@ -16,6 +16,9 @@ import {DatabaseKoboTableExportBtn} from '@/features/Database/KoboTable/Database
 import {useModal} from '@/shared/Modal/useModal'
 import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
+import {AAIconBtn} from '@/shared/IconBtn'
+import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
+import {ignoredColType} from '@/features/Database/Database'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
@@ -23,9 +26,13 @@ export type KoboTranslateChoice = (key: string, choice?: string) => string
 export const DatabaseKoboTableContent = ({
   schema,
   data,
+  canEdit,
   _refresh,
+  _edit,
 }: {
+  canEdit?: boolean
   _refresh: UseAsync<() => Promise<void>>
+  _edit: UseAsync<(answerId: KoboAnswerId) => Promise<void>>
   schema: KoboApiForm,
   data: KoboAnswer<any>[]
 }) => {
@@ -39,6 +46,17 @@ export const DatabaseKoboTableContent = ({
     langIndex,
     questionIndex: _schema.questionIndex,
   }), [schema, langIndex])
+
+  const [openModalAnswer, closeModalAnswer] = useModal((answer: KoboAnswer<any>) => (
+    <DatabaseKoboAnswerView
+      open={true}
+      translateQuestion={translateQuestion}
+      translateChoice={translateChoice}
+      onClose={closeModalAnswer}
+      answer={answer}
+      schema={schema}
+    />
+  ), [schema, langIndex])
 
   const [groupModalOpen, groupModalClose] = useModal(({
     columnId,
@@ -58,7 +76,7 @@ export const DatabaseKoboTableContent = ({
     />
   ), [translateQuestion])
 
-  const columns = useMemo(() => {
+  const schemaColumns = useMemo(() => {
     return getColumnBySchema({
       data: mappedData,
       schema: _schema.sanitizedSchema,
@@ -69,6 +87,21 @@ export const DatabaseKoboTableContent = ({
       onOpenGroupModal: groupModalOpen,
     })
   }, [schema, langIndex])
+
+  const columns = useMemo(() => {
+    const c: SheetColumnProps<any> = {
+      id: 'actions',
+      head: '',
+      render: _ => (
+        <>
+          <TableIconBtn tooltip={m.view} icon="visibility" onClick={() => openModalAnswer(_)}/>
+          <TableIconBtn disabled={!canEdit} tooltip={m.edit} loading={_edit.loading.has(_.id)} onClick={() => _edit.call(_.id)} icon="edit"/>
+        </>
+      )
+    }
+    return [c, ...schemaColumns,]
+  }, [schemaColumns, _edit.loading.values])
+
 
   return (
     <Sheet columns={columns} data={mappedData} header={
@@ -89,11 +122,12 @@ export const DatabaseKoboTableContent = ({
           formGroups={_schema.formGroups}
           form={_schema.sanitizedSchema}
         />
-        <TableIconBtn
-          loading={_refresh.getLoading()}
+        <AAIconBtn
+          loading={_refresh.loading.size > 0}
           color="primary"
           icon="refresh"
-          tooltip={m._koboDatabase.pullData} onClick={_refresh.call}
+          tooltip={m._koboDatabase.pullData}
+          onClick={_refresh.call}
         />
       </>
     }/>
@@ -128,7 +162,7 @@ const getKoboTranslations = ({
         return getKoboLabel(questionIndex[questionName], langIndex)
       } catch (e) {
         console.error('translate', questionName)
-        return 'error ' + questionName
+        return questionName
       }
     },
     translateChoice: (questionName: string, choiceName?: string) => {
@@ -163,7 +197,7 @@ const getColumnBySchema = ({
   translateQuestion: KoboTranslateQuestion
   schema: KoboApiForm
 }): SheetColumnProps<KoboMappedAnswer>[] => {
-  return schema.content.survey.map(q => {
+  return schema.content.survey.filter(_ => !ignoredColType.includes(_.type)).map(q => {
     switch (q.type) {
       case 'image': {
         return {

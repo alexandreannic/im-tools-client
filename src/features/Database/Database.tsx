@@ -22,7 +22,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {Access} from '@/core/sdk/server/access/Access'
 import {Fender, Txt} from 'mui-extension'
 import {DatabaseIndex} from '@/features/Database/DatabaseIndex'
-import {DatabaseKoboEntry} from '@/features/Database/KoboEntry/DatabaseKoboEntry'
+import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 
 export const databaseUrlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -105,7 +105,7 @@ export const Database = () => {
             <Route path={databaseModule.siteMap.home()} element={<DatabaseHome/>}>
               <Route path={databaseModule.siteMap.database.absolute()} element={<DatabaseTableRoute/>}/>
               <Route path={databaseModule.siteMap.access.absolute()} element={<DatabaseAccessRoute/>}/>
-              <Route path={databaseModule.siteMap.entry.absolute()} element={<DatabaseKoboEntry/>}/>
+              <Route path={databaseModule.siteMap.entry.absolute()} element={<DatabaseKoboAnswerView/>}/>
             </Route>
           </Routes>
         </Layout>

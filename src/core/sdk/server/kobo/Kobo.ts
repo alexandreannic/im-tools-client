@@ -4,6 +4,8 @@ import {Enum} from '@alexandreannic/ts-utils'
 
 export type KoboId = string
 
+export type KoboAnswerId = number
+
 export type KoboServer = {
   id: string
   url: string
@@ -62,6 +64,7 @@ export type KoboAnswerMetaData = {
 export type KoboMappedAnswerType = string | string[] | Date | number | undefined | KoboAnswer<any>[]
 
 export type KoboAnswer<T extends Record<string, any> = Record<string, string | undefined>> = (KoboAnswerMetaData & T)
+
 export type KoboMappedAnswer<T extends Record<string, any> = Record<string, KoboMappedAnswerType>> = (KoboAnswerMetaData & T)
 
 export class Kobo {
