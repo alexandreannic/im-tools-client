@@ -255,7 +255,7 @@ export const convertNumberIndexToLetter = (_: number) => {
 
 export namespace Utils {
 
-  export const add = (...args: (string | number)[]) => {
+  export const add = (...args: (string | number | undefined)[]) => {
     return args.reduce<number>((acc, _) => acc + +(_ ?? 0), 0)
   }
 

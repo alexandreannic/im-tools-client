@@ -432,6 +432,10 @@ const tableTheme = (t: Theme) => ({
     borderBottom: `1px solid ${t.palette.divider}`,
     maxWidth: 80,
   },
+  '.table-loading': {
+    padding: 0,
+    height: 1,
+  },
   '.table td, .table th': {
     alignItems: 'left',
     textAlign: 'left',

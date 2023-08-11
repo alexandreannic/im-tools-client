@@ -1,4 +1,4 @@
-import {AAIconBtn} from '@/shared/IconBtn'
+import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
 import React from 'react'
 import {useSession} from '@/core/Session/SessionContext'
 import {Box, Popover} from '@mui/material'
@@ -7,7 +7,7 @@ import {Txt} from 'mui-extension'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {alpha} from '@mui/material/styles'
 
-export const AppHeaderMenu = () => {
+export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
   const session = useSession()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = (!!anchorEl)
@@ -26,7 +26,9 @@ export const AppHeaderMenu = () => {
           },
           background: t => t.palette.primary.main,
           color: t => t.palette.primary.contrastText,
+          ...sx,
         }}
+        {...props}
       />
       <Popover
         anchorEl={anchorEl}

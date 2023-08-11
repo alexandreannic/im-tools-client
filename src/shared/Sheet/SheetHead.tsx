@@ -46,6 +46,7 @@ export const SheetHead = (() => {
           const active = sortedByThis || filters[_.id]
           return (
             <th
+              style={_.styleHead}
               key={_.id}
               title={_.head}
               // onClick={() => onSortBy(_.id)}
@@ -66,7 +67,7 @@ export const SheetHead = (() => {
           const sortedByThis = search.sortBy === c.id ?? false
           const active = sortedByThis || !!filters[c.id]
           return (
-            <td key={c.id} className="td-sub-head">
+            <td key={c.id} style={c.styleHead} className="td-sub-head">
               <SheetHeadContent
                 column={c}
                 active={active}

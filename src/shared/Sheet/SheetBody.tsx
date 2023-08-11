@@ -17,7 +17,6 @@ export const SheetBody = (() => {
     'columns' |
     'getRenderRowKey'
   > & {
-    loading?: boolean
     data: T[]
   }) => {
     return (
@@ -37,8 +36,9 @@ export const SheetBody = (() => {
               const render = _.render(item, i)
               return (
                 <td
-                  title={_.tooltip?.(item) ?? (_.type ? render as any : '')}
+                  title={_.tooltip !== 'none' && (_.tooltip?.(item) ?? (render as any))}
                   key={i}
+                  style={_.style}
                   onClick={_.onClick ? () => _.onClick?.(item) : undefined}
                   className={'td td-clickable ' + fnSwitch(_.align!, {
                     'center': 'td-center',

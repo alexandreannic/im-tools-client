@@ -1,5 +1,5 @@
 import {Badge, Box, BoxProps, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
-import React, {ReactNode, useEffect} from 'react'
+import React, {CSSProperties, ReactNode, useEffect} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {KeyOf, Utils} from '@/utils/utils'
@@ -70,7 +70,9 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   renderExport?: boolean | ((_: T) => string | number | undefined | Date)
   hidden?: boolean
   alwaysVisible?: boolean
-  tooltip?: (_: T) => string
+  tooltip?: 'none' | ((_: T) => string)
+  style?: CSSProperties
+  styleHead?: CSSProperties
   typeIcon?: ReactNode
   options?: () => SheetOptions[]
   className?: string | ((_: T) => string | undefined)
@@ -136,7 +138,7 @@ const _Sheet = <T extends SheetRow>({
   showExportBtn,
   renderEmptyState,
   loading,
-  rowsPerPageOptions,
+  rowsPerPageOptions = [10, 20, 100, 500, 1000],
 }: Pick<SheetTableProps<T>, 'id' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
   const ctx = useSheetContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
@@ -211,6 +213,9 @@ const _Sheet = <T extends SheetRow>({
           </Box>
         )}
       </Box>
+      {loading && (
+        <LinearProgress sx={{marginBottom: '-4px'}}/>
+      )}
       <Box sx={{overflowX: 'auto'}}>
         <Box sx={{
           // width: 'max-coontent'
@@ -231,7 +236,6 @@ const _Sheet = <T extends SheetRow>({
             {map(ctx.data.filteredSortedAndPaginatedData, data => {
               return data.data.length > 0 ? (
                 <SheetBody
-                  loading={loading}
                   data={data.data}
                   select={ctx.select}
                   columns={ctx.columns}
@@ -248,13 +252,7 @@ const _Sheet = <T extends SheetRow>({
                   </td>
                 </tr>
               )
-            }) ?? (loading && (
-              <tr>
-                <td className="td-loading" colSpan={ctx.columns?.length ?? 1}>
-                  <LinearProgress/>
-                </td>
-              </tr>
-            ))}
+            })}
             </tbody>
           </Box>
         </Box>

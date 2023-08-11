@@ -4,7 +4,7 @@ import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
 import {Period} from '../../type'
 import Status = KoboFormProtHH.Status
 
-const invalidDate = '-'
+const invalidDate = ''
 
 export const isDateValid = (d?: Date): boolean => {
   return !!d && d instanceof Date && !isNaN(d.getTime())
@@ -149,6 +149,7 @@ export const en = Object.freeze({
     dashboard: 'Dashboard',
     loading: 'Loading',
     passportSerie: 'Passport serie',
+    price: 'Price',
     passportNumber: 'Passport number',
     taxID: 'Tax ID',
     id: 'ID',
@@ -257,7 +258,7 @@ export const en = Object.freeze({
     monthlyIncomePerHH: 'Monthly income per HH',
     HHsLocation: 'HHs Location',
     idp: 'IDP',
-    selectADatabase: 'Select a database',
+    selectADatabase: 'Select a Kobo form',
     noIdp: 'Non-IDP',
     comparedToPreviousMonth: 'Compared to 30 days ago',
     idps: 'IDPs',
@@ -960,10 +961,20 @@ export const en = Object.freeze({
       showAllQuestions: 'Show unanswered questions',
       pullData: 'Synchronize last Kobo data',
       valueNoLongerInOption: 'This value is no longer in the options list',
-      noAccessToForm: `You don't have access to any database.`
+      noAccessToForm: `You don't have access to any database.`,
+      openKoboForm: 'Open Kobo form',
     },
     _shelter: {
+      contractor1: 'Contractor 1',
+      contractor2: 'Contractor 2',
+      ntaForm: 'NTA form',
+      taForm: 'TA form',
+      taRefOk: 'Correct reference or not filled TA',
+      taRefNok: 'Wrong NTA reference in TA',
+      taFilled: 'TA form filled',
+      taNotFilled: 'TA form NOT filled',
       validationStatus: 'Accepted?',
+      progressStatus: 'Status',
       documentType: 'Doc type',
       owner: 'Tenant',
       ownershipDocumentExist: 'Ownership docs exist',

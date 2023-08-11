@@ -8,6 +8,16 @@ export type KoboQuestionChoice = KoboApiForm['content']['choices'][0]
 
 export interface KoboApiForm {
   name: string
+  deployment__links: {
+    iframe_url: string
+    offline_url: string
+    preview_url: string
+    single_iframe_url: string
+    single_once_iframe_url: string
+    single_once_url: string
+    single_url: string
+    url: string
+  }
   content: {
     choices: {
       $autovalue: string,

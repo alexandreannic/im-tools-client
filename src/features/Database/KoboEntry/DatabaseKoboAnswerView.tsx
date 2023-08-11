@@ -1,12 +1,37 @@
 import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} from '@mui/material'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useI18n} from '@/core/i18n'
-import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import React, {useState} from 'react'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {Txt} from 'mui-extension'
+import {useModal} from '@/shared/Modal/useModal'
+
+export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>({
+  translateQuestion,
+  translateChoice,
+  schema,
+  langIndex,
+}: {
+  langIndex: number
+  translateQuestion: KoboTranslateQuestion
+  translateChoice: KoboTranslateChoice
+  schema: KoboApiForm
+}) => {
+  const [open, close] = useModal((answer: T) => (
+    <DatabaseKoboAnswerView
+      open={true}
+      translateQuestion={translateQuestion}
+      translateChoice={translateChoice}
+      onClose={close}
+      answer={answer}
+      schema={schema}
+    />
+  ), [schema, langIndex])
+  return [open, close]
+}
 
 export const DatabaseKoboAnswerView = ({
   onClose,

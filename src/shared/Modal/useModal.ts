@@ -36,7 +36,7 @@ const isFunctionalComponent = (Component: Function) => {
 /**
  * React hook for showing modal windows
  */
-export const useModal = <T extends object>(
+export const useModal = <T extends Record<any, any> = any>(
   component: ModalType<T>,
   inputs: DependencyList = []
 ): [ShowModal<T>, HideModal] => {

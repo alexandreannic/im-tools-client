@@ -113,7 +113,7 @@ export const AaSelect = <T extends string | number>({
           </MenuItem>
         )}
         {showUndefinedOption && (
-          <MenuItem dense value={''} sx={style.item}/>
+          <MenuItem dense value={null as any} sx={style.item}/>
         )}
         {options.map((option, i) => (
           <MenuItem dense key={option.key ?? option.value} value={option.value} sx={style.item}>

@@ -1,4 +1,4 @@
-import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
+import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
@@ -23,7 +23,9 @@ const ShelterSidebar = () => {
     <Sidebar>
       <SidebarBody>
         <NavLink to={path(shelterModule.siteMap.data)}>
-          <SidebarItem icon="table_chart">{m.data}</SidebarItem>
+          {({isActive, isPending}) => (
+            <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
+          )}
         </NavLink>
       </SidebarBody>
     </Sidebar>
@@ -32,8 +34,8 @@ const ShelterSidebar = () => {
 
 export const Shelter = () => {
   const {session, accesses} = useSession()
-  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.mpca.id), [accesses])
-  if (!session.admin && access.length === 0) {
+  const access = useMemo(() => !!appFeaturesIndex.shelter.showIf?.(session, accesses), [accesses])
+  if (!access) {
     return (
       <NoFeatureAccessPage/>
     )
@@ -45,7 +47,7 @@ export const Shelter = () => {
         header={<AppHeader id="app-header"/>}
       >
         <Routes>
-          <Route index element={<ShelterData/>}/>
+          <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
           <Route path={shelterModule.siteMap.data} element={<ShelterData/>}/>
         </Routes>
       </Layout>

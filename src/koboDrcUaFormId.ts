@@ -3,18 +3,18 @@
 export const kobo = {
   drcUa: {
     server: {
-      prod: '4820279f-6c3d-47ba-8afe-47f86b16ab5d',
+      prod: '4820279f-6c3d-47ba-8afe-47f86b16ab5d' as const,
     },
     form: {
-      shelterNTA: 'aL8oHMzJJ9soPepvK6YU9E',
-      shelterTA: 'aTP5nwZjpyR7oy7bdMZktC',
-      mealVisitMonitoring: 'a8GkjWBQDfxVADGHWJDrUw',
-      protectionHh2: 'aQDZ2xhPUnNd43XzuQucVR',
-      protectionHh: 'aFU8x6tHksveU2c3hK7RUG',
-      fcrmMpca: 'a4Sx3PrFMDAMZEGsyzgJJg',
-      fcrmMpcaMyko: 'a8WAWB9Yxu2jkgk4Ei8GTk',
-      fcrmMpcaNAA: 'aBGVXW2N26DaLehmKneuyB',
-      BNRE: 'aKgX4MNs6gCemDQKPeXxY8',
+      shelterNTA: 'aL8oHMzJJ9soPepvK6YU9E' as const,
+      shelterTA: 'aTP5nwZjpyR7oy7bdMZktC' as const,
+      mealVisitMonitoring: 'a8GkjWBQDfxVADGHWJDrUw' as const,
+      protectionHh2: 'aQDZ2xhPUnNd43XzuQucVR' as const,
+      protectionHh: 'aFU8x6tHksveU2c3hK7RUG' as const,
+      fcrmMpca: 'a4Sx3PrFMDAMZEGsyzgJJg' as const,
+      fcrmMpcaMyko: 'a8WAWB9Yxu2jkgk4Ei8GTk' as const,
+      fcrmMpcaNAA: 'aBGVXW2N26DaLehmKneuyB' as const,
+      BNRE: 'aKgX4MNs6gCemDQKPeXxY8' as const,
     }
   }
 }

@@ -6,6 +6,8 @@ import {IconBtn} from 'mui-extension'
 export interface AAIconBtnProps extends Omit<IconBtnProps, 'children'> {
   tooltip?: string
   children: string
+  href?: string
+  target?: '_blank'
 }
 
 export const AAIconBtn = ({
@@ -16,7 +18,7 @@ export const AAIconBtn = ({
 }: AAIconBtnProps) => {
   const content = (
     <IconBtn {...props} size={size}>
-      <Icon fontSize={size}>{children}</Icon>
+      <Icon fontSize={size === 'small' ? 'medium' : size}>{children}</Icon>
     </IconBtn>
   )
   return tooltip ? (

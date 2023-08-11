@@ -5,7 +5,7 @@ import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Arr, map} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {formatDate, formatDateTime} from '@/core/i18n/localization/en'
 import {useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {UseAsync} from '@/alexlib-labo/useAsync'
@@ -17,7 +17,7 @@ import {useModal} from '@/shared/Modal/useModal'
 import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
+import {DatabaseKoboAnswerView, useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {ignoredColType} from '@/features/Database/Database'
 
 export type KoboTranslateQuestion = (key: string) => string
@@ -47,16 +47,12 @@ export const DatabaseKoboTableContent = ({
     questionIndex: _schema.questionIndex,
   }), [schema, langIndex])
 
-  const [openModalAnswer, closeModalAnswer] = useModal((answer: KoboAnswer<any>) => (
-    <DatabaseKoboAnswerView
-      open={true}
-      translateQuestion={translateQuestion}
-      translateChoice={translateChoice}
-      onClose={closeModalAnswer}
-      answer={answer}
-      schema={schema}
-    />
-  ), [schema, langIndex])
+  const [openModalAnswer] = useDatabaseKoboAnswerView({
+    translateQuestion: translateQuestion,
+    translateChoice: translateChoice,
+    schema: schema,
+    langIndex: langIndex,
+  })
 
   const [groupModalOpen, groupModalClose] = useModal(({
     columnId,
@@ -92,6 +88,7 @@ export const DatabaseKoboTableContent = ({
     const c: SheetColumnProps<any> = {
       id: 'actions',
       head: '',
+      tooltip: 'none',
       render: _ => (
         <>
           <TableIconBtn tooltip={m.view} children="visibility" onClick={() => openModalAnswer(_)}/>
@@ -124,10 +121,15 @@ export const DatabaseKoboTableContent = ({
         />
         <AAIconBtn
           loading={_refresh.loading.size > 0}
-          color="primary"
-          children="refresh"
+          children="cloud_sync"
           tooltip={m._koboDatabase.pullData}
           onClick={_refresh.call}
+        />
+        <AAIconBtn
+          href={schema.deployment__links.url}
+          target="_blank"
+          children="open_in_new"
+          tooltip={m._koboDatabase.openKoboForm}
         />
       </>
     }/>
