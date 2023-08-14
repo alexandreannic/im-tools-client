@@ -27,7 +27,7 @@ export const AaInput = React.forwardRef(({
     <FormControl size="small" sx={{width: '100%', ...sx}} error={error}>
       <InputLabel {...InputLabelProps} htmlFor={id}>{label}</InputLabel>
       <OutlinedInput error={error} label={label} inputRef={inputElement} id={id} {...props} ref={ref} size="small" margin="dense"/>
-      <FormHelperText>{helperText ?? ''}</FormHelperText>
+      <FormHelperText>{helperText}&nbsp;</FormHelperText>
     </FormControl>
   )
   // return <TextField {...props} size="small" variant="outlined" margin="dense" inputRef={ref} />

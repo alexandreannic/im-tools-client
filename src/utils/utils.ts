@@ -1,5 +1,6 @@
 import {Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
+import * as https from 'https'
 
 export type KeyOf<T> = Extract<keyof T, string>
 
@@ -255,6 +256,14 @@ export const convertNumberIndexToLetter = (_: number) => {
 
 export namespace Utils {
 
+  export const pattern = {
+    url: 'http',
+    // url: 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
+  }
+
+  export const regexp = mapObjectValue(pattern, _ => new RegExp(_))
+
+
   export const add = (...args: (string | number | undefined)[]) => {
     return args.reduce<number>((acc, _) => acc + +(_ ?? 0), 0)
   }
@@ -279,7 +288,10 @@ export namespace Utils {
     (_?: string): string | undefined
   }
 
-  export const slugify: Slugify = (_) => _?.replaceAll(/\s/g, '_').replaceAll(/[^.a-zA-Z0-9-_]/g, '') as any
+  export const slugify: Slugify = (_) => _?.replaceAll(/\s/g, '_')
+    .replaceAll(/[éèê]/g, 'e')
+    .replaceAll(/[àâ]/g, 'a')
+    .replaceAll(/[^a-zA-Z0-9_]/g, '') as any
 
   export const dateToPeriod = (date: Date) => {
     const start = startOfMonth(date)

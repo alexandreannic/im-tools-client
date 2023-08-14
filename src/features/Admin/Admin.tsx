@@ -1,15 +1,17 @@
-import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
+import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
 import React from 'react'
 import {AdminUsers} from '@/features/Admin/AdminUsers'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import {Layout} from '@/shared/Layout'
+import {AdminProxy} from '@/features/Admin/AdminProxy'
 
 export const adminModule = {
   basePath: '/admin',
   siteMap: {
-    users: '/',
+    users: '/users',
+    proxy: '/proxy',
   }
 }
 
@@ -22,6 +24,11 @@ const AdminSidebar = () => {
         <NavLink to={path(adminModule.siteMap.users)}>
           {({isActive}) =>
             <SidebarItem icon="group" active={isActive}>{m.users}</SidebarItem>
+          }
+        </NavLink>
+        <NavLink to={path(adminModule.siteMap.proxy)}>
+          {({isActive}) =>
+            <SidebarItem icon="settings_input_antenna" active={isActive}>{m.proxy}</SidebarItem>
           }
         </NavLink>
       </SidebarBody>
@@ -37,7 +44,9 @@ export const Admin = () => {
         header={<AppHeader id="app-header"/>}
       >
         <Routes>
-          <Route index element={<AdminUsers/>}/>
+          <Route index element={<Navigate to={adminModule.siteMap.users}/>}/>
+          <Route path={adminModule.siteMap.users} element={<AdminUsers/>}/>
+          <Route path={adminModule.siteMap.proxy} element={<AdminProxy/>}/>
         </Routes>
       </Layout>
     </Router>

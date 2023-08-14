@@ -11,14 +11,14 @@ import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {WfpDeduplicationSdk} from '@/core/sdk/server/wfpDeduplication/WfpDeduplicationSdk'
 import {AccessSdk} from '@/core/sdk/server/access/AccessSdk'
 import {UserSdk} from '@/core/sdk/server/user/UserSdk'
+import {ProxySdk} from '@/core/sdk/server/proxy/ProxySdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
-
   }
 
-  readonly proxy = <T = any>(method: Method, url: string, options?: RequestOption) => {
-    return this.client.post<T>(`/proxy`, {
+  readonly proxyRequest = <T = any>(method: Method, url: string, options?: RequestOption) => {
+    return this.client.post<T>(`/proxy-request`, {
       responseType: 'blob',
       body: {
         method,
@@ -42,4 +42,5 @@ export class ApiSdk {
   readonly wfpDeduplication = new WfpDeduplicationSdk(this.client)
   readonly access = new AccessSdk(this.client)
   readonly user = new UserSdk(this.client)
+  readonly proxy = new ProxySdk(this.client)
 }
