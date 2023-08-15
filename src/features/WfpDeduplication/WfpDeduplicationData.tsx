@@ -27,6 +27,7 @@ export const WfpDeduplicationData = () => {
     <Page width="full">
       <Panel>
         <Sheet
+          showExportBtn
           title="wfp-deduplication"
           loading={_search.loading}
           columns={[

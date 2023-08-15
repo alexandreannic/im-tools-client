@@ -995,7 +995,6 @@ export const en = Object.freeze({
       scoreSocio: 'Socio',
       scoreDisplacement: 'Displ.',
       progress: {
-        None: '',
         ContractorVisitDone: 'Contractor visit done',
         WorkEstimatesReceived: 'Work estimates received',
         PurchaseRequestDone: 'Purchase Request Done',

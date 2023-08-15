@@ -99,8 +99,8 @@ export const useSheetModal = <T extends SheetRow>({
   const _statsPopoverOpen = useCallback((a: SheetColumnProps<T>, e: any) => statsPopoverOpen({
     type: a.type!,
     columnId: a.id,
-    renderValue: a.renderValue,
-    title: a.head  ?? a.id,
+    renderValue: a.renderValue ?? a.render as any,
+    title: a.head ?? a.id,
     anchorEl: e.currentTarget,
     options: getOption(a.id, a.options),
   }), [])

@@ -46,7 +46,13 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: 'brown',
     path: '/shelter',
     showIf: (u, accesses) => {
-      return u?.email === appConfig.contact
+      return u && ([
+        'xavier.desplans@drc.ngo',
+        'enrico.dainese@drc.ngo',
+        'paul.thibault@drc.ngo',
+        'lorenza.esquinca@drc.ngo',
+      ].includes(u.email) || u.admin)
+      // return u?.email === appConfig.contact
       // return u?.admin || accesses && !!accesses
       //   .filter(Access.filterByFeature(AppFeatureId.kobo_database))
       //   .find(_ => _.params?.koboFormId === kobo.drcUa.form.shelterNTA)

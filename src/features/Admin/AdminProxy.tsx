@@ -44,7 +44,7 @@ export const AdminProxy = () => {
   }
 
   return (
-    <Page>
+    <Page width="lg">
       <Panel>
         <Sheet
           header={
@@ -109,15 +109,15 @@ export const AdminProxy = () => {
             },
             {
               type: 'string',
-              id: 'slug',
-              head: m.slug,
+              id: 'origin',
+              head: m.origin,
               renderValue: _ => _.slug,
               render: _ => <Txt link><a target="_blank" href={Proxy.makeUrl(_)}>{Proxy.makeUrl(_)}</a></Txt>,
             },
             {
               type: 'string',
-              id: 'url',
-              head: m.url,
+              id: 'destination',
+              head: m.destination,
               renderValue: _ => _.url,
               render: _ => <Txt link><a target="_blank" href={_.url}>{_.url}</a></Txt>,
             },
@@ -131,6 +131,7 @@ export const AdminProxy = () => {
             {
               type: 'date',
               id: 'expireAt',
+              width: 0,
               head: m.expireAt,
               renderValue: _ => _.expireAt,
               render: _ => _.expireAt && formatDate(_.expireAt),
@@ -148,6 +149,7 @@ export const AdminProxy = () => {
             {
               id: 'actions',
               head: '',
+              width: 0,
               align: 'right',
               render: _ => (
                 <TableIconBtn onClick={() => _search.remove(_.id)} loading={_search.removing(_.id)}>delete</TableIconBtn>

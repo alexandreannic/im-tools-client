@@ -1,7 +1,6 @@
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 
 export enum ShelterProgress {
-  None = 'None',
   ContractorVisitDone = 'ContractorVisitDone',
   WorkEstimatesReceived = 'WorkEstimatesReceived',
   PurchaseRequestDone = 'PurchaseRequestDone',

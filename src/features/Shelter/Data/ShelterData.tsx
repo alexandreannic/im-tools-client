@@ -222,6 +222,7 @@ export const _ShelterData = ({
         form: kobo.drcUa.form.shelterTA,
         tag: 'progress',
         enumerator: ShelterProgress,
+        translate: m._shelter.progress,
       }),
       contractor1: buildTagEnumColumn({
         width: 148,
@@ -420,6 +421,23 @@ export const _ShelterData = ({
             head: m.submissionTime,
             renderValue: _ => _.ta?.submissionTime,
             render: _ => formatDate(_.ta?.submissionTime),
+          },
+          {
+            type: 'number',
+            id: 'roof',
+            head: '',
+            render: _ => _.ta ? Utils.add(_.ta.roof_shiffer_m, _.ta.roof_metal_sheets_m, _.ta.roof_onduline_sheets_m, _.ta.bitumen_paint_m) : undefined,
+          },
+          {
+            type: 'number',
+            id: 'windows',
+            head: '',
+            render: _ => _.ta ? Utils.add(
+              _.ta.singleshutter_windowdoubleglazed_pc,
+              _.ta.singleshutter_window_tripleglazed_pc,
+              _.ta.doubleshutter_window_tripleglazed_pc,
+              _.ta.glass_replacement_tripleglazed_pc
+            ) : undefined,
           },
           column.contractor1,
           column.contractor2,

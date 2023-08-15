@@ -58,6 +58,9 @@ export enum DrcJob {
   'Gender Based Violence Specialist' = 'Gender Based Violence Specialist',
   'Shelter Officer' = 'Shelter Officer',
   'Shelter and Settlement Team Leader' = 'Shelter and Settlement Team Leader',
+  'Cash and Voucher Assistance Manager' = 'Cash and Voucher Assistance Manager',
+  'Economic Recovery Officer' = 'Economic Recovery Officer',
+  'Accountant' = 'Accountant',
 }
 
 export enum DrcOffice {
