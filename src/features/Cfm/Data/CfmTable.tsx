@@ -137,9 +137,6 @@ export const CfmTable = ({}: any) => {
                 tooltip={m._koboDatabase.pullData}
                 onClick={_refresh.call}
               />
-              <AaBtn sx={{marginLeft: 'auto'}} icon="open_in_new" href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/EaaeqVp3BrpEtgDgRqXi7qABsfhNgrJGOo6JkiRGXrV33g?e=XVcMi9">
-                {m._cfm.referralMatrix}
-              </AaBtn>
             </>
           }
           data={ctx.data.entity}

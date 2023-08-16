@@ -20,6 +20,7 @@ export interface SidebarItemProps extends ButtonBaseProps {
   icon?: string | ReactNode
   large?: boolean
   href?: string
+  target?: string
   active?: boolean
   to?: string
 }
@@ -55,6 +56,9 @@ export const SidebarItem = ({
         my: 1 / 2,
         borderTopRightRadius: 42,
         borderBottomRightRadius: 42,
+        '&:hover': props.onClick ? {
+          background: t => alpha(t.palette.primary.main, 0.06),
+        } : {},
         ...(large && {
           minHeight: 38,
         }),

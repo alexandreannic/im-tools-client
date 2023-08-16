@@ -983,6 +983,10 @@ export const en = Object.freeze({
       contactAgreement: 'Contact agreement',
       existingDrcBeneficiary: 'Existing DRC beneficiary',
       reporterDetails: 'Reporter information',
+      formLong: {
+        Internal: 'Internal Form',
+        External: 'External Form',
+      },
       form: {
         Internal: 'Internal',
         External: 'External',

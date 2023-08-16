@@ -19,6 +19,7 @@ import {KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Box, Divider} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 export const cfmModule = {
   basePath: '/cfm',
@@ -82,6 +83,31 @@ const FcmSidebar = () => {
             <SidebarItem icon="person_add" active={isActive}>{m.access}</SidebarItem>
           )}
         </NavLink>
+        <SidebarHr/>
+        <SidebarItem
+          href={ctx.schemaExternal.sanitizedSchema.deployment__links.url}
+          target="_blank"
+          icon="open_in_new"
+          onClick={() => {}}
+        >
+          {m._cfm.formLong.External}
+        </SidebarItem>
+        <SidebarItem
+          href={ctx.schemaInternal.sanitizedSchema.deployment__links.url}
+          target="_blank"
+          onClick={() => {}}
+          icon="open_in_new"
+        >
+          {m._cfm.formLong.Internal}
+        </SidebarItem>
+        <SidebarItem
+          onClick={() => {}}
+          href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/EaaeqVp3BrpEtgDgRqXi7qABsfhNgrJGOo6JkiRGXrV33g?e=XVcMi9"
+          target="_blank"
+          icon="open_in_new"
+        >
+          {m._cfm.referralMatrix}
+        </SidebarItem>
       </SidebarBody>
     </Sidebar>
   )

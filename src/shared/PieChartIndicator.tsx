@@ -25,7 +25,7 @@ export const Donut = ({
     <AaPieChart
       hideTooltip={true}
       outerRadius={size / 2}
-      innerRadius={(size / 2) - 10}
+      innerRadius={(size / 2) - 9}
       height={size}
       width={size}
       hideLabel
@@ -92,7 +92,7 @@ export const PieChartIndicator = ({
         alignItems: 'center',
         ...sx,
       }}>
-        <Donut percent={value / base} size={dense ? 50 : 55}/>
+        <Donut percent={value / base} size={dense ? 46 : 55}/>
         <Box sx={{ml: dense ? .75 : 1.5}}>
           <SlidePanelTitle icon={titleIcon} noWrap={noWrap}>
             {title}
