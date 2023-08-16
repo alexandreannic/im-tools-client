@@ -981,10 +981,12 @@ export const en = Object.freeze({
       feedback: 'Feedback',
       feedbackType: 'Category',
       contactAgreement: 'Contact agreement',
-      existingDrcBeneficiary  : 'Existing DRC beneficiary',
+      existingDrcBeneficiary: 'Existing DRC beneficiary',
       reporterDetails: 'Reporter information',
-      internal: 'Internal',
-      external: 'External',
+      form: {
+        Internal: 'Internal',
+        External: 'External',
+      },
       status: {
         Close: 'Close',
         Open: 'Open',

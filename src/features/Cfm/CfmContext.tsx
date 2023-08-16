@@ -12,7 +12,7 @@ import {KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
 import {MealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternal'
 
-enum CfmDataSource {
+export enum CfmDataSource {
   Internal = 'Internal',
   External = 'External',
 }
@@ -20,7 +20,7 @@ enum CfmDataSource {
 export type CfmData = {
   formId: KoboId
   tags?: KoboMealCfmTag
-  source: 'internal' | 'external'
+  form: CfmDataSource
   internal?: Pick<MealCfmInternal, 'feedback' | 'existing_beneficiary' | 'feedback_type' | 'project_code'>
   external?: Pick<MealCfmExternal, 'prot_support' | 'thanks_feedback' | 'complaint' | 'consent' | 'feedback_type'>
 } & Pick<KoboAnswer<MealCfmInternal>,
@@ -98,7 +98,7 @@ export const CfmProvider = ({
     external.data.forEach(_ => {
       res.push({
         formId: kobo.drcUa.form.cfmExternal,
-        source: 'external',
+        form: CfmDataSource.External,
         external: _,
         ..._,
       })
@@ -106,7 +106,7 @@ export const CfmProvider = ({
     internal.data.forEach(_ => {
       res.push({
         formId: kobo.drcUa.form.cfmInternal,
-        source: 'internal',
+        form: CfmDataSource.Internal,
         internal: _,
         ..._,
       })

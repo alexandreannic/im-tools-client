@@ -13,23 +13,15 @@ import {Utils} from '@/utils/utils'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect} from '@/shared/Select/Select'
 import {DrcOffice} from '@/core/drcJobTitle'
-import {CfmData, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, CfmDataSource, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
 import {cfmModule} from '@/features/Cfm/CfmModule'
 import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
-import {Txt} from 'mui-extension'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo} from '@/koboDrcUaFormId'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {KoboId} from '@/core/sdk/server/kobo/Kobo'
-
-
-// & Pick<MealCfmExternal,
-// 'feedback_type'
-// >
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -152,7 +144,7 @@ export const CfmTable = ({}: any) => {
           }
           data={ctx.data.entity}
           loading={ctx.data.loading}
-          getRenderRowKey={_ => _.source + _.id}
+          getRenderRowKey={_ => _.form + _.id}
           columns={[
             column.status,
             {
@@ -175,8 +167,8 @@ export const CfmTable = ({}: any) => {
               head: m.form,
               id: 'form',
               width: 80,
-              options: () => [{value: 'internal', label: m._cfm.internal}, {value: 'external', label: m._cfm.external}],
-              render: _ => m._cfm[_.source]
+              options: () => Enum.keys(CfmDataSource).map(_ => ({value: _, label: m._cfm.form[_]})),
+              render: _ => m._cfm.form[_.form]
             },
             column.office,
             {
@@ -218,14 +210,6 @@ export const CfmTable = ({}: any) => {
                 : ctx.translateExternal.translateChoice('feedback_type', _.external?.feedback_type),
               renderValue: _ => _.external?.feedback_type ?? _.internal?.feedback_type,
             },
-            // {
-            //   type: 'select_one',
-            //   head: m._cfm.feedbackType,
-            //   options: () => Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, label: v})),
-            //   id: 'internal_feedback_type',
-            //   render: _ => ctx.translateInternal.translateChoice('feedback_type', _.internal?.feedback_type),
-            //   renderValue: _ => _.internal?.feedback_type,
-            // },
             {
               type: 'string',
               head: m._cfm.feedback,
