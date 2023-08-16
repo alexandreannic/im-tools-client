@@ -206,7 +206,6 @@ const getColumnBySchema = ({
           type: 'string',
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => row[q.name] as string,
           render: row => <KoboAttachedImg attachments={row.attachments} fileName={row[q.name] as string}/>
         }
       }
@@ -217,7 +216,6 @@ const getColumnBySchema = ({
           id: q.name,
           head: translateQuestion(q.name),
           render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>,
-          renderValue: row => row[q.name] as string,
           options: () => Arr(data).map(_ => _[q.name] as string | undefined).distinct(_ => _).map(_ => ({label: _, value: _})),
         }
       }
@@ -227,7 +225,6 @@ const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="attach_file" tooltip="select_one_from_file"/>,
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => row[q.name] as string,
           render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
         }
       }
@@ -237,7 +234,6 @@ const getColumnBySchema = ({
           type: 'string',
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => row[q.name] as string,
           render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
         }
       }
@@ -247,7 +243,6 @@ const getColumnBySchema = ({
           type: 'number',
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => row[q.name] as number,
           render: row => <span title={row[q.name] as string}>{row[q.name] as number}</span>
         }
       }
@@ -257,7 +252,6 @@ const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="info" tooltip="note"/>,
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => row[q.name] as string,
           render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
         }
       }
@@ -269,7 +263,6 @@ const getColumnBySchema = ({
           type: 'date',
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: _ => _[q.name] as Date,
           render: row => map(row[q.name] as Date | undefined, _ => (
             <span title={formatDateTime(_)}>{formatDate(_)}</span>
           ))
@@ -281,7 +274,6 @@ const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="repeat" tooltip="begin_repeat"/>,
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => map(row[q.name] as KoboAnswer[] | undefined, _ => _.length),
           render: row => map(row[q.name] as KoboAnswer[] | undefined, group =>
             <AaBtn onClick={(event) => onOpenGroupModal({columnId: q.name, group, event})}>{group.length}</AaBtn>
           ) ?? <></>
@@ -293,7 +285,6 @@ const getColumnBySchema = ({
           id: q.name,
           head: translateQuestion(q.name),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
-          renderValue: row => row[q.name] as string,
           render: row => map(row[q.name] as string | undefined, v => {
             const render = translateChoice(q.name, v)
             if (render)
@@ -313,7 +304,6 @@ const getColumnBySchema = ({
           id: q.name,
           head: translateQuestion(q.name),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
-          renderValue: row => row[q.name] as string[],
           render: row => map(row[q.name] as string[] | undefined, v => {
             try {
               const render = v.map(_ => translateChoice(q.name, _,)).join(' | ')
@@ -331,7 +321,6 @@ const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="location_on" tooltip="geopoint"/>,
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => row[q.name] as string,
           render: row => map(row[q.name], (x: any) => {
             const render = JSON.stringify(x)
             return <span title={render}>{render}</span>
@@ -343,7 +332,6 @@ const getColumnBySchema = ({
           type: 'string',
           id: q.name,
           head: translateQuestion(q.name),
-          renderValue: row => row[q.name] as string,
           render: row => {
             const render = JSON.stringify(row[q.name])
             return <span title={render}>{render}</span>

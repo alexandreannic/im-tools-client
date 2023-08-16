@@ -47,7 +47,6 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
 
 interface SheetColumnPropsSelectOne<T extends SheetRow> extends SheetColumnPropsBase<T> {
   type?: Exclude<SheetPropertyType, 'date'>
-  // renderValue?: (_: T) => string | number | undefined | Date | string[]
   renderValue?: (_: T) => string | string[] | Date | number | undefined
 }
 

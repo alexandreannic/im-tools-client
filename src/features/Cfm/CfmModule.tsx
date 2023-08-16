@@ -19,7 +19,6 @@ import {KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Box, Divider} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
-import {AAIconBtn} from '@/shared/IconBtn'
 
 export const cfmModule = {
   basePath: '/cfm',

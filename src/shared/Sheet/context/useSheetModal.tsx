@@ -57,7 +57,7 @@ export const useSheetModal = <T extends SheetRow>({
         return <NumberChoicesPopover
           anchorEl={c.anchorEl}
           question={c.columnId}
-          mapValues={c.renderValue}
+          mapValues={getValue}
           data={data.filteredData ?? []}
           onClose={statsPopoverClose}
         />
@@ -99,7 +99,7 @@ export const useSheetModal = <T extends SheetRow>({
   const _statsPopoverOpen = useCallback((a: SheetColumnProps<T>, e: any) => statsPopoverOpen({
     type: a.type!,
     columnId: a.id,
-    renderValue: a.renderValue ?? a.render as any,
+    renderValue: a.renderValue,
     title: a.head ?? a.id,
     anchorEl: e.currentTarget,
     options: getOption(a.id, a.options),
