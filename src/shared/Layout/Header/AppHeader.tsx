@@ -61,7 +61,7 @@ export const AppHeader = ({children, sx, id = 'aa-header-id', ...props}: Props) 
             <Icon>menu</Icon>
           </IconBtn>
         )}
-        <Txt sx={{ml: 1}} size="big" bold>{title}</Txt>
+        <Txt sx={{ml: 1}} size="title" bold>{title}</Txt>
         {children}
       </div>
       <Link href="/">

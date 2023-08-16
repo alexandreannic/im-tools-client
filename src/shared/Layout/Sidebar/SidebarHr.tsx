@@ -9,6 +9,7 @@ export const SidebarHr = ({sx, margin, ...props}: SidebarHrProps) => {
   return (
     <Box
       sx={{
+        maxHeight: '1px',
         minHeight: '1px',
         height: '1px',
         background: t => t.palette.divider,

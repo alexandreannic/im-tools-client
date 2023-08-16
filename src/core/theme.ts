@@ -159,6 +159,9 @@ export const muiTheme = (dark?: boolean): Theme => {
             WebkitFontFeatureSettings: '"liga"',
             WebkitFontSmoothing: 'antialiased',
           },
+          // '.Mui-error': {
+          //   color: baseTheme.palette.error.main + ' !important',
+          // },
           '.recharts-surface': {
             overflow: 'visible',
           },
@@ -385,6 +388,9 @@ const tableTheme = (t: Theme) => ({
   },
   '.th': {
     width: 80,
+  },
+  '.table .th.th-width-fit-content': {
+    width: '1%',
   },
   '.th-resize': {
     display: 'flex',

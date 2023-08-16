@@ -17,7 +17,7 @@ import {useModal} from '@/shared/Modal/useModal'
 import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {DatabaseKoboAnswerView, useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
+import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {ignoredColType} from '@/features/Database/Database'
 
 export type KoboTranslateQuestion = (key: string) => string

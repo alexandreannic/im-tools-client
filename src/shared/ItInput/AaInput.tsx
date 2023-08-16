@@ -14,7 +14,7 @@ export const AaInput = React.forwardRef(({
   error,
   InputLabelProps,
   id,
-  helperText,
+  helperText = '',
   ...props
 }: AaInputProps, ref) => {
   // const id = useMemo(() => Math.random() + '', [])
@@ -27,7 +27,9 @@ export const AaInput = React.forwardRef(({
     <FormControl size="small" sx={{width: '100%', ...sx}} error={error}>
       <InputLabel {...InputLabelProps} htmlFor={id}>{label}</InputLabel>
       <OutlinedInput error={error} label={label} inputRef={inputElement} id={id} {...props} ref={ref} size="small" margin="dense"/>
-      <FormHelperText>{helperText}&nbsp;</FormHelperText>
+      {helperText !== null && (
+        <FormHelperText>{helperText}&nbsp;</FormHelperText>
+      )}
     </FormControl>
   )
   // return <TextField {...props} size="small" variant="outlined" margin="dense" inputRef={ref} />

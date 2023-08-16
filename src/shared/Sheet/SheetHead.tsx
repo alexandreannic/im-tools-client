@@ -50,7 +50,7 @@ export const SheetHead = (() => {
               key={_.id}
               title={_.head}
               // onClick={() => onSortBy(_.id)}
-              className={'td th' + (active ? ' th-active' : '') + (fnSwitch(_.align!, {
+              className={'td th ' + (_.width ? ' th-width-fit-content ' : '') + (active ? ' th-active ' : '') + (fnSwitch(_.align!, {
                 'center': ' td-center',
                 'right': ' td-right'
               }, _ => ''))}

@@ -206,6 +206,7 @@ export const uppercaseHandlingAcronyms = (text: string): string => {
     'PwD',
     'PwDs',
     'HHs',
+    'CoC',
     'w/',
     'PoC',
     'PoCs',
@@ -257,8 +258,10 @@ export const convertNumberIndexToLetter = (_: number) => {
 export namespace Utils {
 
   export const pattern = {
-    url: 'http',
-    // url: 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
+    email: '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
+    drcEmail: '^[a-zA-Z0-9._-]+@drc\.ngo$',
+    // url: 'http',
+    url: 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
   }
 
   export const regexp = mapObjectValue(pattern, _ => new RegExp(_))

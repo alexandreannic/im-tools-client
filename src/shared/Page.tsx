@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
 import {Box, BoxProps, LinearProgress} from '@mui/material'
-import {Page as MxPage} from 'mui-extension'
+import {Page as MxPage, Txt} from 'mui-extension'
 
 export interface PageProps extends BoxProps {
   width?: number | 'xs' | 'md' | 'lg' | 'full'
@@ -29,10 +29,13 @@ export const PageHeader = ({
     </Box>
   )
 }
-export const PageTitle = ({action, children, sx, ...props}: BoxProps & {action?: ReactNode}) => {
+export const PageTitle = ({action, children, subTitle, sx, ...props}: BoxProps & {subTitle?: string, action?: ReactNode}) => {
   return (
-    <Box component="h2" sx={{display: 'flex', mt: 0, alignItems: 'center', ...sx}}>
-      {children}
+    <Box sx={{display: 'flex', mt: 0, mb: 2, alignItems: 'center', ...sx}}>
+      <Box>
+        <Box component="h2" sx={{m: 0, p: 0}}>{children}</Box>
+        <Txt size="big" color="hint">{subTitle}</Txt>
+      </Box>
       {action && (
         <Box sx={{ml: 'auto'}}>{action}</Box>
       )}

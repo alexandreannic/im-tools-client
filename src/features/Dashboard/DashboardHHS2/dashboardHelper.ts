@@ -4,7 +4,7 @@ import {Arr, mapFor} from '@alexandreannic/ts-utils'
 import {Donor} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {makeKoboBarChartComponent} from '@/features/Dashboard/shared/KoboBarChart'
 import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
-import {ProtHhsTags} from '@/core/sdk/server/kobo/KoboProtHhs'
+import {ProtHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
 
 export interface ProtHHS2Person {
   age: ProtHHS_2_1['hh_age_1']

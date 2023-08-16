@@ -22,10 +22,10 @@ export const SessionLoginForm = ({
   const {toastError} = useAaToast()
   const msal = useMsal()
 
-  const _login = useFetchers(() => msal.instance.loginPopup({
+  const _login = useAsync(() => msal.instance.loginPopup({
     scopes: ['User.Read']
   }))
-  useEffectFn(_login.error, _ => _ && toastError(m.youDontHaveAccess))
+  // useEffectFn(_login.error, _ => _ && toastError(m.youDontHaveAccess))
 
   const _saveSession = useAsync(mapPromise({
     promise: api.session.login,

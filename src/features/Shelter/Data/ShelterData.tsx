@@ -4,14 +4,14 @@ import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
-import React, {CSSProperties, ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
+import React, {ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {kobo} from '@/koboDrcUaFormId'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
-import {ShelterContractor, ShelterNtaTags, ShelterProgress, ShelterTagValidation, ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
+import {ShelterContractor, ShelterNtaTags, ShelterProgress, ShelterTagValidation, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {AaSelect} from '@/shared/Select/Select'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
@@ -25,7 +25,6 @@ import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Utils} from '@/utils/utils'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {Txt} from 'mui-extension'
-import {render} from 'react-dom'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 }
@@ -35,11 +34,6 @@ interface Row {
   nta?: KoboAnswer<Shelter_NTA, ShelterNtaTags>
   id: KoboAnswerId
 }
-
-
-const shelterProgressKeys = Enum.keys(ShelterProgress)
-const shelterTaTagsKeys = Enum.keys(ShelterTagValidation)
-const shelterContractorTagsKeys = Enum.keys(ShelterContractor)
 
 export const ShelterData = () => {
   const {api} = useAppSettings()
@@ -80,7 +74,7 @@ export const _ShelterData = ({
   const {m, formatDate, formatLargeNumber} = useI18n()
   const _schemaNta = useKoboSchema({schema: schemas.nta})
   const _schemaTa = useKoboSchema({schema: schemas.ta})
-  const _update = useAsync(api.kobo.answer.update)
+  const _update = useAsync(api.kobo.answer.updateTag)
   const [langIndex, setLangIndex] = useState<number>(0)
   const {toastHttpError, toastLoading} = useAaToast()
 
@@ -181,7 +175,6 @@ export const _ShelterData = ({
         <AaSelect
           showUndefinedOption
           defaultValue={(rowFormKey.tags as any)?.[tag] ?? ''}
-          sx={{border: 'none'}}
           onChange={(tagChange) => {
             _update.call({
               formId: form,
@@ -308,8 +301,8 @@ export const _ShelterData = ({
           },
           {
             id: 'raion',
-            type: 'select_one',
-            options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+            type: 'string',
+            // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
             head: m.raion,
             render: _ => _translateNta.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
             renderValue: _ => _.nta?.ben_det_raion,

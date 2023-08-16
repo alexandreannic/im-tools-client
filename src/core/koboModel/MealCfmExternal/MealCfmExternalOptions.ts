@@ -1,4 +1,18 @@
-export const Shelter_TAOptions = {
+export const MealCfmExternalOptions = {
+prot_support: {
+	'yes': `Yes`,
+	'no': `No`
+},
+feedback_type: {
+	'thanks': `I would like to express thanks`,
+	'feedback': `I would like to provide feedback`,
+	'complaint': `I would like to make a complaint`
+},
+gender: {
+	'male': `Male`,
+	'female': `Female`,
+	'other': `Other`
+},
 ben_det_oblast: {
 	'cherkaska': `Cherkaska`,
 	'chernihivska': `Chernihivska`,
@@ -25,8 +39,4 @@ ben_det_oblast: {
 	'zakarpatska': `Zakarpatska`,
 	'zaporizka': `Zaporizka`,
 	'zhytomyrska': `Zhytomyrska`
-},
-house_or_apartment: {
-	'house': `House`,
-	'apartment': `Apartment`
 }}

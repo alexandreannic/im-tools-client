@@ -43,7 +43,7 @@ export enum ShelterContractor {
   'Dosvid 2002' = 'Dosvid 2002',
 }
 
-const prices: Partial<Record<Shelter_TA['ben_det_oblast'],
+const prices: Partial<Record<NonNullable<Shelter_TA['ben_det_oblast']>,
   Partial<Record<ShelterContractor,
     Partial<Record<keyof Shelter_TA, number>>
   >>

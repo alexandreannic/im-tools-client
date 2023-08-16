@@ -13,7 +13,7 @@ import {getKoboImagePath, mapMpcaKoboAnswer} from '@/features/Mpca/MpcaData/Mpca
 import {MpcaPaymentToolForm} from './MpcaPaymentToolForm'
 import * as yup from 'yup'
 import {Grid} from '@mui/material'
-import {Row} from '@/shared/Row'
+import {ListRow} from '@/shared/ListRow'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 
@@ -77,9 +77,9 @@ export const MpcaPaymentTool = () => {
               <Panel>
                 <PanelHead>{m.calculations}</PanelHead>
                 <PanelBody>
-                  <Row label={m.mpcaDb.mpcaGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.mpcaGrantAmount)}</Txt></Row>
-                  <Row label={m.mpcaDb.cfrGrantAmount}><Txt size="big" bold>{amounts.cfrGrantAmount.map(formatLargeNumber).join(' - ')}</Txt></Row>
-                  <Row label={m.mpcaDb.startupGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.startupGrantAmount)}</Txt></Row>
+                  <ListRow label={m.mpcaDb.mpcaGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.mpcaGrantAmount)}</Txt></ListRow>
+                  <ListRow label={m.mpcaDb.cfrGrantAmount}><Txt size="big" bold>{amounts.cfrGrantAmount.map(formatLargeNumber).join(' - ')}</Txt></ListRow>
+                  <ListRow label={m.mpcaDb.startupGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.startupGrantAmount)}</Txt></ListRow>
                 </PanelBody>
               </Panel>
             </Grid>

@@ -11,6 +11,7 @@ export enum AppFeatureId {
   shelter = 'shelter',
   wfp_deduplication = 'wfp_deduplication',
   activity_info = 'activity_info',
+  cfm = 'cfm',
   admin = 'admin',
   playground = 'playground',
 }
@@ -85,6 +86,14 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     showIf: (u, accesses) => {
       return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.wfp_deduplication)
     }
+  },
+  cfm: {
+    id: AppFeatureId.cfm,
+    name: 'CFM',
+    materialIcons: 'sms_failed',
+    color: '#1c2c73',
+    path: '/cfm',
+    showIf: (u, accesses) => u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.cfm)
   },
   admin: {
     id: AppFeatureId.admin,

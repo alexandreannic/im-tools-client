@@ -86,8 +86,8 @@ const WpfDeduplicationSidebar = () => {
 
 export const WfpDeduplicationPage = () => {
   const {accesses, session} = useSession()
-  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.wfp_deduplication.id), [accesses])
-  if (!session.admin && access.length === 0) {
+  const access = useMemo(() => appFeaturesIndex.wfp_deduplication.showIf?.(session, accesses), [session, accesses])
+  if (!access) {
     return (
       <NoFeatureAccessPage/>
     )

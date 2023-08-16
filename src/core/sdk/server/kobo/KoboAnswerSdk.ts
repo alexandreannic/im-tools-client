@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
-import {Kobo, KoboAnswer, KoboAnswerId, KoboId, KoboMappedAnswerType} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/koboDrcUaFormId'
 import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
@@ -11,9 +11,11 @@ import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
 import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
 import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
-import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/KoboShelterTA'
-import {Donor} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
-import {ProtHhsTags} from '@/core/sdk/server/kobo/KoboProtHhs'
+import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {ProtHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
+import {mapMealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternalMapping'
+import {mapMealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternalMapping'
+import {KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -35,7 +37,8 @@ export class KoboAnswerSdk {
   }
 
 
-  readonly update = ({formId, answerId, tags}: {formId: KoboId, answerId: KoboAnswerId, tags: Record<string, any>}) => {
+  readonly updateTag = ({formId, answerId, tags}: {formId: KoboId, answerId: KoboAnswerId, tags: Record<string, any>}) => {
+    console.log({formId, answerId, tags})
     return this.client.post(`/kobo/answer/${formId}/${answerId}/tag`, {body: {tags}})
   }
 
@@ -109,7 +112,7 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.shelterTA,
       fnMap: mapShelter_TA,
-      fnMapTags: _ =>  _ as ShelterTaTags,
+      fnMapTags: _ => _ as ShelterTaTags,
       ...filters,
     })
   }
@@ -118,7 +121,25 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.shelterNTA,
       fnMap: mapShelter_NTA,
-      fnMapTags: _ =>  _ as ShelterNtaTags,
+      fnMapTags: _ => _ as ShelterNtaTags,
+      ...filters,
+    })
+  }
+
+  readonly searchMealCfmInternal = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.cfmInternal,
+      fnMap: mapMealCfmInternal,
+      fnMapTags: KoboMealCfmTag.map,
+      ...filters,
+    })
+  }
+
+  readonly searchMealCfmExternal = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.cfmExternal,
+      fnMap: mapMealCfmExternal,
+      fnMapTags: KoboMealCfmTag.map,
       ...filters,
     })
   }

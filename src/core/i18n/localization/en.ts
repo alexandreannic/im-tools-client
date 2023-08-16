@@ -974,6 +974,23 @@ export const en = Object.freeze({
       noAccessToForm: `You don't have access to any database.`,
       openKoboForm: 'Open Kobo form',
     },
+    _cfm: {
+      openTicketsCoc: 'Open CoC tickets',
+      openTickets: 'Open tickets',
+      referralMatrix: 'Referral Matrix',
+      feedback: 'Feedback',
+      feedbackType: 'Category',
+      contactAgreement: 'Contact agreement',
+      existingDrcBeneficiary  : 'Existing DRC beneficiary',
+      reporterDetails: 'Reporter information',
+      internal: 'Internal',
+      external: 'External',
+      status: {
+        Close: 'Close',
+        Open: 'Open',
+        Processing: 'Processing',
+      }
+    },
     _shelter: {
       contractor1: 'Contractor 1',
       contractor2: 'Contractor 2',
@@ -1005,6 +1022,9 @@ export const en = Object.freeze({
         HandoverCertificateOfCompletionSigned: 'Handover/Certificate of completion signed',
         InvoicePaymentProcessed: 'Invoice payment processed',
       }
-    }
+    },
+    note: 'Note',
+    projectCode: 'Project Code',
+    form: 'Form',
   },
 })

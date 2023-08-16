@@ -8,6 +8,8 @@ import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {Panel} from '@/shared/Panel'
 import {getGoogle} from '@/core/google'
 
+declare let google: any
+
 const mapTheme = {
   occupiedColor: '#ffd0c4',
   baseColor: '#e4e4e4', // #f8f8f8
@@ -63,7 +65,6 @@ const offices: Office[] = [
   {city: 'Mariupol', closed: true},
 ]
 
-let google: any
 
 const drawMaps = async ({
   apiKey,
@@ -169,7 +170,6 @@ const drawOfficeMarkers = (selector: string, theme: Theme) => {
       }
     }, () => {
       label.setAttribute('y', +marker.getAttribute('y') + 12)
-
     })
     marker.parentNode.insertBefore(label, marker.nextSibling)
     label.setAttribute('font-size', theme.typography.fontSize * .875)

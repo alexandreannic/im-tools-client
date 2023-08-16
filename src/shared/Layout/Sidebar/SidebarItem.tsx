@@ -47,6 +47,7 @@ export const SidebarItem = ({
         overflow: 'hidden',
         minWidth: 0,
         whiteSpace: 'nowrap',
+        textAlign: 'left',
         textOverflow: 'ellipsis',
         color: t => t.palette.text.secondary,
         pr: 1,

@@ -3,7 +3,7 @@ import {Controller, useForm} from 'react-hook-form'
 import {AaSelect} from '@/shared/Select/Select'
 import React, {useEffect} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {Row} from '@/shared/Row'
+import {ListRow} from '@/shared/ListRow'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {AAIconBtn} from '@/shared/IconBtn'
 
@@ -46,19 +46,19 @@ export const MpcaPaymentToolForm = ({
 
   return (
     <>
-      <Row icon="person" noBorder label={m.mpcaDb.headOfOperations}>
+      <ListRow icon="person" border label={m.mpcaDb.headOfOperations}>
         <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.headOfOperation} {...register('headOfOperation')}/>
-      </Row>
-      <Row icon="" noBorder label={m.mpcaDb.financeAndAdministrationOfficer}>
+      </ListRow>
+      <ListRow icon="" border label={m.mpcaDb.financeAndAdministrationOfficer}>
         <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.financeAndAdministrationOfficer} {...register('financeAndAdministrationOfficer')}/>
-      </Row>
-      <Row icon="" label={m.mpcaDb.cashAndVoucherAssistanceAssistant}>
+      </ListRow>
+      <ListRow icon="" label={m.mpcaDb.cashAndVoucherAssistanceAssistant}>
         <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.cashAndVoucherAssistanceAssistant} {...register('cashAndVoucherAssistanceAssistant')}/>
-      </Row>
-      <Row icon="place" label={m.city}>
+      </ListRow>
+      <ListRow icon="place" label={m.city}>
         <Controller
           name="city"
           defaultValue={tool.city}
@@ -69,31 +69,31 @@ export const MpcaPaymentToolForm = ({
             {value: 'Mykolaiv', children: m.mykolaiv},
           ]}/>}
         />
-      </Row>
-      <Row icon="savings" noBorder label={m.mpcaDb.budgetLineCFR}>
+      </ListRow>
+      <ListRow icon="savings" border label={m.mpcaDb.budgetLineCFR}>
         <Controller
           name="budgetLineCFR"
           defaultValue={tool.budgetLineCFR}
           control={control}
           render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
-      </Row>
-      <Row icon={''} noBorder label={m.mpcaDb.budgetLineMPCA}>
+      </ListRow>
+      <ListRow icon={''} border label={m.mpcaDb.budgetLineMPCA}>
         <Controller
           name="budgetLineMPCA"
           defaultValue={tool.budgetLineMPCA}
           control={control}
           render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
-      </Row>
-      <Row icon={''} label={m.mpcaDb.budgetLineStartUp}>
+      </ListRow>
+      <ListRow icon={''} label={m.mpcaDb.budgetLineStartUp}>
         <Controller
           name="budgetLineStartUp"
           defaultValue={tool.budgetLineStartUp}
           control={control}
           render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
-      </Row>
+      </ListRow>
     </>
   )
 

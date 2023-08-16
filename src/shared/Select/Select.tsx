@@ -24,7 +24,7 @@ interface AaSelectSimple<T extends string | number = string> extends AaSelectBas
   onChange: (t: T, e: any) => void
 }
 
-type AaSelect<T extends string | number = string> = AaSelectSimple<T> | AaSelectMultiple<T>
+export type AaSelectProps<T extends string | number = string> = AaSelectSimple<T> | AaSelectMultiple<T>
 
 const style = makeSx({
   item: {
@@ -42,7 +42,7 @@ export const AaSelect = <T extends string | number>({
   onChange,
   sx,
   ...props
-}: AaSelect<T>) => {
+}: AaSelectProps<T>) => {
   const {m} = useI18n()
   const [innerValue, setInnerValue] = useState<undefined | T | T[]>()
   const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE'
