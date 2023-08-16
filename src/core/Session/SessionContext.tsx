@@ -1,5 +1,5 @@
-import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react'
-import {useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import React, {Dispatch, ReactNode, SetStateAction, useCallback, useContext, useEffect, useState} from 'react'
+import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
@@ -11,6 +11,7 @@ import {SessionLoginForm} from '@/core/Session/SessionLoginForm'
 import {SessionInitForm} from '@/core/Session/SessionInitForm'
 import {CenteredContent} from '@/shared/CenteredContent'
 import {Fender} from 'mui-extension'
+import {useAsync} from '@/alexlib-labo/useAsync'
 
 export interface SessionContext {
   session: UserSession
@@ -34,7 +35,7 @@ export const SessionProvider = ({
   const {toastError} = useAaToast()
   const {api} = useAppSettings()
   const [session, setSession] = useState<UserSession | undefined>()
-  const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   const _access = useFetcher<any>(api.access.searchForConnectedUser)
 
@@ -43,24 +44,23 @@ export const SessionProvider = ({
     mapThen: setSession,
   }))
 
-  const logout = () => {
+  const logout = useCallback(() => {
     api.session.logout()
     setSession(undefined)
-  }
-
-  useEffect(() => {
-    if (session?.email)
-      _access.fetch({force: true, clean: true})
-  }, [session?.email, session?.drcOffice, session?.drcJob])
+  }, [])
 
   useEffect(() => {
     _getSession.call()
-    setIsInitialLoading(false)
   }, [])
 
-  useEffectFn(_getSession.getError(), () => toastError(m.youDontHaveAccess))
+  useEffect(() => {
+    if (session?.email)
+      _access.fetch({force: true, clean: true}).then(() => setIsLoading(false))
+  }, [session?.email, session?.drcOffice, session?.drcJob])
 
-  if (_getSession.getLoading() || _access.loading) {
+  useEffectFn(_getSession.errors.size, _ => _ > 0 && toastError(m.youDontHaveAccess))
+
+  if (!_access.error && _getSession.errors.size === 0 && isLoading) {
     return (
       <CenteredContent>
         <CircularProgress/>
