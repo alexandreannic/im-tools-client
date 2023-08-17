@@ -2,28 +2,45 @@ import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {ReactNode, useCallback, useMemo} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmInternalOptions'
 import {AaInput} from '@/shared/ItInput/AaInput'
-import {KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {Utils} from '@/utils/utils'
-import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
+import {TableIcon, TableIconBtn, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect} from '@/shared/Select/Select'
 import {DrcOffice} from '@/core/drcJobTitle'
-import {CfmData, CfmDataSource, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
 import {cfmModule} from '@/features/Cfm/CfmModule'
-import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
-import {AaBtn} from '@/shared/Btn/AaBtn'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo} from '@/koboDrcUaFormId'
+import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
+import {Tooltip} from '@mui/material'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
+}
+
+export const CfmPriorityLogo = ({
+  priority,
+  fontSize,
+  sx,
+}: {
+  sx?: TableIconProps['sx']
+  fontSize?: TableIconProps['fontSize']
+  priority?: CfmData['priority']
+}) => {
+  const {m} = useI18n()
+  return fnSwitch(priority!, {
+    Low: <TableIcon tooltip={m._cfm.priority + ': ' + priority} sx={sx} fontSize={fontSize} color="info">looks_3</TableIcon>,
+    Medium: <TableIcon tooltip={m._cfm.priority + ': ' + priority} sx={sx} fontSize={fontSize} color="warning">looks_two</TableIcon>,
+    High: <TableIcon tooltip={m._cfm.priority + ': ' + priority} sx={sx} fontSize={fontSize} color="error">looks_one</TableIcon>,
+  }, () => undefined)
 }
 
 export const CfmTable = ({}: any) => {
@@ -61,7 +78,7 @@ export const CfmTable = ({}: any) => {
     translate,
     defaultValue,
     ...sheetProps
-  }: Pick<SheetColumnProps<any>, 'style' | 'styleHead' | 'width'> & {
+  }: Pick<SheetColumnProps<any>, 'typeIcon' | 'style' | 'styleHead' | 'width'> & {
     head: string
     defaultValue?: KoboMealCfmTag[T]
     enumerator: Record<K, string>
@@ -85,12 +102,7 @@ export const CfmTable = ({}: any) => {
               answerId: row.id,
               key: tag,
               value: tagChange,
-            }).then(newTag => ctx.data.setEntity(data => data?.map(d => {
-              if (d?.id === row.id) {
-                row.tags = newTag
-              }
-              return d
-            })))
+            })
           }}
           options={enumKeys.map(_ => ({
             value: _, children: translate ? translate[_] : _,
@@ -100,13 +112,14 @@ export const CfmTable = ({}: any) => {
       ),
       ...sheetProps,
     }
-  }, [ctx.data.entity])
+  }, [ctx.mappedData])
 
   const column = useMemo(() => {
     return {
       status: buildTagEnumColumn({
         head: m.status,
-        width: 40,
+        width: 0,
+        typeIcon: null,
         style: {padding: 0},
         tag: 'status',
         defaultValue: KoboMealCfmStatus.Open,
@@ -120,10 +133,17 @@ export const CfmTable = ({}: any) => {
       office: buildTagEnumColumn({
         head: m.office,
         tag: 'office',
+        width: 100,
         enumerator: DrcOffice,
+      }),
+      program: buildTagEnumColumn({
+        head: m.program,
+        width: 140,
+        tag: 'program',
+        enumerator: CfmDataProgram,
       })
     }
-  }, [ctx.data])
+  }, [ctx.mappedData])
 
   return (
     <Page width="full">
@@ -139,24 +159,38 @@ export const CfmTable = ({}: any) => {
               />
             </>
           }
-          data={ctx.data.entity}
+          data={ctx.mappedData}
           loading={ctx.data.loading}
           getRenderRowKey={_ => _.form + _.id}
           columns={[
             column.status,
             {
+              type: 'select_one',
+              id: 'priority',
+              width: 0,
+              typeIcon: null,
+              align: 'center',
+              head: m._cfm.priority,
+              tooltip: null,
+              options: () => [
+                {value: CfmDataPriority.Low, label: CfmDataPriority.Low},
+                {value: CfmDataPriority.Medium, label: CfmDataPriority.Medium},
+                {value: CfmDataPriority.High, label: CfmDataPriority.High},
+              ],
+              render: _ => <CfmPriorityLogo priority={_.priority}/>,
+            },
+            {
               type: 'string',
               head: m.id,
               id: 'id',
               width: 78,
-              render: _ => _.id
+              render: _ => _.id,
             },
             {
               type: 'date',
               head: m.date,
               id: 'date',
               width: 78,
-              renderValue: _ => _.date,
               render: _ => formatDate(_.date),
             },
             {
@@ -168,11 +202,11 @@ export const CfmTable = ({}: any) => {
               render: _ => m._cfm.form[_.form]
             },
             column.office,
+            column.program,
             {
               type: 'string',
               head: m.focalPoint,
               id: 'focalPoint',
-              renderValue: _ => _.tags?.focalPointEmail,
               render: row => (
                 <DebouncedInput<string>
                   debounce={1250}
@@ -197,21 +231,31 @@ export const CfmTable = ({}: any) => {
             {
               type: 'select_one',
               head: m._cfm.feedbackType,
-              id: 'feedback_type',
-              options: () => [
-                ...Enum.entries(MealCfmExternalOptions.feedback_type).map(([k, v]) => ({value: k, label: v})),
-                ...Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, label: v})),
-              ],
-              render: _ => _.internal
-                ? ctx.translateInternal.translateChoice('feedback_type', _.internal?.feedback_type)
-                : ctx.translateExternal.translateChoice('feedback_type', _.external?.feedback_type),
-              renderValue: _ => _.external?.feedback_type ?? _.internal?.feedback_type,
+              id: 'category',
+              width: 120,
+              options: () => Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, label: v})),
+              render: row => row.form === CfmDataSource.Internal
+                ? ctx.translateInternal.translateChoice('feedback_type', row.category)
+                : <AaSelect
+                  defaultValue={row.category}
+                  onChange={newValue => {
+                    ctx.updateTag.call({formId: row.formId, answerId: row.id, key: 'feedbackTypeOverride', value: newValue})
+                  }}
+                  options={Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
+                />
+            },
+            {
+              type: 'select_one',
+              head: m._cfm.feedbackTypeExternal,
+              id: 'category',
+              options: () => Enum.entries(MealCfmExternalOptions.feedback_type).map(([k, v]) => ({value: k, label: v})),
+              render: _ => m._cfm._feedbackType[_.external_feedback_type!],
             },
             {
               type: 'string',
               head: m._cfm.feedback,
               id: 'feedback',
-              render: _ => _.internal?.feedback ?? _.external?.thanks_feedback ?? _.external?.complaint,
+              render: _ => _.feedback,
             },
             {
               type: 'string',
@@ -225,7 +269,6 @@ export const CfmTable = ({}: any) => {
               width: 80,
               id: 'gender',
               options: () => Enum.entries(MealCfmInternalOptions.gender).map(([value, label]) => ({value, label})),
-              renderValue: _ => _.gender,
               render: _ => ctx.translateExternal.translateChoice('gender', _.gender)
             },
             {
@@ -246,25 +289,23 @@ export const CfmTable = ({}: any) => {
               options: () => Enum.entries(MealCfmInternalOptions.ben_det_oblast).map(([value, label]) => ({value, label})),
               id: 'oblast',
               render: _ => ctx.translateExternal.translateChoice('ben_det_oblast', _.ben_det_oblast),
-              renderValue: _ => _.ben_det_oblast,
             },
             {
               type: 'string',
               head: m.raion,
               id: 'raion',
               render: _ => ctx.translateExternal.translateChoice('ben_det_raion', _.ben_det_raion),
-              renderValue: _ => _.ben_det_raion,
             },
             {
               type: 'string',
               head: m.hromada,
               id: 'hromada',
               render: _ => ctx.translateExternal.translateChoice('ben_det_hromada', _.ben_det_hromada),
-              renderValue: _ => _.ben_det_hromada,
             },
             {
               id: 'actions',
               width: 0,
+              stickyEnd: true,
               align: 'center',
               render: row => (
                 <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>

@@ -15,7 +15,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmEntryRoute} from '@/features/Cfm/Data/CfmEntry'
-import {KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Box, Divider} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
@@ -36,16 +36,16 @@ const FcmSidebar = () => {
   const _stats = useMemo(() => {
     let open = 0
     let coc = 0
-    ctx.data.entity?.forEach(_ => {
+    ctx.mappedData?.forEach(_ => {
       if (_.tags?.status === undefined || _.tags?.status === KoboMealCfmStatus.Open) {
-        if (_.internal?.feedback_type === 'coc') coc++
+        if (_.priority === CfmDataPriority.High) coc++
         open++
       }
     })
     return {
       open,
       coc,
-      total: ctx.data.entity?.length
+      total: ctx.mappedData?.length
     }
   }, [ctx.data])
 
@@ -64,7 +64,7 @@ const FcmSidebar = () => {
           <PieChartIndicator
             dense
             showValue
-            title={m._cfm.openTicketsCoc}
+            title={m._cfm.openTicketsHigh}
             value={_stats.coc}
             base={_stats.total ?? 1}
           />
@@ -84,9 +84,19 @@ const FcmSidebar = () => {
         </NavLink>
         <SidebarHr/>
         <SidebarItem
+          icon="view_compact_alt"
+          onClick={() => {}}
+          href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/EaaeqVp3BrpEtgDgRqXi7qABsfhNgrJGOo6JkiRGXrV33g?e=XVcMi9"
+          target="_blank"
+          iconEnd="open_in_new"
+        >
+          {m._cfm.referralMatrix}
+        </SidebarItem>
+        <SidebarItem
           href={ctx.schemaExternal.sanitizedSchema.deployment__links.url}
           target="_blank"
-          icon="open_in_new"
+          icon="fact_check"
+          iconEnd="open_in_new"
           onClick={() => {}}
         >
           {m._cfm.formLong.External}
@@ -95,17 +105,10 @@ const FcmSidebar = () => {
           href={ctx.schemaInternal.sanitizedSchema.deployment__links.url}
           target="_blank"
           onClick={() => {}}
-          icon="open_in_new"
+          icon="fact_check"
+          iconEnd="open_in_new"
         >
           {m._cfm.formLong.Internal}
-        </SidebarItem>
-        <SidebarItem
-          onClick={() => {}}
-          href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/EaaeqVp3BrpEtgDgRqXi7qABsfhNgrJGOo6JkiRGXrV33g?e=XVcMi9"
-          target="_blank"
-          icon="open_in_new"
-        >
-          {m._cfm.referralMatrix}
         </SidebarItem>
       </SidebarBody>
     </Sidebar>

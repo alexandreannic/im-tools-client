@@ -3,6 +3,7 @@ import {externalLinks} from '../../externalLinks'
 import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
 import {Period} from '../../type'
 import Status = KoboFormProtHH.Status
+import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
 
 const invalidDate = ''
 
@@ -975,17 +976,29 @@ export const en = Object.freeze({
       openKoboForm: 'Open Kobo form',
     },
     _cfm: {
-      openTicketsCoc: 'Open CoC tickets',
+      _feedbackType: {
+        'thanks': 'Thanks',
+        'feedback': 'Feedback',
+        'request': 'Request',
+        'complaint': 'Complaint',
+      },
+      priority: 'Rank',
+      openTicketsHigh: 'High priority',
       openTickets: 'Open tickets',
       referralMatrix: 'Referral Matrix',
       feedback: 'Feedback',
       feedbackType: 'Category',
+      feedbackTypeExternal: 'Feedback type',
       contactAgreement: 'Contact agreement',
       existingDrcBeneficiary: 'Existing DRC beneficiary',
       reporterDetails: 'Reporter information',
       formLong: {
         Internal: 'Internal Form',
         External: 'External Form',
+      },
+      formFrom: {
+        Internal: 'From Internal form',
+        External: 'From External form',
       },
       form: {
         Internal: 'Internal',

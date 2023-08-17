@@ -11,6 +11,7 @@ import {WfpDeduplicationAccessForm} from '@/features/WfpDeduplication/WfpDedupli
 import {useI18n} from '@/core/i18n'
 import {Page} from '@/shared/Page'
 import {WfpDeduplicationAccessParams} from '@/core/sdk/server/access/Access'
+import {CfmAccessForm} from '@/features/Cfm/Access/CfmAccessForm'
 
 export const CfmAccess = () => {
   const {api} = useAppSettings()
@@ -38,9 +39,9 @@ export const CfmAccess = () => {
           onRemoved={refresh}
           header={
             session.admin && (
-              <WfpDeduplicationAccessForm onAdded={refresh}>
+              <CfmAccessForm onAdded={refresh}>
                 <AaBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</AaBtn>
-              </WfpDeduplicationAccessForm>
+              </CfmAccessForm>
             )
           }/>
       </Panel>

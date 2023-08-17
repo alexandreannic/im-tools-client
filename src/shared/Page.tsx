@@ -29,9 +29,19 @@ export const PageHeader = ({
     </Box>
   )
 }
-export const PageTitle = ({action, children, subTitle, sx, ...props}: BoxProps & {subTitle?: string, action?: ReactNode}) => {
+export const PageTitle = ({
+  action,
+  children,
+  subTitle,
+  sx,
+  logo,
+  ...props
+}: BoxProps & {logo?: ReactNode, subTitle?: string, action?: ReactNode}) => {
   return (
     <Box sx={{display: 'flex', mt: 0, mb: 2, alignItems: 'center', ...sx}}>
+      {logo && (
+        <Box sx={{mr: 2}}>{logo}</Box>
+      )}
       <Box>
         <Box component="h2" sx={{m: 0, p: 0}}>{children}</Box>
         <Txt size="big" color="hint">{subTitle}</Txt>

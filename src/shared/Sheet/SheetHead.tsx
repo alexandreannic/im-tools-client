@@ -1,5 +1,5 @@
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
-import {Box, Checkbox} from '@mui/material'
+import {alpha, Box, Checkbox} from '@mui/material'
 import React from 'react'
 import {SheetColumnProps, SheetRow} from '@/shared/Sheet/Sheet'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
@@ -50,10 +50,16 @@ export const SheetHead = (() => {
               key={_.id}
               title={_.head}
               // onClick={() => onSortBy(_.id)}
-              className={'td th ' + (_.width ? ' th-width-fit-content ' : '') + (active ? ' th-active ' : '') + (fnSwitch(_.align!, {
-                'center': ' td-center',
-                'right': ' td-right'
-              }, _ => ''))}
+              className={[
+                'td th',
+                _.width ? 'th-width-fit-content' : '',
+                // _.stickyEnd ? 'td-sticky-end' : '',
+                active ? 'th-active' : '',
+                fnSwitch(_.align!, {
+                  'center': 'td-center',
+                  'right': 'td-right'
+                }, _ => '')
+              ].join(' ')}
             >
               <Box className="th-resize" style={{width: _.width}}>
                 {_.head}
@@ -67,7 +73,10 @@ export const SheetHead = (() => {
           const sortedByThis = search.sortBy === c.id ?? false
           const active = sortedByThis || !!filters[c.id]
           return (
-            <td key={c.id} style={c.styleHead} className="td-sub-head">
+            <td key={c.id} style={c.styleHead} className={[
+              'td-sub-head',
+              // c.stickyEnd ? 'td-sticky-end' : ''
+            ].join(' ')}>
               <SheetHeadContent
                 column={c}
                 active={active}
@@ -88,7 +97,7 @@ export const SheetHeadTypeIcon = (props: {
   tooltip: string,
   children: string,
 }) => {
-  return <TableIcon sx={{marginRight: 'auto'}} fontSize="small" color="disabled" {...props}/>
+  return <TableIcon sx={{ml: '2px', marginRight: 'auto', color: t => alpha(t.palette.text.disabled, .18)}} fontSize="small" {...props}/>
 }
 
 export const SheetHeadContent = ({
@@ -105,6 +114,7 @@ export const SheetHeadContent = ({
   return (
     <span style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
       {(() => {
+        if (column.typeIcon === null) return
         if (column.typeIcon) return column.typeIcon
         switch (column.type) {
           case 'date':

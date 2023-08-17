@@ -6,6 +6,7 @@ prot_support: {
 feedback_type: {
 	'thanks': `I would like to express thanks`,
 	'feedback': `I would like to provide feedback`,
+	'request': `I would like to make a request for assistance`,
 	'complaint': `I would like to make a complaint`
 },
 gender: {

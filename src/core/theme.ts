@@ -369,6 +369,9 @@ const tableTheme = (t: Theme) => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
   },
+  '.table .MuiOutlinedInput-input': {
+    paddingLeft: '4px',
+  },
   '.table .MuiOutlinedInput-notchedOutline': {
     border: 'none',
     borderRadius: 0,
@@ -382,7 +385,7 @@ const tableTheme = (t: Theme) => ({
   '.table tr:hover': {
     background: t.palette.action.hover,
   },
-  '.td-sub-head': {
+  '.table .td-sub-head': {
     textAlign: 'right',
     padding: 0,
   },
@@ -410,19 +413,17 @@ const tableTheme = (t: Theme) => ({
   '.table td:first-of-type, .table th:first-of-type': {
     paddingLeft: 8,
   },
-  '.td-sticky-end': {
-    boxShadow: t.shadows[1],
+  '.table .td-sticky-end': {
     borderLeft: `1px solid ${t.palette.divider}`,
     paddingTop: '1px',
+    background: darken(t.palette.background.paper, .02),
+    // background: alpha(t.palette.divider, .02),
     position: 'sticky',
+    zIndex: 10,
     right: 0,
-    background: t.palette.background.paper,
   },
   thead: {
     background: alpha(t.palette.divider, .02),
-  },
-  tbody: {
-    background: t.palette.background.paper,
   },
   '.td-center': {
     textAlign: 'center !important',
@@ -434,9 +435,10 @@ const tableTheme = (t: Theme) => ({
     padding: 0,
     border: 'none',
   },
-  '.table td': {
+  '.table tbody td': {
     borderBottom: `1px solid ${t.palette.divider}`,
     maxWidth: 80,
+    background: t.palette.background.paper,
   },
   '.table-loading': {
     padding: 0,

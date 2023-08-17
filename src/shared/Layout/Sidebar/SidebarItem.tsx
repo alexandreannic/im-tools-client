@@ -18,6 +18,7 @@ const styleActive = (t: Theme) => ({
 
 export interface SidebarItemProps extends ButtonBaseProps {
   icon?: string | ReactNode
+  iconEnd?: string | ReactNode
   large?: boolean
   href?: string
   target?: string
@@ -28,6 +29,7 @@ export interface SidebarItemProps extends ButtonBaseProps {
 export const SidebarItem = ({
   children,
   icon,
+  iconEnd,
   className,
   active,
   large,
@@ -84,6 +86,7 @@ export const SidebarItem = ({
       >
         {children}
       </Box>
+      {iconEnd && (typeof iconEnd === 'string' ? <Icon sx={css.i} color="disabled">{iconEnd}</Icon> : <Box sx={css.i}>{iconEnd}</Box>)}
     </ButtonBase>
   )
 }

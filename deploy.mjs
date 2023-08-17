@@ -32,7 +32,6 @@ const newversion = process.argv[2] ?? 'patch' //as 'patch' | 'minor' | 'major'
 const getPackageVersion = () => JSON.parse(fs.readFileSync('package.json', 'utf8')).version
 
 const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execSync('git branch --show-current').toString())
-
   ; (async () => {
     try {
 
@@ -54,4 +53,4 @@ const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execS
     }
   })()
 
-// toggle deploy 3
+// toggle deploy 4

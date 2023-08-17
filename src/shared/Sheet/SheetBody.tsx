@@ -40,10 +40,14 @@ export const SheetBody = (() => {
                   key={i}
                   style={_.style}
                   onClick={_.onClick ? () => _.onClick?.(item) : undefined}
-                  className={'td td-clickable ' + fnSwitch(_.align!, {
-                    'center': 'td-center',
-                    'right': 'td-right'
-                  }, _ => '')}
+                  className={[
+                    'td td-clickable',
+                    _.stickyEnd ? 'td-sticky-end' : '',
+                    fnSwitch(_.align!, {
+                      'center': 'td-center',
+                      'right': 'td-right'
+                    }, _ => '')
+                  ].join(' ')}
                 >
                   {render}
                 </td>

@@ -88,7 +88,7 @@ export const DatabaseKoboTableContent = ({
     const c: SheetColumnProps<any> = {
       id: 'actions',
       head: '',
-      tooltip: 'none',
+      tooltip: null,
       render: _ => (
         <>
           <TableIconBtn tooltip={m.view} children="visibility" onClick={() => openModalAnswer(_)}/>

@@ -250,7 +250,7 @@ export const _ShelterData = ({
         getRenderRowKey={_ => '' + _.id}
         columns={[
           {
-            tooltip: 'none',
+            tooltip: null,
             type: 'select_one',
             head: m._shelter.ntaForm,
             id: 'ntaForm',
@@ -400,7 +400,7 @@ export const _ShelterData = ({
             type: 'select_one',
             options: () => [{value: 'true', label: m._shelter.taFilled}, {value: 'false', label: m._shelter.taNotFilled}],
             renderValue: _ => _.ta ? 'true' : 'false',
-            tooltip: 'none',
+            tooltip: null,
             render: _ => map(_.ta, form =>
               <>
                 <TableIconBtn tooltip={m.view} children="visibility" onClick={() => openModalAnswerTa(form)}/>

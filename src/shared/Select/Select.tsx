@@ -5,7 +5,7 @@ import {makeSx} from '@/core/theme'
 
 type Option<T extends string | number = string> = {value: T, children: ReactNode, key?: string}
 
-interface AaSelectBase<T extends string | number = string> extends Pick<FormControlProps, 'id'> {
+interface AaSelectBase<T extends string | number = string> extends Pick<FormControlProps, 'disabled' | 'id'> {
   label?: ReactNode
   showUndefinedOption?: boolean
   options: Option<T>[] | string[]

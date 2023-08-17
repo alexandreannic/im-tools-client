@@ -27,7 +27,7 @@ export const ListRow = ({
       },
     }}>
       {icon !== undefined && (
-        <Box sx={{minWidth: 40}}>
+        <Box sx={{minWidth: 40, pb: 1.5}}>
           {icon !== '' && (
             <Icon sx={{color: t => t.palette.text.secondary}}>{icon}</Icon>
           )}

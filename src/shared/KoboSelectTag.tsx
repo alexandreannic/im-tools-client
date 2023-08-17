@@ -1,4 +1,4 @@
-import {KoboAnswer, KoboAnswerId, KoboAnswerMetaData, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import React, {Dispatch, ReactNode, SetStateAction} from 'react'
 import {AaSelect, AaSelectProps} from '@/shared/Select/Select'
 import {useAsync} from '@/alexlib-labo/useAsync'
@@ -31,7 +31,7 @@ export const KoboSelectTag = <
   answerId: KoboAnswerId
   enumerator: Record<K, string>
   translate?: Record<K, ReactNode>
-  setData: Dispatch<SetStateAction<T[] | undefined>>
+  setData?: Dispatch<SetStateAction<T[] | undefined>>
 } & Pick<AaSelectProps<any>, 'sx'>) => {
   const {api} = useAppSettings()
   const enumKeys = Enum.keys(enumerator)
@@ -54,7 +54,7 @@ export const KoboSelectTag = <
           answerId,
           key: tag,
           value: tagChange,
-        }).then(newTag => setData(data => data?.map(d => {
+        }).then(newTag => setData?.(data => data?.map(d => {
           if (d?.id === entry.id) {
             entry.tags = newTag
           }

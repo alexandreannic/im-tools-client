@@ -92,7 +92,7 @@ export const PieChartIndicator = ({
         alignItems: 'center',
         ...sx,
       }}>
-        <Donut percent={value / base} size={dense ? 46 : 55}/>
+        <Donut percent={value / base} size={dense ? 44 : 55}/>
         <Box sx={{ml: dense ? .75 : 1.5}}>
           <SlidePanelTitle icon={titleIcon} noWrap={noWrap}>
             {title}

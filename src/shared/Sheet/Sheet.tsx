@@ -70,7 +70,7 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   renderExport?: boolean | ((_: T) => string | number | undefined | Date)
   hidden?: boolean
   alwaysVisible?: boolean
-  tooltip?: 'none' | ((_: T) => string)
+  tooltip?: null | ((_: T) => undefined | string)
   style?: CSSProperties
   styleHead?: CSSProperties
   typeIcon?: ReactNode
@@ -79,13 +79,6 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   // sx?: (_: T) => SxProps<Theme> | undefined
   // style?: CSSProperties
   stickyEnd?: boolean
-}
-
-const sxStickyEnd: SxProps<Theme> = {
-  paddingTop: '1px',
-  position: 'sticky',
-  right: 0,
-  background: t => t.palette.background.paper,
 }
 
 export type SheetFilter = string

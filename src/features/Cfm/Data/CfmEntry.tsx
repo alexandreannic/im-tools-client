@@ -7,15 +7,18 @@ import {Box, Divider, Grid, Icon} from '@mui/material'
 import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {ListRow} from '@/shared/ListRow'
 import {useI18n} from '@/core/i18n'
-import {AaSelect} from '@/shared/Select/Select'
 import React from 'react'
-import {KoboMealCfmArea, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {CfmDataProgram, CfmDataSource, KoboMealCfmArea, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboSelectTag} from '@/shared/KoboSelectTag'
 import {DrcOffice} from '@/core/drcJobTitle'
 import {Utils} from '@/utils/utils'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
+import {AaSelect} from '@/shared/Select/Select'
+import {Enum} from '@alexandreannic/ts-utils'
+import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmInternalOptions'
+import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -24,9 +27,8 @@ const routeParamsSchema = yup.object({
 export const CfmEntryRoute = () => {
   const {formId, answerId} = routeParamsSchema.validateSync(useParams())
   const ctx = useCfmContext()
-  const entry = ctx.data.entity?.find(_ => _.id === answerId && formId === formId)
+  const entry = ctx.mappedData?.find(_ => _.id === answerId && formId === formId)
 
-  console.log(ctx.data.entity)
   if (!entry) {
     return (
       <Fender type="error">
@@ -47,38 +49,40 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
   return (
     <Page>
       <PageTitle subTitle={formatDateTime(entry.date)} action={
-        <KoboSelectTag<KoboMealCfmTag, CfmData>
-          sx={{width: 200,}}
-          label={m.status}
-          entry={entry}
-          setData={ctx.data.setEntity}
-          tag="status"
-          formId={entry.formId}
-          answerId={entry.id}
-          enumerator={KoboMealCfmStatus}
-          translate={{
-            [KoboMealCfmStatus.Close]: (
-              <Box sx={{display: 'flex', alignItems: 'center'}}>
-                <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Close} color="success">check_circle</TableIcon>
-                {m._cfm.status.Close}
-              </Box>
-            ),
-            [KoboMealCfmStatus.Open]: (
-              <Box sx={{display: 'flex', alignItems: 'center'}}>
-                <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Open} color="warning">new_releases</TableIcon>
-                {m._cfm.status.Open}
-              </Box>
-            ),
-            [KoboMealCfmStatus.Processing]: (
-              <Box sx={{display: 'flex', alignItems: 'center'}}>
-                <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Processing} color="info">schedule</TableIcon>
-                {m._cfm.status.Processing}
-              </Box>
-            ),
-          }}
-        />
+        <>
+          <CfmPriorityLogo fontSize="large" priority={entry.priority} sx={{mr: 2}}/>
+          <KoboSelectTag<KoboMealCfmTag, CfmData>
+            sx={{width: 200,}}
+            label={m.status}
+            entry={entry}
+            tag="status"
+            formId={entry.formId}
+            answerId={entry.id}
+            enumerator={KoboMealCfmStatus}
+            translate={{
+              [KoboMealCfmStatus.Close]: (
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                  <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Close} color="success">check_circle</TableIcon>
+                  {m._cfm.status.Close}
+                </Box>
+              ),
+              [KoboMealCfmStatus.Open]: (
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                  <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Open} color="warning">new_releases</TableIcon>
+                  {m._cfm.status.Open}
+                </Box>
+              ),
+              [KoboMealCfmStatus.Processing]: (
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                  <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Processing} color="info">schedule</TableIcon>
+                  {m._cfm.status.Processing}
+                </Box>
+              ),
+            }}
+          />
+        </>
       }>
-        <Box>{entry.id}</Box>
+        <Box>{entry.id} - {m._cfm.formFrom[entry.form]}</Box>
       </PageTitle>
       <Grid container spacing={2}>
         <Grid item xs={6}>
@@ -94,23 +98,23 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
               <ListRow icon="" label={m.raion}>{ctx.translateExternal.translateChoice('ben_det_raion', entry.ben_det_raion)}</ListRow>
               <ListRow icon="" label={m.hromada}>{ctx.translateExternal.translateChoice('ben_det_hromada', entry.ben_det_hromada)}</ListRow>
               <Divider/>
-              {entry.internal ? (
+              {entry.form === CfmDataSource.Internal ? (
                 <>
-                  <ListRow icon="bookmark" label={m._cfm.existingDrcBeneficiary}>{entry.internal.existing_beneficiary && (
+                  <ListRow icon="bookmark" label={m._cfm.existingDrcBeneficiary}>{entry.internal_existing_beneficiary && (
                     <Icon color="success">check_circle</Icon>
                   )}</ListRow>
-                  <ListRow icon="" label={m.projectCode}>{entry.internal.project_code}</ListRow>
+                  <ListRow icon="" label={m.projectCode}>{entry.internal_project_code}</ListRow>
                 </>
-              ) : entry.external && entry.external.feedback_type === 'complaint' && (
+              ) : entry.external_feedback_type === 'complaint' && (
                 <>
                   <ListRow icon="handshake" label={m._cfm.contactAgreement}>
-                    {entry.external.prot_support === 'yes' ? (
+                    {entry.external_prot_support === 'yes' ? (
                       <Icon color="success">check_circle</Icon>
                     ) : (
                       <Icon color="error">block</Icon>
                     )}
                     <Box sx={{ml: 1}}>
-                      {ctx.translateExternal.translateChoice('prot_support', entry.external.prot_support)}
+                      {ctx.translateExternal.translateChoice('prot_support', entry.external_prot_support)}
                     </Box>
                   </ListRow>
                 </>
@@ -141,11 +145,21 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
                   )}
                 </DebouncedInput>
               </ListRow>
-              <ListRow icon="business" label={m.drcOffice}>
+              <ListRow icon="work" label={m.program}>
                 <KoboSelectTag<KoboMealCfmTag, CfmData>
+                  showUndefinedOption
                   formId={entry.formId}
                   answerId={entry.id}
-                  setData={ctx.data.setEntity}
+                  enumerator={CfmDataProgram}
+                  tag="program"
+                  entry={entry}
+                />
+              </ListRow>
+              <ListRow icon="business" label={m.drcOffice}>
+                <KoboSelectTag<KoboMealCfmTag, CfmData>
+                  showUndefinedOption
+                  formId={entry.formId}
+                  answerId={entry.id}
                   enumerator={DrcOffice}
                   tag="office"
                   entry={entry}
@@ -153,9 +167,9 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
               </ListRow>
               <ListRow icon="map" label={m.area}>
                 <KoboSelectTag<KoboMealCfmTag, CfmData>
+                  showUndefinedOption
                   formId={entry.formId}
                   answerId={entry.id}
-                  setData={ctx.data.setEntity}
                   enumerator={KoboMealCfmArea}
                   tag="gca"
                   entry={entry}
@@ -183,26 +197,21 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
           </Panel>
         </Grid>
       </Grid>
-      <Txt color="hint" bold uppercase block sx={{mb: 1}}>{m._cfm.feedback}</Txt>
-      {entry.internal ? (
-        <Panel>
-          <PanelHead>
-            {ctx.translateInternal.translateChoice('feedback_type', entry.internal?.feedback_type)}
-          </PanelHead>
-          <PanelBody>
-            {entry.internal.feedback}
-          </PanelBody>
-        </Panel>
-      ) : entry.external && (
-        <Panel>
-          <PanelHead>
-            {ctx.translateExternal.translateChoice('feedback_type', entry.external?.feedback_type)}
-          </PanelHead>
-          <PanelBody>
-            {entry.external.thanks_feedback ?? entry.external?.complaint}
-          </PanelBody>
-        </Panel>
-      )}
+      <Panel>
+        <PanelHead>{m._cfm.feedback} {entry.external_feedback_type ? `(${m._cfm._feedbackType[entry.external_feedback_type!]})` : ``}</PanelHead>
+        <PanelBody>
+          <AaSelect
+            sx={{mb: 2}}
+            disabled={entry.form === CfmDataSource.Internal}
+            defaultValue={entry.category}
+            onChange={newValue => {
+              ctx.updateTag.call({formId: entry.formId, answerId: entry.id, key: 'feedbackTypeOverride', value: newValue})
+            }}
+            options={Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
+          />
+          {entry.feedback}
+        </PanelBody>
+      </Panel>
     </Page>
   )
 }
