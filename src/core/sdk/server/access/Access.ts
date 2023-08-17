@@ -47,7 +47,23 @@ interface FilterByFeature {
   (f: AppFeatureId): (_: Access<any>) => _ is Access<any>
 }
 
+interface AccessSum {
+  read: boolean
+  write: boolean
+  admin: boolean
+}
+
 export class Access {
+
+  static readonly sumKoboAccess = (accesses: Access<any>[], formId: KoboId, admin?: boolean): AccessSum => {
+    const filtered = accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId)
+    console.log('sum', admin, filtered)
+    return {
+      admin: admin || !!filtered.find(_ => _.level === AccessLevel.Admin),
+      write: admin || !!filtered.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin),
+      read: admin || !!filtered.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin || _.level === AccessLevel.Read),
+    }
+  }
 
   // @ts-ignore
   static readonly filterByFeature: FilterByFeature = (f) => (_) => {

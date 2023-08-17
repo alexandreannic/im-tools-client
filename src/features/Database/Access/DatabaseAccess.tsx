@@ -1,9 +1,9 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {AppFeatureId} from '@/features/appFeatureId'
-import React, {useEffect} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {Box} from '@mui/material'
-import {AccessLevel, KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
+import {Access, AccessLevel, KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {useDatabaseContext} from '@/features/Database/DatabaseContext'
@@ -59,7 +59,11 @@ export const DatabaseAccess = ({
 }) => {
   const {m} = useI18n()
   const {api} = useAppSettings()
-  const {session} = useSession()
+  const {session, accesses} = useSession()
+
+  const accessSum = useMemo(() => {
+    return Access.sumKoboAccess(accesses, formId, session.admin)
+  }, [session, accesses])
 
   const requestInConstToFixTsInference = () => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === formId))
@@ -78,12 +82,13 @@ export const DatabaseAccess = ({
     <Box>
       <Panel>
         <AccessTable
+          isAdmin={accessSum.admin}
           _remove={_remove}
           _data={_get}
           renderParams={(_: KoboDatabaseAccessParams) => JSON.stringify(_.filters)}
           onRemoved={refresh}
           header={
-            session.admin && (
+            accessSum && (
               <DatabaseAccessForm formId={formId} form={form} onAdded={refresh}>
                 <AaBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</AaBtn>
               </DatabaseAccessForm>

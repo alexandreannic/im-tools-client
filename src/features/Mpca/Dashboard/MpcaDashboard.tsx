@@ -57,7 +57,7 @@ export const _MPCADashboard = ({
         <SlideContainer>
           <SlideContainer column>
             <SlidePanel title={m.ageGroup}>
-              <AAStackedBarChart data={computed.ageGroup} height={250} colors={t => [
+              <AAStackedBarChart data={computed.ageGroup} height={270} colors={t => [
                 t.palette.primary.main,
                 t.palette.info.main,
                 t.palette.divider,

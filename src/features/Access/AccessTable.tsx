@@ -4,18 +4,23 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import React, {ReactNode} from 'react'
 import {useI18n} from '@/core/i18n'
 import {UUID} from '@/core/type'
-import {UseAsync} from '@/alexlib-labo/useAsync'
+import {useAsync, UseAsync} from '@/alexlib-labo/useAsync'
 import {UseFetchersSimple} from '@/alexlib-labo/useFetchersFn'
 import {useSession} from '@/core/Session/SessionContext'
 import {Arr, Enum} from '@alexandreannic/ts-utils'
+import {useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {AaSelect} from '@/shared/Select/Select'
 
 export const AccessTable = ({
+  isAdmin,
   header,
   onRemoved,
   renderParams = _ => JSON.stringify(_),
   _data,
   _remove,
 }: {
+  isAdmin?: boolean
   _data: UseFetchersSimple<() => Promise<Access[]>>
   _remove: UseAsync<(_: UUID) => Promise<any>>
   renderParams?: (_: any) => ReactNode
@@ -23,8 +28,10 @@ export const AccessTable = ({
   // data: Access[] | undefined
   header?: ReactNode
 }) => {
-  const {m} = useI18n()
-  const {session} = useSession()
+  const {m, formatDate} = useI18n()
+  const {api} = useAppSettings()
+  const _update = useAsync(api.access.update, {requestKey: ([id]) => id})
+
   return (
     <Sheet<Access>
       loading={_data.loading}
@@ -39,6 +46,13 @@ export const AccessTable = ({
           options: () => Arr(_data.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
+          width: 80,
+          head: m.createdAt,
+          id: 'date',
+          type: 'date',
+          render: _ => formatDate(_.createdAt),
+        },
+        {
           id: 'drcOffice',
           head: m.drcOffice,
           render: _ => _.drcOffice,
@@ -51,11 +65,18 @@ export const AccessTable = ({
           render: _ => _.email,
         },
         {
-          id: 'accessLevel',
+          width: 90,
+          id: 'level',
           head: m.accessLevel,
           type: 'select_one',
-          render: _ => _.level,
-          options: () => Enum.keys(AccessLevel).map(_ => ({value: _, label: _}))
+          options: () => Enum.keys(AccessLevel).map(_ => ({value: _, label: _})),
+          render: row => isAdmin ? (
+            <AaSelect
+              defaultValue={row.level}
+              onChange={_ => _update.call(row.id, {level: _ as AccessLevel})}
+              options={Enum.keys(AccessLevel).map(_ => ({value: _, children: _}))}
+            />
+          ) : row.level,
         },
         {
           id: 'params',
@@ -63,8 +84,9 @@ export const AccessTable = ({
           render: _ => renderParams(_.params),
           type: 'string'
         },
-        ...session.admin ? [{
+        ...isAdmin ? [{
           id: 'actions',
+          width: 0,
           head: '',
           align: 'right',
           render: (_: Access) => (

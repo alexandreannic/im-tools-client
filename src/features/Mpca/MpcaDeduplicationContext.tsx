@@ -8,6 +8,7 @@ import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
+import {includes} from 'lodash'
 
 export interface MpcaDeduplicationContext {
   _koboAnswers: UseFetcher<() => Promise<_Arr<KoboAnswer<BNRE>>>>
@@ -33,7 +34,7 @@ export const MPCADeduplicationProvider = ({
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)
 
-  const _koboAnswers = useFetcher(() => api.kobo.answer.searchBnre().then(_ => Arr(_.data)))
+  const _koboAnswers = useFetcher(() => api.kobo.answer.searchBnre().then(_ => Arr(_.data).filter(d => d.back_prog_type.find(_ => _.includes('mpca')))))
 
   useEffect(() => {
     // MpcaDeduplicationDb.build({db, sdk}).then(() => {

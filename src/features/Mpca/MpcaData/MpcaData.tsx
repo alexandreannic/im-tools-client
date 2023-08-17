@@ -78,8 +78,7 @@ export const MpcaData = () => {
 
   const enhancedData = useMemo(() => {
     if (!_koboAnswers.entity) return
-    const map = mapMpcaKoboAnswer()
-    return _koboAnswers.entity.map(map)
+    return _koboAnswers.entity.map(mapMpcaKoboAnswer())
   }, [_koboAnswers.entity])
 
   const getAllPossibleValues = (key: keyof NonNullable<typeof enhancedData>[0]) => Array.from(new Set(enhancedData?.map(_ => _[key]))) as string[]

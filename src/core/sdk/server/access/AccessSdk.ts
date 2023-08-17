@@ -14,6 +14,10 @@ type FeatureCreateBase = Omit<Access, 'drcJob' | 'id' | 'createdAt' | 'updatedAt
   drcJob?: DrcJob[]
 }
 
+interface AccessUpdate extends Pick<Access, 'drcJob' | 'drcOffice' | 'level'> {
+
+}
+
 interface AccessCreate {
   (_: FeatureCreateBase & {featureId: AppFeatureId.kobo_database, params: KoboDatabaseAccessParams}): Promise<Access<KoboDatabaseAccessParams>>
   (_: FeatureCreateBase & {featureId: AppFeatureId.wfp_deduplication, params: KoboDatabaseAccessParams}): Promise<Access<WfpDeduplicationAccessParams>>
@@ -27,6 +31,10 @@ export class AccessSdk {
 
   readonly add: AccessCreate = (body) => {
     return this.client.put<Access>(`/access`, {body})
+  }
+
+  readonly update = (id: UUID, body: AccessUpdate) => {
+    return this.client.post<Access>(`/access/${id}`, {body})
   }
 
   readonly remove = (id: UUID) => {
