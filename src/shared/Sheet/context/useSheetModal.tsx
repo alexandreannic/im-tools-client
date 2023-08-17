@@ -3,7 +3,7 @@ import {useModal} from '@/shared/Modal/useModal'
 import {SheetColumnConfigPopoverParams, SheetOptions} from '@/shared/Sheet/sheetType'
 import {SheetFilterDialog} from '@/shared/Sheet/SheetFilterDialog'
 import {SheetContext} from '@/shared/Sheet/context/SheetContext'
-import {SheetColumnProps, SheetRow} from '@/shared/Sheet/Sheet'
+import {SheetColumnProps, SheetFilterValue, SheetRow} from '@/shared/Sheet/Sheet'
 import {DatesPopover, MultipleChoicesPopover, NumberChoicesPopover} from '@/shared/Sheet/SheetPopover'
 import {useMap2} from '@/alexlib-labo/useMap'
 
@@ -24,6 +24,7 @@ export const useSheetModal = <T extends SheetRow>({
   const [filterPopoverOpen, filterPopoverClose] = useModal((c: SheetColumnConfigPopoverParams) => {
     return (
       <SheetFilterDialog
+        data={data.filteredData ?? []}
         title={c.title}
         anchorEl={c.anchorEl}
         columnId={c.columnId}
@@ -41,7 +42,7 @@ export const useSheetModal = <T extends SheetRow>({
           // setFilteringProperty(undefined)
           return {...prev}
         })}
-        onChange={(p: string, v: string | string[] | [Date, Date]) => {
+        onChange={(p: string, v: SheetFilterValue) => {
           data.setFilters(_ => ({..._, [p]: v}))
           data.setSearch(prev => ({...prev, offset: 0}))
           filterPopoverClose()

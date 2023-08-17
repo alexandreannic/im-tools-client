@@ -36,7 +36,7 @@ export const SheetBody = (() => {
               const render = _.render(item, i)
               return (
                 <td
-                  title={_.tooltip !== 'none' && (_.tooltip?.(item) ?? (render as any))}
+                  title={_.tooltip !== null && (_.tooltip?.(item) ?? (render as any))}
                   key={i}
                   style={_.style}
                   onClick={_.onClick ? () => _.onClick?.(item) : undefined}

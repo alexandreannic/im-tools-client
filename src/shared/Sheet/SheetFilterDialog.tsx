@@ -1,7 +1,7 @@
-import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps} from '@mui/material'
+import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps, Slider} from '@mui/material'
 import {AaBtn} from '../Btn/AaBtn'
 import {useI18n} from '../../core/i18n'
-import React, {ReactNode, useEffect, useState} from 'react'
+import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AaInput} from '../ItInput/AaInput'
 import {MultipleChoices} from '../MultipleChoices'
 import {PeriodPicker} from '../PeriodPicker/PeriodPicker'
@@ -10,43 +10,41 @@ import {Txt} from 'mui-extension'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
-import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
+import {SheetOptions} from '@/shared/Sheet/sheetType'
+import {Arr} from '@alexandreannic/ts-utils'
+import {SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, SheetFilterValueString, SheetRow} from '@/shared/Sheet/Sheet'
+import {type} from 'os'
 
-export interface SheetFilterDialogProps extends Pick<PopoverProps, 'anchorEl'> {
+export type SheetFilterDialogProps = Pick<PopoverProps, 'anchorEl'> & {
   orderBy?: OrderBy
   sortBy?: string
   onOrderByChange?: (_?: OrderBy) => void
   onClose?: () => void
   onClear?: () => void
-  value?: string[] | string | [Date, Date]
-  onChange?: (columnName: string, value: string[] | string | [Date, Date]) => void
   columnId: string
   title: ReactNode
-  type?: SheetPropertyType
   options?: SheetOptions[]
-}
-
-//
-// interface PropsMultiple extends PropsBase {
-//   propertyType: string[]
-//   value?: string[]
-//   onChange?: (property: string, value: string[]) => void
-//
-// }
-//
-// interface PropsSingle extends PropsBase {
-//   propertyType?: Exclude<SheetColumnProps<any>['type'], 'date' | string[]>
-//   onChange?: (property: string, value: string) => void
-//   value?: string
-// }
-//
-// interface PropsDate extends PropsBase {
-//   propertyType?: 'date'
-//   onChange?: (property: string, value: string) => void
-//   value?: string
-// }
+  data: SheetRow[]
+} & ({
+  onChange?: (columnName: string, value: SheetFilterValueNumber) => void
+  value: SheetFilterValueNumber
+  type: 'number'
+} | {
+  onChange?: (columnName: string, value: SheetFilterValueDate) => void
+  value: SheetFilterValueDate
+  type: 'date'
+} | {
+  onChange?: (columnName: string, value: SheetFilterValueSelect) => void
+  value: SheetFilterValueSelect
+  type: 'select_one' | 'select_multiple'
+} | {
+  onChange?: (columnName: string, value: SheetFilterValueString) => void
+  value: SheetFilterValueString
+  type: 'string'
+})
 
 export const SheetFilterDialog = ({
+  data,
   orderBy,
   sortBy,
   onOrderByChange,
@@ -75,7 +73,7 @@ export const SheetFilterDialog = ({
           setInnerValue(undefined)
         }}/>
       }>
-        <Txt block sx={{maxWidth: 400}} truncate>{title}</Txt>
+        <Txt block sx={{maxWidth: 340}} truncate>{title}</Txt>
       </PanelHead>
       <PanelBody>
         <Box sx={{display: 'flex', alignItems: 'center', borderBottom: t => `1px solid ${t.palette.divider}`, mb: 1}}>
@@ -135,10 +133,7 @@ export const SheetFilterDialog = ({
               )
             case 'number': {
               return (
-                <>
-                  <AaInput value={innerValue} onChange={e => setInnerValue(e.target.value)}/>
-                  <AaInput value={innerValue} onChange={e => setInnerValue(e.target.value)}/>
-                </>
+                <SheetFilterDialogNumber data={data} columnId={columnId} value={innerValue} onChange={setInnerValue}/>
               )
             }
             default:
@@ -157,5 +152,39 @@ export const SheetFilterDialog = ({
         </AaBtn>
       </PanelFoot>
     </Popover>
+  )
+}
+
+export const SheetFilterDialogNumber = ({
+  value,
+  data,
+  columnId,
+  onChange,
+}: Pick<SheetFilterDialogProps, 'data' | 'columnId'> & {
+  value: SheetFilterValueNumber
+  onChange: Dispatch<SetStateAction<SheetFilterValueNumber>>
+}) => {
+  const {min, max} = useMemo(() => {
+    const values = Arr(data).map(_ => _[columnId] as number | undefined).compact()
+    return {
+      min: Math.min(...values),
+      max: Math.max(...values),
+    }
+  }, [type, data])
+
+  const mappedValue = [value?.[0] ?? min, value?.[1] ?? max]
+
+  useEffect(() => {
+    onChange(value)
+  }, [value])
+
+  return (
+    <>
+      <Slider min={min} max={max} value={mappedValue} onChange={(e, _) => onChange(_ as [number, number])}/>
+      <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+        <AaInput type="number" sx={{width: 60}} value={mappedValue[0]} onChange={e => onChange(prev => [+e.target.value, prev?.[1]])}/>
+        <AaInput type="number" sx={{width: 60}} value={mappedValue[1]} onChange={e => onChange(prev => [prev?.[0], +e.target.value])}/>
+      </Box>
+    </>
   )
 }

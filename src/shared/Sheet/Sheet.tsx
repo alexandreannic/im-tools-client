@@ -81,10 +81,11 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   stickyEnd?: boolean
 }
 
-export type SheetFilter = string
-  | string[]
-  | [Date | undefined, Date | undefined]
-  | [number | undefined, number | undefined]
+export type SheetFilterValueString = string | undefined
+export type SheetFilterValueSelect = string[]
+export type SheetFilterValueDate = [Date | undefined, Date | undefined]
+export type SheetFilterValueNumber = [number | undefined, number | undefined]
+export type SheetFilterValue = SheetFilterValueString | SheetFilterValueSelect | SheetFilterValueDate | SheetFilterValueNumber
 
 export const Sheet = <T extends SheetRow = SheetRow>({
   id,

@@ -2,7 +2,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {orderBy} from 'lodash'
 import {KeyOf, multipleFilters, paginateData} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
-import {SheetColumnProps, SheetFilter, SheetRow} from '@/shared/Sheet/Sheet'
+import {SheetColumnProps, SheetFilterValue, SheetRow} from '@/shared/Sheet/Sheet'
 import {SheetSearch} from '@/shared/Sheet/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 
@@ -15,7 +15,7 @@ export const useSheetData = <T extends SheetRow>({
   data?: T[]
   columnsIndex: Record<KeyOf<T>, SheetColumnProps<T>>
 }) => {
-  const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilter>>({} as any)
+  const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilterValue>>({} as any)
 
   const [search, setSearch] = useState<SheetSearch<any>>({
     limit: 20,
@@ -58,6 +58,14 @@ export const useSheetData = <T extends SheetRow>({
             const v = row[k] as string[]
             const vArray = Array.isArray(v) ? v : [v]
             return !!vArray.find(_ => (filter as string[]).includes(_))
+          }
+        }
+        case 'number': {
+          return row => {
+            const v = row[k] as number | undefined
+            const min = filter[0] as number | undefined
+            const max = filter[1] as number | undefined
+            return !!v && (!max || v <= max) && (!min || v >= min)
           }
         }
         default: {
