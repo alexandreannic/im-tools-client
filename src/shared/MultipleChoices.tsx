@@ -58,7 +58,9 @@ export const MultipleChoices = <T extends string, V extends string = string>({
 
   const allChecked = allValues.length === innerValue?.length
 
-  const toggleAll = () => onChange?.(innerValue?.length === 0 ? allValues : [])
+  const toggleAll = () => {
+    setInnerValue(innerValue?.length === 0 ? allValues : [])
+  }
 
   const onClick = (v: T) => {
     setInnerValue(prev => prev.includes(v)

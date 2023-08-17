@@ -106,7 +106,7 @@ export const SheetFilterDialog = ({
                     children: _.label
                   })) ?? []}
                   initialValue={value as any}
-                  onChange={_ => _.length === 0 ? setInnerValue(undefined) : setInnerValue(_)}
+                  onChange={setInnerValue}
                 >
                   {({options, toggleAll, allChecked, someChecked}) => (
                     <>
