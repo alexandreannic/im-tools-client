@@ -109,7 +109,7 @@ export const Sidebar = ({
         <SidebarBody>{children}</SidebarBody>
         {/*<Icon onClick={() => setDarkTheme(_ => !_)}>{darkTheme ? 'light_mode' : 'dark_mode'}</Icon>*/}
         <SidebarFooter>
-          <SidebarItem onClick={stopPropagation(() => setDarkTheme(_ => !_))} icon="dark_mode" sx={{mr: 0, pr: 0}}>
+          <SidebarItem disabled={true} onClick={stopPropagation(() => setDarkTheme(_ => !_))} icon="dark_mode" sx={{mr: 0, pr: 0}}>
             {m.theme}
             <Switch color="primary" sx={{ml: 'auto'}} checked={darkTheme}/>
           </SidebarItem>

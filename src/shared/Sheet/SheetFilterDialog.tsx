@@ -133,6 +133,14 @@ export const SheetFilterDialog = ({
                   )}
                 </MultipleChoices>
               )
+            case 'number': {
+              return (
+                <>
+                  <AaInput value={innerValue} onChange={e => setInnerValue(e.target.value)}/>
+                  <AaInput value={innerValue} onChange={e => setInnerValue(e.target.value)}/>
+                </>
+              )
+            }
             default:
               return (
                 <AaInput value={innerValue} onChange={e => setInnerValue(e.target.value)}/>

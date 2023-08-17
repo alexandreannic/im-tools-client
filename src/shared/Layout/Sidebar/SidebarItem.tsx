@@ -19,6 +19,7 @@ const styleActive = (t: Theme) => ({
 export interface SidebarItemProps extends ButtonBaseProps {
   icon?: string | ReactNode
   iconEnd?: string | ReactNode
+  disabled?: boolean
   large?: boolean
   href?: string
   target?: string
@@ -58,6 +59,9 @@ export const SidebarItem = ({
         my: 1 / 2,
         borderTopRightRadius: 42,
         borderBottomRightRadius: 42,
+        ...props.disabled && {
+          opacity: .5,
+        },
         '&:hover': props.onClick ? {
           background: t => alpha(t.palette.primary.main, 0.06),
         } : {},
