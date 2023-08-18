@@ -61,6 +61,7 @@ export enum DrcJob {
   'Cash and Voucher Assistance Manager' = 'Cash and Voucher Assistance Manager',
   'Economic Recovery Officer' = 'Economic Recovery Officer',
   'Accountant' = 'Accountant',
+  'Programme Officer' = 'Programme Officer',
 }
 
 export enum DrcOffice {
