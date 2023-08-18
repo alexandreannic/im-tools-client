@@ -1,5 +1,5 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useProtHHS2Data} from './useProtHHS2Data'
@@ -26,6 +26,7 @@ import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterI
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import LokiDb from 'lokijs'
+import {Messages} from '@/core/i18n/localization/en'
 
 const filterShape = DashboardFilterHelper.makeShape<typeof ProtHHS_2_1Options>()({
   drcOffice: {
@@ -52,7 +53,7 @@ const filterShape = DashboardFilterHelper.makeShape<typeof ProtHHS_2_1Options>()
   gender: {
     options: 'hh_sex_1',
     icon: 'female',
-    label: m => m.gender
+    label: m => m.respondent
   },
   poc: {
     options: 'do_you_identify_as_any_of_the_following',
@@ -72,7 +73,9 @@ const filterShape = DashboardFilterHelper.makeShape<typeof ProtHHS_2_1Options>()
   }
 })
 
-type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape>
+type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape> & {
+  hhComposition?: (keyof Messages['protHHS2']['_hhComposition'])[]
+}
 
 export interface DashboardPageProps {
   periodFilter: Partial<Period>
@@ -119,19 +122,17 @@ export const DashboardProtHHS2 = () => {
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
-  const getChoices = <T extends keyof typeof ProtHHS_2_1Options>(
+  const getChoices = useCallback(<T extends keyof typeof ProtHHS_2_1Options>(
     questionName: T, {
       skipKey = [],
-      // renameOptions
     }: {
       skipKey?: (keyof typeof ProtHHS_2_1Options[T])[]
-      // renameOptions?: Record<keyof typeof ProtHHS_2_1Options[T], string>
     } = {}
   ) => {
     return Enum.entries(ProtHHS_2_1Options[questionName] ?? {})
       .map(([name, label]) => ({name, label: label}))
       .filter(_ => !(skipKey as string[]).includes(_.name))
-  }
+  }, [])
 
   const database = useMemo(() => {
     if (!_answers.entity) return
@@ -148,7 +149,26 @@ export const DashboardProtHHS2 = () => {
   }, [_answers.entity])
 
   const data: _Arr<ProtHHS2Enrich> | undefined = useMemo(() => {
-    return map(database, _ => Arr(DashboardFilterHelper.filterDataFromLokiJs(_, filterShape, optionFilter)) as _Arr<ProtHHS2Enrich>)
+    return map(database, _ => {
+      const {hhComposition, ...basicFilters} = optionFilter
+      const filtered = Arr(DashboardFilterHelper.filterDataFromLokiJs(_, filterShape, basicFilters)) as _Arr<ProtHHS2Enrich>
+      if (hhComposition && hhComposition.length > 0)
+        return filtered.filter(d => !!d.persons.find(p => {
+          if (!p.age) return false
+          if (p.gender === 'female') {
+            if (hhComposition.includes('girl') && p.age < 17) return true
+            if (hhComposition.includes('olderFemale') && p.age > 60) return true
+            if (hhComposition.includes('adultFemale')) return true
+          }
+          if (p.gender === 'male') {
+            if (hhComposition.includes('boy') && p.age < 17) return true
+            if (hhComposition.includes('olderMale') && p.age > 60) return true
+            if (hhComposition.includes('adultMale')) return true
+          }
+          return false
+        }))
+      return filtered
+    })
   }, [database, optionFilter])
 
   // const choices = useMemo(() => {
@@ -236,6 +256,21 @@ export const DashboardProtHHS2 = () => {
               }
             </DebouncedInput>
           )}
+          <DebouncedInput
+            debounce={50}
+            value={optionFilter.hhComposition}
+            onChange={_ => setOptionFilters(prev => ({...prev, hhComposition: _}))}
+          >
+            {(value, onChange) =>
+              <DashboardFilterOptions
+                icon="wc"
+                value={value ?? []}
+                label={m.protHHS2.hhComposition}
+                options={Enum.entries(m.protHHS2._hhComposition).map(([k, v]) => ({name: k, label: v}))}
+                onChange={onChange as any}
+              />
+            }
+          </DebouncedInput>
         </Box>
       }
       beforeSection={

@@ -175,6 +175,9 @@ export const muiTheme = (dark?: boolean): Theme => {
           button: {
             fontFamily,
           },
+          '.aa-datepicker-min::-webkit-calendar-picker-indicator': {
+            display: 'none',
+          },
           body: {
             color: baseTheme.palette.text.primary,
             fontSize: '1rem',

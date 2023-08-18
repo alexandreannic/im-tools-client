@@ -6,6 +6,7 @@ import {KoboUkraineMap} from '../shared/KoboUkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ChartTools} from '@/core/chartTools'
+import {PieChartIndicator} from '@/shared/PieChartIndicator'
 
 export const DashboardProtHHS2Safety = ({
   data,
@@ -96,6 +97,24 @@ export const DashboardProtHHS2Safety = ({
             data={data}
             question="what_factors_are_affecting_the_relationship_between_communities_in_this_location"
             filterValue={['unable_unwilling_to_answer']}
+          />
+        </SlidePanel>
+        <SlidePanel>
+          <KoboPieChartIndicator
+            sx={{mb: 1}}
+            title={m.protHHS2.freedomOfMovement}
+            question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
+            filter={_ => !_.includes('no')}
+            filterBase={_ => !_.includes('unable_unwilling_to_answer')}
+            compare={{before: computed.lastMonth}}
+            data={data}
+          />
+          <SlidePanelTitle sx={{mt: 2}}>{m.influencingFactors}</SlidePanelTitle>
+          <ProtHHS2BarChart
+            questionType="multiple"
+            data={data}
+            question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
+            filterValue={['no', 'unable_unwilling_to_answer']}
           />
         </SlidePanel>
       </SlideContainer>

@@ -13,6 +13,8 @@ import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 
+// do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area
+// what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members
 export const DashboardProtHHS2Displacement = ({
   data,
   computed,

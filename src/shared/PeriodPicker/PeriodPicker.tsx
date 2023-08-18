@@ -65,6 +65,9 @@ export const PeriodPicker = ({
         value={start}
         onChange={handleStartChange}
         sx={{marginRight: '-1px'}}
+        inputProps={{
+          className: 'aa-datepicker-min',
+        }}
         InputProps={{
           sx: _ => ({
             borderBottomRightRadius: 0,

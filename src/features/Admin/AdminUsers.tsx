@@ -19,7 +19,7 @@ export const AdminUsers = () => {
   const {setSession} = useSession()
   const _connectAs = useFetcher(api.session.connectAs)
   const _users = useFetcher(api.user.search)
-  const {m, formatDate} = useI18n()
+  const {m, formatDate, formatDateTime} = useI18n()
   const navigate = useNavigate()
 
   const [showDummyAccounts, setShowDummyAccounts] = useState(false)
@@ -69,10 +69,10 @@ export const AdminUsers = () => {
               type: 'date',
             },
             {
-              width: 110,
+              width: 140,
               id: 'lastConnectedAt',
               head: m.lastConnectedAt,
-              render: _ => _.lastConnectedAt && <Txt color="hint">{formatDate(_.lastConnectedAt)}</Txt>,
+              render: _ => _.lastConnectedAt && <Txt color="hint">{formatDateTime(_.lastConnectedAt)}</Txt>,
               type: 'date',
             },
             {

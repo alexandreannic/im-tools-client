@@ -53,9 +53,9 @@ export const DashboardFilterLabel = ({
         sx={combineSx(css.button, active && css.active)}
         onClick={(e) => setAnchorEl(e.currentTarget)}
       >
-        {icon && <Icon fontSize="small" sx={{mr: 1}}>{icon}</Icon>}
+        {icon && <Icon fontSize="small" sx={{mr: .75}}>{icon}</Icon>}
         {label}
-        <Icon color="disabled" sx={{ml: 1}} fontSize="small">{open ? 'expand_less' : 'expand_more'}</Icon>
+        <Icon color="disabled" sx={{ml: .25, mr: -.25}} fontSize="small">{open ? 'expand_less' : 'expand_more'}</Icon>
       </Box>
       <Popover
         disableScrollLock={true}
