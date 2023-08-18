@@ -97,9 +97,9 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
               <ListRow icon="location_on" label={m.oblast}>{ctx.translateExternal.translateChoice('ben_det_oblast', entry.ben_det_oblast)}</ListRow>
               <ListRow icon="" label={m.raion}>{ctx.translateExternal.translateChoice('ben_det_raion', entry.ben_det_raion)}</ListRow>
               <ListRow icon="" label={m.hromada}>{ctx.translateExternal.translateChoice('ben_det_hromada', entry.ben_det_hromada)}</ListRow>
-              <Divider/>
               {entry.form === CfmDataSource.Internal ? (
                 <>
+                  <Divider/>
                   <ListRow icon="bookmark" label={m._cfm.existingDrcBeneficiary}>{entry.internal_existing_beneficiary && (
                     <Icon color="success">check_circle</Icon>
                   )}</ListRow>
@@ -107,6 +107,7 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
                 </>
               ) : entry.external_feedback_type === 'complaint' && (
                 <>
+                  <Divider/>
                   <ListRow icon="handshake" label={m._cfm.contactAgreement}>
                     {entry.external_prot_support === 'yes' ? (
                       <Icon color="success">check_circle</Icon>

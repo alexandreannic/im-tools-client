@@ -6,20 +6,19 @@ import {AccessTable} from '@/features/Access/AccessTable'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Panel} from '@/shared/Panel'
 import React, {useEffect} from 'react'
-import {useSession} from '@/core/Session/SessionContext'
-import {WfpDeduplicationAccessForm} from '@/features/WfpDeduplication/WfpDeduplicationAccessForm'
 import {useI18n} from '@/core/i18n'
 import {Page} from '@/shared/Page'
-import {WfpDeduplicationAccessParams} from '@/core/sdk/server/access/Access'
 import {CfmAccessForm} from '@/features/Cfm/Access/CfmAccessForm'
+import {useCfmContext} from '@/features/Cfm/CfmContext'
 
 export const CfmAccess = () => {
   const {api} = useAppSettings()
-  const {session} = useSession()
   const {m} = useI18n()
+  const ctx = useCfmContext()
 
   const _get = useFetchers(() => api.access.search({featureId: AppFeatureId.cfm}))
   const _remove = useAsync(api.access.remove)
+
 
   const refresh = () => {
     _get.fetch({force: true, clean: false})
@@ -30,15 +29,16 @@ export const CfmAccess = () => {
   }, [])
 
   return (
-    <Page>
+    <Page width="lg">
       <Panel>
         <AccessTable
           _remove={_remove}
           _data={_get}
+          isAdmin={ctx.authorizations.sum.admin}
           // renderParams={(_: WfpDeduplicationAccessParams) => JSON.stringify(_.filters)}
           onRemoved={refresh}
           header={
-            session.admin && (
+            ctx.authorizations.sum.admin && (
               <CfmAccessForm onAdded={refresh}>
                 <AaBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</AaBtn>
               </CfmAccessForm>

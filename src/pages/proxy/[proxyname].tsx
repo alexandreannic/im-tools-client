@@ -14,7 +14,6 @@ export default function _Component() {
   const {api} = useAppSettings()
   const request = (proxyname: string) => api.proxy.search()
     .then(res => res.find(_ => {
-      console.log(_.slug, proxyname)
       return _.slug === proxyname
     }))
 

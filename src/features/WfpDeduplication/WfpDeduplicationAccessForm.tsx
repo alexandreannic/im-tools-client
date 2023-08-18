@@ -11,7 +11,7 @@ import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
-import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
+import {AccessForm, AccessFormSection, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcJobTitle'
 import {AaSelect} from '@/shared/Select/Select'
 
@@ -62,6 +62,7 @@ export const WfpDeduplicationAccessForm = ({
       content={
         <Box sx={{width: 400}}>
           <AccessForm form={accessForm}/>
+          <AccessFormSection>{m.filter}</AccessFormSection>
           <Controller
             name="drcOfficesDataFilter"
             rules={{required: {value: true, message: m.required}}}
@@ -71,7 +72,7 @@ export const WfpDeduplicationAccessForm = ({
                 {...field}
                 defaultValue={[]}
                 multiple={true}
-                label={m._wfpDeduplication.filterByDrcOffice}
+                label={m.drcOffice}
                 onChange={_ => onChange(_)}
                 options={Enum.values(DrcOffice)}
                 sx={{mb: 2.5}}

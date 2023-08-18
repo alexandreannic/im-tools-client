@@ -9,7 +9,9 @@ export class UserSdk {
     return this.client.post<User>(`/user/me`, {body: user})
   }
 
-  readonly search = () => {
-    return this.client.get<any[]>(`/user`).then(_ => _.map(User.map))
+  readonly search = ({includeDummy}: {includeDummy?: boolean} = {}) => {
+    return this.client.get<any[]>(`/user`)
+      .then(res => res.map(User.map))
+      .then(res => includeDummy ? res : res.filter(_ => !_.email.includes('@dummy')))
   }
 }

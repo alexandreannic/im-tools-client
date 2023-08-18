@@ -54,7 +54,6 @@ export const AdminProxy = () => {
                 loading={_search.creating}
                 confirmDisabled={!_createForm.formState.isValid}
                 onConfirm={(e, close) => _createForm.handleSubmit(form => {
-                  console.log('form', form)
                   _search.create({}, {
                     ...form,
                     expireAt: form.expireAt ? endOfDay(new Date(form.expireAt)) : undefined,

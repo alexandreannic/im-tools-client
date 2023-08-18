@@ -22,6 +22,7 @@ export const useSheetContext = <T extends SheetRow>() => useContext<SheetContext
 
 export const SheetProvider = <T extends SheetRow>({
   children,
+  defaultLimit,
   columns,
   select,
   // sortBy,
@@ -29,6 +30,7 @@ export const SheetProvider = <T extends SheetRow>({
   getRenderRowKey,
   data: _data,
 }: {
+  defaultLimit?: number
   columns: SheetTableProps<T>['columns']
   data: SheetTableProps<T>['data']
   getRenderRowKey: SheetTableProps<T>['getRenderRowKey']
@@ -42,6 +44,7 @@ export const SheetProvider = <T extends SheetRow>({
   const data = useSheetData({
     columnsIndex,
     data: _data,
+    defaultLimit,
   })
   const modal = useSheetModal({data})
   return (

@@ -21,7 +21,7 @@ import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo} from '@/koboDrcUaFormId'
 import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
-import {Tooltip} from '@mui/material'
+import {Autocomplete, TextField, Tooltip} from '@mui/material'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -204,6 +204,7 @@ export const CfmTable = ({}: any) => {
             column.office,
             column.program,
             {
+              width: 170,
               type: 'string',
               head: m.focalPoint,
               id: 'focalPoint',
@@ -217,12 +218,22 @@ export const CfmTable = ({}: any) => {
                   }}
                 >
                   {(value, onChange) => (
-                    <AaInput
-                      helperText={null}
+                    <Autocomplete
+                      freeSolo
+                      loading={ctx.users.loading}
+                      disableClearable
                       value={value}
-                      onChange={e => onChange(e.target.value)}
-                      placeholder="@drc.ngo"
-                      endAdornment={value && !Utils.regexp.drcEmail.test(value) && <TableIcon tooltip={m.invalidEmail} color="error">error</TableIcon>}
+                      onChange={(e, _) => onChange(_)}
+                      options={ctx.users.entity?.map((option) => option.email) ?? []}
+                      // renderInput={(params) => <TextField {...params} label="freeSolo" />}
+                      renderInput={({InputProps, ...props}) => <AaInput
+                        {...InputProps}
+                        {...props}
+                        helperText={null}
+                        placeholder="@drc.ngo"
+                        endAdornment={value && !Utils.regexp.drcEmail.test(value) && <TableIcon tooltip={m.invalidEmail} color="error">error</TableIcon>}
+                      />
+                      }
                     />
                   )}
                 </DebouncedInput>

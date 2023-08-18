@@ -38,7 +38,6 @@ export class KoboAnswerSdk {
 
 
   readonly updateTag = ({formId, answerId, tags}: {formId: KoboId, answerId: KoboAnswerId, tags: Record<string, any>}) => {
-    console.log({formId, answerId, tags})
     return this.client.post(`/kobo/answer/${formId}/${answerId}/tag`, {body: {tags}})
   }
 

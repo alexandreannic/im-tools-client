@@ -1,6 +1,8 @@
 import {AppFeatureId} from '@/features/appFeatureId'
 import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
+import admin from '@/pages/admin'
+import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 
 export enum AccessLevel {
   Read = 'Read',
@@ -29,6 +31,12 @@ export interface KoboDatabaseAccessParams {
   filters?: Record<string, string[]>
 }
 
+export interface CfmAccessParams {
+  office?: DrcOffice[]
+  program?: CfmDataProgram[]
+  // seeHisOwn?: boolean
+}
+
 export class WfpDeduplicationAccessParams {
   static readonly create = (_: WfpDeduplicationAccessParams): any => _
 }
@@ -44,10 +52,11 @@ export interface AccessSearch {
 interface FilterByFeature {
   (f: AppFeatureId.kobo_database): (_: Access<any>) => _ is Access<KoboDatabaseAccessParams>
   (f: AppFeatureId.wfp_deduplication): (_: Access<any>) => _ is Access<WfpDeduplicationAccessParams>
+  (f: AppFeatureId.cfm): (_: Access<any>) => _ is Access<CfmAccessParams>
   (f: AppFeatureId): (_: Access<any>) => _ is Access<any>
 }
 
-interface AccessSum {
+export interface AccessSum {
   read: boolean
   write: boolean
   admin: boolean
@@ -55,13 +64,11 @@ interface AccessSum {
 
 export class Access {
 
-  static readonly sumKoboAccess = (accesses: Access<any>[], formId: KoboId, admin?: boolean): AccessSum => {
-    const filtered = accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId)
-    console.log('sum', admin, filtered)
+  static readonly toSum = (accesses: Access<any>[], admin?: boolean) => {
     return {
-      admin: admin || !!filtered.find(_ => _.level === AccessLevel.Admin),
-      write: admin || !!filtered.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin),
-      read: admin || !!filtered.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin || _.level === AccessLevel.Read),
+      admin: admin || !!accesses.find(_ => _.level === AccessLevel.Admin),
+      write: admin || !!accesses.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin),
+      read: admin || !!accesses.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin || _.level === AccessLevel.Read),
     }
   }
 

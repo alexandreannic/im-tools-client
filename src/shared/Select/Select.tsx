@@ -44,7 +44,7 @@ export const AaSelect = <T extends string | number>({
   ...props
 }: AaSelectProps<T>) => {
   const {m} = useI18n()
-  const [innerValue, setInnerValue] = useState<undefined | T | T[]>()
+  const [innerValue, setInnerValue] = useState<undefined | T | T[]>(multiple ? [] : undefined)
   const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE'
 
   const options = useMemo(() => {
@@ -87,17 +87,22 @@ export const AaSelect = <T extends string | number>({
         id={id}
         defaultValue={defaultValue ?? (multiple ? [] : '')}
         multiple={multiple}
+        // renderValue={_ => {
+        //   console.log('https://ee.humanitarianresponse.info/x/5on180Ku', _)
+        //   return JSON.stringify(_)
         onChange={e => {
           const value = e.target.value
           if (![value].flat().includes(IGNORED_VALUE_FOR_SELECT_ALL_ITEM as any)) {
             setInnerValue(value as any)
           }
         }}
-        input={<OutlinedInput
-          label={label}
-          // endAdornment={
-          //   <CircularProgress size={24} color="secondary"/>
-        />}
+        input={
+          <OutlinedInput
+            label={label}
+            // endAdornment={
+            //   <CircularProgress size={24} color="secondary"/>
+          />
+        }
         {...props}
       >
         {isMultiple && options.length > 5 && (

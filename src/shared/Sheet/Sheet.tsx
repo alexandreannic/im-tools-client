@@ -1,4 +1,4 @@
-import {Badge, Box, BoxProps, Icon, LinearProgress, SxProps, TablePagination, Theme,} from '@mui/material'
+import {Badge, Box, BoxProps, Icon, LinearProgress, TablePagination,} from '@mui/material'
 import React, {CSSProperties, ReactNode, useEffect} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
@@ -12,7 +12,6 @@ import {SheetHead} from './SheetHead'
 import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
 import {format} from 'date-fns'
 import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
-import {id} from 'date-fns/locale'
 
 type OrderBy = 'asc' | 'desc'
 
@@ -22,6 +21,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   header?: ReactNode
   loading?: boolean
   total?: number
+  defaultLimit?: number
   title?: string
   readonly select?: {
     readonly onSelect: (_: string[]) => void
@@ -97,6 +97,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   columns,
   getRenderRowKey,
   header,
+  defaultLimit,
   showColumnsToggle,
   showColumnsToggleBtnTooltip,
   renderEmptyState,
@@ -110,6 +111,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
     <SheetProvider
       columns={columns}
       data={data}
+      defaultLimit={defaultLimit}
       select={select}
       getRenderRowKey={getRenderRowKey}
     >

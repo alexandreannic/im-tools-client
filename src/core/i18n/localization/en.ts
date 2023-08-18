@@ -937,7 +937,6 @@ export const en = Object.freeze({
     dateOfDeparture: `Date of departure`,
     pin: 'Pin',
     _wfpDeduplication: {
-      filterByDrcOffice: 'Filter by DRC office',
     },
     mpcaDb: {
       drcSupportSuggestion: {

@@ -62,7 +62,10 @@ export const DatabaseAccess = ({
   const {session, accesses} = useSession()
 
   const accessSum = useMemo(() => {
-    return Access.sumKoboAccess(accesses, formId, session.admin)
+    return Access.toSum(
+      accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId),
+      session.admin
+    )
   }, [session, accesses])
 
   const requestInConstToFixTsInference = () => api.access.search({featureId: AppFeatureId.kobo_database})

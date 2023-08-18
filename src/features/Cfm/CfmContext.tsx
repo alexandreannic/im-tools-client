@@ -8,9 +8,15 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo} from '@/koboDrcUaFormId'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
-import {CfmDataPriority, CfmDataSource, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
 import {MealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternal'
+import {Arr, Enum} from '@alexandreannic/ts-utils'
+import {Access, AccessSum} from '@/core/sdk/server/access/Access'
+import {AppFeatureId} from '@/features/appFeatureId'
+import {useSession} from '@/core/Session/SessionContext'
+import {DrcOffice} from '@/core/drcJobTitle'
+import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [kobo.drcUa.form.cfmExternal]: CfmDataSource.External,
@@ -51,11 +57,18 @@ export type CfmData = {
 >
 
 export interface CfmContext {
+  authorizations: {
+    sum: AccessSum,
+    accessibleOffices?: DrcOffice[]
+    accessiblePrograms?: CfmDataProgram[]
+    // seeHisOwn: boolean
+  }
   schemaInternal: UseKoboSchema,
   schemaExternal: UseKoboSchema,
   translateExternal: ReturnType<typeof getKoboTranslations>,
   translateInternal: ReturnType<typeof getKoboTranslations>,
   updateTag: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId, key: string, value: any}) => Promise<Record<string, any>>>
+  users: UseFetcher<ApiSdk['user']['search']>
   data: UseFetcher<() => Promise<{
     [CfmDataSource.Internal]: KoboAnswer<MealCfmInternal, KoboMealCfmTag>[]
     [CfmDataSource.External]: KoboAnswer<MealCfmExternal, KoboMealCfmTag>[]
@@ -81,6 +94,7 @@ export const CfmProvider = ({
   }
   children: ReactNode
 }) => {
+  const {session, accesses} = useSession()
   const {api} = useAppSettings()
   const schemaInternal = useKoboSchema({schema: schemas.internal})
   const schemaExternal = useKoboSchema({schema: schemas.external})
@@ -89,6 +103,22 @@ export const CfmProvider = ({
     langIndex,
     questionIndex: schemaExternal.questionIndex,
   }), [schemas.external, langIndex])
+
+  const users = useFetcher(() => api.user.search())
+
+  const authorizations: CfmContext['authorizations'] = useMemo(() => {
+    const cfmAccesses = Arr(accesses).filter(Access.filterByFeature(AppFeatureId.cfm))
+    const sum = Access.toSum(cfmAccesses, session.admin)
+    const accessibleOffices = cfmAccesses.map(_ => _.params).flatMap(_ => _?.office).compact().get
+    const accessiblePrograms = cfmAccesses.map(_ => _.params).flatMap(_ => _?.program).compact().get
+    // const seeHisOwn = !!cfmAccesses.find(_ => _.params?.seeHisOwn)
+    return {
+      sum,
+      accessibleOffices: accessibleOffices.length === 0 ? undefined : accessibleOffices,
+      accessiblePrograms: accessiblePrograms.length === 0 ? undefined : accessiblePrograms,
+      // seeHisOwn: seeHisOwn,
+    }
+  }, [session, accesses])
 
   const translateInternal = useMemo(() => getKoboTranslations({
     schema: schemas.internal,
@@ -132,7 +162,22 @@ export const CfmProvider = ({
         ..._,
       })
     })
-    return res.sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
+    console.log('authorizations.sum', authorizations)
+    return res
+      .filter(_ => {
+        if (session.email === _.tags?.focalPointEmail)
+          return true
+        if (!authorizations.sum.read)
+          return false
+        if (authorizations.accessiblePrograms && !authorizations.accessiblePrograms.includes(_.tags?.program!))
+          return false
+        if (authorizations.accessibleOffices && !authorizations.accessibleOffices.includes(_.tags?.office!))
+          return false
+        // if (authorizations.accessibleEmails && !authorizations.accessibleEmails.includes(_.tags?.focalPointEmail!))
+        //   return false
+        return true
+      })
+      .sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
   }, [data])
 
   const updateTag = useAsync((params: {formId: KoboId, answerId: KoboAnswerId, key: string, value: any}) => api.kobo.answer.updateTag({
@@ -156,16 +201,19 @@ export const CfmProvider = ({
 
   useEffect(() => {
     data.fetch()
+    users.fetch()
   }, [])
 
   return (
     <CfmContext.Provider value={{
+      authorizations,
       schemaInternal,
       schemaExternal,
       translateExternal,
       translateInternal,
       updateTag,
       data,
+      users,
       mappedData,
     }}>
       {children}

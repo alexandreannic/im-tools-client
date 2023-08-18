@@ -1,7 +1,7 @@
 import {FormControl, FormHelperText, InputLabel, OutlinedInput, OutlinedInputProps, TextFieldProps} from '@mui/material'
 import React, {ReactNode, useEffect, useRef} from 'react'
 
-export interface AaInputProps extends OutlinedInputProps, Pick<TextFieldProps, 'InputLabelProps'> {
+export interface AaInputProps extends OutlinedInputProps, Pick<TextFieldProps, 'InputProps' | 'InputLabelProps'> {
   small?: boolean
   label?: string
   helperText?: ReactNode

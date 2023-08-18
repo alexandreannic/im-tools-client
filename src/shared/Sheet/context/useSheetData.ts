@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {orderBy} from 'lodash'
 import {KeyOf, multipleFilters, paginateData} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
@@ -11,14 +11,16 @@ export type UseSheetData = ReturnType<typeof useSheetData>
 export const useSheetData = <T extends SheetRow>({
   data,
   columnsIndex,
+  defaultLimit = 20,
 }: {
+  defaultLimit?: number
   data?: T[]
   columnsIndex: Record<KeyOf<T>, SheetColumnProps<T>>
 }) => {
   const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilterValue>>({} as any)
 
   const [search, setSearch] = useState<SheetSearch<any>>({
-    limit: 20,
+    limit: defaultLimit,
     offset: 0,
   })
 

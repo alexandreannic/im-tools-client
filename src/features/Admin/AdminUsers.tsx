@@ -27,9 +27,9 @@ export const AdminUsers = () => {
   const [showDummyAccounts, setShowDummyAccounts] = useState(false)
 
   useEffect(() => {
-    _users.fetch()
+    _users.fetch({clean: false}, {includeDummy: !showDummyAccounts})
     navigate(adminModule.siteMap.users)
-  }, [])
+  }, [showDummyAccounts])
 
   const connectAs = async (email: string) => {
     const session = await _connectAs.fetch({force: true, clean: true}, email)
@@ -37,10 +37,7 @@ export const AdminUsers = () => {
     setSession(session)
   }
 
-  const filteredData = useMemo(() => {
-    if (showDummyAccounts) return _users.entity
-    return _users.entity?.filter(_ => !_.email.includes('@dummy'))
-  }, [showDummyAccounts, _users.entity])
+  const filteredData = _users.entity
 
   return (
     <Page width="lg">
@@ -52,6 +49,7 @@ export const AdminUsers = () => {
               <Switch value={showDummyAccounts} onChange={e => setShowDummyAccounts(e.target.checked)}/>
             </Box>
           }
+          defaultLimit={200}
           data={filteredData}
           columns={[
             // {

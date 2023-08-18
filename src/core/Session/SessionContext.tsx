@@ -38,12 +38,10 @@ export const SessionProvider = ({
   const {api} = useAppSettings()
   const [session, setSession] = useState<UserSession | undefined>()
   const [isInitialLoading, setIsInitialLoading] = useState(true)
-  const router = useRouter()
 
   const _access = useFetcher<any>(api.access.searchForConnectedUser)
   const _revertConnectAs = useAsync<any>(async () => {
     const session = await api.session.revertConnectAs()
-    await router.push('/')
     setSession(session)
   })
 
