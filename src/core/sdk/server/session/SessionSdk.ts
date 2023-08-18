@@ -26,4 +26,7 @@ export class SessionSdk {
   readonly connectAs = (email: string) => {
     return this.client.post<UserSession>(`/session/connect-as`, {body: {email}})
   }
+  readonly revertConnectAs = () => {
+    return this.client.post<UserSession>(`/session/connect-as-revert`)
+  }
 }

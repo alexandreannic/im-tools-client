@@ -13,6 +13,7 @@ import {Arr} from '@alexandreannic/ts-utils'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {Txt} from 'mui-extension'
 import {Box, Switch} from '@mui/material'
+import {useRouter} from 'next/router'
 
 export const AdminUsers = () => {
   const {api} = useAppSettings()
@@ -21,6 +22,7 @@ export const AdminUsers = () => {
   const _users = useFetcher(api.user.search)
   const {m, formatDate, formatDateTime} = useI18n()
   const navigate = useNavigate()
+  const router = useRouter()
 
   const [showDummyAccounts, setShowDummyAccounts] = useState(false)
 
@@ -29,8 +31,10 @@ export const AdminUsers = () => {
     navigate(adminModule.siteMap.users)
   }, [])
 
-  const connectAs = (email: string) => {
-    _connectAs.fetch({force: true, clean: true}, email).then(setSession)
+  const connectAs = async (email: string) => {
+    const session = await _connectAs.fetch({force: true, clean: true}, email)
+    await router.push('/')
+    setSession(session)
   }
 
   const filteredData = useMemo(() => {

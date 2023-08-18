@@ -4,13 +4,16 @@ import {useI18n} from '@/core/i18n'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {mapPromise} from '@alexandreannic/ts-utils'
-import {CircularProgress} from '@mui/material'
+import {Box, CircularProgress} from '@mui/material'
 import {useAaToast} from '@/core/useToast'
 import {Access} from '@/core/sdk/server/access/Access'
 import {SessionLoginForm} from '@/core/Session/SessionLoginForm'
 import {SessionInitForm} from '@/core/Session/SessionInitForm'
 import {CenteredContent} from '@/shared/CenteredContent'
 import {Fender} from 'mui-extension'
+import {AAIconBtn} from '@/shared/IconBtn'
+import {useNavigate} from 'react-router'
+import {useRouter} from 'next/router'
 
 export interface SessionContext {
   session: UserSession
@@ -35,8 +38,14 @@ export const SessionProvider = ({
   const {api} = useAppSettings()
   const [session, setSession] = useState<UserSession | undefined>()
   const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const router = useRouter()
 
   const _access = useFetcher<any>(api.access.searchForConnectedUser)
+  const _revertConnectAs = useAsync<any>(async () => {
+    const session = await api.session.revertConnectAs()
+    await router.push('/')
+    setSession(session)
+  })
 
   const _getSession = useAsync(mapPromise({
     promise: api.session.get,
@@ -97,6 +106,12 @@ export const SessionProvider = ({
         accesses: _access.entity,
         logout,
       }}>
+        {session.originalEmail && (
+          <Box sx={{px: 2, py: .25, background: t => t.palette.background.paper}}>
+            Connected as <b>{session.email}</b>. Go back as <b>{session.originalEmail}</b>
+            <AAIconBtn loading={_revertConnectAs.getLoading()} onClick={_revertConnectAs.call} color="primary">logout</AAIconBtn>
+          </Box>
+        )}
         {children}
       </Context.Provider>
     )
