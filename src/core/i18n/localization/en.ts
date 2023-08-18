@@ -1042,8 +1042,10 @@ export const en = Object.freeze({
         InvoicePaymentProcessed: 'Invoice payment processed',
       }
     },
+    admin: 'Admin',
     note: 'Note',
     projectCode: 'Project Code',
     form: 'Form',
+    showDummyAccounts: 'Show dummy accounts',
   },
 })

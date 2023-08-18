@@ -2,7 +2,6 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {appConfig} from '@/conf/AppConfig'
 import {Access} from '@/core/sdk/server/access/Access'
-import {kobo} from '@/koboDrcUaFormId'
 
 export enum AppFeatureId {
   dashboards = 'dashboards',

@@ -1,6 +1,6 @@
 import {Page} from '@/shared/Page'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useEffect} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
@@ -10,6 +10,9 @@ import {useNavigate} from 'react-router'
 import {adminModule} from '@/features/Admin/Admin'
 import {Panel} from '@/shared/Panel'
 import {Arr} from '@alexandreannic/ts-utils'
+import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {Txt} from 'mui-extension'
+import {Box, Switch} from '@mui/material'
 
 export const AdminUsers = () => {
   const {api} = useAppSettings()
@@ -18,6 +21,8 @@ export const AdminUsers = () => {
   const _users = useFetcher(api.user.search)
   const {m, formatDate} = useI18n()
   const navigate = useNavigate()
+
+  const [showDummyAccounts, setShowDummyAccounts] = useState(false)
 
   useEffect(() => {
     _users.fetch()
@@ -28,11 +33,22 @@ export const AdminUsers = () => {
     _connectAs.fetch({force: true, clean: true}, email).then(setSession)
   }
 
+  const filteredData = useMemo(() => {
+    if (showDummyAccounts) return _users.entity
+    return _users.entity?.filter(_ => !_.email.includes('@dummy'))
+  }, [showDummyAccounts, _users.entity])
+
   return (
-    <Page>
+    <Page width="lg">
       <Panel>
         <Sheet
-          data={_users.entity}
+          header={
+            <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
+              <Txt sx={{fontSize: '1rem'}} color="hint">{m.showDummyAccounts}</Txt>
+              <Switch value={showDummyAccounts} onChange={e => setShowDummyAccounts(e.target.checked)}/>
+            </Box>
+          }
+          data={filteredData}
           columns={[
             // {
             //   id: 'name',
@@ -42,13 +58,21 @@ export const AdminUsers = () => {
             {
               id: 'email',
               head: m.email,
-              render: _ => _.email,
+              render: _ => <Txt bold>{_.email}</Txt>,
               type: 'string',
             },
             {
+              width: 110,
+              id: 'createdAt',
+              head: m.createdAt,
+              render: _ => <Txt color="hint">{formatDate(_.createdAt)}</Txt>,
+              type: 'date',
+            },
+            {
+              width: 110,
               id: 'lastConnectedAt',
               head: m.lastConnectedAt,
-              render: _ => formatDate(_.lastConnectedAt),
+              render: _ => _.lastConnectedAt && <Txt color="hint">{formatDate(_.lastConnectedAt)}</Txt>,
               type: 'date',
             },
             {
@@ -65,7 +89,18 @@ export const AdminUsers = () => {
               options: () => Arr(_users.entity?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
+              type: 'select_one',
+              id: 'admin',
+              width: 10,
+              align: 'center',
+              head: m.admin,
+              renderValue: _ => _.admin ? 'true' : 'false',
+              render: _ => _.admin && <TableIcon color="success">check_circle</TableIcon>,
+              options: () => [{value: 'true', label: m.yes}, {value: 'false', label: m.no}]
+            },
+            {
               id: 'action',
+              width: 10,
               align: 'right',
               render: _ => (
                 <AAIconBtn

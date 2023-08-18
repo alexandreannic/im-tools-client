@@ -17,8 +17,8 @@ export class User {
   static readonly map = (u: Record<keyof User, any>): User => {
     return {
       ...u,
-      lastConnectedAt: map(u.lastConnectedAt, _ => new Date(_)),
-      createdAt: map(u.createdAt, _ => new Date(_)),
+      lastConnectedAt: u.lastConnectedAt ? new Date(u.lastConnectedAt) : undefined,
+      createdAt: u.createdAt ? new Date(u.createdAt) : undefined,
     }
   }
 }
