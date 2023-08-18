@@ -1,9 +1,9 @@
 import {Controller, UseFormReturn} from 'react-hook-form'
 import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
 import {AccessLevel} from '@/core/sdk/server/access/Access'
-import {Txt} from 'mui-extension'
+import {Txt, TxtProps} from 'mui-extension'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {Autocomplete, Chip} from '@mui/material'
+import {Autocomplete, BoxProps, Chip} from '@mui/material'
 import {Enum} from '@alexandreannic/ts-utils'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {AaSelect} from '@/shared/Select/Select'
@@ -18,6 +18,10 @@ export interface IAccessForm {
   level: AccessLevel
 }
 
+export const AccessFormSection = ({children, ...props}: TxtProps) => {
+  return <Txt block uppercase bold color="hint" fontSize="small" sx={{mb: 1}} {...props}>{children}</Txt>
+}
+
 export const AccessForm = ({
   form,
 }: {
@@ -26,7 +30,7 @@ export const AccessForm = ({
   const {m} = useI18n()
   return (
     <>
-      <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.Access.giveAccessBy}</Txt>
+      <AccessFormSection>{m.Access.giveAccessBy}</AccessFormSection>
       <Controller
         name="selectBy"
         rules={{required: {value: true, message: m.required}}}
@@ -73,7 +77,7 @@ export const AccessForm = ({
                 sx={{mb: 2.5}}
                 options={Enum.values(DrcJob) ?? []}
                 // renderOption={(props, _) => <Txt truncate>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
-                renderInput={({InputProps, ...props}) => <AaInput label={m.drcJob} {...InputProps} {...props}/>}
+                renderInput={({InputProps, ...props}) => <AaInput helperText={null} label={m.drcJob} {...InputProps} {...props}/>}
               />
             )}
           />
@@ -102,7 +106,7 @@ export const AccessForm = ({
           {...form.register('email', {required: false, pattern: {value: /(@drc.ngo$|\s)/, message: m.invalidEmail}})}
         />
       )}
-      <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.accessLevel}</Txt>
+      <AccessFormSection>{m.accessLevel}</AccessFormSection>
       <Controller
         name="level"
         defaultValue={AccessLevel.Read}

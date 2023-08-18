@@ -14,7 +14,7 @@ import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
-import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
+import {AccessForm, AccessFormSection, IAccessForm} from '@/features/Access/AccessForm'
 import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 
 interface Form extends IAccessForm {
@@ -99,7 +99,7 @@ export const DatabaseAccessForm = ({
       content={
         <Box sx={{width: 400}}>
           <AccessForm form={accessForm}/>
-          <Txt block color="hint" fontSize="small" sx={{mb: .5}}>{m.filter}</Txt>
+          <AccessFormSection>{m.filter}</AccessFormSection>
           <Controller
             name="question"
             control={accessForm.control}
