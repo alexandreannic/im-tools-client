@@ -344,7 +344,7 @@ export const en = Object.freeze({
         and the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect 
         those of the European Union or the BHA. Neither the European Union nor the BHA can be held responsible for any use of the dashboard.
       `,
-      mainConcernsRegardingHousing: 'HHs with concerns regarding their accommodation',
+      mainConcernsRegardingHousing: 'Concerns related to current accommodation',
       typeOfIncident: 'Type of incident',
       poorRelationshipWithHostCommunity: 'Poor intercommunity relationships',
       poorSenseOfSafety: 'Poor sense of safety',
@@ -365,6 +365,48 @@ export const en = Object.freeze({
       safetyOrSecurityConcernsDuringDisplacement: 'HHs reporting security concerns during displacement',
       HHs: 'HHs',
       AvgHHSize: 'AvgHHSize',
+    },
+    snapshotProtMonito: {
+      echo: {
+        livelihood: ({
+          outOfWork,
+        }: {
+          outOfWork?: string
+        }) => `Limited livelihood opportunities were widely reported by household respondents. The percentage of individuals surveyed out of work and seeking employment remains quite high (<b>${outOfWork}</b>). Primary factors contributing to unemployment were reported as lack of available jobs, housework/caring for children and physical impairments/limitations. As a result of limited livelihood and economic opportunities, a considerable portion of the Ukrainian population is currently dependent on social protection schemes and humanitarian assistance.`,
+        needs: ({
+          healthPn,
+          barriersRural,
+          barriersUrban,
+        }: {
+          healthPn?: string
+          barriersRural?: string
+          barriersUrban?: string
+        }) => `Health continues to be the first priority for the vast majority of households surveyed, cited by a total of <b>${healthPn}</b> of respondents as a priority need. The ratio of households reporting barriers to access healthcare is exponentially higher in rural areas— <b>${barriersRural}</b> of respondents living in rural areas compared to <b>${barriersUrban}</b> of those living in urban areas.`,
+        safety: ({
+          poorSafety,
+          poorSafetyRural,
+          poorSafetyUrban,
+          protectionIncident,
+        }: {
+          poorSafety?: string
+          poorSafetyRural?: string
+          poorSafetyUrban?: string
+          protectionIncident?: string
+        }) => `Perceptions of sense of safety vary significantly depending on the surveyed area. Overall, <b>${poorSafety}</b> of respondents across surveyed oblasts reported a poor sense of safety (feeling unsafe or very unsafe), mainly due to shelling or threats of shelling, however this figure is affected by a high number of respondents from areas such as Chernihiv and Sumy. Poor sense of safety is higher in rural areas (<b>${poorSafetyRural}</b>) than in urban areas (<b>${poorSafetyUrban}</b>). <b>${protectionIncident}</b> of respondents reported protection incidents experienced by household members over the past 6 months.`,
+        registration: ({
+          hrkLackPersonalDoc
+        }: {
+          hrkLackPersonalDoc?: string
+        }) => `<b>${hrkLackPersonalDoc}</b> of individuals surveyed in Kharkivska oblast lack personal documentation and face subsequent challenges in accessing services as well as  limitations to their freedom of movement. Most of the respondents who reported lacking HLP documentation indicated not possessing property ownership for apartment/house or land, which can hinder them from accessing compensation, resolving property disputes (which may pose the long-term threat of eviction for IDPs), or exercising their rights in relation to their land or property.`,
+        displacement: `Majority of the IDPs surveyed during the monitoring period reported having left their place of habitual residence between February and May 2022. Main factors influencing departure reported included shelling and attacks on civilians, destruction or damage of housing, land or property due to conflict, as well as occupation of property, exposure to UXOs/landmines and lack of access to livelihoods.`,
+        desc: 'This snapshot summarizes the findings of <b>Protection Monitoring</b> (PM) implemented through household interviews in the following oblasts: <ul style="columns: 2"><li>Chernihivska</li><li>Dnipropetrovska</li><li>Ivano-Frankivska</li><li>Kharkivska</li><li>Lvivska</li><li>Khersonska</li><li>Mykolaivska</li><li>Sumska</li><li>Volynska</li><li>Zaporizska</li></ul>DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people directly exposed to and affected by the current armed conflict.',
+      },
+      basicNeeds: `Basic Needs`,
+      livelihood: `Livelihoods & Coping mechanisms`,
+      safetyProtectionIncidents: 'Safety & Protection incidents',
+      displacementDesc: `Majority of the IDPs surveyed during the monitoring period reported having left their place of habitual residence between February and May 2022. Main factors influencing departure reported included shelling and attacks on civilians, destruction or damage of housing, land or property due to conflict, as well as occupation of property, exposure to UXOs/landmines and lack of access to livelihoods.`,
+      integrateIntoTheLocalCommunity: 'Integrate into the local community',
+      monitoredHhByOblast: 'Monitored HH By Oblast',
     },
     protHHSnapshot: {
       male1860: `Males 18-60 years old`,
@@ -738,8 +780,7 @@ export const en = Object.freeze({
       childWithoutBirthCertificate: 'Child without birth certificate',
       barriersToPersonalDocument: 'Barriers',
       maleWithoutIDPCertByOblast: 'IDP men 18 to 60 years old without IDP certificate',
-      maleWithoutIDPCert: 'IDPs without IDP certificate',
-      femaleWithoutIDPCert: 'Female without IDP certificate',
+      maleWithoutIDPCert: 'Unregistered IDPs',
       safetyConcernsDuringDisplacement: `Safety/Security on Displacement`,
       threatsOrConcernsDuringDisplacement: `Experienced threats`,
       threatsOrConcernsDuringDisplacementByOblast: `Experienced shelling threat by oblast of origin`,
@@ -919,7 +960,7 @@ export const en = Object.freeze({
       // _40_1_pn_health_byCategory: 'Health as 1st priority need by category',
       // _40_1_pn_cash_byCategory: 'Cash as 1st priority need by category',
       _29_nfiNeededByCategory: 'Reported needs of NFIs',
-      title: 'Protection Snapshot',
+      title: 'Protection Monitoring Snapshot',
       title2: 'Ukraine',
       subTitle: 'Ukraine Response',
       factorInfluencingSenseOfSafety: 'Factors influencing the sense of safety',
@@ -936,8 +977,7 @@ export const en = Object.freeze({
     returnToOrigin: `Return to area of origin`,
     dateOfDeparture: `Date of departure`,
     pin: 'Pin',
-    _wfpDeduplication: {
-    },
+    _wfpDeduplication: {},
     mpcaDb: {
       drcSupportSuggestion: {
         ThreeMonthsUnAgency: '3 Months Assistance - UN Agency',

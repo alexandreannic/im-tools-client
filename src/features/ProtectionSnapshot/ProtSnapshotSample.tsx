@@ -1,4 +1,4 @@
-import {Slide, SlideBody, SlideContainer, SlidePanelDepreacted, SlideTxt, SlideWidget} from '../../shared/PdfLayout/Slide'
+import {PdfSlide, PdfSlideBody, Div, SlidePanelDepreacted, SlideTxt, SlideWidget} from '../../shared/PdfLayout/PdfSlide'
 import {format, sub} from 'date-fns'
 import {Box, Icon, useTheme} from '@mui/material'
 import {AaPieChart} from '../../shared/Chart/AaPieChart'
@@ -26,7 +26,7 @@ export const ProtSnapshotSample = ({
   const {pdfTheme} = usePdfContext()
   const theme = useTheme()
   return (
-    <Slide>
+    <PdfSlide>
       <Box sx={{
         px: 2,
         py: 1,
@@ -49,18 +49,18 @@ export const ProtSnapshotSample = ({
           <DRCLogo/>
         </Box>
       </Box>
-      <SlideBody>
-        <SlideContainer>
-          <SlideContainer column sx={{flex: 4.7}}>
+      <PdfSlideBody>
+        <Div>
+          <Div column sx={{flex: 4.7}}>
             <SlideTxt>
               <p dangerouslySetInnerHTML={{__html: m.protHHSnapshot.desc.disclaimer}}/>
               <p dangerouslySetInnerHTML={{__html: m.protHHSnapshot.desc.sample}}/>
             </SlideTxt>
             <Box id="map" sx={{height: 316, borderRadius: pdfTheme.slideRadius}}/>
             <Box sx={{color: 'white'}}>Fix google map print issue</Box>
-          </SlideContainer>
+          </Div>
 
-          <SlideContainer column sx={{flex: 6}}>
+          <Div column sx={{flex: 6}}>
             <Box sx={{display: 'flex'}}>
               <SlideWidget title={m.hhs} icon="home">
                 {formatLargeNumber(data.length)}
@@ -73,8 +73,8 @@ export const ProtSnapshotSample = ({
               </SlideWidget>
             </Box>
 
-            <SlideContainer>
-              <SlideContainer column>
+            <Div>
+              <Div column>
                 <SlidePanelDepreacted>
                   <AaPieChart
                     outerRadius={60}
@@ -98,17 +98,17 @@ export const ProtSnapshotSample = ({
                 <SlidePanelDepreacted title={m.status}>
                   <HorizontalBarChartGoogle data={computed._12_Do_you_identify_as_any_of}/>
                 </SlidePanelDepreacted>
-              </SlideContainer>
-              <SlideContainer>
+              </Div>
+              <Div>
                 <SlidePanelDepreacted sx={{flex: 1, height: '100%'}} title={m.ageGroup}>
                   <HorizontalBarChartGoogle
                     data={computed._8_individuals.byAgeGroup}
                   />
                 </SlidePanelDepreacted>
-              </SlideContainer>
-            </SlideContainer>
-            <SlideContainer>
-              <SlideContainer column>
+              </Div>
+            </Div>
+            <Div>
+              <Div column>
                 <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
@@ -123,8 +123,8 @@ export const ProtSnapshotSample = ({
                     percent={computed.categoriesTotal.memberWithDisability.value / data.length}
                   />
                 </SlidePanelDepreacted>
-              </SlideContainer>
-              <SlideContainer column>
+              </Div>
+              <Div column>
                 <SlidePanelDepreacted>
                   <PieChartIndicator
                     noWrap
@@ -139,11 +139,11 @@ export const ProtSnapshotSample = ({
                     percent={computed.categoriesTotal.hohh60.value / data.length}
                   />
                 </SlidePanelDepreacted>
-              </SlideContainer>
-            </SlideContainer>
-          </SlideContainer>
-        </SlideContainer>
-      </SlideBody>
-    </Slide>
+              </Div>
+            </Div>
+          </Div>
+        </Div>
+      </PdfSlideBody>
+    </PdfSlide>
   )
 }

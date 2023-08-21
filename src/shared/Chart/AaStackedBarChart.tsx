@@ -35,11 +35,12 @@ export const AAStackedBarChart = ({
           // width={width}
           // height={height}
           data={data}
-          // margin={{
-          //   top: 20,
-          //   right: 30,
-          //   left: 20,
-          //   bottom: 5,
+          margin={{
+            // top: 20,
+            // right: 30,
+            left: -40,
+            // bottom: 5,
+          }}
         >
           {/*<CartesianGrid strokeDasharray="3 3"/>*/}
           <XAxis type="number" domain={[0, 10]}/>

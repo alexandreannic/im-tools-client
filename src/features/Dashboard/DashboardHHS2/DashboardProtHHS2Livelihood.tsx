@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
@@ -20,9 +20,9 @@ export const DashboardProtHHS2Livelihood = ({
   const {formatLargeNumber, m} = useI18n()
 
   return (
-    <SlideContainer column>
-      <SlideContainer responsive>
-        <SlideContainer>
+    <Div column>
+      <Div responsive>
+        <Div>
           <SlidePanel sx={{flex: 1}}>
             <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
               value: _ => _.what_is_the_average_month_income_per_household === 'no_income',
@@ -43,8 +43,8 @@ export const DashboardProtHHS2Livelihood = ({
               {(_, last) => <PieChartIndicator title={m.hhOutOfWork} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer>
+        </Div>
+        <Div>
           <SlidePanel sx={{flex: 1}}>
             <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
               value: _ => _.do_you_and_your_hh_members_receive_the_idp_allowance === 'yes',
@@ -62,10 +62,10 @@ export const DashboardProtHHS2Livelihood = ({
               {(_, last) => <PieChartIndicator title={m.hhWithGapMeetingBasicNeeds} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
-        </SlideContainer>
-      </SlideContainer>
-      <SlideContainer responsive alignItems="flex-start">
-        <SlideContainer column sx={{flex: 1}}>
+        </Div>
+      </Div>
+      <Div responsive alignItems="flex-start">
+        <Div column sx={{flex: 1}}>
           <SlidePanel title={m.protHHS2.hhOutOfWorkAndSeekingEmployment}>
             <KoboLineChart
               question="including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment"
@@ -90,11 +90,10 @@ export const DashboardProtHHS2Livelihood = ({
               filterValue={['unable_unwilling_to_answer']}
             />
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column sx={{flex: 1}}>
+        </Div>
+        <Div column sx={{flex: 1}}>
           <SlidePanel title={m.monthlyIncomePerHH}>
             <Lazy deps={[data]} fn={() => {
-
               const income = chain(ChartTools.single({
                 filterValue: ['no_income', 'unable_unwilling_to_answer'],
                 data: data.map(_ => _.what_is_the_average_month_income_per_household).compact(),
@@ -142,8 +141,8 @@ export const DashboardProtHHS2Livelihood = ({
               filterValue={['unable_unwilling_to_answer']}
             />
           </SlidePanel>
-        </SlideContainer>
-      </SlideContainer>
-    </SlideContainer>
+        </Div>
+      </Div>
+    </Div>
   )
 }

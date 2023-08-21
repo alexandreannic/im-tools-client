@@ -4,7 +4,7 @@ import React, {useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {Box, Divider, Icon, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {PdfSlide, PdfSlideBody, Div, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ScLineChart} from '../../shared/Chart/ScLineChart'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
@@ -39,11 +39,11 @@ export const ProtSnapshotDisplacement = ({
   }, [computed])
 
   return (
-    <Slide>
+    <PdfSlide>
       <SlideHeader>{m.displacement}</SlideHeader>
-      <SlideBody>
-        <SlideContainer>
-          <SlideContainer sx={{flex: 3}} column>
+      <PdfSlideBody>
+        <Div>
+          <Div sx={{flex: 3}} column>
             <SlidePanel title={m.departureFromAreaOfOrigin}>
               <ScLineChart hideYTicks hideXTicks height={140} hideLabelToggle curves={[
                 {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: computed._12_3_1_dateDeparture},
@@ -78,9 +78,9 @@ export const ProtSnapshotDisplacement = ({
                 sx={{mx: 2}}
               />
             </Box>
-          </SlideContainer>
+          </Div>
 
-          <SlideContainer column sx={{flex: 7}}>
+          <Div column sx={{flex: 7}}>
             <div>
               <SlideTxt dangerouslySetInnerHTML={{
                 __html: m.protHHSnapshot.desc.displacement({
@@ -92,8 +92,8 @@ export const ProtSnapshotDisplacement = ({
                 })
               }}/>
             </div>
-            <SlideContainer>
-              <SlideContainer column>
+            <Div>
+              <Div column>
                 <SlidePanel title={m.intentionToReturn}>
                   <PieChartIndicator
                     percent={computed._12_7_1_planToReturn.percent}
@@ -105,8 +105,8 @@ export const ProtSnapshotDisplacement = ({
                   <SlidePanelTitle>{m.decidingFactorsToReturn}</SlidePanelTitle>
                   <HorizontalBarChartGoogle data={computed._12_8_1_What_would_be_the_deciding_fac} base={data.length}/>
                 </SlidePanel>
-              </SlideContainer>
-              <SlideContainer column>
+              </Div>
+              <Div column>
                 {/*<SlidePanel title={<Txt noWrap>{m.protHHSnapshot.experiencedShellingDuringDisplacement}</Txt>}>*/}
                 {/*  <PieChartIndicator*/}
                 {/*    value={computed._12_5_1_During_your_displacement_journPercent.percent}*/}
@@ -147,11 +147,11 @@ export const ProtSnapshotDisplacement = ({
                   {/*  __html: m.protHHSnapshot.desc.dataAccuracy*/}
                   {/*}}/>*/}
                 </Txt>
-              </SlideContainer>
-            </SlideContainer>
-          </SlideContainer>
-        </SlideContainer>
-      </SlideBody>
-    </Slide>
+              </Div>
+            </Div>
+          </Div>
+        </Div>
+      </PdfSlideBody>
+    </PdfSlide>
   )
 }

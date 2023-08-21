@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -72,8 +72,8 @@ export const DashboardProtHHS2Violence = ({
     return res
   }, [data, category])
   return (
-    <SlideContainer responsive>
-      <SlideContainer column>
+    <Div responsive>
+      <Div column>
         <Lazy deps={[data]} fn={() => {
           const questions = forceArrayStringInference([
             'has_any_adult_male_member_experienced_violence',
@@ -102,13 +102,7 @@ export const DashboardProtHHS2Violence = ({
                 res.has_any_other_member_experienced_violence.base += 1
               }
             })
-            forceArrayStringInference([
-              'has_any_adult_male_member_experienced_violence',
-              'has_any_adult_female_member_experienced_violence',
-              'has_any_boy_member_experienced_violence',
-              'has_any_girl_member_experienced_violence',
-              'has_any_other_member_experienced_violence',
-            ]).forEach(key => {
+            questions.forEach(key => {
               if (row[key] === 'yes') {
                 res[key].value += 1
               }
@@ -171,8 +165,8 @@ export const DashboardProtHHS2Violence = ({
             question="what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members"
           />
         </SlidePanel>
-      </SlideContainer>
-      <SlideContainer column>
+      </Div>
+      <Div column>
         <Lazy deps={[groupedIndividualsType.type]} fn={() =>
           chain(ChartTools.multiple({
             data: groupedIndividualsType.type,
@@ -218,7 +212,7 @@ export const DashboardProtHHS2Violence = ({
         {/*    </SlidePanel>*/}
         {/*  )}*/}
         {/*</Lazy>*/}
-      </SlideContainer>
-    </SlideContainer>
+      </Div>
+    </Div>
   )
 }

@@ -2,7 +2,7 @@ import {Box, Icon, Tooltip, useTheme} from '@mui/material'
 import React, {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
 import {AaPieChart} from './Chart/AaPieChart'
-import {SlidePanelTitle} from './PdfLayout/Slide'
+import {SlidePanelTitle} from './PdfLayout/PdfSlide'
 import {PanelProps} from './Panel/Panel'
 import {useI18n} from '@/core/i18n'
 import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
@@ -93,12 +93,12 @@ export const PieChartIndicator = ({
         ...sx,
       }}>
         <Donut percent={value / base} size={dense ? 44 : 55}/>
-        <Box sx={{ml: dense ? .75 : 1.5}}>
+        <Box sx={{ml: dense ? 1 : 1.5}}>
           <SlidePanelTitle icon={titleIcon} noWrap={noWrap}>
             {title}
           </SlidePanelTitle>
           <Box sx={{display: 'inline-flex', lineHeight: 1, alignItems: 'flex-start'}}>
-            <Txt bold sx={{fontSize: '1.7em'}}>{renderPercent(value / base, true, fractionDigits)}</Txt>
+            <Txt bold sx={{fontSize: dense ? '1.6em' : '1.7em'}}>{renderPercent(value / base, true, fractionDigits)}</Txt>
             {showValue !== undefined && (
               <Txt color="disabled" sx={{ml: .5, fontWeight: '400'}}>
               <span style={{fontSize: '1.6em', letterSpacing: '2px'}}>

@@ -2,7 +2,7 @@ import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Box, Divider, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {PdfSlide, PdfSlideBody, Div, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
@@ -22,11 +22,11 @@ export const ProtSnapshotDocument = ({
   const theme = useTheme()
 
   return (
-    <Slide>
+    <PdfSlide>
       <SlideHeader>{m.protHHSnapshot.titles.document}</SlideHeader>
-      <SlideBody>
-        <SlideContainer>
-          <SlideContainer column sx={{flex: 3}}>
+      <PdfSlideBody>
+        <Div>
+          <Div column sx={{flex: 3}}>
             {/*<SlidePanel title={m.uaCitizenShip}>*/}
             {/*  <AaPieChart*/}
             {/*    outerRadius={55}*/}
@@ -75,8 +75,8 @@ export const ProtSnapshotDocument = ({
                 data={computed._16_1_2_What_are_the_barriers_}
               />
             </SlidePanelDepreacted>
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 2.8}}>
+          </Div>
+          <Div column sx={{flex: 2.8}}>
             <SlidePanelDepreacted>
               <PieChartIndicator
                 title={m.protHHSnapshot.hhWDisabilityWoAllowance}
@@ -122,11 +122,11 @@ export const ProtSnapshotDocument = ({
             {/*    value={computed._11_What_is_your_citizenship.percent}*/}
             {/*  />*/}
             {/*</SlidePanel>*/}
-          </SlideContainer>
-        </SlideContainer>
+          </Div>
+        </Div>
 
-      </SlideBody>
-    </Slide>
+      </PdfSlideBody>
+    </PdfSlide>
   )
 }
 

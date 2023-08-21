@@ -1,7 +1,7 @@
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {useI18n} from '../../../core/i18n'
 import {useTheme} from '@mui/material'
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2PN = ({
@@ -13,7 +13,7 @@ export const DashboardProtHHS2PN = ({
 
   return (
     <>
-      <SlideContainer responsive>
+      <Div responsive>
         <SlidePanel title={m.firstPriorityNeed}>
           <ProtHHS2BarChart
             data={data}
@@ -44,7 +44,7 @@ export const DashboardProtHHS2PN = ({
             }}
           />
         </SlidePanel>
-      </SlideContainer>
+      </Div>
     </>
   )
 }

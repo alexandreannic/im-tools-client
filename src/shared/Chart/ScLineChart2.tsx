@@ -61,7 +61,7 @@ export const ScLineChart2 = ({
           ))}
         </Box>
       )}
-      <Box sx={{height, ml: -4 - (hideYTicks ? 4 : 0), mb: hideXTicks ? -4 : 0, ...sx}}>
+      <Box sx={{height, ml: -5 - (hideYTicks ? 4 : 0), mb: hideXTicks ? -4 : 0, ...sx}}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={data}>
             <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>

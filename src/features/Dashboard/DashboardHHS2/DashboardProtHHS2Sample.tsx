@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel, SlideWidget} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useState} from 'react'
@@ -42,10 +42,10 @@ export const DashboardProtHHS2Sample = ({
   const [ag, setAg] = useState<keyof (typeof ageGroup)>('drc')
   const [agDisplay, setAgDisplay] = useState<'chart' | 'table'>('chart')
   return (
-    <SlideContainer column>
-      <SlideContainer alignItems="flex-start" responsive>
-        <SlideContainer column>
-          <SlideContainer>
+    <Div column>
+      <Div alignItems="flex-start" responsive>
+        <Div column>
+          <Div>
             <SlideWidget sx={{flex: 1}} icon="home" title={m.hhs}>
               {formatLargeNumber(data.length)}
             </SlideWidget>
@@ -55,10 +55,10 @@ export const DashboardProtHHS2Sample = ({
             <SlideWidget sx={{flex: 1}} icon="group" title={m.hhSize}>
               {(computed.individualsCount / data.length).toFixed(1)}
             </SlideWidget>
-          </SlideContainer>
-        </SlideContainer>
-        <SlideContainer column>
-          <SlideContainer>
+          </Div>
+        </Div>
+        <Div column>
+          <Div>
             <SlideWidget sx={{flex: 1}} icon="elderly" title={m.avgAge}>
               <Lazy deps={[data]} fn={() => computed.flatData.map(_ => _.age).compact().sum() / computed.flatData.length}>
                 {_ => _.toFixed(1)}
@@ -97,11 +97,11 @@ export const DashboardProtHHS2Sample = ({
             {/*    {_ => _}*/}
             {/*  </Lazy>*/}
             {/*</SlideWidget>*/}
-          </SlideContainer>
-        </SlideContainer>
-      </SlideContainer>
-      <SlideContainer alignItems="flex-start" responsive>
-        <SlideContainer column>
+          </Div>
+        </Div>
+      </Div>
+      <Div alignItems="flex-start" responsive>
+        <Div column>
           <SlidePanel title={m.HHsLocation}>
             <UkraineMap data={computed.byCurrentOblast} sx={{mx: 1}} base={data.length}/>
           </SlidePanel>
@@ -141,8 +141,8 @@ export const DashboardProtHHS2Sample = ({
               )}
             </Lazy>
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column>
+        </Div>
+        <Div column>
           <SlidePanel title={m.poc}>
             <Lazy
               deps={[data]}
@@ -191,8 +191,8 @@ export const DashboardProtHHS2Sample = ({
           {/*  ]}*/}
           {/*/>*/}
           {/*</SlidePanel>*/}
-        </SlideContainer>
-      </SlideContainer>
-    </SlideContainer>
+        </Div>
+      </Div>
+    </Div>
   )
 }

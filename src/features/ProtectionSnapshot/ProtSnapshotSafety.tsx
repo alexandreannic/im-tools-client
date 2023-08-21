@@ -2,7 +2,7 @@ import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Divider, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {PdfSlide, PdfSlideBody, Div, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {PieChartIndicator} from '../../shared/PieChartIndicator'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
@@ -24,11 +24,11 @@ export const ProtSnapshotSafety = ({
 
   console.log(computed._12_5_1_During_your_displacement_journ.shelling_or_missile_attacks_an)
   return (
-    <Slide>
+    <PdfSlide>
       <SlideHeader>{m.protHHSnapshot.titles.safety}</SlideHeader>
-      <SlideBody>
-        <SlideContainer>
-          <SlideContainer column sx={{flex: 4}}>
+      <PdfSlideBody>
+        <Div>
+          <Div column sx={{flex: 4}}>
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.desc.safety({
                 safetyDuringDisplacement: toPercent(computed._12_5_1_During_your_displacement_journPercent.value / computed.idpsCount, 0),
@@ -64,8 +64,8 @@ export const ProtSnapshotSafety = ({
             {/*<SlidePanel title={m.levelOfPropertyDamaged}>*/}
             {/*  <HorizontalBarChartGoogle data={computed._19_1_2_What_factors_are_influencing_t} base={data.length}/>*/}
             {/*</SlidePanel>*/}
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 3}}>
+          </Div>
+          <Div column sx={{flex: 3}}>
             <SlidePanel title={m.protHHSnapshot.senseOfSafety}>
               <UkraineMap
                 fillBaseOn="percent"
@@ -78,8 +78,8 @@ export const ProtSnapshotSafety = ({
               {/*<SlidePanel title={m.protHHSnapshot.factorInfluencingSenseOfSafety}>*/}
               <HorizontalBarChartGoogle hideValue data={computed._18_1_2_What_are_the_factors_t} base={data.length}/>
             </SlidePanel>
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 3}}>
+          </Div>
+          <Div column sx={{flex: 3}}>
             <SlidePanel title={m.protHHSnapshot.safetyConcernsDuringDisplacement}>
               <UkraineMap
                 sx={{mt: 2, mx: 1}}
@@ -91,10 +91,10 @@ export const ProtSnapshotSafety = ({
               <SlidePanelTitle>{m.protHHSnapshot.threatsOrConcernsDuringDisplacement}</SlidePanelTitle>
               <HorizontalBarChartGoogle hideValue data={computed._12_5_1_During_your_displacement_journ} base={computed.idpsCount}/>
             </SlidePanel>
-          </SlideContainer>
-        </SlideContainer>
-      </SlideBody>
-    </Slide>
+          </Div>
+        </Div>
+      </PdfSlideBody>
+    </PdfSlide>
   )
 }
 

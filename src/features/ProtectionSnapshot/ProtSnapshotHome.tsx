@@ -2,7 +2,7 @@ import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Box, useTheme} from '@mui/material'
-import {Slide, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {PdfSlide, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {Txt} from 'mui-extension'
 import {format, sub} from 'date-fns'
 import {DRCLogo, EULogo} from '../../shared/logo/logo'
@@ -22,7 +22,7 @@ export const ProtSnapshotHome = ({
   const theme = useTheme()
 
   return (
-    <Slide>
+    <PdfSlide>
       <Box sx={{height: '100%', weight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         <Box sx={{maxWidth: '50%'}}>
           <Box sx={{fontSize: '3em'}}>{m.protHHSnapshot.title}</Box>
@@ -43,7 +43,7 @@ export const ProtSnapshotHome = ({
           </Box>
         </Box>
       </Box>
-    </Slide>
+    </PdfSlide>
   )
 }
 

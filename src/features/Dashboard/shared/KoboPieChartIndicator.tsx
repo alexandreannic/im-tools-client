@@ -41,6 +41,7 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
   data,
   filter,
   filterBase,
+  hideEvolution,
   ...props
 }: {
   compare?: {before: _Arr<T>, now?: _Arr<T>}
@@ -51,6 +52,7 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
   data: _Arr<T>
   showValue?: boolean
   showBase?: boolean
+  hideEvolution?: boolean
 } & Omit<PieChartIndicatorProps, 'base' | 'value'>) => {
 
   const percent = ({res, base}: {res: number, base: number}) => res / base
@@ -78,7 +80,7 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
       title={title}
       value={all.res}
       base={all.base}
-      evolution={comparedData ? percent(comparedData.now ?? all) - percent(comparedData.before) : undefined}
+      evolution={hideEvolution ? undefined : comparedData ? percent(comparedData.now ?? all) - percent(comparedData.before) : undefined}
       {...props}
     />
   )

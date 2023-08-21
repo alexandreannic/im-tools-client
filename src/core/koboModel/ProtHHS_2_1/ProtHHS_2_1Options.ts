@@ -2020,7 +2020,7 @@ if_nonukrainian_what_is_your_citizenship: {
 	'country_of_origin_moldovan': `Moldovan`,
 	'country_of_origin_romanian': `Romanian`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group: {
 	'no': `No`,
@@ -2033,7 +2033,7 @@ if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_g
 	'azerbaijan': `Azerbaijan`,
 	'russian': `Russian`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_is_the_primary_language_spoken_in_your_household: {
 	'ukrainian': `Ukrainian`,
@@ -2140,7 +2140,7 @@ where_is_your_partner: {
 	'displaced_to_another_location_in_ukraine': `Displaced to another location in Ukraine`,
 	'displaced_to_another_country_outside_ukraine': `Displaced to another country outside Ukraine`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_partner_remain_behind_in_the_area_of_origin: {
 	'unable_to_travel_as_a_result_of_age_or_physical_impairment': `Unable to travel as a result of age or physical impairment`,
@@ -2150,7 +2150,7 @@ where_is_your_partner_remain_behind_in_the_area_of_origin: {
 	'unwilling_to_leave_due_to_fear_of_conscription': `Unwilling to leave due to fear of conscription`,
 	'stayed_to_take_care_of_properties': `Stayed to take care of properties`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_child_lt_18: {
 	'remained_behind_in_the_area_of_origin': `Remained behind in the area of origin`,
@@ -2159,7 +2159,7 @@ where_is_your_child_lt_18: {
 	'displaced_to_another_location_in_ukraine': `Displaced to another location in Ukraine`,
 	'displaced_to_another_country_outside_ukraine': `Displaced to another country outside Ukraine`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_child_lt_18_remain_behind_in_the_area_of_origin: {
 	'unable_to_travel_as_a_result_of_age_or_physical_impairment': `Unable to travel as a result of age or physical impairment`,
@@ -2169,7 +2169,7 @@ where_is_your_child_lt_18_remain_behind_in_the_area_of_origin: {
 	'unwilling_to_leave_due_to_fear_of_conscription': `Unwilling to leave due to fear of conscription`,
 	'stayed_to_take_care_of_properties': `Stayed to take care of properties`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_child_gte_18: {
 	'remained_behind_in_the_area_of_origin': `Remained behind in the area of origin`,
@@ -2178,7 +2178,7 @@ where_is_your_child_gte_18: {
 	'displaced_to_another_location_in_ukraine': `Displaced to another location in Ukraine`,
 	'displaced_to_another_country_outside_ukraine': `Displaced to another country outside Ukraine`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_child_gte_18_remain_behind_in_the_area_of_origin: {
 	'unable_to_travel_as_a_result_of_age_or_physical_impairment': `Unable to travel as a result of age or physical impairment`,
@@ -2188,7 +2188,7 @@ where_is_your_child_gte_18_remain_behind_in_the_area_of_origin: {
 	'unwilling_to_leave_due_to_fear_of_conscription': `Unwilling to leave due to fear of conscription`,
 	'stayed_to_take_care_of_properties': `Stayed to take care of properties`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_mother: {
 	'remained_behind_in_the_area_of_origin': `Remained behind in the area of origin`,
@@ -2197,7 +2197,7 @@ where_is_your_mother: {
 	'displaced_to_another_location_in_ukraine': `Displaced to another location in Ukraine`,
 	'displaced_to_another_country_outside_ukraine': `Displaced to another country outside Ukraine`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_mother_remain_behind_in_the_area_of_origin: {
 	'unable_to_travel_as_a_result_of_age_or_physical_impairment': `Unable to travel as a result of age or physical impairment`,
@@ -2207,7 +2207,7 @@ where_is_your_mother_remain_behind_in_the_area_of_origin: {
 	'unwilling_to_leave_due_to_fear_of_conscription': `Unwilling to leave due to fear of conscription`,
 	'stayed_to_take_care_of_properties': `Stayed to take care of properties`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_father: {
 	'remained_behind_in_the_area_of_origin': `Remained behind in the area of origin`,
@@ -2216,7 +2216,7 @@ where_is_your_father: {
 	'displaced_to_another_location_in_ukraine': `Displaced to another location in Ukraine`,
 	'displaced_to_another_country_outside_ukraine': `Displaced to another country outside Ukraine`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_father_remain_behind_in_the_area_of_origin: {
 	'unable_to_travel_as_a_result_of_age_or_physical_impairment': `Unable to travel as a result of age or physical impairment`,
@@ -2226,7 +2226,7 @@ where_is_your_father_remain_behind_in_the_area_of_origin: {
 	'unwilling_to_leave_due_to_fear_of_conscription': `Unwilling to leave due to fear of conscription`,
 	'stayed_to_take_care_of_properties': `Stayed to take care of properties`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_caregiver: {
 	'remained_behind_in_the_area_of_origin': `Remained behind in the area of origin`,
@@ -2235,7 +2235,7 @@ where_is_your_caregiver: {
 	'displaced_to_another_location_in_ukraine': `Displaced to another location in Ukraine`,
 	'displaced_to_another_country_outside_ukraine': `Displaced to another country outside Ukraine`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_caregiver_remain_behind_in_the_area_of_origin: {
 	'unable_to_travel_as_a_result_of_age_or_physical_impairment': `Unable to travel as a result of age or physical impairment`,
@@ -2245,7 +2245,7 @@ where_is_your_caregiver_remain_behind_in_the_area_of_origin: {
 	'unwilling_to_leave_due_to_fear_of_conscription': `Unwilling to leave due to fear of conscription`,
 	'stayed_to_take_care_of_properties': `Stayed to take care of properties`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_other_relative: {
 	'remained_behind_in_the_area_of_origin': `Remained behind in the area of origin`,
@@ -2254,7 +2254,7 @@ where_is_your_other_relative: {
 	'displaced_to_another_location_in_ukraine': `Displaced to another location in Ukraine`,
 	'displaced_to_another_country_outside_ukraine': `Displaced to another country outside Ukraine`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 where_is_your_other_relative_remain_behind_in_the_area_of_origin: {
 	'unable_to_travel_as_a_result_of_age_or_physical_impairment': `Unable to travel as a result of age or physical impairment`,
@@ -2264,7 +2264,7 @@ where_is_your_other_relative_remain_behind_in_the_area_of_origin: {
 	'unwilling_to_leave_due_to_fear_of_conscription': `Unwilling to leave due to fear of conscription`,
 	'stayed_to_take_care_of_properties': `Stayed to take care of properties`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household: {
 	'pregnant_and_lactating_woman': `Pregnant and Lactating person (PLW)`,
@@ -2274,7 +2274,7 @@ do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household: {
 	'chronicallyill_headed_household': `Household headed by a person with serious medical condition`,
 	'no_specific_needs': `No specific needs`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_you_have_a_household_member_that_has_a_lot_of_difficulty: {
 	'no': `No`,
@@ -2302,7 +2302,7 @@ why_dont_they_have_status: {
 	'unwilling_to_register': `Unwilling to register`,
 	'unaware_ofnot_familiar_with_the_procedure': `Unaware of/not familiar with the procedure`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_you_or_anyone_in_your_household_receive_state_allowance_for_disability: {
 	'yes': `Yes`,
@@ -2344,7 +2344,7 @@ why_did_you_leave_your_area_of_origin: {
 	'seeking_family_reunification': `Seeking family reunification`,
 	'fear_of_conscription': `Fear of conscription`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 how_did_you_travel_to_your_displacement_location: {
 	'volunteer_and_or_ukrainian_ngo_supported_evacuation': `Volunteer and/or Ukrainian NGO supported evacuation`,
@@ -2352,7 +2352,7 @@ how_did_you_travel_to_your_displacement_location: {
 	'government_supported_evacuation': `Government supported evacuation`,
 	'own_means': `Own means`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 why_did_you_decide_to_return_to_your_area_of_origin: {
 	'improved_security_in_area_of_origin': `Improved security in area of origin`,
@@ -2367,7 +2367,7 @@ why_did_you_decide_to_return_to_your_area_of_origin: {
 	'lack_of_access_to_livelihoods_employment_and_economic_opportunities_in_area_of_displacement': `Lack of access to livelihoods, employment and economic opportunities in area of displacement`,
 	'eviction_eviction_threats_in_area_of_displacement': `Eviction/eviction threats in area of displacement`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 have_you_received_any_form_of_compensation_for_leaving_your_area_of_origin: {
 	'yes': `Yes`,
@@ -2386,7 +2386,7 @@ was_your_movement_to_return_to_your_area_of_origin_supported_or_facilitated_by_a
 	'host_communitys_local_authorities_supported_return': `Host community's local authorities supported return`,
 	'own_means': `Own means`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns: {
 	'none': `None`,
@@ -2401,7 +2401,7 @@ did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_
 	'extortion': `Extortion`,
 	'hate_speech': `Hate speech`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 have_you_been_displaced_prior_to_your_current_displacement: {
 	'yes_after_2014': `Yes, after 2014`,
@@ -2424,7 +2424,7 @@ what_factors_would_be_key_to_support_your_successful_integration_into_the_local_
 	'social_cohesion': `Social cohesion`,
 	'family_reunification': `Family reunification`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin: {
 	'improved_security_situation': `Improved security situation`,
@@ -2448,7 +2448,7 @@ why_are_planning_to_relocate_from_your_current_place_of_residence: {
 	'seeking_family_reunification': `Seeking family reunification`,
 	'fear_of_conscription': `Fear of conscription`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 as_nonUkrainian_do_you_have_documentation: {
 	'yes_refugee_status': `Yes, refugee status`,
@@ -2481,7 +2481,7 @@ does_1_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_2_registered: {
 	'yes': `Yes`,
@@ -2496,7 +2496,7 @@ does_2_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_3_registered: {
 	'yes': `Yes`,
@@ -2511,7 +2511,7 @@ does_3_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_4_registered: {
 	'yes': `Yes`,
@@ -2526,7 +2526,7 @@ does_4_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_5_registered: {
 	'yes': `Yes`,
@@ -2541,7 +2541,7 @@ does_5_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_6_registered: {
 	'yes': `Yes`,
@@ -2556,7 +2556,7 @@ does_6_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_7_registered: {
 	'yes': `Yes`,
@@ -2571,7 +2571,7 @@ does_7_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_8_registered: {
 	'yes': `Yes`,
@@ -2586,7 +2586,7 @@ does_8_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_9_registered: {
 	'yes': `Yes`,
@@ -2601,7 +2601,7 @@ does_9_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_10_registered: {
 	'yes': `Yes`,
@@ -2616,7 +2616,7 @@ does_10_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_11_registered: {
 	'yes': `Yes`,
@@ -2631,7 +2631,7 @@ does_11_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_member_12_registered: {
 	'yes': `Yes`,
@@ -2646,7 +2646,7 @@ does_12_lack_doc: {
 	'passport': `National passport`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_you_have_any_of_the_following: {
 	'idp_certificate': `IDP certificate (paper-based)`,
@@ -2663,7 +2663,7 @@ why_they_do_not_receive: {
 	'delays_in_allowances_payment': `Delays in allowance's payment`,
 	'change_of_place_of_residence': `Change of place of residence`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 why_are_you_not_registered: {
 	'registration_was_rejected': `Registration was rejected`,
@@ -2675,7 +2675,7 @@ why_are_you_not_registered: {
 	'fear_of_conscription': `Fear of conscription`,
 	'lack_of_civil_documentation_required_to_process_registration_delays_in_issuance_of_civil_documentation_required': `Lack of civil documentation required to process registration/Delays in issuance of civil documentation required`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 why_not_registered: {
 	'multiple_displacements': `Multiple displacements`,
@@ -2683,7 +2683,7 @@ why_not_registered: {
 	'displacement_area_not_falling_under_governmental_criteria_for_idp_registration': `Displacement area not falling under governmental criteria for IDP registration`,
 	'displacement_area_too_close_from_area_of_origin': `Displacement area too close from area of origin`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_housing_land_and_property_documents_do_you_lack: {
 	'none': `None`,
@@ -2701,7 +2701,7 @@ what_housing_land_and_property_documents_do_you_lack: {
 	'death_declaration_certificate_by_ambulance_or_police_of_predecessor': `Death declaration certificate by ambulance or police of predecessor`,
 	'informatsiyna_dovidka_informational_extract_on_damaged_property': `Informatsiyna dovidka / Informational extract on damaged property`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation: {
 	'length_of_administrative_procedures': `Length of administrative procedures`,
@@ -2715,7 +2715,7 @@ have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentati
 	'distrust_of_public_institutions_and_authorities': `Distrust of public institutions and authorities`,
 	'no': `No`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 please_rate_your_sense_of_safety_in_this_location: {
 	'_1_very_unsafe': `1 - Very unsafe`,
@@ -2736,7 +2736,7 @@ what_are_the_main_factors_that_make_this_location_feel_unsafe: {
 	'risks_of_abduction_or_enforced_disappearance': `Risks of abduction or enforced disappearance`,
 	'risks_of_sexual_violence_and_exploitation': `Risks of sexual violence and exploitation`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 how_would_you_describe_the_relationship_between_member_of_the_host_community: {
 	'_1_very_bad': `1 - Very bad`,
@@ -2752,7 +2752,7 @@ what_factors_are_affecting_the_relationship_between_communities_in_this_location
 	'tension_over_access_to_services_and_or_employment_opportunities': `Tension over access to services and/or employment opportunities`,
 	'tension_over_conscription_procedures': `Tension over conscription procedures`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 have_you_or_your_household_members_experienced_incidents_with_host_community_members_idps_returnees: {
 	'harassment_violence_or_abuse': `Harassment, violence or abuse`,
@@ -2764,7 +2764,7 @@ have_you_or_your_household_members_experienced_incidents_with_host_community_mem
 	'dispute_or_conflict_over_ethic_political_or_social_issues': `Dispute or conflict over ethic, political or social issues`,
 	'no_incident_experienced': `No incident experienced`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area: {
 	'no': `No`,
@@ -2778,7 +2778,7 @@ do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_aro
 	'lack_of_transportationfinancial_resources_to_pay_transportation': `Lack of transportation/financial resources to pay transportation`,
 	'reduced_mobility_linked_with_health_issues_or_disability': `Reduced mobility linked with health issues or disability`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 has_any_adult_male_member_experienced_violence: {
 	'yes': `Yes`,
@@ -2810,7 +2810,7 @@ what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence
 	'denial_of_travel_documents': `Denial of travel documents`,
 	'denial_of_idp_registration': `Denial of IDP registration`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence: {
 	'predisplacement_or_in_the_area_of_origin': `Pre-displacement or in the area of origin`,
@@ -2827,7 +2827,7 @@ who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_
 	'community_members_within_the_displaced_community': `Community members within the displaced community`,
 	'humanitarian_assistance_providers': `Humanitarian assistance providers`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 has_any_adult_female_member_experienced_violence: {
 	'yes': `Yes`,
@@ -2859,7 +2859,7 @@ what_type_of_incidents_took_place_has_any_adult_female_member_experienced_violen
 	'denial_of_travel_documents': `Denial of travel documents`,
 	'denial_of_idp_registration': `Denial of IDP registration`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 when_did_the_incidents_occur_has_any_adult_female_member_experienced_violence: {
 	'predisplacement_or_in_the_area_of_origin': `Pre-displacement or in the area of origin`,
@@ -2876,7 +2876,7 @@ who_were_the_perpetrators_of_the_incident_has_any_adult_female_member_experience
 	'community_members_within_the_displaced_community': `Community members within the displaced community`,
 	'humanitarian_assistance_providers': `Humanitarian assistance providers`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 has_any_boy_member_experienced_violence: {
 	'yes': `Yes`,
@@ -2908,7 +2908,7 @@ what_type_of_incidents_took_place_has_any_boy_member_experienced_violence: {
 	'denial_of_travel_documents': `Denial of travel documents`,
 	'denial_of_idp_registration': `Denial of IDP registration`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 when_did_the_incidents_occur_has_any_boy_member_experienced_violence: {
 	'predisplacement_or_in_the_area_of_origin': `Pre-displacement or in the area of origin`,
@@ -2925,7 +2925,7 @@ who_were_the_perpetrators_of_the_incident_has_any_boy_member_experienced_violenc
 	'community_members_within_the_displaced_community': `Community members within the displaced community`,
 	'humanitarian_assistance_providers': `Humanitarian assistance providers`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 has_any_girl_member_experienced_violence: {
 	'yes': `Yes`,
@@ -2957,7 +2957,7 @@ what_type_of_incidents_took_place_has_any_girl_member_experienced_violence: {
 	'denial_of_travel_documents': `Denial of travel documents`,
 	'denial_of_idp_registration': `Denial of IDP registration`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 when_did_the_incidents_occur_has_any_girl_member_experienced_violence: {
 	'predisplacement_or_in_the_area_of_origin': `Pre-displacement or in the area of origin`,
@@ -2974,7 +2974,7 @@ who_were_the_perpetrators_of_the_incident_has_any_girl_member_experienced_violen
 	'community_members_within_the_displaced_community': `Community members within the displaced community`,
 	'humanitarian_assistance_providers': `Humanitarian assistance providers`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 has_any_other_member_experienced_violence: {
 	'yes': `Yes`,
@@ -3006,7 +3006,7 @@ what_type_of_incidents_took_place_has_any_other_member_experienced_violence: {
 	'denial_of_travel_documents': `Denial of travel documents`,
 	'denial_of_idp_registration': `Denial of IDP registration`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 when_did_the_incidents_occur_has_any_other_member_experienced_violence: {
 	'predisplacement_or_in_the_area_of_origin': `Pre-displacement or in the area of origin`,
@@ -3023,7 +3023,7 @@ who_were_the_perpetrators_of_the_incident_has_any_other_member_experienced_viole
 	'community_members_within_the_displaced_community': `Community members within the displaced community`,
 	'humanitarian_assistance_providers': `Humanitarian assistance providers`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_you_or_members_of_your_household_experience_discrimination_or_stigmatization_in_your_current_area_of_residence: {
 	'yes': `Yes`,
@@ -3043,7 +3043,7 @@ on_what_ground: {
 	'medical_condition': `Medical condition`,
 	'language': `Language`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_are_any_adult_memberof_your_household_displaying_any_of_the_following_signs: {
 	'feeling_sad_depressed_tired': `Feeling sad/depressed/tired`,
@@ -3056,7 +3056,7 @@ is_are_any_adult_memberof_your_household_displaying_any_of_the_following_signs: 
 	'feeling_hopeless': `Feeling hopeless`,
 	'no_sign_of_psychological_distress': `No sign of psychological distress`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 is_are_any_child_member_of_your_household_displaying_any_of_the_following_signs: {
 	'feeling_sad_depressed_tired': `Feeling sad/depressed/tired`,
@@ -3069,7 +3069,7 @@ is_are_any_child_member_of_your_household_displaying_any_of_the_following_signs:
 	'feeling_hopeless': `Feeling hopeless`,
 	'no_sign_of_psychological_distress': `No sign of psychological distress`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_household_members_experiencing_distress_have_access_to_relevant_care_and_services: {
 	'yes': `Yes`,
@@ -3086,7 +3086,7 @@ what_are_the_barriers_to_access_services: {
 	'requirement_for_civil_documentation': `Requirement for civil documentation`,
 	'poor_quality_of_the_services_provided': `Poor quality of the services provided`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members: {
 	'displacement_related_stress': `Displacement related stress`,
@@ -3102,7 +3102,7 @@ what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_m
 	'worries_about_the_children': `Worries about the children`,
 	'worries_about_the_future': `Worries about the future`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_are_the_main_sources_of_income_of_your_household: {
 	'salary_formal_employment': `Salary – Formal Employment`,
@@ -3116,7 +3116,7 @@ what_are_the_main_sources_of_income_of_your_household: {
 	'social_protection_payments': `Social protection payments (pensions, allowances, etc.)`,
 	'no_resources_coming_into_the_household': `No resources coming into the household`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_type_of_allowances_do_you_receive: {
 	'idp_allowance': `IDP allowance`,
@@ -3124,7 +3124,7 @@ what_type_of_allowances_do_you_receive: {
 	'pension_for_people_with_disability': `Pension for people with disability`,
 	'pension_for_3_or_more_children_in_the_household': `Pension for 3 or more children in the household`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_is_the_average_month_income_per_household: {
 	'no_income': `No income`,
@@ -3152,7 +3152,7 @@ what_are_the_reasons_for_being_out_of_work: {
 	'discrimination_based_on_age': `Discrimination based on age`,
 	'mine_containment': `Mine containment`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 are_there_gaps_in_meeting_your_basic_needs: {
 	'yes_a_lot': `Yes a lot`,
@@ -3177,7 +3177,7 @@ what_are_the_strategies_that_your_household_uses_to_cope_with_these_challenges: 
 	'sending_hh_members_to_live_elsewhere': `Sending HH members to live elsewhere`,
 	'choosing_less_suitable_accommodation': `Choosing less suitable accommodation (cheaper/less safe/etc)`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 are_schoolaged_children_in_your_household_regularly_attending_primary_or_secondary_education: {
 	'yes_all_of_them': `Yes, all of them`,
@@ -3206,7 +3206,7 @@ what_are_the_reasons_preventing_children_in_your_household_from_regularly_attend
 	'cost_of_specialized_materials': `Cost of specialized materials (including for children with disabilities)`,
 	'language_barriers': `Language barriers`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_is_your_current_housing_structure: {
 	'house_apartment': `House/Apartment`,
@@ -3222,14 +3222,14 @@ what_is_the_tenure_status_of_your_accommodation_private: {
 	'owning_private_accommodation': `Owning private accommodation (respondent owns the property)`,
 	'squatting_private_property_without_permission': `Squatting private property without permission`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_is_the_tenure_status_of_your_accommodation_public: {
 	'rental_fees': `Rental fees`,
 	'utilities_fees_only': `Utilities fees only`,
 	'no_rental_utilities_fees': `No rental/utilities fees`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 do_you_have_formal_rental_documents_to_stay_in_your_accommodation: {
 	'yes_i_have_a_written_lease_agreement': `Yes, I have a written lease agreement`,
@@ -3279,7 +3279,7 @@ what_are_the_barriers_to_accessing_health_services: {
 	'long_waiting_time': `Long waiting time`,
 	'language_barriers': `Language barriers`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_is_your_1_priority: {
 	'education': `Education (primary/secondary)`,
@@ -3297,7 +3297,7 @@ what_is_your_1_priority: {
 	'nfis': `NFIs`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_is_your_2_priority: {
 	'education': `Education (primary/secondary)`,
@@ -3315,7 +3315,7 @@ what_is_your_2_priority: {
 	'nfis': `NFIs`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 what_is_your_3_priority: {
 	'education': `Education (primary/secondary)`,
@@ -3333,7 +3333,7 @@ what_is_your_3_priority: {
 	'nfis': `NFIs`,
 	'none': `None`,
 	'unable_unwilling_to_answer': `Unable/unwilling to answer`,
-	'other_specify': `Other (specify)`
+	'other_specify': `Other`
 },
 need_for_assistance: {
 	'yes': `Yes`,

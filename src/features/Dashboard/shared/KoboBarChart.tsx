@@ -5,6 +5,7 @@ import React, {useMemo} from 'react'
 import {chain} from '@/utils/utils'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Checkbox} from '@mui/material'
+import multiple = ChartTools.multiple
 
 export const makeKoboBarChartComponent = <D extends Record<string, any>, O extends Partial<Record<keyof D, Record<string, string>>>>({
   options,
@@ -21,13 +22,17 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
   overrideLabel = {},
   filterValue,
   questionType = 'single',
-  base
+  base,
+  mergeOptions,
+  debug
 }: {
+  debug?: boolean
   onClickData?: (_: K) => void
   limit?: number
   questionType?: 'multiple' | 'single'
   sortBy?: typeof ChartTools.sortBy.value
   data: _Arr<D>,
+  mergeOptions?: Partial<Record<keyof O[K], keyof O[K]>>
   overrideLabel?: Partial<Record<keyof O[K], string>>
   filterValue?: (keyof O[K])[]
   question: K,
@@ -37,7 +42,16 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
 }) => {
   const {m} = useI18n()
   const res = useMemo(() => {
-    const source = Arr(data).map(_ => _[question]).compact()
+    const source = Arr(data).map(d => {
+      if (d[question] === undefined) return
+      if (mergeOptions) {
+        if (questionType === 'multiple') {
+          return Arr(d[question] as string[]).map(_ => (mergeOptions as any)[_] ?? _).distinct(_ => _)
+        }
+        return (mergeOptions as any)[d[question]] ?? d[question]
+      }
+      return d[question]
+    }).compact()
     const chart = questionType === 'multiple'
       ? ChartTools.multiple({
         data: source,

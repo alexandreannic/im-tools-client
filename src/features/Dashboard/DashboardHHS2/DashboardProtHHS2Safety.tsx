@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -14,14 +14,14 @@ export const DashboardProtHHS2Safety = ({
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   return (
-    <SlideContainer responsive>
-      <SlideContainer column>
+    <Div responsive>
+      <Div column>
         <SlidePanel>
           <KoboPieChartIndicator
             sx={{mb: 1}}
             title={m.protHHS2.poorSenseOfSafety}
             question="please_rate_your_sense_of_safety_in_this_location"
-            filter={_ => _ === '_2_unsafe'}// || _ === '_2_unsafe'}
+            filter={_ => _ === '_2_unsafe' || _ === '_1_very_unsafe'}
             filterBase={_ => _ !== 'unable_unwilling_to_answer'}
             compare={{before: computed.lastMonth}}
             data={data}
@@ -56,8 +56,8 @@ export const DashboardProtHHS2Safety = ({
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>
-      </SlideContainer>
-      <SlideContainer column>
+      </Div>
+      <Div column>
         <SlidePanel>
           <KoboPieChartIndicator
             sx={{mb: 1}}
@@ -109,7 +109,6 @@ export const DashboardProtHHS2Safety = ({
             compare={{before: computed.lastMonth}}
             data={data}
           />
-          <SlidePanelTitle sx={{mt: 2}}>{m.influencingFactors}</SlidePanelTitle>
           <ProtHHS2BarChart
             questionType="multiple"
             data={data}
@@ -117,7 +116,7 @@ export const DashboardProtHHS2Safety = ({
             filterValue={['no', 'unable_unwilling_to_answer']}
           />
         </SlidePanel>
-      </SlideContainer>
-    </SlideContainer>
+      </Div>
+    </Div>
   )
 }

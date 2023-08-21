@@ -21,12 +21,15 @@ export class OblastIndex {
     return OblastIndex.oblastByISO[iso]
   }
 
-  static readonly findISOByName = (name: string): OblastISO | undefined => {
+  static readonly findISOByName = (name: OblastName): OblastISO => {
     return Enum.entries(OblastIndex.oblastByISO)
-      .find(([k, v]) => v === name)?.[0]
+      .find(([k, v]) => v === name)?.[0]!
   }
 
-
+  static readonly searchISOByName = (name: string): undefined | OblastISO => {
+    return Enum.entries(OblastIndex.oblastByISO)
+      .find(([k, v]) => v === name)?.[0]!
+  }
 
   static readonly oblastByISO = Object.freeze({
     'UA43': `Autonomous Republic of Crimea`,

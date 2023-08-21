@@ -22,7 +22,6 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {Access} from '@/core/sdk/server/access/Access'
 import {Fender, Txt} from 'mui-extension'
 import {DatabaseIndex} from '@/features/Database/DatabaseIndex'
-import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 
 export const databaseUrlParamsValidation = yup.object({
   serverId: yup.string().required(),

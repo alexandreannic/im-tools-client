@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -16,8 +16,8 @@ export const DashboardProtHHS2Housing = ({
 
   return (
     <>
-      <SlideContainer responsive>
-        <SlideContainer column>
+      <Div responsive>
+        <Div column>
           <SlidePanel title={m.housingStructure}>
             <ProtHHS2BarChart
               data={data}
@@ -41,8 +41,8 @@ export const DashboardProtHHS2Housing = ({
               filterValue={['unable_unwilling_to_answer']}
             />
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column>
+        </Div>
+        <Div column>
           <SlidePanel>
             <KoboPieChartIndicator
               compare={{before: computed.lastMonth}}
@@ -73,8 +73,8 @@ export const DashboardProtHHS2Housing = ({
               filterValue={['unable_unwilling_to_answer']}
             />
           </SlidePanel>
-        </SlideContainer>
-      </SlideContainer>
+        </Div>
+      </Div>
     </>
   )
 }

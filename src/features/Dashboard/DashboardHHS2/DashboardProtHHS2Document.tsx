@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
@@ -14,7 +14,7 @@ import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {_Arr} from '@alexandreannic/ts-utils'
 import {ProtHHS2BarChart, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
-const getIdpsAnsweringRegistrationQuestion = (base: _Arr<ProtHHS2Enrich>) => {
+export const getIdpsAnsweringRegistrationQuestion = (base: _Arr<ProtHHS2Enrich>) => {
   return base
     .flatMap(_ => _.persons.map(p => ({..._, ...p})))
     .filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
@@ -33,10 +33,10 @@ export const DashboardProtHHS2Document = ({
 
   return (
     <>
-      <SlideContainer responsive alignItems="flex-start">
-        <SlideContainer column sx={{flex: 1}}>
+      <Div responsive alignItems="flex-start">
+        <Div column sx={{flex: 1}}>
           <SlidePanel title={m.protHHSnapshot.maleWithoutIDPCert}>
-            <SlideContainer>
+            <Div>
               <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
                 data: getIdpsAnsweringRegistrationQuestion(d),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
@@ -53,7 +53,7 @@ export const DashboardProtHHS2Document = ({
                   <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
                 )}
               </Lazy>
-            </SlideContainer>
+            </Div>
           </SlidePanel>
           <Lazy deps={[computed.flatData]} fn={() => ChartTools.byCategory({
             data: computed.flatData,
@@ -88,8 +88,8 @@ export const DashboardProtHHS2Document = ({
               ]}
             />
           </SlidePanel>
-        </SlideContainer>
-        <SlideContainer column sx={{flex: 1}}>
+        </Div>
+        <Div column sx={{flex: 1}}>
           <SlidePanel>
             <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartTools.percentage({
               data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
@@ -131,8 +131,8 @@ export const DashboardProtHHS2Document = ({
             />
           </SlidePanel>
 
-        </SlideContainer>
-      </SlideContainer>
+        </Div>
+      </Div>
     </>
   )
 }

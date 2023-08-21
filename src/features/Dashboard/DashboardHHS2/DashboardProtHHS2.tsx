@@ -104,8 +104,7 @@ export const DashboardProtHHS2 = () => {
       start: filter.start,
       end: filter.end,
     }
-  })
-    .then(_ => _.data.map(enrichProtHHS_2_1))
+  }).then(_ => _.data.map(enrichProtHHS_2_1))
 
   const _answers = useFetcher(request)
 

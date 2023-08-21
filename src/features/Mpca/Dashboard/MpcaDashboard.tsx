@@ -2,7 +2,7 @@ import {Page} from '@/shared/Page'
 import React, {useEffect} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
-import {SlideContainer, SlidePanel, SlideWidget} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {BNREOblastToISO, UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {KoboAnswer} from '../../../core/sdk/server/kobo/Kobo'
 import {BNRE} from '../../../core/koboModel/BNRE/BNRE'
@@ -43,8 +43,8 @@ export const _MPCADashboard = ({
   const {m, formatDate, formatLargeNumber} = useI18n()
   return (
     <>
-      <SlideContainer column>
-        <SlideContainer>
+      <Div column>
+        <Div>
           <SlideWidget sx={{flex: 1}} icon="home" title={m.hhs}>
             {formatLargeNumber(data.length)}
           </SlideWidget>
@@ -53,9 +53,9 @@ export const _MPCADashboard = ({
           </SlideWidget>
           <SlideWidget sx={{flex: 1}} icon="content_copy" title={m.deduplications}>
           </SlideWidget>
-        </SlideContainer>
-        <SlideContainer>
-          <SlideContainer column>
+        </Div>
+        <Div>
+          <Div column>
             <SlidePanel title={m.ageGroup}>
               <AAStackedBarChart data={computed.ageGroup} height={270} colors={t => [
                 t.palette.primary.main,
@@ -77,8 +77,8 @@ export const _MPCADashboard = ({
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
-          </SlideContainer>
-          <SlideContainer column>
+          </Div>
+          <Div column>
             <SlidePanel title={m.HHsLocation}>
               <Lazy deps={[data]} fn={() => ChartTools.groupBy({
                 data,
@@ -88,9 +88,9 @@ export const _MPCADashboard = ({
                 {_ => <UkraineMap data={_}/>}
               </Lazy>
             </SlidePanel>
-          </SlideContainer>
-        </SlideContainer>
-      </SlideContainer>
+          </Div>
+        </Div>
+      </Div>
     </>
   )
 }

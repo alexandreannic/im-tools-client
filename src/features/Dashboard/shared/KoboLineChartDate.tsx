@@ -12,11 +12,13 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
   data,
   curves,
   label,
+  height,
   start,
   end = new Date(),
   // translations,
   ...props
 }: {
+  height?: number
   curves: Record<string, (_: T) => Date | undefined>
   label?: string | string[]
   data: T[]
@@ -56,7 +58,7 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
       <ScLineChart2
         {...props}
         hideLabelToggle={true}
-        height={220}
+        height={height ?? 220}
         data={curve}
         // translation={translations as any}
       />

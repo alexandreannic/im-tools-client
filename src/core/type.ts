@@ -69,6 +69,6 @@ export const groupByAgeGroup = <AG extends Record<string, number[]>>(
   p: T, getAge: (_: T) => number
 ): keyof AG | undefined => {
   for (const [k, [min, max]] of Enum.entries(ag)) {
-    if (getAge(p) && getAge(p) >= min && getAge(p) <= max) return k
+    if (getAge(p) !== undefined && getAge(p) >= min && getAge(p) <= max) return k
   }
 }

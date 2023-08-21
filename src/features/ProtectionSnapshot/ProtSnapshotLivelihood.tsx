@@ -3,7 +3,7 @@ import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Divider} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {PdfSlide, PdfSlideBody, Div, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Txt} from 'mui-extension'
 import {toPercent} from '../../utils/utils'
@@ -22,11 +22,11 @@ export const ProtSnapshotLivelihood = ({
   const {m, formatLargeNumber, formatDate} = useI18n()
   
   return (
-    <Slide>
+    <PdfSlide>
       <SlideHeader>{m.protHHSnapshot.titles.livelihood}</SlideHeader>
-      <SlideBody>
-        <SlideContainer>
-          <SlideContainer sx={{flex: 4.3}} column>
+      <PdfSlideBody>
+        <Div>
+          <Div sx={{flex: 4.3}} column>
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.desc.livelihoodAbout({
                 workingIdp: toPercent(computed._31_Is_anyone_from_the_household_percent.idp.percent, 0),
@@ -56,7 +56,7 @@ export const ProtSnapshotLivelihood = ({
             {/*</SlidePanel>*/}
 
             <SlidePanelDepreacted title={m.protHHSnapshot.allowanceStateOrHumanitarianAsMainSourceOfIncome}>
-              <SlideContainer
+              <Div
                 sx={{justifyContent: 'space-between'}}
               >
                 <PieChartIndicator
@@ -71,7 +71,7 @@ export const ProtSnapshotLivelihood = ({
                   percent={computed._32_dependingOnAllowancePercent.notIdp.percent}
                   evolution={computed._32_dependingOnAllowancePercent.notIdp.percent - previous.computed._32_dependingOnAllowancePercent.notIdp.percent}
                 />
-              </SlideContainer>
+              </Div>
               {/*<PieChartIndicator*/}
               {/*  sx={{flex: 1}}*/}
               {/*  title={m.protHHSnapshot.elderlyWithPension}*/}
@@ -91,8 +91,8 @@ export const ProtSnapshotLivelihood = ({
               {/*  evolution={computed._32_1_What_type_of_allowances_byChildrens.percent - previous.computed._32_1_What_type_of_allowances_byChildrens.percent}*/}
               {/*/>*/}
             </SlidePanelDepreacted>
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 4}}>
+          </Div>
+          <Div column sx={{flex: 4}}>
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.desc.livelihoodAbout2({
                 hhIncomeBelow3000: toPercent(
@@ -119,10 +119,10 @@ export const ProtSnapshotLivelihood = ({
             {/*<SlidePanel title={m.protHHSnapshot.incomeUnder6000ByCategory}>*/}
             {/*  <HorizontalBarChartGoogle data={computed._33_incomeByCategory} icons={categoryIcons}/>*/}
             {/*</SlidePanel>*/}
-          </SlideContainer>
-        </SlideContainer>
-      </SlideBody>
-    </Slide>
+          </Div>
+        </Div>
+      </PdfSlideBody>
+    </PdfSlide>
   )
 }
 

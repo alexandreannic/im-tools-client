@@ -2,6 +2,7 @@ import {red} from '@mui/material/colors'
 import {alpha, createTheme, darken, SxProps, Theme} from '@mui/material'
 import {ThemeOptions} from '@mui/material/styles/createTheme'
 import {lighten} from '@mui/system/colorManipulator'
+import {dark} from '@mui/material/styles/createPalette'
 
 export const combineSx = (...sxs: (SxProps<Theme> | undefined | false)[]): SxProps<Theme> => {
   return sxs.reduce((res, sx) => (sx !== undefined && sx !== false ? {...res, ...sx} : res), {} as any)
@@ -74,10 +75,21 @@ export const styleUtils = (t: Theme) => ({
 
 export const defaultSpacing = 8
 
-export const muiTheme = (dark?: boolean): Theme => {
+export const muiTheme = ({
+  dark,
+  backgroundPaper,
+  backgroundDefault,
+  cardElevation,
+  fontSize = 14,
+}: {
+  fontSize?: number
+  backgroundPaper?: string
+  backgroundDefault?: string
+  cardElevation?: number
+  dark?: boolean
+}): Theme => {
   const defaultRadius = 8
   const fontFamily = '"Open Sans", sans-serif'
-  const fontSize = 14
   const mainColor = '#c9000a'
   const colorPrimary = {
     main: mainColor,
@@ -102,8 +114,8 @@ export const muiTheme = (dark?: boolean): Theme => {
       mode: dark ? 'dark' : 'light',
       background: {
         // default: dark ? 'black' : 'white',
-        default: dark ? '#000' : '#f8f9fa',
-        paper: dark ? '#1e1e22' : '#fff',
+        default: backgroundDefault ?? (dark ? '#000' : '#f8f9fa'),
+        paper: backgroundPaper ?? (dark ? '#1e1e22' : '#fff'),
       }
     },
     shape: {
@@ -131,6 +143,7 @@ export const muiTheme = (dark?: boolean): Theme => {
       },
     },
   })
+
   const theme: ThemeOptions = {
     components: {
       MuiCssBaseline: {
@@ -169,7 +182,7 @@ export const muiTheme = (dark?: boolean): Theme => {
             fontWeight: 'bold',
           },
           html: {
-            fontSize: baseTheme.typography.fontSize,
+            fontSize: fontSize,
             fontFamily,
           },
           button: {
@@ -220,7 +233,7 @@ export const muiTheme = (dark?: boolean): Theme => {
       },
       MuiCard: {
         defaultProps: {
-          elevation: 1,
+          elevation: cardElevation ?? 1,
         },
         styleOverrides: {
           root: {

@@ -3,7 +3,7 @@ import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {Box, Divider, useTheme} from '@mui/material'
-import {Slide, SlideBody, SlideContainer, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/Slide'
+import {PdfSlide, PdfSlideBody, Div, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Enum, map} from '@alexandreannic/ts-utils'
 import {toPercent} from '../../utils/utils'
@@ -38,11 +38,11 @@ export const ProtSnapshotNeeds = ({
   //   }).map(_ => _.value))
   // }, [computed])
   return (
-    <Slide>
+    <PdfSlide>
       <SlideHeader>{m.protHHSnapshot.titles.needs}</SlideHeader>
-      <SlideBody>
-        <SlideContainer>
-          <SlideContainer column sx={{flex: 3}}>
+      <PdfSlideBody>
+        <Div>
+          <Div column sx={{flex: 3}}>
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.desc.needs({
                 percentLvivWithoutHot: map(computed._28_accessToHotByOblast['UA77'], _ => toPercent(_.value / _.base, 0))!,
@@ -63,8 +63,8 @@ export const ProtSnapshotNeeds = ({
                 )}
               </Box>
             </SlidePanelDepreacted>
-          </SlideContainer>
-          <SlideContainer column sx={{flex: 3, minWidth: 318}}>
+          </Div>
+          <Div column sx={{flex: 3, minWidth: 318}}>
             <SlidePanelDepreacted title={m.firstPriorityNeed}>
               <Box sx={{display: 'flex', mt: 1}}>
                 {Enum.entries(computed._40_1_What_is_your_first_priorty!).splice(0, 3).map(([k, v]) =>
@@ -82,9 +82,9 @@ export const ProtSnapshotNeeds = ({
               <SlidePanelTitle>{m.protHHSnapshot._29_nfiNeededByCategory}</SlidePanelTitle>
               <HorizontalBarChartGoogle data={computed._29_nfiNeededByCategory} icons={categoryIcons as any}/>
             </SlidePanelDepreacted>
-          </SlideContainer>
-        </SlideContainer>
-      </SlideBody>
-    </Slide>
+          </Div>
+        </Div>
+      </PdfSlideBody>
+    </PdfSlide>
   )
 }

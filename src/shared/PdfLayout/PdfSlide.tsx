@@ -8,22 +8,23 @@ import {DRCLogo, EULogo} from '../logo/logo'
 import {uppercaseHandlingAcronyms} from '@/utils/utils'
 import {PanelBodyProps} from '../Panel/PanelBody'
 
-export const Slide = (props: BoxProps) => {
+export const PdfSlide = (props: BoxProps) => {
   return (
     <Box
       {...props}
       sx={{
-        background: t => t.palette.background.paper,
+        background: t => t.palette.background.default,
+        p: 0,
         overflow: 'hidden',
         width: '29.7cm',
         height: '21.0cm',
         '@media screen': {
           // aspectRatio: (297 / 210) + '',
-          mb: 2,
+          mb: 16,
           borderRadius: '6px',
           boxShadow: t => t.shadows[1],
         },
-        pageBreakAfter: 'always',
+        // pageBreakAfter: 'always',
         ...props.sx,
       }}
     />
@@ -58,7 +59,7 @@ export const SlideTxt = ({children, sx, textAlign = 'justify', ...props}: TxtPro
   )
 }
 
-export const SlideContainer = ({
+export const Div = ({
   children,
   sx,
   column,
@@ -82,7 +83,6 @@ export const SlideContainer = ({
           mb: 2,
           mr: 0,
           flex: 1,
-
         }
       } : {},
       ...column && {
@@ -118,7 +118,7 @@ export const SlideHeader = ({children}: BoxProps) => {
   )
 }
 
-export const SlideBody = (props: BoxProps) => {
+export const PdfSlideBody = (props: BoxProps) => {
   const {pdfTheme} = usePdfContext()
   return (
     <Box {...props} sx={{p: 2, pb: 0, ...props.sx}}/>
@@ -146,7 +146,7 @@ export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML
   </Txt>
 }
 
-export const SlidePanel = ({savableAsImg = true, expendable = true, children, sx, BodyProps, ...props}: PanelProps & {BodyProps?: Omit<PanelBodyProps, 'ref' | 'children'>}) => {
+export const SlidePanel = ({savableAsImg = true, expendable = true, children, sx, BodyProps, ...props}: PanelProps & {BodyProps?: Omit<PanelBodyProps, 'ref' | 'children'>}) => {
   return (
     <Panel elevation={0} {...props} savableAsImg={savableAsImg} expendable={expendable} sx={{
       ...sx,
@@ -172,6 +172,12 @@ export const SlideWidget = ({
       {...props}
       expendable={false}
       savableAsImg={false}
+      BodyProps={{
+        sx: {
+          pb: t => t.spacing(1) + ' !important',
+        }
+      }
+      }
       sx={{
         width: '100%',
         textAlign: 'center',
@@ -180,10 +186,11 @@ export const SlideWidget = ({
         },
         ...sx,
       }}>
-      <Txt block color="hint" bold>
+      <Txt block color="hint" bold sx={{lineHeight: 1, mb: .5}}>
         {uppercaseHandlingAcronyms(title)}
       </Txt>
       <Box sx={{
+        lineHeight: 1,
         fontWeight: t => t.typography.fontWeightBold,
         fontSize: '1.7em',
         display: 'inline-flex',

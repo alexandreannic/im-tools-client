@@ -1,7 +1,7 @@
 import {Box, BoxProps, Icon} from '@mui/material'
 import React from 'react'
 import {Txt} from 'mui-extension'
-import {SlidePanelTitle} from './PdfLayout/Slide'
+import {SlidePanelTitle} from './PdfLayout/PdfSlide'
 
 const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
   return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value

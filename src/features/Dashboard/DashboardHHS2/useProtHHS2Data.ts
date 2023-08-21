@@ -1,11 +1,12 @@
-import {useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
-import {_Arr, Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Enum, lazy} from '@alexandreannic/ts-utils'
 import {OblastISOSVG, ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
 import {groupByAgeGroup} from '../../../core/type'
 import {subDays} from 'date-fns'
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
 
 export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
 
@@ -14,6 +15,24 @@ export const useProtHHS2Data = ({
 }: {
   data?: _Arr<ProtHHS2Enrich>
 }) => {
+  const ageGroup = useCallback(lazy((ageGroup: Record<string, number[]>) => {
+    return chain(
+      data!.flatMap(_ => _.persons)
+        // .filter(_ => _.age !== undefined)
+        .groupBy(_ => groupByAgeGroup(ageGroup)(_, p => p.age!))
+    )
+      .map(_ => Enum.entries(_).map(([group, v]) => ({
+          key: group,
+          Male: v.filter(_ => _.gender === 'male').length,
+          Female: v.filter(_ => _.gender === 'female').length,
+          Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length,
+        })
+      ))
+      .map(_ => _.sort((a, b) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))
+      .get
+  }), [data])
+
+
   return useMemo(() => {
     if (!data || data.length === 0) return
     const sorted = data.sort((a, b) => a.end.getTime() - b.end.getTime())
@@ -31,7 +50,7 @@ export const useProtHHS2Data = ({
     ) => Enum.keys(ukraineSvgPath)
       .reduce(
         (acc, isoCode) => ({...acc, [isoCode]: (_: ProtHHS2Enrich): boolean => _[column] === isoCode}),
-        {} as Record<OblastISOSVG, (_: ProtHHS2Enrich) => boolean>
+        {} as Record<OblastISO, (_: ProtHHS2Enrich) => boolean>
       )
 
     const byCurrentOblast = ChartTools.byCategory({
@@ -66,25 +85,12 @@ export const useProtHHS2Data = ({
       flatData,
       individualsCount: data.sum(_ => _.persons.length),
       categoryOblasts,
-      ageGroup: (ageGroup: Record<string, number[]>) => chain(data.flatMap(_ => _.persons).filter(_ => _.age !== undefined).groupBy(_ => groupByAgeGroup(ageGroup)(_, p => p.age!)))
-        .map(_ => Enum.entries(_).map(([group, v]) => ({
-            key: group,
-            Male: v.filter(_ => _.gender === 'male').length,
-            Female: v.filter(_ => _.gender === 'female').length,
-            Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length,
-          })
-        ))
-        .map(_ => _.sort((a, b) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))
-        .get
-      ,
-
+      ageGroup: ageGroup,
       byGender: chain(ChartTools.single({
-        data: data.flatMap(_ => _.persons.map(_ => _.gender)),
-        filterValue: ['unable_unwilling_to_answer'],
+        data: data.flatMap(_ => _.persons.map(_ => (_.gender === undefined || _.gender === 'unable_unwilling_to_answer') ? 'other' : _.gender)),
       }))
         .map(ChartTools.mapValue(_ => _.value))
         .get,
-
       idps,
       byCurrentOblast,
       byOriginOblast,

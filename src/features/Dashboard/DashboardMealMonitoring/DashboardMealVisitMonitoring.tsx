@@ -12,7 +12,7 @@ import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoring'
 import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringOptions'
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
@@ -218,8 +218,8 @@ export const DashboardMealVisitMonitoring = () => {
       beforeSection={
         data && (
           <>
-            <SlideContainer>
-              <SlideContainer column>
+            <Div>
+              <Div column>
                 <SlidePanel>
                   <KoboUkraineMap
                     fillBaseOn="value"
@@ -260,9 +260,9 @@ export const DashboardMealVisitMonitoring = () => {
                   <KoboPieChartIndicator title={m.mealMonitoringVisit.criticalConcern} question="visf" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
                   <MealVisitMonitoringBarChart data={data} question="visp"/>
                 </SlidePanel>
-              </SlideContainer>
+              </Div>
 
-              <SlideContainer column sx={{maxHeight: '33%'}}>
+              <Div column sx={{maxHeight: '33%'}}>
                 <SlidePanel title={m.mealMonitoringVisit.nfiDistribution}>
                   <MealVisitMonitoringBarChart data={data} question="pan" questionType="multiple"/>
                 </SlidePanel>
@@ -281,9 +281,9 @@ export const DashboardMealVisitMonitoring = () => {
                 <SlidePanel title={m.mealMonitoringVisit.eore}>
                   <MealVisitMonitoringBarChart data={data} question="pao"/>
                 </SlidePanel>
-              </SlideContainer>
+              </Div>
 
-              <SlideContainer column>
+              <Div column>
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
                   <Box sx={{maxHeight: '650px', overflowY: 'auto'}}>
                     {data.map(row => (
@@ -323,8 +323,8 @@ export const DashboardMealVisitMonitoring = () => {
                     ))}
                   </Box>
                 </SlidePanel>
-              </SlideContainer>
-            </SlideContainer>
+              </Div>
+            </Div>
           </>
         )
       }

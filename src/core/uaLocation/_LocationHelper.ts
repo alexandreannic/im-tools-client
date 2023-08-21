@@ -42,7 +42,7 @@ export class AILocationHelper {
     if (raionName === 'Cnernivetskyi') {
       raionName = 'Chernivetskyi'
     }
-    const oblastIso = OblastIndex.findISOByName(oblastName)
+    const oblastIso = OblastIndex.searchISOByName(oblastName)
     const list = Enum.values(raions).filter(_ => _.parent === oblastIso)
     return list.find(_ => _.en === raionName)
   }

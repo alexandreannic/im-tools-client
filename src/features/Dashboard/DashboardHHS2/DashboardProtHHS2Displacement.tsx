@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
 import React, {useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -22,8 +22,8 @@ export const DashboardProtHHS2Displacement = ({
   const {m} = useI18n()
   const [intentionFilters, setIntentionFilters] = useState<Record<string, any>>({})
   return (
-    <SlideContainer responsive>
-      <SlideContainer column>
+    <Div responsive>
+      <Div column>
         <SlidePanel title={m.idpPopulationByOblast}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <UkraineMap sx={{flex: 1}} data={computed.idpsByOriginOblast} base={computed.idps.length} title={m.originOblast}/>
@@ -77,8 +77,8 @@ export const DashboardProtHHS2Displacement = ({
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>
-      </SlideContainer>
-      <SlideContainer column>
+      </Div>
+      <Div column>
         <SlidePanel>
           <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartTools.percentage({
             value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,
@@ -142,7 +142,7 @@ export const DashboardProtHHS2Displacement = ({
             )}
           </Lazy>
         </SlidePanel>
-      </SlideContainer>
-    </SlideContainer>
+      </Div>
+    </Div>
   )
 }

@@ -1,4 +1,4 @@
-import {SlideContainer} from '@/shared/PdfLayout/Slide'
+import {Div} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -13,14 +13,14 @@ export const DashboardProtHHS2Needs = ({
 
   return (
     <>
-      <SlideContainer>
-        <SlideContainer column>
+      <Div>
+        <Div column>
 
-        </SlideContainer>
-        <SlideContainer column>
+        </Div>
+        <Div column>
 
-        </SlideContainer>
-      </SlideContainer>
+        </Div>
+      </Div>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -11,8 +11,8 @@ export const DashboardProtHHS2Disability = ({
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   return (
-    <SlideContainer responsive>
-      <SlideContainer column>
+    <Div responsive>
+      <Div column>
         <SlidePanel>
           <KoboPieChartIndicator
             title={m.protHHS2.hhWithMemberHavingDifficulties}
@@ -44,8 +44,8 @@ export const DashboardProtHHS2Disability = ({
           />
           <ProtHHS2BarChart data={data} question="why_dont_they_have_status"/>
         </SlidePanel>
-      </SlideContainer>
-      <SlideContainer column>
+      </Div>
+      <Div column>
         <SlidePanel>
           <KoboPieChartIndicator
             title={m.protHHS2.barriersToAccessHealth}
@@ -63,8 +63,7 @@ export const DashboardProtHHS2Disability = ({
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>
-
-      </SlideContainer>
-    </SlideContainer>
+      </Div>
+    </Div>
   )
 }

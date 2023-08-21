@@ -1,4 +1,4 @@
-import {SlideContainer, SlidePanel} from '@/shared/PdfLayout/Slide'
+import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -55,8 +55,8 @@ export const DashboardProtHHS2FamilyUnity = ({
 
   return (
     <>
-      <SlideContainer responsive>
-        <SlideContainer column>
+      <Div responsive>
+        <Div column>
           <SlidePanel>
             <KoboPieChartIndicator
               compare={{before: computed.lastMonth}}
@@ -124,8 +124,8 @@ export const DashboardProtHHS2FamilyUnity = ({
             </Lazy>
           </SlidePanel>
 
-        </SlideContainer>
-        <SlideContainer column>
+        </Div>
+        <Div column>
           <SlidePanel title={m.protHHS2.locationOfSeparatedFamilyMembers}>
             <Lazy deps={[data, category]} fn={() => chain(ChartTools.single({
               data: data.flatMap(_ => [
@@ -160,8 +160,8 @@ export const DashboardProtHHS2FamilyUnity = ({
               {_ => <HorizontalBarChartGoogle data={_}/>}
             </Lazy>
           </SlidePanel>
-        </SlideContainer>
-      </SlideContainer>
+        </Div>
+      </Div>
     </>
   )
 }
