@@ -1019,6 +1019,7 @@ export const en = Object.freeze({
       }
     },
     _koboDatabase: {
+      title: (form?: string) => `Kobo Database${form ? `: <b>${form}</b>` : ``}`,
       showAllQuestions: 'Show unanswered questions',
       pullData: 'Synchronize last Kobo data',
       valueNoLongerInOption: 'This value is no longer in the options list',

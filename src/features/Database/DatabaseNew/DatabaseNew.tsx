@@ -89,9 +89,7 @@ export const DatabaseNew = ({
         </>
       }
     >
-      {
-        children
-      }
+      {children}
     </Modal>
   )
 }
