@@ -15,7 +15,7 @@ export const useProtHHS2Data = ({
 }: {
   data?: _Arr<ProtHHS2Enrich>
 }) => {
-  const ageGroup = useCallback(lazy((ageGroup: Record<string, number[]>) => {
+  const ageGroup = useCallback(lazy((ageGroup: Record<string, number[]>, hideOther?: boolean) => {
     return chain(
       data!.flatMap(_ => _.persons)
         // .filter(_ => _.age !== undefined)
@@ -25,7 +25,7 @@ export const useProtHHS2Data = ({
           key: group,
           Male: v.filter(_ => _.gender === 'male').length,
           Female: v.filter(_ => _.gender === 'female').length,
-          Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length,
+          ...!hideOther && {Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length},
         })
       ))
       .map(_ => _.sort((a, b) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))

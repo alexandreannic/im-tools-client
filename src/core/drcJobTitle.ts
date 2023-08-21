@@ -38,6 +38,7 @@ export enum DrcJob {
   'MPCA/NFI Team Leader' = 'MPCA/NFI Team Leader',
   'MPCA/NFI Officer' = 'MPCA/NFI Officer',
   'MPCA/NFI Assistant' = 'MPCA/NFI Assistant',
+  'MPCA / NFI Assistant' = 'MPCA / NFI Assistant',
   'MPCA Assistant' = 'MPCA Assistant',
   'Cash And Voucher Assistance Officer' = 'Cash And Voucher Assistance Officer',
   'Distribution TL' = 'Distribution TL',

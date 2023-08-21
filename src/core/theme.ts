@@ -77,11 +77,13 @@ export const defaultSpacing = 8
 
 export const muiTheme = ({
   dark,
+  mainColor = '#c9000a',
   backgroundPaper,
   backgroundDefault,
   cardElevation,
   fontSize = 14,
 }: {
+  mainColor?: string
   fontSize?: number
   backgroundPaper?: string
   backgroundDefault?: string
@@ -90,7 +92,7 @@ export const muiTheme = ({
 }): Theme => {
   const defaultRadius = 8
   const fontFamily = '"Open Sans", sans-serif'
-  const mainColor = '#c9000a'
+  // const mainColor = '#af161e'
   const colorPrimary = {
     main: mainColor,
     light: alpha(mainColor, .4),

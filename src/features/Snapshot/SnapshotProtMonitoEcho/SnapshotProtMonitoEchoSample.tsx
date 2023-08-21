@@ -14,6 +14,7 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
 import {AaPieChart} from '@/shared/Chart/AaPieChart'
+import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
 export const SnapshotProtMonitoEchoSample = () => {
   const theme = useTheme()
@@ -81,13 +82,16 @@ export const SnapshotProtMonitoEchoSample = () => {
                     m={{
                       male: m.male,
                       female: m.female,
-                      other: m.other,
+                      // other: m.other,
                     }}
-                    data={computed.byGender}
+                    data={{
+                      female: computed.byGender.female,
+                      male: computed.byGender.male,
+                    }}
                     colors={{
                       female: theme.palette.primary.main,
-                      male: theme.palette.info.main,
-                      other: theme.palette.divider,
+                      male: snapshotAlternateColor(theme),
+                      // other: theme.palette.divider,
                     }}
                   >
                     <Legend iconType="circle" layout="vertical" verticalAlign="middle" align="right"/>
@@ -105,7 +109,10 @@ export const SnapshotProtMonitoEchoSample = () => {
               <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(ageGroup['drc'])} height={250}/>
+                  <AAStackedBarChart data={computed.ageGroup(ageGroup['drc'], true)} height={250} colors={t => [
+                    snapshotAlternateColor(t),
+                    t.palette.primary.main,
+                  ]}/>
                 </SlidePanel>
                 <SlidePanel sx={{flex: 1}}>
                   <SlidePanelTitle>{m.status}</SlidePanelTitle>

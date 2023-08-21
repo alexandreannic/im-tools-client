@@ -8,6 +8,7 @@ const SnapshotProtectionMonitoringPage = () => {
     <ThemeProvider theme={muiTheme({
       dark: false,
       fontSize: 14,
+      mainColor: '#af161e',
       backgroundDefault: 'white',
       backgroundPaper: '#f6f7f9',
       cardElevation: 1,

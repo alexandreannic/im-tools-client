@@ -9,6 +9,9 @@ import {SnapshotProtMonitoEchoLivelihood} from '@/features/Snapshot/SnapshotProt
 import {SnapshotProtMonitoEchoSample} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoSample'
 import {SnapshotProtMonitoEchoDisplacement} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoDisplacement'
 import {SnapshotProtMonitoEchoRegistration} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoRegistration'
+import {Theme} from '@mui/material'
+
+export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 
 export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dense' | 'evolution' | 'showValue' | 'sx' | 'showBase'>> & {
   hideEvolution?: boolean
