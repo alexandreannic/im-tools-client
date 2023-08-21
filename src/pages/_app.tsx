@@ -54,7 +54,7 @@ const AppWithConfig = (props: AppProps) => {
     <Provide providers={[
       // _ => <StyledEngineProvider injectFirst children={_}/>,
       _ => <ToastProvider children={_}/>,
-      _ => <ThemeProvider theme={muiTheme(false && settings.darkTheme)} children={_}/>,
+      _ => <ThemeProvider theme={muiTheme({dark: false && settings.darkTheme})} children={_}/>,
       _ => <CssBaseline children={_}/>,
       _ => <I18nProvider children={_}/>,
       _ => <MsalProvider children={_} instance={msal}/>,
