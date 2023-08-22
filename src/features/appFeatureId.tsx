@@ -60,7 +60,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
   },
   mpca: {
     id: AppFeatureId.mpca,
-    name: 'MPCA',
+    name: 'MPCA and Basic Needs',
     materialIcons: 'savings',
     color: 'green',
     path: '/mpca',

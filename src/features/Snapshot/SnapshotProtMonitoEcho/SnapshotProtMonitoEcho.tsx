@@ -13,6 +13,11 @@ import {Theme} from '@mui/material'
 
 export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 
+export const snapshotColors = (t: Theme) => [
+  t.palette.primary.main,
+  snapshotAlternateColor(t),
+]
+
 export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dense' | 'evolution' | 'showValue' | 'sx' | 'showBase'>> & {
   hideEvolution?: boolean
 } = {

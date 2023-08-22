@@ -1,12 +1,13 @@
 import {CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts'
 import * as React from 'react'
 import {useState} from 'react'
-import {Box, BoxProps, Checkbox, useTheme} from '@mui/material'
+import {Box, BoxProps, Checkbox, Theme, useTheme} from '@mui/material'
 import {map} from '@alexandreannic/ts-utils'
 import {styleUtils} from '@/core/theme'
 import {chartConfig} from '@/shared/Chart/chartConfig'
 
 export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
+  colors?: (t: Theme) => string[]
   /**
    * This props may be needed because sometimes label are not showing because of animation.
    * https://github.com/recharts/recharts/issues/1135
@@ -20,7 +21,7 @@ export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
   percent?: boolean
 }
 
-interface Props extends ScLineChartPropsBase {
+export interface ScLineChartProps extends ScLineChartPropsBase {
   data: ScLineChart2Data[]
 }
 
@@ -28,11 +29,12 @@ export type ScLineChart2Data = Record<string, number> & {
   name: string
 }
 
-const colors = chartConfig.defaultColors
+// const colors = chartConfig.defaultColors
 
 export const ScLineChart2 = ({
   data,
   sx,
+  colors = chartConfig.defaultColors,
   translation,
   hideYTicks,
   hideXTicks,
@@ -40,7 +42,7 @@ export const ScLineChart2 = ({
   hideLabelToggle,
   percent,
   height = 220
-}: Props) => {
+}: ScLineChartProps) => {
   const theme = useTheme()
   const lines = Object.keys(data[0] ?? {}).filter(_ => _ !== 'name')
   const [showCurves, setShowCurves] = useState<boolean[]>(new Array(lines.length).fill(false))

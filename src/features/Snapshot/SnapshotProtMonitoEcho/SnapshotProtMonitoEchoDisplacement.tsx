@@ -1,24 +1,12 @@
-import {Pdf} from '@/shared/PdfLayout/PdfLayout'
 import React from 'react'
-import {Box, Checkbox, Icon} from '@mui/material'
+import {Box, Icon} from '@mui/material'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
-import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
+import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
-import {Txt} from 'mui-extension'
-import {format, sub} from 'date-fns'
-import {DRCLogo, EULogo} from '@/shared/logo/logo'
-import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
-import {ageGroup} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {PanelTitle} from '@/shared/Panel'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
-import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {Lazy} from '@/shared/Lazy'
-import {chain} from '@/utils/utils'
-import {ChartTools} from '@/core/chartTools'
-import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {snapshotAlternateColor, snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
 export const SnapshotProtMonitoEchoDisplacement = () => {
   const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
@@ -47,6 +35,7 @@ export const SnapshotProtMonitoEchoDisplacement = () => {
             <SlidePanel>
               <SlidePanelTitle>{m.displacementAndReturn}</SlidePanelTitle>
               <KoboLineChartDate
+                colors={snapshotColors}
                 height={200}
                 data={data}
                 start={new Date(2022, 0, 1)}
@@ -56,6 +45,7 @@ export const SnapshotProtMonitoEchoDisplacement = () => {
                 }}
                 label={[m.departureFromAreaOfOrigin, m.returnToOrigin]}
                 end={computed.end}
+
               />
             </SlidePanel>
           </Div>
