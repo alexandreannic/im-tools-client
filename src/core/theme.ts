@@ -397,13 +397,13 @@ const tableTheme = (t: Theme) => ({
   '.table tr': {
     whiteSpace: 'nowrap',
   },
-  'table .td:has(.MuiOutlinedInput-notchedOutline)': {
+  'table td:has(.MuiOutlinedInput-notchedOutline)': {
     padding: 0,
   },
   '.table tr:hover': {
     background: t.palette.action.hover,
   },
-  '.table .td-sub-head': {
+  '.table td-sub-head': {
     textAlign: 'right',
     padding: 0,
   },
@@ -466,7 +466,7 @@ const tableTheme = (t: Theme) => ({
     alignItems: 'left',
     textAlign: 'left',
     height: 30,
-    padding: '0 0px 0 4px',
+    padding: '0 1px 0 4px',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',

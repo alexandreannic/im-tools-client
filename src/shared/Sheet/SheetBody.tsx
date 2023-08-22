@@ -43,6 +43,7 @@ export const SheetBody = (() => {
                   className={[
                     'td td-clickable',
                     _.stickyEnd ? 'td-sticky-end' : '',
+                    _.type === 'number' ? 'td-right' : '',
                     fnSwitch(_.align!, {
                       'center': 'td-center',
                       'right': 'td-right'

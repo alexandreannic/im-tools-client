@@ -87,6 +87,16 @@ export type SheetFilterValueDate = [Date | undefined, Date | undefined]
 export type SheetFilterValueNumber = [number | undefined, number | undefined]
 export type SheetFilterValue = SheetFilterValueString | SheetFilterValueSelect | SheetFilterValueDate | SheetFilterValueNumber
 
+export class SheetUtils {
+
+  static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
+
+  static readonly buildOptions = (opt: string[]): SheetOptions[] => {
+    return opt.map(_ => ({value: _, label: _}))
+  }
+}
+
+
 export const Sheet = <T extends SheetRow = SheetRow>({
   id,
   loading,
@@ -135,7 +145,8 @@ const _Sheet = <T extends SheetRow>({
   renderEmptyState,
   loading,
   rowsPerPageOptions = [10, 20, 100, 500, 1000],
-}: Pick<SheetTableProps<T>, 'id' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
+  title,
+}: Pick<SheetTableProps<T>, 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
   const ctx = useSheetContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   useEffect(() => ctx.select?.onSelect(ctx.selected.toArray), [ctx.selected.get])
@@ -143,7 +154,7 @@ const _Sheet = <T extends SheetRow>({
 
   const exportToCSV = () => {
     if (ctx.data.filteredAndSortedData) {
-      _generateXLSFromArray.call(Utils.slugify('TODO') ?? 'noname', {
+      _generateXLSFromArray.call(Utils.slugify(title) ?? 'noname', {
         sheetName: 'data',
         data: ctx.data.filteredAndSortedData,
         schema: ctx.columns
@@ -151,12 +162,12 @@ const _Sheet = <T extends SheetRow>({
           .map(q => ({
             name: q.head as string ?? q.id,
             render: (row: any) => {
-              if (!q.renderExport) return
+              if (!q.renderExport || !q.renderValue) return
               if (q.renderExport === true) return fnSwitch(q.type!, {
                 number: () => map(row[q.id], _ => +_),
                 date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
               }, () => row[q.id])
-              return q.renderExport(row)
+              return (q.renderExport ?? q.renderValue)(row)
             }
           })),
       })

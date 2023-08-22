@@ -1,5 +1,6 @@
 import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {mapObject, mapObjectValue, sortObject} from '../utils/utils'
+import {ReactNode} from 'react'
 
 export interface ChartDataValPercent extends ChartDataVal {
   base: number
@@ -9,7 +10,7 @@ export interface ChartDataValPercent extends ChartDataVal {
 export interface ChartDataVal {
   value: number
   base?: number
-  label?: string
+  label?: ReactNode
   desc?: string
 }
 
@@ -47,7 +48,7 @@ export namespace ChartTools {
     },
     label: <T extends string>(obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
       return sortObject(obj as Record<string, ChartDataVal>, ([aK, aV], [bK, bV]) => {
-        return (bV.label ?? '').localeCompare(aV.label ?? '')
+        return (bV.label as string ?? '').localeCompare(aV.label as string ?? '')
       })
     }
   }
@@ -201,7 +202,7 @@ export namespace ChartTools {
     return res
   }
 
-  export const setLabel = <A extends string>(m: Record<A, string>) => (data: ChartData<A>): ChartData<A> => {
+  export const setLabel = <A extends string>(m: Record<A, ReactNode>) => (data: ChartData<A>): ChartData<A> => {
     Enum.keys(data).forEach(k => {
       data[k].label = m[k]
     })

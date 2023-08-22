@@ -99,7 +99,7 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
       }
     })()
     return translations
-      ? ChartTools.setLabel(Arr(translations).reduceObject<Record<string, string>>(_ => [_.value!, _.label!]))(ChartTools.sortBy.value(chart))
+      ? ChartTools.setLabel(Arr(translations).reduceObject<Record<string, ReactNode>>(_ => [_.value!, _.label!]))(ChartTools.sortBy.value(chart))
       : ChartTools.sortBy.value(chart)
   }, [getValue, data, translations])
   return (

@@ -6,7 +6,8 @@ export type SheetPropertyType = 'date' | 'number' | 'string' | 'select_one' | 's
 
 export interface SheetOptions {
   value?: string
-  label?: string
+  // label?: string
+  label?: ReactNode
 }
 
 export interface SheetSearch<T = any> {
