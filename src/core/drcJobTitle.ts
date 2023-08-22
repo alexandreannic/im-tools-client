@@ -67,6 +67,7 @@ export enum DrcJob {
   'Head of Humanitarian Disarmament and Peacebuilding' = 'Head of Humanitarian Disarmament and Peacebuilding',
   'Cash and Voucher Assistance Assistant' = 'Cash and Voucher Assistance Assistant',
   'Protection Specialist' = 'Protection Specialist',
+  'Shelter and Settlement Assistant' = 'Shelter and Settlement Assistant',
 }
 
 export enum DrcOffice {
