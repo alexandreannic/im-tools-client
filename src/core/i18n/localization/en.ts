@@ -1062,6 +1062,14 @@ export const en = Object.freeze({
       }
     },
     _shelter: {
+      workDoneAt: 'Work done',
+      scoreLevel: 'Price level',
+      priceLevel: 'Price level',
+      roofSum: 'Σ Roof',
+      windowsSum: 'Σ Window',
+      agreement: 'Agreement',
+      workOrder: 'Work order',
+      donor: 'Donor',
       contractor1: 'Contractor 1',
       contractor2: 'Contractor 2',
       ntaForm: 'NTA form',

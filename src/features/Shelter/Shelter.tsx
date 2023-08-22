@@ -2,12 +2,17 @@ import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-rout
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
-import React, {useMemo} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
-import {ShelterData} from '@/features/Shelter/Data/ShelterData'
+import {ShelterTable} from '@/features/Shelter/Data/ShelterTable'
+import {ShelterProvider} from '@/features/Shelter/ShelterContext'
+import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {kobo} from '@/koboDrcUaFormId'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {useAaToast} from '@/core/useToast'
 
 export const shelterModule = {
   basePath: '/shelter',
@@ -33,8 +38,26 @@ const ShelterSidebar = () => {
 }
 
 export const Shelter = () => {
+  const {m} = useI18n()
   const {session, accesses} = useSession()
   const access = useMemo(() => !!appFeaturesIndex.shelter.showIf?.(session, accesses), [accesses])
+  const {api} = useAppSettings()
+  const {toastHttpError} = useAaToast()
+
+  const _schemas = useFetcher(async () => {
+    if (!access) return
+    const [ta, nta] = await Promise.all([
+      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelterTA),
+      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelterNTA),
+    ])
+    return {ta, nta}
+  })
+  useEffectFn(_schemas.error, toastHttpError)
+
+  useEffect(() => {
+    _schemas.fetch()
+  }, [])
+
   if (!access) {
     return (
       <NoFeatureAccessPage/>
@@ -43,13 +66,21 @@ export const Shelter = () => {
   return (
     <Router>
       <Layout
+        title={appFeaturesIndex.shelter.name}
         sidebar={<ShelterSidebar/>}
         header={<AppHeader id="app-header"/>}
       >
-        <Routes>
-          <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
-          <Route path={shelterModule.siteMap.data} element={<ShelterData/>}/>
-        </Routes>
+        {_schemas.entity && (
+          <ShelterProvider
+            schemaNta={_schemas.entity.nta}
+            schemaTa={_schemas.entity.ta}
+          >
+            <Routes>
+              <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
+              <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
+            </Routes>
+          </ShelterProvider>
+        )}
       </Layout>
     </Router>
   )

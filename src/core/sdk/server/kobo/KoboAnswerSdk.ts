@@ -63,6 +63,7 @@ export class KoboAnswerSdk {
       end: map(_.end, endOfDay),
     }
   }
+
   readonly searchByAccess = <
     TQuestion extends Record<string, any> = Record<string, string | undefined>,
     TTags extends Record<string, any> | undefined = undefined
@@ -111,7 +112,7 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.shelterTA,
       fnMap: mapShelter_TA,
-      fnMapTags: _ => _ as ShelterTaTags,
+      fnMapTags: _ => ({..._, workDoneAt: _?.workDoneAt ? new Date(_.workDoneAt) : undefined}) as ShelterTaTags,
       ...filters,
     })
   }

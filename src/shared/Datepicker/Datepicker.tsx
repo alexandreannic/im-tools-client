@@ -10,7 +10,7 @@ export interface DatepickerProps extends Omit<TextFieldProps, 'onChange'> {
   label?: string
   InputProps?: Partial<StandardInputProps>
   fullWidth?: boolean
-  timeOfDay: // when picking a date, the Date returned will be at 00:00:000 in the user timezone
+  timeOfDay?: // when picking a date, the Date returned will be at 00:00:000 in the user timezone
     | 'startOfDay'
     // with this, it will be at 23:59:999 in the user timezone
     | 'endOfDay'
@@ -24,7 +24,7 @@ export const Datepicker = ({
   label,
   fullWidth,
   InputProps,
-  timeOfDay,
+  timeOfDay = 'startOfDay',
   ...props
 }: DatepickerProps) => {
   const onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
