@@ -1,4 +1,5 @@
 import {bool, defaultValue, env, required} from '@alexandreannic/ts-utils'
+import {AppFeatureId, appFeaturesIndex} from '@/features/appFeatureId'
 
 enum Env {
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = 'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',
@@ -22,7 +23,11 @@ const persistedTempEnvVariablesForFront: { [key in Env]: string | undefined } = 
 
 const _ = env(persistedTempEnvVariablesForFront)
 
+
 export const appConfig = {
+  linkToFeature: (feature: AppFeatureId, path: string) => {
+    return appFeaturesIndex[feature].path + '/#' + path
+  },
   contact: 'alexandre.annic@drc.ngo',
   apiURL: _(required)(Env.NEXT_PUBLIC_API_BASE_URL),
   gooogle: {

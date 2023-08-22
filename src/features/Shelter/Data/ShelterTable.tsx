@@ -20,8 +20,6 @@ import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo
 import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
-import {Simulate} from 'react-dom/test-utils'
-import progress = Simulate.progress
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 }

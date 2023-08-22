@@ -2,6 +2,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {appConfig} from '@/conf/AppConfig'
 import {Access} from '@/core/sdk/server/access/Access'
+import {kobo} from '@/koboDrcUaFormId'
 
 export enum AppFeatureId {
   dashboards = 'dashboards',
@@ -46,16 +47,16 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: 'brown',
     path: '/shelter',
     showIf: (u, accesses) => {
-      return u && ([
-        'xavier.desplans@drc.ngo',
-        'enrico.dainese@drc.ngo',
-        'paul.thibault@drc.ngo',
-        'lorenza.esquinca@drc.ngo',
-      ].includes(u.email) || u.admin)
+      // return u && ([
+      //   'xavier.desplans@drc.ngo',
+      //   'enrico.dainese@drc.ngo',
+      //   'paul.thibault@drc.ngo',
+      //   'lorenza.esquinca@drc.ngo',
+      // ].includes(u.email) || u.admin)
       // return u?.email === appConfig.contact
-      // return u?.admin || accesses && !!accesses
-      //   .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-      //   .find(_ => _.params?.koboFormId === kobo.drcUa.form.shelterNTA)
+      return u?.admin || accesses && !!accesses
+        .filter(Access.filterByFeature(AppFeatureId.kobo_database))
+        .find(_ => _.params?.koboFormId === kobo.drcUa.form.shelterNTA)
     }
   },
   mpca: {

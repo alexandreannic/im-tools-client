@@ -37,6 +37,10 @@ export interface CfmAccessParams {
   // seeHisOwn?: boolean
 }
 
+export interface ShelterAccessParams {
+  office?: DrcOffice[]
+}
+
 export class WfpDeduplicationAccessParams {
   static readonly create = (_: WfpDeduplicationAccessParams): any => _
 }
@@ -53,6 +57,7 @@ interface FilterByFeature {
   (f: AppFeatureId.kobo_database): (_: Access<any>) => _ is Access<KoboDatabaseAccessParams>
   (f: AppFeatureId.wfp_deduplication): (_: Access<any>) => _ is Access<WfpDeduplicationAccessParams>
   (f: AppFeatureId.cfm): (_: Access<any>) => _ is Access<CfmAccessParams>
+  (f: AppFeatureId.shelter): (_: Access<any>) => _ is Access<ShelterAccessParams>
   (f: AppFeatureId): (_: Access<any>) => _ is Access<any>
 }
 

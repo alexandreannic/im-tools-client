@@ -1,13 +1,13 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useMemo} from 'react'
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import {ShelterNtaTags, ShelterTaPriceLevel, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {DrcOffice} from '@/core/drcJobTitle'
 
 export interface ShelterRow {
   ta?: KoboAnswer<Shelter_TA, ShelterTaTags> & {
@@ -20,7 +20,7 @@ export interface ShelterRow {
 
 export type UseShelterData = ReturnType<typeof useShelterData>
 
-export const useShelterData = () => {
+export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][]) => {
   const {api} = useAppSettings()
   const ntaRequest = () => api.kobo.answer.searchShelterNta().then(_ => _.data)
   const taRequest = () => api.kobo.answer.searchShelterTa().then(_ => _.data)
@@ -29,16 +29,22 @@ export const useShelterData = () => {
 
   const mappedData = useMemo(() => {
     if (!_fetchTa.entity || !_fetchNta.entity) return
+    const skippedNta = new Set<number>()
     const index: Record<KoboAnswerId, {
       nta?: ShelterRow['nta'],
       ta?: ShelterRow['ta'],
     }> = {} as any
     _fetchNta.entity.forEach(d => {
-      if (!index[d.id]) index[d.id] = {}
-      index[d.id].nta = d
+      if (allowedOffices.length > 0 && !allowedOffices.includes(d.back_office)) {
+        skippedNta.add(d.id)
+      } else {
+        if (!index[d.id]) index[d.id] = {}
+        index[d.id].nta = d
+      }
     })
     _fetchTa.entity.forEach(d => {
       const refId = d.nta_id ? +d.nta_id.replaceAll(/[^\d]/g, '') : d.id
+      if (skippedNta.has(refId)) return
       if (!index[refId]) index[refId] = {}
       const price = ShelterContractorPrices.compute({
         answer: d,
@@ -72,7 +78,7 @@ export const useShelterData = () => {
         if (!b.nta) return 1
         return a.nta.submissionTime?.getTime() - b.nta?.submissionTime.getTime()
       }) as ShelterRow[]
-  }, [_fetchTa.entity, _fetchNta.entity])
+  }, [_fetchTa.entity, _fetchNta.entity, allowedOffices])
 
   return {
     _fetchNta,

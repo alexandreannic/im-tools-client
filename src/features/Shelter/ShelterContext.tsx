@@ -1,4 +1,4 @@
-import React, {ReactNode, useCallback, useContext, useState} from 'react'
+import React, {ReactNode, useCallback, useContext, useMemo, useState} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {kobo} from '@/koboDrcUaFormId'
@@ -7,8 +7,16 @@ import {UseShelterData, useShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
+import {_Arr, Arr, fnSwitch} from '@alexandreannic/ts-utils'
+import {Access, AccessSum} from '@/core/sdk/server/access/Access'
+import {AppFeatureId} from '@/features/appFeatureId'
+import {CfmContext} from '@/features/Cfm/CfmContext'
+import {useSession} from '@/core/Session/SessionContext'
+import {DrcOffice} from '@/core/drcJobTitle'
+import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 
 export interface ShelterContext {
+  access: AccessSum
   refresh: UseAsync<() => Promise<void>>
   data: UseShelterData
   nta: UseShelterActions<ShelterNtaTags>
@@ -38,6 +46,14 @@ export const useShelterContext = () => useContext<ShelterContext>(Context)
 //   }
 // }
 
+// const shelterToOffice = (_?: Shelter_NTA['back_office']) => fnSwitch(_!, {
+//   cej: DrcOffice.Chernihiv,
+//   dnk: DrcOffice.Dnipro,
+//   hrk: DrcOffice.Kharkiv,
+//   nlv: DrcOffice.Mykolaiv,
+//   umy: DrcOffice.Sumy,
+// }, () => undefined)
+
 export const ShelterProvider = ({
   schemaTa,
   schemaNta,
@@ -50,10 +66,20 @@ export const ShelterProvider = ({
   const {api} = useAppSettings()
   const [langIndex, setLangIndex] = useState<number>(0)
   const {m} = useI18n()
-  // const ta = useMemo(() => buildFormHelper(schemaTa, langIndex, m), [schemaTa, langIndex])
-  // const nta = useMemo(() => buildFormHelper(schemaNta, langIndex, m), [schemaNta, langIndex])
+  const {session, accesses} = useSession()
 
-  const _data = useShelterData()
+  const {access, allowedOffices} = useMemo(() => {
+    const cfmAccesses = Arr(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))
+    const allowedOffices = cfmAccesses.flatMap(_ => {
+      return _.params?.filters?.back_office as Shelter_NTA['back_office'][] | undefined
+    }).compact()
+    return {
+      access: Access.toSum(cfmAccesses, session.admin),
+      allowedOffices,
+    }
+  }, [session, accesses])
+
+  const _data = useShelterData(allowedOffices)
 
   const _ntaActions = useShelterActions<ShelterNtaTags>({
     formId: kobo.drcUa.form.shelterNTA,
@@ -119,6 +145,7 @@ export const ShelterProvider = ({
 
   return (
     <Context.Provider value={{
+      access,
       data: _data,
       fetching,
       refresh: _refresh,
