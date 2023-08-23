@@ -113,24 +113,24 @@ export const SheetHeadContent = ({
 }) => {
   return (
     <span style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
-      {(() => {
-        if (column.typeIcon === null) return
+      {column.typeIcon}
+      {/*(() => {
         if (column.typeIcon) return column.typeIcon
-        switch (column.type) {
-          case 'date':
-            return <SheetHeadTypeIcon children="event" tooltip={column.type}/>
-          case 'select_multiple':
-            return <SheetHeadTypeIcon children="check_box" tooltip={column.type}/>
-          case 'select_one':
-            return <SheetHeadTypeIcon children="radio_button_checked" tooltip={column.type}/>
-          case 'number':
-            return <SheetHeadTypeIcon children="tag" tooltip={column.type}/>
-          case 'string':
-            return <SheetHeadTypeIcon children="short_text" tooltip={column.type}/>
-          default:
-            return column.type
-        }
-      })()}
+        // switch (column.type) {
+        //   case 'date':
+        //     return <SheetHeadTypeIcon children="event" tooltip={column.type}/>
+        //   case 'select_multiple':
+        //     return <SheetHeadTypeIcon children="check_box" tooltip={column.type}/>
+        //   case 'select_one':
+        //     return <SheetHeadTypeIcon children="radio_button_checked" tooltip={column.type}/>
+        //   case 'number':
+        //     return <SheetHeadTypeIcon children="tag" tooltip={column.type}/>
+        //   case 'string':
+        //     return <SheetHeadTypeIcon children="short_text" tooltip={column.type}/>
+        //   default:
+        //     return column.type
+        // }
+      })()*/}
       {(column.options || ['date', 'number'].includes(column.type!)) && (
         <TableIconBtn children="bar_chart" onClick={e => onOpenStats(e)}/>
       )}

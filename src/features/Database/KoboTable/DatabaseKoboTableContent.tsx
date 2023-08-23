@@ -205,6 +205,7 @@ const getColumnBySchema = ({
         return {
           type: 'string',
           id: q.name,
+          typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           head: translateQuestion(q.name),
           render: row => <KoboAttachedImg attachments={row.attachments} fileName={row[q.name] as string}/>
         }
@@ -232,6 +233,7 @@ const getColumnBySchema = ({
       case 'text': {
         return {
           type: 'string',
+          typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           id: q.name,
           head: translateQuestion(q.name),
           render: row => <span title={row[q.name] as string}>{row[q.name] as string}</span>
@@ -242,6 +244,7 @@ const getColumnBySchema = ({
         return {
           type: 'number',
           id: q.name,
+          typeIcon: <SheetHeadTypeIcon children="tag" tooltip={q.type}/>,
           head: translateQuestion(q.name),
           render: row => <span title={row[q.name] as string}>{row[q.name] as number}</span>
         }
@@ -262,6 +265,7 @@ const getColumnBySchema = ({
         return {
           type: 'date',
           id: q.name,
+          typeIcon: <SheetHeadTypeIcon children="event" tooltip={q.type}/>,
           head: translateQuestion(q.name),
           render: row => map(row[q.name] as Date | undefined, _ => (
             <span title={formatDateTime(_)}>{formatDate(_)}</span>
@@ -283,6 +287,7 @@ const getColumnBySchema = ({
         return {
           type: 'select_one',
           id: q.name,
+          typeIcon: <SheetHeadTypeIcon children="radio_button_checked" tooltip={q.type}/>,
           head: translateQuestion(q.name),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
           render: row => map(row[q.name] as string | undefined, v => {
@@ -302,6 +307,7 @@ const getColumnBySchema = ({
         return {
           type: 'select_multiple',
           id: q.name,
+          typeIcon: <SheetHeadTypeIcon children="check_box" tooltip={q.type}/>,
           head: translateQuestion(q.name),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
           render: row => map(row[q.name] as string[] | undefined, v => {
@@ -331,6 +337,7 @@ const getColumnBySchema = ({
         return {
           type: 'string',
           id: q.name,
+          typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           head: translateQuestion(q.name),
           render: row => {
             const render = JSON.stringify(row[q.name])
