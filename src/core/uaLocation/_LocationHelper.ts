@@ -5,9 +5,11 @@ import {aiRaions} from './aiRaions'
 import {hromadas} from './hromadas'
 import {AILocation, raions} from './raions'
 // @ts-ignore
-import {settlements as untypedSettlements} from './settlements'
+import settlements from './settlements.json'
 
-const settlements: Record<string, AILocation> = untypedSettlements
+
+// const settlements = _settlements as any
+// const settlements = JSON.parse(_settlements)
 
 export class AILocationHelper {
 
@@ -22,7 +24,7 @@ export class AILocationHelper {
   private static readonly settlementsIndex = (() => {
     const index: Record<string, number[]> = {}
     for (var k in settlements) {
-      const obj = (settlements as any)[k]
+      const obj = settlements[k]
       if (!index[obj.parent]) index[obj.parent] = []
       index[obj.parent].push(obj.iso)
     }
