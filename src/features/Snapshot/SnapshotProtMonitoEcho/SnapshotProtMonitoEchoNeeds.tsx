@@ -78,7 +78,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 question="why_dont_they_have_status"
                 filterValue={['unable_unwilling_to_answer']}
                 overrideLabel={{
-                  status_registration_not_requested: 'Status registration not requested',
+                  status_registration_not_requested: 'Disability status not applied for',
                   status_registration_rejected_not_meeting_the_criteria_as_per_ukrainian_procedure: 'Status registration rejected',
                 }}
                 mergeOptions={{

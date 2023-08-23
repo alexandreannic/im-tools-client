@@ -114,8 +114,8 @@ export const SnapshotProtMonitoEchoSample = () => {
                     t.palette.primary.main,
                   ]}/>
                 </SlidePanel>
-                <SlidePanel sx={{flex: 1}}>
-                  <SlidePanelTitle>{m.status}</SlidePanelTitle>
+                <SlidePanel>
+                  <SlidePanelTitle>{m.displacementStatus}</SlidePanelTitle>
                   <ProtHHS2BarChart data={data} question="do_you_identify_as_any_of_the_following"/>
                 </SlidePanel>
               </Div>

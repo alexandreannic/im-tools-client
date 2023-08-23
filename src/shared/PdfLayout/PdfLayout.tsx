@@ -47,21 +47,25 @@ export const Pdf = ({children, ...props}: BoxProps) => {
     <>
       {generalStyles}
       <Box sx={{
-        background: t => t.palette.background.default,//'#f6f7f9',
+        overflow: 'hidden',
+        background: t => 'white',//'#f6f7f9',
         '@media screen': {
           background: t => t.palette.background.paper,//'#f6f7f9',
           padding: 2,
         }
       }}>
-
         <Box
           {...props}
           sx={{
             size: 'landscape',
+            overflow: 'hidden',
+            width: '29.7cm',
+            p: 0,
+            m: 0,
+            // height: '21.0cm',
             '@media screen': {
               my: 2,
               mx: 'auto',
-              width: '29.7cm',
             }
           }}
         >

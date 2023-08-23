@@ -15,6 +15,7 @@ import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {ProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export const SnapshotProtMonitoEchoSafety = () => {
   const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
@@ -66,6 +67,16 @@ export const SnapshotProtMonitoEchoSafety = () => {
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
+                  poorSafetyChernihiv: ChartTools.percentage({
+                    data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.findISOByName('Chernihivska')).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
+                    value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
+                    base: _ => _ !== 'unable_unwilling_to_answer',
+                  }),
+                  poorSafetySumy: ChartTools.percentage({
+                    data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.findISOByName('Sumska')).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
+                    value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
+                    base: _ => _ !== 'unable_unwilling_to_answer',
+                  }),
                   senseOfSafetyUrban: ChartTools.percentage({
                     data: data.filter(_ => _.type_of_site === 'urban_area').map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
@@ -90,6 +101,8 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   <p dangerouslySetInnerHTML={{
                     __html: m.snapshotProtMonito.echo.safety({
                       poorSafety: toPercent(_.senseOfSafety.percent, 0),
+                      poorSafetyChernihiv: toPercent(_.poorSafetyChernihiv.percent, 0),
+                      poorSafetySumy: toPercent(_.poorSafetySumy.percent, 0),
                       poorSafetyUrban: toPercent(_.senseOfSafetyUrban.percent, 0),
                       poorSafetyRural: toPercent(_.senseOfSafetyRural.percent, 0),
                       protectionIncident: toPercent(_.incidents.percent, 0)

@@ -17,9 +17,10 @@ export const PdfSlide = (props: BoxProps) => {
         p: 0,
         overflow: 'hidden',
         width: '29.7cm',
-        height: '21.0cm',
+        height: '20.5cm',
         '@media screen': {
           // aspectRatio: (297 / 210) + '',
+          height: '21.0cm',
           mb: 16,
           borderRadius: '6px',
           boxShadow: t => t.shadows[1],

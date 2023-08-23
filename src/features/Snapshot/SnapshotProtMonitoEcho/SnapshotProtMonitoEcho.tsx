@@ -43,15 +43,13 @@ const _SnapshotProtMonitoring = () => {
   const {formatLargeNumber, m} = useI18n()
   if (!data || !computed) return <>...</>
   return (
-    <>
-      <Pdf>
-        <SnapshotProtMonitoEchoSample/>
-        <SnapshotProtMonitoEchoDisplacement/>
-        <SnapshotProtMonitoEchoRegistration/>
-        <SnapshotProtMonitoEchoSafety/>
-        <SnapshotProtMonitoEchoNeeds/>
-        <SnapshotProtMonitoEchoLivelihood/>
-      </Pdf>
-    </>
+    <Pdf>
+      <SnapshotProtMonitoEchoSample/>
+      <SnapshotProtMonitoEchoDisplacement/>
+      <SnapshotProtMonitoEchoRegistration/>
+      <SnapshotProtMonitoEchoSafety/>
+      <SnapshotProtMonitoEchoNeeds/>
+      <SnapshotProtMonitoEchoLivelihood/>
+    </Pdf>
   )
 }

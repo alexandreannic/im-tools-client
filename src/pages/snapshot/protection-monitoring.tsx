@@ -1,8 +1,13 @@
 import React from 'react'
 import {SnapshotProtMonitoEcho} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
-import {createTheme, ThemeProvider} from '@mui/material'
+import {createTheme, GlobalStyles, ThemeProvider} from '@mui/material'
 import {muiTheme} from '@/core/theme'
 
+const generalStyles = <GlobalStyles styles={{
+  body: {
+    background: 'white',
+  }
+}}/>
 const SnapshotProtectionMonitoringPage = () => {
   return (
     <ThemeProvider theme={muiTheme({
@@ -13,6 +18,7 @@ const SnapshotProtectionMonitoringPage = () => {
       backgroundPaper: '#f6f7f9',
       cardElevation: 1,
     })}>
+      {generalStyles}
       <SnapshotProtMonitoEcho/>
     </ThemeProvider>
   )
