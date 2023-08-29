@@ -18,13 +18,20 @@ const Context = React.createContext({} as SnapshotProtMonitoContext)
 export const useSnapshotProtMonitoringContext = () => useContext<SnapshotProtMonitoContext>(Context)
 
 export const SnapshotProtMonitoringProvider = ({
+  filters = {},
+  initialPeriodFilter,
   children,
 }: {
+  filters?: {
+    currentOblast?: ProtHHS_2_1['where_are_you_current_living_oblast'][],
+    drcOffice?: ProtHHS_2_1['staff_to_insert_their_DRC_office'][],
+  }
+  initialPeriodFilter?: Period,
   children: ReactNode
 }) => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const [periodFilter, setPeriodFilter] = useState<Period>({
+  const [periodFilter, setPeriodFilter] = useState<Period>(initialPeriodFilter ?? {
     start: new Date(2023, 6, 1),
     end: new Date(2023, 6, 31),
   })

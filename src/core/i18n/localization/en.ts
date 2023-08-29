@@ -194,6 +194,7 @@ export const en = Object.freeze({
     decidingFactorsToReturn: 'Deciding factors to return',
     displacement: 'Displacement',
     originOblast: 'Oblast of origin',
+    idpOriginOblast: 'Origin oblast of IDPs',
     currentOblast: 'Current oblast',
     idpPopulationByOblast: 'IDP population by oblast',
     age: 'Age',
@@ -431,6 +432,36 @@ export const en = Object.freeze({
         }) => `<b>${hrkLackPersonalDoc}</b> of individuals surveyed in Kharkivska oblast lack personal documentation and face subsequent challenges in accessing services as well as  limitations to their freedom of movement. Most of the respondents who reported lacking HLP documentation indicated not possessing property ownership for their apartment/house or land, which can prevent them from accessing compensation, resolving property disputes (which may pose the long-term threat of eviction for IDPs), or exercising their rights in relation to their land or property.`,
         displacement: `The majority of the IDPs surveyed during the monitoring period reported having left their place of habitual residence between February and May 2022. The main factors influencing departure from areas of origin included shelling and attacks on civilians, destruction or damage of housing, land or property due to conflict, occupation of property, exposure to UXOs/landmines, and lack of access to livelihoods.`,
         desc: 'This snapshot summarizes the findings of <b>Protection Monitoring</b> (PM) implemented through household surveys in the following oblasts: <ul style="columns: 2"><li>Chernihivska</li><li>Dnipropetrovska</li><li>Ivano-Frankivska</li><li>Kharkivska</li><li>Lvivska</li><li>Khersonska</li><li>Mykolaivska</li><li>Sumska</li><li>Volynska</li><li>Zaporizska</li></ul>DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people directly exposed to and affected by the current armed conflict in order to understand the protection needs facing affected populations; informing DRC and the protection communities\' response.',
+      },
+      nn2: {
+        livelihood: ({
+          outOfWork,
+        }: {
+          outOfWork?: string
+        //}) => `<b>${outOfWork}</b> of respondents reported household members being out of work and seeking employment remains quite high, with main unemployment factor being the lack of available jobs.`,
+        }) => `The percentage of surveyed individuals out of work and seeking employment remains quite high at <b>${outOfWork}</b> of responses, with main unemployment factor being the lack of available jobs. As a result of the limited livelihood opportunities or challenges in accessing livelihoods, a considerable proportion of the surveyed population is currently dependent on social protection schemes and humanitarian assistance.`,
+        needs: ({
+          healthPn,
+          damagedAcc,
+        }: {
+          healthPn?: string
+          damagedAcc?: string
+        // }) => `Health continues to be the first priority for the vast majority of households surveyed, cited by a total of <b>${healthPn}</b> of respondents as a priority need. <b>${damagedAcc}</b> of respondents reported damage to their accommodation.`,
+        }) => `<b>${healthPn}</b> of respondents indicated health as a priority need. <b>${damagedAcc}</b> of respondents reported damage to their accommodation.`,
+        safety: ({
+          fearOfShelling,
+          barrierToMovement,
+        }: {
+          fearOfShelling?: string
+          barrierToMovement?: string
+        }) => `<b>${fearOfShelling}</b> of respondents indicating feeling unsafe or very unsafe reported shelling/threat of shelling as the main factor. Fear of conscription was reported by <b>${barrierToMovement}</b> of respondents indicating facing barriers to freedom of movement.`,
+        registration: ({
+          hrkLackPersonalDoc
+        }: {
+          hrkLackPersonalDoc?: string
+        }) => `<b>${hrkLackPersonalDoc}</b> of individuals surveyed in Kharkivska oblast lack personal documentation and face subsequent challenges in accessing services as well as  limitations to their freedom of movement. Most of the respondents who reported lacking HLP documentation indicated not possessing property ownership for their apartment/house or land, which can prevent them from accessing compensation, resolving property disputes (which may pose the long-term threat of eviction for IDPs), or exercising their rights in relation to their land or property.`,
+        displacement: `Majority of the IDPs surveyed during the monitoring period reported having left their place of habitual residence in June 2023, following the Nova Kakhova dam damage. The attack on the Kakhova dam on 6<sup>th</sup> June caused massive flooding, affecting both government controlled and non-government controlled  parts of Khersonska oblast including the city of Kherson, and Mykolaivska oblast, resulting in thousands of individuals being displaced in both oblasts. Majority of families affected by the flooding opted to remain near their places of origin to be able to return home as soon as the water levels reduced.`,
+        desc: 'This snapshot summarizes the findings of <b>Protection Monitoring</b> (PM) implemented through household surveys in Mykolaivska oblast between June and July 2023. DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people directly exposed to and affected by the current armed conflict in order to understand the protection needs facing affected populations; informing DRC and the protection communities\' response.',
       },
       basicNeeds: `Basic Needs`,
       livelihood: `Livelihoods & Coping mechanisms`,
