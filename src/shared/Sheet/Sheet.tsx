@@ -127,6 +127,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
     >
       <_Sheet
         id={id}
+        title={title}
         showExportBtn={showExportBtn}
         renderEmptyState={renderEmptyState}
         header={header}
@@ -162,12 +163,19 @@ const _Sheet = <T extends SheetRow>({
           .map(q => ({
             name: q.head as string ?? q.id,
             render: (row: any) => {
-              if (!q.renderExport || !q.renderValue) return
+              // if (!q.renderExport || !q.renderValue) return
+              if (q.renderExport === false) return
               if (q.renderExport === true) return fnSwitch(q.type!, {
                 number: () => map(row[q.id], _ => +_),
                 date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
               }, () => row[q.id])
-              return (q.renderExport ?? q.renderValue)(row)
+              if (q.renderExport) {
+                return q.renderExport(row)
+              }
+              if (q.renderValue) {
+                return q.renderValue(row)
+              }
+              return row[q.id]
             }
           })),
       })

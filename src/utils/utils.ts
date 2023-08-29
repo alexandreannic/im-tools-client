@@ -294,7 +294,7 @@ export namespace Utils {
   export const slugify: Slugify = (_) => _?.replaceAll(/\s/g, '_')
     .replaceAll(/[éèê]/g, 'e')
     .replaceAll(/[àâ]/g, 'a')
-    .replaceAll(/[^a-zA-Z0-9_]/g, '') as any
+    .replaceAll(/[^a-zA-Z0-9_-]/g, '') as any
 
   export const dateToPeriod = (date: Date) => {
     const start = startOfMonth(date)

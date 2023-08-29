@@ -75,5 +75,6 @@ export const getDrcSuggestion = (_: WfpDeduplication): DrcSupportSuggestion => {
     return DrcSupportSuggestion.OneMonth
   if (overlap === 1)
     return DrcSupportSuggestion.TwoMonths
-  throw new Error(`Unhandled case for ${JSON.stringify(_)}`)
+  return 'WARNING' as any
+  // throw new Error(`Unhandled case for ${JSON.stringify(_)}`)
 }

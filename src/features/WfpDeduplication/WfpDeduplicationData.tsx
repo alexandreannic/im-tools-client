@@ -11,6 +11,7 @@ import {Txt} from 'mui-extension'
 import {DrcOffice} from '@/core/drcJobTitle'
 
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {format} from 'date-fns'
 
 export const WfpDeduplicationData = () => {
   const {api} = useAppSettings()
@@ -28,7 +29,7 @@ export const WfpDeduplicationData = () => {
       <Panel>
         <Sheet
           showExportBtn
-          title="wfp-deduplication"
+          title={'wfp-deduplication-' + format(new Date(), 'yyyy-MM-dd')}
           loading={_search.loading}
           columns={[
             {
