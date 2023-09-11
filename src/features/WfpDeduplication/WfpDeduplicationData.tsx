@@ -1,12 +1,12 @@
 import {Page} from '@/shared/Page'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {Sheet} from '@/shared/Sheet/Sheet'
-import React, {useEffect} from 'react'
+import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
+import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {Txt} from 'mui-extension'
 import {DrcOffice} from '@/core/drcJobTitle'
 
@@ -19,6 +19,17 @@ export const WfpDeduplicationData = () => {
   const _uploadTaxIdMapping = useAsync(api.wfpDeduplication.uploadTaxIdsMapping)
   const {formatDate, formatLargeNumber} = useI18n()
   const {m} = useI18n()
+
+  const existingOrga = useMemo(() => {
+    if (!_search.entity) return
+    return Arr(_search.entity.data)
+      .map(_ => _.existingOrga)
+      .distinct(_ => _)
+      .compact()
+      .map(SheetUtils.buildOption)
+  }, [_search.entity])
+
+  console.log(existingOrga)
 
   useEffect(() => {
     _search.fetch()
@@ -119,7 +130,8 @@ export const WfpDeduplicationData = () => {
               head: m.mpcaDb.existingOrga,
               renderExport: true,
               render: _ => _.existingOrga,
-              type: 'string',
+              options: existingOrga ? (() => existingOrga) : undefined,
+              type: 'select_one',
             },
             {
               id: 'existingAmount',

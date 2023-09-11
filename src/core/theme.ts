@@ -1,3 +1,4 @@
+
 import {red} from '@mui/material/colors'
 import {alpha, createTheme, darken, SxProps, Theme} from '@mui/material'
 import {ThemeOptions} from '@mui/material/styles/createTheme'
@@ -456,7 +457,7 @@ const tableTheme = (t: Theme) => ({
   '.table tbody td': {
     borderBottom: `1px solid ${t.palette.divider}`,
     maxWidth: 80,
-    background: t.palette.background.paper,
+    // background: t.palette.background.paper,
   },
   '.table-loading': {
     padding: 0,

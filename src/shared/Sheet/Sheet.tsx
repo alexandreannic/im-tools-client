@@ -92,7 +92,11 @@ export class SheetUtils {
   static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
 
   static readonly buildOptions = (opt: string[]): SheetOptions[] => {
-    return opt.map(_ => ({value: _, label: _}))
+    return opt.map(SheetUtils.buildOption)
+  }
+
+  static readonly buildOption = (_: string): SheetOptions => {
+    return {value: _, label: _}
   }
 }
 
