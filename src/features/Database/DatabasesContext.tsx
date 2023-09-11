@@ -10,7 +10,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {KoboForm, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {Arr} from '@alexandreannic/ts-utils'
 
-export interface DatabaseContext {
+export interface DatabasesContext {
   _forms: UseFetcher<ApiSdk['kobo']['form']['getAll']>
   isAdmin?: boolean
   getForm: (_: KoboId) => KoboForm | undefined
@@ -19,7 +19,7 @@ export interface DatabaseContext {
   // servers: UseFetcher<ApiSdk['kobo']['server']['getAll']>
 }
 
-export const Context = React.createContext({} as DatabaseContext)
+export const Context = React.createContext({} as DatabasesContext)
 
 export const useDatabaseContext = () => useContext(Context)
 

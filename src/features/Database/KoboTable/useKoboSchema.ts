@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {Arr, mapFor} from '@alexandreannic/ts-utils'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
-import {ignoredColType} from '@/features/Database/Database'
+import {ignoredColType} from '@/features/Database/Databases'
 import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Messages} from '@/core/i18n/localization/en'

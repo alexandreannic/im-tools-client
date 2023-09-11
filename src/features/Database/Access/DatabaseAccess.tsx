@@ -6,9 +6,9 @@ import {Box} from '@mui/material'
 import {Access, AccessLevel, KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
-import {useDatabaseContext} from '@/features/Database/DatabaseContext'
+import {useDatabaseContext} from '@/features/Database/DatabasesContext'
 import {useParams} from 'react-router'
-import {databaseUrlParamsValidation} from '@/features/Database/Database'
+import {databaseUrlParamsValidation} from '@/features/Database/Databases'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {Page} from '@/shared/Page'
 import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
@@ -47,7 +47,6 @@ export const DatabaseAccessRoute = () => {
       )}
     </Page>
   )
-
 }
 
 export const DatabaseAccess = ({

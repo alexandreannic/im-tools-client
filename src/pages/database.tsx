@@ -1,11 +1,11 @@
 import React from 'react'
-import {Database} from '@/features/Database/Database'
+import {Databases} from '@/features/Database/Databases'
 import {SessionProvider} from '@/core/Session/SessionContext'
 
 const DashboardProtectionHouseholdSurvey = () => {
   return (
     <SessionProvider>
-      <Database/>
+      <Databases/>
     </SessionProvider>
   )
 }

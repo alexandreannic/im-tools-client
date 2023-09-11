@@ -1,6 +1,6 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useEffectFn} from '@alexandreannic/react-hooks-lib'
-import React from 'react'
+import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import React, {useEffect} from 'react'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
@@ -9,16 +9,20 @@ import {databaseModule} from '@/features/Database/databaseModule'
 import {HashRouter as Router, Navigate, NavLink, Outlet, Route, Routes} from 'react-router-dom'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
-import {Skeleton, Tab, Tabs} from '@mui/material'
+import {LinearProgress, Skeleton, Tab, Tabs} from '@mui/material'
 import {useLocation, useParams} from 'react-router'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
-import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
+import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabasesContext'
 import {DatabaseAccessRoute} from '@/features/Database/Access/DatabaseAccess'
 import {DatabaseTableRoute} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {Fender, Txt} from 'mui-extension'
-import {DatabaseIndex} from '@/features/Database/DatabaseIndex'
+import {DatabasesDefaultPage} from '@/features/Database/DatabasesDefaultPage'
 import {useLayoutContext} from '@/shared/Layout/LayoutContext'
+import {KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {useAaToast} from '@/core/useToast'
+import {DatabaseKoboTableProvider} from '@/features/Database/KoboTable/DatabaseKoboTableContext'
+import {map} from '@alexandreannic/ts-utils'
 
 export const databaseUrlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -34,7 +38,7 @@ export const ignoredColType: KoboApiColType[] = [
   // 'note',
 ]
 
-export const Database = () => {
+export const Databases = () => {
   return (
     <DatabaseProvider>
       <Router>
@@ -88,7 +92,7 @@ export const DatabaseWithContext = () => {
         </Fender>
       )}
       <Routes>
-        <Route index element={<DatabaseIndex forms={ctx.formAccess}/>}/>
+        <Route index element={<DatabasesDefaultPage forms={ctx.formAccess}/>}/>
         <Route path={databaseModule.siteMap.home()} element={<DatabaseHome/>}>
           <Route index element={<Navigate to={databaseModule.siteMap.database.relative}/>}/>
           <Route path={databaseModule.siteMap.database.relative} element={<DatabaseTableRoute/>}/>
@@ -106,32 +110,56 @@ export const DatabaseHome = () => {
   const {pathname} = useLocation()
   const ctx = useDatabaseContext()
   const {setTitle} = useLayoutContext()
+  const {api} = useAppSettings()
+  const {toastHttpError} = useAaToast()
+
+  const fetchersSchema = useDatabaseContext().formSchemas
+  const fetcherAnswers = useFetcher((id: KoboId) => api.kobo.answer.searchByAccess({
+    formId: id,
+  }))
+
+  useEffect(() => {
+    fetchersSchema.fetch({}, serverId, formId)
+    fetcherAnswers.fetch({}, formId)
+  }, [serverId, formId])
 
   useEffectFn(ctx.getForm(formId)?.name, _ => _ && setTitle(m._koboDatabase.title(_)))
+  useEffectFn(fetcherAnswers.error, toastHttpError)
+  useEffectFn(fetchersSchema.getError(formId), toastHttpError)
 
   return (
     <>
-      <Tabs
-        value={pathname}
-        sx={{
-          mb: 1,
-          borderBottom: t => `1px solid ${t.palette.divider}`
-        }}
-      >
-        <Tab
-          component={NavLink}
-          value={databaseModule.siteMap.database.absolute(serverId, formId)}
-          to={databaseModule.siteMap.database.absolute(serverId, formId)}
-          label={m.data}
-        />
-        <Tab
-          component={NavLink}
-          value={databaseModule.siteMap.access.absolute(serverId, formId)}
-          to={databaseModule.siteMap.access.absolute(serverId, formId)}
-          label={m.access}
-        />
-      </Tabs>
-      <Outlet/>
+      {fetchersSchema.getLoading(formId) ?
+        (
+          <LinearProgress/>
+        ) : map(fetchersSchema.get(formId), schema => (
+          <DatabaseKoboTableProvider
+            schema={schema}
+            fetcherAnswers={fetcherAnswers}
+          >
+            <Tabs
+              value={pathname}
+              sx={{
+                mb: 1,
+                borderBottom: t => `1px solid ${t.palette.divider}`
+              }}
+            >
+              <Tab
+                component={NavLink}
+                value={databaseModule.siteMap.database.absolute(serverId, formId)}
+                to={databaseModule.siteMap.database.absolute(serverId, formId)}
+                label={m.data}
+              />
+              <Tab
+                component={NavLink}
+                value={databaseModule.siteMap.access.absolute(serverId, formId)}
+                to={databaseModule.siteMap.access.absolute(serverId, formId)}
+                label={m.access}
+              />
+            </Tabs>
+            <Outlet/>
+          </DatabaseKoboTableProvider>
+        ))}
     </>
   )
 }

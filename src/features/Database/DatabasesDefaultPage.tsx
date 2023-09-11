@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router'
 import {databaseModule} from '@/features/Database/databaseModule'
 import {Page, PageTitle} from '@/shared/Page'
 
-export const DatabaseIndex = ({
+export const DatabasesDefaultPage = ({
   forms,
 }: {
   forms?: KoboForm[]

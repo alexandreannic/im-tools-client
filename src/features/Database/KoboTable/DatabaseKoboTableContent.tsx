@@ -18,7 +18,7 @@ import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/Databas
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
-import {ignoredColType} from '@/features/Database/Database'
+import {ignoredColType} from '@/features/Database/Databases'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
@@ -37,7 +37,7 @@ export const DatabaseKoboTableContent = ({
   data: KoboAnswer<any>[]
 }) => {
   const {m} = useI18n()
-  const _schema = useKoboSchema({schema: schema})
+  // const _schema = useKoboSchema({schema: schema})
   const [langIndex, setLangIndex] = useState<number>(0)
   const mappedData = useMemo(() => data.map(_ => Kobo.mapAnswerBySchema(_schema.questionIndex, _)), [data])
 

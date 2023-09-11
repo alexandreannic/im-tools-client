@@ -9,7 +9,6 @@ import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UseKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
-import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {AAIconBtn} from '@/shared/IconBtn'
 
 const renderExportSchema = <T extends KoboMappedAnswer>({
