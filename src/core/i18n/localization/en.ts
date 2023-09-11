@@ -1114,6 +1114,8 @@ export const en = Object.freeze({
     note: 'Note',
     projectCode: 'Project Code',
     form: 'Form',
+    viewMore: 'More',
+    viewLess: 'Less',
     showDummyAccounts: 'Show dummy accounts',
   },
 })

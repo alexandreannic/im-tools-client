@@ -24,6 +24,9 @@ import {KoboUkraineMap} from '../shared/KoboUkraineMap'
 import {OblastISOSVG} from '@/shared/UkraineMap/ukraineSvgPath'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {AaBtn} from '@/shared/Btn/AaBtn'
+import Link from 'next/link'
+import {AAIconBtn} from '@/shared/IconBtn'
+import {ViewMoreText} from '@/shared/ViewMoreText'
 
 export interface DashboardPageProps {
   filters: OptionFilters
@@ -175,9 +178,14 @@ export const DashboardMealVisitMonitoring = () => {
       title={m.ukraine}
       subTitle={m.mealVisitMonitoringDashboard}
       action={
-        <a href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/Ee4lwQ1OMKhCkzyeza_UejoBVWdn-2zgxjoCbpPjN4DZZQ?e=zn5LHw" target="_blank">
-          <AaBtn variant="outlined" icon="open_in_new">Open Excel tracker</AaBtn>
-        </a>
+        <>
+          <Link href="/">
+            <AAIconBtn sx={{mr: 1}} children="home"/>
+          </Link>
+          <a href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/Ee4lwQ1OMKhCkzyeza_UejoBVWdn-2zgxjoCbpPjN4DZZQ?e=zn5LHw" target="_blank">
+            <AaBtn variant="outlined" icon="open_in_new">Open Excel tracker</AaBtn>
+          </a>
+        </>
       }
       header={
         <Box sx={{
@@ -299,7 +307,9 @@ export const DashboardMealVisitMonitoring = () => {
                           <Txt block bold size="big">{(MealVisitMonitoringOptions.mdp as any)[row.mdp]}</Txt>
                           <Txt color="hint">{formatDate(row.mdd ?? row.end)}</Txt>
                         </Box>
-                        <Txt block color="hint" sx={{mb: 1}}>{row.fcpc ?? m.noComment}</Txt>
+                        <Txt block color="hint" sx={{mb: 1}}>
+                          <ViewMoreText limit={210} children={row.fcpc ?? m.noComment}/>
+                        </Txt>
                         <Box sx={{display: 'flex', flexWrap: 'wrap', '& > *': {mb: 1, mr: 1}}}>
                           {row.fcpl && (
                             <Box component="a" target="_blank" href={row.fcpl} sx={{
