@@ -2,8 +2,9 @@ import React, {useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {format, getDaysInMonth, parse, subMonths} from 'date-fns'
-import {mapFor} from '@alexandreannic/ts-utils'
-import {type} from 'os'
+import {Arr, mapFor} from '@alexandreannic/ts-utils'
+import {Box} from '@mui/material'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 
 enum Status {
   AM = 'AM',
@@ -12,24 +13,31 @@ enum Status {
   OFF = 'OFF',
 }
 
+const config = {
+  maxNightPerWeek: 3,
+  daysBreakAfterNightShift: 2,
+}
+
 const SafetyPage = () => {
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
-  const persons = [
+  const [persons, setPersons] = useState([
     'Yana',
     'Denys',
     'Bohdan',
     'Volodymyr',
     'Stanislav',
-  ]
+  ])
+  const [leaves, setLeaves] = useState(Arr(persons).reduceObject<Record<string, number[]>>(_ => [_, []]))
 
   const dayInMonth = getDaysInMonth(parse(period, 'yyyy-MM', new Date()))
 
   const data = useMemo(() => {
     const res: Record<string, Status>[] = []
     const dayInMonth = getDaysInMonth(parse(period, 'yyyy-MM', new Date()))
-    for (let i = 0; i < length - 1; i++) {
+    for (let i = 0; i < dayInMonth - 1; i++) {
       persons.forEach(p => {
         if (!res[i]) res[i] = {}
+        res[i][p]
 
       })
     }
@@ -49,7 +57,13 @@ const SafetyPage = () => {
         onChange={_ => setPeriod(_.target.value)}
       />
 
-      <table className="table borderY">
+      <Box component="table" className="table borderY" sx={{
+        '& td': {
+          minWidth: 32,
+          pr: 0, pl: 0,
+          textAlign: 'center'
+        }
+      }}>
         <thead>
         <tr>
           <td></td>
@@ -64,9 +78,7 @@ const SafetyPage = () => {
           </tr>
         )}
         </tbody>
-      </table>
-
-
+      </Box>
     </Page>
   )
 }
