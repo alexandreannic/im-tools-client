@@ -3,15 +3,11 @@ import React, {useEffect} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {MpcaRow, useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {BNREOblastToISO, UseBNREComputed, useBNREComputed} from '../useBNREComputed'
-import {KoboAnswer} from '../../../core/sdk/server/kobo/Kobo'
-import {BNRE} from '../../../core/koboModel/BNRE/BNRE'
-import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '../../../core/chartTools'
+import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {_Arr} from '@alexandreannic/ts-utils'
+import {_Arr, Enum} from '@alexandreannic/ts-utils'
+import {toPercent} from '@/utils/utils'
+import {Txt} from 'mui-extension'
 
 export const MpcaDashboard = () => {
   const {fetcherData} = useMPCADeduplicationContext()
@@ -37,16 +33,21 @@ export const _MPCADashboard = ({
   data,
   computed,
 }: {
-  data: _Arr<KoboAnswer<MpcaRow>>
+  data: _Arr<MpcaRow>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const {m, formatDate, formatLargeNumber} = useI18n()
+  console.log(computed.multipleTimeAssisted)
   return (
     <>
       <Div column>
         <Div>
-          <SlideWidget sx={{flex: 1}} icon="home" title={m.hhs}>
-            {formatLargeNumber(data.length)}
+          <SlideWidget sx={{flex: 1}} icon="content_copy" title={m.hhs}>
+            {data.length}
+          </SlideWidget>
+          <SlideWidget sx={{flex: 1}} icon="content_copy" title={m.hhs}>
+            {Enum.keys(computed.multipleTimeAssisted).length}
+            <Txt color="hint" sx={{ml: 1}}>{toPercent(Enum.keys(computed.multipleTimeAssisted).length / data.length)}</Txt>
           </SlideWidget>
           <SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>
             {formatLargeNumber(computed?.flatData.length)}

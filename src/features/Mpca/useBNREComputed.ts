@@ -1,12 +1,12 @@
-import {BNRE} from '../../core/koboModel/BNRE/BNRE'
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
-import {KoboAnswer} from '../../core/sdk/server/kobo/Kobo'
 import {useMemo} from 'react'
 import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {chain} from '../../utils/utils'
+import {chain, mapObjectValue} from '../../utils/utils'
 import {ageGroup, groupByAgeGroup} from '../../core/type'
 import {MpcaRow} from '@/features/Mpca/MpcaDeduplicationContext'
+import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {transform} from 'lodash'
 
 export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = {
   cherkaska: 'UA71',
@@ -40,12 +40,24 @@ export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 export const useBNREComputed = ({
   data,
 }: {
-  data?: _Arr<KoboAnswer<MpcaRow>> | undefined
+  data?: _Arr<MpcaRow> | undefined
 }) => useMemo(() => {
   if (!data) return
   const flatData = Arr([] as any[])//data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))
   return {
     flatData,
+    multipleTimeAssisted: (() => {
+      const grouped = data.filter(_ => [
+          DrcSupportSuggestion.ThreeMonthsNoDuplication,
+          DrcSupportSuggestion.ThreeMonthsUnAgency,
+          undefined
+        ].includes(_.deduplication?.suggestion)
+      ).groupBy(_ => _.taxId)
+      return new Enum(grouped)
+        .transform((k, v) => [k, v.length])
+        .filter((k, v) => v > 1)
+        .get()
+    })(),
     ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => groupByAgeGroup()(_, p => +p?.hh_char_hh_det_age!)))
       .map(_ => Enum.entries(_).map(([group, v]) => ({
           key: group,

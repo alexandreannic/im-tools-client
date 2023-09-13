@@ -5,7 +5,7 @@ import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
-import {Arr, fnSwitch} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, fnSwitch} from '@alexandreannic/ts-utils'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 
@@ -37,7 +37,7 @@ export interface MpcaRow {
 }
 
 export interface MpcaDeduplicationContext {
-  fetcherData: UseFetcher<() => Promise<MpcaRow[]>>
+  fetcherData: UseFetcher<() => Promise<_Arr<MpcaRow>>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
   _create: UseAsync<(_: string[]) => Promise<MpcaPayment>>
 }
@@ -163,7 +163,7 @@ export const MPCADeduplicationProvider = ({
       idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
       phone: '' + _.ben_det_ph_number,
     }))
-    return res
+    return Arr(res)
       .sort((a, b) => a.date.getTime() - b.date.getTime())
       .map(row => {
         if (!row.taxId) return row

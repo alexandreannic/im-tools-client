@@ -13,7 +13,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
-import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -89,10 +89,18 @@ export const MpcaData = () => {
               width: 0,
               head: m.deduplication,
               type: 'select_one',
-              renderValue: _ => _.deduplication?.status ?? 'Waiting',
-              options: () => [...Enum.keys(WfpDeduplicationStatus), 'Waiting'].map(_ => ({label: _, value: _})),
+              renderValue: _ => _.deduplication?.status ?? ' ',
+              options: () => [...Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})), {label: ' ', value: ' '}],
               tooltip: _ => _.deduplication && m.mpcaDb.status[_.deduplication.status],
               render: _ => _.deduplication && <DeduplicationStatusIcon status={_.deduplication.status}/>,
+            },
+            {
+              id: 'suggestion',
+              head: m.suggestion,
+              type: 'select_one',
+              renderValue: _ => _.deduplication?.suggestion ?? ' ',
+              options: () => [...Enum.keys(DrcSupportSuggestion).map(_ => ({label: _, value: _})), {label: ' ', value: ' '}],
+              render: _ => _.deduplication?.suggestion,
             },            // {
             //   id: 'deduplicationFile',
             //   head: 'deduplicationFile',
