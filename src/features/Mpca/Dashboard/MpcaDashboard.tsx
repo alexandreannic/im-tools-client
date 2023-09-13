@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import React, {useEffect} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
+import {MpcaRow, useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {BNREOblastToISO, UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {KoboAnswer} from '../../../core/sdk/server/kobo/Kobo'
@@ -14,18 +14,18 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import {_Arr} from '@alexandreannic/ts-utils'
 
 export const MpcaDashboard = () => {
-  const {_koboAnswers} = useMPCADeduplicationContext()
-  const computed = useBNREComputed({data: _koboAnswers.entity})
+  const {fetcherData} = useMPCADeduplicationContext()
+  const computed = useBNREComputed({data: fetcherData.entity})
 
   useEffect(() => {
-    _koboAnswers.fetch({force: false})
+    fetcherData.fetch({force: false})
   }, [])
 
   return (
-    <Page width="lg" loading={_koboAnswers.loading}>
-      {computed && _koboAnswers.entity && (
+    <Page width="lg" loading={fetcherData.loading}>
+      {computed && fetcherData.entity && (
         <_MPCADashboard
-          data={_koboAnswers.entity}
+          data={fetcherData.entity}
           computed={computed}
         />
       )}
@@ -37,7 +37,7 @@ export const _MPCADashboard = ({
   data,
   computed,
 }: {
-  data: _Arr<KoboAnswer<BNRE>>
+  data: _Arr<KoboAnswer<MpcaRow>>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const {m, formatDate, formatLargeNumber} = useI18n()
@@ -63,32 +63,32 @@ export const _MPCADashboard = ({
                 t.palette.divider,
               ]}/>
             </SlidePanel>
-            <SlidePanel title={m.program}>
-              <Lazy deps={[data]} fn={() => ChartTools.multiple({
-                data: data.map(_ => _.back_prog_type).compact().map(_ => _.map(x => x.split('_')[0]))
-              })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
-              </Lazy>
-            </SlidePanel>
-            <SlidePanel title={m.donor}>
-              <Lazy deps={[data]} fn={() => ChartTools.single({
-                data: data.map(_ => _.back_donor).compact().map(_ => _.split('_')[0])
-              })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
-              </Lazy>
-            </SlidePanel>
+            {/*<SlidePanel title={m.program}>*/}
+            {/*  <Lazy deps={[data]} fn={() => ChartTools.multiple({*/}
+            {/*    data: data.map(_ => _.back_prog_type).compact().map(_ => _.map(x => x.split('_')[0]))*/}
+            {/*  })}>*/}
+            {/*    {_ => <HorizontalBarChartGoogle data={_}/>}*/}
+            {/*  </Lazy>*/}
+            {/*</SlidePanel>*/}
+            {/*<SlidePanel title={m.donor}>*/}
+            {/*  <Lazy deps={[data]} fn={() => ChartTools.single({*/}
+            {/*    data: data.map(_ => _.back_donor).compact().map(_ => _.split('_')[0])*/}
+            {/*  })}>*/}
+            {/*    {_ => <HorizontalBarChartGoogle data={_}/>}*/}
+            {/*  </Lazy>*/}
+            {/*</SlidePanel>*/}
           </Div>
-          <Div column>
-            <SlidePanel title={m.HHsLocation}>
-              <Lazy deps={[data]} fn={() => ChartTools.groupBy({
-                data,
-                groupBy: _ => _.ben_det_oblast ? BNREOblastToISO[_.ben_det_oblast] : undefined,
-                filter: _ => true
-              })}>
-                {_ => <UkraineMap data={_}/>}
-              </Lazy>
-            </SlidePanel>
-          </Div>
+          {/*<Div column>*/}
+          {/*  <SlidePanel title={m.HHsLocation}>*/}
+          {/*    <Lazy deps={[data]} fn={() => ChartTools.groupBy({*/}
+          {/*      data,*/}
+          {/*      groupBy: _ => _.ben_det_oblast ? BNREOblastToISO[_.ben_det_oblast] : undefined,*/}
+          {/*      filter: _ => true*/}
+          {/*    })}>*/}
+          {/*      {_ => <UkraineMap data={_}/>}*/}
+          {/*    </Lazy>*/}
+          {/*  </SlidePanel>*/}
+          {/*</Div>*/}
         </Div>
       </Div>
     </>

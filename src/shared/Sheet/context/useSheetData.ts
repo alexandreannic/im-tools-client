@@ -2,7 +2,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {orderBy} from 'lodash'
 import {KeyOf, multipleFilters, paginateData} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
-import {SheetColumnProps, SheetFilterValue, SheetRow} from '@/shared/Sheet/Sheet'
+import {SheetColumnProps, SheetFilterValue, SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, SheetFilterValueString, SheetRow} from '@/shared/Sheet/Sheet'
 import {SheetSearch} from '@/shared/Sheet/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 
@@ -38,47 +38,53 @@ export const useSheetData = <T extends SheetRow>({
       switch (type) {
         case 'date': {
           return row => {
+            const typedFilter = filter as SheetFilterValueDate
             const v = renderValue(row) as Date | undefined
             if (!v) return false
             if (!((v as any) instanceof Date)) {
               console.warn(`Value of ${String(k)} is`, v, `but Date expected.`)
               throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
             }
-            const [min, max] = filter as [Date, Date]
+            const [min, max] = typedFilter
             return (!min || v.getTime() >= min.getTime()) && (!max || v.getTime() <= max.getTime())
           }
         }
         case 'select_one': {
           return row => {
+            const typedFilter = filter as SheetFilterValueSelect
             const v = renderValue(row) as string
             if (!v) return false
-            return (filter as string[]).includes(v)
+            return (typedFilter).includes(v)
           }
         }
         case 'select_multiple': {
           return row => {
+            const typedFilter = filter as SheetFilterValueSelect
             const v = row[k] as string[]
             const vArray = Array.isArray(v) ? v : [v]
-            return !!vArray.find(_ => (filter as string[]).includes(_))
+            return !!vArray.find(_ => (typedFilter).includes(_))
           }
         }
         case 'number': {
           return row => {
+            const typedFilter = filter as SheetFilterValueNumber
             const v = row[k] as number | undefined
-            const min = filter[0] as number | undefined
-            const max = filter[1] as number | undefined
+            const min = typedFilter[0] as number | undefined
+            const max = typedFilter[1] as number | undefined
             return !!v && (!max || v <= max) && (!min || v >= min)
           }
         }
         default: {
           return row => {
+            const typedFilter = filter as SheetFilterValueString
             const v = renderValue(row)
-            if (!v) return false
+            if (!v && typedFilter?.filterBlank !== false) return false
+            if (typedFilter?.value === undefined) return true
             if (typeof v !== 'string' && typeof v !== 'number') {
               console.warn('Value of ${String(k)} is', v)
               throw new Error(`Value of ${String(k)} is ${v} but expected string.`)
             }
-            return ('' + v).includes(filter as string)
+            return ('' + v).includes(typedFilter.value)
           }
         }
       }

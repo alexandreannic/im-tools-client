@@ -2,7 +2,7 @@ import React from 'react'
 import {SessionProvider} from '@/core/Session/SessionContext'
 import {WfpDeduplicationPage} from '@/features/WfpDeduplication/WfpDeduplicationPage'
 
-const _ = () => {
+const WfpDeduplicationRoute = () => {
   return (
     <SessionProvider>
       <WfpDeduplicationPage/>
@@ -10,7 +10,7 @@ const _ = () => {
   )
 }
 
-export default _
+export default WfpDeduplicationRoute
 
 // fetch('https://buildingblocks.ukr.wfp.org/api/manager/beneficiaries/import', {
 //   'headers': {

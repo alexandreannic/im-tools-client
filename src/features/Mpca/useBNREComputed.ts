@@ -1,11 +1,12 @@
 import {BNRE} from '../../core/koboModel/BNRE/BNRE'
-import {_Arr, Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {KoboAnswer} from '../../core/sdk/server/kobo/Kobo'
 import {useMemo} from 'react'
 import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {chain} from '../../utils/utils'
 import {ageGroup, groupByAgeGroup} from '../../core/type'
+import {MpcaRow} from '@/features/Mpca/MpcaDeduplicationContext'
 
 export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = {
   cherkaska: 'UA71',
@@ -39,10 +40,10 @@ export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 export const useBNREComputed = ({
   data,
 }: {
-  data?: _Arr<KoboAnswer<BNRE>> | undefined
+  data?: _Arr<KoboAnswer<MpcaRow>> | undefined
 }) => useMemo(() => {
   if (!data) return
-  const flatData = data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))
+  const flatData = Arr([] as any[])//data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))
   return {
     flatData,
     ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => groupByAgeGroup()(_, p => +p?.hh_char_hh_det_age!)))
