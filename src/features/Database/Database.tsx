@@ -1,6 +1,6 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
-import React from 'react'
+import React, {useMemo} from 'react'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
@@ -19,6 +19,9 @@ import {DatabaseTableRoute} from '@/features/Database/KoboTable/DatabaseKoboTabl
 import {Fender, Txt} from 'mui-extension'
 import {DatabaseIndex} from '@/features/Database/DatabaseIndex'
 import {useLayoutContext} from '@/shared/Layout/LayoutContext'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
+import {Arr, Enum} from '@alexandreannic/ts-utils'
+import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 
 export const databaseUrlParamsValidation = yup.object({
   serverId: yup.string().required(),
@@ -48,6 +51,11 @@ export const DatabaseWithContext = () => {
   const {m} = useI18n()
   const {conf} = useAppSettings()
   const ctx = useDatabaseContext()
+
+  const parsedFormNames = useMemo(() => {
+    return Arr(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
+  }, [ctx.formAccess])
+
   return (
     <Layout
       title={m._koboDatabase.title()}
@@ -70,12 +78,16 @@ export const DatabaseWithContext = () => {
                 <Skeleton sx={{width: 160, height: 30}}/>
               </SidebarItem>
             </>
-          ) : ctx.formAccess?.map(_ => (
-            <NavLink key={_.id} to={databaseModule.siteMap.home(_.serverId, _.id)}>
-              {({isActive, isPending}) => (
-                <SidebarItem key={_.id} active={isActive}>{_.name}</SidebarItem>
+          ) : Enum.entries(parsedFormNames)?.map(([category, forms]) => (
+            <SidebarSection title={category} key={category}>
+              {forms.map(_ =>
+                <NavLink key={_.id} to={databaseModule.siteMap.home(_.serverId, _.id)}>
+                  {({isActive, isPending}) => (
+                    <SidebarItem onClick={() => undefined} key={_.id} active={isActive}>{_.parsedName.name}</SidebarItem>
+                  )}
+                </NavLink>
               )}
-            </NavLink>
+            </SidebarSection>
           ))}
         </Sidebar>
       }
@@ -135,5 +147,4 @@ export const DatabaseHome = () => {
     </>
   )
 }
-
 
