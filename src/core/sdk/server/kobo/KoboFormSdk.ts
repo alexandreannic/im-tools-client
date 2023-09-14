@@ -19,9 +19,8 @@ export class KoboFormSdk {
   constructor(private client: ApiClient) {
   }
 
-
   static readonly parseFormName = (name: string): KoboParsedFormName => {
-    const match = name.match(/^\[(.*?)]\s*(?:\{(.*?)})?(.*)$/)
+    const match = name.match(/^\[(.*?)]\s*(?:\{(.*?)})?\s*(.*)$/)
     if (match) {
       const [, sector, donors, formName] = match
       return {
