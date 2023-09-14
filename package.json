@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": " node deploy.mjs"
   },
   "dependencies": {
     "@alexandreannic/react-hooks-lib": "^1.11.22",
     "@alexandreannic/ts-utils": "1.7.41",
+
     "@azure/msal-browser": "^2.37.1",
     "@azure/msal-react": "^1.5.8",
     "@emotion/react": "^11.10.6",
