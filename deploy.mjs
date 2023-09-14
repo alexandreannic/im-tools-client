@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 
 dotenv.config({path: '.env.local'})
 
+console.log(process.env.DEPLOY_USER)
+
 const config = {
   mainBranch: 'master',
   gitServer: `https://${encodeURIComponent(process.env.DEPLOY_USER)}:${encodeURIComponent(process.env.DEPLOY_PWD)}@drc-imaa-ukr-tools.scm.azurewebsites.net:443/drc-imaa-ukr-tools.git`,
@@ -51,6 +53,7 @@ const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execS
   } catch (e) {
     console.error(e)
     await run(`git remote remove azure`)
+    process.exit(1)
   }
 })()
 
