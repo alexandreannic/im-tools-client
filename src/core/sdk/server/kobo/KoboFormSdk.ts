@@ -8,10 +8,31 @@ export interface KoboFormCreate {
   uid: KoboId
 }
 
+interface KoboParsedFormName {
+  name: string
+  project?: string
+  donors?: string[]
+}
 
 export class KoboFormSdk {
 
   constructor(private client: ApiClient) {
+  }
+
+
+  static readonly parseFormName = (name: string): KoboParsedFormName => {
+    const match = name.match(/^\[(.*?)]\s*(?:\{(.*?)})?(.*)$/)
+    if (match) {
+      const [, sector, donors, formName] = match
+      return {
+        project: sector,
+        name: formName,
+        donors: donors?.split(','),
+      }
+    }
+    return {
+      name,
+    }
   }
 
   readonly create = (body: KoboFormCreate): Promise<KoboForm> => {

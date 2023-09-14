@@ -31,7 +31,7 @@ const renderExportSchema = <T extends KoboMappedAnswer>({
           case 'end':
             return row.start
           case 'date':
-            return row.end
+            return row[q.name]
           case 'image':
             return map(getKoboPath(row.attachments, row[q.name] as string), getUnsecureKoboImgUrl)
           case 'select_one': {
