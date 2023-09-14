@@ -32,8 +32,8 @@ export const SnapshotProtMonitoringProvider = ({
   const {api} = useAppSettings()
   const {m} = useI18n()
   const [periodFilter, setPeriodFilter] = useState<Period>(initialPeriodFilter ?? {
-    start: new Date(2023, 6, 1),
-    end: new Date(2023, 6, 31),
+    start: new Date(2023, 7, 1),
+    end: new Date(2023, 7, 31),
   })
 
   const request = (filter: Partial<Period>) => api.kobo.answer.searchProtection_Hhs2({
