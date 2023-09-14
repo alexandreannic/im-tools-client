@@ -1,4 +1,3 @@
-
 import {red} from '@mui/material/colors'
 import {alpha, createTheme, darken, SxProps, Theme} from '@mui/material'
 import {ThemeOptions} from '@mui/material/styles/createTheme'
@@ -153,6 +152,9 @@ export const muiTheme = ({
         styleOverrides: {
           '*': {
             boxSizing: 'border-box',
+          },
+          '.MuiDateRangeCalendar-root > div:first-child': {
+            display: 'none',
           },
           '@font-face': {
             fontFamily: 'Material Icons',

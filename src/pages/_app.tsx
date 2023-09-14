@@ -18,6 +18,8 @@ import {CenteredContent} from '@/shared/CenteredContent'
 import {ModalProvider} from '@/shared/Modal/ModalProvider'
 import createEmotionCache from '@/core/createEmotionCache'
 import Head from 'next/head'
+import {LocalizationProvider} from '@mui/x-date-pickers'
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
@@ -48,11 +50,15 @@ const App = ({
   )
 }
 const AppWithConfig = (props: AppProps) => {
+  // LicenseInfo.setLicenseKey(
+  //   'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',
+  // );
   const settings = useAppSettings()
   const msal = useMemo(() => getMsalInstance(settings.conf), [settings.conf])
   return (
     <Provide providers={[
       // _ => <StyledEngineProvider injectFirst children={_}/>,
+      _ => <LocalizationProvider children={_} dateAdapter={AdapterDateFns}/>,
       _ => <ToastProvider children={_}/>,
       _ => <ThemeProvider theme={muiTheme({dark: false && settings.darkTheme})} children={_}/>,
       _ => <CssBaseline children={_}/>,
