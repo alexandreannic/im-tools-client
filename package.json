@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": " node deploy.mjs"
   },
   "dependencies": {
     "@alexandreannic/react-hooks-lib": "^1.11.22",
