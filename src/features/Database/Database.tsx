@@ -53,6 +53,7 @@ export const DatabaseWithContext = () => {
   const ctx = useDatabaseContext()
 
   const parsedFormNames = useMemo(() => {
+    ctx.formAccess?.map(_ => console.log(`https://eu.kobotoolbox.org/#/forms/${_.id}/settings/sharing`))
     return Arr(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
   }, [ctx.formAccess])
 

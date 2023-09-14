@@ -153,7 +153,10 @@ export class KoboApiSdk {
   }
 
   readonly getEditUrl = (serverId: UUID, formId: KoboId, answerId: KoboAnswerId): Promise<{url: string, detail?: string}> => {
-    return this.client.get(`/kobo-api/${serverId}/${formId}/${answerId}/edit-url`)
+    // return this.client.get(`/kobo-api/${serverId}/${formId}/${answerId}/edit-url`)
+    // console.log('getEditUrl', this.client.baseUrl + `/kobo-api/${serverId}/${formId}/${answerId}/edit-url`)
+    // return Promise.resolve({url: ''})
+    return Promise.resolve({url: this.client.baseUrl + `/kobo-api/${serverId}/${formId}/${answerId}/edit-url`})
   }
 
   readonly getForms = (serverId: UUID): Promise<ApiKoboForm[]> => {
