@@ -4,6 +4,7 @@ import {useI18n} from '../../core/i18n'
 import {Box, BoxProps} from '@mui/material'
 import {Datepicker} from '../Datepicker/Datepicker'
 
+
 export interface PeriodPickerProps extends Omit<BoxProps, 'onChange'> {
   min?: Date
   max?: Date
@@ -13,7 +14,7 @@ export interface PeriodPickerProps extends Omit<BoxProps, 'onChange'> {
   fullWidth?: boolean
 }
 
-export const PeriodPicker = ({
+export const PeriodPickerNative = ({
   min,
   max,
   value,
