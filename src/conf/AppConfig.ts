@@ -9,6 +9,7 @@ enum Env {
   NEXT_PUBLIC_MS_CLIENT_ID = 'NEXT_PUBLIC_MS_CLIENT_ID',
   NEXT_PUBLIC_MS_AUTHORITY = 'NEXT_PUBLIC_MS_AUTHORITY',
   NEXT_PUBLIC_APP_OFF = 'NEXT_PUBLIC_APP_OFF',
+  NEXT_PUBLIC_MUI_PRO_LICENSE_KEY = 'NEXT_PUBLIC_MUI_PRO_LICENSE_KEY',
 }
 
 const persistedTempEnvVariablesForFront: { [key in Env]: string | undefined } = {
@@ -19,12 +20,14 @@ const persistedTempEnvVariablesForFront: { [key in Env]: string | undefined } = 
   NEXT_PUBLIC_MS_CLIENT_ID: process.env.NEXT_PUBLIC_MS_CLIENT_ID,
   NEXT_PUBLIC_MS_AUTHORITY: process.env.NEXT_PUBLIC_MS_AUTHORITY,
   NEXT_PUBLIC_APP_OFF: process.env.NEXT_PUBLIC_APP_OFF,
+  NEXT_PUBLIC_MUI_PRO_LICENSE_KEY: process.env.NEXT_PUBLIC_MUI_PRO_LICENSE_KEY,
 }
 
 const _ = env(persistedTempEnvVariablesForFront)
 
 
 export const appConfig = {
+  muiProLicenseKey: _()(Env.NEXT_PUBLIC_MUI_PRO_LICENSE_KEY),
   linkToFeature: (feature: AppFeatureId, path: string) => {
     return appFeaturesIndex[feature].path + '/#' + path
   },
