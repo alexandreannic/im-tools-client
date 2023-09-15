@@ -32,17 +32,21 @@ const MPCASidebar = () => {
     <Sidebar>
       <SidebarBody>
         <NavLink to={path(mpcaModule.siteMap.dashboard)}>
-          <SidebarItem icon="equalizer">{m.dashboard}</SidebarItem>
+          {({isActive, isPending}) => (
+            <SidebarItem icon="equalizer" active={isActive}>{m.dashboard}</SidebarItem>
+          )}
         </NavLink>
         <NavLink to={path(mpcaModule.siteMap.data)}>
-          <SidebarItem icon="table_chart">{m.data}</SidebarItem>
+          {({isActive, isPending}) => (
+            <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
+          )}
         </NavLink>
-        <NavLink to={path(mpcaModule.siteMap.paymentTools)}>
-          <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>
-        </NavLink>
-        <NavLink to={path(mpcaModule.siteMap.deduplication)}>
-          <SidebarItem icon="join_left">{m.wfpDeduplication}</SidebarItem>
-        </NavLink>
+        {/*<NavLink to={path(mpcaModule.siteMap.paymentTools)}>*/}
+        {/*  <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>*/}
+        {/*</NavLink>*/}
+        {/*<NavLink to={path(mpcaModule.siteMap.deduplication)}>*/}
+        {/*  <SidebarItem icon="join_left">{m.wfpDeduplication}</SidebarItem>*/}
+        {/*</NavLink>*/}
       </SidebarBody>
     </Sidebar>
   )

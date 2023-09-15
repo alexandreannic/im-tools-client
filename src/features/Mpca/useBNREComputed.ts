@@ -2,11 +2,10 @@ import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {useMemo} from 'react'
 import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {chain, mapObjectValue} from '../../utils/utils'
+import {chain} from '../../utils/utils'
 import {ageGroup, groupByAgeGroup} from '../../core/type'
 import {MpcaRow} from '@/features/Mpca/MpcaDeduplicationContext'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {transform} from 'lodash'
 
 export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = {
   cherkaska: 'UA71',
@@ -44,8 +43,15 @@ export const useBNREComputed = ({
 }) => useMemo(() => {
   if (!data) return
   const flatData = Arr([] as any[])//data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))
+  const deduplications = data.map(_ => _.deduplication).compact()
   return {
     flatData,
+    deduplications,
+    preventedAssistance: deduplications.filter(_ => [
+      DrcSupportSuggestion.NoAssistanceFullDuplication,
+      DrcSupportSuggestion.NoAssistanceExactSameTimeframe,
+      DrcSupportSuggestion.NoAssistanceDrcDuplication,
+    ].includes(_.suggestion)),
     multipleTimeAssisted: (() => {
       const grouped = data.filter(_ => [
           DrcSupportSuggestion.ThreeMonthsNoDuplication,
