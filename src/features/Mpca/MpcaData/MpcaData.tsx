@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {MpcaRow, MpcaRowSource, useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
+import {MpcaProgram, MpcaRow, MpcaRowSource, useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {Enum, map} from '@alexandreannic/ts-utils'
@@ -28,7 +28,7 @@ export const MpcaData = () => {
   const _payment = useAsync(api.mpcaPayment.create)
 
   useEffect(() => {
-    ctx.fetcherData.fetch()
+    ctx.fetcherData.fetch({force: false})
   }, [])
 
   // const getAllPossibleValues = (key: keyof NonNullable<typeof enhancedData>[0]) => Array.from(new Set(enhancedData?.map(_ => _[key]))) as string[]
@@ -82,6 +82,13 @@ export const MpcaData = () => {
               head: m.date,
               type: 'date',
               render: _ => formatDate(_.date)
+            },
+            {
+              id: 'prog',
+              head: m.program,
+              type: 'select_multiple',
+              options: () => [...Enum.keys(MpcaProgram).map(_ => ({label: _, value: _})), {label: ' ', value: ' '}],
+              render: _ => _.prog?.join(' | '),
             },
             {
               id: 'deduplication',

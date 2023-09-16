@@ -8,6 +8,7 @@ import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {_Arr, Arr, fnSwitch} from '@alexandreannic/ts-utils'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 
 export enum MpcaRowSource {
   RRM = 'RRM',
@@ -16,10 +17,17 @@ export enum MpcaRowSource {
   Old = 'Old',
 }
 
+export enum MpcaProgram {
+  CashForRent = 'CashForRent',
+  CashForEducation = 'CashForEducation',
+  MPCA = 'MPCA',
+}
+
 export interface MpcaRow {
   id: number
   source: MpcaRowSource
   date: Date
+  prog?: MpcaProgram[]
   benefStatus?: BNRE['ben_det_res_stat']
   lastName?: string
   firstName?: string
@@ -37,7 +45,7 @@ export interface MpcaRow {
 }
 
 export interface MpcaDeduplicationContext {
-  fetcherData: UseFetcher<() => Promise<_Arr<MpcaRow>>>
+  fetcherData: UseFetcher<(filters?: KoboAnswerFilter) => Promise<_Arr<MpcaRow>>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
   _create: UseAsync<(_: string[]) => Promise<MpcaPayment>>
 }
@@ -67,7 +75,7 @@ export const MPCADeduplicationProvider = ({
   //   .then(_ => _.data.filter(d => d.back_prog_type?.includes('mpca'))))
   // const deduplication = useFetcher(() => api.wfpDeduplication.search())
 
-  const fetcherData = useFetcher(async () => {
+  const fetcherData = useFetcher(async (filters: KoboAnswerFilter = {}) => {
     const res: MpcaRow[] = []
     const [
       bnre,
@@ -76,13 +84,13 @@ export const MPCADeduplicationProvider = ({
       old,
       deduplication,
     ] = await Promise.all([
-      api.kobo.answer.searchBnre()
+      api.kobo.answer.searchBnre(filters)
         .then(_ => _.data.filter(d => d.back_prog_type.find(_ => _.includes('cfe') || _.includes('cfr') || _.includes('mpca')))),
-      api.kobo.answer.searchShelter_cashForRepair()
+      api.kobo.answer.searchShelter_cashForRepair(filters)
         .then(_ => _.data),
-      api.kobo.answer.searchRapidResponseMechanism()
+      api.kobo.answer.searchRapidResponseMechanism(filters)
         .then(_ => _.data.filter(d => d.back_prog_type?.includes('mpca'))),
-      api.kobo.answer.searchMpcaNfiOld()
+      api.kobo.answer.searchMpcaNfiOld(filters)
         .then(_ => _.data.filter(d => d.Programme?.includes('cash_for_rent') || d.Programme?.includes('mpca'))),
       api.wfpDeduplication.search()
         .then(_ => Arr(_.data).groupBy(_ => _.taxId!))
@@ -90,7 +98,12 @@ export const MPCADeduplicationProvider = ({
     bnre.forEach(_ => res.push({
       source: MpcaRowSource.BNRE,
       id: _.id,
-      date: _.start,
+      date: _.end,
+      prog: Arr(_.back_prog_type)?.map(prog => fnSwitch(prog.split('_')[0], {
+        'cfr': MpcaProgram.CashForRent,
+        'cfe': MpcaProgram.CashForEducation,
+        'mpca': MpcaProgram.MPCA,
+      }, () => undefined)).compact(),
       benefStatus: _.ben_det_res_stat,
       lastName: _.ben_det_surname,
       firstName: _.ben_det_first_name,
@@ -108,7 +121,14 @@ export const MPCADeduplicationProvider = ({
     old.forEach(_ => res.push({
       source: MpcaRowSource.Old,
       id: _.id,
-      date: _.start,
+      date: _.end,
+      prog: fnSwitch(_.Programme, {
+        'mpca': [MpcaProgram.MPCA],
+        'mpca___nfi': [MpcaProgram.MPCA],
+        'nfi': undefined,
+        'cash_for_rent': [MpcaProgram.CashForRent],
+        'mpca___cash_for_rent': [MpcaProgram.MPCA, MpcaProgram.CashForRent],
+      }, () => undefined),
       benefStatus: fnSwitch(_.status!, {
         status_idp: 'idp',
         status_conflict: 'long_res',
@@ -130,8 +150,9 @@ export const MPCADeduplicationProvider = ({
     }))
     cfr.forEach(_ => res.push({
       source: MpcaRowSource.CFR,
+      prog: [MpcaProgram.CashForRent],
       id: _.id,
-      date: _.start,
+      date: _.end,
       lastName: _.bis,
       firstName: _.bif,
       patronyme: _.bip,
@@ -147,8 +168,13 @@ export const MPCADeduplicationProvider = ({
     }))
     rrm.forEach(_ => res.push({
       source: MpcaRowSource.RRM,
+      prog: Arr(_.back_prog_type)?.map(prog => fnSwitch(prog.split('_')[0], {
+        'cfr': MpcaProgram.CashForRent,
+        'cfe': MpcaProgram.CashForEducation,
+        'mpca': MpcaProgram.MPCA,
+      }, () => undefined)).compact(),
       id: _.id,
-      date: _.start,
+      date: _.end,
       benefStatus: _.ben_det_res_stat_l,
       lastName: _.ben_det_surname,
       firstName: _.ben_det_first_name,

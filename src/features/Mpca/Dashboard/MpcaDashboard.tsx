@@ -1,5 +1,5 @@
 import {Page} from '@/shared/Page'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {MpcaRow, useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
@@ -8,17 +8,33 @@ import {_Arr, Enum} from '@alexandreannic/ts-utils'
 import {toPercent} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
+import {Period} from '@/core/type'
+import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {Lazy} from '@/shared/Lazy'
+import {ChartTools} from '@/core/chartTools'
+
+const today = new Date()
 
 export const MpcaDashboard = () => {
   const {fetcherData} = useMPCADeduplicationContext()
   const computed = useBNREComputed({data: fetcherData.entity})
+  const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
+  const {m} = useI18n()
 
   useEffect(() => {
-    fetcherData.fetch({force: false})
-  }, [])
+    fetcherData.fetch({force: true}, {filters: periodFilter})
+  }, [periodFilter])
 
   return (
     <Page width="lg" loading={fetcherData.loading}>
+      <PeriodPicker
+        value={[periodFilter.start, periodFilter.end]}
+        onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
+        sx={{mb: 2}}
+        label={[m.start, m.endIncluded]}
+        max={today}
+      />
       {computed && fetcherData.entity && (
         <_MPCADashboard
           data={fetcherData.entity}
@@ -57,6 +73,20 @@ export const _MPCADashboard = ({
           {/*<SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>*/}
           {/*  {formatLargeNumber(computed?.flatData.length)}*/}
           {/*</SlideWidget>*/}
+        </Div>
+        <Div>
+          <Div>
+
+            <SlidePanel title={m.program}>
+              <Lazy deps={[data]} fn={() => ChartTools.multiple({
+                data: data.map(_ => _.prog),
+              })}>
+                {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
+            </SlidePanel>
+          </Div>
+          <Div>
+          </Div>
         </Div>
         {/*<Div>*/}
         {/*  <Div column>*/}
