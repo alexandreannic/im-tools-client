@@ -44,6 +44,7 @@ export const PeriodPickerMui = ({
 
   return (
     <DateRangePicker
+      sx={sx}
       defaultValue={value}
       // value={value}
       onChange={onChange as any}
@@ -124,6 +125,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
           margin="dense"
           variant="outlined"
           size="small"
+          InputLabelProps={{shrink: true}}
           {...startDateProps}
           sx={{marginRight: '-1px'}}
           InputProps={{
