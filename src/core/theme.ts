@@ -153,9 +153,9 @@ export const muiTheme = ({
           '*': {
             boxSizing: 'border-box',
           },
-          '.MuiDateRangeCalendar-root > div:first-child': {
-            display: 'none',
-          },
+          // '.MuiDateRangeCalendar-root > div:first-child': {
+          //   display: 'none',
+          // },
           '@font-face': {
             fontFamily: 'Material Icons',
             fontStyle: 'normal',

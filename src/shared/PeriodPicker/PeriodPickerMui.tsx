@@ -44,6 +44,8 @@ export const PeriodPickerMui = ({
 
   return (
     <DateRangePicker
+      minDate={min}
+      maxDate={max}
       sx={sx}
       defaultValue={value}
       // value={value}
@@ -60,10 +62,45 @@ export const PeriodPickerMui = ({
   )
 }
 
-const BrowserMultiInputDateRangeField = React.forwardRef(
-  (props: any, ref: React.Ref<HTMLDivElement>) => {
-    const {
-      slotProps,
+const BrowserMultiInputDateRangeField = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => {
+  const {
+    slotProps,
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    disabled,
+    onError,
+    fullWidth,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    sx,
+    selectedSections,
+    onSelectedSectionsChange,
+    className,
+  } = props
+
+  const {inputRef: startInputRef, ...startTextFieldProps} = useSlotProps({
+    elementType: null as any,
+    externalSlotProps: slotProps?.textField,
+    ownerState: {...props, position: 'start'},
+  }) as MultiInputFieldSlotTextFieldProps
+
+  const {inputRef: endInputRef, ...endTextFieldProps} = useSlotProps({
+    elementType: null as any,
+    externalSlotProps: slotProps?.textField,
+    ownerState: {...props, position: 'end'},
+  }) as MultiInputFieldSlotTextFieldProps
+
+  const {
+    startDate: {ref: startRef, ...startDateProps},
+    endDate: {ref: endRef, ...endDateProps},
+  } = useMultiInputDateRangeField<Date, MultiInputFieldSlotTextFieldProps>({
+    sharedProps: {
       value,
       defaultValue,
       format,
@@ -78,81 +115,60 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      className,
-    } = props
+    },
+    startTextFieldProps,
+    endTextFieldProps,
+    startInputRef,
+    endInputRef,
+  })
 
-    const {inputRef: startInputRef, ...startTextFieldProps} = useSlotProps({
-      elementType: null as any,
-      externalSlotProps: slotProps?.textField,
-      ownerState: {...props, position: 'start'},
-    }) as MultiInputFieldSlotTextFieldProps
-
-    const {inputRef: endInputRef, ...endTextFieldProps} = useSlotProps({
-      elementType: null as any,
-      externalSlotProps: slotProps?.textField,
-      ownerState: {...props, position: 'end'},
-    }) as MultiInputFieldSlotTextFieldProps
-
-    const {
-      startDate: {ref: startRef, ...startDateProps},
-      endDate: {ref: endRef, ...endDateProps},
-    } = useMultiInputDateRangeField<Date, MultiInputFieldSlotTextFieldProps>({
-      sharedProps: {
-        value,
-        defaultValue,
-        format,
-        onChange,
-        readOnly,
-        disabled,
-        onError,
-        shouldDisableDate,
-        minDate,
-        maxDate,
-        disableFuture,
-        disablePast,
-        selectedSections,
-        onSelectedSectionsChange,
-      },
-      startTextFieldProps,
-      endTextFieldProps,
-      startInputRef,
-      endInputRef,
-    })
-
-    return (
-      <Box ref={ref} className={className}>
-        <TextField
-          margin="dense"
-          variant="outlined"
-          size="small"
-          InputLabelProps={{shrink: true}}
-          {...startDateProps}
-          sx={{marginRight: '-1px'}}
-          InputProps={{
-            ...startDateProps.InputProps,
-            sx: _ => ({
-              borderBottomRightRadius: 0,
-              borderTopRightRadius: 0,
-            }),
-          }}
-          inputRef={startRef}
-        />
-        <TextField
-          margin="dense"
-          variant="outlined"
-          size="small"
-          InputLabelProps={{shrink: true}}
-          {...endDateProps}
-          InputProps={{
-            ...endDateProps.InputProps,
-            sx: _ => ({
-              borderBottomLeftRadius: 0,
-              borderTopLeftRadius: 0,
-            }),
-          }}
-          inputRef={endRef}
-        />
-      </Box>
-    )
-  },
-) as any
+  return (
+    <Box
+      ref={ref}
+      className={className}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        ...(fullWidth && {width: '100%'}),
+        ...sx,
+      }}
+    >
+      <TextField
+        type="text"
+        margin="dense"
+        variant="outlined"
+        fullWidth={true}
+        size="small"
+        InputLabelProps={{shrink: true}}
+        {...startDateProps}
+        sx={{minWidth: 115, marginRight: '-1px'}}
+        InputProps={{
+          ...startDateProps.InputProps,
+          sx: _ => ({
+            borderBottomRightRadius: 0,
+            borderTopRightRadius: 0,
+          }),
+        }}
+        inputRef={startRef}
+      />
+      <TextField
+        type="text"
+        margin="dense"
+        variant="outlined"
+        fullWidth={true}
+        size="small"
+        sx={{minWidth: 115}}
+        InputLabelProps={{shrink: true}}
+        {...endDateProps}
+        InputProps={{
+          ...endDateProps.InputProps,
+          sx: _ => ({
+            borderBottomLeftRadius: 0,
+            borderTopLeftRadius: 0,
+          }),
+        }}
+        inputRef={endRef}
+      />
+    </Box>
+  )
+},) as any

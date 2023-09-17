@@ -20,6 +20,9 @@ import createEmotionCache from '@/core/createEmotionCache'
 import Head from 'next/head'
 import {LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
+import {LicenseInfo} from '@mui/x-license-pro'
+
+LicenseInfo.setLicenseKey(appConfig.muiProLicenseKey ?? '')
 
 const api = new ApiSdk(new ApiClient({
   baseUrl: appConfig.apiURL,
