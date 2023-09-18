@@ -4,7 +4,7 @@ import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {chain} from '../../utils/utils'
 import {ageGroup, groupByAgeGroup} from '../../core/type'
-import {MpcaRow} from '@/features/Mpca/MpcaDeduplicationContext'
+import {MpcaRow} from '@/features/Mpca/MpcaContext'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 
 export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = {

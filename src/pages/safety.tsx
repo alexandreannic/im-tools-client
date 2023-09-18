@@ -27,12 +27,12 @@ const SafetyPage = () => {
   const data = useMemo(() => {
     const res: Record<string, Status>[] = []
     const dayInMonth = getDaysInMonth(parse(period, 'yyyy-MM', new Date()))
-    for (let i = 0; i < length - 1; i++) {
-      persons.forEach(p => {
-        if (!res[i]) res[i] = {}
-
-      })
-    }
+    // for (let i = 0; i < length - 1; i++) {
+    //   persons.forEach(p => {
+    //     if (!res[i]) res[i] = {}
+    //
+    //   })
+    // }
 
   }, [persons, period])
 

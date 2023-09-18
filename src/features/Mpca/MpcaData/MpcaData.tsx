@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {MpcaProgram, MpcaRow, MpcaRowSource, useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
+import {MpcaProgram, MpcaRow, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {Enum, map} from '@alexandreannic/ts-utils'
@@ -22,7 +22,7 @@ export const getKoboImagePath = (url: string): string => {
 export const MpcaData = () => {
   const {m, formatDate} = useI18n()
   const {api} = useAppSettings()
-  const ctx = useMPCADeduplicationContext()
+  const ctx = useMPCAContext()
   const _servers = useFetcher(api.kobo.server.getAll)
   const [selected, setSelected] = useState<string[]>([])
   const _payment = useAsync(api.mpcaPayment.create)
@@ -39,12 +39,16 @@ export const MpcaData = () => {
         <Sheet<MpcaRow>
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}
+          loading={ctx.fetcherData.loading || ctx.fetcherDeduplication.loading}
+          getRenderRowKey={_ => '' + _.id}
+          data={ctx.data}
           select={{
             getId: _ => '' + _.id,
             onSelect: _ => setSelected(_),
             selectActions: (
               <>
                 <AaBtn
+                  disabled
                   sx={{mr: 1}}
                   color="primary"
                   icon="content_paste_search"
@@ -53,6 +57,7 @@ export const MpcaData = () => {
                   {m.mpcaDb.generateDeduplicationFile}
                 </AaBtn>
                 <AaBtn
+                  disabled
                   color="primary"
                   icon="create_new_folder"
                   variant="outlined"
@@ -66,9 +71,6 @@ export const MpcaData = () => {
               </>
             )
           }}
-          loading={ctx.fetcherData.loading}
-          getRenderRowKey={_ => '' + _.id}
-          data={ctx.fetcherData.entity}
           columns={[
             {
               id: 'source',

@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import React, {useEffect, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {MpcaRow, useMPCADeduplicationContext} from '../MpcaDeduplicationContext'
+import {MpcaRow, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {_Arr, Enum} from '@alexandreannic/ts-utils'
@@ -13,21 +13,22 @@ import {Period} from '@/core/type'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/core/chartTools'
+import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 
 const today = new Date()
 
 export const MpcaDashboard = () => {
-  const {fetcherData} = useMPCADeduplicationContext()
-  const computed = useBNREComputed({data: fetcherData.entity})
+  const ctx = useMPCAContext()
+  const computed = useBNREComputed({data: ctx.data})
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m} = useI18n()
 
   useEffect(() => {
-    fetcherData.fetch({force: true}, {filters: periodFilter})
+    ctx.fetcherData.fetch({force: true}, {filters: periodFilter})
   }, [periodFilter])
 
   return (
-    <Page width="lg" loading={fetcherData.loading}>
+    <Page width="lg" loading={ctx.fetcherData.loading}>
       <PeriodPicker
         value={[periodFilter.start, periodFilter.end]}
         onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
@@ -35,9 +36,9 @@ export const MpcaDashboard = () => {
         label={[m.start, m.endIncluded]}
         max={today}
       />
-      {computed && fetcherData.entity && (
+      {computed && ctx.data && (
         <_MPCADashboard
-          data={fetcherData.entity}
+          data={ctx.data}
           computed={computed}
         />
       )}
@@ -75,8 +76,7 @@ export const _MPCADashboard = ({
           {/*</SlideWidget>*/}
         </Div>
         <Div>
-          <Div>
-
+          <Div column>
             <SlidePanel title={m.program}>
               <Lazy deps={[data]} fn={() => ChartTools.multiple({
                 data: data.map(_ => _.prog),
@@ -84,8 +84,23 @@ export const _MPCADashboard = ({
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
+            <SlidePanel title={m.form}>
+              <Lazy deps={[data]} fn={() => ChartTools.single({
+                data: data.map(_ => _.source),
+              })}>
+                {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
+            </SlidePanel>
           </Div>
-          <Div>
+          <Div column>
+            <SlidePanel title={m.submissionTime}>
+              <KoboLineChartDate
+                data={data}
+                curves={{
+                  'date': _ => _.date,
+                }}
+              />
+            </SlidePanel>
           </Div>
         </Div>
         {/*<Div>*/}
