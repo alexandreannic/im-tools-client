@@ -9,7 +9,7 @@ import {databaseModule} from '@/features/Database/databaseModule'
 import {HashRouter as Router, Navigate, NavLink, Outlet, Route, Routes} from 'react-router-dom'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
-import {Skeleton, Tab, Tabs} from '@mui/material'
+import {Skeleton, Tab, Tabs, Tooltip} from '@mui/material'
 import {useLocation, useParams} from 'react-router'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
@@ -53,7 +53,8 @@ export const DatabaseWithContext = () => {
   const ctx = useDatabaseContext()
 
   const parsedFormNames = useMemo(() => {
-    return Arr(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
+    const grouped = Arr(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
+    return new Enum(grouped).transform((k, v) => [k, v.sort((a, b) => a.name.localeCompare(b.name))]).get()
   }, [ctx.formAccess])
 
   return (
@@ -81,11 +82,13 @@ export const DatabaseWithContext = () => {
           ) : Enum.entries(parsedFormNames)?.map(([category, forms]) => (
             <SidebarSection title={category} key={category}>
               {forms.map(_ =>
-                <NavLink key={_.id} to={databaseModule.siteMap.home(_.serverId, _.id)}>
-                  {({isActive, isPending}) => (
-                    <SidebarItem onClick={() => undefined} key={_.id} active={isActive}>{_.parsedName.name}</SidebarItem>
-                  )}
-                </NavLink>
+                <Tooltip title={_.parsedName.name} placement="right-end">
+                  <NavLink key={_.id} to={databaseModule.siteMap.home(_.serverId, _.id)}>
+                    {({isActive, isPending}) => (
+                      <SidebarItem onClick={() => undefined} key={_.id} active={isActive}>{_.parsedName.name}</SidebarItem>
+                    )}
+                  </NavLink>
+                </Tooltip>
               )}
             </SidebarSection>
           ))}
