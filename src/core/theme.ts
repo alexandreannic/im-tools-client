@@ -90,7 +90,7 @@ export const muiTheme = ({
   cardElevation?: number
   dark?: boolean
 }): Theme => {
-  const defaultRadius = 8
+  const defaultRadius = 12
   const fontFamily = '"Open Sans", sans-serif'
   // const mainColor = '#af161e'
   const colorPrimary = {
