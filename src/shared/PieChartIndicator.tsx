@@ -10,6 +10,7 @@ import {toPercent} from '@/utils/utils'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
 
 const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
+  if (isNaN(value)) return '-'
   return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value
 }
 

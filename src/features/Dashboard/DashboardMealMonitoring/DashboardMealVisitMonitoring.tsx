@@ -204,7 +204,7 @@ export const DashboardMealVisitMonitoring = () => {
           >
             {(value, onChange) => <PeriodPicker
               sx={{marginTop: '-6px'}}
-              value={value ?? [undefined, undefined]}
+              defaultValue={value ?? [undefined, undefined]}
               onChange={onChange}
               min={_period.entity?.start}
               max={_period.entity?.end}

@@ -31,7 +31,7 @@ export const dateFromNow = (d?: Date): string | undefined => {
 }
 
 export const formatLargeNumber = (n?: number): string => {
-  return n !== undefined && n !== null ? n.toLocaleString('en-EN') : '-'
+  return n !== undefined && n !== null && !isNaN(n) ? n.toLocaleString('en-EN') : '-'
 }
 
 export const formatDuration = formatDurationFns

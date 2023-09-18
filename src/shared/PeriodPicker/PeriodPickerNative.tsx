@@ -4,11 +4,11 @@ import {useI18n} from '../../core/i18n'
 import {Box, BoxProps} from '@mui/material'
 import {Datepicker} from '../Datepicker/Datepicker'
 
-
-export interface PeriodPickerProps extends Omit<BoxProps, 'onChange'> {
+export interface PeriodPickerProps extends Omit<BoxProps, 'defaultValue' | 'onChange'> {
   min?: Date
   max?: Date
   value?: [Date | undefined, Date | undefined]
+  defaultValue?: [Date | undefined, Date | undefined]
   onChange: (_: [Date | undefined, Date | undefined]) => void
   label?: [string, string]
   fullWidth?: boolean

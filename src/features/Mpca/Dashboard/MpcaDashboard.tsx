@@ -24,13 +24,14 @@ export const MpcaDashboard = () => {
   const {m} = useI18n()
 
   useEffect(() => {
-    ctx.fetcherData.fetch({force: true}, {filters: periodFilter})
+    if (periodFilter.start || periodFilter.end)
+      ctx.fetcherData.fetch({force: true}, {filters: periodFilter})
   }, [periodFilter])
 
   return (
     <Page width="lg" loading={ctx.fetcherData.loading}>
       <PeriodPicker
-        value={[periodFilter.start, periodFilter.end]}
+        defaultValue={[periodFilter.start, periodFilter.end]}
         onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
         sx={{mb: 2}}
         label={[m.start, m.endIncluded]}

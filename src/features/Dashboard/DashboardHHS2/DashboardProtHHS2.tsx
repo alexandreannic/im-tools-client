@@ -230,7 +230,7 @@ export const DashboardProtHHS2 = () => {
           >
             {(value, onChange) => <PeriodPicker
               sx={{marginTop: '-6px'}}
-              value={value ?? [undefined, undefined]}
+              defaultValue={value ?? [undefined, undefined]}
               onChange={onChange}
               label={[m.start, m.endIncluded]}
               min={_period.entity?.start}

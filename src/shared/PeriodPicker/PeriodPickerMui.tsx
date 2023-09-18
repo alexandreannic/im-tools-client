@@ -6,19 +6,12 @@ import {unstable_useMultiInputDateRangeField as useMultiInputDateRangeField} fro
 import {Box, BoxProps, TextField} from '@mui/material'
 import {mapFor} from '@alexandreannic/ts-utils'
 import {endOfMonth, format, startOfMonth, subMonths} from 'date-fns'
-
-export interface PeriodPickerProps extends Omit<BoxProps, 'onChange'> {
-  min?: Date
-  max?: Date
-  value?: [Date | undefined, Date | undefined]
-  onChange: (_: [Date | undefined, Date | undefined]) => void
-  label?: [string, string]
-  fullWidth?: boolean
-}
+import {PeriodPickerProps} from '@/shared/PeriodPicker/PeriodPickerNative'
 
 export const PeriodPickerMui = ({
   min,
   max,
+  defaultValue,
   value,
   onChange,
   label,
@@ -47,8 +40,8 @@ export const PeriodPickerMui = ({
       minDate={min}
       maxDate={max}
       sx={sx}
-      defaultValue={value}
-      // value={value}
+      defaultValue={defaultValue}
+      value={value}
       onChange={onChange as any}
       slotProps={{
         shortcuts: {
