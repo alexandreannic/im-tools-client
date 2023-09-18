@@ -50,7 +50,6 @@ export const PeriodPickerNative = ({
 
   return (
     <Box
-      {...props}
       sx={{
         display: 'flex',
         alignItems: 'center',

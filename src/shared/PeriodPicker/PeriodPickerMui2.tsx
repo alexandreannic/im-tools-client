@@ -43,7 +43,6 @@ export const PeriodPickerMui2 = ({
   return (
     <>
       <Box
-        {...props}
         sx={{
           display: 'flex',
           alignItems: 'center',
