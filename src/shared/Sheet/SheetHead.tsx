@@ -1,3 +1,4 @@
+
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {alpha, Box, Checkbox} from '@mui/material'
 import React from 'react'
@@ -27,7 +28,7 @@ export const SheetHead = (() => {
       <thead>
       <tr className="tr trh">
         {map(select?.getId, getId => (
-          <th className="td th td-center">
+          <th className="td th td-center td-width0">
             <Checkbox
               size="small"
               checked={selected.size === data?.length}
@@ -69,6 +70,9 @@ export const SheetHead = (() => {
         })}
       </tr>
       <tr>
+        {select?.getId && (
+          <td/>
+        )}
         {columns.map(c => {
           const sortedByThis = search.sortBy === c.id ?? false
           const active = sortedByThis || !!filters[c.id]

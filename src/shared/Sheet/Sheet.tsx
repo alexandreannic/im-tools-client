@@ -81,7 +81,7 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   stickyEnd?: boolean
 }
 
-export type SheetFilterValueString = string | undefined
+export type SheetFilterValueString = {filterBlank?: boolean, value?: string} | undefined
 export type SheetFilterValueSelect = string[]
 export type SheetFilterValueDate = [Date | undefined, Date | undefined]
 export type SheetFilterValueNumber = [number | undefined, number | undefined]
@@ -89,6 +89,7 @@ export type SheetFilterValue = SheetFilterValueString | SheetFilterValueSelect |
 
 export class SheetUtils {
 
+  // static readonly FILTER_BLANK_TEXT = 'FILTER_BLANK_TEXT_someRandomTextToAvoidCollision_9fa3'
   static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
 
   static readonly buildOptions = (opt: string[]): SheetOptions[] => {
@@ -205,6 +206,7 @@ const _Sheet = <T extends SheetRow>({
             right: 0,
             left: 0,
             bottom: 0,
+            borderRadius: t => t.shape.borderRadius + 'px',
             background: t => t.palette.background.paper,
           }}>
             <Box sx={{
@@ -215,13 +217,15 @@ const _Sheet = <T extends SheetRow>({
               bottom: 0,
               display: 'flex',
               alignItems: 'center',
-              border: t => `2px solid ${t.palette.primary.main}`,
-              color: t => t.palette.primary.main,
               fontWeight: t => t.typography.fontWeightBold,
               background: t => t.palette.action.focus,
+              px: 2,
+              border: t => `2px solid ${t.palette.primary.main}`,
               borderTopLeftRadius: t => t.shape.borderRadius + 'px',
               borderTopRightRadius: t => t.shape.borderRadius + 'px',
-              px: 2,
+              // margin: .75,
+              // color: t => t.palette.primary.main,
+              // borderRadius: t => t.shape.borderRadius + 'px',
             }}>
               <Box sx={{flex: 1,}}>
                 {ctx.selected.size} {m.selected}.

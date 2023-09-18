@@ -6,6 +6,8 @@ export const kobo = {
       prod: '4820279f-6c3d-47ba-8afe-47f86b16ab5d' as const,
     },
     form: {
+      rapidResponseMechanism: 'aMJL9DG8qEcULqTZTKQbrq',
+      mpca_cashForRepair: 'a9CjhyhTKVojCdArKmw9yM',
       cfmInternal: 'aN3Y8JeH2fU3GthrWAs9FG' as const,
       cfmExternal: 'aJaGLvGEdpYWk5ift8k87y' as const,
       shelterNTA: 'aL8oHMzJJ9soPepvK6YU9E' as const,

@@ -75,7 +75,7 @@ export const PieChartIndicator = ({
   sx,
   ...props
 }: PieChartIndicatorProps) => {
-  const {m} = useI18n()
+  const {m, formatLargeNumber} = useI18n()
   return (
     <LightTooltip title={
       <>
@@ -102,10 +102,10 @@ export const PieChartIndicator = ({
             {showValue !== undefined && (
               <Txt color="disabled" sx={{ml: .5, fontWeight: '400'}}>
               <span style={{fontSize: '1.6em', letterSpacing: '2px'}}>
-                &nbsp;{value}
+                &nbsp;{formatLargeNumber(value)}
               </span>
                 {showBase !== undefined && (
-                  <span style={{fontSize: '1.2em'}}>/{base}</span>
+                  <span style={{fontSize: '1.2em'}}>/{formatLargeNumber(base)}</span>
                 )}
                 {/*<Txt color="disabled" sx={{fontSize: '1.4em', fontWeight: 'lighter'}}>)</Txt>*/}
               </Txt>

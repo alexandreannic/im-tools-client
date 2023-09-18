@@ -449,6 +449,9 @@ const tableTheme = (t: Theme) => ({
   '.td-center': {
     textAlign: 'center !important',
   },
+  'td-width0': {
+    width: 0,
+  },
   '.td-right': {
     textAlign: 'right !important',
   },

@@ -41,7 +41,8 @@ export const SheetBody = (() => {
                   style={_.style}
                   onClick={_.onClick ? () => _.onClick?.(item) : undefined}
                   className={[
-                    'td td-clickable',
+                    'td',
+                    'td-clickable',
                     _.stickyEnd ? 'td-sticky-end' : '',
                     _.type === 'number' ? 'td-right' : '',
                     fnSwitch(_.align!, {

@@ -66,10 +66,7 @@ export const getDrcSuggestion = (_: WfpDeduplication): DrcSupportSuggestion => {
   if (!_.existingOrga || !_.existingStart || !_.existingEnd) return DrcSupportSuggestion.ThreeMonthsNoDuplication
   if (_.existingOrga === 'DRC') return DrcSupportSuggestion.NoAssistanceDrcDuplication
   if (_.status === WfpDeduplicationStatus.Error) return DrcSupportSuggestion.DeduplicationFailed
-
-  const deadlineToAssistUnAgencyDupliation = new Date(2023, 8, 13)
-  if (unAgencies.includes(_.existingOrga) && _.createdAt.getTime() < deadlineToAssistUnAgencyDupliation.getTime()) return DrcSupportSuggestion.ThreeMonthsUnAgency
-
+  if (unAgencies.includes(_.existingOrga)) return DrcSupportSuggestion.ThreeMonthsUnAgency
   if (_.status === WfpDeduplicationStatus.Deduplicated) return DrcSupportSuggestion.NoAssistanceFullDuplication
   const overlap = getOverlapMonths(_.validFrom, _.expiry, _.existingStart, _.existingEnd)
   if (overlap === 3)
