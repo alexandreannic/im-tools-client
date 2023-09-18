@@ -86,6 +86,7 @@ export const DashboardProtHHS2Violence = ({
           questions.forEach(q => {
             res[q] = {value: 0, base: 0}
           })
+          const total = {value: 0, base: 0,}
           data.forEach(row => {
             row.persons.forEach(_ => {
               if (_.age) {
@@ -101,32 +102,32 @@ export const DashboardProtHHS2Violence = ({
               } else {
                 res.has_any_other_member_experienced_violence.base += 1
               }
+              total.base += 1
             })
             questions.forEach(key => {
               if (row[key] === 'yes') {
+                total.value += 1
                 res[key].value += 1
               }
             })
           })
           return ChartTools.setLabel({
+            total: m.selectAll,
             has_any_adult_female_member_experienced_violence: m.adultWomen,
             has_any_adult_male_member_experienced_violence: m.adultMen,
             has_any_boy_member_experienced_violence: m.boy,
             has_any_girl_member_experienced_violence: m.girl,
             has_any_other_member_experienced_violence: m.other,
-          })(res)
+          })({total, ...res})
         }}>
           {_ =>
             <SlidePanel title={m.protHHS2.reportedIncidents}>
-              <Box sx={{display: 'flex', alignItems: 'center'}}>
-                <Checkbox indeterminate={!allChecked && oneChecked} checked={allChecked} onClick={() => {
-                  updateAll(!allChecked)
-                }}/>
-                <Txt bold size="big">{m.selectAll}</Txt>
-              </Box>
               <HorizontalBarChartGoogle
                 data={_}
                 labels={{
+                  total: <Checkbox indeterminate={!allChecked && oneChecked} checked={allChecked} onClick={() => {
+                    updateAll(!allChecked)
+                  }}/>,
                   has_any_adult_male_member_experienced_violence: <Checkbox
                     size="small"
                     checked={category.has_any_adult_male_member_experienced_violence}
