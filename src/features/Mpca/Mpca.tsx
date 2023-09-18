@@ -2,7 +2,7 @@ import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
-import {MPCADeduplicationProvider} from './MpcaDeduplicationContext'
+import {MPCAProvider} from './MpcaContext'
 import React, {useMemo} from 'react'
 import {MpcaData} from '@/features/Mpca/MpcaData/MpcaData'
 import {MpcaDashboard} from '@/features/Mpca/Dashboard/MpcaDashboard'
@@ -32,17 +32,21 @@ const MPCASidebar = () => {
     <Sidebar>
       <SidebarBody>
         <NavLink to={path(mpcaModule.siteMap.dashboard)}>
-          <SidebarItem icon="equalizer">{m.dashboard}</SidebarItem>
+          {({isActive, isPending}) => (
+            <SidebarItem icon="equalizer" active={isActive}>{m.dashboard}</SidebarItem>
+          )}
         </NavLink>
         <NavLink to={path(mpcaModule.siteMap.data)}>
-          <SidebarItem icon="table_chart">{m.data}</SidebarItem>
+          {({isActive, isPending}) => (
+            <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
+          )}
         </NavLink>
-        <NavLink to={path(mpcaModule.siteMap.paymentTools)}>
-          <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>
-        </NavLink>
-        <NavLink to={path(mpcaModule.siteMap.deduplication)}>
-          <SidebarItem icon="join_left">{m.wfpDeduplication}</SidebarItem>
-        </NavLink>
+        {/*<NavLink to={path(mpcaModule.siteMap.paymentTools)}>*/}
+        {/*  <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>*/}
+        {/*</NavLink>*/}
+        {/*<NavLink to={path(mpcaModule.siteMap.deduplication)}>*/}
+        {/*  <SidebarItem icon="join_left">{m.wfpDeduplication}</SidebarItem>*/}
+        {/*</NavLink>*/}
       </SidebarBody>
     </Sidebar>
   )
@@ -50,15 +54,15 @@ const MPCASidebar = () => {
 
 export const Mpca = () => {
   const {session, accesses} = useSession()
-  const access = useMemo(() => accesses.filter(_ => _.featureId === appFeaturesIndex.mpca.id), [accesses])
-  if (!session.admin && access.length === 0) {
+  const access = useMemo(() => !!appFeaturesIndex.mpca.showIf?.(session, accesses), [accesses])
+  if (!access) {
     return (
       <NoFeatureAccessPage/>
     )
   }
   return (
     <Router>
-      <MPCADeduplicationProvider>
+      <MPCAProvider>
         <Layout
           sidebar={<MPCASidebar/>}
           header={<AppHeader id="app-header"/>}
@@ -71,7 +75,7 @@ export const Mpca = () => {
             <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
           </Routes>
         </Layout>
-      </MPCADeduplicationProvider>
+      </MPCAProvider>
     </Router>
   )
 }

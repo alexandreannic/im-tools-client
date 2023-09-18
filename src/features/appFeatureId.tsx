@@ -66,7 +66,10 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: 'green',
     path: '/mpca',
     showIf: (u, accesses) => {
-      return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
+      return u?.admin || accesses && !!accesses
+        .filter(Access.filterByFeature(AppFeatureId.kobo_database))
+        .find(_ => _.params?.koboFormId === kobo.drcUa.form.BNRE)
+      // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },
   activity_info: {

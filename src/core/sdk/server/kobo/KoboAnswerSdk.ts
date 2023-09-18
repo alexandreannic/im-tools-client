@@ -15,7 +15,13 @@ import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboS
 import {ProtHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
 import {mapMealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternalMapping'
 import {mapMealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternalMapping'
-import {KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {RapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanism'
+import {mapRapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanismMapping'
+import {mapShelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shelter_CashForRepairMapping'
+import {Shelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shelter_CashForRepair'
+import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
+import {mapMPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFIMapping'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -96,6 +102,29 @@ export class KoboAnswerSdk {
     return this.search<BNRE>({
       formId: kobo.drcUa.form.BNRE,
       fnMap: mapBNRE,
+      ...filters,
+    })
+  }
+
+  readonly searchShelter_cashForRepair = (filters: KoboAnswerFilter = {}) => {
+    return this.search<Shelter_CashForRepair>({
+      formId: kobo.drcUa.form.mpca_cashForRepair,
+      fnMap: mapShelter_CashForRepair,
+      ...filters,
+    })
+  }
+
+  readonly searchRapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
+    return this.search<RapidResponseMechanism>({
+      formId: kobo.drcUa.form.rapidResponseMechanism,
+      fnMap: mapRapidResponseMechanism,
+      ...filters,
+    })
+  }
+  readonly searchMpcaNfiOld = (filters: KoboAnswerFilter = {}) => {
+    return this.search<MPCA_NFI>({
+      formId: kobo.drcUa.form.fcrmMpca,
+      fnMap: mapMPCA_NFI,
       ...filters,
     })
   }

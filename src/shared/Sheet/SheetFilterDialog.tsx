@@ -138,7 +138,7 @@ export const SheetFilterDialog = ({
             }
             default:
               return (
-                <AaInput value={innerValue} onChange={e => setInnerValue(e.target.value)}/>
+                <SheetFilterDialogText value={innerValue} onChange={setInnerValue}/>
               )
           }
         })()}
@@ -152,6 +152,28 @@ export const SheetFilterDialog = ({
         </AaBtn>
       </PanelFoot>
     </Popover>
+  )
+}
+
+export const SheetFilterDialogText = ({
+  value,
+  onChange,
+}: {
+  value: SheetFilterValueString
+  onChange: Dispatch<SetStateAction<SheetFilterValueString>>
+}) => {
+  const {m} = useI18n()
+  return (
+    <>
+      <FormControlLabel
+        sx={{mb: 1}}
+        label={m.filterBlanks}
+        control={
+          <Checkbox size="small" checked={value?.filterBlank} onChange={e => onChange(prev => ({...prev, filterBlank: e.target.checked}))}/>
+        }
+      />
+      <AaInput value={value?.value} onChange={e => onChange(prev => ({...prev, value: e.target.value}))}/>
+    </>
   )
 }
 

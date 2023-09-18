@@ -13,6 +13,15 @@ import {DrcOffice} from '@/core/drcJobTitle'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {format} from 'date-fns'
 
+export const DeduplicationStatusIcon = ({status}: {status: WfpDeduplicationStatus}) => {
+  return fnSwitch(status, {
+    Deduplicated: <TableIcon color="warning" children="join_full"/>,
+    PartiallyDeduplicated: <TableIcon color="info" children="join_left"/>,
+    NotDeduplicated: <TableIcon color="success" children="check_circle"/>,
+    Error: <TableIcon color="error" children="error"/>,
+  }, () => <></>)
+}
+
 export const WfpDeduplicationData = () => {
   const {api} = useAppSettings()
   const _search = useFetcher(api.wfpDeduplication.search)
@@ -117,14 +126,7 @@ export const WfpDeduplicationData = () => {
               options: () => Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})),
               tooltip: _ => m.mpcaDb.status[_.status],
               renderExport: false,
-              render: _ => (
-                fnSwitch(_.status, {
-                  Deduplicated: <TableIcon color="warning" children="join_full"/>,
-                  PartiallyDeduplicated: <TableIcon color="info" children="join_left"/>,
-                  NotDeduplicated: <TableIcon color="success" children="check_circle"/>,
-                  Error: <TableIcon color="error" children="error"/>,
-                }, () => <></>)
-              ),
+              render: _ => <DeduplicationStatusIcon status={_.status}/>,
             },
             {
               id: 'existingOrga',
