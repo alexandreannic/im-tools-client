@@ -18,7 +18,7 @@ export const ViewMoreText = ({
   return (
     <Box>
       {(open || children.length <= limit) ? children : <>{children.substring(0, limit)}...</>}
-      {children.length > limit && <Txt link bold onClick={() => setOpen(_ => !_)}>&nbsp;{open ? m.viewLess : m.viewMore}</Txt>}
+      {children.length > limit && <Txt sx={{cursor: 'pointer'}} link bold onClick={() => setOpen(_ => !_)}>&nbsp;{open ? m.viewLess : m.viewMore}</Txt>}
     </Box>
   )
 }
