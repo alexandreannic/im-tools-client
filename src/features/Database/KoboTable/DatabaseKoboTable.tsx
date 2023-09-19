@@ -22,6 +22,7 @@ export const DatabaseTableRoute = () => {
   const {api} = useAppSettings()
   const {accesses, session} = useSession()
   const {toastHttpError, toastLoading} = useAaToast()
+  const ctx = useDatabaseContext()
 
   const access = useMemo(() => {
     const list = accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId)
@@ -62,10 +63,11 @@ export const DatabaseTableRoute = () => {
   return (
     <Page loading={_formSchemas.getLoading(formId) || _answers.loading} width="full">
       <Panel>
-        {data && map(_formSchemas.get(formId), schema => (
+        {data && map(_formSchemas.get(formId), ctx.getForm(formId), (schema, form) => (
           <DatabaseKoboTableContent
             _edit={_edit}
             data={data.data}
+            form={form}
             schema={schema}
             _refresh={_refresh}
             canEdit={access.write}

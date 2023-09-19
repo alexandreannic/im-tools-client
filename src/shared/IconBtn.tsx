@@ -1,10 +1,10 @@
 import {Icon, Tooltip} from '@mui/material'
 import {IconBtnProps} from 'mui-extension/lib/IconBtn/IconBtn'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {IconBtn} from 'mui-extension'
 
-export interface AAIconBtnProps extends Omit<IconBtnProps, 'children'> {
-  tooltip?: string
+export interface AAIconBtnProps extends Omit<IconBtnProps, 'tooltip' | 'children'> {
+  tooltip?: ReactNode
   children: string
   href?: string
   target?: '_blank'

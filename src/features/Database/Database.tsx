@@ -82,8 +82,8 @@ export const DatabaseWithContext = () => {
           ) : Enum.entries(parsedFormNames)?.map(([category, forms]) => (
             <SidebarSection title={category} key={category}>
               {forms.map(_ =>
-                <Tooltip title={_.parsedName.name} placement="right-end">
-                  <NavLink key={_.id} to={databaseModule.siteMap.home(_.serverId, _.id)}>
+                <Tooltip key={_.id} title={_.parsedName.name} placement="right-end">
+                  <NavLink to={databaseModule.siteMap.home(_.serverId, _.id)}>
                     {({isActive, isPending}) => (
                       <SidebarItem onClick={() => undefined} key={_.id} active={isActive}>{_.parsedName.name}</SidebarItem>
                     )}

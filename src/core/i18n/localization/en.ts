@@ -383,8 +383,8 @@ export const en = Object.freeze({
           healthPn?: string
           barriersRural?: string
           barriersUrban?: string
-        //}) => `Health continues to be the first priority for the vast majority of households surveyed, cited by a total of <b>${healthPn}</b> of respondents as a priority need. The ratio of households reporting barriers to access healthcare is exponentially higher in rural areas— <b>${barriersRural}</b> of respondents living in rural areas compared to <b>${barriersUrban}</b> of those living in urban areas.`,
-        //}) => `<b>${healthPn}</b> of respondents indicated health as their first priority need. Response rates for health needs are twice as high in rural areas compared to urban areas at <b>${barriersRural}</b> and <b>${barriersUrban}</b> respectively, indicated improved access to health services in urban centres.`,
+          //}) => `Health continues to be the first priority for the vast majority of households surveyed, cited by a total of <b>${healthPn}</b> of respondents as a priority need. The ratio of households reporting barriers to access healthcare is exponentially higher in rural areas— <b>${barriersRural}</b> of respondents living in rural areas compared to <b>${barriersUrban}</b> of those living in urban areas.`,
+          //}) => `<b>${healthPn}</b> of respondents indicated health as their first priority need. Response rates for health needs are twice as high in rural areas compared to urban areas at <b>${barriersRural}</b> and <b>${barriersUrban}</b> respectively, indicated improved access to health services in urban centres.`,
         }) => `<b>${healthPn}</b> of respondents indicated health as a priority need. Response rates for health needs are twice as high in rural areas compared to urban areas at <b>${barriersRural}</b> and <b>${barriersUrban}</b> respectively.`,
         safety: ({
           poorSafety,
@@ -400,7 +400,7 @@ export const en = Object.freeze({
           poorSafetyRural?: string
           poorSafetyUrban?: string
           protectionIncident?: string
-        //}) => `Perceptions of sense of safety vary significantly depending on the surveyed area. Overall, <b>${poorSafety}</b> of respondents across surveyed oblasts reported a poor sense of safety (feeling unsafe or very unsafe), mainly due to shelling or threats of shelling. This figure is particularly high in the areas of Chernihiv and Sumy Chernihiv and Sumy. Poor sense of safety is higher in rural areas (<b>${poorSafetyRural}</b>) than in urban areas (<b>${poorSafetyUrban}</b>). <b>${protectionIncident}</b> of respondents reported protection incidents experienced by household members over the past 6 months.`,
+          //}) => `Perceptions of sense of safety vary significantly depending on the surveyed area. Overall, <b>${poorSafety}</b> of respondents across surveyed oblasts reported a poor sense of safety (feeling unsafe or very unsafe), mainly due to shelling or threats of shelling. This figure is particularly high in the areas of Chernihiv and Sumy Chernihiv and Sumy. Poor sense of safety is higher in rural areas (<b>${poorSafetyRural}</b>) than in urban areas (<b>${poorSafetyUrban}</b>). <b>${protectionIncident}</b> of respondents reported protection incidents experienced by household members over the past 6 months.`,
         }) => `Perceptions of safety vary significantly depending on the surveyed area. Overall <b>${poorSafety}</b> of respondents indicated a poor sense of safety (feeling unsafe or very unsafe) mainly due to shelling or threats of shelling. This figure is particularly high in the areas of Chernihiv and Sumy at <b>${poorSafetyChernihiv}</b> and <b>${poorSafetySumy}</b>. <b>${protectionIncident}</b> of respondents reported protection incidents experienced by household members over the past 6 months.`,
         registration: ({
           hrkLackPersonalDoc
@@ -1030,7 +1030,8 @@ export const en = Object.freeze({
     _koboDatabase: {
       title: (form?: string) => `Kobo Database${form ? `: <b>${form}</b>` : ``}`,
       showAllQuestions: 'Show unanswered questions',
-      pullData: 'Synchronize last Kobo data',
+      pullData: `Synchronize last Kobo data.`,
+      pullDataAt: (lastUpdate: Date) => `Synchronize Kobo data.<br/>Last synchronization: <b>${formatDateTime(lastUpdate)}</b>.`,
       valueNoLongerInOption: 'This value is no longer in the options list',
       noAccessToForm: `You don't have access to any database.`,
       openKoboForm: 'Open Kobo form',

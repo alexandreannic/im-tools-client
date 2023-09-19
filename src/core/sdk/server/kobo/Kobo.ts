@@ -22,6 +22,14 @@ export interface KoboForm {
   uploadedBy?: string
 }
 
+export class KoboFormHelper {
+  static readonly map = (_: Record<keyof KoboForm, any>): KoboForm => {
+    _.updatedAt = new Date(_.updatedAt)
+    _.createdAt = new Date(_.createdAt)
+    return _
+  }
+}
+
 export type KoboAttachment = {
   download_url: string
   filename: string
