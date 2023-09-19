@@ -25,13 +25,13 @@ export const buildKoboSchemaHelper = (schema: KoboApiForm, m: Messages) => {
       survey: [
         idSchema,
         {
-          name: 'submission_time',
+          name: 'submissionTime',
           label: mapFor(schema.content.translations.length, () => m.submissionTime),
           type: 'date' as const,
-          $kuid: 'submission_time',
-          $autoname: 'submission_time',
-          $qpath: 'submission_time',
-          $xpath: 'submission_time',
+          $kuid: 'submissionTime',
+          $autoname: 'submissionTime',
+          $qpath: 'submissionTime',
+          $xpath: 'submissionTime',
         },
         ...schema.content.survey.map(_ => ({
           ..._,
