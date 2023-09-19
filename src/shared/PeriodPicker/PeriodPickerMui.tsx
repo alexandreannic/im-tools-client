@@ -19,6 +19,7 @@ export const PeriodPickerMui = ({
   sx,
   ...props
 }: PeriodPickerProps) => {
+  console.log('log')
   const shortcutsItems: PickersShortcutsItem<DateRange<Date>>[] = useMemo(() => {
     const today = new Date()
     const limit = 7
@@ -130,7 +131,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props: any, ref: React
         type="text"
         margin="dense"
         variant="outlined"
-        fullWidth={true}
+        fullWidth={fullWidth}
         size="small"
         InputLabelProps={{shrink: true}}
         {...startDateProps}
@@ -148,7 +149,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props: any, ref: React
         type="text"
         margin="dense"
         variant="outlined"
-        fullWidth={true}
+        fullWidth={fullWidth}
         size="small"
         sx={{minWidth: 115}}
         InputLabelProps={{shrink: true}}
