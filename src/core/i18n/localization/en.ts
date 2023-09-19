@@ -1115,6 +1115,7 @@ export const en = Object.freeze({
     note: 'Note',
     projectCode: 'Project Code',
     form: 'Form',
+    viewNMore: (n: number) => `View ${n} more`,
     viewMore: 'More',
     viewLess: 'Less',
     showDummyAccounts: 'Show dummy accounts',

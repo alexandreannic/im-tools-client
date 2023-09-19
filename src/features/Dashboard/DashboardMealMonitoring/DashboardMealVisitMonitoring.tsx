@@ -27,6 +27,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {ViewMoreText} from '@/shared/ViewMoreText'
+import {DashboardMealVisitMonitoringComments} from '@/features/Dashboard/DashboardMealMonitoring/DashboardMealVisitMonitoringComments'
 
 export interface DashboardPageProps {
   filters: OptionFilters
@@ -293,45 +294,7 @@ export const DashboardMealVisitMonitoring = () => {
 
               <Div column>
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
-                  <Box sx={{maxHeight: '650px', overflowY: 'auto'}}>
-                    {data.map(row => (
-                      <Box key={row.id} sx={{
-                        pb: 2,
-                        pr: 1,
-                        '&:not(:last-of-type)': {
-                          mb: 2,
-                          borderBottom: t => `1px solid ${t.palette.divider}`
-                        }
-                      }}>
-                        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                          <Txt block bold size="big">{(MealVisitMonitoringOptions.mdp as any)[row.mdp]}</Txt>
-                          <Txt color="hint">{formatDate(row.mdd ?? row.end)}</Txt>
-                        </Box>
-                        <Txt block color="hint" sx={{mb: 1}}>
-                          <ViewMoreText limit={210} children={row.fcpc ?? m.noComment}/>
-                        </Txt>
-                        <Box sx={{display: 'flex', flexWrap: 'wrap', '& > *': {mb: 1, mr: 1}}}>
-                          {row.fcpl && (
-                            <Box component="a" target="_blank" href={row.fcpl} sx={{
-                              height: 50,
-                              width: 50,
-                              display: 'flex',
-                              alignItems: 'center',
-                              borderRadius: '6px',
-                              justifyContent: 'center',
-                              color: t => t.palette.primary.main,
-                              border: t => `1px solid ${t.palette.divider}`
-                            }}>
-                              <Icon>open_in_new</Icon>
-                            </Box>
-                          )}
-                          {mapFor(10, i =>
-                            <KoboAttachedImg key={i} attachments={row.attachments} size={50} fileName={(row as any)['fcp' + (i + 1)]}/>
-                          )}
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
+                  <DashboardMealVisitMonitoringComments data={data}/>
                 </SlidePanel>
               </Div>
             </Div>
