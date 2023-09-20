@@ -73,7 +73,6 @@ export const buildKoboSchemaHelper = (schema: KoboApiForm, m: Messages) => {
 
 export type UseKoboSchema = ReturnType<typeof useKoboSchema>
 
-/** @deprecated*/
 export const useKoboSchema = ({
   schema
 }: {
