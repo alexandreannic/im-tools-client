@@ -1,5 +1,5 @@
 import {KoboApiForm, KoboQuestionChoice} from '@/core/sdk/server/kobo/KoboApi'
-import {Kobo, KoboAnswer, KoboAnswerId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Arr, map} from '@alexandreannic/ts-utils'
@@ -19,11 +19,13 @@ import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {ignoredColType} from '@/features/Database/Database'
+import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
 
 export const DatabaseKoboTableContent = ({
+  form,
   schema,
   data,
   canEdit,
@@ -34,6 +36,7 @@ export const DatabaseKoboTableContent = ({
   _refresh: UseAsync<() => Promise<void>>
   _edit: UseAsync<(answerId: KoboAnswerId) => Promise<void>>
   schema: KoboApiForm,
+  form: KoboForm
   data: KoboAnswer<any>[]
 }) => {
   const {m} = useI18n()
@@ -122,7 +125,7 @@ export const DatabaseKoboTableContent = ({
         <AAIconBtn
           loading={_refresh.loading.size > 0}
           children="cloud_sync"
-          tooltip={m._koboDatabase.pullData}
+          tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.pullDataAt(form.updatedAt)}}/>}
           onClick={_refresh.call}
         />
         <AAIconBtn

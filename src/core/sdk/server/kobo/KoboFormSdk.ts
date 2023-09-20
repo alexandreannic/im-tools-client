@@ -1,5 +1,5 @@
 import {ApiClient} from '../ApiClient'
-import {KoboForm, KoboId} from './Kobo'
+import {KoboForm, KoboFormHelper, KoboId} from './Kobo'
 import {UUID} from '@/core/type'
 
 export interface KoboFormCreate {
@@ -39,10 +39,10 @@ export class KoboFormSdk {
   }
 
   readonly get = (formId: string): Promise<KoboForm> => {
-    return this.client.get(`/kobo/form/${formId}`)
+    return this.client.get(`/kobo/form/${formId}`).then(KoboFormHelper.map)
   }
 
   readonly getAll = (): Promise<KoboForm[]> => {
-    return this.client.get(`/kobo/form`)
+    return this.client.get(`/kobo/form`).then(_ => _.map(KoboFormHelper.map))
   }
 }

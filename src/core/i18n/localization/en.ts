@@ -1030,7 +1030,8 @@ export const en = Object.freeze({
     _koboDatabase: {
       title: (form?: string) => `Kobo Database${form ? `: <b>${form}</b>` : ``}`,
       showAllQuestions: 'Show unanswered questions',
-      pullData: 'Synchronize last Kobo data',
+      pullData: `Synchronize last Kobo data.`,
+      pullDataAt: (lastUpdate: Date) => `Synchronize Kobo data.<br/>Last synchronization: <b>${formatDateTime(lastUpdate)}</b>.`,
       valueNoLongerInOption: 'This value is no longer in the options list',
       noAccessToForm: `You don't have access to any database.`,
       openKoboForm: 'Open Kobo form',
@@ -1119,5 +1120,6 @@ export const en = Object.freeze({
     viewLess: 'Less',
     showDummyAccounts: 'Show dummy accounts',
     filterBlanks: 'Filter blanks',
+    total: 'Total',
   },
 })

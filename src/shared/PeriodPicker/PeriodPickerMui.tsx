@@ -41,7 +41,7 @@ export const PeriodPickerMui = ({
       maxDate={max}
       sx={sx}
       defaultValue={defaultValue}
-      value={value}
+      value={(value && (value[0] || value[1])) ? value : undefined}
       onChange={onChange as any}
       slotProps={{
         shortcuts: {

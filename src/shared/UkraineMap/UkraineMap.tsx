@@ -16,7 +16,7 @@ const maxAlpha = .8
 const medianAlpha = minAlpha + (maxAlpha - minAlpha) / 2
 
 const computeFill = (value: number, min: number, max: number) => {
-  if(max - min === 0) return medianAlpha
+  if (max - min === 0) return medianAlpha
   return value > 0 ? (maxAlpha - minAlpha) * (value - min) / (max - min) + minAlpha : undefined
 }
 
@@ -72,11 +72,12 @@ export const UkraineMap = ({
   const generateColor = (fill: number | undefined) => {
     if (fill) {
       if (fill < medianAlpha) {
-        return alpha(theme.palette.primary.main, fill * 2)
+        return alpha(theme.palette.primary.main, map(fill * 2, _ => Math.max(_, 0))!)
       } else {
-        return darken(theme.palette.primary.main, (fill - .5) * 2)
+        return darken(theme.palette.primary.main, map((fill - .5) * 2, _ => Math.max(_, 0))!)
       }
     }
+
     return theme.palette.divider
   }
 

@@ -390,6 +390,9 @@ const tableTheme = (t: Theme) => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
   },
+  '.table-head-type-icon': {
+    ml: '2px', marginRight: 'auto', color: alpha(t.palette.text.disabled, .18)
+  },
   '.table .MuiOutlinedInput-input': {
     paddingLeft: '4px',
   },
