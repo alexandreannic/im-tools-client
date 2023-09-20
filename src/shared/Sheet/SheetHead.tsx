@@ -101,7 +101,7 @@ export const SheetHeadTypeIcon = (props: {
   tooltip: string,
   children: string,
 }) => {
-  return <TableIcon sx={{ml: '2px', marginRight: 'auto', color: t => alpha(t.palette.text.disabled, .18)}} fontSize="small" {...props}/>
+  return <TableIcon className="table-head-type-icon" fontSize="small" {...props}/>
 }
 
 export const SheetHeadContent = ({
