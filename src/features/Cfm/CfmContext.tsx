@@ -17,6 +17,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {DrcOffice} from '@/core/drcJobTitle'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
+import {useAaToast} from '@/core/useToast'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [kobo.drcUa.form.cfmExternal]: CfmDataSource.External,
@@ -67,7 +68,9 @@ export interface CfmContext {
   schemaExternal: UseKoboSchema,
   translateExternal: ReturnType<typeof getKoboTranslations>,
   translateInternal: ReturnType<typeof getKoboTranslations>,
-  updateTag: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId, key: string, value: any}) => Promise<Record<string, any>>>
+  updateTag: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag, value: any}) => Promise<Record<string, any>>>
+  asyncRemove: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId}) => Promise<void>>
+  asyncEdit: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId}) => Promise<void>>
   users: UseFetcher<ApiSdk['user']['search']>
   data: UseFetcher<() => Promise<{
     [CfmDataSource.Internal]: KoboAnswer<MealCfmInternal, KoboMealCfmTag>[]
@@ -80,7 +83,9 @@ const CfmContext = React.createContext({} as CfmContext)
 
 export const useCfmContext = () => useContext<CfmContext>(CfmContext)
 
-export const cfmMakeUpdateRequestKey = (form: KoboId, answerId: KoboAnswerId, key: string) => form + answerId + key
+export const cfmMakeUpdateRequestKey = (form: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag) => form + answerId + key
+
+export const cfmMakeEditRequestKey = (form: KoboId, answerId: KoboAnswerId) => form + answerId
 
 export const CfmProvider = ({
   children,
@@ -96,6 +101,7 @@ export const CfmProvider = ({
 }) => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
+  const {toastHttpError} = useAaToast()
   const schemaInternal = useKoboSchema({schema: schemas.internal})
   const schemaExternal = useKoboSchema({schema: schemas.external})
   const translateExternal = useMemo(() => getKoboTranslations({
@@ -162,9 +168,9 @@ export const CfmProvider = ({
         ..._,
       })
     })
-    console.log('authorizations.sum', authorizations)
     return res
       .filter(_ => {
+        if (_.tags?.deletedAt) return false
         if (session.email === _.tags?.focalPointEmail)
           return true
         if (!authorizations.sum.read)
@@ -180,7 +186,7 @@ export const CfmProvider = ({
       .sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
   }, [data])
 
-  const updateTag = useAsync((params: {formId: KoboId, answerId: KoboAnswerId, key: string, value: any}) => api.kobo.answer.updateTag({
+  const updateTag = useAsync((params: {formId: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag, value: any}) => api.kobo.answer.updateTag({
     formId: params.formId,
     answerId: params.answerId,
     tags: {[params.key]: params.value}
@@ -199,6 +205,35 @@ export const CfmProvider = ({
     requestKey: ([_]) => cfmMakeUpdateRequestKey(_.formId, _.answerId, _.key)
   })
 
+  const asyncRemove = useAsync(async ({formId, answerId}: {formId: KoboId, answerId: KoboAnswerId}) => {
+    await Promise.all([
+      updateTag.call({
+        formId,
+        answerId,
+        key: 'deletedAt',
+        value: new Date(),
+      }),
+      updateTag.call({
+        formId,
+        answerId,
+        key: 'deletedBy',
+        value: session.email,
+      })
+    ])
+  }, {
+    requestKey: ([_]) => cfmMakeEditRequestKey(_.formId, _.answerId)
+  })
+
+  const asyncEdit = useAsync(async ({formId, answerId}: {formId: KoboId, answerId: KoboAnswerId}) => {
+    return api.koboApi.getEditUrl(kobo.drcUa.server.prod, formId, answerId).then(_ => {
+      if (_.url) {
+        window.open(_.url, '_blank')
+      }
+    })
+      .catch(toastHttpError)
+  }, {requestKey: ([_]) => cfmMakeEditRequestKey(_.formId, _.answerId)})
+
+
   useEffect(() => {
     data.fetch()
     users.fetch()
@@ -208,6 +243,8 @@ export const CfmProvider = ({
     <CfmContext.Provider value={{
       authorizations,
       schemaInternal,
+      asyncRemove,
+      asyncEdit,
       schemaExternal,
       translateExternal,
       translateInternal,

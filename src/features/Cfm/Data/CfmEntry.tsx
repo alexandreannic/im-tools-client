@@ -1,5 +1,5 @@
-import {CfmData, useCfmContext} from '@/features/Cfm/CfmContext'
-import {useParams} from 'react-router'
+import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
+import {useNavigate, useParams} from 'react-router'
 import {Page, PageTitle} from '@/shared/Page'
 import * as yup from 'yup'
 import {Fender, Txt} from 'mui-extension'
@@ -9,7 +9,7 @@ import {ListRow} from '@/shared/ListRow'
 import {useI18n} from '@/core/i18n'
 import React from 'react'
 import {CfmDataProgram, CfmDataSource, KoboMealCfmArea, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboSelectTag} from '@/shared/KoboSelectTag'
 import {DrcOffice} from '@/core/drcJobTitle'
 import {Utils} from '@/utils/utils'
@@ -19,6 +19,9 @@ import {AaSelect} from '@/shared/Select/Select'
 import {Enum} from '@alexandreannic/ts-utils'
 import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmInternalOptions'
 import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
+import {AaBtn} from '@/shared/Btn/AaBtn'
+import {cfmModule} from '@/features/Cfm/CfmModule'
+import {Confirm} from 'mui-extension/lib/Confirm'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -46,6 +49,7 @@ export const CfmEntryRoute = () => {
 export const CfmEntry = ({entry}: {entry: CfmData}) => {
   const {m, formatDateTime} = useI18n()
   const ctx = useCfmContext()
+  const navigate = useNavigate()
   return (
     <Page>
       <PageTitle subTitle={formatDateTime(entry.date)} action={
@@ -87,7 +91,15 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Panel>
-            <PanelHead>{m._cfm.reporterDetails}</PanelHead>
+            <PanelHead action={
+              <AaBtn
+                variant="outlined"
+                color="primary"
+                icon="edit"
+                loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(entry.formId, entry.id))}
+                onClick={() => ctx.asyncEdit.call({formId: entry.formId, answerId: entry.id})}
+              >{m.edit}</AaBtn>
+            }>{m._cfm.reporterDetails}</PanelHead>
             <PanelBody>
               <ListRow icon="person" label={entry.name}/>
               <ListRow icon="phone" label={entry.phone}/>
@@ -213,6 +225,23 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
           {entry.feedback}
         </PanelBody>
       </Panel>
+      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+        <Confirm
+          loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(entry.formId, entry.id))}
+          content={m._cfm.deleteWarning}
+          onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmModule.siteMap.data))}
+          title={m.shouldDelete}
+        >
+          <AaBtn
+            icon="delete"
+            size="large"
+            sx={{margin: 'auto'}}
+            variant="contained"
+          >
+            {m.remove}
+          </AaBtn>
+        </Confirm>
+      </Box>
     </Page>
   )
 }

@@ -4,6 +4,7 @@ import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
 import {Period} from '../../type'
 import Status = KoboFormProtHH.Status
 import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
+import {appConfig} from '@/conf/AppConfig'
 
 const invalidDate = ''
 
@@ -1037,6 +1038,7 @@ export const en = Object.freeze({
       openKoboForm: 'Open Kobo form',
     },
     _cfm: {
+      deleteWarning: `In case of mistake, you can still recover deleted data by contacting ${appConfig.contact}.`,
       _feedbackType: {
         'thanks': 'Thanks',
         'feedback': 'Feedback',
@@ -1121,5 +1123,7 @@ export const en = Object.freeze({
     showDummyAccounts: 'Show dummy accounts',
     filterBlanks: 'Filter blanks',
     total: 'Total',
+    shouldDelete: 'Delete?',
+    remove: 'Delete',
   },
 })
