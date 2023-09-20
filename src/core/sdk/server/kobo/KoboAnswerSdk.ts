@@ -80,7 +80,7 @@ export class KoboAnswerSdk {
     fnMap = (_: any) => _,
     fnMapTags = (_?: any) => _,
   }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<TQuestion, TTags>>> => {
-    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
+    return this.client.post<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}/by-access`, {body: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
       .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }
 
@@ -94,7 +94,7 @@ export class KoboAnswerSdk {
     fnMap = (_: any) => _,
     fnMapTags = (_?: any) => _,
   }: KoboAnswerSearch<TQuestion, TTags>): Promise<ApiPaginate<KoboAnswer<TQuestion, TTags>>> => {
-    return this.client.get<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}`, {qs: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
+    return this.client.post<ApiPaginate<Record<string, any>>>(`/kobo/answer/${formId}`, {body: {...KoboAnswerSdk.mapFilters(filters), ...paginate}})
       .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }
 
