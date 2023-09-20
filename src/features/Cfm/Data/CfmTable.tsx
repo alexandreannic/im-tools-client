@@ -13,7 +13,7 @@ import {Utils} from '@/utils/utils'
 import {TableIcon, TableIconBtn, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect} from '@/shared/Select/Select'
 import {DrcOffice} from '@/core/drcJobTitle'
-import {CfmData, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, cfmMakeEditRequestKey, cfmMakeUpdateRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
 import {cfmModule} from '@/features/Cfm/CfmModule'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -21,7 +21,10 @@ import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo} from '@/koboDrcUaFormId'
 import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
-import {Autocomplete, TextField, Tooltip} from '@mui/material'
+import {Autocomplete} from '@mui/material'
+import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {useSession} from '@/core/Session/SessionContext'
+import {Confirm} from 'mui-extension/lib/Confirm'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -46,7 +49,7 @@ export const CfmPriorityLogo = ({
 export const CfmTable = ({}: any) => {
   const ctx = useCfmContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
-
+  const {session} = useSession()
   const {api} = useAppSettings()
 
   const _refresh = useAsync(async () => {
@@ -315,13 +318,33 @@ export const CfmTable = ({}: any) => {
             },
             {
               id: 'actions',
-              width: 0,
-              stickyEnd: true,
+              width: 95,
               align: 'center',
+              stickyEnd: true,
               render: row => (
-                <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>
-                  <TableIconBtn children="keyboard_arrow_right"/>
-                </NavLink>
+                <>
+                  {(ctx.authorizations.sum.write || session.email === row.tags?.focalPointEmail) && (
+                    <>
+                      <TableIconBtn
+                        tooltip={m.edit}
+                        loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(row.formId, row.id))}
+                        onClick={() => ctx.asyncEdit.call({formId: row.formId, answerId: row.id})}
+                        children="edit"
+                      />
+                      <Confirm
+                        loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(row.formId, row.id))}
+                        content={m._cfm.deleteWarning}
+                        onConfirm={(e, close) => ctx.asyncRemove.call({formId: row.formId, answerId: row.id}).then(close)}
+                        title={m.shouldDelete}
+                      >
+                        <TableIconBtn children="delete"/>
+                      </Confirm>
+                    </>
+                  )}
+                  <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>
+                    <TableIconBtn children="keyboard_arrow_right"/>
+                  </NavLink>
+                </>
               )
             }
           ]}

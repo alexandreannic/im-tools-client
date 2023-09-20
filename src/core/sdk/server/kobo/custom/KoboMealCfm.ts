@@ -35,6 +35,8 @@ export enum KoboMealCfmArea {
 }
 
 export interface KoboMealCfmTag {
+  deletedAt?: Date
+  deletedBy?: string
   gca?: KoboMealCfmArea
   office?: DrcOffice
   program?: CfmDataProgram

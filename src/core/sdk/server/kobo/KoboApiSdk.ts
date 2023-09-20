@@ -8,9 +8,17 @@ import {KoboApiForm} from './KoboApi'
 import {mapMPCA_NFI_Old} from '../../../koboModel/MPCA_NFI_Old/MPCA_NFI_OldMapping'
 import {mapProtHHS_2_1} from '../../../koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 
-export interface AnswersFilters {
+export interface FilterBy {
+  column: string
+  value: (string | null)[]
+  type?: 'array',
+}
+
+export interface AnswersFilters<T extends FilterBy[] = FilterBy[]> {
   start?: Date
   end?: Date
+  ids?: KoboId[]
+  filterBy?: T
 }
 
 export interface FiltersProps {
