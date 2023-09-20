@@ -14,7 +14,7 @@ export enum MpcaRowSource {
   RRM = 'RRM',
   CFR = 'CFR',
   BNRE = 'BNRE',
-  Old = 'Old form',
+  Old_form = 'Old_form',
 }
 
 export enum MpcaProgram {
@@ -81,117 +81,126 @@ export const MPCAProvider = ({
 
   const fetcherData = useFetcher(async (filters: KoboAnswerFilter = {}) => {
     const res: MpcaRow[] = []
-    const [
-      bnre,
-      cfr,
-      rrm,
-      old,
-    ] = await Promise.all([
-      api.kobo.answer.searchBnre(filters)
-        .then(_ => _.data.filter(d => d.back_prog_type.find(_ => _.includes('cfe') || _.includes('cfr') || _.includes('mpca')))),
+    await Promise.all([
+      api.kobo.answer.searchBnre({
+        filters: {
+          filterBy: [
+            {column: 'back_prog_type', value: ['cfe', 'cfr', 'mpca']},
+          ]
+        }
+      }).then(_ => _.data.forEach(_ => res.push({
+        source: MpcaRowSource.BNRE,
+        id: _.id,
+        date: _.submissionTime,
+        prog: Arr(_.back_prog_type)?.map(prog => fnSwitch(prog.split('_')[0], {
+          'cfr': MpcaProgram.CashForRent,
+          'cfe': MpcaProgram.CashForEducation,
+          'mpca': MpcaProgram.MPCA,
+        }, () => undefined)).compact(),
+        benefStatus: _.ben_det_res_stat,
+        lastName: _.ben_det_surname,
+        firstName: _.ben_det_first_name,
+        patronyme: _.ben_det_pat_name,
+        hhSize: _.hh_char_hh_det?.length,
+        passportSerie: _.pay_det_pass_ser,
+        passportNum: _.pay_det_pass_num,
+        taxId: _.pay_det_tax_id_num,
+        taxIdFileName: _.pay_det_tax_id_ph,
+        taxIdFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_tax_id_ph)),
+        idFileName: _.pay_det_id_ph,
+        idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
+        phone: '' + _.ben_det_ph_number,
+      }))),
+
       api.kobo.answer.searchShelter_cashForRepair(filters)
-        .then(_ => _.data),
-      api.kobo.answer.searchRapidResponseMechanism(filters)
-        .then(_ => _.data.filter(d => d.back_prog_type?.includes('mpca'))),
-      api.kobo.answer.searchMpcaNfiOld(filters)
-        .then(_ => _.data.filter(d => d.Programme?.includes('cash_for_rent') || d.Programme?.includes('mpca'))),
-      // api.wfpDeduplication.search()
-      //   .then(_ => Arr(_.data).groupBy(_ => _.taxId!))
+        .then(_ => _.data.forEach(_ => res.push({
+          source: MpcaRowSource.CFR,
+          prog: [MpcaProgram.CashForRent],
+          id: _.id,
+          date: _.submissionTime,
+          lastName: _.bis,
+          firstName: _.bif,
+          patronyme: _.bip,
+          hhSize: _.bihm,
+          // passportSerie: _.pay_det_pass_ser,
+          passportNum: _.pay_det_pass_num,
+          taxId: _.pay_det_tax_id_num,
+          taxIdFileName: _.pay_det_tax_id_ph,
+          taxIdFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_tax_id_ph)),
+          idFileName: _.pay_det_id_ph,
+          idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
+          phone: '' + _.bin,
+        }))),
+
+      api.kobo.answer.searchRapidResponseMechanism({
+        filters: {
+          filterBy: [
+            {column: 'back_prog_type', value: ['mpca', null]}
+          ]
+        }
+      }).then(_ => _.data.forEach(_ => res.push({
+        source: MpcaRowSource.RRM,
+        prog: Arr(_.back_prog_type)?.map(prog => fnSwitch(prog.split('_')[0], {
+          'cfr': MpcaProgram.CashForRent,
+          'cfe': MpcaProgram.CashForEducation,
+          'mpca': MpcaProgram.MPCA,
+        }, () => undefined)).compact(),
+        id: _.id,
+        date: _.submissionTime,
+        benefStatus: _.ben_det_res_stat_l,
+        lastName: _.ben_det_surname,
+        firstName: _.ben_det_first_name,
+        patronyme: _.ben_det_pat_name,
+        hhSize: _.ben_det_hh_size,
+        passportSerie: _.pay_det_pass_ser,
+        passportNum: _.pay_det_pass_num,
+        taxId: _.pay_det_tax_id_num,
+        taxIdFileName: _.pay_det_tax_id_ph,
+        taxIdFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_tax_id_ph)),
+        idFileName: _.pay_det_id_ph,
+        idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
+        phone: '' + _.ben_det_ph_number,
+      }))),
+
+      api.kobo.answer.searchMpcaNfiOld({
+        filters: {
+          filterBy: [{
+            column: 'Programme',
+            value: ['cash_for_rent', 'mpca'],
+            type: 'array',
+          }]
+        }
+      }).then(_ => _.data.forEach(_ => res.push({
+        source: MpcaRowSource.Old_form,
+        id: _.id,
+        date: _.submissionTime,
+        prog: fnSwitch(_.Programme, {
+          'mpca': [MpcaProgram.MPCA],
+          'mpca___nfi': [MpcaProgram.MPCA],
+          'nfi': undefined,
+          'cash_for_rent': [MpcaProgram.CashForRent],
+          'mpca___cash_for_rent': [MpcaProgram.MPCA, MpcaProgram.CashForRent],
+        }, () => undefined),
+        benefStatus: fnSwitch(_.status!, {
+          status_idp: 'idp',
+          status_conflict: 'long_res',
+          status_returnee: 'ret',
+          status_refugee: 'ref_asy',
+        }),
+        lastName: _.patron,
+        firstName: _.name_resp,
+        patronyme: _.last_resp,
+        hhSize: _.group_in3fh72?.length + 1,
+        passportSerie: _.passport_serial,
+        passportNum: _.passport_number,
+        taxId: _.ITN,
+        taxIdFileName: _.photo_reg_passport,
+        taxIdFileURL: _.attachments.find(x => x.filename.includes(_.Photo_of_IDP_Certificate_001)),
+        idFileName: _.photo_reg_passport_001,
+        idFileURL: _.attachments.find(x => x.filename.includes(_.photo_reg_passport_001) || x.filename.includes(_.photo_reg_passport)),
+        phone: '' + _.phone,
+      })))
     ])
-    bnre.forEach(_ => res.push({
-      source: MpcaRowSource.BNRE,
-      id: _.id,
-      date: _.submissionTime,
-      prog: Arr(_.back_prog_type)?.map(prog => fnSwitch(prog.split('_')[0], {
-        'cfr': MpcaProgram.CashForRent,
-        'cfe': MpcaProgram.CashForEducation,
-        'mpca': MpcaProgram.MPCA,
-      }, () => undefined)).compact(),
-      benefStatus: _.ben_det_res_stat,
-      lastName: _.ben_det_surname,
-      firstName: _.ben_det_first_name,
-      patronyme: _.ben_det_pat_name,
-      hhSize: _.hh_char_hh_det?.length,
-      passportSerie: _.pay_det_pass_ser,
-      passportNum: _.pay_det_pass_num,
-      taxId: _.pay_det_tax_id_num,
-      taxIdFileName: _.pay_det_tax_id_ph,
-      taxIdFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_tax_id_ph)),
-      idFileName: _.pay_det_id_ph,
-      idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
-      phone: '' + _.ben_det_ph_number,
-    }))
-    old.forEach(_ => res.push({
-      source: MpcaRowSource.Old,
-      id: _.id,
-      date: _.submissionTime,
-      prog: fnSwitch(_.Programme, {
-        'mpca': [MpcaProgram.MPCA],
-        'mpca___nfi': [MpcaProgram.MPCA],
-        'nfi': undefined,
-        'cash_for_rent': [MpcaProgram.CashForRent],
-        'mpca___cash_for_rent': [MpcaProgram.MPCA, MpcaProgram.CashForRent],
-      }, () => undefined),
-      benefStatus: fnSwitch(_.status!, {
-        status_idp: 'idp',
-        status_conflict: 'long_res',
-        status_returnee: 'ret',
-        status_refugee: 'ref_asy',
-      }),
-      lastName: _.patron,
-      firstName: _.name_resp,
-      patronyme: _.last_resp,
-      hhSize: _.group_in3fh72?.length + 1,
-      passportSerie: _.passport_serial,
-      passportNum: _.passport_number,
-      taxId: _.ITN,
-      taxIdFileName: _.photo_reg_passport,
-      taxIdFileURL: _.attachments.find(x => x.filename.includes(_.Photo_of_IDP_Certificate_001)),
-      idFileName: _.photo_reg_passport_001,
-      idFileURL: _.attachments.find(x => x.filename.includes(_.photo_reg_passport_001) || x.filename.includes(_.photo_reg_passport)),
-      phone: '' + _.phone,
-    }))
-    cfr.forEach(_ => res.push({
-      source: MpcaRowSource.CFR,
-      prog: [MpcaProgram.CashForRent],
-      id: _.id,
-      date: _.submissionTime,
-      lastName: _.bis,
-      firstName: _.bif,
-      patronyme: _.bip,
-      hhSize: _.bihm,
-      // passportSerie: _.pay_det_pass_ser,
-      passportNum: _.pay_det_pass_num,
-      taxId: _.pay_det_tax_id_num,
-      taxIdFileName: _.pay_det_tax_id_ph,
-      taxIdFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_tax_id_ph)),
-      idFileName: _.pay_det_id_ph,
-      idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
-      phone: '' + _.bin,
-    }))
-    rrm.forEach(_ => res.push({
-      source: MpcaRowSource.RRM,
-      prog: Arr(_.back_prog_type)?.map(prog => fnSwitch(prog.split('_')[0], {
-        'cfr': MpcaProgram.CashForRent,
-        'cfe': MpcaProgram.CashForEducation,
-        'mpca': MpcaProgram.MPCA,
-      }, () => undefined)).compact(),
-      id: _.id,
-      date: _.submissionTime,
-      benefStatus: _.ben_det_res_stat_l,
-      lastName: _.ben_det_surname,
-      firstName: _.ben_det_first_name,
-      patronyme: _.ben_det_pat_name,
-      hhSize: _.ben_det_hh_size,
-      passportSerie: _.pay_det_pass_ser,
-      passportNum: _.pay_det_pass_num,
-      taxId: _.pay_det_tax_id_num,
-      taxIdFileName: _.pay_det_tax_id_ph,
-      taxIdFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_tax_id_ph)),
-      idFileName: _.pay_det_id_ph,
-      idFileURL: _.attachments.find(x => x.filename.includes(_.pay_det_id_ph)),
-      phone: '' + _.ben_det_ph_number,
-    }))
     return Arr(res).sort((a, b) => a.date.getTime() - b.date.getTime())
   })
 
