@@ -72,11 +72,12 @@ export const UkraineMap = ({
   const generateColor = (fill: number | undefined) => {
     if (fill) {
       if (fill < medianAlpha) {
-        return alpha(theme.palette.primary.main, fill * 2)
+        return alpha(theme.palette.primary.main, map(fill * 2, _ => Math.max(_, 0))!)
       } else {
-        return darken(theme.palette.primary.main, (fill - .5) * 2)
+        return darken(theme.palette.primary.main, map((fill - .5) * 2, _ => Math.max(_, 0))!)
       }
     }
+
     return theme.palette.divider
   }
 

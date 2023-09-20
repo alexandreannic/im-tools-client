@@ -99,28 +99,24 @@ export const DashboardProtHHS2 = () => {
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
-  const _answers = useFetcher((filter: Partial<Period>) => api.kobo.answer.searchProtHhs({
+  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.answer.searchProtHhs({
     filters: {
-      start: filter.start,
-      end: filter.end,
+      start: filter?.start,
+      end: filter?.end,
     }
-  }).then(_ => _.data.map(enrichProtHHS_2_1)) as Promise<ReturnType<typeof enrichProtHHS_2_1>[]>)
+  }).then(_ => _.data.map(enrichProtHHS_2_1)) as Promise<ProtHHS2Enrich[]>)
 
   useEffect(() => {
-    // _period.fetch().then(setPeriodFilter)
-    _answers.fetch(undefined, {})
+    _period.fetch()
+    _answers.fetch()
   }, [])
 
-  // useEffect(() => {
-  //   if (_period.entity) setPeriodFilter(_period.entity)
-  // }, [_period.entity])
+  useEffect(() => {
+    if (_period.entity) setPeriodFilter(_period.entity)
+  }, [_period.entity])
 
   useEffect(() => {
-    console.log('fetch')
-    if (
-      periodFilter.start?.getTime() !== _period.entity?.start.getTime() ||
-      periodFilter.end?.getTime() !== _period.entity?.end.getTime()
-    )
+    if (_answers.entity)
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
@@ -191,9 +187,6 @@ export const DashboardProtHHS2 = () => {
 
   const computed = useProtHHS2Data({data: data})
 
-
-  const x = useMemo(() => [periodFilter.start, periodFilter.end] as any, [periodFilter])
-  console.log('x', x)
   return (
     <DashboardLayout
       loading={_answers.loading}
@@ -229,14 +222,24 @@ export const DashboardProtHHS2 = () => {
           },
           '& > :not(:last-child)': {mr: 1}
         }}>
-          <PeriodPicker
+          <DebouncedInput<[Date | undefined, Date | undefined]>
+            debounce={800}
+            value={[periodFilter.start, periodFilter.end]}
+            onChange={([start, end]) => {
+              console.log('onchange', start, end)
+              setPeriodFilter(prev => ({...prev, start: start ?? undefined, end: end ?? undefined}))
+            }
+            }
+          >
+            {(value, onChange) => <PeriodPicker
               sx={{marginTop: '-6px'}}
-              value={x}
-              onChange={console.log}
+              value={value}
+              onChange={onChange}
               label={[m.start, m.endIncluded]}
               min={_period.entity?.start}
               max={_period.entity?.end}
-            />
+            />}
+          </DebouncedInput>
           {Enum.entries(filterShape).map(([k, shape]) =>
             <DebouncedInput<string[]>
               key={k}
@@ -304,5 +307,3 @@ export const DashboardProtHHS2 = () => {
       })()}/>
   )
 }
-
-
