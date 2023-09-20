@@ -11,7 +11,6 @@ import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {Panel} from '@/shared/Panel'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ageGroup} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
@@ -114,8 +113,10 @@ export const DashboardProtHHS2Sample = ({
               </ScRadioGroup>
               <ScRadioGroup value={agDisplay} onChange={setAgDisplay} dense inline sx={{mb: 2}}>
                 <ScRadioGroupItem dense hideRadio value="table" title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>calendar_view_month</Icon>}/>
-                <ScRadioGroupItem dense hideRadio value="chart"
-                                  title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>align_horizontal_left</Icon>}/>
+                <ScRadioGroupItem
+                  dense hideRadio value="chart"
+                  title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>align_horizontal_left</Icon>}
+                />
               </ScRadioGroup>
             </Box>
             <Lazy deps={[ag, data]} fn={() => computed.ageGroup(ageGroup[ag])}>
@@ -137,6 +138,12 @@ export const DashboardProtHHS2Sample = ({
                       <td>{k.Other}</td>
                     </tr>
                   )}
+                  <tr>
+                    <td><b>{m.total}</b></td>
+                    <td><b>{_.reduce((acc, _) => acc + (_.Female ?? 0), 0)}</b></td>
+                    <td><b>{_.reduce((acc, _) => acc + (_.Male ?? 0), 0)}</b></td>
+                    <td><b>{_.reduce((acc, _) => acc + (_.Other ?? 0), 0)}</b></td>
+                  </tr>
                 </Box>
               )}
             </Lazy>

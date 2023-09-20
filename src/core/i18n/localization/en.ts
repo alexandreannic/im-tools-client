@@ -1120,5 +1120,6 @@ export const en = Object.freeze({
     viewLess: 'Less',
     showDummyAccounts: 'Show dummy accounts',
     filterBlanks: 'Filter blanks',
+    total: 'Total',
   },
 })
