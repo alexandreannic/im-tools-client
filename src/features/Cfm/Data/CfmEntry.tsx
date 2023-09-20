@@ -22,6 +22,7 @@ import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {cfmModule} from '@/features/Cfm/CfmModule'
 import {Confirm} from 'mui-extension/lib/Confirm'
+import {useSession} from '@/core/Session/SessionContext'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -50,6 +51,8 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
   const {m, formatDateTime} = useI18n()
   const ctx = useCfmContext()
   const navigate = useNavigate()
+  const {session} = useSession()
+  const canEdit = ctx.authorizations.sum.write || session.email === entry.tags?.focalPointEmail
   return (
     <Page>
       <PageTitle subTitle={formatDateTime(entry.date)} action={
@@ -88,18 +91,20 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
       }>
         <Box>{entry.id} - {m._cfm.formFrom[entry.form]}</Box>
       </PageTitle>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} alignItems="stretch">
         <Grid item xs={6}>
           <Panel>
             <PanelHead action={
-              <AaBtn
-                variant="outlined"
-                color="primary"
-                icon="edit"
-                loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(entry.formId, entry.id))}
-                onClick={() => ctx.asyncEdit.call({formId: entry.formId, answerId: entry.id})}
-              >{m.edit}</AaBtn>
-            }>{m._cfm.reporterDetails}</PanelHead>
+              canEdit && (
+                <AaBtn
+                  variant="outlined"
+                  color="primary"
+                  icon="edit"
+                  loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(entry.formId, entry.id))}
+                  onClick={() => ctx.asyncEdit.call({formId: entry.formId, answerId: entry.id})}
+                >{m.edit}</AaBtn>
+              )}
+            >{m._cfm.reporterDetails}</PanelHead>
             <PanelBody>
               <ListRow icon="person" label={entry.name}/>
               <ListRow icon="phone" label={entry.phone}/>
@@ -225,23 +230,25 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
           {entry.feedback}
         </PanelBody>
       </Panel>
-      <Box sx={{display: 'flex', justifyContent: 'center'}}>
-        <Confirm
-          loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(entry.formId, entry.id))}
-          content={m._cfm.deleteWarning}
-          onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmModule.siteMap.data))}
-          title={m.shouldDelete}
-        >
-          <AaBtn
-            icon="delete"
-            size="large"
-            sx={{margin: 'auto'}}
-            variant="contained"
+      {canEdit && (
+        <Box sx={{display: 'flex', justifyContent: 'center'}}>
+          <Confirm
+            loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(entry.formId, entry.id))}
+            content={m._cfm.deleteWarning}
+            onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmModule.siteMap.data))}
+            title={m.shouldDelete}
           >
-            {m.remove}
-          </AaBtn>
-        </Confirm>
-      </Box>
+            <AaBtn
+              icon="delete"
+              size="large"
+              sx={{margin: 'auto'}}
+              variant="contained"
+            >
+              {m.remove}
+            </AaBtn>
+          </Confirm>
+        </Box>
+      )}
     </Page>
   )
 }

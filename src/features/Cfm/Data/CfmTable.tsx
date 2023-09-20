@@ -49,7 +49,7 @@ export const CfmPriorityLogo = ({
 export const CfmTable = ({}: any) => {
   const ctx = useCfmContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
-
+  const {session} = useSession()
   const {api} = useAppSettings()
 
   const _refresh = useAsync(async () => {
@@ -319,24 +319,28 @@ export const CfmTable = ({}: any) => {
             {
               id: 'actions',
               width: 95,
-              stickyEnd: true,
               align: 'center',
+              stickyEnd: true,
               render: row => (
                 <>
-                  <TableIconBtn
-                    tooltip={m.edit}
-                    loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(row.formId, row.id))}
-                    onClick={() => ctx.asyncEdit.call({formId: row.formId, answerId: row.id})}
-                    children="edit"
-                  />
-                  <Confirm
-                    loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(row.formId, row.id))}
-                    content={m._cfm.deleteWarning}
-                    onConfirm={(e, close) => ctx.asyncRemove.call({formId: row.formId, answerId: row.id}).then(close)}
-                    title={m.shouldDelete}
-                  >
-                    <TableIconBtn children="delete"/>
-                  </Confirm>
+                  {(ctx.authorizations.sum.write || session.email === row.tags?.focalPointEmail) && (
+                    <>
+                      <TableIconBtn
+                        tooltip={m.edit}
+                        loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(row.formId, row.id))}
+                        onClick={() => ctx.asyncEdit.call({formId: row.formId, answerId: row.id})}
+                        children="edit"
+                      />
+                      <Confirm
+                        loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(row.formId, row.id))}
+                        content={m._cfm.deleteWarning}
+                        onConfirm={(e, close) => ctx.asyncRemove.call({formId: row.formId, answerId: row.id}).then(close)}
+                        title={m.shouldDelete}
+                      >
+                        <TableIconBtn children="delete"/>
+                      </Confirm>
+                    </>
+                  )}
                   <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>
                     <TableIconBtn children="keyboard_arrow_right"/>
                   </NavLink>
