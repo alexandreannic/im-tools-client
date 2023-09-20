@@ -1,9 +1,9 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Box, Icon, TypographyProps} from '@mui/material'
+import {Box, BoxProps, Icon} from '@mui/material'
 import {PanelTitle} from './PanelTitle'
 
-interface Props extends TypographyProps {
+interface Props extends BoxProps {
   className?: string
   children: ReactNode
   action?: ReactNode

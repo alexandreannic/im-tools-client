@@ -145,6 +145,8 @@ export enum DrcJob {
   "Head of Humanitarian Disarmament and Peacebuilding" = "Head of Humanitarian Disarmament and Peacebuilding",
   "Head of Operations" = "Head of Operations",
   "Head of Programme" = "Head of Programme",
+  "Head of Safety" = "Head of Safety",
+  "MPCA Officer" = "MPCA Officer",
   "Head of Support Services" = "Head of Support Services",
   "HMA Deminer" = "HMA Deminer",
   "HMA Demining Supervisor" = "HMA Demining Supervisor",
