@@ -35,12 +35,12 @@ export const KoboSelectTag = <
 } & Pick<AaSelectProps<any>, 'sx'>) => {
   const {api} = useAppSettings()
   const enumKeys = Enum.keys(enumerator)
-  const updateTag = useAsync((_: {formId: KoboId, answerId: KoboAnswerId, key: string, value: any}) => api.kobo.answer.updateTag({
+  const updateTag = useAsync((_: {formId: KoboId, answerId: KoboAnswerId, key: KeyOf<TTag>, value: any}) => api.kobo.answer.updateTag({
     formId: _.formId,
     answerId: _.answerId,
     tags: {[_.key]: _.value}
   }), {
-    requestKey: ([_]) => cfmMakeUpdateRequestKey(_.formId, _.answerId, _.key)
+    requestKey: ([_]) => cfmMakeUpdateRequestKey(_.formId, _.answerId, _.key as any)
   })
 
   return (

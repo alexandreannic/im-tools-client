@@ -18,6 +18,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {DrcOffice} from '@/core/drcJobTitle'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
+import {KeyOf} from '@/utils/utils'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [kobo.drcUa.form.cfmExternal]: CfmDataSource.External,
@@ -83,7 +84,7 @@ const CfmContext = React.createContext({} as CfmContext)
 
 export const useCfmContext = () => useContext<CfmContext>(CfmContext)
 
-export const cfmMakeUpdateRequestKey = (form: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag) => form + answerId + key
+export const cfmMakeUpdateRequestKey = (form: KoboId, answerId: KoboAnswerId, key: KeyOf<KoboMealCfmTag>) => form + answerId + key
 
 export const cfmMakeEditRequestKey = (form: KoboId, answerId: KoboAnswerId) => form + answerId
 
