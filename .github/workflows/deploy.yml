@@ -3,7 +3,8 @@ name: Deploy workflow
 on:
   push:
     branches:
-      - master
+      - disabled
+      #master
 
 # A workflow run is made up of one or more jobs that can run
 # sequentially or in parallel
