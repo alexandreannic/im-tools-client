@@ -1,8 +1,8 @@
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {ReactNode, useCallback, useMemo} from 'react'
 import {Page} from '@/shared/Page'
-import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
-import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Sheet, SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
+import {Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmInternalOptions'
@@ -147,7 +147,7 @@ export const CfmTable = ({}: any) => {
       })
     }
   }, [ctx.mappedData])
-
+  
   return (
     <Page width="full">
       <Panel>
@@ -194,7 +194,7 @@ export const CfmTable = ({}: any) => {
               head: m.date,
               id: 'date',
               width: 78,
-              render: _ => formatDate(_.date),
+              render: _ => formatDate(_.date ?? _.submissionTime),
             },
             {
               type: 'select_one',
@@ -208,7 +208,9 @@ export const CfmTable = ({}: any) => {
             column.program,
             {
               width: 170,
-              type: 'string',
+              type: 'select_one',
+              options: () => Arr(ctx.mappedData).map(_ => _.tags?.focalPointEmail).compact().distinct(_ => _).map(SheetUtils.buildOption),
+              renderValue: _ => _.tags?.focalPointEmail,
               head: m.focalPoint,
               id: 'focalPoint',
               render: row => (
