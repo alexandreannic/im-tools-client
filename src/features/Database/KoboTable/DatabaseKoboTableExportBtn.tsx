@@ -9,7 +9,6 @@ import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UseKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
-import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {AAIconBtn} from '@/shared/IconBtn'
 
 const renderExportSchema = <T extends KoboMappedAnswer>({
@@ -84,7 +83,13 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
         ...Enum.entries(formGroups).map(([groupName, questions]) => {
           const _: GenerateXlsFromArrayParams<any> = {
             sheetName: groupName as string,
-            data: Arr(data).flatMap(d => (d[groupName] as any[])?.map(_ => ({..._, id: d.id}))).compact(),
+            data: Arr(data).flatMap(d => (d[groupName] as any[])?.map(_ => ({
+              ..._,
+              id: d.id,
+              start: d.start,
+              end: d.end,
+              submissionTime: d.submissionTime,
+            }))).compact(),
             schema: renderExportSchema({
               schema: questions,
               translateQuestion,

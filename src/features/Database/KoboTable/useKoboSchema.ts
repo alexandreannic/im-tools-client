@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {Arr, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, map, mapFor} from '@alexandreannic/ts-utils'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {ignoredColType} from '@/features/Database/Database'
 import {Utils} from '@/utils/utils'
@@ -18,21 +18,23 @@ export const buildKoboSchemaHelper = (schema: KoboApiForm, m: Messages) => {
     $qpath: 'id',
     $xpath: 'id',
   }
+  const submissionTimeSchema = {
+    name: 'submissionTime',
+    label: mapFor(schema.content.translations.length, () => m.submissionTime),
+    type: 'date' as const,
+    $kuid: 'submissionTime',
+    $autoname: 'submissionTime',
+    $qpath: 'submissionTime',
+    $xpath: 'submissionTime',
+  }
+
   const sanitizedForm: KoboApiForm = {
     ...schema,
     content: {
       ...schema.content,
       survey: [
         idSchema,
-        {
-          name: 'submissionTime',
-          label: mapFor(schema.content.translations.length, () => m.submissionTime),
-          type: 'date' as const,
-          $kuid: 'submissionTime',
-          $autoname: 'submissionTime',
-          $qpath: 'submissionTime',
-          $xpath: 'submissionTime',
-        },
+        submissionTimeSchema,
         ...schema.content.survey.map(_ => ({
           ..._,
           label: _.label?.map(_ => Utils.removeHtml(_))
@@ -51,7 +53,16 @@ export const buildKoboSchemaHelper = (schema: KoboApiForm, m: Messages) => {
   }
   const formGroups = schema.content.survey.reduce<Record<string, KoboQuestionSchema[]>>((acc, _, i, arr) => {
     if (_.type === 'begin_repeat') {
-      const groupQuestion: KoboQuestionSchema[] = [idSchema]
+      const groupQuestion: KoboQuestionSchema[] = [
+        idSchema,
+        submissionTimeSchema,
+      ]
+      map(schema.content.survey.find(_ => _.name === 'start'), startSchema => {
+        groupQuestion.push(startSchema)
+      })
+      map(schema.content.survey.find(_ => _.name === 'end'), endSchema => {
+        groupQuestion.push(endSchema)
+      })
       for (let j = i + 1; arr[j].$xpath?.includes(_.name + '/') && j <= arr.length; j++) {
         groupQuestion.push(arr[j])
       }
