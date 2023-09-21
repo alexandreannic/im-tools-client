@@ -52,7 +52,7 @@ export const ActivityInfoHHS2 = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: subDays(new Date(parseInt(year), parseInt(month)), 1),
     }
-    return api.kobo.answer.searchProtHhs({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(res => {
+    return api.kobo.answer.searchProtHhs2({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(res => {
       return res
         .filter(_ => {
           const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)

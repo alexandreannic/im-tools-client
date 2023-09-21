@@ -22,6 +22,7 @@ import {mapShelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/S
 import {Shelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shelter_CashForRepair'
 import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
 import {mapMPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFIMapping'
+import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -173,7 +174,7 @@ export class KoboAnswerSdk {
     })
   }
 
-  readonly searchProtHhs = (filters: KoboAnswerFilter = {}) => {
+  readonly searchProtHhs2 = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.protectionHh2,
       fnMap: mapProtHHS_2_1,
@@ -191,5 +192,13 @@ export class KoboAnswerSdk {
     //     }))
     //   })
     // })
+  }
+
+  readonly searchProtHhs1 = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.protectionHh,
+      fnMap: KoboFormProtHH.mapAnswers,
+      ...filters,
+    })
   }
 }

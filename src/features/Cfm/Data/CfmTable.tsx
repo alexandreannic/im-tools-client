@@ -147,7 +147,7 @@ export const CfmTable = ({}: any) => {
       })
     }
   }, [ctx.mappedData])
-  
+
   return (
     <Page width="full">
       <Panel>

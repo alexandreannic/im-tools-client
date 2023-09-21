@@ -99,7 +99,7 @@ export const DashboardProtHHS2 = () => {
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
-  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.answer.searchProtHhs({
+  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.answer.searchProtHhs2({
     filters: {
       start: filter?.start,
       end: filter?.end,
