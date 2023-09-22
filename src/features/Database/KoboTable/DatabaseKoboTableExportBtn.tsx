@@ -1,7 +1,7 @@
 import {useAsync} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray, GenerateXlsFromArrayParams} from '@/shared/Sheet/generateXLSFile'
 import {Utils} from '@/utils/utils'
-import {Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
 import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
@@ -9,66 +9,126 @@ import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UseKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
 
 const renderExportSchema = <T extends KoboMappedAnswer>({
   schema,
   translateQuestion,
   translateChoice,
+  repeatGroupsAsColumns,
+  groupSchemas,
+  groupIndex,
+  groupName,
 }: {
+  repeatGroupsAsColumns?: boolean
   translateQuestion: KoboTranslateQuestion
   translateChoice: KoboTranslateChoice
   schema: KoboQuestionSchema[],
-}) => {
-  return schema.map(q => {
-    return {
-      name: translateQuestion(q.name),
-      render: (row: T) => {
-        switch (q.type) {
-          case 'start':
-            return row.start
-          case 'end':
-            return row.start
-          case 'date':
-            return row[q.name]
-          case 'image':
-            return map(getKoboPath(row.attachments, row[q.name] as string), getUnsecureKoboImgUrl)
-          case 'select_one': {
-            return translateChoice(q.name, row[q.name] as string)
-          }
-          case 'select_multiple':
-            return map(row[q.name] as any, (v: string[]) => {
-              return v.map(choiceName => translateChoice(q.name, choiceName)).join(' | ')
-            })
-          case 'calculate':
-            return map(row[q.name], (_: any) => isNaN(_) ? _ : +_)
-          case 'integer':
-            return map(row[q.name], _ => +(_ as string))
-          default:
-            return row[q.name] as any
+  groupSchemas: Record<string, KoboQuestionSchema[]>
+  groupIndex?: number
+  groupName?: string
+}): GenerateXlsFromArrayParams['schema'] => {
+  const getVal = (groupIndex && groupName)
+    ? (row: KoboMappedAnswer, name: string) => (row as any)[groupName][groupIndex]?.[name]
+    : (row: KoboMappedAnswer, name: string) => row[name]
+  return schema.flatMap(q => {
+    switch (q.type) {
+      case 'start':
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => row.start,
+        }
+      case 'end':
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => row.start,
+        }
+      case 'date':
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => getVal(row, q.name),
+        }
+      case 'image':
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => {
+            return map(getKoboPath(row.attachments, getVal(row, q.name) as string), getUnsecureKoboImgUrl)
+          },
+        }
+      case 'select_one': {
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => {
+            return translateChoice(q.name, getVal(row, q.name) as string)
+          },
         }
       }
+      case 'select_multiple':
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => map(getVal(row, q.name) as any, (v: string[]) => {
+            return v.map(choiceName => translateChoice(q.name, choiceName)).join(' | ')
+          })
+        }
+      case 'calculate':
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => map(getVal(row, q.name), (_: any) => isNaN(_) ? _ : +_)
+        }
+      case 'integer':
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => map(getVal(row, q.name), _ => +(_ as string))
+        }
+      case 'begin_repeat': {
+        if (repeatGroupsAsColumns) {
+          return mapFor(17, i => renderExportSchema({
+            groupSchemas,
+            schema: groupSchemas[q.name],
+            translateQuestion,
+            translateChoice,
+            groupIndex: i,
+            groupName: q.name,
+          })).flat()
+        }
+        return []
+      }
+      default:
+        return {
+          head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
+          render: (row: T) => getVal(row, q.name) as any,
+        }
     }
   })
-
 }
+
 export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
   data,
   form,
-  formGroups,
+  groupSchemas,
   translateQuestion,
   translateChoice,
+  repeatGroupsAsColumns,
+  ...props
 }: {
+  repeatGroupsAsColumns?: boolean
   translateQuestion: KoboTranslateQuestion
   translateChoice: KoboTranslateChoice
-  formGroups: UseKoboSchema['formGroups']
+  groupSchemas: UseKoboSchema['groupSchemas']
   form: KoboApiForm
   data: T[] | undefined
-}) => {
+} & Pick<AAIconBtnProps, 'sx'>) => {
   const {m} = useI18n()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
 
   const exportToCSV = () => {
+    console.log('renderExportSchema', renderExportSchema({
+      schema: form.content.survey,
+      groupSchemas,
+      translateQuestion,
+      translateChoice,
+      repeatGroupsAsColumns,
+    }))
     if (data) {
       _generateXLSFromArray.call(Utils.slugify(form.name), [
         {
@@ -76,11 +136,13 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
           data: data,
           schema: renderExportSchema({
             schema: form.content.survey,
+            groupSchemas,
             translateQuestion,
             translateChoice,
+            repeatGroupsAsColumns,
           })
         },
-        ...Enum.entries(formGroups).map(([groupName, questions]) => {
+        ...Enum.entries(groupSchemas).map(([groupName, questions]) => {
           const _: GenerateXlsFromArrayParams<any> = {
             sheetName: groupName as string,
             data: Arr(data).flatMap(d => (d[groupName] as any[])?.map(_ => ({
@@ -92,6 +154,7 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
             }))).compact(),
             schema: renderExportSchema({
               schema: questions,
+              groupSchemas,
               translateQuestion,
               translateChoice,
             })
@@ -102,6 +165,6 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
     }
   }
   return (
-    <AAIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
+    <AAIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download" {...props}/>
   )
 }
