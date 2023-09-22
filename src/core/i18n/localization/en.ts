@@ -1125,5 +1125,6 @@ export const en = Object.freeze({
     total: 'Total',
     shouldDelete: 'Delete?',
     remove: 'Delete',
+    sync: 'Sync',
   },
 })

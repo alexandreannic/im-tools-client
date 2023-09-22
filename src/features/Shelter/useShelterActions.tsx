@@ -33,7 +33,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
   const {toastHttpError} = useAaToast()
 
   const helper = useMemo(() => {
-    const schemaHelper = buildKoboSchemaHelper(schema, m)
+    const schemaHelper = buildKoboSchemaHelper({schema, m})
     return {
       schemaHelper,
       ...getKoboTranslations({
