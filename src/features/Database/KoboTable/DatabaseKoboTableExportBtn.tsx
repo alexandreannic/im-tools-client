@@ -122,14 +122,8 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
 
   const exportToCSV = () => {
-    console.log('renderExportSchema', renderExportSchema({
-      schema: form.content.survey,
-      groupSchemas,
-      translateQuestion,
-      translateChoice,
-      repeatGroupsAsColumns,
-    }))
     if (data) {
+      const questionToAddInGroups = form.content.survey.filter(_ => ['id', 'submissionTime', 'start', 'end'].includes(_.name))
       _generateXLSFromArray.call(Utils.slugify(form.name), [
         {
           sheetName: Utils.slugify(form.name),
@@ -153,7 +147,7 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
               submissionTime: d.submissionTime,
             }))).compact(),
             schema: renderExportSchema({
-              schema: questions,
+              schema: [...questionToAddInGroups, ...questions],
               groupSchemas,
               translateQuestion,
               translateChoice,
