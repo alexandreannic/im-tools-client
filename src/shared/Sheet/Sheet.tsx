@@ -166,7 +166,7 @@ const _Sheet = <T extends SheetRow>({
         schema: ctx.columns
           .filter(_ => _.renderExport)
           .map(q => ({
-            name: q.head as string ?? q.id,
+            head: q.head as string ?? q.id,
             render: (row: any) => {
               // if (!q.renderExport || !q.renderValue) return
               if (q.renderExport === false) return

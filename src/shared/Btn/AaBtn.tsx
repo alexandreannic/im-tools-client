@@ -1,29 +1,46 @@
 import * as React from 'react'
-import {forwardRef} from 'react'
-import {Box, Button, CircularProgress, Icon, Tooltip} from '@mui/material'
+import {forwardRef, ReactNode} from 'react'
+import {Box, Button, CircularProgress, Icon, SxProps, Tooltip} from '@mui/material'
 import {ButtonProps} from '@mui/material/Button'
-import {makeSx} from '../../core/theme'
+import {makeStyles} from 'tss-react/mui'
 
-const sx = makeSx({
+const useStyles = makeStyles()((t) => ({
   icon: {
     height: '22px !important',
     lineHeight: '22px !important',
     fontSize: '22px !important',
-    marginRight: 1
+    marginRight: t.spacing(1),
   },
-})
+  iconEnd: {
+    mr: 0,
+    ml: 1,
+  }
+}))
 
 export interface AaBtnProps extends ButtonProps {
-  tooltip?: string
+  tooltip?: ReactNode
   loading?: boolean
   icon?: string
   iconAfter?: string
+  iconSx?: ButtonProps['sx']
 }
 
-export const AaBtn = forwardRef(({tooltip, loading, children, disabled, icon, iconAfter, ...props}: AaBtnProps, ref: any) => {
+export const AaBtn = forwardRef(({
+  tooltip,
+  loading,
+  children,
+  disabled,
+  icon,
+  iconAfter,
+  color,
+  iconSx,
+  ...props
+}: AaBtnProps, ref: any) => {
+  const {classes, cx} = useStyles()
   const btn = (
     <Button
       {...props}
+      color={color}
       disabled={disabled || loading}
       ref={ref}
     >
@@ -35,19 +52,16 @@ export const AaBtn = forwardRef(({tooltip, loading, children, disabled, icon, ic
         }
       }}>
         {icon && (
-          <Icon fontSize={props.size} sx={sx.icon}>
+          <Icon fontSize={props.size} className={classes.icon} sx={iconSx}>
             {icon}
           </Icon>
         )}
         {children}
         {iconAfter && (
           <Icon
+            className={cx(classes.iconEnd, classes.icon)}
             fontSize={props.size}
-            sx={{
-              ...sx.icon,
-              mr: 0,
-              ml: 1,
-            }}
+            sx={iconSx}
           >
             {iconAfter}
           </Icon>

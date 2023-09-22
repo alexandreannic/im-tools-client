@@ -1,11 +1,11 @@
 import * as ExcelJS from 'exceljs'
 import {downloadBufferAsFile} from '@/utils/utils'
 
-export interface GenerateXlsFromArrayParams<T> {
+export interface GenerateXlsFromArrayParams<T = any> {
   sheetName: string
   data: T[]
   schema: {
-    name: string
+    head: string
     render: (_: T) => string | number | undefined | Date
   }[]
 }
@@ -16,7 +16,7 @@ export const generateXLSFromArray = async <T>(fileName: string, params: Generate
     data, schema, sheetName
   }) => {
     const sheet = workbook.addWorksheet(sheetName)
-    const header = sheet.addRow(schema.map(_ => _.name))
+    const header = sheet.addRow(schema.map(_ => _.head))
     // header.fill = {
     //   type: 'pattern',
     //   pattern: 'solid',
