@@ -2,7 +2,7 @@ import {KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/se
 import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
-import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
+import {Arr, map, mapFor} from '@alexandreannic/ts-utils'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import React, {useMemo, useState} from 'react'
@@ -24,55 +24,6 @@ import {usePersistentState} from 'react-persistent-state'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
-
-export const koboFlatGroups = ({
-  data,
-  schema,
-  groupSchemas,
-}: {
-  data: KoboMappedAnswer[]
-  schema: KoboApiForm['content']['survey']
-  groupSchemas: Record<string, KoboQuestionSchema[]>
-}) => {
-  const getFlatGroupName = (questionName: string, index: number) => questionName + index
-
-  const sizes = new Enum(groupSchemas).transform((k, v) => {
-    return [k, Math.max(...data.map(_ => (_[k] as any[]).length))]
-  }).get()
-
-  const extendedSchema = schema.flatMap(s => s.type === 'begin_repeat'
-    ? mapFor(sizes[s.name], i =>
-      groupSchemas[s.name].map(_ => ({..._, name: getFlatGroupName(_.name, i)}))
-    ).flat()
-    : [s]
-  )
-
-  const extendedData = data.map(d => {
-    const res = {...d}
-    Enum.values(groupSchemas).forEach(groupSchemas => {
-      groupSchemas.forEach((s, i) => {
-        return {
-          ...s,
-          name: res[getFlatGroupName(s.name, i)],
-        }
-      })
-    })
-    return res
-    // return {
-    //   ..._,
-    //   ...Arr(Enum.values(groupSchemas)).reduceObject(_ => {
-    //     return [
-    //       _.map,
-    //
-    //     ]
-    //   })
-    // }
-  })
-  return {
-    extendedSchema,
-    extendedData
-  }
-}
 
 export const DatabaseKoboTableContent = ({
   form,
