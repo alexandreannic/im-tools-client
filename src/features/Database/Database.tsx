@@ -28,15 +28,6 @@ export const databaseUrlParamsValidation = yup.object({
   formId: yup.string().required(),
 })
 
-export const ignoredColType: KoboApiColType[] = [
-  'begin_group',
-  'end_group',
-  'deviceid',
-  // 'end_repeat',
-  // 'begin_repeat',
-  // 'note',
-]
-
 export const Database = () => {
   return (
     <DatabaseProvider>

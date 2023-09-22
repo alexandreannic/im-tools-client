@@ -1029,6 +1029,7 @@ export const en = Object.freeze({
       }
     },
     _koboDatabase: {
+      repeatGroupsAsColumns: `Display repeat groups as new columns (also visible in XLS exports).`,
       title: (form?: string) => `Kobo Database${form ? `: <b>${form}</b>` : ``}`,
       showAllQuestions: 'Show unanswered questions',
       pullData: `Synchronize last Kobo data.`,

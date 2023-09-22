@@ -1,4 +1,4 @@
-import {KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiColType, KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
@@ -18,12 +18,20 @@ import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/Databas
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
-import {ignoredColType} from '@/features/Database/Database'
 import {Switch, Theme} from '@mui/material'
 import {usePersistentState} from 'react-persistent-state'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
+
+export const ignoredColType: KoboApiColType[] = [
+  'begin_group',
+  'end_group',
+  'deviceid',
+  'end_repeat',
+  // 'begin_repeat',
+  // 'note',
+]
 
 export const DatabaseKoboTableContent = ({
   form,
@@ -121,7 +129,13 @@ export const DatabaseKoboTableContent = ({
           ]}
         />
         {_schema.groupsCount > 0 && (
-          <AaBtn icon="repartition" variant="outlined" iconSx={{color: (t: Theme) => t.palette.text.disabled}} onClick={() => setRepeatGroupAsColumns(_ => !_)}>
+          <AaBtn
+            icon="move_up"
+            variant="outlined"
+            iconSx={{color: (t: Theme) => t.palette.text.disabled, transform: 'rotate(90deg)'}}
+            onClick={() => setRepeatGroupAsColumns(_ => !_)}
+            tooltip={m._koboDatabase.repeatGroupsAsColumns}
+          >
             <Switch size="small" sx={{mr: -1}} checked={repeatGroupsAsColumns}/>
           </AaBtn>
         )}
@@ -230,12 +244,12 @@ const getColumnBySchema = ({
   } = (() => {
     if (groupIndex && groupName)
       return {
-        getId: (id: string) => `${groupIndex}_${id}`,
+        getId: (q: KoboQuestionSchema) => `${groupIndex}_${q.name}`,
         getHead: (name: string) => `[${groupIndex}] ${name}`,
         getVal: (row: KoboMappedAnswer, name: string) => (row as any)[groupName][groupIndex]?.[name]
       }
     return {
-      getId: (id: string) => id,
+      getId: (q: KoboQuestionSchema) => q.name,
       getHead: (name: string) => name,
       getVal: (row: KoboMappedAnswer, name: string) => row[name],
     }
@@ -246,7 +260,7 @@ const getColumnBySchema = ({
       case 'image': {
         return {
           type: 'string',
-          id: getId(q.name),
+          id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           render: row => <KoboAttachedImg attachments={row.attachments} fileName={getVal(row, q.name) as string}/>
@@ -256,7 +270,7 @@ const getColumnBySchema = ({
         return {
           type: 'string',
           typeIcon: <SheetHeadTypeIcon children="functions" tooltip="calculate"/>,
-          id: getId(q.name),
+          id: getId(q),
           head: getHead(translateQuestion(q.name)),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
           options: () => Arr(data).map(_ => _[q.name] as string | undefined).distinct(_ => _).map(_ => ({label: _, value: _})),
@@ -266,7 +280,7 @@ const getColumnBySchema = ({
         return {
           type: 'string',
           typeIcon: <SheetHeadTypeIcon children="attach_file" tooltip="select_one_from_file"/>,
-          id: getId(q.name),
+          id: getId(q),
           head: getHead(translateQuestion(q.name)),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>
         }
@@ -276,7 +290,7 @@ const getColumnBySchema = ({
         return {
           type: 'string',
           typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
-          id: getId(q.name),
+          id: getId(q),
           head: getHead(translateQuestion(q.name)),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>
         }
@@ -285,7 +299,7 @@ const getColumnBySchema = ({
       case 'integer': {
         return {
           type: 'number',
-          id: getId(q.name),
+          id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="tag" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as number}</span>
@@ -295,7 +309,7 @@ const getColumnBySchema = ({
         return {
           type: 'string',
           typeIcon: <SheetHeadTypeIcon children="info" tooltip="note"/>,
-          id: getId(q.name),
+          id: getId(q),
           head: getHead(translateQuestion(q.name)),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>
         }
@@ -306,7 +320,7 @@ const getColumnBySchema = ({
       case 'end': {
         return {
           type: 'date',
-          id: getId(q.name),
+          id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="event" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           render: row => map(getVal(row, q.name) as Date | undefined, _ => (
@@ -332,7 +346,7 @@ const getColumnBySchema = ({
         return {
           type: 'number',
           typeIcon: <SheetHeadTypeIcon children="repeat" tooltip="begin_repeat"/>,
-          id: getId(q.name),
+          id: getId(q),
           head: getHead(translateQuestion(q.name)),
           render: row => map(row[q.name] as KoboAnswer[] | undefined, group =>
             <AaBtn onClick={(event) => onOpenGroupModal({columnId: q.name, group, event})}>{group.length}</AaBtn>
@@ -342,7 +356,7 @@ const getColumnBySchema = ({
       case 'select_one': {
         return {
           type: 'select_one',
-          id: getId(q.name),
+          id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="radio_button_checked" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
@@ -362,7 +376,7 @@ const getColumnBySchema = ({
       case 'select_multiple': {
         return {
           type: 'select_multiple',
-          id: getId(q.name),
+          id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="check_box" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
@@ -381,7 +395,7 @@ const getColumnBySchema = ({
         return {
           type: 'string',
           typeIcon: <SheetHeadTypeIcon children="location_on" tooltip="geopoint"/>,
-          id: getId(q.name),
+          id: getId(q),
           head: getHead(translateQuestion(q.name)),
           render: row => map(getVal(row, q.name), (x: any) => {
             const render = JSON.stringify(x)
@@ -392,7 +406,7 @@ const getColumnBySchema = ({
       default: {
         return {
           type: 'string',
-          id: getId(q.name),
+          id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           render: row => {
