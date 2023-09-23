@@ -29,7 +29,7 @@ const renderExportSchema = <T extends KoboMappedAnswer>({
   groupName?: string
 }): GenerateXlsFromArrayParams['schema'] => {
   const getVal = (groupIndex && groupName)
-    ? (row: KoboMappedAnswer, name: string) => (row as any)[groupName][groupIndex]?.[name]
+    ? (row: KoboMappedAnswer, name: string) => (row as any)[groupName]?.[groupIndex]?.[name]
     : (row: KoboMappedAnswer, name: string) => row[name]
   return schema.flatMap(q => {
     switch (q.type) {

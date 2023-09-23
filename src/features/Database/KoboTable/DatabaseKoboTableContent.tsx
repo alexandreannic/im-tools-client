@@ -246,7 +246,7 @@ const getColumnBySchema = ({
       return {
         getId: (q: KoboQuestionSchema) => `${groupIndex}_${q.name}`,
         getHead: (name: string) => `[${groupIndex}] ${name}`,
-        getVal: (row: KoboMappedAnswer, name: string) => (row as any)[groupName][groupIndex]?.[name]
+        getVal: (row: KoboMappedAnswer, name: string) => (row as any)[groupName]?.[groupIndex]?.[name]
       }
     return {
       getId: (q: KoboQuestionSchema) => q.name,
