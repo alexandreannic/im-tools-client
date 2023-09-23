@@ -1,6 +1,5 @@
 import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
-import {UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
-import {getKoboTranslations} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'

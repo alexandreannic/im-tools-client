@@ -5,11 +5,11 @@ import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
 import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {UseKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
+import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 
 const renderExportSchema = <T extends KoboMappedAnswer>({
   schema,
@@ -104,39 +104,32 @@ const renderExportSchema = <T extends KoboMappedAnswer>({
 
 export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
   data,
-  form,
-  groupSchemas,
-  translateQuestion,
-  translateChoice,
   repeatGroupsAsColumns,
   ...props
 }: {
   repeatGroupsAsColumns?: boolean
-  translateQuestion: KoboTranslateQuestion
-  translateChoice: KoboTranslateChoice
-  groupSchemas: UseKoboSchema['groupSchemas']
-  form: KoboApiForm
   data: T[] | undefined
 } & Pick<AAIconBtnProps, 'sx'>) => {
   const {m} = useI18n()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
+  const ctx = useDatabaseKoboTableContext()
 
   const exportToCSV = () => {
     if (data) {
-      const questionToAddInGroups = form.content.survey.filter(_ => ['id', 'submissionTime', 'start', 'end'].includes(_.name))
-      _generateXLSFromArray.call(Utils.slugify(form.name), [
+      const questionToAddInGroups = ctx.schema.content.survey.filter(_ => ['id', 'submissionTime', 'start', 'end'].includes(_.name))
+      _generateXLSFromArray.call(Utils.slugify(ctx.schema.name), [
         {
-          sheetName: Utils.slugify(form.name),
+          sheetName: Utils.slugify(ctx.schema.name),
           data: data,
           schema: renderExportSchema({
-            schema: form.content.survey,
-            groupSchemas,
-            translateQuestion,
-            translateChoice,
+            schema: ctx.schema.content.survey,
+            groupSchemas: ctx.schemaHelper.groupSchemas,
+            translateQuestion: ctx.translate.question,
+            translateChoice: ctx.translate.choice,
             repeatGroupsAsColumns,
           })
         },
-        ...Enum.entries(groupSchemas).map(([groupName, questions]) => {
+        ...Enum.entries(ctx.schemaHelper.groupSchemas).map(([groupName, questions]) => {
           const _: GenerateXlsFromArrayParams<any> = {
             sheetName: groupName as string,
             data: Arr(data).flatMap(d => (d[groupName] as any[])?.map(_ => ({
@@ -148,9 +141,9 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
             }))).compact(),
             schema: renderExportSchema({
               schema: [...questionToAddInGroups, ...questions],
-              groupSchemas,
-              translateQuestion,
-              translateChoice,
+              groupSchemas: ctx.schemaHelper.groupSchemas,
+              translateQuestion: ctx.translate.question,
+              translateChoice: ctx.translate.choice,
             })
           }
           return _

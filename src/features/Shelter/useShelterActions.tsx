@@ -6,9 +6,8 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {ShelterRow} from '@/features/Shelter/useShelterData'
-import {getKoboTranslations} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {buildKoboSchemaHelper} from '@/features/Database/KoboTable/useKoboSchema'
+import {buildKoboSchemaHelper, getKoboTranslations} from '@/features/Database/KoboTable/useKoboSchema'
 import {useI18n} from '@/core/i18n'
 
 export type UseShelterActions<T extends Record<string, any>> = ReturnType<typeof useShelterActions<T>>
