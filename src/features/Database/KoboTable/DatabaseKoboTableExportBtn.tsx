@@ -5,9 +5,8 @@ import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
 import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {UseKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
@@ -123,14 +122,14 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
           sheetName: Utils.slugify(ctx.schema.name),
           data: data,
           schema: renderExportSchema({
-            schema: ctx.form.content.survey,
-            groupSchemas,
-            translateQuestion,
-            translateChoice,
+            schema: ctx.schema.content.survey,
+            groupSchemas: ctx.schemaHelper.groupSchemas,
+            translateQuestion: ctx.translate.question,
+            translateChoice: ctx.translate.choice,
             repeatGroupsAsColumns,
           })
         },
-        ...Enum.entries(groupSchemas).map(([groupName, questions]) => {
+        ...Enum.entries(ctx.schemaHelper.groupSchemas).map(([groupName, questions]) => {
           const _: GenerateXlsFromArrayParams<any> = {
             sheetName: groupName as string,
             data: Arr(data).flatMap(d => (d[groupName] as any[])?.map(_ => ({
@@ -142,9 +141,9 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
             }))).compact(),
             schema: renderExportSchema({
               schema: [...questionToAddInGroups, ...questions],
-              groupSchemas,
-              translateQuestion,
-              translateChoice,
+              groupSchemas: ctx.schemaHelper.groupSchemas,
+              translateQuestion: ctx.translate.question,
+              translateChoice: ctx.translate.choice,
             })
           }
           return _
@@ -156,29 +155,3 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
     <AAIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download" {...props}/>
   )
 }
-
-
-
-"During this award, 11,485 individuals including 4693 men, 6782 women and 10 individuals who preferred not to disclose their gender (
-
-2677
-
-2257
-
-1083
-
-3023
-
-1453
-
-381
-
-230
-
-130
-
-70
-
-86
-
-92

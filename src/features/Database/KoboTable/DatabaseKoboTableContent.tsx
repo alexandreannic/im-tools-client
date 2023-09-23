@@ -21,9 +21,7 @@ export type KoboTranslateChoice = (key: string, choice?: string) => string
 export const DatabaseKoboTableContent = () => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
-  const [repeatGroupsAsColumns, setRepeatGroupAsColumns] = usePersistentState<boolean>(false, `database-${form.id}-repeat-groups`)
-
-  const mappedData = useMemo(() => ctx.data.map(_ => Kobo.mapAnswerBySchema(ctx.schemaHelper.questionIndex, _)), [data])
+  const [repeatGroupsAsColumns, setRepeatGroupAsColumns] = usePersistentState<boolean>(false, `database-${ctx.form.id}-repeat-groups`)
 
   const [openModalAnswer] = useDatabaseKoboAnswerView({
     translateQuestion: ctx.translate.question,
@@ -51,7 +49,7 @@ export const DatabaseKoboTableContent = () => {
 
   const schemaColumns = useMemo(() => {
     return getColumnBySchema({
-      data: mappedData,
+      data: ctx.data,
       schema: ctx.schemaHelper.sanitizedSchema.content.survey,
       groupSchemas: ctx.schemaHelper.groupSchemas,
       translateQuestion: ctx.translate.question,
@@ -80,7 +78,7 @@ export const DatabaseKoboTableContent = () => {
 
 
   return (
-    <Sheet columns={columns} data={mappedData} header={
+    <Sheet columns={columns} data={ctx.data} header={
       <>
         <AaSelect<number>
           sx={{maxWidth: 128, mr: 1}}
@@ -111,16 +109,14 @@ export const DatabaseKoboTableContent = () => {
           sx={{marginLeft: 'auto'}}
         />
         <DatabaseKoboTableExportBtn
-          data={mappedData}
-          groupSchemas={ctx.schemaHelper.groupSchemas}
-          form={ctx.schemaHelper.sanitizedSchema}
+          data={ctx.data}
           repeatGroupsAsColumns={repeatGroupsAsColumns}
         />
         <AaBtn
           variant="outlined"
           loading={ctx.asyncRefresh.loading.size > 0}
           icon="cloud_sync"
-          tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.pullDataAt(form.updatedAt)}}/>}
+          tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.pullDataAt(ctx.form.updatedAt)}}/>}
           onClick={ctx.asyncRefresh.call}
         >{m.sync}</AaBtn>
       </>

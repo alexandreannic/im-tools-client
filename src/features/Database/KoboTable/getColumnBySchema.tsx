@@ -150,7 +150,7 @@ export const getColumnBySchema = ({
           id: getId(q),
           head: getHead(translateQuestion(q.name)),
           render: row => map(row[q.name] as KoboAnswer[] | undefined, group =>
-            <AaBtn sx={{py: '6px'}} onClick={(event) => onOpenGroupModal?.({
+            <AaBtn sx={{py: '4px'}} onClick={(event) => onOpenGroupModal?.({
               columnId: q.name,
               group,
               event,
