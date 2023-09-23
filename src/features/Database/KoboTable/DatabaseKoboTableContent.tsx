@@ -1,4 +1,4 @@
-import {Kobo, KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'

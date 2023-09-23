@@ -1,9 +1,8 @@
 import {useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {I18nContextProps} from '@/core/i18n/I18n'
-import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiColType, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {SheetColumnProps} from '@/shared/Sheet/Sheet'
-import {ignoredColType} from '@/features/Database/Database'
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Arr, map, mapFor} from '@alexandreannic/ts-utils'
@@ -12,6 +11,15 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+
+const ignoredColType: KoboApiColType[] = [
+  'begin_group',
+  'end_group',
+  'deviceid',
+  'end_repeat',
+  // 'begin_repeat',
+  // 'note',
+]
 
 export const getColumnBySchema = ({
   data,
