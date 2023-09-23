@@ -7,43 +7,41 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useI18n} from '@/core/i18n'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 
 export const DatabaseKoboTableGroupModal = ({
   anchorEl,
-  title,
+  name,
   onClose,
-  schema,
   groupData,
 }: {
-  translateQuestion: KoboTranslateQuestion
-  translateChoice: KoboTranslateChoice
-  schema: KoboQuestionSchema[]
-  groupData: Record<string, any>[]
-  title?: string
+  groupData: KoboAnswer[],
+  name: string
   onClose: () => void
   anchorEl: any,
 }) => {
   const {m} = useI18n()
+  const ctx = useDatabaseKoboTableContext()
   const columns = useMemo(() => {
     return getColumnBySchema({
-      schema: schema,
+      schema: ctx.schemaHelper.groupSchemas[name],
       data: groupData,
       m,
-      translateQuestion,
-      translateChoice,
-      choicesIndex,
+      translateQuestion: ctx.translate.question,
+      translateChoice: ctx.translate.choice,
+      choicesIndex: ctx.schemaHelper.choicesIndex,
+      groupSchemas: ctx.schemaHelper.groupSchemas,
     })
-  }, [])
+  }, [ctx.schema])
+
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead>
-        <Txt block sx={{maxWidth: 400}} truncate>{title}</Txt>
+        <Txt block sx={{maxWidth: 400}} truncate>{ctx.translate.question(name)}</Txt>
       </PanelHead>
       <PanelBody>
-        <Sheet columns={}
-        <Box component="pre" sx={{width: 300,}}>
-          {JSON.stringify(groupData, null, 2)}
-        </Box>
+        <Sheet columns={columns} data={groupData}/>
       </PanelBody>
     </Popover>
   )

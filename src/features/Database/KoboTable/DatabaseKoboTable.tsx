@@ -15,11 +15,10 @@ import {useAsync} from '@/alexlib-labo/useAsync'
 import {useSession} from '@/core/Session/SessionContext'
 import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
-import {DatabaseKoboProvider} from '@/features/Database/KoboTable/DatabaseKoboContext'
+import {DatabaseKoboTableProvider} from '@/features/Database/KoboTable/DatabaseKoboContext'
 
 export const DatabaseTableRoute = () => {
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
-  const {m, formatDate, formatLargeNumber} = useI18n()
   const {api} = useAppSettings()
   const {accesses, session} = useSession()
   const {toastHttpError, toastLoading} = useAaToast()
@@ -38,19 +37,6 @@ export const DatabaseTableRoute = () => {
     formId,
   }))
 
-  // const _refresh = useAsync(async () => {
-  //   await api.koboApi.synchronizeAnswers(serverId, formId)
-  //   await _answers.fetch({force: true, clean: false}, formId)
-  // })
-  //
-  // const _edit = useAsync(async (answerId: KoboAnswerId) => {
-  //   return api.koboApi.getEditUrl(serverId, formId, answerId).then(_ => {
-  //     if (_.url) {
-  //       window.open(_.url, '_blank')
-  //     }
-  //   }).catch(toastHttpError)
-  // }, {requestKey: _ => _[0]})
-
   const data = _answers.entity
 
   useEffect(() => {
@@ -64,18 +50,18 @@ export const DatabaseTableRoute = () => {
   return (
     <Page loading={_formSchemas.getLoading(formId) || _answers.loading} width="full">
       <Panel>
-        {data && map(_formSchemas.get(formId), ctx.getForm(formId), (schema, form) => (
-          <DatabaseKoboProvider>
-
-          <DatabaseKoboTableContent
-            _edit={_edit}
+        {map(_answers.entity, _formSchemas.get(formId), ctx.getForm(formId), (data, schema, form) => (
+          <DatabaseKoboTableProvider
+            canEdit={access.write}
+            formId={formId}
+            serverId={serverId}
+            fetcherAnswers={_answers}
+            schema={schema}
             data={data.data}
             form={form}
-            schema={schema}
-            _refresh={_refresh}
-            canEdit={access.write}
-          />
-          </DatabaseKoboProvider>
+          >
+            <DatabaseKoboTableContent/>
+          </DatabaseKoboTableProvider>
         ))}
       </Panel>
     </Page>

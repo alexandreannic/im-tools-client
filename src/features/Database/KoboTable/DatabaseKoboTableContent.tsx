@@ -1,11 +1,8 @@
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {Kobo, KoboAnswer, KoboAnswerId, KoboForm} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet, SheetColumnProps} from '@/shared/Sheet/Sheet'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
-import React, {useMemo, useState} from 'react'
-import {getKoboTranslations, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
-import {UseAsync} from '@/alexlib-labo/useAsync'
+import React, {useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
 import {DatabaseKoboTableExportBtn} from '@/features/Database/KoboTable/DatabaseKoboTableExportBtn'
@@ -16,52 +13,23 @@ import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseK
 import {Switch, Theme} from '@mui/material'
 import {usePersistentState} from 'react-persistent-state'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
+import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
 
-export const ignoredColType: KoboApiColType[] = [
-  'begin_group',
-  'end_group',
-  'deviceid',
-  'end_repeat',
-  // 'begin_repeat',
-  // 'note',
-]
-
-export const DatabaseKoboTableContent = ({
-  form,
-  schema,
-  data,
-  canEdit,
-  _refresh,
-  _edit,
-}: {
-  canEdit?: boolean
-  _refresh: UseAsync<() => Promise<void>>
-  _edit: UseAsync<(answerId: KoboAnswerId) => Promise<void>>
-  schema: KoboApiForm,
-  form: KoboForm
-  data: KoboAnswer<any>[]
-}) => {
+export const DatabaseKoboTableContent = () => {
+  const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
-  const _schema = useKoboSchema({schema: schema})
-  const [langIndex, setLangIndex] = useState<number>(0)
   const [repeatGroupsAsColumns, setRepeatGroupAsColumns] = usePersistentState<boolean>(false, `database-${form.id}-repeat-groups`)
 
-  const mappedData = useMemo(() => data.map(_ => Kobo.mapAnswerBySchema(_schema.questionIndex, _)), [data])
-
-  const {translateQuestion, translateChoice} = useMemo(() => getKoboTranslations({
-    schema,
-    langIndex,
-    questionIndex: _schema.questionIndex,
-  }), [schema, langIndex])
+  const mappedData = useMemo(() => ctx.data.map(_ => Kobo.mapAnswerBySchema(ctx.schemaHelper.questionIndex, _)), [data])
 
   const [openModalAnswer] = useDatabaseKoboAnswerView({
-    translateQuestion: translateQuestion,
-    translateChoice: translateChoice,
-    schema: schema,
-    langIndex: langIndex,
+    translateQuestion: ctx.translate.question,
+    translateChoice: ctx.translate.choice,
+    schema: ctx.schema,
+    langIndex: ctx.langIndex,
   })
 
   const [groupModalOpen, groupModalClose] = useModal(({
@@ -69,34 +37,31 @@ export const DatabaseKoboTableContent = ({
     group,
     event,
   }: {
-    columnId: string,
-    group: KoboAnswer[],
+    columnId: string
+    group: KoboAnswer[]
     event: any
   }) => (
     <DatabaseKoboTableGroupModal
-      title={translateQuestion(columnId)}
+      name={columnId}
       anchorEl={event.target}
       groupData={group}
-      schema={_schema.groupSchemas[columnId]}
       onClose={groupModalClose}
-      translateQuestion={translateQuestion}
-      translateChoice={translateChoice}
     />
-  ), [translateQuestion])
+  ), [ctx.schema])
 
   const schemaColumns = useMemo(() => {
     return getColumnBySchema({
       data: mappedData,
-      schema: _schema.sanitizedSchema.content.survey,
-      groupSchemas: _schema.groupSchemas,
-      translateQuestion,
-      translateChoice,
-      choicesIndex: _schema.choicesIndex,
+      schema: ctx.schemaHelper.sanitizedSchema.content.survey,
+      groupSchemas: ctx.schemaHelper.groupSchemas,
+      translateQuestion: ctx.translate.question,
+      translateChoice: ctx.translate.choice,
+      choicesIndex: ctx.schemaHelper.choicesIndex,
       m,
       repeatGroupsAsColumn: repeatGroupsAsColumns,
       onOpenGroupModal: groupModalOpen,
     })
-  }, [schema, langIndex, repeatGroupsAsColumns])
+  }, [ctx.schema, ctx.langIndex, repeatGroupsAsColumns])
 
   const columns = useMemo(() => {
     const c: SheetColumnProps<any> = {
@@ -106,12 +71,12 @@ export const DatabaseKoboTableContent = ({
       render: _ => (
         <>
           <TableIconBtn tooltip={m.view} children="visibility" onClick={() => openModalAnswer(_)}/>
-          <TableIconBtn disabled={!canEdit} tooltip={m.edit} loading={_edit.loading.has(_.id)} onClick={() => _edit.call(_.id)} children="edit"/>
+          <TableIconBtn disabled={!ctx.canEdit} tooltip={m.edit} loading={ctx.asyncEdit.loading.has(_.id)} onClick={() => ctx.asyncEdit.call(_.id)} children="edit"/>
         </>
       )
     }
     return [c, ...schemaColumns,]
-  }, [schemaColumns, _edit.loading.values])
+  }, [schemaColumns, ctx.asyncEdit.loading.values])
 
 
   return (
@@ -119,14 +84,14 @@ export const DatabaseKoboTableContent = ({
       <>
         <AaSelect<number>
           sx={{maxWidth: 128, mr: 1}}
-          defaultValue={langIndex}
-          onChange={setLangIndex}
+          defaultValue={ctx.langIndex}
+          onChange={ctx.setLangIndex}
           options={[
             {children: 'XML', value: -1},
-            ..._schema.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
+            ...ctx.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
           ]}
         />
-        {_schema.groupsCount > 0 && (
+        {ctx.schemaHelper.groupsCount > 0 && (
           <AaBtn
             icon="move_up"
             variant="outlined"
@@ -139,26 +104,24 @@ export const DatabaseKoboTableContent = ({
         )}
 
         <AAIconBtn
-          href={schema.deployment__links.url}
+          href={ctx.schema.deployment__links.url}
           target="_blank"
           children="open_in_new"
           tooltip={m._koboDatabase.openKoboForm}
           sx={{marginLeft: 'auto'}}
         />
         <DatabaseKoboTableExportBtn
-          translateQuestion={translateQuestion}
-          translateChoice={translateChoice}
           data={mappedData}
-          groupSchemas={_schema.groupSchemas}
-          form={_schema.sanitizedSchema}
+          groupSchemas={ctx.schemaHelper.groupSchemas}
+          form={ctx.schemaHelper.sanitizedSchema}
           repeatGroupsAsColumns={repeatGroupsAsColumns}
         />
         <AaBtn
           variant="outlined"
-          loading={_refresh.loading.size > 0}
+          loading={ctx.asyncRefresh.loading.size > 0}
           icon="cloud_sync"
           tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.pullDataAt(form.updatedAt)}}/>}
-          onClick={_refresh.call}
+          onClick={ctx.asyncRefresh.call}
         >{m.sync}</AaBtn>
       </>
     }/>
