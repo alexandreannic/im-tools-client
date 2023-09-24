@@ -1,9 +1,10 @@
 import {useMemo} from 'react'
 import {Arr, mapFor} from '@alexandreannic/ts-utils'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Messages} from '@/core/i18n/localization/en'
+import {getKoboLabel, KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 
 export type KoboSchemaHelper = ReturnType<typeof buildKoboSchemaHelper>
 
@@ -95,8 +96,48 @@ export const buildKoboSchemaHelper = ({
   }
 }
 
-export type UseKoboSchema = ReturnType<typeof useKoboSchema>
+export const getKoboTranslations = ({
+  schema,
+  langIndex,
+  questionIndex,
+}: {
+  schema: KoboApiForm,
+  langIndex: number
+  questionIndex: ReturnType<typeof useKoboSchema>['questionIndex']
+}): {
+  translateQuestion: KoboTranslateQuestion
+  translateChoice: KoboTranslateChoice,
+} => {
+  const choicesTranslation: Record<string, Record<string, KoboQuestionChoice>> = {}
+  schema.content.choices.forEach(choice => {
+    if (!choicesTranslation[choice.list_name]) choicesTranslation[choice.list_name] = {}
+    choicesTranslation[choice.list_name][choice.name] = choice
+  })
 
+  return {
+    translateQuestion: (questionName: string) => {
+      try {
+        return getKoboLabel(questionIndex[questionName], langIndex)
+      } catch (e) {
+        return questionName
+      }
+    },
+    translateChoice: (questionName: string, choiceName?: string) => {
+      const listName = questionIndex[questionName]?.select_from_list_name
+      try {
+        if (choiceName) return getKoboLabel(choicesTranslation[listName!][choiceName], langIndex)
+      } catch (e) {
+        // console.warn(
+        //   'Cannot translate this options. Maybe the question type has changed?',
+        //   {question: questionIndex[questionName], listName, choiceName, choicesTranslation}
+        // )
+      }
+      return ''
+    },
+  }
+}
+
+export type UseKoboSchema = ReturnType<typeof useKoboSchema>
 export const useKoboSchema = ({
   schema
 }: {

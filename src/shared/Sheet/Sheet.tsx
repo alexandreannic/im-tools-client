@@ -1,5 +1,5 @@
 import {Badge, Box, BoxProps, Icon, LinearProgress, TablePagination,} from '@mui/material'
-import React, {CSSProperties, ReactNode, useEffect} from 'react'
+import React, {CSSProperties, ReactNode, useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {KeyOf, Utils} from '@/utils/utils'
@@ -12,6 +12,8 @@ import {SheetHead} from './SheetHead'
 import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
 import {format} from 'date-fns'
 import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
+import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
+import {usePersistentState} from 'react-persistent-state'
 
 type OrderBy = 'asc' | 'desc'
 
@@ -189,12 +191,22 @@ const _Sheet = <T extends SheetRow>({
 
   const filterCount = useMemoFn(ctx.data.filters, _ => Enum.keys(_).length)
 
+  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], 'database-columns-' + id)
+  const filteredColumns = useMemo(() => ctx.columns.filter(_ => !hiddenColumns.includes(_.id)), [ctx.columns, hiddenColumns])
+
   return (
     <>
       <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center'}}>
         <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
           <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
         </Badge>
+        <DatatableColumnToggle
+          sx={{mr: 1}}
+          columns={ctx.columns}
+          hiddenColumns={hiddenColumns}
+          onChange={_ => setHiddenColumns(_)}
+          title={m.toggleDatatableColumns}
+        />
         {header}
         {showExportBtn && (
           <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
@@ -248,7 +260,7 @@ const _Sheet = <T extends SheetRow>({
               data={ctx.data.filteredSortedAndPaginatedData?.data}
               search={ctx.data.search}
               filters={ctx.data.filters}
-              columns={ctx.columns}
+              columns={filteredColumns}
               columnsIndex={ctx.columnsIndex}
               select={ctx.select}
               selected={ctx.selected}
@@ -261,7 +273,7 @@ const _Sheet = <T extends SheetRow>({
                 <SheetBody
                   data={data.data}
                   select={ctx.select}
-                  columns={ctx.columns}
+                  columns={filteredColumns}
                   getRenderRowKey={ctx.getRenderRowKey}
                   selected={ctx.selected}
                 />

@@ -22,13 +22,13 @@ export const DatatableColumnToggle = ({className, title, columns, hiddenColumns,
   return (
     <>
       <Tooltip title={title ?? ''}>
-        <IconBtn {...props} color="primary" onClick={handleClick}>
+        <IconBtn {...props} onClick={handleClick}>
           <Badge
-            color="error"
+            color="primary"
             badgeContent={columns.length === hiddenColumns.length ? '!' : columns.length - hiddenColumns.length}
             invisible={hiddenColumns.length === 0}
           >
-            <Icon color={columns.length === hiddenColumns.length ? 'error' : undefined}>table_chart</Icon>
+            <Icon>table_chart</Icon>
           </Badge>
         </IconBtn>
       </Tooltip>
@@ -49,7 +49,7 @@ export const DatatableColumnToggle = ({className, title, columns, hiddenColumns,
                 }}
                 checked={checked}
               />
-              {col.head}
+              <div dangerouslySetInnerHTML={{__html: col.head as string}}/>
             </MenuItem>
           )
         })}

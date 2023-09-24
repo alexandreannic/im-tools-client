@@ -1,13 +1,11 @@
 import {Page} from '@/shared/Page'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {useSession} from '@/core/Session/SessionContext'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {useNavigate} from 'react-router'
-import {adminModule} from '@/features/Admin/Admin'
 import {Panel} from '@/shared/Panel'
 import {Arr} from '@alexandreannic/ts-utils'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
@@ -21,14 +19,12 @@ export const AdminUsers = () => {
   const _connectAs = useFetcher(api.session.connectAs)
   const _users = useFetcher(api.user.search)
   const {m, formatDate, formatDateTime} = useI18n()
-  const navigate = useNavigate()
   const router = useRouter()
 
   const [showDummyAccounts, setShowDummyAccounts] = useState(false)
 
   useEffect(() => {
-    _users.fetch({clean: false}, {includeDummy: !showDummyAccounts})
-    navigate(adminModule.siteMap.users)
+    _users.fetch({clean: false}, {includeDummy: showDummyAccounts})
   }, [showDummyAccounts])
 
   const connectAs = async (email: string) => {
@@ -52,11 +48,11 @@ export const AdminUsers = () => {
           defaultLimit={200}
           data={filteredData}
           columns={[
-            // {
-            //   id: 'name',
-            //   head: m.name,
-            //   render: _ => _.name,
-            // },
+            {
+              id: 'name',
+              head: m.name,
+              render: _ => _.name,
+            },
             {
               id: 'email',
               head: m.email,
