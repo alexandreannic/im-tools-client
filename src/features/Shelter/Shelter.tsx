@@ -38,7 +38,7 @@ const ShelterSidebar = () => {
           )}
         </NavLink>
         <Link href={conf.linkToFeature(AppFeatureId.kobo_database, databaseModule.siteMap.access.absolute(kobo.drcUa.server.prod, kobo.drcUa.form.shelterNTA))}>
-          <SidebarItem icon="person_add">{m.accesses}</SidebarItem>
+          <SidebarItem icon="person_add" iconEnd="open_in_new">{m.accesses}</SidebarItem>
         </Link>
       </SidebarBody>
     </Sidebar>
@@ -86,7 +86,7 @@ export const Shelter = () => {
             <Routes>
               <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
               <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
-              <Route path={shelterModule.siteMap.access} element={<ShelterAccess/>}/>
+              {/*<Route path={shelterModule.siteMap.access} element={<ShelterAccess/>}/>*/}
             </Routes>
           </ShelterProvider>
         )}

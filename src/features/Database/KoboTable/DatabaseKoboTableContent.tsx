@@ -78,7 +78,7 @@ export const DatabaseKoboTableContent = () => {
 
 
   return (
-    <Sheet columns={columns} data={ctx.data} header={
+    <Sheet id={ctx.form.id} columns={columns} data={ctx.data} header={
       <>
         <AaSelect<number>
           sx={{maxWidth: 128, mr: 1}}

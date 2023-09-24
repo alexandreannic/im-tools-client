@@ -130,7 +130,7 @@ export const en = Object.freeze({
     downloadAsPdf: 'Download as PDF',
     all: 'All',
     details: 'Details',
-    toggleDatatableColumns: 'Toggle',
+    toggleDatatableColumns: 'Show/hide columns',
     areas: {
       north: 'North',
       east: 'East',

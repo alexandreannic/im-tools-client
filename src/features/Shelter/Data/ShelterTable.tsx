@@ -434,7 +434,7 @@ export const ShelterTable = () => {
         )),
       },
       {
-        id: 'agreement',
+        id: 'workDoneAt',
         head: m._shelter.workDoneAt,
         type: 'date',
         renderValue: _ => _.ta?.tags?.workDoneAt,
