@@ -45,7 +45,7 @@ export const DatabaseWithContext = () => {
 
   const parsedFormNames = useMemo(() => {
     const grouped = Arr(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
-    return new Enum(grouped).transform((k, v) => [k, v.sort((a, b) => a.name.localeCompare(b.name))]).get()
+    return new Enum(grouped).transform((k, v) => [k, v.sort((a, b) => a.name.localeCompare(b.name))]).sort(([ak], [bk]) => ak.localeCompare(bk)).get()
   }, [ctx.formAccess])
 
   return (

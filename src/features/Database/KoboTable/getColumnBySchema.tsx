@@ -11,6 +11,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+import {Tooltip} from '@mui/material'
 
 const ignoredColType: KoboApiColType[] = [
   'begin_group',
@@ -55,7 +56,7 @@ export const getColumnBySchema = ({
       return {
         getId: (q: KoboQuestionSchema) => `${groupIndex}_${q.name}`,
         getHead: (name: string) => `[${groupIndex}] ${name}`,
-        getVal: (row: KoboMappedAnswer, name: string) => (row as any)[groupName][groupIndex]?.[name]
+        getVal: (row: KoboMappedAnswer, name: string) => (row as any)[groupName]?.[groupIndex]?.[name]
       }
     return {
       getId: (q: KoboQuestionSchema) => q.name,
@@ -72,7 +73,8 @@ export const getColumnBySchema = ({
           id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
-          render: row => <KoboAttachedImg attachments={row.attachments} fileName={getVal(row, q.name) as string}/>
+          render: row =>
+            <KoboAttachedImg attachments={row.attachments} fileName={getVal(row, q.name) as string}/>
         }
       }
       case 'calculate': {
