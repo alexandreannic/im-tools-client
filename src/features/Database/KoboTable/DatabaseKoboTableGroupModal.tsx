@@ -7,41 +7,52 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useI18n} from '@/core/i18n'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
-import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {DatabaseKoboContext, useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
+import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
 
 export const DatabaseKoboTableGroupModal = ({
-  anchorEl,
+  schema,
+  translateQuestion,
+  translateChoice,
+  choicesIndex,
+  groupSchemas,
+  groupData,
   name,
   onClose,
-  groupData,
+  formId,
+  anchorEl,
 }: {
+  formId: KoboId
+  schema: KoboQuestionSchema[]
+  translateQuestion: KoboTranslateQuestion
+  translateChoice: KoboTranslateChoice
+  choicesIndex: DatabaseKoboContext['schemaHelper']['choicesIndex']
+  groupSchemas: DatabaseKoboContext['schemaHelper']['groupSchemas']
   groupData: KoboAnswer[],
   name: string
   onClose: () => void
   anchorEl: any,
 }) => {
   const {m} = useI18n()
-  const ctx = useDatabaseKoboTableContext()
   const columns = useMemo(() => {
     return getColumnBySchema({
-      schema: ctx.schemaHelper.groupSchemas[name],
       data: groupData,
       m,
-      translateQuestion: ctx.translate.question,
-      translateChoice: ctx.translate.choice,
-      choicesIndex: ctx.schemaHelper.choicesIndex,
-      groupSchemas: ctx.schemaHelper.groupSchemas,
+      schema: schema,
+      translateQuestion: translateQuestion,
+      translateChoice: translateChoice,
+      choicesIndex: choicesIndex,
+      groupSchemas: groupSchemas,
     })
-  }, [ctx.schema])
+  }, [schema])
 
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead>
-        <Txt block sx={{maxWidth: 400}} truncate>{ctx.translate.question(name)}</Txt>
+        <Txt block sx={{maxWidth: 400}} truncate>{translateQuestion(name)}</Txt>
       </PanelHead>
       <PanelBody>
-        <Sheet columns={columns} data={groupData}/>
+        <Sheet columns={columns} data={groupData} id={name}/>
       </PanelBody>
     </Popover>
   )

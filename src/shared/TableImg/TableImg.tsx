@@ -1,36 +1,49 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {makeStyles} from 'tss-react/mui'
+import {Tooltip} from '@mui/material'
 
-const useStyles = makeStyles<{size: number}>()((t, {size}) => ({
+const useStyles = makeStyles<{url: string, size: number, tooltipSize?: number}>()((t, {url, size, tooltipSize}) => ({
+  common: {
+    display: 'inline-block',
+    backgroundImage: `url(${url})`,
+    borderRadius: '6px',
+  },
   root: {
+    backgroundColor: t.palette.divider,
     '&:hover': {
       transform: 'scale(1.2)',
       boxShadow: t.shadows[4],
     },
+    backgroundSize: 'cover',
     verticalAlign: 'middle',
-    display: 'inline-block',
     transition: t.transitions.create('all'),
-    backgroundColor: t.palette.divider,
-    // backgroundImage: `url(${url})`,
     height: size,
     width: size,
-    borderRadius: '6px',
-    backgroundSize: 'cover'
+  },
+  tooltip: {
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    height: tooltipSize,
+    width: tooltipSize,
   }
 }))
 
 export const TableImg = ({
   url,
   size = 30,
+  tooltipSize,
 }: {
+  tooltipSize?: number
   size?: number
   url: string
 }) => {
-  const {classes} = useStyles({size})
+  const {classes, cx} = useStyles({url, size, tooltipSize})
   return url ? (
-    <a href={url} target="_blank">
-      <div className={classes.root} style={{backgroundImage: `url(${url})`,}}/>
-    </a>
+    <Tooltip enterDelay={340} title={tooltipSize && <div className={cx(classes.common, classes.tooltip)}/>}>
+      <a href={url} target="_blank">
+        <div className={cx(classes.root, classes.common)}/>
+      </a>
+    </Tooltip>
   ) : (
     <></>
   )

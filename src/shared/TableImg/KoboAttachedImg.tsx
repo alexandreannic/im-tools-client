@@ -18,14 +18,16 @@ export const KoboAttachedImg = ({
   serverId,
   attachments,
   size,
+  tooltipSize = 450,
 }: {
   size?: number
+  tooltipSize?: number
   fileName?: string
   serverId?: string
   attachments: KoboAttachment[]
 }) => {
   const fileUrl = useMemo(() => getKoboPath(attachments, fileName), [attachments, fileName])
   return (
-    <TableImg size={size} url={(fileUrl ? getUnsecureKoboImgUrl(fileUrl, serverId) : '') ?? ''}/>
+    <TableImg size={size} tooltipSize={tooltipSize} url={(fileUrl ? getUnsecureKoboImgUrl(fileUrl, serverId) : '') ?? ''}/>
   )
 }
