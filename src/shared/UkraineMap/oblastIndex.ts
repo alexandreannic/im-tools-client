@@ -31,7 +31,7 @@ export class OblastIndex {
   }
 
   static readonly oblastByISO = Object.freeze({
-    'UA43': `Autonomous Republic of Crimea`,
+    'UA01': `Autonomous Republic of Crimea`,
     'UA71': `Cherkaska`,
     'UA74': `Chernihivska`,
     'UA73': `Chernivetska`,
@@ -44,7 +44,7 @@ export class OblastIndex {
     'UA35': `Kirovohradska`,
     'UA80': `Kyiv`,
     'UA32': `Kyivska`,
-    'UA09': `Luhanska`, // UA-09 in Real but UA-44 in Activity Info
+    'UA44': `Luhanska`, // UA-09 in Real but UA-44 in Activity Info
     'UA46': `Lvivska`,
     'UA48': `Mykolaivska`,
     'UA51': `Odeska`,
@@ -62,7 +62,7 @@ export class OblastIndex {
 
 }
 
-const protHH0oblastKey = {
+const protHH0oblastKey: Record<string, OblastISO> = {
   vin: 'UA05',
   vol: 'UA07',
   dnip: 'UA12',
@@ -72,9 +72,9 @@ const protHH0oblastKey = {
   zap: 'UA23',
   ivan: 'UA26',
   kyi: 'UA32',
-  avt: 'UA43',
+  avt: 'UA01',
   kir: 'UA35',
-  luh: 'UA09',
+  luh: 'UA44',
   lvi: 'UA46',
   myk: 'UA48',
   ode: 'UA51',
@@ -86,7 +86,7 @@ const protHH0oblastKey = {
   khe: 'UA65',
   khm: 'UA68',
   che: 'UA71',
-  chern: 'UA77',
+  chern: 'UA73',
   cherni: 'UA74',
-  sev: 'UA40',
+  sev: 'UA85',
 }
