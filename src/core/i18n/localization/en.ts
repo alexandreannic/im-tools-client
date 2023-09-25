@@ -372,8 +372,11 @@ export const en = Object.freeze({
     _dashboardSafetyIncidentsTracker: {
       title: 'Safety Incidents Tracker',
       incidents: 'Incidents',
+      incident: 'Incident',
+      attackOfOn: (type: string, oblast: string) => `${type} attack on ${oblast}`,
       attackTypes: 'Attack type',
       attacks: 'Attacks',
+      attack: 'Attack',
       dead: 'Dead',
       injured: 'Injured',
       typeOfCasualties: 'Type of casualties',

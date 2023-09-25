@@ -293,7 +293,7 @@ export const DashboardMealVisitMonitoring = () => {
               <Div column>
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
                   <Lazy deps={[data]} fn={() => data.map(row => ({
-                    id: row.id,
+                    id: '' + row.id,
                     title: row.mdp,
                     date: row.mdd ?? row.end,
                     desc: row.fcpc,

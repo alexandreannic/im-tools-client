@@ -30,6 +30,7 @@ import {KoboLineChart} from '@/features/Dashboard/shared/KoboLineChart'
 import {format} from 'date-fns'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
+import {DashboardMealVisitMonitoringComments} from '@/features/Dashboard/DashboardMealMonitoring/DashboardMealVisitMonitoringComments'
 
 export interface DashboardPageProps {
   filters: OptionFilters
@@ -271,6 +272,16 @@ export const DashboardSafetyIncidentsTracker = () => {
                 </SlidePanel>
                 <SlidePanel title={m._dashboardSafetyIncidentsTracker.typeOfCasualties}>
                   <SafetyIncidentsTrackerBarChart data={data} question="type_casualties"/>
+                </SlidePanel>
+                <SlidePanel>
+                  <Lazy deps={[data]} fn={() => data?.filter(_ => _.attack === 'yes').map((_: KoboAnswer<SafetyIncidentTracker>) => ({
+                    id: _.id,
+                    title: m._dashboardSafetyIncidentsTracker.attackOfOn(_.attack_type, _.oblast),
+                    date: _.date_time,
+                    desc: _.Attack_details,
+                  }))}>
+                    {_ => <DashboardMealVisitMonitoringComments data={_}/>}
+                  </Lazy>
                 </SlidePanel>
               </Div>
             </Div>
