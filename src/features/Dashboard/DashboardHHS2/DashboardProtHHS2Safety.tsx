@@ -6,7 +6,6 @@ import {KoboUkraineMap} from '../shared/KoboUkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ChartTools} from '@/core/chartTools'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
 
 export const DashboardProtHHS2Safety = ({
   data,

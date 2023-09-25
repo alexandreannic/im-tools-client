@@ -1,5 +1,4 @@
 import {DrcOffice} from '@/core/drcJobTitle'
-import {map} from '@alexandreannic/ts-utils'
 
 export interface User {
   email: string

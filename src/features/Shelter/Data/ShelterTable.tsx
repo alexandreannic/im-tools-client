@@ -343,8 +343,7 @@ export const ShelterTable = () => {
             }}
             options={ShelterContractorPrices.findContractor({oblast: ta?.ben_det_oblast, lot: 1}).map(_ => ({
               value: _, children: _,
-            }))
-            }
+            }))}
           />
         )),
       },
@@ -451,6 +450,7 @@ export const ShelterTable = () => {
     <Page width="full">
       <Panel>
         <Sheet
+          id="shelter"
           title="Shelter-Assessment_database"
           // showExportBtn
           header={

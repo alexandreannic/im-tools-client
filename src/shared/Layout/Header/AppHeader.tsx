@@ -1,4 +1,3 @@
-
 import {alpha, BoxProps, Icon} from '@mui/material'
 import {IconBtn, Txt} from 'mui-extension'
 import {layoutConfig} from '../index'

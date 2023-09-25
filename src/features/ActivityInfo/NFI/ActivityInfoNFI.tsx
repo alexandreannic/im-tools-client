@@ -8,7 +8,6 @@ import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
 import {MPCA_NFIOptions} from '@/core/koboModel/MPCA_NFI/MPCA_NFIOptions'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
-import {Datatable} from '@/shared/Datatable/Datatable'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 import {ActivityInfoHelper} from '../shared/activityInfoHelper'
 import {format, subMonths} from 'date-fns'
@@ -249,7 +248,7 @@ const _ActivityInfo = ({
         </AaBtn>
       </Box>
       <Panel>
-        <Sheet<Row> data={data} columns={[
+        <Sheet<Row> id="ai-nfi" data={data} columns={[
           {
             id: 'actions', head: '', width: 200, render: (_, i) =>
               <>

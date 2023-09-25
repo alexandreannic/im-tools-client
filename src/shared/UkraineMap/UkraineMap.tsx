@@ -1,11 +1,10 @@
 import {Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
 import {alpha, Box, BoxProps, darken, useTheme} from '@mui/material'
-import {useEffect, useMemo} from 'react'
+import {useMemo} from 'react'
 import {OblastIndex, OblastISO} from './oblastIndex'
 import {Txt} from 'mui-extension'
 import {toPercent} from '../../utils/utils'
-import {omitBy} from 'lodash'
 
 // viewBox="22.138577 52.380834 40.220623 44.387017"
 // width="612.47321"

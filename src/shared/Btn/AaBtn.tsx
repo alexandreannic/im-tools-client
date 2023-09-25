@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {forwardRef, ReactNode} from 'react'
-import {Box, Button, CircularProgress, Icon, SxProps, Tooltip} from '@mui/material'
+import {Box, Button, CircularProgress, Icon, Tooltip} from '@mui/material'
 import {ButtonProps} from '@mui/material/Button'
 import {makeStyles} from 'tss-react/mui'
 

@@ -3,7 +3,7 @@ import React, {CSSProperties, ReactNode, useMemo} from 'react'
 import {DatatableColumnToggle} from './DatatableColumnsToggle'
 import {useI18n} from '../../core/i18n'
 import {Fender} from 'mui-extension'
-import {usePersistentState} from 'react-persistent-state'
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {combineSx, sxUtils} from '../../core/theme'
 
 type OrderBy = 'asc' | 'desc'

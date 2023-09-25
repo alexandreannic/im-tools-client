@@ -48,6 +48,7 @@ export const WfpDeduplicationData = () => {
     <Page width="full">
       <Panel>
         <Sheet
+          id="wfp"
           showExportBtn
           title={'wfp-deduplication-' + format(new Date(), 'yyyy-MM-dd')}
           loading={_search.loading}

@@ -2,17 +2,14 @@ import React, {ReactNode, useCallback, useContext, useMemo, useState} from 'reac
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {kobo} from '@/koboDrcUaFormId'
-import {useI18n} from '@/core/i18n'
 import {UseShelterData, useShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
-import {_Arr, Arr, fnSwitch} from '@alexandreannic/ts-utils'
+import {Arr} from '@alexandreannic/ts-utils'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
-import {CfmContext} from '@/features/Cfm/CfmContext'
 import {useSession} from '@/core/Session/SessionContext'
-import {DrcOffice} from '@/core/drcJobTitle'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 
 export interface ShelterContext {
@@ -24,35 +21,11 @@ export interface ShelterContext {
   langIndex: number
   fetching?: boolean
   fetchAll: () => Promise<void>
-  // helper: {
-  //   nta: ReturnType<typeof buildFormHelper>
-  //   ta: ReturnType<typeof buildFormHelper>
-  // }
 }
 
 const Context = React.createContext({} as ShelterContext)
 
 export const useShelterContext = () => useContext<ShelterContext>(Context)
-
-// const buildFormHelper = (schemaTa: KoboApiForm, langIndex: number, m: Messages) => {
-//   const schemaHelper = buildKoboSchemaHelper(schemaTa, m)
-//   return {
-//     schemaHelper,
-//     translate: getKoboTranslations({
-//       schema: schemaTa,
-//       langIndex,
-//       questionIndex: schemaHelper.questionIndex,
-//     })
-//   }
-// }
-
-// const shelterToOffice = (_?: Shelter_NTA['back_office']) => fnSwitch(_!, {
-//   cej: DrcOffice.Chernihiv,
-//   dnk: DrcOffice.Dnipro,
-//   hrk: DrcOffice.Kharkiv,
-//   nlv: DrcOffice.Mykolaiv,
-//   umy: DrcOffice.Sumy,
-// }, () => undefined)
 
 export const ShelterProvider = ({
   schemaTa,
@@ -65,7 +38,6 @@ export const ShelterProvider = ({
 }) => {
   const {api} = useAppSettings()
   const [langIndex, setLangIndex] = useState<number>(0)
-  const {m} = useI18n()
   const {session, accesses} = useSession()
 
   const {access, allowedOffices} = useMemo(() => {
@@ -111,38 +83,6 @@ export const ShelterProvider = ({
     await fetchAll()
   })
 
-  // const _updateNta = useAsync(<K extends keyof ShelterNtaTags>({answerId, key, value}: {answerId: KoboAnswerId, key: K, value: ShelterNtaTags[K]}) => api.kobo.answer.updateTag({
-  //   formId: kobo.drcUa.form.shelterNTA,
-  //   answerId: answerId,
-  //   tags: {[key]: value},
-  // }).then(newTag => {
-  //   _data._fetchNta.setEntity(data => data?.map(d => {
-  //     if (d.id === answerId) {
-  //       d.tags = newTag
-  //     }
-  //     return d
-  //   }))
-  // }), {
-  //   requestKey: ([_]) => _.answerId
-  // })
-  //
-  // const _updateTa = useAsync(<K extends keyof ShelterTaTags>({answerId, key, value}: {answerId: KoboAnswerId, key: K, value: ShelterTaTags[K]}) => api.kobo.answer.updateTag({
-  //   formId: kobo.drcUa.form.shelterNTA,
-  //   answerId: answerId,
-  //   tags: {[key]: value},
-  // }).then(newTag => {
-  //   _data._fetchTa.setEntity(data => data?.map(d => {
-  //     if (d.id === answerId) {
-  //       d.tags = newTag
-  //     }
-  //     return d
-  //   }))
-  // }), {
-  //   requestKey: ([_]) => _.answerId
-  // })
-
-  // const _updateTag = useAsync(api.kobo.answer.updateTag)
-
   return (
     <Context.Provider value={{
       access,
@@ -153,7 +93,6 @@ export const ShelterProvider = ({
       ta: _taActions,
       fetchAll,
       langIndex,
-      // helper: {ta, nta},
     }}>
       {children}
     </Context.Provider>

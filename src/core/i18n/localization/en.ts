@@ -2,11 +2,10 @@ import {format, formatDistance, formatDuration as formatDurationFns, sub} from '
 import {externalLinks} from '../../externalLinks'
 import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
 import {Period} from '../../type'
-import Status = KoboFormProtHH.Status
-import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
 import {appConfig} from '@/conf/AppConfig'
 import {capitalize} from '@/utils/utils'
 import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import Status = KoboFormProtHH.Status
 
 const invalidDate = ''
 

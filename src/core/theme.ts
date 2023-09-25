@@ -2,7 +2,6 @@ import {red} from '@mui/material/colors'
 import {alpha, createTheme, darken, SxProps, Theme} from '@mui/material'
 import {ThemeOptions} from '@mui/material/styles/createTheme'
 import {lighten} from '@mui/system/colorManipulator'
-import {dark} from '@mui/material/styles/createPalette'
 
 export const combineSx = (...sxs: (SxProps<Theme> | undefined | false)[]): SxProps<Theme> => {
   return sxs.reduce((res, sx) => (sx !== undefined && sx !== false ? {...res, ...sx} : res), {} as any)

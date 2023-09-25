@@ -13,7 +13,6 @@ import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
-import {ShelterAccess} from '@/features/Shelter/Access/ShelterAccess'
 import Link from 'next/link'
 import {databaseModule} from '@/features/Database/databaseModule'
 
@@ -86,7 +85,6 @@ export const Shelter = () => {
             <Routes>
               <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
               <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
-              {/*<Route path={shelterModule.siteMap.access} element={<ShelterAccess/>}/>*/}
             </Routes>
           </ShelterProvider>
         )}
