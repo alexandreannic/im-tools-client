@@ -44,7 +44,7 @@ export class OblastIndex {
     'UA35': `Kirovohradska`,
     'UA80': `Kyiv`,
     'UA32': `Kyivska`,
-    'UA44': `Luhanska`, // UA-09 in Real but UA-44 in Activity Info
+    'UA09': `Luhanska`, // UA-09 in Real but UA-44 in Activity Info
     'UA46': `Lvivska`,
     'UA48': `Mykolaivska`,
     'UA51': `Odeska`,
