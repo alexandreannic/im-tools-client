@@ -152,6 +152,7 @@ export const CfmTable = ({}: any) => {
     <Page width="full">
       <Panel>
         <Sheet
+          id="cfm"
           header={
             <>
               <AAIconBtn

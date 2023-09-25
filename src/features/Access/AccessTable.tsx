@@ -34,6 +34,7 @@ export const AccessTable = ({
 
   return (
     <Sheet<Access>
+      id="access"
       loading={_data.loading}
       header={header}
       data={_data.get()}

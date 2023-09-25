@@ -11,7 +11,7 @@ import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/Databas
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {Switch, Theme} from '@mui/material'
-import {usePersistentState} from 'react-persistent-state'
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 

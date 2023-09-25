@@ -13,7 +13,7 @@ import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
 import {format} from 'date-fns'
 import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
 import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
-import {usePersistentState} from 'react-persistent-state'
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 type OrderBy = 'asc' | 'desc'
 

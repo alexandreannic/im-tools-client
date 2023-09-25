@@ -249,7 +249,7 @@ const _ActivityInfo = ({
         </AaBtn>
       </Box>
       <Panel>
-        <Sheet<Row> data={data} columns={[
+        <Sheet<Row> id="ai-nfi" data={data} columns={[
           {
             id: 'actions', head: '', width: 200, render: (_, i) =>
               <>

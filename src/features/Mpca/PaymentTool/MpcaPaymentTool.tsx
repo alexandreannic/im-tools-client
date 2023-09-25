@@ -86,7 +86,7 @@ export const MpcaPaymentTool = () => {
           </Grid>
 
           <Panel>
-            <Sheet data={_answers.entity} loading={_answers.loading} columns={[
+            <Sheet id="mpca-payment" data={_answers.entity} loading={_answers.loading} columns={[
               {id: 'date', head: m.date, type: 'date', render: _ => formatDate(_.date)},
               {id: 'taxId', head: m.taxID, render: _ => _.taxId},
               {

@@ -2,6 +2,7 @@ import {BoxProps} from '@mui/material'
 import React from 'react'
 import {Sheet} from '@/shared/Sheet/Sheet'
 
+/** @deprecated*/
 export const AnswerTable = <T extends Record<string, any>, >({
   answers,
   ...props
@@ -10,6 +11,7 @@ export const AnswerTable = <T extends Record<string, any>, >({
 } & BoxProps) => {
   return (
     <Sheet<T>
+      id="answer-table"
       title=""
       {...props}
       data={answers}

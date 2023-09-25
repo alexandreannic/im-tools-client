@@ -47,6 +47,7 @@ export const AdminProxy = () => {
     <Page width="lg">
       <Panel>
         <Sheet
+          id="proxy"
           header={
             <>
               <Confirm

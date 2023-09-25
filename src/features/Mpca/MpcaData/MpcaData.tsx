@@ -37,6 +37,7 @@ export const MpcaData = () => {
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
         <Sheet<MpcaRow>
+          id="mpca"
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}
           loading={ctx.fetcherData.loading || ctx.fetcherDeduplication.loading}
