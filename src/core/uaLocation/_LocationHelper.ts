@@ -1,7 +1,6 @@
 import {Enum} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {aiOblasts} from './aiOblasts'
-import {aiRaions} from './aiRaions'
 import {hromadas} from './hromadas'
 import {AILocation, raions} from './raions'
 // @ts-ignore

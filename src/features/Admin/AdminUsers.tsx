@@ -39,6 +39,7 @@ export const AdminUsers = () => {
     <Page width="lg">
       <Panel>
         <Sheet
+          id="users"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
               <Txt sx={{fontSize: '1rem'}} color="hint">{m.showDummyAccounts}</Txt>

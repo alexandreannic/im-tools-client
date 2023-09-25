@@ -7,7 +7,7 @@ import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {map} from '@alexandreannic/ts-utils'
 import {getKoboImagePath} from '@/features/Mpca/MpcaData/MpcaData'
 import {MpcaPaymentToolForm} from './MpcaPaymentToolForm'
@@ -86,7 +86,7 @@ export const MpcaPaymentTool = () => {
           </Grid>
 
           <Panel>
-            <Sheet data={_answers.entity} loading={_answers.loading} columns={[
+            <Sheet id="mpca-payment" data={_answers.entity} loading={_answers.loading} columns={[
               {id: 'date', head: m.date, type: 'date', render: _ => formatDate(_.date)},
               {id: 'taxId', head: m.taxID, render: _ => _.taxId},
               {

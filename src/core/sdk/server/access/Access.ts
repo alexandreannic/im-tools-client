@@ -1,7 +1,6 @@
 import {AppFeatureId} from '@/features/appFeatureId'
 import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
-import admin from '@/pages/admin'
 import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 
 export enum AccessLevel {

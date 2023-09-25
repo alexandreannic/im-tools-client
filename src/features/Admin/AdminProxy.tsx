@@ -7,7 +7,6 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {Switch} from '@mui/material'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {Confirm} from 'mui-extension/lib/Confirm'
 import {useForm} from 'react-hook-form'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {Utils} from '@/utils/utils'
@@ -15,6 +14,7 @@ import {Txt} from 'mui-extension'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {Proxy} from '@/core/sdk/server/proxy/Proxy'
 import {endOfDay} from 'date-fns'
+import {Modal} from 'mui-extension/lib/Modal'
 
 interface CreateForm {
   name: string
@@ -47,9 +47,10 @@ export const AdminProxy = () => {
     <Page width="lg">
       <Panel>
         <Sheet
+          id="proxy"
           header={
             <>
-              <Confirm
+              <Modal
                 title={m.create}
                 loading={_search.creating}
                 confirmDisabled={!_createForm.formState.isValid}
@@ -93,7 +94,7 @@ export const AdminProxy = () => {
                 }
               >
                 <AAIconBtn>add</AAIconBtn>
-              </Confirm>
+              </Modal>
             </>
           }
           data={_search.list}

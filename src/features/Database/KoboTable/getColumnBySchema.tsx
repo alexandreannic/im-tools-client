@@ -11,7 +11,6 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
-import {Tooltip} from '@mui/material'
 
 const ignoredColType: KoboApiColType[] = [
   'begin_group',

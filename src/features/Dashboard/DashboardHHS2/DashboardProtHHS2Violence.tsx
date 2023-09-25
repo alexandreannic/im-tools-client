@@ -10,8 +10,7 @@ import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {ProtHHS_2_1} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {Box, Checkbox} from '@mui/material'
-import {Txt} from 'mui-extension'
+import {Checkbox} from '@mui/material'
 
 export const DashboardProtHHS2Violence = ({
   data,

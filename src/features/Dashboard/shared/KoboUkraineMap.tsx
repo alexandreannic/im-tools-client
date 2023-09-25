@@ -1,6 +1,6 @@
 import {ChartTools} from '@/core/chartTools'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import React, {useEffect, useMemo} from 'react'
+import React, {useMemo} from 'react'
 import {_Arr} from '@alexandreannic/ts-utils'
 import {BoxProps} from '@mui/material'
 import {OblastISO} from '@/shared/UkraineMap/oblastIndex'

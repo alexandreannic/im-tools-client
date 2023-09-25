@@ -6,7 +6,7 @@ import {useI18n} from '@/core/i18n'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
-import {snapshotAlternateColor, snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
 export const SnapshotProtMonitoEchoDisplacement = () => {
   const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()

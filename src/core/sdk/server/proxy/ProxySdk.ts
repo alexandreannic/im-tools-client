@@ -1,5 +1,4 @@
 import {ApiClient} from '@/core/sdk/server/ApiClient'
-import {User} from '@/core/sdk/server/user/User'
 import {UUID} from '@/core/type'
 import {Proxy} from '@/core/sdk/server/proxy/Proxy'
 

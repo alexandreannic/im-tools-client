@@ -13,7 +13,7 @@ import {Utils} from '@/utils/utils'
 import {TableIcon, TableIconBtn, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect} from '@/shared/Select/Select'
 import {DrcOffice} from '@/core/drcJobTitle'
-import {CfmData, cfmMakeEditRequestKey, cfmMakeUpdateRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
 import {cfmModule} from '@/features/Cfm/CfmModule'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -22,9 +22,8 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo} from '@/koboDrcUaFormId'
 import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
 import {Autocomplete} from '@mui/material'
-import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useSession} from '@/core/Session/SessionContext'
-import {Confirm} from 'mui-extension/lib/Confirm'
+import {Modal} from 'mui-extension/lib/Modal'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -152,6 +151,7 @@ export const CfmTable = ({}: any) => {
     <Page width="full">
       <Panel>
         <Sheet
+          id="cfm"
           header={
             <>
               <AAIconBtn
@@ -333,14 +333,14 @@ export const CfmTable = ({}: any) => {
                         onClick={() => ctx.asyncEdit.call({formId: row.formId, answerId: row.id})}
                         children="edit"
                       />
-                      <Confirm
+                      <Modal
                         loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(row.formId, row.id))}
                         content={m._cfm.deleteWarning}
                         onConfirm={(e, close) => ctx.asyncRemove.call({formId: row.formId, answerId: row.id}).then(close)}
                         title={m.shouldDelete}
                       >
                         <TableIconBtn children="delete"/>
-                      </Confirm>
+                      </Modal>
                     </>
                   )}
                   <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>

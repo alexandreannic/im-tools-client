@@ -3,7 +3,6 @@ import {Page} from '@/shared/Page'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {format, getDaysInMonth, parse, subMonths} from 'date-fns'
 import {mapFor} from '@alexandreannic/ts-utils'
-import {type} from 'os'
 
 enum Status {
   AM = 'AM',

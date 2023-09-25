@@ -2,14 +2,14 @@ import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmC
 import {useNavigate, useParams} from 'react-router'
 import {Page, PageTitle} from '@/shared/Page'
 import * as yup from 'yup'
-import {Fender, Txt} from 'mui-extension'
+import {Fender} from 'mui-extension'
 import {Box, Divider, Grid, Icon} from '@mui/material'
 import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {ListRow} from '@/shared/ListRow'
 import {useI18n} from '@/core/i18n'
 import React from 'react'
 import {CfmDataProgram, CfmDataSource, KoboMealCfmArea, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
+import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboSelectTag} from '@/shared/KoboSelectTag'
 import {DrcOffice} from '@/core/drcJobTitle'
 import {Utils} from '@/utils/utils'
@@ -21,8 +21,8 @@ import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmIn
 import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {cfmModule} from '@/features/Cfm/CfmModule'
-import {Confirm} from 'mui-extension/lib/Confirm'
 import {useSession} from '@/core/Session/SessionContext'
+import {Modal} from 'mui-extension/lib/Modal'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -232,7 +232,7 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
       </Panel>
       {canEdit && (
         <Box sx={{display: 'flex', justifyContent: 'center'}}>
-          <Confirm
+          <Modal
             loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(entry.formId, entry.id))}
             content={m._cfm.deleteWarning}
             onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmModule.siteMap.data))}
@@ -246,7 +246,7 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
             >
               {m.remove}
             </AaBtn>
-          </Confirm>
+          </Modal>
         </Box>
       )}
     </Page>

@@ -4,7 +4,7 @@ import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
 import {useAppSettings} from '../../core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
-import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
+import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
 import {Panel} from '@/shared/Panel'
 import {getGoogle} from '@/core/google'
 

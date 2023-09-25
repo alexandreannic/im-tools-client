@@ -1,7 +1,7 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext} from 'react'
 import {ApiSdk} from '../sdk/server/ApiSdk'
 import {appConfig, AppConfig} from '../../conf/AppConfig'
-import {usePersistentState} from 'react-persistent-state'
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 export interface ConfigContext {
   api: ApiSdk

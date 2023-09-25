@@ -1,7 +1,7 @@
 import React from 'react'
 import {Icon, Tooltip} from '@mui/material'
 import {AnswerTable} from './AnswerTable'
-import {Confirm} from 'mui-extension/lib/Confirm'
+import {Modal} from 'mui-extension/lib/Modal'
 import {useI18n} from '../../../core/i18n'
 import {IconBtn} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -31,7 +31,7 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
 }) => {
   const {m} = useI18n()
   return (
-    <Confirm
+    <Modal
       maxWidth={'lg'}
       title={m.koboData}
       PaperProps={{}}
@@ -39,7 +39,7 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
       content={<AnswerTable answers={answers}/>}
     >
       <AAIconBtn tooltip="View related Kobo data" children="table_view" color="primary"/>
-    </Confirm>
+    </Modal>
   )
 }
 
@@ -83,7 +83,7 @@ const AIPreviewJSON = ({
   request: any
 }) => {
   return (
-    <Confirm title={title} content={
+    <Modal title={title} content={
       <pre>{JSON.stringify(request, null, 2)}</pre>
     }>
       <Tooltip title={title}>
@@ -91,6 +91,6 @@ const AIPreviewJSON = ({
           <Icon>{icon}</Icon>
         </IconBtn>
       </Tooltip>
-    </Confirm>
+    </Modal>
   )
 }
