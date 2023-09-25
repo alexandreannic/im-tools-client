@@ -14,55 +14,26 @@ import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisi
 import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringOptions'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {Txt} from 'mui-extension'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Period} from '@/core/type'
 import {Lazy} from '@/shared/Lazy'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {OblastISOSVG} from '@/shared/UkraineMap/ukraineSvgPath'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {ViewMoreText} from '@/shared/ViewMoreText'
-import {DashboardMealVisitMonitoringComments} from '@/features/Dashboard/DashboardMealMonitoring/DashboardMealVisitMonitoringComments'
+import {CommentsPanel} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
+import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
+import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
 export interface DashboardPageProps {
   filters: OptionFilters
   data: Arr<KoboAnswer<MealVisitMonitoring>>
 }
 
-const mapOblast: Record<string, OblastISOSVG> = {
-  aroc: 'UA43',//'UA01',
-  cherkaska: 'UA71',
-  chernihivska: 'UA74',
-  chernivetska: 'UA77',// 'UA73',
-  dnipropetrovska: 'UA12',
-  donetska: 'UA14',
-  'ivano-frankivska': 'UA26',
-  kharkivska: 'UA63',
-  khersonska: 'UA65',
-  khmelnytska: 'UA68',
-  kirovohradska: 'UA35',
-  citykyiv: 'UA32',//'UA80',
-  kyivska: 'UA32',
-  luhanska: 'UA09',//'UA44',
-  lvivska: 'UA46',
-  mykolaivska: 'UA48',
-  odeska: 'UA51',
-  poltavska: 'UA53',
-  rivnenska: 'UA56',
-  sevastopilska: 'UA40',//'UA85',
-  sumska: 'UA59',
-  ternopilska: 'UA61',
-  vinnytska: 'UA05',
-  volynska: 'UA07',
-  zakarpatska: 'UA21',
-  zaporizka: 'UA23',
-  zhytomyrska: 'UA18',
-}
+const mapOblast: Record<string, OblastISO> = KoboSafetyIncidentHelper.mapOblast
 
 const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOptions>()({
   oblast: {
@@ -294,7 +265,35 @@ export const DashboardMealVisitMonitoring = () => {
 
               <Div column>
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
-                  <DashboardMealVisitMonitoringComments data={data}/>
+                  <Lazy deps={[data]} fn={() => data.map(row => ({
+                    id: '' + row.id,
+                    title: (MealVisitMonitoringOptions.mdp as any)[row.mdp],
+                    date: row.mdd ?? row.end,
+                    desc: row.fcpc,
+                    children: (
+                      <>
+                        {row.fcpl && (
+                          <Box component="a" target="_blank" href={row.fcpl} sx={{
+                            height: 90,
+                            width: 90,
+                            display: 'flex',
+                            alignItems: 'center',
+                            borderRadius: '6px',
+                            justifyContent: 'center',
+                            color: t => t.palette.primary.main,
+                            border: t => `1px solid ${t.palette.divider}`
+                          }}>
+                            <Icon>open_in_new</Icon>
+                          </Box>
+                        )}
+                        {mapFor(10, i =>
+                          <KoboAttachedImg key={i} attachments={row.attachments} size={90} fileName={(row as any)['fcp' + (i + 1)]}/>
+                        )}
+                      </>
+                    )
+                  }))}>
+                    {_ => <CommentsPanel data={_}/>}
+                  </Lazy>
                 </SlidePanel>
               </Div>
             </Div>

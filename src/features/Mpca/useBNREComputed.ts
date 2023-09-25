@@ -6,36 +6,12 @@ import {chain} from '../../utils/utils'
 import {ageGroup, groupByAgeGroup} from '../../core/type'
 import {MpcaRow} from '@/features/Mpca/MpcaContext'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
-export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = {
-  cherkaska: 'UA71',
-  chernihivska: 'UA74',
-  chernivetska: 'UA73',
-  dnipropetrovska: 'UA12',
-  donetska: 'UA14',
-  'ivano-frankivska': 'UA26',
-  kharkivska: 'UA63',
-  khersonska: 'UA65',
-  khmelnytska: 'UA68',
-  kirovohradska: 'UA35',
-  kyivska: 'UA32',
-  luhanska: 'UA44',
-  lvivska: 'UA46',
-  mykolaivska: 'UA48',
-  odeska: 'UA51',
-  poltavska: 'UA53',
-  rivnenska: 'UA56',
-  sevastopilska: 'UA85',
-  sumska: 'UA59',
-  ternopilska: 'UA61',
-  vinnytska: 'UA05',
-  volynska: 'UA07',
-  zakarpatska: 'UA21',
-  zaporizka: 'UA23',
-  zhytomyrska: 'UA18',
-}
+export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = KoboSafetyIncidentHelper.mapOblast
 
 export type UseBNREComputed = ReturnType<typeof useBNREComputed>
+
 export const useBNREComputed = ({
   data,
 }: {

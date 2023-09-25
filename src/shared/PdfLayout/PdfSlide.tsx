@@ -180,6 +180,7 @@ export const SlideWidget = ({
       }
       }
       sx={{
+        minHeight: 79,
         width: '100%',
         textAlign: 'center',
         '&:last-child': {

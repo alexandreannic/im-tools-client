@@ -211,7 +211,6 @@ export const MPCAProvider = ({
 
   const data = useMemo(() => {
     if (!fetcherData.entity || !fetcherDeduplication.entity) return
-    console.log('data refresh')
     return fetcherData.entity.map(row => {
       if (!row.taxId) return row
       const dedup = fetcherDeduplication.entity![row.taxId]

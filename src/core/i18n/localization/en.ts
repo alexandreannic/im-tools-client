@@ -5,6 +5,8 @@ import {Period} from '../../type'
 import Status = KoboFormProtHH.Status
 import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
 import {appConfig} from '@/conf/AppConfig'
+import {capitalize} from '@/utils/utils'
+import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
 
 const invalidDate = ''
 
@@ -368,6 +370,21 @@ export const en = Object.freeze({
       safetyOrSecurityConcernsDuringDisplacement: 'HHs reporting security concerns during displacement',
       HHs: 'HHs',
       AvgHHSize: 'AvgHHSize',
+    },
+    _dashboardSafetyIncident: {
+      aggravatingFactors: 'Aggravating factors',
+      lastAttacks: 'Last attacks',
+      title: 'Safety Incidents Tracker',
+      incidents: 'Incidents',
+      incident: 'Incident',
+      attackOfOn: (oblast?: OblastISO, type?: string[]) => `${type?.map(capitalize).join(' and ') ?? ''}${type ? ' a' : 'A'}ttack${oblast ? ` in ${OblastIndex.findByIso(oblast)}` : ''}`,
+      attackTypes: 'Attack type',
+      attacks: 'Attacks',
+      attack: 'Attack',
+      dead: 'Dead',
+      injured: 'Injured',
+      typeOfCasualties: 'Type of casualties',
+      target: 'Target',
     },
     snapshotProtMonito: {
       echo: {
@@ -1119,6 +1136,7 @@ export const en = Object.freeze({
     projectCode: 'Project Code',
     form: 'Form',
     viewNMore: (n: number) => `View ${n} more`,
+    viewNLess: (n: number) => `View ${n} less`,
     viewMore: 'More',
     viewLess: 'Less',
     showDummyAccounts: 'Show dummy accounts',
