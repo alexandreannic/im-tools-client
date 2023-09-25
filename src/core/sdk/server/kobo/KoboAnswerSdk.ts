@@ -23,6 +23,7 @@ import {Shelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shel
 import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
 import {mapMPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFIMapping'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
+import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -54,13 +55,16 @@ export class KoboAnswerSdk {
   }
 
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
-    if (formId === kobo.drcUa.form.protectionHh2) {
-      return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
+    switch (formId) {
+      case kobo.drcUa.form.protectionHh2:
+        return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
+      case kobo.drcUa.form.mealVisitMonitoring:
+        return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
+      case kobo.drcUa.form.safetyIncident:
+        return Promise.resolve({start: new Date(2023, 8, 19), end: startOfDay(new Date())})
+      default:
+        throw new Error('To implement')
     }
-    if (formId === kobo.drcUa.form.mealVisitMonitoring) {
-      return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
-    }
-    throw new Error('To implement')
   }
 
   private static mapFilters = (_: AnswersFilters): AnswersFilters => {
@@ -198,6 +202,14 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.protectionHh,
       fnMap: KoboFormProtHH.mapAnswers,
+      ...filters,
+    })
+  }
+
+  readonly searchSafetyIncident = (filters: KoboAnswerFilter = {}): Promise<ApiPaginate<KoboSafetyIncidentHelper.Type>> => {
+    return this.search({
+      formId: kobo.drcUa.form.safetyIncident,
+      fnMap: KoboSafetyIncidentHelper.mapData,
       ...filters,
     })
   }
