@@ -19,48 +19,21 @@ import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterI
 import {Period} from '@/core/type'
 import {Lazy} from '@/shared/Lazy'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {OblastISOSVG} from '@/shared/UkraineMap/ukraineSvgPath'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {DashboardMealVisitMonitoringComments} from '@/features/Dashboard/DashboardMealMonitoring/DashboardMealVisitMonitoringComments'
+import {CommentsPanel} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
+import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
 export interface DashboardPageProps {
   filters: OptionFilters
   data: Arr<KoboAnswer<MealVisitMonitoring>>
 }
 
-const mapOblast: Record<string, OblastISOSVG> = {
-  aroc: 'UA43',//'UA01',
-  cherkaska: 'UA71',
-  chernihivska: 'UA74',
-  chernivetska: 'UA77',// 'UA73',
-  dnipropetrovska: 'UA12',
-  donetska: 'UA14',
-  'ivano-frankivska': 'UA26',
-  kharkivska: 'UA63',
-  khersonska: 'UA65',
-  khmelnytska: 'UA68',
-  kirovohradska: 'UA35',
-  citykyiv: 'UA32',//'UA80',
-  kyivska: 'UA32',
-  luhanska: 'UA09',//'UA44',
-  lvivska: 'UA46',
-  mykolaivska: 'UA48',
-  odeska: 'UA51',
-  poltavska: 'UA53',
-  rivnenska: 'UA56',
-  sevastopilska: 'UA40',//'UA85',
-  sumska: 'UA59',
-  ternopilska: 'UA61',
-  vinnytska: 'UA05',
-  volynska: 'UA07',
-  zakarpatska: 'UA21',
-  zaporizka: 'UA23',
-  zhytomyrska: 'UA18',
-}
+const mapOblast: Record<string, OblastISO> = KoboSafetyIncidentHelper.mapOblast
 
 const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOptions>()({
   oblast: {
@@ -294,7 +267,7 @@ export const DashboardMealVisitMonitoring = () => {
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
                   <Lazy deps={[data]} fn={() => data.map(row => ({
                     id: '' + row.id,
-                    title: row.mdp,
+                    title: (MealVisitMonitoringOptions.mdp as any)[row.mdp],
                     date: row.mdd ?? row.end,
                     desc: row.fcpc,
                     children: (
@@ -319,7 +292,7 @@ export const DashboardMealVisitMonitoring = () => {
                       </>
                     )
                   }))}>
-                    {_ => <DashboardMealVisitMonitoringComments data={_}/>}
+                    {_ => <CommentsPanel data={_}/>}
                   </Lazy>
                 </SlidePanel>
               </Div>

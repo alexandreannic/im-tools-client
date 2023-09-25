@@ -1,8 +1,8 @@
-import {DashboardSafetyIncidentsTracker} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncidentsTracker'
+import {DashboardSafetyIncident} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncident'
 
 const DashboardSafetyIncidentTrackerPage = () => {
   return (
-    <DashboardSafetyIncidentsTracker/>
+    <DashboardSafetyIncident/>
   )
 }
 

@@ -1,9 +1,8 @@
-import {OblastISOSVG} from './ukraineSvgPath'
 import {Enum} from '@alexandreannic/ts-utils'
 
 export interface Oblast {
   name: string
-  iso: OblastISOSVG
+  iso: OblastISO
 }
 
 export type OblastISO = keyof typeof OblastIndex['oblastByISO']

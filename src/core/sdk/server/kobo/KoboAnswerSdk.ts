@@ -23,7 +23,7 @@ import {Shelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shel
 import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
 import {mapMPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFIMapping'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
-import {mapSafetyIncidentTracker} from '@/core/koboModel/SafetyIncidentTracker/SafetyIncidentTrackerMapping'
+import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -60,7 +60,7 @@ export class KoboAnswerSdk {
         return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
       case kobo.drcUa.form.mealVisitMonitoring:
         return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
-      case kobo.drcUa.form.safetyIncidentTracker:
+      case kobo.drcUa.form.safetyIncident:
         return Promise.resolve({start: new Date(2023, 8, 19), end: startOfDay(new Date())})
       default:
         throw new Error('To implement')
@@ -206,10 +206,10 @@ export class KoboAnswerSdk {
     })
   }
 
-  readonly searchSafetyIncidentTracker = (filters: KoboAnswerFilter = {}) => {
+  readonly searchSafetyIncident = (filters: KoboAnswerFilter = {}): Promise<ApiPaginate<KoboSafetyIncidentHelper.Type>> => {
     return this.search({
-      formId: kobo.drcUa.form.safetyIncidentTracker,
-      fnMap: mapSafetyIncidentTracker,
+      formId: kobo.drcUa.form.safetyIncident,
+      fnMap: KoboSafetyIncidentHelper.mapData,
       ...filters,
     })
   }

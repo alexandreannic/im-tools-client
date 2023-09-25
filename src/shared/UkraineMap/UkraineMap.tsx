@@ -1,8 +1,8 @@
 import {Arr, Enum, map} from '@alexandreannic/ts-utils'
-import {OblastISOSVG, UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
+import {UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
 import {alpha, Box, BoxProps, darken, useTheme} from '@mui/material'
-import {useMemo} from 'react'
-import {OblastIndex} from './oblastIndex'
+import {useEffect, useMemo} from 'react'
+import {OblastIndex, OblastISO} from './oblastIndex'
 import {Txt} from 'mui-extension'
 import {toPercent} from '../../utils/utils'
 import {omitBy} from 'lodash'
@@ -16,6 +16,7 @@ const maxAlpha = .8
 const medianAlpha = minAlpha + (maxAlpha - minAlpha) / 2
 
 const computeFill = (value: number, min: number, max: number) => {
+  console.log({value, min, max})
   if (max - min === 0) return medianAlpha
   return value > 0 ? (maxAlpha - minAlpha) * (value - min) / (max - min) + minAlpha : undefined
 }
@@ -33,7 +34,7 @@ export const UkraineMap = ({
   omitValueLt?: number
   legend?: boolean
   title?: string
-  onSelect?: (oblast: OblastISOSVG) => void
+  onSelect?: (oblast: OblastISO) => void
   base?: number
   fillBaseOn?: 'percent' | 'value'
   data?: Partial<{ [key in keyof UkraineSvgPath]: {value: number, base?: number} }>
@@ -41,15 +42,15 @@ export const UkraineMap = ({
   const theme = useTheme()
 
   const filteredData = useMemo(() => {
-    return omitValueLt ? omitBy(data, _ => (_.base ?? _.value) <= omitValueLt) : data
+    return omitValueLt ? new Enum(data).filter((k, v) => !!v && v.value >= omitValueLt).get() : data
   }, [data])
 
 
   const {max, min, maxPercent, minPercent} = useMemo(() => {
-    const _data = Arr(Enum.values(filteredData)).compact()
+    const _data = Arr(Enum.values(filteredData)).compact().get
     const values = _data.map(_ => _!.value ?? 0)
     // TODO _data.map create invalid array length
-    const percents = ((_data.head && _data.head.base !== undefined) || base !== undefined) ? _data.get.map(_ => {
+    const percents = ((_data[0] && _data[0].base !== undefined) || base !== undefined) ? _data.map(_ => {
       const b = (base ?? _.base) || 1
       if (!b) {
         return 0
@@ -81,6 +82,9 @@ export const UkraineMap = ({
     return theme.palette.divider
   }
 
+  useEffect(() => {
+    console.log('filteredData', filteredData)
+  }, [filteredData])
   return (
     <Box sx={{...sx, position: 'relative'}}>
       <Box
@@ -98,6 +102,7 @@ export const UkraineMap = ({
               const fill = (percent && fillBaseOn === 'percent' && maxPercent && minPercent !== undefined)
                 ? computeFill(percent, minPercent, maxPercent)
                 : computeFill(value, min, max)
+              console.log(value, _base, percent, fill, percent && fillBaseOn === 'percent' && maxPercent && minPercent !== undefined)
               return {value, base: _base, fill, percent}
             })() : undefined
             return (

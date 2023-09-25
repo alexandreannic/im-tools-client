@@ -12,17 +12,19 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 
 const pageSize = 5
 
-export const DashboardMealVisitMonitoringComments = memo(({
-  data,
-}: {
+export interface CommentsPanelProps {
   data: _Arr<{
-    id: string
+    id: number | string
     title: string
     date?: Date
     desc?: string
     children?: ReactNode
   }>
-}) => {
+}
+
+export const CommentsPanel = memo(({
+  data,
+}: CommentsPanelProps) => {
   const [limit, setLimit] = useState(pageSize)
   const {m, formatDate} = useI18n()
   return (
@@ -37,7 +39,7 @@ export const DashboardMealVisitMonitoringComments = memo(({
           }
         }}>
           <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-            <Txt block bold size="big">{(MealVisitMonitoringOptions.mdp as any)[row.title]}</Txt>
+            <Txt block bold size="big">{row.title}</Txt>
             <Txt color="hint">{formatDate(row.date)}</Txt>
           </Box>
           <Txt block color="hint" sx={{mb: 1}}>
@@ -48,9 +50,14 @@ export const DashboardMealVisitMonitoringComments = memo(({
           </Box>
         </Box>
       ))}
-      {limit < data.length && (
-        <AaBtn variant="outlined" sx={{margin: 'auto'}} color="primary" onClick={() => setLimit(_ => _ + pageSize)}>{m.viewNMore(pageSize)}</AaBtn>
-      )}
+      <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        {limit > pageSize && (
+          <AaBtn icon="remove" variant="outlined" sx={{mr: 1}} color="primary" onClick={() => setLimit(_ => _ - pageSize)}>{m.viewNMore(pageSize)}</AaBtn>
+        )}
+        {limit < data.length && (
+          <AaBtn icon="add" variant="outlined" color="primary" onClick={() => setLimit(_ => _ + pageSize)}>{m.viewNMore(pageSize)}</AaBtn>
+        )}
+      </Box>
     </Box>
   )
 })
