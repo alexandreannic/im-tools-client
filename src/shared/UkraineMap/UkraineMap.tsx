@@ -82,9 +82,6 @@ export const UkraineMap = ({
     return theme.palette.divider
   }
 
-  useEffect(() => {
-    console.log('filteredData', filteredData)
-  }, [filteredData])
   return (
     <Box sx={{...sx, position: 'relative'}}>
       <Box

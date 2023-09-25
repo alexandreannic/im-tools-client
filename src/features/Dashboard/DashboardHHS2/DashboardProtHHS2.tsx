@@ -226,7 +226,6 @@ export const DashboardProtHHS2 = () => {
             debounce={800}
             value={[periodFilter.start, periodFilter.end]}
             onChange={([start, end]) => {
-              console.log('onchange', start, end)
               setPeriodFilter(prev => ({...prev, start: start ?? undefined, end: end ?? undefined}))
             }
             }
