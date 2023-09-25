@@ -1,1 +1,4 @@
 - Harmonize useFetcher, useAsync, useMap, ...
+- Remove sortObject and else since new Enum()
+- Delete old MPCA form mapping methods
+- Remove ScLineChart2?

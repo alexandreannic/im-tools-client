@@ -369,6 +369,16 @@ export const en = Object.freeze({
       HHs: 'HHs',
       AvgHHSize: 'AvgHHSize',
     },
+    _dashboardSafetyIncidentsTracker: {
+      title: 'Safety Incidents Tracker',
+      incidents: 'Incidents',
+      attackTypes: 'Attack type',
+      attacks: 'Attacks',
+      dead: 'Dead',
+      injured: 'Injured',
+      typeOfCasualties: 'Type of casualties',
+      target: 'Target',
+    },
     snapshotProtMonito: {
       echo: {
         livelihood: ({

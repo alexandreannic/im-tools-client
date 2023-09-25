@@ -4,19 +4,24 @@ import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/M
 import {ViewMoreText} from '@/shared/ViewMoreText'
 import {_Arr, mapFor} from '@alexandreannic/ts-utils'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
-import React, {memo, useState} from 'react'
+import React, {memo, ReactNode, useState} from 'react'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoring'
 import {useI18n} from '@/core/i18n'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 
 const pageSize = 5
-const imgSize = 90
 
 export const DashboardMealVisitMonitoringComments = memo(({
   data,
 }: {
-  data: _Arr<KoboAnswer<MealVisitMonitoring>>
+  data: _Arr<{
+    id: string
+    title: string
+    date?: Date
+    desc?: string
+    children?: ReactNode
+  }>
 }) => {
   const [limit, setLimit] = useState(pageSize)
   const {m, formatDate} = useI18n()
@@ -32,30 +37,14 @@ export const DashboardMealVisitMonitoringComments = memo(({
           }
         }}>
           <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-            <Txt block bold size="big">{(MealVisitMonitoringOptions.mdp as any)[row.mdp]}</Txt>
-            <Txt color="hint">{formatDate(row.mdd ?? row.end)}</Txt>
+            <Txt block bold size="big">{(MealVisitMonitoringOptions.mdp as any)[row.title]}</Txt>
+            <Txt color="hint">{formatDate(row.date)}</Txt>
           </Box>
           <Txt block color="hint" sx={{mb: 1}}>
-            <ViewMoreText limit={210} children={row.fcpc ?? m.noComment}/>
+            <ViewMoreText limit={210} children={row.desc ?? m.noComment}/>
           </Txt>
           <Box sx={{display: 'flex', flexWrap: 'wrap', '& > *': {mb: 1, mr: 1}}}>
-            {row.fcpl && (
-              <Box component="a" target="_blank" href={row.fcpl} sx={{
-                height: imgSize,
-                width: imgSize,
-                display: 'flex',
-                alignItems: 'center',
-                borderRadius: '6px',
-                justifyContent: 'center',
-                color: t => t.palette.primary.main,
-                border: t => `1px solid ${t.palette.divider}`
-              }}>
-                <Icon>open_in_new</Icon>
-              </Box>
-            )}
-            {mapFor(10, i =>
-              <KoboAttachedImg key={i} attachments={row.attachments} size={imgSize} fileName={(row as any)['fcp' + (i + 1)]}/>
-            )}
+            {row.children}
           </Box>
         </Box>
       ))}

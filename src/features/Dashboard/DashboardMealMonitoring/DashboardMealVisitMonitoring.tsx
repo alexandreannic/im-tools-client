@@ -14,9 +14,7 @@ import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisi
 import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringOptions'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {Txt} from 'mui-extension'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Period} from '@/core/type'
 import {Lazy} from '@/shared/Lazy'
@@ -26,8 +24,8 @@ import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {ViewMoreText} from '@/shared/ViewMoreText'
 import {DashboardMealVisitMonitoringComments} from '@/features/Dashboard/DashboardMealMonitoring/DashboardMealVisitMonitoringComments'
+import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 
 export interface DashboardPageProps {
   filters: OptionFilters
@@ -294,7 +292,35 @@ export const DashboardMealVisitMonitoring = () => {
 
               <Div column>
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
-                  <DashboardMealVisitMonitoringComments data={data}/>
+                  <Lazy deps={[data]} fn={() => data.map(row => ({
+                    id: row.id,
+                    title: row.mdp,
+                    date: row.mdd ?? row.end,
+                    desc: row.fcpc,
+                    children: (
+                      <>
+                        {row.fcpl && (
+                          <Box component="a" target="_blank" href={row.fcpl} sx={{
+                            height: 90,
+                            width: 90,
+                            display: 'flex',
+                            alignItems: 'center',
+                            borderRadius: '6px',
+                            justifyContent: 'center',
+                            color: t => t.palette.primary.main,
+                            border: t => `1px solid ${t.palette.divider}`
+                          }}>
+                            <Icon>open_in_new</Icon>
+                          </Box>
+                        )}
+                        {mapFor(10, i =>
+                          <KoboAttachedImg key={i} attachments={row.attachments} size={90} fileName={(row as any)['fcp' + (i + 1)]}/>
+                        )}
+                      </>
+                    )
+                  }))}>
+                    {_ => <DashboardMealVisitMonitoringComments data={_}/>}
+                  </Lazy>
                 </SlidePanel>
               </Div>
             </Div>
