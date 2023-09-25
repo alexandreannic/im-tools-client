@@ -23,7 +23,7 @@ import {kobo} from '@/koboDrcUaFormId'
 import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
 import {Autocomplete} from '@mui/material'
 import {useSession} from '@/core/Session/SessionContext'
-import {Confirm} from 'mui-extension/lib/Confirm'
+import {Modal} from 'mui-extension/lib/Modal'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -333,14 +333,14 @@ export const CfmTable = ({}: any) => {
                         onClick={() => ctx.asyncEdit.call({formId: row.formId, answerId: row.id})}
                         children="edit"
                       />
-                      <Confirm
+                      <Modal
                         loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(row.formId, row.id))}
                         content={m._cfm.deleteWarning}
                         onConfirm={(e, close) => ctx.asyncRemove.call({formId: row.formId, answerId: row.id}).then(close)}
                         title={m.shouldDelete}
                       >
                         <TableIconBtn children="delete"/>
-                      </Confirm>
+                      </Modal>
                     </>
                   )}
                   <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>

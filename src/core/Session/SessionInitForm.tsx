@@ -10,7 +10,7 @@ import {useEffect, useState} from 'react'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
-import {Confirm} from 'mui-extension/lib/Confirm'
+import {Modal} from 'mui-extension/lib/Modal'
 
 export const SessionInitForm = ({
   user,
@@ -53,7 +53,7 @@ export const SessionInitForm = ({
             <ScRadioGroupItem key={k} value={k} title={k}/>
           )}
         </ScRadioGroup>
-        <Confirm
+        <Modal
           title={m.confirmYourOffice(drcOffice!)}
           content={m.itCannotBeChanged(conf.contact)}
           onConfirm={() => _updateUser.fetch({}, {drcOffice: drcOffice})}
@@ -67,7 +67,7 @@ export const SessionInitForm = ({
           >
             {m.select}
           </AaBtn>
-        </Confirm>
+        </Modal>
       </Box>
     </Box>
   )
