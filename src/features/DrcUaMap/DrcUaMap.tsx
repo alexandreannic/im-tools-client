@@ -114,17 +114,14 @@ const drawUA = (selector: string, theme: Theme) => {
     'UA14',
     'UA23',
     'UA43',
-    'UA09',
+    'UA44',
     'UA65',
-    'UA09', // Luhanska is UA-44 in Activity Info
+    'UA44', // Luhanska is UA-44 in Activity Info
   ]
-
-  const fixActivityInfoWrongIso = (_: OblastISO): string => _ === 'UA44' ? 'UA09' : _
 
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
     ...Enum.keys(OblastIndex.oblastByISO)
-      .map(fixActivityInfoWrongIso)
       .map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
 

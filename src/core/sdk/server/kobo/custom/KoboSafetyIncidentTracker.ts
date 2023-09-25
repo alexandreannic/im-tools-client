@@ -3,10 +3,10 @@ import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
 
 export namespace KoboSafetyIncidentHelper {
   export const mapOblast: Record<string, OblastISO> = {
-    aroc: 'UA43',//'UA01',
+    aroc: 'UA01',//'UA43',
     cherkaska: 'UA71',
     chernihivska: 'UA74',
-    chernivetska: 'UA73',// 'UA73',
+    chernivetska: 'UA73',// 'UA77',
     dnipropetrovska: 'UA12',
     donetska: 'UA14',
     'ivano-frankivska': 'UA26',
@@ -16,7 +16,7 @@ export namespace KoboSafetyIncidentHelper {
     kirovohradska: 'UA35',
     citykyiv: 'UA80',//'UA80',
     kyivska: 'UA32',
-    luhanska: 'UA44',//'UA44',
+    luhanska: 'UA44',//'UA09',
     lvivska: 'UA46',
     mykolaivska: 'UA48',
     odeska: 'UA51',
