@@ -5,11 +5,12 @@ import throttle from 'lodash/throttle'
 
 export function usePersistentState<S>(initialState: S | (() => S), key?: string): [S, Dispatch<SetStateAction<S>>, () => void] {
   const localStorage = useMemo(() => new LocalStorageEntity<S>(generateId(key)), [])
-  const [state, setState] = useState<S>(initialState)
+  const [state, setState] = useState<S>(undefined as any)
   useEffect(() => {
     const loaded = localStorage.load()
+    console.log('ls', {loaded, state})
     if (loaded)
-      setState(localStorage.load())
+      setState(localStorage.load() ?? initialState)
   }, [])
   const throttled = useRef(throttle(localStorage.save, 1000))
   useEffect(() => throttled.current(state), [state])
