@@ -37,8 +37,6 @@ export const DatabaseTableRoute = () => {
     formId,
   }))
 
-  const data = _answers.entity
-
   useEffect(() => {
     _formSchemas.fetch({}, serverId, formId)
     _answers.fetch({})
