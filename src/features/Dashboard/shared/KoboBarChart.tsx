@@ -5,7 +5,7 @@ import React, {useMemo} from 'react'
 import {chain} from '@/utils/utils'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Checkbox} from '@mui/material'
-import multiple = ChartTools.multiple
+
 
 export const makeKoboBarChartComponent = <D extends Record<string, any>, O extends Partial<Record<keyof D, Record<string, string>>>>({
   options,

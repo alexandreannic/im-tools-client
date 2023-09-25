@@ -1,6 +1,6 @@
 import React, {useMemo, useRef, useState} from 'react'
 import {DateRange, PickersShortcutsItem, StaticDateRangePicker} from '@mui/x-date-pickers-pro'
-import {Box, BoxProps, Popover, TextField} from '@mui/material'
+import {Box, Popover, TextField} from '@mui/material'
 import {mapFor} from '@alexandreannic/ts-utils'
 import {endOfMonth, format, startOfMonth, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'

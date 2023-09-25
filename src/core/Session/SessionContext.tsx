@@ -12,8 +12,6 @@ import {SessionInitForm} from '@/core/Session/SessionInitForm'
 import {CenteredContent} from '@/shared/CenteredContent'
 import {Fender} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {useNavigate} from 'react-router'
-import {useRouter} from 'next/router'
 
 export interface SessionContext {
   session: UserSession

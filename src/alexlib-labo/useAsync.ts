@@ -1,4 +1,4 @@
-import {Func, useMap} from '@alexandreannic/react-hooks-lib'
+import {Func} from '@alexandreannic/react-hooks-lib'
 import {UseMap2, useMap2} from '@/alexlib-labo/useMap'
 
 export interface UseAsync<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> {

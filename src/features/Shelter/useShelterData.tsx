@@ -1,13 +1,12 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import React, {useMemo} from 'react'
+import {useMemo} from 'react'
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import {ShelterNtaTags, ShelterTaPriceLevel, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {DrcOffice} from '@/core/drcJobTitle'
 
 export interface ShelterRow {
   ta?: KoboAnswer<Shelter_TA, ShelterTaTags> & {

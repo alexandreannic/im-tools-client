@@ -7,7 +7,6 @@ import {PanelProps} from './Panel/Panel'
 import {useI18n} from '@/core/i18n'
 import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
 import {toPercent} from '@/utils/utils'
-import {formatLargeNumber} from '@/core/i18n/localization/en'
 
 const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
   if (isNaN(value)) return '-'
