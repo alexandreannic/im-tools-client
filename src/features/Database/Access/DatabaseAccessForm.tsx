@@ -179,7 +179,7 @@ export const DatabaseAccessForm = ({
                           size="small"
                           variant="outlined"
                           label={option}
-                          {...getTagProps({index: dataAndex})}
+                          {...getTagProps({index})}
                         />
                       ))
                     }

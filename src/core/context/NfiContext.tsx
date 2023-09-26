@@ -21,7 +21,7 @@ export const NfiProvider = ({
 
   return (
     <_NfiContext.Provider value={{
-      index: dataAndex,
+      index,
     }}>
       {children}
     </_NfiContext.Provider>

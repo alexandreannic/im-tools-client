@@ -69,7 +69,7 @@ export const AccessForm = ({
                       size="small"
                       variant="outlined"
                       label={option}
-                      {...getTagProps({index: dataAndex})}
+                      {...getTagProps({index})}
                     />
                   ))
                 }
