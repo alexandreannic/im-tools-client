@@ -14,12 +14,14 @@ export interface AaSelectBase<T extends string | number = string> extends Pick<F
 
 export interface AaSelectMultiple<T extends string | number = string> extends AaSelectBase<T> {
   defaultValue: T[]
+  value: T[]
   multiple: true
   onChange: (t: T[], e: any) => void
 }
 
 export interface AaSelectSimple<T extends string | number = string> extends AaSelectBase<T> {
   defaultValue?: T
+  value?: T
   multiple?: false
   onChange: (t: T, e: any) => void
 }
@@ -35,6 +37,7 @@ const style = makeSx({
 
 export const AaSelect = <T extends string | number>({
   defaultValue,
+  value,
   multiple,
   showUndefinedOption,
   label,
@@ -85,6 +88,7 @@ export const AaSelect = <T extends string | number>({
         size="small"
         margin="dense"
         id={id}
+        value={value}
         defaultValue={defaultValue ?? (multiple ? [] : '')}
         multiple={multiple}
         // renderValue={_ => {

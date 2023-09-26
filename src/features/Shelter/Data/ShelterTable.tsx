@@ -2,7 +2,7 @@ import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
@@ -197,7 +197,7 @@ export const ShelterTable = () => {
         renderValue: (row: ShelterRow) => row.nta?.tags?.validation,
         render: (row: ShelterRow) => map(row.nta, nta => (
           <ShelterSelectAccepted
-            defaultValue={nta.tags?.validation}
+            value={nta.tags?.validation}
             onChange={(tagChange) => {
               ctx.nta._update.call({
                 answerId: nta.id,
@@ -324,6 +324,7 @@ export const ShelterTable = () => {
         align: 'center',
         type: 'select_one',
         typeIcon: null,
+        tooltip: null,
         options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
         renderValue: row => fnSwitch(KoboShelterTa.hasLot1(row.ta) + '', {
           true: 'Yes',
@@ -368,6 +369,7 @@ export const ShelterTable = () => {
         align: 'center',
         type: 'select_one',
         typeIcon: null,
+        tooltip: null,
         options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
         renderValue: row => fnSwitch(KoboShelterTa.hasLot2(row.ta) + '', {
           true: 'Yes',
@@ -492,9 +494,9 @@ export const ShelterTable = () => {
                 <ShelterSelectAccepted
                   onChange={(tagChange) => {
                     map(ctx.data.index, index => {
-                      const ntaIds = selectedIds.map(_ => index[_]?.)
-                      ctx.nta._update.call({
-                        answerId: selectedIds,
+                      const ntaIds = Arr(selectedIds).map(_ => index[_]?.nta?.id).compact()
+                      ctx.nta._updates.call({
+                        answerIds: ntaIds,
                         key: 'validation',
                         value: tagChange,
                       })

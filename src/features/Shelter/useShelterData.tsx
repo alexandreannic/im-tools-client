@@ -28,7 +28,7 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][]) => 
 
   const {mappedData, index} = useMemo(() => {
       if (!_fetchTa.entity || !_fetchNta.entity) return {}
-      const skippedNta = new Set<number>()
+      const skippedNta = new Set<KoboAnswerId>()
       const index: Record<KoboAnswerId, {
         nta?: ShelterRow['nta'],
         ta?: ShelterRow['ta'],
@@ -42,7 +42,7 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][]) => 
         }
       })
       _fetchTa.entity.forEach(d => {
-        const refId = d.nta_id ? +d.nta_id.replaceAll(/[^\d]/g, '') : d.id
+        const refId = d.nta_id ? d.nta_id.replaceAll(/[^\d]/g, '') : d.id
         if (skippedNta.has(refId)) return
         if (!index[refId]) index[refId] = {}
         const price = ShelterContractorPrices.compute({

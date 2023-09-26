@@ -3,7 +3,7 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect, AaSelectProps, AaSelectSimple} from '@/shared/Select/Select'
 import React from 'react'
 
-export const ShelterSelectAccepted = (props: Pick<AaSelectSimple<ShelterTagValidation>, 'defaultValue' | 'onChange'>) => {
+export const ShelterSelectAccepted = (props: Pick<AaSelectSimple<ShelterTagValidation>, 'value' | 'defaultValue' | 'onChange'>) => {
   return (
     <AaSelect<ShelterTagValidation>
       multiple={false}
