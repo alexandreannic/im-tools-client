@@ -1,10 +1,11 @@
 import {useCallback, useMemo, useState} from 'react'
 import {orderBy} from 'lodash'
-import {KeyOf, multipleFilters, paginateData} from '@/utils/utils'
-import {Enum} from '@alexandreannic/ts-utils'
+import {KeyOf, multipleFilters, paginateData, Utils} from '@/utils/utils'
+import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {SheetColumnProps, SheetFilterValue, SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, SheetFilterValueString, SheetRow} from '@/shared/Sheet/Sheet'
 import {SheetSearch} from '@/shared/Sheet/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
+import safeNumber = Utils.safeNumber
 
 export type UseSheetData = ReturnType<typeof useSheetData>
 
@@ -18,15 +19,17 @@ export const useSheetData = <T extends SheetRow>({
   columnsIndex: Record<KeyOf<T>, SheetColumnProps<T>>
 }) => {
   const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilterValue>>({} as any)
-
   const [search, setSearch] = useState<SheetSearch<any>>({
     limit: defaultLimit,
     offset: 0,
   })
-
   const onOrderBy = useCallback((columnId: string, orderBy?: OrderBy) => {
     setSearch(prev => ({...prev, orderBy, sortBy: columnId}))
   }, [])
+
+  const getValue = (colName: string) => {
+    return columnsIndex[colName].renderValue ?? columnsIndex[colName].render as any ?? ((_: T) => _[colName])
+  }
 
   const filteredData = useMemo(() => {
     if (!data) return
@@ -34,7 +37,7 @@ export const useSheetData = <T extends SheetRow>({
       const filter = filters[k]
       if (filter === undefined) return
       const type = columnsIndex[k].type
-      const renderValue = columnsIndex[k].renderValue ?? ((_: T) => _[k])
+      const renderValue = getValue(k)
       switch (type) {
         case 'date': {
           return row => {
@@ -92,8 +95,26 @@ export const useSheetData = <T extends SheetRow>({
   }, [data, filters])
 
   const filteredAndSortedData = useMemo(() => {
-    if (!filteredData) return
-    return orderBy(filteredData, search.sortBy, search.orderBy)
+    return map(filteredData, search.sortBy, (d, sortBy) => {
+      const columnInfo = columnsIndex[sortBy]
+      const sorted = d.sort(fnSwitch(columnInfo.type!, {
+        number: () => (a: T, b: T) => {
+          const av = safeNumber(getValue(sortBy)(a), Number.MIN_SAFE_INTEGER)
+          const bv = safeNumber(getValue(sortBy)(b), Number.MIN_SAFE_INTEGER)
+          return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
+        },
+        date: () => (a: T, b: T) => {
+          const av = getValue(sortBy)(a)?.getTime() ?? 0
+          const bv = getValue(sortBy)(b)?.getTime() ?? 0
+          return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
+        },
+      }, () => (a: T, b: T) => {
+        const av = ('' + getValue(sortBy)(a)) ?? ''
+        const bv = ('' + getValue(sortBy)(b)) ?? ''
+        return av.localeCompare(bv) * (search.orderBy === 'asc' ? -1 : 1)
+      }))
+      return [...sorted]
+    }) ?? filteredData
   }, [filteredData, search.sortBy, search.orderBy])
 
   const filteredSortedAndPaginatedData = useMemo(() => {

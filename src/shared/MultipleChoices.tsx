@@ -3,7 +3,7 @@ import {SxProps, Theme} from '@mui/material'
 
 interface MultipleChoicesBase<T, V> {
   label?: ReactNode
-  options: {value: T, children: ReactNode, key?: string}[]
+  options: {value: T, children: ReactNode, key?: number | string}[]
   sx?: SxProps<Theme>
 }
 
@@ -18,7 +18,7 @@ interface MultipleChoicesMultiple<T extends string, V> extends MultipleChoicesBa
       value: T
       checked?: boolean
       children?: ReactNode
-      key?: string
+      key?: string | number
       onChange: () => void
     }[]
   }) => JSX.Element

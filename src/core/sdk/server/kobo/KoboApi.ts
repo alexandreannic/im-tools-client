@@ -42,6 +42,7 @@ export interface KoboApiForm {
         'begin_group' |
         'select_one' |
         'note' |
+        'datetime' |
         'end_group' |
         'username' |
         'geopoint' |

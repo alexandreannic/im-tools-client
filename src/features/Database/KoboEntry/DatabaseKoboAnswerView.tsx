@@ -149,6 +149,7 @@ const KoboAnswerQuestionView = ({
     }
     case 'start':
     case 'end':
+    case 'datetime':
     case 'date': {
       return <>
         <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
