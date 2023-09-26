@@ -1,6 +1,6 @@
 import {Badge, Checkbox, Icon, IconButtonProps, Menu, MenuItem, Tooltip} from '@mui/material'
 import React from 'react'
-import {IconBtn} from 'mui-extension'
+import {IconBtn, Txt} from 'mui-extension'
 import {DatatableColumnProps} from './Datatable'
 
 interface Props extends Omit<IconButtonProps, 'onChange'> {
@@ -37,11 +37,13 @@ export const DatatableColumnToggle = ({className, title, columns, hiddenColumns,
           const checked = !hiddenColumns.includes(col.id)
           return (
             <MenuItem
-              dense
               key={col.id}
+              title={col.head as string}
+              dense
               onClick={() => onChange(checked ? [...hiddenColumns, col.id] : hiddenColumns.filter(_ => _ !== col.id))}
             >
               <Checkbox
+                size="small"
                 sx={{
                   pl: 0,
                   pb: 0.25,
@@ -49,7 +51,7 @@ export const DatatableColumnToggle = ({className, title, columns, hiddenColumns,
                 }}
                 checked={checked}
               />
-              <div dangerouslySetInnerHTML={{__html: col.head as string}}/>
+              <Txt truncate sx={{maxWidth: 400}} dangerouslySetInnerHTML={{__html: col.head as string}}/>
             </MenuItem>
           )
         })}

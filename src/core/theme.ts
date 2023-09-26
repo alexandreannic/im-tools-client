@@ -237,7 +237,7 @@ export const muiTheme = ({
       },
       MuiCard: {
         defaultProps: {
-          elevation: cardElevation ?? 1,
+          elevation: cardElevation ?? 0,
         },
         styleOverrides: {
           root: {
@@ -274,10 +274,10 @@ export const muiTheme = ({
       MuiMenuItem: {
         styleOverrides: {
           root: {
-            fontSize: '1rem',
-            minHeight: 42,
+            // fontSize: '1rem',
+            // minHeight: 40,
             [baseTheme.breakpoints.up('xs')]: {
-              minHeight: 42,
+              // minHeight: 42,
             },
           },
         },
@@ -410,9 +410,6 @@ const tableTheme = (t: Theme) => ({
   'table td:has(.MuiOutlinedInput-notchedOutline)': {
     padding: 0,
   },
-  '.table tr:hover': {
-    background: t.palette.action.hover,
-  },
   '.table td-sub-head': {
     textAlign: 'right',
     padding: 0,
@@ -441,17 +438,27 @@ const tableTheme = (t: Theme) => ({
   '.table td:first-of-type, .table th:first-of-type': {
     paddingLeft: 8,
   },
+  '.table .td-sticky-start': {
+    position: 'sticky',
+    zIndex: 10,
+    left: 0,
+    // background: t.palette.background.paper,
+    boxShadow: 'inset -2px 0 1px -1px rgba(0,0,0,0.2), -1px 0px 1px 0px rgba(0,0,0,0.14), -1px 0px 3px 0px rgba(0,0,0,0.12)',
+  },
   '.table .td-sticky-end': {
-    borderLeft: `1px solid ${t.palette.divider}`,
     paddingTop: '1px',
-    background: darken(t.palette.background.paper, .02),
-    // background: alpha(t.palette.divider, .02),
+    boxShadow: 'inset 2px 0 1px -1px rgba(0,0,0,0.2), 1px 0px 1px 0px rgba(0,0,0,0.14), 1px 0px 3px 0px rgba(0,0,0,0.12)',
     position: 'sticky',
     zIndex: 10,
     right: 0,
   },
-  thead: {
-    background: alpha(t.palette.divider, .02),
+  '.table tbody td': {
+    background: t.palette.background.paper,
+    borderBottom: `1px solid ${t.palette.divider}`,
+    maxWidth: 80,
+  },
+  '.table thead td, .table thead th': {
+    background: darken(t.palette.background.default, .01),
   },
   '.td-center': {
     textAlign: 'center !important',
@@ -465,11 +472,6 @@ const tableTheme = (t: Theme) => ({
   '.td-loading': {
     padding: 0,
     border: 'none',
-  },
-  '.table tbody td': {
-    borderBottom: `1px solid ${t.palette.divider}`,
-    maxWidth: 80,
-    // background: t.palette.background.paper,
   },
   '.table-loading': {
     padding: 0,
@@ -497,6 +499,9 @@ const tableTheme = (t: Theme) => ({
     paddingBottom: 0,
     position: 'sticky',
     color: t.palette.text.secondary,
+  },
+  '.table tbody tr:hover td': {
+    background: t.palette.action.hover,
   },
   //
   // 'table.sheet': {

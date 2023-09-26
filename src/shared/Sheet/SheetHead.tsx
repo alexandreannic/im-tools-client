@@ -27,7 +27,7 @@ export const SheetHead = (() => {
       <thead>
       <tr className="tr trh">
         {map(select?.getId, getId => (
-          <th className="td th td-center td-width0">
+          <th className="td th td-center td-width0 td-sticky-start">
             <Checkbox
               size="small"
               checked={selected.size === data?.length}
@@ -53,7 +53,7 @@ export const SheetHead = (() => {
               className={[
                 'td th',
                 _.width ? 'th-width-fit-content' : '',
-                // _.stickyEnd ? 'td-sticky-end' : '',
+                _.stickyEnd ? 'td-sticky-end' : '',
                 active ? 'th-active' : '',
                 fnSwitch(_.align!, {
                   'center': 'td-center',
@@ -70,7 +70,7 @@ export const SheetHead = (() => {
       </tr>
       <tr>
         {select?.getId && (
-          <td/>
+          <td className="td-sticky-start"/>
         )}
         {columns.map(c => {
           const sortedByThis = search.sortBy === c.id ?? false
@@ -78,7 +78,7 @@ export const SheetHead = (() => {
           return (
             <td key={c.id} style={c.styleHead} className={[
               'td-sub-head',
-              // c.stickyEnd ? 'td-sticky-end' : ''
+              c.stickyEnd ? 'td-sticky-end' : ''
             ].join(' ')}>
               <SheetHeadContent
                 column={c}

@@ -253,8 +253,8 @@ const _Sheet = <T extends SheetRow>({
               // color: t => t.palette.primary.main,
               // borderRadius: t => t.shape.borderRadius + 'px',
             }}>
-              <Box sx={{flex: 1,}}>
-                {ctx.selected.size} {m.selected}.
+              <Box sx={{flex: 1, mr: 1, whiteSpace: 'nowrap'}}>
+                <b>{ctx.selected.size}</b> {m.selected}.
               </Box>
               {ctx.select?.selectActions}
               <AAIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
@@ -262,9 +262,6 @@ const _Sheet = <T extends SheetRow>({
           </Box>
         )}
       </Box>
-      {loading && (
-        <LinearProgress sx={{marginBottom: '-4px'}}/>
-      )}
       <Box sx={{overflowX: 'auto'}}>
         <Box sx={{
           // width: 'max-coontent'
@@ -306,6 +303,9 @@ const _Sheet = <T extends SheetRow>({
           </Box>
         </Box>
       </Box>
+      {loading && (
+        <LinearProgress sx={{position: 'absolute', left: 0, right: 0, top: 0}}/>
+      )}
       <TablePagination
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"

@@ -5,20 +5,20 @@ import {makeSx} from '@/core/theme'
 
 type Option<T extends string | number = string> = {value: T, children: ReactNode, key?: string}
 
-interface AaSelectBase<T extends string | number = string> extends Pick<FormControlProps, 'disabled' | 'id'> {
+export interface AaSelectBase<T extends string | number = string> extends Pick<FormControlProps, 'disabled' | 'id'> {
   label?: ReactNode
   showUndefinedOption?: boolean
   options: Option<T>[] | string[]
   sx?: SxProps<Theme>
 }
 
-interface AaSelectMultiple<T extends string | number = string> extends AaSelectBase<T> {
+export interface AaSelectMultiple<T extends string | number = string> extends AaSelectBase<T> {
   defaultValue: T[]
   multiple: true
   onChange: (t: T[], e: any) => void
 }
 
-interface AaSelectSimple<T extends string | number = string> extends AaSelectBase<T> {
+export interface AaSelectSimple<T extends string | number = string> extends AaSelectBase<T> {
   defaultValue?: T
   multiple?: false
   onChange: (t: T, e: any) => void

@@ -1,5 +1,5 @@
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import React, {useEffect, useMemo} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
@@ -18,8 +18,9 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {ShelterRow} from '@/features/Shelter/useShelterData'
-import {ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {KoboShelterTa, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
+import {ShelterSelectAccepted} from '@/features/Shelter/Data/ShelterTableInputs'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 }
@@ -28,6 +29,7 @@ export const ShelterTable = () => {
   const ctx = useShelterContext()
   const theme = useTheme()
   const {m, formatDate, formatLargeNumber} = useI18n()
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const columns = useMemo(() => {
     return SheetUtils.buildColumns([
@@ -194,8 +196,7 @@ export const ShelterTable = () => {
         ],
         renderValue: (row: ShelterRow) => row.nta?.tags?.validation,
         render: (row: ShelterRow) => map(row.nta, nta => (
-          <AaSelect<ShelterTagValidation>
-            showUndefinedOption
+          <ShelterSelectAccepted
             defaultValue={nta.tags?.validation}
             onChange={(tagChange) => {
               ctx.nta._update.call({
@@ -204,11 +205,6 @@ export const ShelterTable = () => {
                 value: tagChange,
               })
             }}
-            options={[
-              {value: ShelterTagValidation.Accepted, children: <TableIcon color="success">check_circle</TableIcon>},
-              {value: ShelterTagValidation.Rejected, children: <TableIcon color="error">cancel</TableIcon>},
-              {value: ShelterTagValidation.Pending, children: <TableIcon color="warning">schedule</TableIcon>},
-            ]}
           />
         )),
       },
@@ -329,7 +325,7 @@ export const ShelterTable = () => {
         type: 'select_one',
         typeIcon: null,
         options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
-        renderValue:  row => fnSwitch(KoboShelterTa.hasLot1(row.ta) + '', {
+        renderValue: row => fnSwitch(KoboShelterTa.hasLot1(row.ta) + '', {
           true: 'Yes',
           false: 'No',
         }, () => 'None'),
@@ -373,7 +369,7 @@ export const ShelterTable = () => {
         type: 'select_one',
         typeIcon: null,
         options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
-        renderValue:  row => fnSwitch(KoboShelterTa.hasLot2(row.ta) + '', {
+        renderValue: row => fnSwitch(KoboShelterTa.hasLot2(row.ta) + '', {
           true: 'Yes',
           false: 'No',
         }, () => 'None'),
@@ -488,6 +484,26 @@ export const ShelterTable = () => {
         <Sheet
           id="shelter"
           title="Shelter-Assessment_database"
+          select={{
+            onSelect: setSelectedIds,
+            getId: _ => _.id + '',
+            selectActions: (
+              <>
+                <ShelterSelectAccepted
+                  onChange={(tagChange) => {
+                    map(ctx.data.index, index => {
+                      const ntaIds = selectedIds.map(_ => index[_]?.)
+                      ctx.nta._update.call({
+                        answerId: selectedIds,
+                        key: 'validation',
+                        value: tagChange,
+                      })
+                    })
+                  }}
+                />
+              </>
+            )
+          }}
           // showExportBtn
           header={
             <>

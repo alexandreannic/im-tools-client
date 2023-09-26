@@ -46,7 +46,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
 
   const _update = useAsync(<K extends keyof T>({answerId, key, value}: {answerId: KoboAnswerId, key: K, value: T[K] | null}) => api.kobo.answer.updateTag({
     formId,
-    answerId: answerId,
+    answerIds: [answerId],
     tags: {[key]: value},
   }).then(newTag => {
     setEntity((data?: KoboAnswer<any, T>[]) => data?.map(d => {

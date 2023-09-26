@@ -189,7 +189,7 @@ export const CfmProvider = ({
 
   const updateTag = useAsync((params: {formId: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag, value: any}) => api.kobo.answer.updateTag({
     formId: params.formId,
-    answerId: params.answerId,
+    answerIds: [params.answerId],
     tags: {[params.key]: params.value}
   }).then(newTags => {
     const formName = formIdMapping[params.formId]
