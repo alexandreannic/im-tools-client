@@ -394,6 +394,11 @@ const tableTheme = (t: Theme) => ({
   },
   '.table .MuiOutlinedInput-input': {
     paddingLeft: '4px',
+    paddingTop: '5px',
+    paddingBottom: '5px',
+  },
+  '.table .MuiCheckbox-root': {
+    padding: '6px',
   },
   '.table .MuiOutlinedInput-notchedOutline': {
     border: 'none',

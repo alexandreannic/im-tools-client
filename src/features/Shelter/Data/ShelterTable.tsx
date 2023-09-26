@@ -50,8 +50,8 @@ export const ShelterTable = () => {
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                   <TableIcon color="error" sx={{mr: .5}}>error</TableIcon>
                   <Box>
-                    <Txt block size="small">TA ID: <Txt bold>{_.ta?.id}</Txt></Txt>
-                    <Txt block size="small">NTA Ref: <Txt bold>{_.ta?.nta_id}</Txt></Txt>
+                    <Txt block size="small" sx={{marginBottom: '-5px'}}>TA ID: <Txt bold>{_.ta?.id}</Txt></Txt>
+                    <Txt block size="small" sx={{marginBottom: '-2px'}}>NTA Ref: <Txt bold>{_.ta?.nta_id}</Txt></Txt>
                   </Box>
                 </Box>
               </>
@@ -322,6 +322,23 @@ export const ShelterTable = () => {
         ))
       },
       {
+        id: 'hasLot1',
+        head: m._shelter.lot1,
+        width: 0,
+        align: 'center',
+        type: 'select_one',
+        typeIcon: null,
+        options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
+        renderValue:  row => fnSwitch(KoboShelterTa.hasLot1(row.ta) + '', {
+          true: 'Yes',
+          false: 'No',
+        }, () => 'None'),
+        render: row => fnSwitch(KoboShelterTa.hasLot1(row.ta) + '', {
+          true: <TableIcon color="success">task_alt</TableIcon>,
+          false: <TableIcon color="disabled">block</TableIcon>,
+        }, () => <></>),
+      },
+      {
         id: 'contractor1',
         width: 148,
         head: m._shelter.contractor1,
@@ -331,6 +348,7 @@ export const ShelterTable = () => {
         typeIcon: null,
         render: row => map(row.ta, ta => (
           <AaSelect
+            disabled={!KoboShelterTa.hasLot1(ta)}
             showUndefinedOption
             defaultValue={ta.tags?.contractor1}
             onChange={(tagChange) => {
@@ -348,6 +366,23 @@ export const ShelterTable = () => {
         )),
       },
       {
+        id: 'hasLot2',
+        head: m._shelter.lot2,
+        width: 0,
+        align: 'center',
+        type: 'select_one',
+        typeIcon: null,
+        options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
+        renderValue:  row => fnSwitch(KoboShelterTa.hasLot2(row.ta) + '', {
+          true: 'Yes',
+          false: 'No',
+        }, () => 'None'),
+        render: row => fnSwitch(KoboShelterTa.hasLot2(row.ta) + '', {
+          true: <TableIcon color="success">task_alt</TableIcon>,
+          false: <TableIcon color="disabled">block</TableIcon>,
+        }, () => <></>),
+      },
+      {
         id: 'contractor2',
         width: 148,
         head: m._shelter.contractor2,
@@ -357,6 +392,7 @@ export const ShelterTable = () => {
         renderValue: row => row.ta?.tags?.contractor2,
         render: row => map(row.ta, ta => (
           <AaSelect
+            disabled={!KoboShelterTa.hasLot2(ta)}
             showUndefinedOption
             defaultValue={ta.tags?.contractor2}
             onChange={(tagChange) => {
