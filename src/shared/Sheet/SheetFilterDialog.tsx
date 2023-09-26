@@ -1,4 +1,4 @@
-import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps, Slider} from '@mui/material'
+import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps, Slider, Switch} from '@mui/material'
 import {AaBtn} from '../Btn/AaBtn'
 import {useI18n} from '../../core/i18n'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
@@ -169,8 +169,9 @@ export const SheetFilterDialogText = ({
       <FormControlLabel
         sx={{mb: 1}}
         label={m.filterBlanks}
+        value={value?.filterBlank}
         control={
-          <Checkbox size="small" checked={value?.filterBlank} onChange={e => onChange(prev => ({...prev, filterBlank: e.target.checked}))}/>
+          <Switch checked={value?.filterBlank} onChange={e => onChange(prev => ({...prev, filterBlank: e.target.checked}))}/>
         }
       />
       <AaInput value={value?.value} onChange={e => onChange(prev => ({...prev, value: e.target.value}))}/>

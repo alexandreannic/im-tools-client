@@ -49,7 +49,7 @@ export const useSheetModal = <T extends SheetRow>({
         }}
       />
     )
-  }, [data.search, data.filters])
+  }, [data.search, data.filters, data.filteredData])
 
   const [statsPopoverOpen, statsPopoverClose] = useModal((c: SheetColumnConfigPopoverParams & {renderValue?: SheetColumnProps<T>['renderValue']}) => {
     const getValue = c.renderValue ?? (_ => _[c.columnId])
