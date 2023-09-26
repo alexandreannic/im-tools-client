@@ -72,6 +72,7 @@ export const getColumnBySchema = ({
           id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row =>
             <KoboAttachedImg attachments={row.attachments} fileName={getVal(row, q.name) as string}/>
         }
@@ -82,6 +83,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="functions" tooltip="calculate"/>,
           id: getId(q),
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
           options: () => Arr(data).map(_ => _[q.name] as string | undefined).distinct(_ => _).map(_ => ({label: _, value: _})),
         }
@@ -92,6 +94,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="attach_file" tooltip="select_one_from_file"/>,
           id: getId(q),
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>
         }
       }
@@ -102,7 +105,8 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           id: getId(q),
           head: getHead(translateQuestion(q.name)),
-          render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>
+          renderValue: row => getVal(row, q.name),
+          render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
         }
       }
       case 'decimal':
@@ -112,6 +116,7 @@ export const getColumnBySchema = ({
           id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="tag" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as number}</span>
         }
       }
@@ -121,10 +126,12 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="info" tooltip="note"/>,
           id: getId(q),
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>
         }
       }
       case 'date':
+      case 'datetime':
       case 'today':
       case 'start':
       case 'end': {
@@ -133,6 +140,7 @@ export const getColumnBySchema = ({
           id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="event" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => map(getVal(row, q.name) as Date | undefined, _ => (
             <span title={formatDateTime(_)}>{formatDate(_)}</span>
           ))
@@ -158,6 +166,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="repeat" tooltip="begin_repeat"/>,
           id: getId(q),
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => map(row[q.name] as KoboAnswer[] | undefined, group =>
             <AaBtn sx={{py: '4px'}} onClick={(event) => onOpenGroupModal?.({
               columnId: q.name,
@@ -174,6 +183,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="radio_button_checked" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
+          renderValue: row => getVal(row, q.name),
           render: row => map(getVal(row, q.name) as string | undefined, v => {
             const render = translateChoice(q.name, v)
             if (render)
@@ -194,6 +204,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="check_box" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
           options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
+          renderValue: row => getVal(row, q.name),
           render: row => map(getVal(row, q.name) as string[] | undefined, v => {
             try {
               const render = v.map(_ => translateChoice(q.name, _,)).join(' | ')
@@ -211,6 +222,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="location_on" tooltip="geopoint"/>,
           id: getId(q),
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => map(getVal(row, q.name), (x: any) => {
             const render = JSON.stringify(x)
             return <span title={render}>{render}</span>
@@ -223,6 +235,7 @@ export const getColumnBySchema = ({
           id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="short_text" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
+          renderValue: row => getVal(row, q.name),
           render: row => {
             const render = JSON.stringify(getVal(row, q.name))
             return <span title={render}>{render}</span>

@@ -101,7 +101,8 @@ export const SheetFilterDialog = ({
             case 'select_multiple':
               return (
                 <MultipleChoices
-                  options={options?.map(_ => ({
+                  options={options?.map((_, i) => ({
+                    key: i,
                     value: _.value ?? '',
                     children: _.label
                   })) ?? []}

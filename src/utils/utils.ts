@@ -267,16 +267,19 @@ export namespace Utils {
 
 
   export const add = (...args: (string | number | undefined)[]) => {
-    return args.reduce<number>((acc, _) => acc + +(_ ?? 0), 0)
+    return args.reduce<number>((acc, _) => acc + safeNumber(_, 0), 0)
   }
 
-  interface RemoveHtml {
+  export const safeNumber: {
+    (_: undefined | string | number, defaultValue?: undefined): number | undefined
+    (_: undefined | string | number, defaultValue: number): number
+  } = (_, defaultValue) => (isNaN(_ as number) ? defaultValue : +_!) as number
+
+  export const removeHtml: {
     (_: string): string
     (_: undefined): undefined
     (_?: string): string | undefined
-  }
-
-  export const removeHtml: RemoveHtml = (_) => _?.replace(/(<([^>]+)>)/gi, '') as any
+  } = (_) => _?.replace(/(<([^>]+)>)/gi, '') as any
 
   export function assert(condition: any, msg?: string): asserts condition {
     if (!condition) {
@@ -284,13 +287,11 @@ export namespace Utils {
     }
   }
 
-  interface Slugify {
+  export const slugify: {
     (_: string): string
     (_: undefined): undefined
     (_?: string): string | undefined
-  }
-
-  export const slugify: Slugify = (_) => _?.replaceAll(/\s/g, '_')
+  } = (_) => _?.replaceAll(/\s/g, '_')
     .replaceAll(/[éèê]/g, 'e')
     .replaceAll(/[àâ]/g, 'a')
     .replaceAll(/[^a-zA-Z0-9_-]/g, '') as any
