@@ -1,9 +1,9 @@
 import {ShelterTagValidation} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
-import {AaSelect, AaSelectProps, AaSelectSimple} from '@/shared/Select/Select'
+import {AaSelect, AaSelectBase, AaSelectProps, AaSelectSimple} from '@/shared/Select/Select'
 import React from 'react'
 
-export const ShelterSelectAccepted = (props: Pick<AaSelectSimple<ShelterTagValidation>, 'value' | 'defaultValue' | 'onChange'>) => {
+export const ShelterSelectAccepted = (props: Pick<AaSelectSimple<ShelterTagValidation>, 'value' | 'defaultValue' | 'onChange'> & Pick<AaSelectBase, 'label'>) => {
   return (
     <AaSelect<ShelterTagValidation>
       multiple={false}

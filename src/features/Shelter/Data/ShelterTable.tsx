@@ -492,6 +492,7 @@ export const ShelterTable = () => {
             selectActions: (
               <>
                 <ShelterSelectAccepted
+                  label={m._shelter.validationStatus}
                   onChange={(tagChange) => {
                     map(ctx.data.index, index => {
                       const ntaIds = Arr(selectedIds).map(_ => index[_]?.nta?.id).compact()
