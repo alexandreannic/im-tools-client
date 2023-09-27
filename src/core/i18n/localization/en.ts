@@ -100,6 +100,7 @@ export const en = Object.freeze({
     theme: 'Dark theme',
     previous: 'Previous',
     filter: 'Filter',
+    filterPlaceholder: 'Filter...',
     count: 'Count',
     sum: 'Sum',
     average: 'Average',
