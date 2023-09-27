@@ -1,5 +1,5 @@
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
 import {Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
@@ -20,7 +20,7 @@ import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo
 import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {KoboShelterTa, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
-import {ShelterSelectAccepted} from '@/features/Shelter/Data/ShelterTableInputs'
+import {ShelterSelectAccepted, ShelterSelectContractor} from '@/features/Shelter/Data/ShelterTableInputs'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 }
@@ -30,6 +30,11 @@ export const ShelterTable = () => {
   const theme = useTheme()
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+
+  // const getNtaIds = () => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact()
+  // const getTaIds = () => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact()
+  const getNta = useCallback(() => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
+  const getTa = useCallback(() => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
 
   const columns = useMemo(() => {
     return SheetUtils.buildColumns([
@@ -344,10 +349,10 @@ export const ShelterTable = () => {
         renderValue: row => row.ta?.tags?.contractor1,
         typeIcon: null,
         render: row => map(row.ta, ta => (
-          <AaSelect
+          <ShelterSelectContractor
             disabled={!KoboShelterTa.hasLot1(ta)}
-            showUndefinedOption
-            defaultValue={ta.tags?.contractor1}
+            value={ta.tags?.contractor1}
+            oblast={ta?.ben_det_oblast}
             onChange={(tagChange) => {
               ctx.ta._update.call({
                 answerId: ta.id,
@@ -356,9 +361,6 @@ export const ShelterTable = () => {
                 // value: ShelterContractor[tagChange],
               })
             }}
-            options={ShelterContractorPrices.findContractor({oblast: ta?.ben_det_oblast, lot: 1}).map(_ => ({
-              value: _, children: _,
-            }))}
           />
         )),
       },
@@ -389,22 +391,24 @@ export const ShelterTable = () => {
         typeIcon: null,
         renderValue: row => row.ta?.tags?.contractor2,
         render: row => map(row.ta, ta => (
-          <AaSelect
-            disabled={!KoboShelterTa.hasLot2(ta)}
-            showUndefinedOption
-            defaultValue={ta.tags?.contractor2}
-            onChange={(tagChange) => {
-              ctx.ta._update.call({
-                answerId: ta.id,
-                key: 'contractor2',
-                value: tagChange,
-              })
-            }}
-            options={ShelterContractorPrices.findContractor({oblast: ta?.ben_det_oblast, lot: 2}).map(_ => ({
-              value: _, children: _,
-            }))
-            }
-          />
+          <>
+            <AaSelect
+              disabled={!KoboShelterTa.hasLot2(ta)}
+              showUndefinedOption
+              value={ta.tags?.contractor2}
+              onChange={(tagChange) => {
+                ctx.ta._update.call({
+                  answerId: ta.id,
+                  key: 'contractor2',
+                  value: tagChange,
+                })
+              }}
+              options={ShelterContractorPrices.findContractor({oblast: ta?.ben_det_oblast, lot: 2}).map(_ => ({
+                value: _, children: _,
+              }))
+              }
+            />
+          </>
         )),
       },
       // column.progress,
@@ -490,21 +494,53 @@ export const ShelterTable = () => {
             onSelect: setSelectedIds,
             getId: _ => _.id + '',
             selectActions: (
-              <>
+              <Box sx={{
+                width: '100%',
+                display: 'flex',
+                '& > *': {
+                  marginLeft: t => t.spacing(1) + ' !important',
+                }
+              }}>
                 <ShelterSelectAccepted
+                  sx={{maxWidth: 110}}
                   label={m._shelter.validationStatus}
                   onChange={(tagChange) => {
-                    map(ctx.data.index, index => {
-                      const ntaIds = Arr(selectedIds).map(_ => index[_]?.nta?.id).compact()
+                    map(getNta()?.map(_ => _.id), ids => {
                       ctx.nta._updates.call({
-                        answerIds: ntaIds,
+                        answerIds: ids,
                         key: 'validation',
                         value: tagChange,
                       })
                     })
                   }}
                 />
-              </>
+                <ShelterSelectContractor
+                  sx={{maxWidth: 140}}
+                  label={m._shelter.contractor1}
+                  onChange={(tagChange) => {
+                    map(getTa()?.map(_ => _.id), ids => {
+                      ctx.ta._updates.call({
+                        answerIds: ids,
+                        key: 'contractor1',
+                        value: tagChange,
+                      })
+                    })
+                  }}
+                />
+                <ShelterSelectContractor
+                  sx={{maxWidth: 140}}
+                  label={m._shelter.contractor2}
+                  onChange={(tagChange) => {
+                    map(getTa()?.map(_ => _.id), ids => {
+                      ctx.ta._updates.call({
+                        answerIds: ids,
+                        key: 'contractor2',
+                        value: tagChange,
+                      })
+                    })
+                  }}
+                />
+              </Box>
             )
           }}
           // showExportBtn

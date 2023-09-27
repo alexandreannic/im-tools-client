@@ -237,7 +237,7 @@ export const muiTheme = ({
       },
       MuiCard: {
         defaultProps: {
-          elevation: cardElevation ?? 0,
+          elevation: cardElevation ?? 1,
         },
         styleOverrides: {
           root: {

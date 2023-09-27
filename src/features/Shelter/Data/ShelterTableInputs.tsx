@@ -1,9 +1,11 @@
 import {ShelterTagValidation} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
-import {AaSelect, AaSelectBase, AaSelectProps, AaSelectSimple} from '@/shared/Select/Select'
+import {AaSelect, AaSelectBase, AaSelectSimple} from '@/shared/Select/Select'
 import React from 'react'
+import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
+import {Shelter_TAOptions} from '@/core/koboModel/Shelter_TA/Shelter_TAOptions'
 
-export const ShelterSelectAccepted = (props: Pick<AaSelectSimple<ShelterTagValidation>, 'value' | 'defaultValue' | 'onChange'> & Pick<AaSelectBase, 'label'>) => {
+export const ShelterSelectAccepted = (props: Pick<AaSelectSimple<ShelterTagValidation>, 'value' | 'defaultValue' | 'onChange'> & Pick<AaSelectBase, 'disabled' | 'sx' | 'label'>) => {
   return (
     <AaSelect<ShelterTagValidation>
       multiple={false}
@@ -13,6 +15,22 @@ export const ShelterSelectAccepted = (props: Pick<AaSelectSimple<ShelterTagValid
         {value: ShelterTagValidation.Rejected, children: <TableIcon color="error">cancel</TableIcon>},
         {value: ShelterTagValidation.Pending, children: <TableIcon color="warning">schedule</TableIcon>},
       ]}
+      {...props}
+    />
+  )
+}
+
+export const ShelterSelectContractor = ({
+  oblast,
+  ...props
+}: Pick<AaSelectSimple<ShelterContractor>, 'value' | 'defaultValue' | 'onChange'> & Pick<AaSelectBase, 'disabled' | 'sx' | 'label'> & {
+  oblast?: keyof typeof Shelter_TAOptions['ben_det_oblast']
+}) => {
+  return (
+    <AaSelect
+      multiple={false}
+      showUndefinedOption
+      options={ShelterContractorPrices.findContractor({oblast, lot: 1})}
       {...props}
     />
   )
