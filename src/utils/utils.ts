@@ -256,6 +256,46 @@ export const convertNumberIndexToLetter = (_: number) => {
 
 export namespace Utils {
 
+  export const removeAccent = (str: string): string => {
+    const accentMap: Record<string, string> = {
+      'à': 'a',
+      'á': 'a',
+      'â': 'a',
+      'ã': 'a',
+      'ä': 'a',
+      'å': 'a',
+      'ç': 'c',
+      'è': 'e',
+      'é': 'e',
+      'ê': 'e',
+      'ë': 'e',
+      'ì': 'i',
+      'í': 'i',
+      'î': 'i',
+      'ï': 'i',
+      'ð': 'd',
+      'ñ': 'n',
+      'ò': 'o',
+      'ó': 'o',
+      'ô': 'o',
+      'õ': 'o',
+      'ö': 'o',
+      'ø': 'o',
+      'ù': 'u',
+      'ú': 'u',
+      'û': 'u',
+      'ü': 'u',
+      'ý': 'y',
+      'ÿ': 'y',
+      'ă': 'a',
+      'ć': 'c',
+      'đ': 'd',
+      'ē': 'e',
+    }
+
+    return str.replace(/[àáâãäåçèéêëìíîïðñòóôõöøùúûüýÿćđē]/g, match => accentMap[match] || match)
+  }
+
   export const pattern = {
     email: '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
     drcEmail: '^[a-zA-Z0-9._-]+@drc\.ngo$',

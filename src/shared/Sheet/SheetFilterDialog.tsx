@@ -14,6 +14,7 @@ import {SheetOptions} from '@/shared/Sheet/sheetType'
 import {Arr} from '@alexandreannic/ts-utils'
 import {SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, SheetFilterValueString, SheetRow} from '@/shared/Sheet/Sheet'
 import {type} from 'os'
+import {Utils} from '@/utils/utils'
 
 export type SheetFilterDialogProps = Pick<PopoverProps, 'anchorEl'> & {
   orderBy?: OrderBy
@@ -100,37 +101,7 @@ export const SheetFilterDialog = ({
             case 'select_one':
             case 'select_multiple':
               return (
-                <MultipleChoices
-                  options={options?.map((_, i) => ({
-                    key: i,
-                    value: _.value ?? '',
-                    children: _.label
-                  })) ?? []}
-                  initialValue={value as any}
-                  onChange={setInnerValue}
-                >
-                  {({options, toggleAll, allChecked, someChecked}) => (
-                    <>
-                      <FormControlLabel
-                        sx={{display: 'block', fontWeight: t => t.typography.fontWeightBold}}
-                        onClick={toggleAll}
-                        control={<Checkbox size="small" checked={allChecked} indeterminate={!allChecked && someChecked}/>}
-                        label={m.selectAll}
-                      />
-                      <Divider/>
-                      <Box sx={{maxHeight: 350, overflowY: 'auto'}}>
-                        {options.map(o =>
-                          <FormControlLabel
-                            sx={{display: 'block'}}
-                            key={o.key}
-                            control={<Checkbox size="small" name={o.value} checked={o.checked} onChange={o.onChange}/>}
-                            label={o.children}
-                          />
-                        )}
-                      </Box>
-                    </>
-                  )}
-                </MultipleChoices>
+                <SheetFilterDialogSelect options={options} columnId={columnId} value={innerValue} onChange={setInnerValue}/>
               )
             case 'number': {
               return (
@@ -153,6 +124,53 @@ export const SheetFilterDialog = ({
         </AaBtn>
       </PanelFoot>
     </Popover>
+  )
+}
+
+export const SheetFilterDialogSelect = ({
+  value,
+  onChange,
+  options,
+}: {
+  value: SheetFilterValueString
+  onChange: Dispatch<SetStateAction<SheetFilterValueSelect>>
+  options?: SheetOptions[]
+}) => {
+  const {m} = useI18n()
+  const [filter, setFilter] = useState<string>('')
+  return (
+    <MultipleChoices
+      options={options?.filter(_ => filter === '' || (_.value ?? '').includes(filter)).map((_, i) => ({
+        key: i,
+        value: _.value ?? '',
+        children: _.label
+      })) ?? []}
+      initialValue={value as any}
+      onChange={onChange}
+    >
+      {({options, toggleAll, allChecked, someChecked}) => (
+        <>
+          <FormControlLabel
+            sx={{display: 'block', fontWeight: t => t.typography.fontWeightBold}}
+            onClick={toggleAll}
+            control={<Checkbox size="small" checked={allChecked} indeterminate={!allChecked && someChecked}/>}
+            label={m.selectAll}
+          />
+          <AaInput label={m.filterPlaceholder} helperText={null} sx={{mb: 1}} onChange={e => setFilter(e.target.value)}/>
+          <Divider/>
+          <Box sx={{maxHeight: 350, overflowY: 'auto'}}>
+            {options.map(o =>
+              <FormControlLabel
+                sx={{display: 'block'}}
+                key={o.key}
+                control={<Checkbox size="small" name={o.value} checked={o.checked} onChange={o.onChange}/>}
+                label={o.children}
+              />
+            )}
+          </Box>
+        </>
+      )}
+    </MultipleChoices>
   )
 }
 
