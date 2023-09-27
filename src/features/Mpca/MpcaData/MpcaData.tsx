@@ -14,6 +14,7 @@ import {TableImg} from '@/shared/TableImg/TableImg'
 import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {DrcDonor, DrcProject} from '@/core/drcUa'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -74,6 +75,12 @@ export const MpcaData = () => {
           }}
           columns={[
             {
+              id: 'id',
+              head: m.id,
+              type: 'string',
+              render: _ => _.id,
+            },
+            {
               id: 'source',
               head: m.form,
               type: 'select_one',
@@ -87,11 +94,38 @@ export const MpcaData = () => {
               render: _ => formatDate(_.date)
             },
             {
+              id: 'donor',
+              head: m.donor,
+              type: 'select_one',
+              options: () => SheetUtils.buildOptions(Enum.keys(DrcDonor), true),
+              render: _ => _.donor ?? ''
+            },
+            {
+              id: 'project',
+              head: m.project,
+              type: 'select_one',
+              options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+              render: _ => _.project ?? ''
+            },
+            {
               id: 'prog',
               head: m.program,
               type: 'select_multiple',
               options: () => [...Enum.keys(MpcaProgram).map(_ => ({label: _, value: _})), {label: ' ', value: ' '}],
               render: _ => _.prog?.join(' | '),
+            },
+            {
+              id: 'hhSize',
+              head: m.hhSize,
+              type: 'number',
+              render: _ => _.hhSize},
+            {
+              id: 'amountUahSupposed',
+              align: 'right',
+              head: m.amountUAH,
+              type: 'number',
+              renderValue: _ => _.amountUahSupposed,
+              render: _ => _.amountUahSupposed,
             },
             {
               id: 'deduplication',
@@ -153,7 +187,6 @@ export const MpcaData = () => {
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.keys(BNREOptions.ben_det_res_stat)),
             },
-            {id: 'hhSize', head: m.hhSize, render: _ => _.hhSize},
             {id: 'phone', head: m.phone, render: _ => _.phone},
           ]}
         />

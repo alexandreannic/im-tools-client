@@ -8,7 +8,7 @@ import {Panel} from '@/shared/Panel'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {Txt} from 'mui-extension'
-import {DrcOffice} from '@/core/drcJobTitle'
+import {DrcOffice} from '@/core/drcUa'
 
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {format} from 'date-fns'

@@ -2,7 +2,16 @@ import {useCallback, useMemo, useState} from 'react'
 import {orderBy} from 'lodash'
 import {KeyOf, multipleFilters, paginateData, Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {SheetColumnProps, SheetFilterValue, SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, SheetFilterValueString, SheetRow} from '@/shared/Sheet/Sheet'
+import {
+  SheetColumnProps,
+  SheetFilterValue,
+  SheetFilterValueDate,
+  SheetFilterValueNumber,
+  SheetFilterValueSelect,
+  SheetFilterValueString,
+  SheetRow,
+  SheetUtils
+} from '@/shared/Sheet/Sheet'
 import {SheetSearch} from '@/shared/Sheet/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import safeNumber = Utils.safeNumber
@@ -28,7 +37,7 @@ export const useSheetData = <T extends SheetRow>({
   }, [])
 
   const getValue = (colName: string) => {
-    return columnsIndex[colName].renderValue ?? columnsIndex[colName].render as any ?? ((_: T) => _[colName])
+    return SheetUtils.getValueByColumn(columnsIndex[colName], colName)
   }
 
   const filteredData = useMemo(() => {
@@ -43,7 +52,7 @@ export const useSheetData = <T extends SheetRow>({
           return row => {
             const typedFilter = filter as SheetFilterValueDate
             const v = renderValue(row) as Date | undefined
-            if (!v) return false
+            if (v === undefined) return false
             if (!((v as any) instanceof Date)) {
               console.warn(`Value of ${String(k)} is`, v, `but Date expected.`)
               throw new Error(`Value of ${String(k)} is ${v} but Date expected.`)
@@ -56,7 +65,7 @@ export const useSheetData = <T extends SheetRow>({
           return row => {
             const typedFilter = filter as SheetFilterValueSelect
             const v = renderValue(row) as string
-            if (!v) return false
+            if (v === undefined) return false
             return (typedFilter).includes(v)
           }
         }
@@ -81,7 +90,7 @@ export const useSheetData = <T extends SheetRow>({
           return row => {
             const typedFilter = filter as SheetFilterValueString
             const v = renderValue(row)
-            if (!v && typedFilter?.filterBlank !== false) return false
+            if (v === undefined && typedFilter?.filterBlank !== false) return false
             if (typedFilter?.value === undefined) return true
             if (typeof v !== 'string' && typeof v !== 'number') {
               console.warn('Value of ${String(k)} is', v)

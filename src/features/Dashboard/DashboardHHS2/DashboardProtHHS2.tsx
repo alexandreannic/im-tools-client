@@ -84,14 +84,6 @@ export interface DashboardPageProps {
   computed: NonNullable<ReturnType<typeof useProtHHS2Data>>
 }
 
-export enum Donor {
-  'BHA_UKR000284' = 'BHA UKR-000284',
-  'OKF_UKR000309' = 'OKF UKR-000309',
-  'ECHO_UKR000322' = 'ECHO UKR-000322',
-  'UHF_IV_UKR000314' = 'UHF IV UKR-000314',
-  'NN2_UKR000298' = 'NN2 UKR-000298',
-}
-
 export const DashboardProtHHS2 = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()

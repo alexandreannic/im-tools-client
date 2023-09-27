@@ -78,6 +78,13 @@ export const _MPCADashboard = ({
         </Div>
         <Div>
           <Div column>
+            <SlidePanel title={m.form}>
+              <Lazy deps={[data]} fn={() => ChartTools.single({
+                data: data.map(_ => _.source),
+              })}>
+                {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
+            </SlidePanel>
             <SlidePanel title={m.program}>
               <Lazy deps={[data]} fn={() => ChartTools.multiple({
                 data: data.map(_ => _.prog),
@@ -85,9 +92,16 @@ export const _MPCADashboard = ({
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
-            <SlidePanel title={m.form}>
+            <SlidePanel title={m.donor}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
-                data: data.map(_ => _.source),
+                data: data.map(_ => _.donor ?? m.dash),
+              })}>
+                {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
+            </SlidePanel>
+            <SlidePanel title={m.project}>
+              <Lazy deps={[data]} fn={() => ChartTools.single({
+                data: data.map(_ => _.project ?? m.dash),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>

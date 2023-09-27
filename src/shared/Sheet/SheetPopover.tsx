@@ -53,7 +53,7 @@ export const NumberChoicesPopover = <T, >({
       <PanelBody>
         <RenderRow label={m.count} value={formatLargeNumber(chart.mapped.length)}/>
         <RenderRow label={m.sum} value={formatLargeNumber(chart.sum)}/>
-        <RenderRow label={m.average} value={chart.avg.toFixed(2)}/>
+        <RenderRow label={m.average} value={formatLargeNumber(chart.avg)}/>
         <RenderRow label={m.min} value={formatLargeNumber(chart.min)}/>
         <RenderRow label={m.max} value={formatLargeNumber(chart.max)}/>
       </PanelBody>

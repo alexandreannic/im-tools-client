@@ -12,7 +12,7 @@ import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, AccessFormSection, IAccessForm} from '@/features/Access/AccessForm'
-import {DrcOffice} from '@/core/drcJobTitle'
+import {DrcOffice} from '@/core/drcUa'
 import {AaSelect} from '@/shared/Select/Select'
 
 interface Form extends IAccessForm {
