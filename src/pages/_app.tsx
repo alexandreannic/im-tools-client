@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import type {AppProps} from 'next/app'
 import {Provide} from '@/shared/Provide'
 import {Box, CssBaseline, Icon, ThemeProvider} from '@mui/material'
@@ -21,6 +21,7 @@ import Head from 'next/head'
 import {LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LicenseInfo} from '@mui/x-license-pro'
+import {useRouter} from 'next/router'
 
 LicenseInfo.setLicenseKey(appConfig.muiProLicenseKey ?? '')
 
@@ -38,6 +39,12 @@ const App = ({
   emotionCache = clientSideEmotionCache,
   ...props
 }: MyAppProps) => {
+
+  const router = useRouter()
+  useEffect(() => {
+    api.session.track(router.pathname)
+  }, [router])
+
   return (
     <Provide providers={[
       _ => <CacheProvider value={emotionCache} children={_}/>,
