@@ -1,6 +1,6 @@
-import {Donor} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2'
+import {DrcDonor} from '@/core/drcUa'
 
 export interface ProtHhsTags {
-  ai: Donor,
-  ipt: Donor[]
+  ai: DrcDonor,
+  ipt: DrcDonor[]
 }

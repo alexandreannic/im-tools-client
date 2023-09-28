@@ -1,5 +1,3 @@
-
-
 export const kobo = {
   drcUa: {
     server: {
@@ -8,7 +6,12 @@ export const kobo = {
     form: {
       safetyIncident: 'aAJNkn7v9fRL2XqQCgEkXf',
       rapidResponseMechanism: 'aMJL9DG8qEcULqTZTKQbrq',
-      mpca_cashForRepair: 'a9CjhyhTKVojCdArKmw9yM',
+      bn_cashForRentApplication: 'aBupWbhtUmA7so3532tYLa',
+      bn_cashForRepair: 'a9CjhyhTKVojCdArKmw9yM',
+      bn_fcrmMpca: 'a4Sx3PrFMDAMZEGsyzgJJg' as const,
+      bn_fcrmMpcaMyko: 'a8WAWB9Yxu2jkgk4Ei8GTk' as const,
+      bn_fcrmMpcaNAA: 'aBGVXW2N26DaLehmKneuyB' as const,
+      bn_re: 'aKgX4MNs6gCemDQKPeXxY8' as const,
       cfmInternal: 'aN3Y8JeH2fU3GthrWAs9FG' as const,
       cfmExternal: 'aJaGLvGEdpYWk5ift8k87y' as const,
       shelterNTA: 'aL8oHMzJJ9soPepvK6YU9E' as const,
@@ -16,10 +19,6 @@ export const kobo = {
       mealVisitMonitoring: 'a8GkjWBQDfxVADGHWJDrUw' as const,
       protectionHh2: 'aQDZ2xhPUnNd43XzuQucVR' as const,
       protectionHh: 'aFU8x6tHksveU2c3hK7RUG' as const,
-      fcrmMpca: 'a4Sx3PrFMDAMZEGsyzgJJg' as const,
-      fcrmMpcaMyko: 'a8WAWB9Yxu2jkgk4Ei8GTk' as const,
-      fcrmMpcaNAA: 'aBGVXW2N26DaLehmKneuyB' as const,
-      BNRE: 'aKgX4MNs6gCemDQKPeXxY8' as const,
     }
   }
 }

@@ -1,5 +1,5 @@
 import {getOverlapMonths} from '@/utils/utils'
-import {DrcOffice} from '@/core/drcJobTitle'
+import {DrcOffice} from '@/core/drcUa'
 
 export enum WfpDeduplicationStatus {
   Deduplicated = 'Deduplicated',

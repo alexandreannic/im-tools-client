@@ -94,12 +94,22 @@ export class SheetUtils {
   // static readonly FILTER_BLANK_TEXT = 'FILTER_BLANK_TEXT_someRandomTextToAvoidCollision_9fa3'
   static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
 
-  static readonly buildOptions = (opt: string[]): SheetOptions[] => {
-    return opt.map(SheetUtils.buildOption)
+  static readonly blankValue = ''
+  static readonly blankOption: SheetOptions = {value: SheetUtils.blankValue, label: <i>BLANK</i>}
+
+  static readonly buildOptions = (opt: string[], addBlank?: boolean): SheetOptions[] => {
+    return [
+      ...(addBlank ? [SheetUtils.blankOption] : []),
+      ...opt.map(SheetUtils.buildOption),
+    ]
   }
 
   static readonly buildOption = (_: string): SheetOptions => {
     return {value: _, label: _}
+  }
+
+  static readonly getValueGetter = <T extends SheetRow>(col: Pick<SheetColumnProps<T>, 'render' | 'renderValue'>, colName: string) => {
+    return col.renderValue ?? col.render as any ?? ((_: T) => _[colName])
   }
 }
 

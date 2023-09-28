@@ -5,7 +5,7 @@ import {SheetFilterDialogProps} from '@/shared/Sheet/SheetFilterDialog'
 export type SheetPropertyType = 'date' | 'number' | 'string' | 'select_one' | 'select_multiple'
 
 export interface SheetOptions {
-  value?: string
+  value: string
   // label?: string
   label?: ReactNode
 }

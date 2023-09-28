@@ -14,6 +14,9 @@ import {TableImg} from '@/shared/TableImg/TableImg'
 import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {DrcDonor, DrcProject} from '@/core/drcUa'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {formatLargeNumber} from '@/core/i18n/localization/en'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -74,6 +77,12 @@ export const MpcaData = () => {
           }}
           columns={[
             {
+              id: 'id',
+              head: m.id,
+              type: 'string',
+              render: _ => _.id,
+            },
+            {
               id: 'source',
               head: m.form,
               type: 'select_one',
@@ -84,14 +93,67 @@ export const MpcaData = () => {
               id: 'date',
               head: m.date,
               type: 'date',
+              renderValue: _ => _.date,
               render: _ => formatDate(_.date)
+            },
+            {
+              id: 'donor',
+              head: m.donor,
+              type: 'select_one',
+              options: () => SheetUtils.buildOptions(Enum.keys(DrcDonor), true),
+              render: _ => _.donor ?? ''
+            },
+            {
+              id: 'project',
+              head: m.project,
+              type: 'select_one',
+              options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+              render: _ => _.project ?? SheetUtils.blankValue
             },
             {
               id: 'prog',
               head: m.program,
               type: 'select_multiple',
-              options: () => [...Enum.keys(MpcaProgram).map(_ => ({label: _, value: _})), {label: ' ', value: ' '}],
+              options: () => SheetUtils.buildOptions(Enum.keys(MpcaProgram), true),
+              renderValue: _ => _.prog,
               render: _ => _.prog?.join(' | '),
+            },
+            {
+              id: 'oblast',
+              head: m.oblast,
+              type: 'select_one',
+              options: () => SheetUtils.buildOptions(Enum.values(OblastIndex.oblastByISO), true),
+              render: _ => _.oblast ?? SheetUtils.blankValue,
+            },
+            {
+              id: 'hhSize',
+              head: m.hhSize,
+              type: 'number',
+              render: _ => _.hhSize
+            },
+            {
+              id: 'amountUahSupposed',
+              align: 'right',
+              head: m.amountUAH,
+              type: 'number',
+              renderValue: _ => _.amountUahSupposed,
+              render: _ => _.amountUahSupposed ? formatLargeNumber(_.amountUahSupposed) : undefined,
+            },
+            {
+              id: 'amountUahDedup',
+              align: 'right',
+              head: 'Amount dedup',
+              type: 'number',
+              renderValue: _ => _.amountUahDedup,
+              render: _ => _.amountUahDedup ? formatLargeNumber(_.amountUahDedup) : undefined,
+            },
+            {
+              id: 'amountUahFinal',
+              align: 'right',
+              head: 'Amount final',
+              type: 'number',
+              renderValue: _ => _.amountUahFinal,
+              render: _ => _.amountUahFinal ? formatLargeNumber(_.amountUahFinal) : undefined,
             },
             {
               id: 'deduplication',
@@ -99,18 +161,17 @@ export const MpcaData = () => {
               width: 0,
               head: m.deduplication,
               type: 'select_one',
-              renderValue: _ => _.deduplication?.status ?? ' ',
-              options: () => [...Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})), {label: ' ', value: ' '}],
+              options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
               tooltip: _ => _.deduplication && m.mpcaDb.status[_.deduplication.status],
+              renderValue: _ => _.deduplication?.status ?? SheetUtils.blankValue,
               render: _ => _.deduplication && <DeduplicationStatusIcon status={_.deduplication.status}/>,
             },
             {
               id: 'suggestion',
               head: m.suggestion,
               type: 'select_one',
-              renderValue: _ => _.deduplication?.suggestion ?? ' ',
-              options: () => [...Enum.keys(DrcSupportSuggestion).map(_ => ({label: _, value: _})), {label: ' ', value: ' '}],
-              render: _ => _.deduplication?.suggestion,
+              options: () => SheetUtils.buildOptions(Enum.keys(DrcSupportSuggestion), true),
+              render: _ => _.deduplication?.suggestion ?? SheetUtils.blankValue,
             },            // {
             //   id: 'deduplicationFile',
             //   head: 'deduplicationFile',
@@ -130,7 +191,12 @@ export const MpcaData = () => {
             //     pending: <TableIcon color="disabled" children="schedule"/>,
             //   }, () => <Txt skeleton={30}/>)
             // },
-            {type: 'string', id: 'taxId', head: m.taxID, render: _ => _.taxId},
+            {
+              type: 'string',
+              id: 'taxId',
+              head: m.taxID,
+              render: _ => _.taxId
+            },
             {
               id: 'taxIdImg', align: 'center', head: m.taxID, render: _ => map(_.taxIdFileURL, url =>
                 <TableImg url={getKoboImagePath(url.download_small_url)}/>
@@ -153,7 +219,6 @@ export const MpcaData = () => {
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.keys(BNREOptions.ben_det_res_stat)),
             },
-            {id: 'hhSize', head: m.hhSize, render: _ => _.hhSize},
             {id: 'phone', head: m.phone, render: _ => _.phone},
           ]}
         />

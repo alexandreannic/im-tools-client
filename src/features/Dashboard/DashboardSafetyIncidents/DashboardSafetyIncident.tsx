@@ -77,8 +77,8 @@ export const DashboardSafetyIncident = () => {
     } = {}
   ) => {
     return Enum.entries(SafetyIncidentTrackerOptions[questionName] ?? {})
-      .map(([name, label]) => ({name, label: label}))
-      .filter(_ => !(skipKey as string[]).includes(_.name))
+      .map(([value, label]) => ({value, label: label}))
+      .filter(_ => !(skipKey as string[]).includes(_.value))
   }
 
   const data: DashboardSafetyIncidentsPageProps['data'] | undefined = useMemo(() => {

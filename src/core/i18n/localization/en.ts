@@ -32,8 +32,8 @@ export const dateFromNow = (d?: Date): string | undefined => {
   return d ? formatDistance(d, new Date(), {addSuffix: true}) : undefined
 }
 
-export const formatLargeNumber = (n?: number): string => {
-  return n !== undefined && n !== null && !isNaN(n) ? n.toLocaleString('en-EN') : '-'
+export const formatLargeNumber = (n?: number, options?: Intl.NumberFormatOptions): string => {
+  return n !== undefined && n !== null && !isNaN(n) ? n.toLocaleString('en-EN', options) : '-'
 }
 
 export const formatDuration = formatDurationFns
@@ -87,6 +87,7 @@ export const en = Object.freeze({
     no: 'No',
     contactAdmin: 'Contact:',
     office: 'Office',
+    disaggregation: 'Disaggregation',
     drcOffice: 'DRC office',
     question: 'Question',
     answer: 'Answer',
@@ -100,6 +101,9 @@ export const en = Object.freeze({
     theme: 'Dark theme',
     previous: 'Previous',
     filter: 'Filter',
+    noneFormatted: '<i>None</i>',
+    none: '<i>None</i>',
+    dash: '-',
     filterPlaceholder: 'Filter...',
     count: 'Count',
     sum: 'Sum',
@@ -224,6 +228,7 @@ export const en = Object.freeze({
     status: 'Status',
     male: 'Male',
     ukraine: 'Ukraine',
+    location: 'Location',
     submissionTime: 'Submission',
     submittedBy: 'By',
     mealVisitMonitoringDashboard: 'MEAL Visit Monitoring Dashboard',

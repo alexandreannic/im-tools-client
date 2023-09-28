@@ -84,14 +84,6 @@ export interface DashboardPageProps {
   computed: NonNullable<ReturnType<typeof useProtHHS2Data>>
 }
 
-export enum Donor {
-  'BHA_UKR000284' = 'BHA UKR-000284',
-  'OKF_UKR000309' = 'OKF UKR-000309',
-  'ECHO_UKR000322' = 'ECHO UKR-000322',
-  'UHF_IV_UKR000314' = 'UHF IV UKR-000314',
-  'NN2_UKR000298' = 'NN2 UKR-000298',
-}
-
 export const DashboardProtHHS2 = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
@@ -128,8 +120,8 @@ export const DashboardProtHHS2 = () => {
     } = {}
   ) => {
     return Enum.entries(ProtHHS_2_1Options[questionName] ?? {})
-      .map(([name, label]) => ({name, label: label}))
-      .filter(_ => !(skipKey as string[]).includes(_.name))
+      .map(([value, label]) => ({value, label: label}))
+      .filter(_ => !(skipKey as string[]).includes(_.value))
   }, [])
 
   const database = useMemo(() => {
@@ -267,7 +259,7 @@ export const DashboardProtHHS2 = () => {
                 icon="wc"
                 value={value ?? []}
                 label={m.protHHS2.hhComposition}
-                options={Enum.entries(m.protHHS2._hhComposition).map(([k, v]) => ({name: k, label: v}))}
+                options={Enum.entries(m.protHHS2._hhComposition).map(([k, v]) => ({value: k, label: v}))}
                 onChange={onChange as any}
               />
             }

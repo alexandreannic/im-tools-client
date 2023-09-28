@@ -14,7 +14,6 @@ import {SheetOptions} from '@/shared/Sheet/sheetType'
 import {Arr} from '@alexandreannic/ts-utils'
 import {SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, SheetFilterValueString, SheetRow} from '@/shared/Sheet/Sheet'
 import {type} from 'os'
-import {Utils} from '@/utils/utils'
 
 export type SheetFilterDialogProps = Pick<PopoverProps, 'anchorEl'> & {
   orderBy?: OrderBy
@@ -101,7 +100,7 @@ export const SheetFilterDialog = ({
             case 'select_one':
             case 'select_multiple':
               return (
-                <SheetFilterDialogSelect options={options} columnId={columnId} value={innerValue} onChange={setInnerValue}/>
+                <SheetFilterDialogSelect options={options} value={innerValue} onChange={setInnerValue}/>
               )
             case 'number': {
               return (

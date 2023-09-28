@@ -68,7 +68,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     showIf: (u, accesses) => {
       return u?.admin || accesses && !!accesses
         .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-        .find(_ => _.params?.koboFormId === kobo.drcUa.form.BNRE)
+        .find(_ => _.params?.koboFormId === kobo.drcUa.form.bn_re)
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },

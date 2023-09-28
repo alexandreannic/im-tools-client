@@ -1,8 +1,39 @@
 import {mapSafetyIncidentTracker} from '@/core/koboModel/SafetyIncidentTracker/SafetyIncidentTrackerMapping'
-import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 
 export namespace KoboSafetyIncidentHelper {
-  export const mapOblast: Record<string, OblastISO> = {
+
+  export const mapOblast: Record<string, OblastName> = {
+    aroc: 'Autonomous Republic of Crimea',//'UA43',
+    cherkaska: 'Cherkaska',
+    chernihivska: 'Chernihivska',
+    chernivetska: 'Chernivetska',// 'UA77',
+    dnipropetrovska: 'Dnipropetrovska',
+    donetska: 'Donetska',
+    'ivano-ivano': 'Ivano-Frankivska',
+    kharkivska: 'Kharkivska',
+    khersonska: 'Khersonska',
+    khmelnytska: 'Khmelnytska',
+    kirovohradska: 'Kirovohradska',
+    citykyiv: 'Kyiv',//'UA80',
+    kyivska: 'Kyivska',
+    luhanska: 'Luhanska',//'UA09',
+    lvivska: 'Lvivska',
+    mykolaivska: 'Mykolaivska',
+    odeska: 'Odeska',
+    poltavska: 'Poltavska',
+    rivnenska: 'Rivnenska',
+    sevastopilska: 'Sevastopol',//'UA85',
+    sumska: 'Sumska',
+    ternopilska: 'Ternopilska',
+    vinnytska: 'Vinnytska',
+    volynska: 'Volynska',
+    zakarpatska: 'Zakarpatska',
+    zaporizka: 'Zaporizka',
+    zhytomyrska: 'Zhytomyrska',
+  }
+
+  export const mapOblastIso: Record<string, OblastISO> = {
     aroc: 'UA01',//'UA43',
     cherkaska: 'UA71',
     chernihivska: 'UA74',
@@ -34,7 +65,7 @@ export namespace KoboSafetyIncidentHelper {
 
   export const mapData = (_: any) => {
     const d = mapSafetyIncidentTracker(_)
-    return {...d, oblastISO: mapOblast[d.oblast!]}
+    return {...d, oblastISO: mapOblastIso[d.oblast!]}
   }
 
   export type Type = ReturnType<typeof mapData>
