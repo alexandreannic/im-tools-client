@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {MpcaProgram, MpcaRow, MpcaRowSource, useMPCAContext} from '../MpcaContext'
+import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {Enum, map} from '@alexandreannic/ts-utils'
@@ -17,6 +17,7 @@ import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wf
 import {DrcDonor, DrcProject} from '@/core/drcUa'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
+import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -39,7 +40,7 @@ export const MpcaData = () => {
   return (
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
-        <Sheet<MpcaRow>
+        <Sheet<Mpca>
           id="mpca"
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}

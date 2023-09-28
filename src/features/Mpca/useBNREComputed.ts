@@ -4,9 +4,9 @@ import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {chain} from '../../utils/utils'
 import {ageGroup, groupByAgeGroup} from '../../core/type'
-import {MpcaRow} from '@/features/Mpca/MpcaContext'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
+import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 
 export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = KoboSafetyIncidentHelper.mapOblastIso
 
@@ -15,7 +15,7 @@ export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 export const useBNREComputed = ({
   data,
 }: {
-  data?: _Arr<MpcaRow> | undefined
+  data?: _Arr<Mpca> | undefined
 }) => useMemo(() => {
   if (!data) return
   const flatData = Arr([] as any[])//data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))
