@@ -12,6 +12,7 @@ import {WfpDeduplicationSdk} from '@/core/sdk/server/wfpDeduplication/WfpDedupli
 import {AccessSdk} from '@/core/sdk/server/access/AccessSdk'
 import {UserSdk} from '@/core/sdk/server/user/UserSdk'
 import {ProxySdk} from '@/core/sdk/server/proxy/ProxySdk'
+import {MpcaSdk} from '@/core/sdk/server/mpca/MpcaSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -38,6 +39,7 @@ export class ApiSdk {
   }
   readonly koboApi = new KoboApiSdk(this.client)
   readonly activityInfo = new ActivityInfoSdk(this.client)
+  readonly mpca = new MpcaSdk(this.client)
   readonly mpcaPayment = new MpcaPaymentSdk(this.client)
   readonly wfpDeduplication = new WfpDeduplicationSdk(this.client)
   readonly access = new AccessSdk(this.client)

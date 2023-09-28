@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {MpcaProgram, MpcaRow, MpcaRowSource, useMPCAContext} from '../MpcaContext'
+import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
@@ -25,6 +25,7 @@ import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
+import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 
 const today = new Date()
 
@@ -45,7 +46,7 @@ export const MpcaDashboard = () => {
 
   const {defaultFilter, filterShape} = useMemo(() => {
     const d = ctx.data ?? Arr([])
-    const filterShape: {icon?: string, label: string, property: keyof MpcaRow, multiple?: boolean, options: SheetOptions[]}[] = [{
+    const filterShape: {icon?: string, label: string, property: keyof Mpca, multiple?: boolean, options: SheetOptions[]}[] = [{
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
       options: Object.keys(MpcaRowSource).map(_ => SheetUtils.buildCustomOption(_, ctx.formNameTranslation[_]))
     }, {
@@ -67,7 +68,7 @@ export const MpcaDashboard = () => {
     }
   }, [ctx.data])
 
-  const [filters, setFilters] = useState<Record<keyof MpcaRow, string[]>>(defaultFilter)
+  const [filters, setFilters] = useState<Record<keyof Mpca, string[]>>(defaultFilter)
 
   console.log(filters)
   const filteredData = useMemo(() => {
@@ -129,7 +130,7 @@ export const _MPCADashboard = ({
   data,
   computed,
 }: {
-  data: _Arr<MpcaRow>
+  data: _Arr<Mpca>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const ctx = useMPCAContext()
@@ -255,7 +256,7 @@ export const _MPCADashboard = ({
             <SlidePanel title={m.location}>
               <Lazy deps={[data]} fn={() => ChartTools.byCategory({
                 data,
-                categories: new Enum(OblastIndex.oblastByISO).transform((k, v) => [k, (_: MpcaRow) => _.oblastIso === k]).get(),
+                categories: new Enum(OblastIndex.oblastByISO).transform((k, v) => [k, (_: Mpca) => _.oblastIso === k]).get(),
                 filter: _ => true,
               })}>
                 {_ => <UkraineMap data={_} base={data.length} sx={{mx: 2}}/>}
