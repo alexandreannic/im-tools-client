@@ -18,7 +18,7 @@ const RenderRow = ({label, value}: {
   value: ReactNode
 }) => {
   return (
-    <Box sx={{display: 'flex', '&:not(:last-of-child)': {mb: 2}}}>
+    <Box sx={{display: 'flex', '&:not(:last-of-type)': {mb: 1.5}}}>
       <Txt color="hint" sx={{flex: 1, mr: 2}}>{label}</Txt>
       <Txt block bold>{value}</Txt>
     </Box>
@@ -53,7 +53,7 @@ export const NumberChoicesPopover = <T, >({
       <PanelBody>
         <RenderRow label={m.count} value={formatLargeNumber(chart.mapped.length)}/>
         <RenderRow label={m.sum} value={formatLargeNumber(chart.sum)}/>
-        <RenderRow label={m.average} value={formatLargeNumber(chart.avg)}/>
+        <RenderRow label={m.average} value={formatLargeNumber(chart.avg, {maximumFractionDigits: 2})}/>
         <RenderRow label={m.min} value={formatLargeNumber(chart.min)}/>
         <RenderRow label={m.max} value={formatLargeNumber(chart.max)}/>
       </PanelBody>

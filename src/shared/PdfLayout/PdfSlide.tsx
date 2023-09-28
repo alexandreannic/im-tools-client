@@ -196,7 +196,8 @@ export const SlideWidget = ({
         fontWeight: t => t.typography.fontWeightBold,
         fontSize: '1.7em',
         display: 'inline-flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        minHeight: 32,
       }}>
         {icon && (typeof icon === 'string' ? <Icon color="disabled" sx={{mr: 1}} fontSize="large">{icon}</Icon> : icon)}
         {children}

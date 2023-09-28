@@ -8,7 +8,7 @@ import {MpcaRow} from '@/features/Mpca/MpcaContext'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
-export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = KoboSafetyIncidentHelper.mapOblast
+export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = KoboSafetyIncidentHelper.mapOblastIso
 
 export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 

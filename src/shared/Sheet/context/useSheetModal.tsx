@@ -55,7 +55,7 @@ export const useSheetModal = <T extends SheetRow>({
     renderValue?: SheetColumnProps<T>['renderValue']
     render: SheetColumnProps<T>['render']
   }) => {
-    const getValue = SheetUtils.getValueByColumn(c, c.columnId)
+    const getValue = SheetUtils.getValueGetter(c, c.columnId)
     switch (c.type) {
       case 'number':
         return <NumberChoicesPopover

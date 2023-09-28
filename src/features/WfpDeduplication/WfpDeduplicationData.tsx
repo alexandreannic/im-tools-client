@@ -38,8 +38,6 @@ export const WfpDeduplicationData = () => {
       .map(SheetUtils.buildOption)
   }, [_search.entity])
 
-  console.log(existingOrga)
-
   useEffect(() => {
     _search.fetch()
   }, [])
@@ -124,10 +122,11 @@ export const WfpDeduplicationData = () => {
               align: 'center',
               head: m.status,
               type: 'select_one',
-              options: () => Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})),
+              options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
               tooltip: _ => m.mpcaDb.status[_.status],
               renderExport: false,
               render: _ => <DeduplicationStatusIcon status={_.status}/>,
+              renderValue: _ => _.status ?? SheetUtils.blankValue,
             },
             {
               id: 'existingOrga',

@@ -227,6 +227,7 @@ export const en = Object.freeze({
     status: 'Status',
     male: 'Male',
     ukraine: 'Ukraine',
+    location: 'Location',
     submissionTime: 'Submission',
     submittedBy: 'By',
     mealVisitMonitoringDashboard: 'MEAL Visit Monitoring Dashboard',

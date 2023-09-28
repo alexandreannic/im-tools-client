@@ -36,8 +36,8 @@ export const useSheetData = <T extends SheetRow>({
     setSearch(prev => ({...prev, orderBy, sortBy: columnId}))
   }, [])
 
-  const getValue = (colName: string) => {
-    return SheetUtils.getValueByColumn(columnsIndex[colName], colName)
+  const getValueGetter = (colName: string) => {
+    return SheetUtils.getValueGetter(columnsIndex[colName], colName)
   }
 
   const filteredData = useMemo(() => {
@@ -46,12 +46,12 @@ export const useSheetData = <T extends SheetRow>({
       const filter = filters[k]
       if (filter === undefined) return
       const type = columnsIndex[k].type
-      const renderValue = getValue(k)
+      const getValue = getValueGetter(k)
       switch (type) {
         case 'date': {
           return row => {
             const typedFilter = filter as SheetFilterValueDate
-            const v = renderValue(row) as Date | undefined
+            const v = getValue(row) as Date | undefined
             if (v === undefined) return false
             if (!((v as any) instanceof Date)) {
               console.warn(`Value of ${String(k)} is`, v, `but Date expected.`)
@@ -64,7 +64,7 @@ export const useSheetData = <T extends SheetRow>({
         case 'select_one': {
           return row => {
             const typedFilter = filter as SheetFilterValueSelect
-            const v = renderValue(row) as string
+            const v = getValue(row) as string
             if (v === undefined) return false
             return (typedFilter).includes(v)
           }
@@ -89,7 +89,7 @@ export const useSheetData = <T extends SheetRow>({
         default: {
           return row => {
             const typedFilter = filter as SheetFilterValueString
-            const v = renderValue(row)
+            const v = getValue(row)
             if (v === undefined && typedFilter?.filterBlank !== false) return false
             if (typedFilter?.value === undefined) return true
             if (typeof v !== 'string' && typeof v !== 'number') {
@@ -108,18 +108,23 @@ export const useSheetData = <T extends SheetRow>({
       const columnInfo = columnsIndex[sortBy]
       const sorted = d.sort(fnSwitch(columnInfo.type!, {
         number: () => (a: T, b: T) => {
-          const av = safeNumber(getValue(sortBy)(a), Number.MIN_SAFE_INTEGER)
-          const bv = safeNumber(getValue(sortBy)(b), Number.MIN_SAFE_INTEGER)
+          const av = safeNumber(getValueGetter(sortBy)(a), Number.MIN_SAFE_INTEGER)
+          const bv = safeNumber(getValueGetter(sortBy)(b), Number.MIN_SAFE_INTEGER)
           return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
         },
         date: () => (a: T, b: T) => {
-          const av = getValue(sortBy)(a)?.getTime() ?? 0
-          const bv = getValue(sortBy)(b)?.getTime() ?? 0
-          return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
+          try {
+            const av = getValueGetter(sortBy)(a)?.getTime() ?? 0
+            const bv = getValueGetter(sortBy)(b)?.getTime() ?? 0
+            return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
+          } catch (e) {
+            console.warn('Invalid date', getValueGetter(sortBy)(a))
+            return -1
+          }
         },
       }, () => (a: T, b: T) => {
-        const av = ('' + getValue(sortBy)(a)) ?? ''
-        const bv = ('' + getValue(sortBy)(b)) ?? ''
+        const av = ('' + getValueGetter(sortBy)(a)) ?? ''
+        const bv = ('' + getValueGetter(sortBy)(b)) ?? ''
         return av.localeCompare(bv) * (search.orderBy === 'asc' ? -1 : 1)
       }))
       return [...sorted]
