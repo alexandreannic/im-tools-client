@@ -24,6 +24,8 @@ import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
 import {mapMPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFIMapping'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
+import {mapBn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplication/Bn_cashForRentApplicationMapping'
+import {Bn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplication/Bn_cashForRentApplication'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -105,36 +107,44 @@ export class KoboAnswerSdk {
 
   readonly searchBnre = (filters: KoboAnswerFilter = {}) => {
     return this.search<BNRE>({
-      formId: kobo.drcUa.form.BNRE,
+      formId: kobo.drcUa.form.bn_re,
       fnMap: mapBNRE,
       ...filters,
     })
   }
 
-  readonly searchShelter_cashForRepair = (filters: KoboAnswerFilter = {}) => {
+  readonly searcheBn_cashForRepair = (filters: KoboAnswerFilter = {}) => {
     return this.search<Shelter_CashForRepair>({
-      formId: kobo.drcUa.form.mpca_cashForRepair,
+      formId: kobo.drcUa.form.bn_cashForRepair,
       fnMap: mapShelter_CashForRepair,
       ...filters,
     })
   }
 
-  readonly searchRapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
+  readonly searchBn_cashForRentApplication = (filters: KoboAnswerFilter = {}) => {
+    return this.search<Bn_cashForRentApplication>({
+      formId: kobo.drcUa.form.bn_cashForRentApplication,
+      fnMap: mapBn_cashForRentApplication,
+      ...filters,
+    })
+  }
+
+  readonly searchBn_MpcaNfiOld = (filters: KoboAnswerFilter = {}) => {
+    return this.search<MPCA_NFI>({
+      formId: kobo.drcUa.form.bn_fcrmMpca,
+      fnMap: mapMPCA_NFI,
+      ...filters,
+    })
+  }
+  readonly searchBn_RapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
     return this.search<RapidResponseMechanism>({
       formId: kobo.drcUa.form.rapidResponseMechanism,
       fnMap: mapRapidResponseMechanism,
       ...filters,
     })
   }
-  readonly searchMpcaNfiOld = (filters: KoboAnswerFilter = {}) => {
-    return this.search<MPCA_NFI>({
-      formId: kobo.drcUa.form.fcrmMpca,
-      fnMap: mapMPCA_NFI,
-      ...filters,
-    })
-  }
 
-  readonly searchMealVisitMonitoring = (filters: KoboAnswerFilter = {}) => {
+  readonly searchMeal_VisitMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.mealVisitMonitoring,
       fnMap: mapMealVisitMonitoring,

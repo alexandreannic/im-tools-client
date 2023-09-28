@@ -1,4 +1,4 @@
-import {DrcOffice} from '@/core/drcJobTitle'
+import {DrcOffice} from '@/core/drcUa'
 import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 

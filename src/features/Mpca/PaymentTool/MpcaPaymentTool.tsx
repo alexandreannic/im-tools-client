@@ -78,7 +78,7 @@ export const MpcaPaymentTool = () => {
                 <PanelHead>{m.calculations}</PanelHead>
                 <PanelBody>
                   <ListRow label={m.mpcaDb.mpcaGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.mpcaGrantAmount)}</Txt></ListRow>
-                  <ListRow label={m.mpcaDb.cfrGrantAmount}><Txt size="big" bold>{amounts.cfrGrantAmount.map(formatLargeNumber).join(' - ')}</Txt></ListRow>
+                  <ListRow label={m.mpcaDb.cfrGrantAmount}><Txt size="big" bold>{amounts.cfrGrantAmount.map(_ => formatLargeNumber(_)).join(' - ')}</Txt></ListRow>
                   <ListRow label={m.mpcaDb.startupGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.startupGrantAmount)}</Txt></ListRow>
                 </PanelBody>
               </Panel>

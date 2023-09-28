@@ -2,7 +2,7 @@ import {useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {I18nContextProps} from '@/core/i18n/I18n'
 import {KoboApiColType, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {SheetColumnProps} from '@/shared/Sheet/Sheet'
+import {SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Arr, map, mapFor} from '@alexandreannic/ts-utils'
@@ -85,7 +85,7 @@ export const getColumnBySchema = ({
           head: getHead(translateQuestion(q.name)),
           renderValue: row => getVal(row, q.name),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
-          options: () => Arr(data).map(_ => _[q.name] as string | undefined).distinct(_ => _).map(_ => ({label: _, value: _})),
+          options: () => Arr(data).map(_ => _[q.name] ?? SheetUtils.blankValue).distinct(_ => _).map(_ => ({label: _, value: _})),
         }
       }
       case 'select_one_from_file': {
@@ -182,8 +182,8 @@ export const getColumnBySchema = ({
           id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="radio_button_checked" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
-          options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
-          renderValue: row => getVal(row, q.name),
+          options: () => [SheetUtils.blankOption, ...choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)}))],
+          renderValue: row => getVal(row, q.name) ?? SheetUtils.blankValue,
           render: row => map(getVal(row, q.name) as string | undefined, v => {
             const render = translateChoice(q.name, v)
             if (render)
@@ -203,8 +203,8 @@ export const getColumnBySchema = ({
           id: getId(q),
           typeIcon: <SheetHeadTypeIcon children="check_box" tooltip={q.type}/>,
           head: getHead(translateQuestion(q.name)),
-          options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
-          renderValue: row => getVal(row, q.name),
+          options: () => [SheetUtils.blankOption, ...choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)}))],
+          renderValue: row => getVal(row, q.name) ?? SheetUtils.blankValue,
           render: row => map(getVal(row, q.name) as string[] | undefined, v => {
             try {
               const render = v.map(_ => translateChoice(q.name, _,)).join(' | ')

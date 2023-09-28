@@ -3,7 +3,7 @@ import {useModal} from '@/shared/Modal/useModal'
 import {SheetColumnConfigPopoverParams, SheetOptions} from '@/shared/Sheet/sheetType'
 import {SheetFilterDialog} from '@/shared/Sheet/SheetFilterDialog'
 import {SheetContext} from '@/shared/Sheet/context/SheetContext'
-import {SheetColumnProps, SheetFilterValue, SheetRow} from '@/shared/Sheet/Sheet'
+import {SheetColumnProps, SheetFilterValue, SheetRow, SheetUtils} from '@/shared/Sheet/Sheet'
 import {DatesPopover, MultipleChoicesPopover, NumberChoicesPopover} from '@/shared/Sheet/SheetPopover'
 import {useMap2} from '@/alexlib-labo/useMap'
 
@@ -51,8 +51,11 @@ export const useSheetModal = <T extends SheetRow>({
     )
   }, [data.search, data.filters, data.filteredData])
 
-  const [statsPopoverOpen, statsPopoverClose] = useModal((c: SheetColumnConfigPopoverParams & {renderValue?: SheetColumnProps<T>['renderValue']}) => {
-    const getValue = c.renderValue ?? (_ => _[c.columnId])
+  const [statsPopoverOpen, statsPopoverClose] = useModal((c: SheetColumnConfigPopoverParams & {
+    renderValue?: SheetColumnProps<T>['renderValue']
+    render: SheetColumnProps<T>['render']
+  }) => {
+    const getValue = SheetUtils.getValueGetter(c, c.columnId)
     switch (c.type) {
       case 'number':
         return <NumberChoicesPopover
@@ -100,6 +103,7 @@ export const useSheetModal = <T extends SheetRow>({
   const _statsPopoverOpen = useCallback((a: SheetColumnProps<T>, e: any) => statsPopoverOpen({
     type: a.type!,
     columnId: a.id,
+    render: a.render,
     renderValue: a.renderValue,
     title: a.head ?? a.id,
     anchorEl: e.currentTarget,

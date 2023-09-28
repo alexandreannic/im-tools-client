@@ -12,7 +12,6 @@ import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {AaSelect} from '@/shared/Select/Select'
 import {useAaToast} from '@/core/useToast'
-import {Donor} from '../../Dashboard/DashboardHHS2/DashboardProtHHS2'
 import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
@@ -20,6 +19,7 @@ import {alreadySentKobosInApril} from './missSubmittedData'
 import {format, subDays, subMonths} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {DrcDonor} from '@/core/drcUa'
 
 const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
   returnee: 'Returnees',
@@ -28,13 +28,13 @@ const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify
   refugee: 'Non-Displaced',
 }, _ => 'Non-Displaced')
 
-const planCode: Record<Donor, AiProtectionHhs.GET<'Plan Code'>> = {
+const planCode: Partial<Record<DrcDonor, AiProtectionHhs.GET<'Plan Code'>>> = {
   // [Donor.ECHO_UKR000322]: 'GP-DRC-00001',//ECHO
-  [Donor.NN2_UKR000298]: 'GP-DRC-00002',//Novo Nordisk ------
-  [Donor.BHA_UKR000284]: 'GP-DRC-00003',//BHA OK
-  [Donor.OKF_UKR000309]: 'GP-DRC-00004',//OKF ------
-  [Donor.UHF_IV_UKR000314]: 'GP-DRC-00005',//UHF
-  [Donor.ECHO_UKR000322]: 'GP-DRC-00006',//ECHO
+  [DrcDonor.NONO]: 'GP-DRC-00002',//Novo Nordisk ------
+  [DrcDonor.BHA]: 'GP-DRC-00003',//BHA OK
+  [DrcDonor.OKF]: 'GP-DRC-00004',//OKF ------
+  [DrcDonor.UHF]: 'GP-DRC-00005',//UHF
+  [DrcDonor.ECHO]: 'GP-DRC-00006',//ECHO
   // [Donor.D] MoF: 'GP-DRC-00007',//Danish
 }
 

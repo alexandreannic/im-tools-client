@@ -1,5 +1,5 @@
 import {Controller, UseFormReturn} from 'react-hook-form'
-import {DrcJob, DrcOffice} from '@/core/drcJobTitle'
+import {DrcJob, DrcOffice} from '@/core/drcUa'
 import {AccessLevel} from '@/core/sdk/server/access/Access'
 import {Txt, TxtProps} from 'mui-extension'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'

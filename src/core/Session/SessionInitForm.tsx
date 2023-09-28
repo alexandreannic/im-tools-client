@@ -1,5 +1,4 @@
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {DrcOffice} from '@/core/drcJobTitle'
 import {Enum, map} from '@alexandreannic/ts-utils'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {Txt} from 'mui-extension'
@@ -11,6 +10,7 @@ import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import {Modal} from 'mui-extension/lib/Modal'
+import {DrcOffice} from '@/core/drcUa'
 
 export const SessionInitForm = ({
   user,

@@ -193,7 +193,7 @@ export const Playground = () => {
   const {session} = useSession()
   const {api} = useAppSettings()
 
-  const shape = useFetcher(() => api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.BNRE))
+  const shape = useFetcher(() => api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.bn_re))
   const bnre = useFetcher(() => api.kobo.answer.searchBnre())
 
   const form = useFetcher(() => api.koboApi.getForm(KoboApiSdk.serverRefs.prod, KoboApiSdk.koboFormRefs.MPCA_NFI_NAA))

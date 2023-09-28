@@ -8,7 +8,7 @@ import {Panel} from '@/shared/Panel'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {Txt} from 'mui-extension'
-import {DrcOffice} from '@/core/drcJobTitle'
+import {DrcOffice} from '@/core/drcUa'
 
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {format} from 'date-fns'
@@ -37,8 +37,6 @@ export const WfpDeduplicationData = () => {
       .compact()
       .map(SheetUtils.buildOption)
   }, [_search.entity])
-
-  console.log(existingOrga)
 
   useEffect(() => {
     _search.fetch()
@@ -124,10 +122,11 @@ export const WfpDeduplicationData = () => {
               align: 'center',
               head: m.status,
               type: 'select_one',
-              options: () => Enum.keys(WfpDeduplicationStatus).map(_ => ({label: _, value: _})),
+              options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
               tooltip: _ => m.mpcaDb.status[_.status],
               renderExport: false,
               render: _ => <DeduplicationStatusIcon status={_.status}/>,
+              renderValue: _ => _.status ?? SheetUtils.blankValue,
             },
             {
               id: 'existingOrga',

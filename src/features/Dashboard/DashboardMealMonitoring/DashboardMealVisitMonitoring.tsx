@@ -33,7 +33,7 @@ export interface DashboardPageProps {
   data: Arr<KoboAnswer<MealVisitMonitoring>>
 }
 
-const mapOblast: Record<string, OblastISO> = KoboSafetyIncidentHelper.mapOblast
+const mapOblast: Record<string, OblastISO> = KoboSafetyIncidentHelper.mapOblastIso
 
 const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOptions>()({
   oblast: {
@@ -104,7 +104,7 @@ export const DashboardMealVisitMonitoring = () => {
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
 
-  const request = (filter: Partial<Period>) => api.kobo.answer.searchMealVisitMonitoring({
+  const request = (filter: Partial<Period>) => api.kobo.answer.searchMeal_VisitMonitoring({
     filters: {
       start: filter.start,
       end: filter.end,
@@ -134,8 +134,8 @@ export const DashboardMealVisitMonitoring = () => {
     } = {}
   ) => {
     return Enum.entries(MealVisitMonitoringOptions[questionName] ?? {})
-      .map(([name, label]) => ({name, label: label}))
-      .filter(_ => !(skipKey as string[]).includes(_.name))
+      .map(([value, label]) => ({value, label: label}))
+      .filter(_ => !(skipKey as string[]).includes(_.value))
   }
 
   const data = useMemo(() => {
