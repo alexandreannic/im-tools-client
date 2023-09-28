@@ -191,34 +191,6 @@ export const _MPCADashboard = ({
                 {_ => <UkraineMap data={_} base={data.length} sx={{mx: 2}}/>}
               </Lazy>
             </SlidePanel>
-            <SlidePanel title={m.location}>
-              <Lazy deps={[data]} fn={() => {
-                const gb = data.groupBy(_ => _.oblast)
-                return new Enum(gb).transform((k, v) => [k, {
-                  oblast: k,
-                  total: v.sum(d => d.hhSize ?? 0),
-                  men: v.sum(d => d.men ?? 0),
-                  women: v.sum(d => d.women ?? 0),
-                  boys: v.sum(d => d.boys ?? 0),
-                  girls: v.sum(d => d.girls ?? 0),
-                }]).entries().map(_ => _[1])
-              }}>
-                {_ => (
-                  <Sheet data={_} columns={[
-                    {id: 'oblast', head: 'Oblast', type: 'string', render: _ => _.oblast},
-                    {id: 'men', head: 'Men', type: 'number', renderValue: _ => _.men, render: _ => formatLargeNumber(_.men)},
-                    {id: 'women', head: 'Women', type: 'number', renderValue: _ => _.women, render: _ => formatLargeNumber(_.women)},
-                    {id: 'boys', head: 'Boys', type: 'number', renderValue: _ => _.boys, render: _ => formatLargeNumber(_.boys)},
-                    {id: 'girls', head: 'Girls', type: 'number', renderValue: _ => _.girls, render: _ => formatLargeNumber(_.girls)},
-                    {
-                      id: 'total_disag', head: 'Total Disaggregated', type: 'number', renderValue: _ => Utils.add(_.men, _.women, _.boys, _.girls), render: _ =>
-                        <b>{formatLargeNumber(Utils.add(_.men, _.women, _.boys, _.girls))}</b>
-                    },
-                    {id: 'total', head: 'Total', type: 'number', renderValue: _ => _.total, render: _ => <b>{formatLargeNumber(_.total)}</b>},
-                  ]}/>
-                )}
-              </Lazy>
-            </SlidePanel>
           </Div>
           <Div column>
             <SlidePanel title={m.form}>
@@ -247,6 +219,35 @@ export const _MPCADashboard = ({
                 data: data.map(_ => _.project ?? m.dash),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
+            </SlidePanel>
+            <SlidePanel title={m.disaggregation}>
+              <Lazy deps={[data]} fn={() => {
+                const gb = data.groupBy(_ => _.oblast)
+                return new Enum(gb).transform((k, v) => [k, {
+                  oblast: k,
+                  total: v.sum(d => d.hhSize ?? 0),
+                  men: v.sum(d => d.men ?? 0),
+                  women: v.sum(d => d.women ?? 0),
+                  boys: v.sum(d => d.boys ?? 0),
+                  girls: v.sum(d => d.girls ?? 0),
+                }]).entries().map(_ => _[1])
+              }}>
+                {_ => (
+                  <Sheet data={_} columns={[
+                    {id: 'oblast', head: 'Oblast', type: 'string', render: _ => _.oblast},
+                    {width: 0, id: 'men', head: 'Men', type: 'number', renderValue: _ => _.men, render: _ => formatLargeNumber(_.men)},
+                    {width: 0, id: 'women', head: 'Women', type: 'number', renderValue: _ => _.women, render: _ => formatLargeNumber(_.women)},
+                    {width: 0, id: 'boys', head: 'Boys', type: 'number', renderValue: _ => _.boys, render: _ => formatLargeNumber(_.boys)},
+                    {width: 0, id: 'girls', head: 'Girls', type: 'number', renderValue: _ => _.girls, render: _ => formatLargeNumber(_.girls)},
+                    {
+                      width: 0,
+                      id: 'total_disag', head: 'Total Disaggregated', type: 'number', renderValue: _ => Utils.add(_.men, _.women, _.boys, _.girls), render: _ =>
+                        <b>{formatLargeNumber(Utils.add(_.men, _.women, _.boys, _.girls))}</b>
+                    },
+                    {width: 0, id: 'total', head: 'Total', type: 'number', renderValue: _ => _.total, render: _ => <b>{formatLargeNumber(_.total)}</b>},
+                  ]}/>
+                )}
               </Lazy>
             </SlidePanel>
           </Div>

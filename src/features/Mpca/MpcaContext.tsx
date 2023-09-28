@@ -25,9 +25,9 @@ import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafety
 export enum MpcaRowSource {
   RRM = 'RRM',
   CashForRent = 'CashForRent',
-  CashForRepair = 'CashForRepair',
+  CashForRepairRegistration = 'CashForRepairRegistration',
   BNRE = 'BNRE',
-  Old_form = 'Old_form',
+  OldBNRe = 'OldBNRe',
 }
 
 export enum MpcaProgram {
@@ -214,7 +214,7 @@ export const MPCAProvider = ({
       api.kobo.answer.searcheBn_cashForRepair(filters)
         .then(_ => {
           return _.data.forEach(_ => res.push({
-            source: MpcaRowSource.CashForRepair,
+            source: MpcaRowSource.CashForRepairRegistration,
             prog: [MpcaProgram.CashForRent],
             oblast: fnSwitch(_.ben_det_oblast ?? (_ as any).ben_det_oblastgov!, KoboSafetyIncidentHelper.mapOblast, () => undefined),
             oblastIso: fnSwitch(_.ben_det_oblast ?? (_ as any).ben_det_oblastgov!, KoboSafetyIncidentHelper.mapOblastIso, () => undefined),
@@ -374,7 +374,7 @@ export const MPCAProvider = ({
         return _.data.forEach(_ => {
           const group = [..._.group_in3fh72 ?? [], {GenderHH: _.gender_respondent, AgeHH: _.agex}]
           res.push({
-            source: MpcaRowSource.Old_form,
+            source: MpcaRowSource.OldBNRe,
             id: _.id,
             date: _.submissionTime,
             prog: fnSwitch(_.Programme, {
@@ -424,16 +424,16 @@ export const MPCAProvider = ({
 
   const data = useMemo(() => {
     if (!fetcherData.entity || !fetcherDeduplication.entity) return
+    const dedupIndex = {...fetcherDeduplication.entity}
     return fetcherData.entity.map(row => {
       row.amountUahSupposed = row.hhSize ? row.hhSize * 3 * 2220 : undefined
       if (!row.taxId) return row
-      const dedup = fetcherDeduplication.entity![row.taxId]
+      const dedup = dedupIndex[row.taxId]
       if (!dedup || dedup.length === 0) return row
       dedup
         .filter(_ => _.createdAt.getTime() > row.date.getTime())
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       row.deduplication = dedup.pop()
-      fetcherDeduplication.entity![row.taxId] = dedup
       if (row.deduplication) {
         row.amountUahDedup = row.deduplication.amount
       }
@@ -444,10 +444,12 @@ export const MPCAProvider = ({
       //     [DrcSupportSuggestion.NoAssistanceDrcDuplication]: 0,
       //     [DrcSupportSuggestion.NoAssistanceFullDuplication]: 0,
       //   }, () => row.hhSize! * 3 * 2220)
-      return {...row}
+      return row
     }).map(row => {
-      row.amountUahFinal = row.amountUahDedup ?? row.amountUahSupposed
-      return {...row}
+      return {
+        ...row,
+        amountUahFinal: row.amountUahDedup ?? row.amountUahSupposed
+      }
     })
       .sort((a, b) => b.date.getTime() - a.date.getTime())
   }, [
