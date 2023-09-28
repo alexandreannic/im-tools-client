@@ -5,7 +5,7 @@ import {MpcaProgram, MpcaRow, MpcaRowSource, useMPCAContext} from '../MpcaContex
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
-import {toPercent, Utils} from '@/utils/utils'
+import {chain, toPercent, Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
@@ -21,10 +21,10 @@ import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {SheetOptions} from '@/shared/Sheet/sheetType'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {DrcDonor, DrcProject} from '@/core/drcUa'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 const today = new Date()
 
@@ -32,26 +32,44 @@ const today = new Date()
 //   donor
 // }
 
-const filterShape: {icon?: string, label: string, property: keyof MpcaRow, multiple?: boolean, options: SheetOptions[]}[] = [
-  {icon: 'inventory', label: 'Kobo Form', property: 'source', options: SheetUtils.buildOptions(Object.keys(MpcaRowSource))},
-  {icon: 'handshake', label: 'Donor', property: 'donor', options: SheetUtils.buildOptions(Object.keys(DrcDonor))},
-  {icon: 'inventory_2', label: 'Project', property: 'project', options: SheetUtils.buildOptions(Object.keys(DrcProject))},
-  {icon: 'groups', label: 'Prog', property: 'prog', multiple: true, options: SheetUtils.buildOptions(Object.keys(MpcaProgram))},
-  {icon: 'location_on', label: 'Oblast', property: 'oblast', options: SheetUtils.buildOptions(Object.values(OblastIndex.oblastByISO))},
-]
-
 export const MpcaDashboard = () => {
   const ctx = useMPCAContext()
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m} = useI18n()
 
-  const [filters, setFilters] = useState<Record<keyof MpcaRow, string[]>>(Arr(filterShape).reduceObject<any>(_ => [_.property, []]))
 
   useEffect(() => {
     if (periodFilter.start || periodFilter.end)
       ctx.fetcherData.fetch({force: true}, {filters: periodFilter})
   }, [periodFilter])
 
+  const {defaultFilter, filterShape} = useMemo(() => {
+    const d = ctx.data ?? Arr([])
+    const filterShape: {icon?: string, label: string, property: keyof MpcaRow, multiple?: boolean, options: SheetOptions[]}[] = [{
+      icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
+      options: Object.keys(MpcaRowSource).map(_ => SheetUtils.buildCustomOption(_, ctx.formNameTranslation[_]))
+    }, {
+      icon: 'handshake', label: 'Donor', property: 'donor',
+      options: SheetUtils.buildOptions(d.map(_ => _.donor!).distinct(_ => _).sort())
+    }, {
+      icon: 'inventory_2', label: 'Project', property: 'project',
+      options: SheetUtils.buildOptions(d.map(_ => _.project!).distinct(_ => _).sort())
+    }, {
+      icon: 'groups', label: 'Prog', property: 'prog', multiple: true,
+      options: SheetUtils.buildOptions([...Object.keys(MpcaProgram), ''].sort())
+    }, {
+      icon: 'location_on', label: 'Oblast', property: 'oblast',
+      options: SheetUtils.buildOptions(d.map(_ => _.oblast!).distinct(_ => _).sort())
+    }]
+    return {
+      filterShape,
+      defaultFilter: Arr(filterShape).reduceObject<any>(_ => [_.property, []]),
+    }
+  }, [ctx.data])
+
+  const [filters, setFilters] = useState<Record<keyof MpcaRow, string[]>>(defaultFilter)
+
+  console.log(filters)
   const filteredData = useMemo(() => {
     return ctx.data?.filter(d => {
       return filterShape.every(shape => {
@@ -95,6 +113,7 @@ export const MpcaDashboard = () => {
             }
           </DebouncedInput>
         )}
+        <AAIconBtn sx={{ml: 1, mb: 1.5}} children="clear" tooltip={m.clearFilter} onClick={() => setFilters(defaultFilter)}/>
       </Box>
       {computed && filteredData && (
         <_MPCADashboard
@@ -113,8 +132,10 @@ export const _MPCADashboard = ({
   data: _Arr<MpcaRow>
   computed: NonNullable<UseBNREComputed>
 }) => {
+  const ctx = useMPCAContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [amountType, setAmountType] = useState<'amountUahSupposed' | 'amountUahDedup' | 'amountUahFinal'>('amountUahFinal')
+  const [tableType, setTableType] = useState<'ratio' | 'absolute'>('absolute')
   return (
     <>
       <Div column>
@@ -142,14 +163,16 @@ export const _MPCADashboard = ({
           <Div column>
             <SlidePanel>
               <ScRadioGroup value={amountType} onChange={setAmountType} dense inline>
-                <ScRadioGroupItem value="amountUahSupposed">Supposed</ScRadioGroupItem>
-                <ScRadioGroupItem value="amountUahDedup">After deduplication</ScRadioGroupItem>
-                <ScRadioGroupItem value="amountUahFinal">Final</ScRadioGroupItem>
+                <ScRadioGroupItem value="amountUahSupposed" title="Estimated"/>
+                <ScRadioGroupItem value="amountUahDedup" title="Deduplicated"/>
+                <ScRadioGroupItem value="amountUahFinal" title="Reel"/>
               </ScRadioGroup>
               <Lazy deps={[data, amountType]} fn={() => data.sum(_ => _[amountType] ?? 0)}>
                 {_ => (
                   <SlideWidget title="Total amount">
                     {formatLargeNumber(_)} UAH
+                    <Txt block color="disabled" sx={{mx: 1}}>-</Txt>
+                    ~ ${formatLargeNumber(_ * .027)}
                   </SlideWidget>
                 )}
               </Lazy>
@@ -182,6 +205,53 @@ export const _MPCADashboard = ({
                 }}
               />
             </SlidePanel>
+            <SlidePanel title={m.disaggregation}>
+              <Lazy deps={[data, tableType]} fn={() => {
+                const gb = data.groupBy(_ => _.oblast)
+                const computed = new Enum(gb).transform((k, v) => [k, {
+                  oblast: k,
+                  total: v.sum(d => d.hhSize ?? 0),
+                  men: v.sum(d => d.men ?? 0),
+                  women: v.sum(d => d.women ?? 0),
+                  boys: v.sum(d => d.boys ?? 0),
+                  girls: v.sum(d => d.girls ?? 0),
+                }]).entries().map(([, _]) => ({
+                  ..._,
+                  sum: Utils.add(_.men, _.women, _.boys, _.girls),
+                }))
+                if (tableType === 'absolute') return computed
+                return computed.map(_ => ({
+                  ..._,
+                  men: _.men / _.sum,
+                  women: _.women / _.sum,
+                  boys: _.boys / _.sum,
+                  girls: _.girls / _.sum,
+                }))
+              }}>
+                {_ => (
+                  <Sheet
+                    header={
+                      <ScRadioGroup value={tableType} onChange={setTableType} dense inline>
+                        <ScRadioGroupItem value="absolute" title={m.absolute}/>
+                        <ScRadioGroupItem value="ratio" title={m.ratio}/>
+                      </ScRadioGroup>
+                    }
+                    data={_}
+                    columns={[
+                      {id: 'oblast', head: 'Oblast', type: 'string', render: _ => _.oblast},
+                      {width: 0, id: 'men', head: 'Men', type: 'number', renderValue: _ => _.men, render: _ => formatLargeNumber(_.men)},
+                      {width: 0, id: 'women', head: 'Women', type: 'number', renderValue: _ => _.women, render: _ => formatLargeNumber(_.women)},
+                      {width: 0, id: 'boys', head: 'Boys', type: 'number', renderValue: _ => _.boys, render: _ => formatLargeNumber(_.boys)},
+                      {width: 0, id: 'girls', head: 'Girls', type: 'number', renderValue: _ => _.girls, render: _ => formatLargeNumber(_.girls)},
+                      {width: 0, id: 'sum', head: 'Total Disaggregated', type: 'number', renderValue: _ => _.sum, render: _ => <b>{formatLargeNumber(_.sum)}</b>},
+                      {width: 0, id: 'total', head: 'Total', type: 'number', renderValue: _ => _.total, render: _ => <b>{formatLargeNumber(_.total)}</b>},
+                    ]}
+                  />
+                )}
+              </Lazy>
+            </SlidePanel>
+          </Div>
+          <Div column>
             <SlidePanel title={m.location}>
               <Lazy deps={[data]} fn={() => ChartTools.byCategory({
                 data,
@@ -191,12 +261,10 @@ export const _MPCADashboard = ({
                 {_ => <UkraineMap data={_} base={data.length} sx={{mx: 2}}/>}
               </Lazy>
             </SlidePanel>
-          </Div>
-          <Div column>
             <SlidePanel title={m.form}>
-              <Lazy deps={[data]} fn={() => ChartTools.single({
+              <Lazy deps={[data]} fn={() => chain(ChartTools.single({
                 data: data.map(_ => _.source),
-              })}>
+              })).map(ChartTools.setLabel(ctx.formNameTranslation)).get}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
@@ -209,45 +277,16 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <SlidePanel title={m.donor}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
-                data: data.map(_ => _.donor ?? m.dash),
+                data: data.map(_ => _.donor ?? ''),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.project}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
-                data: data.map(_ => _.project ?? m.dash),
+                data: data.map(_ => _.project ?? SheetUtils.blankValue),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
-              </Lazy>
-            </SlidePanel>
-            <SlidePanel title={m.disaggregation}>
-              <Lazy deps={[data]} fn={() => {
-                const gb = data.groupBy(_ => _.oblast)
-                return new Enum(gb).transform((k, v) => [k, {
-                  oblast: k,
-                  total: v.sum(d => d.hhSize ?? 0),
-                  men: v.sum(d => d.men ?? 0),
-                  women: v.sum(d => d.women ?? 0),
-                  boys: v.sum(d => d.boys ?? 0),
-                  girls: v.sum(d => d.girls ?? 0),
-                }]).entries().map(_ => _[1])
-              }}>
-                {_ => (
-                  <Sheet data={_} columns={[
-                    {id: 'oblast', head: 'Oblast', type: 'string', render: _ => _.oblast},
-                    {width: 0, id: 'men', head: 'Men', type: 'number', renderValue: _ => _.men, render: _ => formatLargeNumber(_.men)},
-                    {width: 0, id: 'women', head: 'Women', type: 'number', renderValue: _ => _.women, render: _ => formatLargeNumber(_.women)},
-                    {width: 0, id: 'boys', head: 'Boys', type: 'number', renderValue: _ => _.boys, render: _ => formatLargeNumber(_.boys)},
-                    {width: 0, id: 'girls', head: 'Girls', type: 'number', renderValue: _ => _.girls, render: _ => formatLargeNumber(_.girls)},
-                    {
-                      width: 0,
-                      id: 'total_disag', head: 'Total Disaggregated', type: 'number', renderValue: _ => Utils.add(_.men, _.women, _.boys, _.girls), render: _ =>
-                        <b>{formatLargeNumber(Utils.add(_.men, _.women, _.boys, _.girls))}</b>
-                    },
-                    {width: 0, id: 'total', head: 'Total', type: 'number', renderValue: _ => _.total, render: _ => <b>{formatLargeNumber(_.total)}</b>},
-                  ]}/>
-                )}
               </Lazy>
             </SlidePanel>
           </Div>

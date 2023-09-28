@@ -108,6 +108,10 @@ export class SheetUtils {
     return {value: _, label: _}
   }
 
+  static readonly buildCustomOption = (_: string, label?: string): SheetOptions => {
+    return {value: _, label: label ?? _}
+  }
+
   static readonly getValueGetter = <T extends SheetRow>(col: Pick<SheetColumnProps<T>, 'render' | 'renderValue'>, colName: string) => {
     return col.renderValue ?? col.render as any ?? ((_: T) => _[colName])
   }

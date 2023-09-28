@@ -35,7 +35,7 @@ export const ScRadioGroupItem = <T, >({
   sx,
   ...rest
 }: ScRadioGroupItemProps<T>) => {
-  const minHeight = dense ? 40 : 50
+  const minHeight = dense ? 34 : 50
   return (
     <Box
       role={multiple ? 'checkbox' : 'radio'}
@@ -115,8 +115,9 @@ export const ScRadioGroupItem = <T, >({
             }}/>
         ) : (
           <Radio
+            size="small"
             disabled={disabled}
-            size={dense ? 'small' : undefined}
+            // size={dense ? 'small' : undefined}
             checked={selected}
             sx={{
               marginLeft: 1,
@@ -132,14 +133,13 @@ export const ScRadioGroupItem = <T, >({
           justifyContent: 'center',
           pt: 1.5,
           pb: 1.5,
-          // minHeight: 42,
           flexDirection: 'column',
           ml: hideRadio ? 2 : .5,
           mr: 2,
           width: '100%',
           ...dense && {
-            pt: 1,
-            pb: 1,
+            pt: .5,
+            pb: .5,
           }
         }}>
         {title && (
