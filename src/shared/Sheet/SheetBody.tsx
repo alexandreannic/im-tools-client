@@ -28,7 +28,7 @@ export const SheetBody = (() => {
             // onClick={e => onClickRows?.(item, e)}
           >
             {select && (
-              <td className="td td-center">
+              <td className="td td-center td-sticky-start">
                 <Checkbox size="small" checked={selected.has(select.getId(item))} onChange={() => selected.toggle(select.getId(item))}/>
               </td>
             )}

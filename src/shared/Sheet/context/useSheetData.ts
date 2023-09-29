@@ -1,5 +1,4 @@
 import {useCallback, useMemo, useState} from 'react'
-import {orderBy} from 'lodash'
 import {KeyOf, multipleFilters, paginateData, Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {

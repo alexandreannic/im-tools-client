@@ -1,8 +1,8 @@
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import React, {useEffect, useMemo} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
@@ -18,8 +18,9 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {ShelterRow} from '@/features/Shelter/useShelterData'
-import {ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {KoboShelterTa, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
+import {ShelterSelectAccepted, ShelterSelectContractor} from '@/features/Shelter/Data/ShelterTableInputs'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 }
@@ -28,6 +29,12 @@ export const ShelterTable = () => {
   const ctx = useShelterContext()
   const theme = useTheme()
   const {m, formatDate, formatLargeNumber} = useI18n()
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+
+  // const getNtaIds = () => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact()
+  // const getTaIds = () => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact()
+  const getNta = useCallback(() => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
+  const getTa = useCallback(() => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
 
   const columns = useMemo(() => {
     return SheetUtils.buildColumns([
@@ -50,8 +57,8 @@ export const ShelterTable = () => {
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                   <TableIcon color="error" sx={{mr: .5}}>error</TableIcon>
                   <Box>
-                    <Txt block size="small">TA ID: <Txt bold>{_.ta?.id}</Txt></Txt>
-                    <Txt block size="small">NTA Ref: <Txt bold>{_.ta?.nta_id}</Txt></Txt>
+                    <Txt block size="small" sx={{marginBottom: '-5px'}}>TA ID: <Txt bold>{_.ta?.id}</Txt></Txt>
+                    <Txt block size="small" sx={{marginBottom: '-2px'}}>NTA Ref: <Txt bold>{_.ta?.nta_id}</Txt></Txt>
                   </Box>
                 </Box>
               </>
@@ -194,9 +201,8 @@ export const ShelterTable = () => {
         ],
         renderValue: (row: ShelterRow) => row.nta?.tags?.validation,
         render: (row: ShelterRow) => map(row.nta, nta => (
-          <AaSelect<ShelterTagValidation>
-            showUndefinedOption
-            defaultValue={nta.tags?.validation}
+          <ShelterSelectAccepted
+            value={nta.tags?.validation}
             onChange={(tagChange) => {
               ctx.nta._update.call({
                 answerId: nta.id,
@@ -204,11 +210,6 @@ export const ShelterTable = () => {
                 value: tagChange,
               })
             }}
-            options={[
-              {value: ShelterTagValidation.Accepted, children: <TableIcon color="success">check_circle</TableIcon>},
-              {value: ShelterTagValidation.Rejected, children: <TableIcon color="error">cancel</TableIcon>},
-              {value: ShelterTagValidation.Pending, children: <TableIcon color="warning">schedule</TableIcon>},
-            ]}
           />
         )),
       },
@@ -322,6 +323,24 @@ export const ShelterTable = () => {
         ))
       },
       {
+        id: 'hasLot1',
+        head: m._shelter.lot1,
+        width: 0,
+        align: 'center',
+        type: 'select_one',
+        typeIcon: null,
+        tooltip: null,
+        options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
+        renderValue: row => fnSwitch(KoboShelterTa.hasLot1(row.ta) + '', {
+          true: 'Yes',
+          false: 'No',
+        }, () => 'None'),
+        render: row => fnSwitch(KoboShelterTa.hasLot1(row.ta) + '', {
+          true: <TableIcon color="success">task_alt</TableIcon>,
+          false: <TableIcon color="disabled">block</TableIcon>,
+        }, () => <></>),
+      },
+      {
         id: 'contractor1',
         width: 148,
         head: m._shelter.contractor1,
@@ -330,9 +349,10 @@ export const ShelterTable = () => {
         renderValue: row => row.ta?.tags?.contractor1,
         typeIcon: null,
         render: row => map(row.ta, ta => (
-          <AaSelect
-            showUndefinedOption
-            defaultValue={ta.tags?.contractor1}
+          <ShelterSelectContractor
+            disabled={!KoboShelterTa.hasLot1(ta)}
+            value={ta.tags?.contractor1}
+            oblast={ta?.ben_det_oblast}
             onChange={(tagChange) => {
               ctx.ta._update.call({
                 answerId: ta.id,
@@ -341,11 +361,26 @@ export const ShelterTable = () => {
                 // value: ShelterContractor[tagChange],
               })
             }}
-            options={ShelterContractorPrices.findContractor({oblast: ta?.ben_det_oblast, lot: 1}).map(_ => ({
-              value: _, children: _,
-            }))}
           />
         )),
+      },
+      {
+        id: 'hasLot2',
+        head: m._shelter.lot2,
+        width: 0,
+        align: 'center',
+        type: 'select_one',
+        typeIcon: null,
+        tooltip: null,
+        options: () => ['Yes', 'No', 'None'].map(SheetUtils.buildOption),
+        renderValue: row => fnSwitch(KoboShelterTa.hasLot2(row.ta) + '', {
+          true: 'Yes',
+          false: 'No',
+        }, () => 'None'),
+        render: row => fnSwitch(KoboShelterTa.hasLot2(row.ta) + '', {
+          true: <TableIcon color="success">task_alt</TableIcon>,
+          false: <TableIcon color="disabled">block</TableIcon>,
+        }, () => <></>),
       },
       {
         id: 'contractor2',
@@ -356,21 +391,24 @@ export const ShelterTable = () => {
         typeIcon: null,
         renderValue: row => row.ta?.tags?.contractor2,
         render: row => map(row.ta, ta => (
-          <AaSelect
-            showUndefinedOption
-            defaultValue={ta.tags?.contractor2}
-            onChange={(tagChange) => {
-              ctx.ta._update.call({
-                answerId: ta.id,
-                key: 'contractor2',
-                value: tagChange,
-              })
-            }}
-            options={ShelterContractorPrices.findContractor({oblast: ta?.ben_det_oblast, lot: 2}).map(_ => ({
-              value: _, children: _,
-            }))
-            }
-          />
+          <>
+            <AaSelect
+              disabled={!KoboShelterTa.hasLot2(ta)}
+              showUndefinedOption
+              value={ta.tags?.contractor2}
+              onChange={(tagChange) => {
+                ctx.ta._update.call({
+                  answerId: ta.id,
+                  key: 'contractor2',
+                  value: tagChange,
+                })
+              }}
+              options={ShelterContractorPrices.findContractor({oblast: ta?.ben_det_oblast, lot: 2}).map(_ => ({
+                value: _, children: _,
+              }))
+              }
+            />
+          </>
         )),
       },
       // column.progress,
@@ -452,6 +490,59 @@ export const ShelterTable = () => {
         <Sheet
           id="shelter"
           title="Shelter-Assessment_database"
+          select={{
+            onSelect: setSelectedIds,
+            getId: _ => _.id + '',
+            selectActions: (
+              <Box sx={{
+                width: '100%',
+                display: 'flex',
+                '& > *': {
+                  marginLeft: t => t.spacing(1) + ' !important',
+                }
+              }}>
+                <ShelterSelectAccepted
+                  sx={{maxWidth: 110}}
+                  label={m._shelter.validationStatus}
+                  onChange={(tagChange) => {
+                    map(getNta()?.map(_ => _.id), ids => {
+                      ctx.nta._updates.call({
+                        answerIds: ids,
+                        key: 'validation',
+                        value: tagChange,
+                      })
+                    })
+                  }}
+                />
+                <ShelterSelectContractor
+                  sx={{maxWidth: 140}}
+                  label={m._shelter.contractor1}
+                  onChange={(tagChange) => {
+                    map(getTa()?.map(_ => _.id), ids => {
+                      ctx.ta._updates.call({
+                        answerIds: ids,
+                        key: 'contractor1',
+                        value: tagChange,
+                      })
+                    })
+                  }}
+                />
+                <ShelterSelectContractor
+                  sx={{maxWidth: 140}}
+                  label={m._shelter.contractor2}
+                  onChange={(tagChange) => {
+                    map(getTa()?.map(_ => _.id), ids => {
+                      ctx.ta._updates.call({
+                        answerIds: ids,
+                        key: 'contractor2',
+                        value: tagChange,
+                      })
+                    })
+                  }}
+                />
+              </Box>
+            )
+          }}
           // showExportBtn
           header={
             <>
