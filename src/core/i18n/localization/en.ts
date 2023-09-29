@@ -1011,7 +1011,8 @@ export const en = Object.freeze({
     dateOfDeparture: `Date of departure`,
     pin: 'Pin',
     _wfpDeduplication: {},
-    mpcaDb: {
+    mpca: {
+      assistanceByLocation: 'Assistance by location',
       drcSupportSuggestion: {
         ThreeMonthsUnAgency: '3 Months Assistance - UN Agency',
         ThreeMonthsNoDuplication: '3 Months Assistance - No Duplication',

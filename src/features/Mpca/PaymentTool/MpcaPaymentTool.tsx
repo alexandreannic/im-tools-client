@@ -57,10 +57,10 @@ export const MpcaPaymentTool = () => {
           <PageHeader sx={{mb: 0}} action={
             <AaBtn variant="contained" icon="download">{m.downloadAsPdf}</AaBtn>
           }>
-            {m.mpcaDb.paymentTool} #{tool.index}
+            {m.mpca.paymentTool} #{tool.index}
           </PageHeader>
           <Txt color="hint" size="big" block sx={{mb: 2}}>{formatDate(tool?.createdAt)}</Txt>
-          <Alert sx={{mb: 2}} type="info" deletable persistentDelete>{m.mpcaDb.allAmountsAreWithoutTaxes}</Alert>
+          <Alert sx={{mb: 2}} type="info" deletable persistentDelete>{m.mpca.allAmountsAreWithoutTaxes}</Alert>
 
           <Grid container spacing={2}>
             <Grid item sm={6}>
@@ -77,9 +77,9 @@ export const MpcaPaymentTool = () => {
               <Panel>
                 <PanelHead>{m.calculations}</PanelHead>
                 <PanelBody>
-                  <ListRow label={m.mpcaDb.mpcaGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.mpcaGrantAmount)}</Txt></ListRow>
-                  <ListRow label={m.mpcaDb.cfrGrantAmount}><Txt size="big" bold>{amounts.cfrGrantAmount.map(_ => formatLargeNumber(_)).join(' - ')}</Txt></ListRow>
-                  <ListRow label={m.mpcaDb.startupGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.startupGrantAmount)}</Txt></ListRow>
+                  <ListRow label={m.mpca.mpcaGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.mpcaGrantAmount)}</Txt></ListRow>
+                  <ListRow label={m.mpca.cfrGrantAmount}><Txt size="big" bold>{amounts.cfrGrantAmount.map(_ => formatLargeNumber(_)).join(' - ')}</Txt></ListRow>
+                  <ListRow label={m.mpca.startupGrantAmount}><Txt size="big" bold>{formatLargeNumber(amounts.startupGrantAmount)}</Txt></ListRow>
                 </PanelBody>
               </Panel>
             </Grid>

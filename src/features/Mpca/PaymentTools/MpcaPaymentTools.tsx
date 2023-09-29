@@ -23,7 +23,7 @@ export const MpcaPaymentTools = () => {
       <Panel>
         <Sheet
           id="mpca-payments"
-          header={<PanelTitle>{m.mpcaDb.paymentTools}</PanelTitle>}
+          header={<PanelTitle>{m.mpca.paymentTools}</PanelTitle>}
           data={_getPayments.entity}
           loading={_getPayments.loading}
           columns={[
@@ -36,32 +36,32 @@ export const MpcaPaymentTools = () => {
             },
             {
               id: 'budgetLineMPCA',
-              head: m.mpcaDb.budgetLineMPCA,
+              head: m.mpca.budgetLineMPCA,
               render: _ => _.budgetLineMPCA
             },
             {
               id: 'budgetLineCFR',
-              head: m.mpcaDb.budgetLineCFR,
+              head: m.mpca.budgetLineCFR,
               render: _ => _.budgetLineCFR
             },
             {
               id: 'budgetLineStartUp',
-              head: m.mpcaDb.budgetLineStartUp,
+              head: m.mpca.budgetLineStartUp,
               render: _ => _.budgetLineStartUp
             },
             {
               id: 'hoo',
-              head: m.mpcaDb.headOfOperations,
+              head: m.mpca.headOfOperations,
               render: _ => _.headOfOperation,
             },
             {
               id: 'hoo',
-              head: m.mpcaDb.financeAndAdministrationOfficer,
+              head: m.mpca.financeAndAdministrationOfficer,
               render: _ => _.financeAndAdministrationOfficer,
             },
             {
               id: 'hoo',
-              head: m.mpcaDb.cashAndVoucherAssistanceAssistant,
+              head: m.mpca.cashAndVoucherAssistanceAssistant,
               render: _ => _.cashAndVoucherAssistanceAssistant,
             },
             {

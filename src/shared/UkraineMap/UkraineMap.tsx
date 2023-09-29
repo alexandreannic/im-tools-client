@@ -5,6 +5,7 @@ import {useMemo} from 'react'
 import {OblastIndex, OblastISO} from './oblastIndex'
 import {Txt} from 'mui-extension'
 import {toPercent} from '../../utils/utils'
+import {formatLargeNumber} from '@/core/i18n/localization/en'
 
 // viewBox="22.138577 52.380834 40.220623 44.387017"
 // width="612.47321"
@@ -27,8 +28,10 @@ export const UkraineMap = ({
   onSelect,
   legend = true,
   title,
+  maximumFractionDigits,
   sx,
 }: {
+  maximumFractionDigits?: number
   omitValueLt?: number
   legend?: boolean
   title?: string
@@ -120,7 +123,10 @@ export const UkraineMap = ({
                     {_}
                     {'\n'}
                     {res ? (
-                      <>{res.value} {res.base && res.base !== 100 && '/ ' + res.base} - {toPercent(res.percent)}</>
+                      <>
+                        {formatLargeNumber(res.value, {maximumFractionDigits})}
+                        {res.base && res.base !== 100 && ' / ' + formatLargeNumber(res.base, {maximumFractionDigits})} - {toPercent(res.percent)}
+                      </>
                     ) : 0}
                   </title>
                 ))}
@@ -141,7 +147,7 @@ export const UkraineMap = ({
             {fillBaseOn === 'percent' ? (
               <><Box>{toPercent(minPercent, 0)}</Box> <Box>{toPercent(maxPercent, 0)}</Box></>
             ) : (
-              <><Box>{min}</Box> <Box>{max}</Box></>
+              <><Box>{formatLargeNumber(min, {maximumFractionDigits})}</Box> <Box>{formatLargeNumber(max, {maximumFractionDigits})}</Box></>
             )}
           </Txt>
         </Box>

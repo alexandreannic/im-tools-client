@@ -46,15 +46,15 @@ export const MpcaPaymentToolForm = ({
 
   return (
     <>
-      <ListRow icon="person" border label={m.mpcaDb.headOfOperations}>
+      <ListRow icon="person" border label={m.mpca.headOfOperations}>
         <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.headOfOperation} {...register('headOfOperation')}/>
       </ListRow>
-      <ListRow icon="" border label={m.mpcaDb.financeAndAdministrationOfficer}>
+      <ListRow icon="" border label={m.mpca.financeAndAdministrationOfficer}>
         <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.financeAndAdministrationOfficer} {...register('financeAndAdministrationOfficer')}/>
       </ListRow>
-      <ListRow icon="" label={m.mpcaDb.cashAndVoucherAssistanceAssistant}>
+      <ListRow icon="" label={m.mpca.cashAndVoucherAssistanceAssistant}>
         <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <AaInput defaultValue={tool.cashAndVoucherAssistanceAssistant} {...register('cashAndVoucherAssistanceAssistant')}/>
       </ListRow>
@@ -70,7 +70,7 @@ export const MpcaPaymentToolForm = ({
           ]}/>}
         />
       </ListRow>
-      <ListRow icon="savings" border label={m.mpcaDb.budgetLineCFR}>
+      <ListRow icon="savings" border label={m.mpca.budgetLineCFR}>
         <Controller
           name="budgetLineCFR"
           defaultValue={tool.budgetLineCFR}
@@ -78,7 +78,7 @@ export const MpcaPaymentToolForm = ({
           render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
       </ListRow>
-      <ListRow icon={''} border label={m.mpcaDb.budgetLineMPCA}>
+      <ListRow icon={''} border label={m.mpca.budgetLineMPCA}>
         <Controller
           name="budgetLineMPCA"
           defaultValue={tool.budgetLineMPCA}
@@ -86,7 +86,7 @@ export const MpcaPaymentToolForm = ({
           render={({field}) => <AaSelect defaultValue={field.value ?? ''} onChange={_ => field.onChange({target: {value: _}} as any)} options={budgetLines}/>}
         />
       </ListRow>
-      <ListRow icon={''} label={m.mpcaDb.budgetLineStartUp}>
+      <ListRow icon={''} label={m.mpca.budgetLineStartUp}>
         <Controller
           name="budgetLineStartUp"
           defaultValue={tool.budgetLineStartUp}

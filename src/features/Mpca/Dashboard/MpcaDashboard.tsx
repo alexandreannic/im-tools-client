@@ -1,10 +1,10 @@
 import {Page} from '@/shared/Page'
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
-import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {chain, toPercent, Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
@@ -14,7 +14,6 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/core/chartTools'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
-import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box} from '@mui/material'
 import {DebouncedInput} from '@/shared/DebouncedInput'
@@ -26,17 +25,28 @@ import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
+import {usePersistentState} from 'react-persistent-state'
 
 const today = new Date()
 
-// interface Filters {
-//   donor
-// }
+enum AmountType {
+  amountUahSupposed = 'amountUahSupposed',
+  amountUahDedup = 'amountUahDedup',
+  amountUahFinal = 'amountUahFinal',
+}
+
+enum Currency {
+  USD = 'USD',
+  UAH = 'UAH',
+}
 
 export const MpcaDashboard = () => {
   const ctx = useMPCAContext()
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
-  const {m} = useI18n()
+  const {m, formatLargeNumber} = useI18n()
+  const [amountType, setAmountType] = usePersistentState<AmountType>(AmountType.amountUahFinal, 'mpca-dashboard-amountType')
+  const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, 'mpca-dashboard-currency')
 
 
   useEffect(() => {
@@ -70,7 +80,6 @@ export const MpcaDashboard = () => {
 
   const [filters, setFilters] = useState<Record<keyof Mpca, string[]>>(defaultFilter)
 
-  console.log(filters)
   const filteredData = useMemo(() => {
     return ctx.data?.filter(d => {
       return filterShape.every(shape => {
@@ -85,6 +94,16 @@ export const MpcaDashboard = () => {
 
   const computed = useBNREComputed({data: filteredData})
 
+  const getAmount = useCallback((_: Mpca) => {
+    const amount = _[amountType]
+    if (!amount) return
+    return amount * fnSwitch(currency, {
+      [Currency.UAH]: 1,
+      [Currency.USD]: 0.027,
+    })
+    // return formatLargeNumber(converted) + ' ' + Currency.UAH
+  }, [currency, amountType])
+
   return (
     <Page width="lg" loading={ctx.fetcherData.loading}>
       <Box sx={{display: 'flex', alignItems: 'center'}}>
@@ -95,6 +114,19 @@ export const MpcaDashboard = () => {
           label={[m.start, m.endIncluded]}
           max={today}
         />
+        <DashboardFilterLabel sx={{mb: 1.5, ml: 1}} icon="attach_money" active={true} label={currency}>
+          <Box sx={{p: 1}}>
+            <ScRadioGroup value={amountType} onChange={setAmountType} dense sx={{mb: 2}}>
+              <ScRadioGroupItem value={AmountType.amountUahSupposed} title="Estimated" description="Estimated when filling the form"/>
+              <ScRadioGroupItem value={AmountType.amountUahDedup} title="Deduplicated" description="Amount given after WFP deduplication"/>
+              <ScRadioGroupItem value={AmountType.amountUahFinal} title="Reel" description="Deduplicated amount or Estimated if none"/>
+            </ScRadioGroup>
+            <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
+              <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
+              <ScRadioGroupItem value={Currency.UAH} title="UAH" sx={{width: '100%'}}/>
+            </ScRadioGroup>
+          </Box>
+        </DashboardFilterLabel>
         {filterShape.map(shape =>
           <DebouncedInput<string[]>
             key={shape.property}
@@ -118,8 +150,11 @@ export const MpcaDashboard = () => {
       </Box>
       {computed && filteredData && (
         <_MPCADashboard
+          currency={currency}
+          amountType={amountType}
           data={filteredData}
           computed={computed}
+          getAmount={getAmount}
         />
       )}
     </Page>
@@ -129,14 +164,22 @@ export const MpcaDashboard = () => {
 export const _MPCADashboard = ({
   data,
   computed,
+  currency,
+  getAmount,
 }: {
+  getAmount: (_: Mpca) => number | undefined
+  amountType: AmountType
+  currency: Currency
   data: _Arr<Mpca>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const ctx = useMPCAContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const [amountType, setAmountType] = useState<'amountUahSupposed' | 'amountUahDedup' | 'amountUahFinal'>('amountUahFinal')
   const [tableType, setTableType] = useState<'ratio' | 'absolute'>('absolute')
+
+  const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
+
+  const displayAmount = (_: number) => formatLargeNumber(_, {maximumFractionDigits: 0}) + ' ' + currency
   return (
     <>
       <Div column>
@@ -162,26 +205,16 @@ export const _MPCADashboard = ({
         </Div>
         <Div sx={{alignItems: 'flex-start'}}>
           <Div column>
-            <SlidePanel>
-              <ScRadioGroup value={amountType} onChange={setAmountType} dense inline>
-                <ScRadioGroupItem value="amountUahSupposed" title="Estimated"/>
-                <ScRadioGroupItem value="amountUahDedup" title="Deduplicated"/>
-                <ScRadioGroupItem value="amountUahFinal" title="Reel"/>
-              </ScRadioGroup>
-              <Lazy deps={[data, amountType]} fn={() => data.sum(_ => _[amountType] ?? 0)}>
-                {_ => (
-                  <SlideWidget title="Total amount">
-                    {formatLargeNumber(_)} UAH
-                    <Txt block color="disabled" sx={{mx: 1}}>-</Txt>
-                    ~ ${formatLargeNumber(_ * .027)}
-                  </SlideWidget>
-                )}
-              </Lazy>
+            <SlidePanel BodyProps={{sx: {pt: 0}}}>
 
-              <Lazy deps={[data, amountType]} fn={() => {
+              <SlideWidget title="Total amount">
+                {displayAmount(totalAmount)}
+              </SlideWidget>
+
+              <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = data.groupBy(d => format(d.date, 'yyyy-MM'))
                 return new Enum(gb)
-                  .transform((k, v) => [k, v.sum(_ => (_[amountType] ?? 0) / 1000)])
+                  .transform((k, v) => [k, v.sum(_ => (getAmount(_) ?? 0) / 1000)])
                   .sort(([ka], [kb]) => ka.localeCompare(kb))
                   .entries()
                   .map(([k, v]) => ({name: k, amount: v}))
@@ -191,9 +224,6 @@ export const _MPCADashboard = ({
                     data={_ as any}
                     height={220}
                     hideLabelToggle
-                    translation={{
-                      amount: 'Amount * 1000 UAH',
-                    }}
                   />
                 )}
               </Lazy>
@@ -252,14 +282,23 @@ export const _MPCADashboard = ({
               </Lazy>
             </SlidePanel>
           </Div>
+          {/*// POFU data Cghernihiv donestk lvivi zapo*/}
           <Div column>
-            <SlidePanel title={m.location}>
-              <Lazy deps={[data]} fn={() => ChartTools.byCategory({
-                data,
-                categories: new Enum(OblastIndex.oblastByISO).transform((k, v) => [k, (_: Mpca) => _.oblastIso === k]).get(),
-                filter: _ => true,
-              })}>
-                {_ => <UkraineMap data={_} base={data.length} sx={{mx: 2}}/>}
+            {/*<SlidePanel title={m.location}>*/}
+            {/*  <Lazy deps={[data]} fn={() => ChartTools.byCategory({*/}
+            {/*    data,*/}
+            {/*    categories: new Enum(OblastIndex.oblastByISO).transform((k, v) => [k, (_: Mpca) => _.oblastIso === k]).get(),*/}
+            {/*    filter: _ => true,*/}
+            {/*  })}>*/}
+            {/*    {_ => <UkraineMap data={_} base={data.length} sx={{mx: 2}}/>}*/}
+            {/*  </Lazy>*/}
+            {/*</SlidePanel>*/}
+            <SlidePanel title={`${m.mpca.assistanceByLocation}`}>
+              <Lazy deps={[data, currency, getAmount]} fn={() => {
+                const by = data.groupBy(_ => _.oblastIso)
+                return new Enum(by).transform((k, v) => [k, {value: v.sum(x => getAmount(x) ?? 0)}]).get()
+              }}>
+                {_ => <UkraineMap data={_} sx={{mx: 2}} maximumFractionDigits={0} base={totalAmount}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.form}>

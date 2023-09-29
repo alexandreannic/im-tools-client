@@ -44,7 +44,7 @@ export const MpcaData = () => {
           id="mpca"
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}
-          loading={ctx.fetcherData.loading || ctx.fetcherDeduplication.loading}
+          loading={ctx.fetcherData.loading}
           getRenderRowKey={_ => '' + _.id}
           data={ctx.data}
           select={{
@@ -59,7 +59,7 @@ export const MpcaData = () => {
                   icon="content_paste_search"
                   variant="outlined"
                 >
-                  {m.mpcaDb.generateDeduplicationFile}
+                  {m.mpca.generateDeduplicationFile}
                 </AaBtn>
                 <AaBtn
                   disabled
@@ -71,7 +71,7 @@ export const MpcaData = () => {
                     _payment.call(selected)
                   }}
                 >
-                  {m.mpcaDb.makePaymentTool}
+                  {m.mpca.makePaymentTool}
                 </AaBtn>
               </>
             )
@@ -163,7 +163,7 @@ export const MpcaData = () => {
               head: m.deduplication,
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
-              tooltip: _ => _.deduplication && m.mpcaDb.status[_.deduplication.status],
+              tooltip: _ => _.deduplication && m.mpca.status[_.deduplication.status],
               renderValue: _ => _.deduplication?.status ?? SheetUtils.blankValue,
               render: _ => _.deduplication && <DeduplicationStatusIcon status={_.deduplication.status}/>,
             },

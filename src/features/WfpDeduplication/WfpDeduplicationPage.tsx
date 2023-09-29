@@ -50,7 +50,7 @@ const WpfDeduplicationSidebar = () => {
                 msg={{
                   invalidSize: m.error,
                   loading: m.loading,
-                  upload: m.mpcaDb.uploadWfpTaxIdMapping,
+                  upload: m.mpca.uploadWfpTaxIdMapping,
                 }}
               />
             </SidebarItem>
