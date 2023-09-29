@@ -18,8 +18,8 @@ import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {useCfmContext} from '@/features/Cfm/CfmContext'
 
 interface Form extends IAccessForm {
-  office?: DrcOffice[]
-  program?: CfmDataProgram[]
+  office: DrcOffice[]
+  program: CfmDataProgram[]
   // seeHisOwn?: boolean
 }
 

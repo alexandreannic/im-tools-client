@@ -9,7 +9,7 @@ import {KeyOf} from '@/utils/utils'
 
 export const KoboSelectTag = <
   TTag extends Record<string, any>,
-  T extends {id: number, tags?: TTag},
+  T extends {id: KoboAnswerId, tags?: TTag},
   K extends string = string,
 >({
   label,

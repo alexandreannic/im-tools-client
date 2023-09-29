@@ -26,7 +26,7 @@ import {Modal} from 'mui-extension/lib/Modal'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
-  answerId: yup.number().required()
+  answerId: yup.string().required()
 })
 export const CfmEntryRoute = () => {
   const {formId, answerId} = routeParamsSchema.validateSync(useParams())

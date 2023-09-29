@@ -14,7 +14,7 @@ const SnapshotProtectionMonitoringPage = () => {
       dark: false,
       fontSize: 14,
       mainColor: '#af161e',
-      backgroundDefault: 'white',
+      backgroundDefault: '#000',
       backgroundPaper: '#f6f7f9',
       cardElevation: 1,
     })}>

@@ -27,6 +27,10 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {usePersistentState} from 'react-persistent-state'
+import {DrcDonor} from '@/core/drcUa'
+import {themeLightScrollbar} from '@/core/theme'
+import {useMap} from '@alexandreannic/react-hooks-lib'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 const today = new Date()
 
@@ -48,14 +52,21 @@ export const MpcaDashboard = () => {
   const [amountType, setAmountType] = usePersistentState<AmountType>(AmountType.amountUahFinal, 'mpca-dashboard-amountType')
   const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, 'mpca-dashboard-currency')
 
+  const mappedData = useMemo(() => ctx.data?.map(_ => {
+    if (_.donor === undefined) _.donor = SheetUtils.blankValue as any
+    if (_.project === undefined) _.project = SheetUtils.blankValue as any
+    if (_.oblastIso === undefined) _.oblastIso = SheetUtils.blankValue as any
+    if (_.oblast === undefined) _.oblast = SheetUtils.blankValue as any
+    return _
+  }), [ctx.data])
 
-  useEffect(() => {
-    if (periodFilter.start || periodFilter.end)
-      ctx.fetcherData.fetch({force: true}, {filters: periodFilter})
-  }, [periodFilter])
+  // useEffect(() => {
+  //   if (periodFilter.start || periodFilter.end)
+  //     ctx.fetcherData.fetch({force: true}, {filters: periodFilter})
+  // }, [periodFilter])
 
   const {defaultFilter, filterShape} = useMemo(() => {
-    const d = ctx.data ?? Arr([])
+    const d = mappedData ?? Arr([])
     const filterShape: {icon?: string, label: string, property: keyof Mpca, multiple?: boolean, options: SheetOptions[]}[] = [{
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
       options: Object.keys(MpcaRowSource).map(_ => SheetUtils.buildCustomOption(_, ctx.formNameTranslation[_]))
@@ -76,12 +87,14 @@ export const MpcaDashboard = () => {
       filterShape,
       defaultFilter: Arr(filterShape).reduceObject<any>(_ => [_.property, []]),
     }
-  }, [ctx.data])
+  }, [mappedData])
 
-  const [filters, setFilters] = useState<Record<keyof Mpca, string[]>>(defaultFilter)
+  const [filters, setFilters] = usePersistentState<Record<keyof Mpca, string[]>>(defaultFilter)
 
   const filteredData = useMemo(() => {
-    return ctx.data?.filter(d => {
+    return mappedData?.filter(d => {
+      if (periodFilter?.start && periodFilter.start.getTime() >= d.date.getTime()) return false
+      if (periodFilter?.end && periodFilter.end.getTime() <= d.date.getTime()) return false
       return filterShape.every(shape => {
         const value = d[shape.property] as any
         if (filters[shape.property].length <= 0) return true
@@ -90,7 +103,7 @@ export const MpcaDashboard = () => {
         return filters[shape.property].includes(value)
       })
     })
-  }, [ctx.data, filters])
+  }, [mappedData, filters, periodFilter])
 
   const computed = useBNREComputed({data: filteredData})
 
@@ -106,7 +119,7 @@ export const MpcaDashboard = () => {
 
   return (
     <Page width="lg" loading={ctx.fetcherData.loading}>
-      <Box sx={{display: 'flex', alignItems: 'center'}}>
+      <Box sx={{display: 'flex', alignItems: 'center', ...themeLightScrollbar, whiteSpace: 'nowrap'}}>
         <PeriodPicker
           defaultValue={[periodFilter.start, periodFilter.end]}
           onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
@@ -146,7 +159,10 @@ export const MpcaDashboard = () => {
             }
           </DebouncedInput>
         )}
-        <AAIconBtn sx={{ml: 1, mb: 1.5}} children="clear" tooltip={m.clearFilter} onClick={() => setFilters(defaultFilter)}/>
+        <AAIconBtn sx={{ml: 1, mb: 1.5}} children="clear" tooltip={m.clearFilter} onClick={() => {
+          setFilters(defaultFilter)
+          setPeriodFilter({})
+        }}/>
       </Box>
       {computed && filteredData && (
         <_MPCADashboard
@@ -291,6 +307,14 @@ export const _MPCADashboard = ({
             {/*    filter: _ => true,*/}
             {/*  })}>*/}
             {/*    {_ => <UkraineMap data={_} base={data.length} sx={{mx: 2}}/>}*/}
+            {/*  </Lazy>*/}
+            {/*</SlidePanel>*/}
+            {/*<SlidePanel title={`${m.mpca.assistanceByLocation}`}>*/}
+            {/*  <Lazy deps={[data, currency, getAmount]} fn={() => {*/}
+            {/*    const by = data.groupBy(_ => _.oblastIso)*/}
+            {/*    return new Enum(by).transform((k, v) => [OblastIndex.findByIso(k)!, {value: v.sum(x => getAmount(x) ?? 0)}]).get()*/}
+            {/*  }}>*/}
+            {/*    {_ => <HorizontalBarChartGoogle data={_}/>}*/}
             {/*  </Lazy>*/}
             {/*</SlidePanel>*/}
             <SlidePanel title={`${m.mpca.assistanceByLocation}`}>

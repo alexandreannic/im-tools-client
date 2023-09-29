@@ -16,7 +16,7 @@ import {DrcOffice} from '@/core/drcUa'
 import {AaSelect} from '@/shared/Select/Select'
 
 interface Form extends IAccessForm {
-  office?: DrcOffice[]
+  office: DrcOffice[]
 }
 
 /** @deprecated Not used*/

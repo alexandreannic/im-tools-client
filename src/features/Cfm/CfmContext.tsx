@@ -126,7 +126,6 @@ export const CfmProvider = ({
     }
   }, [session, accesses])
 
-  console.log(authorizations.sum)
   const translateInternal = useMemo(() => getKoboTranslations({
     schema: schemas.internal,
     langIndex,

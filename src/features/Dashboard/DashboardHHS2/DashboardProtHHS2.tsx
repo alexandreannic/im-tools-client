@@ -27,6 +27,7 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardH
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
+import {themeLightScrollbar} from '@/core/theme'
 
 const filterShape = DashboardFilterHelper.makeShape<typeof ProtHHS_2_1Options>()({
   drcOffice: {
@@ -189,29 +190,9 @@ export const DashboardProtHHS2 = () => {
           pt: 1,
           pb: 1,
           display: 'flex',
-          overflowX: 'auto',
           whiteSpace: 'nowrap',
           alignItems: 'center',
-          scrollbarWidth: 'tin',
-          // '&::-webkit-scrollbar-track': {
-          //   boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
-          // },
-          '&::-webkit-scrollbar': {
-            width: '10px',
-            height: '10px',
-          },
-          '&::-webkit-scrollbar-track': {
-            borderTop: t => '1px solid ' + t.palette.divider,
-            // borderRadius: 40,
-          },
-          '&::-webkit-scrollbar-thumb': {
-            border: '3px solid transparent',
-            height: '4px',
-            borderRadius: 40,
-            background: t => t.palette.text.disabled,
-            backgroundClip: 'content-box',
-            // backgroundColor: 'darkgrey',
-          },
+          ...themeLightScrollbar,
           '& > :not(:last-child)': {mr: 1}
         }}>
           <DebouncedInput<[Date | undefined, Date | undefined]>
