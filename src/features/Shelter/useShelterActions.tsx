@@ -1,5 +1,5 @@
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {Dispatch, SetStateAction, useMemo} from 'react'
+import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -9,6 +9,7 @@ import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {buildKoboSchemaHelper, getKoboTranslations} from '@/features/Database/KoboTable/useKoboSchema'
 import {useI18n} from '@/core/i18n'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 
 export type UseShelterActions<T extends Record<string, any>> = ReturnType<typeof useShelterActions<T>>
 
@@ -82,6 +83,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
     requestKey: ([_]) => _.answerId
   })
 
+
   const _edit = useAsync(async (answerId: KoboAnswerId) => {
     return api.koboApi.getEditUrl(kobo.drcUa.server.prod, formId, answerId).then(_ => {
       if (_.url) window.open(_.url, '_blank')
@@ -94,6 +96,10 @@ export const useShelterActions = <T extends Record<string, any>, >({
     schema,
     langIndex: langIndex,
   })
+
+  useEffectFn(_updates.errors.keys, _updates.errors.size > 0 ? toastHttpError : () => {})
+  useEffectFn(_update.errors.keys, _update.errors.size > 0 ? toastHttpError : () => {})
+  useEffectFn(_edit.errors.keys, _edit.errors.size > 0 ? toastHttpError : () => {})
 
   return {
     _helper: helper,

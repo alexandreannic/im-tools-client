@@ -1,6 +1,7 @@
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import {Enum} from '@alexandreannic/ts-utils'
 import {Shelter_TAOptions} from '@/core/koboModel/Shelter_TA/Shelter_TAOptions'
+import {KoboShelterTa} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 
 export enum ShelterContractor {
   'Artbudservice' = 'Artbudservice',
@@ -51,7 +52,7 @@ export class ShelterContractorPrices {
         if (quantity === undefined || price === undefined) throw new Error()
         total += quantity * price
       })
-      if (contractor2)
+      if (KoboShelterTa.hasLot2(answer) && contractor2)
         lot2.map(question => {
           const quantity = answer[question] as number
           const price = pricesCents[contractor2]![question]!
