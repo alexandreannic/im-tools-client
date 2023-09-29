@@ -1,5 +1,5 @@
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {Dispatch, SetStateAction, useMemo} from 'react'
+import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -9,21 +9,18 @@ import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {buildKoboSchemaHelper, getKoboTranslations} from '@/features/Database/KoboTable/useKoboSchema'
 import {useI18n} from '@/core/i18n'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 
 export type UseShelterActions<T extends Record<string, any>> = ReturnType<typeof useShelterActions<T>>
 
 export const useShelterActions = <T extends Record<string, any>, >({
   formId,
   setEntity,
-  // translateQuestion,
-  // translateChoice,
   schema,
   langIndex,
 }: {
   langIndex: number
   schema: KoboApiForm
-  // translateQuestion: KoboTranslateQuestion,
-  // translateChoice: KoboTranslateChoice
   formId: KoboId,
   setEntity: Dispatch<SetStateAction<KoboAnswer<any, T>>>
 }) => {
@@ -44,20 +41,48 @@ export const useShelterActions = <T extends Record<string, any>, >({
   }, [schema, langIndex])
 
 
-  const _update = useAsync(<K extends keyof T>({answerId, key, value}: {answerId: KoboAnswerId, key: K, value: T[K] | null}) => api.kobo.answer.updateTag({
+  const _updates = useAsync(async <K extends keyof T>({
+    answerIds,
+    key,
+    value
+  }: {
+    answerIds: KoboAnswerId[],
+    key: K,
+    value: T[K] | null
+  }) => {
+    await api.kobo.answer.updateTag({
+      formId,
+      answerIds,
+      tags: {[key]: value},
+    })
+    const answerIdsSet = new Set(answerIds)
+    setEntity((data?: KoboAnswer<any, T>[]) => data?.map(d => {
+      if (answerIdsSet.has(d.id)) {
+        d.tags = {...d.tags, [key]: value}
+      }
+      return d
+    }))
+  })
+
+  const _update = useAsync(<K extends keyof T>({answerId, key, value}: {
+    answerId: KoboAnswerId,
+    key: K,
+    value: T[K] | null
+  }) => api.kobo.answer.updateTag({
     formId,
-    answerId: answerId,
+    answerIds: [answerId],
     tags: {[key]: value},
-  }).then(newTag => {
+  }).then(() => {
     setEntity((data?: KoboAnswer<any, T>[]) => data?.map(d => {
       if (d.id === answerId) {
-        d.tags = newTag
+        d.tags = {...d.tags, [key]: value}
       }
       return d
     }))
   }), {
     requestKey: ([_]) => _.answerId
   })
+
 
   const _edit = useAsync(async (answerId: KoboAnswerId) => {
     return api.koboApi.getEditUrl(kobo.drcUa.server.prod, formId, answerId).then(_ => {
@@ -72,9 +97,14 @@ export const useShelterActions = <T extends Record<string, any>, >({
     langIndex: langIndex,
   })
 
+  useEffectFn(_updates.errors.keys, _updates.errors.size > 0 ? toastHttpError : () => {})
+  useEffectFn(_update.errors.keys, _update.errors.size > 0 ? toastHttpError : () => {})
+  useEffectFn(_edit.errors.keys, _edit.errors.size > 0 ? toastHttpError : () => {})
+
   return {
     _helper: helper,
     _update,
+    _updates,
     _edit,
     openModalAnswer,
   }

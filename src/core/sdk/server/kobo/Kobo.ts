@@ -4,7 +4,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 
 export type KoboId = string
 
-export type KoboAnswerId = number
+export type KoboAnswerId = string
 
 export type KoboServer = {
   id: string
@@ -126,7 +126,7 @@ export class Kobo {
       end: new Date(k.end),
       submissionTime: new Date(k.submissionTime),
       version: k.version,
-      id: +k.id,
+      id: k.id,
       validationStatus: k.validationStatus,
       validatedBy: k.validatedBy,
       lastValidatedTimestamp: k.lastValidatedTimestamp,
