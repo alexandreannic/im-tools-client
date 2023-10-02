@@ -1,5 +1,5 @@
 import {Page} from '@/shared/Page'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
@@ -29,8 +29,6 @@ import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterL
 import {usePersistentState} from 'react-persistent-state'
 import {DrcDonor, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
-import {useMap} from '@alexandreannic/react-hooks-lib'
-import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 const today = new Date()
 
@@ -235,7 +233,7 @@ export const _MPCADashboard = ({
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = data.groupBy(d => format(d.date, 'yyyy-MM'))
                 return new Enum(gb)
-                  .transform((k, v) => [k, v.sum(_ => (getAmount(_) ?? 0) / 1000)])
+                  .transform((k, v) => [k, v.sum(_ => (getAmount(_) ?? 0))])
                   .sort(([ka], [kb]) => ka.localeCompare(kb))
                   .entries()
                   .map(([k, v]) => ({name: k, amount: v}))
