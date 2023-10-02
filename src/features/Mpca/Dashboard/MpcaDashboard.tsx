@@ -82,6 +82,9 @@ export const MpcaDashboard = () => {
     }, {
       icon: 'location_on', label: 'Oblast', property: 'oblast',
       options: SheetUtils.buildOptions(d.map(_ => _.oblast!).distinct(_ => _).sort())
+    }, {
+      icon: 'business', label: 'Office', property: 'office',
+      options: SheetUtils.buildOptions(d.map(_ => _.office!).distinct(_ => _).sort())
     }]
     return {
       filterShape,

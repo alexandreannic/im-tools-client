@@ -6,6 +6,7 @@ export enum DrcOffice {
   Chernihiv = 'Chernihiv',
   Kharkiv = 'Kharkiv',
   Dnipro = 'Dnipro',
+  Poltava = 'Poltava',
 }
 
 export enum DrcDonor {

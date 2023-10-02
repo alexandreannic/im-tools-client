@@ -14,7 +14,7 @@ import {TableImg} from '@/shared/TableImg/TableImg'
 import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {DrcDonor, DrcProject} from '@/core/drcUa'
+import {DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
@@ -125,6 +125,13 @@ export const MpcaData = () => {
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.values(OblastIndex.oblastByISO), true),
               render: _ => _.oblast ?? SheetUtils.blankValue,
+            },
+            {
+              id: 'office',
+              head: m.office,
+              type: 'select_one',
+              options: () => SheetUtils.buildOptions(Enum.values(DrcOffice), true),
+              render: _ => _.office ?? SheetUtils.blankValue,
             },
             {
               id: 'hhSize',
