@@ -27,7 +27,7 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {usePersistentState} from 'react-persistent-state'
-import {DrcDonor} from '@/core/drcUa'
+import {DrcDonor, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useMap} from '@alexandreannic/react-hooks-lib'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
@@ -57,6 +57,7 @@ export const MpcaDashboard = () => {
     if (_.project === undefined) _.project = SheetUtils.blankValue as any
     if (_.oblastIso === undefined) _.oblastIso = SheetUtils.blankValue as any
     if (_.oblast === undefined) _.oblast = SheetUtils.blankValue as any
+    if (_.office === undefined) _.office = SheetUtils.blankValue as any
     return _
   }), [ctx.data])
 
@@ -82,6 +83,9 @@ export const MpcaDashboard = () => {
     }, {
       icon: 'location_on', label: 'Oblast', property: 'oblast',
       options: SheetUtils.buildOptions(d.map(_ => _.oblast!).distinct(_ => _).sort())
+    }, {
+      icon: 'business', label: 'Office', property: 'office',
+      options: SheetUtils.buildOptions([...Object.keys(DrcOffice), ''].sort())
     }]
     return {
       filterShape,
@@ -191,7 +195,8 @@ export const _MPCADashboard = ({
 }) => {
   const ctx = useMPCAContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const [tableType, setTableType] = useState<'ratio' | 'absolute'>('absolute')
+  const [tableType, setTableType] = usePersistentState<'ratio' | 'absolute'>('absolute', 'mpca-dashboard-tableType')
+  const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', 'mpca-dashboard-tableArea')
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 
@@ -253,22 +258,26 @@ export const _MPCADashboard = ({
               />
             </SlidePanel>
             <SlidePanel title={m.disaggregation}>
-              <Lazy deps={[data, tableType]} fn={() => {
-                const gb = data.groupBy(_ => _.oblast)
+              <Lazy deps={[data, tableArea, tableType]} fn={() => {
+                const gb = data.groupBy(_ => _[tableArea] as string)
                 const computed = new Enum(gb).transform((k, v) => [k, {
-                  oblast: k,
+                  [tableArea]: k,
                   total: v.sum(d => d.hhSize ?? 0),
                   men: v.sum(d => d.men ?? 0),
                   women: v.sum(d => d.women ?? 0),
+                  elderlyMen: v.sum(d => d.elderlyMen ?? 0),
+                  elderlyWomen: v.sum(d => d.elderlyWomen ?? 0),
                   boys: v.sum(d => d.boys ?? 0),
                   girls: v.sum(d => d.girls ?? 0),
                 }]).entries().map(([, _]) => ({
                   ..._,
-                  sum: Utils.add(_.men, _.women, _.boys, _.girls),
+                  sum: Utils.add(_.men, _.women, _.boys, _.girls, _.elderlyMen, _.elderlyWomen),
                 }))
                 if (tableType === 'absolute') return computed
                 return computed.map(_ => ({
                   ..._,
+                  elderlyMen: _.elderlyMen / _.sum,
+                  elderlyWomen: _.elderlyWomen / _.sum,
                   men: _.men / _.sum,
                   women: _.women / _.sum,
                   boys: _.boys / _.sum,
@@ -278,16 +287,24 @@ export const _MPCADashboard = ({
                 {_ => (
                   <Sheet
                     header={
-                      <ScRadioGroup value={tableType} onChange={setTableType} dense inline>
-                        <ScRadioGroupItem value="absolute" title={m.absolute}/>
-                        <ScRadioGroupItem value="ratio" title={m.ratio}/>
-                      </ScRadioGroup>
+                      <Box sx={{with: '100%', display: 'flex'}}>
+                        <ScRadioGroup value={tableType} onChange={setTableType} dense inline sx={{mr: 1}}>
+                          <ScRadioGroupItem value="absolute" title={m.absolute} hideRadio/>
+                          <ScRadioGroupItem value="ratio" title={m.ratio} hideRadio/>
+                        </ScRadioGroup>
+                        <ScRadioGroup value={tableArea} onChange={setTableArea} dense inline>
+                          <ScRadioGroupItem value="oblast" title={m.oblast} hideRadio/>
+                          <ScRadioGroupItem value="office" title={m.office} hideRadio/>
+                        </ScRadioGroup>
+                      </Box>
                     }
                     data={_}
                     columns={[
-                      {id: 'oblast', head: 'Oblast', type: 'string', render: _ => _.oblast},
-                      {width: 0, id: 'men', head: 'Men', type: 'number', renderValue: _ => _.men, render: _ => formatLargeNumber(_.men)},
-                      {width: 0, id: 'women', head: 'Women', type: 'number', renderValue: _ => _.women, render: _ => formatLargeNumber(_.women)},
+                      {id: tableArea, head: m[tableArea], type: 'string', render: (_: any) => _[tableArea]},
+                      {width: 0, id: 'elderly_men', head: '50+ Male', type: 'number', renderValue: _ => _.elderlyMen, render: _ => formatLargeNumber(_.elderlyMen)},
+                      {width: 0, id: 'elderly_women', head: '50+ Female', type: 'number', renderValue: _ => _.elderlyWomen, render: _ => formatLargeNumber(_.elderlyWomen)},
+                      {width: 0, id: 'men', head: '18-49 Male', type: 'number', renderValue: _ => _.men, render: _ => formatLargeNumber(_.men)},
+                      {width: 0, id: 'women', head: '18-49 Female', type: 'number', renderValue: _ => _.women, render: _ => formatLargeNumber(_.women)},
                       {width: 0, id: 'boys', head: 'Boys', type: 'number', renderValue: _ => _.boys, render: _ => formatLargeNumber(_.boys)},
                       {width: 0, id: 'girls', head: 'Girls', type: 'number', renderValue: _ => _.girls, render: _ => formatLargeNumber(_.girls)},
                       {width: 0, id: 'sum', head: 'Total Disaggregated', type: 'number', renderValue: _ => _.sum, render: _ => <b>{formatLargeNumber(_.sum)}</b>},

@@ -1,5 +1,5 @@
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
-import {DrcDonor, DrcProject} from '@/core/drcUa'
+import {DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
 import {BNRE} from '@/core/koboModel/BNRE/BNRE'
 import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
@@ -9,6 +9,7 @@ export interface Mpca {
   id: number
   source: MpcaRowSource
   oblast?: OblastName
+  office?: DrcOffice
   oblastIso?: OblastISO
   date: Date
   prog?: MpcaProgram[]
@@ -35,6 +36,8 @@ export interface Mpca {
   boys?: number
   men?: number
   women?: number
+  elderlyMen?: number
+  elderlyWomen?: number
 }
 
 export class MpcaHelper {
