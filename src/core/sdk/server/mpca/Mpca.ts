@@ -36,6 +36,8 @@ export interface Mpca {
   boys?: number
   men?: number
   women?: number
+  elderlyMen?: number
+  elderlyWomen?: number
 }
 
 export class MpcaHelper {
