@@ -42,8 +42,8 @@ export class ShelterContractorPrices {
     contractor1?: ShelterContractor
     contractor2?: ShelterContractor
     answer?: Shelter_TA
-  }): number | string => {
-    if (!answer || !contractor1) return ''
+  }): number | undefined | null => {
+    if (!answer || !contractor1) return undefined
     try {
       let total = 0
       lot1.map(question => {

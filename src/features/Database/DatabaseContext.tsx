@@ -15,7 +15,6 @@ export interface DatabaseContext {
   isAdmin?: boolean
   getForm: (_: KoboId) => KoboForm | undefined
   formAccess?: KoboForm[]
-  formSchemas: UseFetchersMultiple<ApiSdk['koboApi']['getForm']>
   // servers: UseFetcher<ApiSdk['kobo']['server']['getAll']>
 }
 
@@ -30,7 +29,6 @@ export const DatabaseProvider = ({
 }) => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
-  const formSchemas = useFetchers(api.koboApi.getForm, {requestKey: ([server, form]) => form})
   const _forms = useFetcher(api.kobo.form.getAll)
   const {toastHttpError} = useAaToast()
 
@@ -60,7 +58,6 @@ export const DatabaseProvider = ({
   return (
     <Context.Provider value={{
       _forms,
-      formSchemas,
       isAdmin: session.admin,
       formAccess,
       getForm,

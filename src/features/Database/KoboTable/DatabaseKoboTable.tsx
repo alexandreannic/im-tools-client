@@ -13,13 +13,47 @@ import {useSession} from '@/core/Session/SessionContext'
 import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {DatabaseKoboTableProvider} from '@/features/Database/KoboTable/DatabaseKoboContext'
+import {UUID} from '@/core/type'
+import {KoboForm, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {kobo} from '@/koboDrcUaFormId'
+import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 
 export const DatabaseTableRoute = () => {
+  const ctx = useDatabaseContext()
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
+  return (
+    <>
+      {map(ctx.getForm(formId), form =>
+        <DatabaseTablePage
+          serverId={serverId}
+          form={form}
+          formId={formId}
+        />
+      )}
+    </>
+  )
+}
+
+export const DatabaseTablePage = ({
+  serverId = kobo.drcUa.server.prod,
+  form,
+  schema,
+  formId,
+}: {
+  form?: KoboForm
+  schema?: KoboApiForm
+  serverId?: UUID
+  formId: KoboId
+}) => {
   const {api} = useAppSettings()
   const {accesses, session} = useSession()
   const {toastHttpError, toastLoading} = useAaToast()
-  const ctx = useDatabaseContext()
+
+  const _formSchema = useFetcher(() => schema ? Promise.resolve(schema) : api.koboApi.getForm(serverId, formId))
+  const _form = useFetcher(() => form ? Promise.resolve(form) : api.kobo.form.get(formId))
+  const _answers = useFetcher(() => api.kobo.answer.searchByAccess({
+    formId,
+  }))
 
   const access = useMemo(() => {
     const list = accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId)
@@ -29,26 +63,22 @@ export const DatabaseTableRoute = () => {
     return {admin, write, read}
   }, [accesses])
 
-  const _formSchemas = useDatabaseContext().formSchemas
-  const _answers = useFetcher(() => api.kobo.answer.searchByAccess({
-    formId,
-  }))
 
   useEffect(() => {
-    _formSchemas.fetch({}, serverId, formId)
+    _formSchema.fetch({})
     _answers.fetch({})
+    _form.fetch()
   }, [serverId, formId])
 
-  // useEffectFn(_formSchemas.error, toastHttpError)
+  useEffectFn(_formSchema.error, toastHttpError)
   useEffectFn(_answers.error, toastHttpError)
 
   return (
-    <Page loading={_formSchemas.getLoading(formId) || _answers.loading} width="full">
+    <Page loading={_formSchema.loading || _answers.loading} width="full">
       <Panel>
-        {map(_answers.entity, _formSchemas.get(formId), ctx.getForm(formId), (data, schema, form) => (
+        {map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (
           <DatabaseKoboTableProvider
             canEdit={access.write}
-            formId={formId}
             serverId={serverId}
             fetcherAnswers={_answers}
             schema={schema}

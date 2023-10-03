@@ -383,7 +383,8 @@ export const en = Object.freeze({
       title: 'Safety Incidents Tracker',
       incidents: 'Incidents',
       incident: 'Incident',
-      attackOfOn: (oblast?: OblastISO, type?: string[]) => `${type?.map(capitalize).join(' and ') ?? ''}${type ? ' a' : 'A'}ttack${oblast ? ` in ${OblastIndex.findByIso(oblast)}` : ''}`,
+      attackOfOn: (oblast?: OblastISO,
+        type?: string[]) => `${type?.map(capitalize).join(' and ') ?? ''}${type ? ' a' : 'A'}ttack${oblast ? ` in ${OblastIndex.findByIso(oblast)}` : ''}`,
       attackTypes: 'Attack type',
       attacks: 'Attacks',
       attack: 'Attack',
@@ -1099,6 +1100,10 @@ export const en = Object.freeze({
       }
     },
     _shelter: {
+      assignedContractor: 'Assigned contractors',
+      assessmentLocations: 'Assessments locations',
+      repairCost: 'Total repairs cost',
+      repairCostByHh: 'Repairs cost by HH',
       workDoneAt: 'Work done',
       scoreLevel: 'Price level',
       priceLevel: 'Price level',

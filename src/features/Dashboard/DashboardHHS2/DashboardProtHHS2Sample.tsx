@@ -12,7 +12,7 @@ import {chain} from '@/utils/utils'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
-import {ageGroup} from '@/core/type'
+import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
 import {makeSx} from 'mui-extension'
@@ -38,7 +38,7 @@ export const DashboardProtHHS2Sample = ({
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()
-  const [ag, setAg] = useState<keyof (typeof ageGroup)>('drc')
+  const [ag, setAg] = useState<keyof (typeof Person.ageGroup)>('drc')
   const [agDisplay, setAgDisplay] = useState<'chart' | 'table'>('chart')
   return (
     <Div column>
@@ -107,7 +107,7 @@ export const DashboardProtHHS2Sample = ({
           <SlidePanel title={m.ageGroup}>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <ScRadioGroup value={ag} onChange={setAg} dense inline sx={{mb: 2}}>
-                {Enum.keys(ageGroup).map(_ =>
+                {Enum.keys(Person.ageGroup).map(_ =>
                   <ScRadioGroupItem dense hideRadio key={_} value={_} title={_.toUpperCase()}/>
                 )}
               </ScRadioGroup>
@@ -119,7 +119,7 @@ export const DashboardProtHHS2Sample = ({
                 />
               </ScRadioGroup>
             </Box>
-            <Lazy deps={[ag, data]} fn={() => computed.ageGroup(ageGroup[ag])}>
+            <Lazy deps={[ag, data]} fn={() => computed.ageGroup(Person.ageGroup[ag])}>
               {_ => agDisplay === 'chart' ? (
                 <AAStackedBarChart data={_} height={250}/>
               ) : (

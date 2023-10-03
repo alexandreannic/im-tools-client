@@ -12,7 +12,7 @@ import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {Period} from '@/core/type'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/core/chartTools'
+import {ChartTools, makeChartData} from '@/core/chartTools'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box} from '@mui/material'
@@ -27,10 +27,11 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {usePersistentState} from 'react-persistent-state'
-import {DrcDonor, DrcOffice} from '@/core/drcUa'
+import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
+import {useAppSettings} from '@/core/context/ConfigContext'
 
-const today = new Date()
+export const today = new Date()
 
 enum AmountType {
   amountUahSupposed = 'amountUahSupposed',
@@ -38,12 +39,13 @@ enum AmountType {
   amountUahFinal = 'amountUahFinal',
 }
 
-enum Currency {
+export enum Currency {
   USD = 'USD',
   UAH = 'UAH',
 }
 
 export const MpcaDashboard = () => {
+  const {conf} = useAppSettings()
   const ctx = useMPCAContext()
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m, formatLargeNumber} = useI18n()
@@ -114,7 +116,7 @@ export const MpcaDashboard = () => {
     if (!amount) return
     return amount * fnSwitch(currency, {
       [Currency.UAH]: 1,
-      [Currency.USD]: 0.027,
+      [Currency.USD]: conf.uahToUsd,
     })
     // return formatLargeNumber(converted) + ' ' + Currency.UAH
   }, [currency, amountType])
@@ -335,7 +337,7 @@ export const _MPCADashboard = ({
             <SlidePanel title={`${m.mpca.assistanceByLocation}`}>
               <Lazy deps={[data, currency, getAmount]} fn={() => {
                 const by = data.groupBy(_ => _.oblastIso)
-                return new Enum(by).transform((k, v) => [k, {value: v.sum(x => getAmount(x) ?? 0)}]).get()
+                return new Enum(by).transform((k, v) => [k, makeChartData({value: v.sum(x => getAmount(x) ?? 0)})]).get()
               }}>
                 {_ => <UkraineMap data={_} sx={{mx: 2}} maximumFractionDigits={0} base={totalAmount}/>}
               </Lazy>

@@ -1,5 +1,5 @@
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
-import {ageGroup, groupByAgeGroup} from '../core/type'
+import {Person} from '../core/type'
 import {ChartTools} from '../core/chartTools'
 
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
@@ -32,7 +32,7 @@ export const getProtHhsIptData = (data?: _Arr<ProtHHS2Enrich>) => {
           // .filter(_ => _.gender === 'male' || _.gender === 'female')
         .groupBy(_ => _.gender))
       ).forEach(([gender, genderV]) => {
-        const byAge = Arr(genderV).groupBy(_ => groupByAgeGroup(ageGroup.bha)(_, p => p.age!))
+        const byAge = Arr(genderV).groupBy(_ => Person.groupByAgeGroup(Person.ageGroup.bha)(_, p => p.age!))
         const byAgeFilled = {
           '0 - 4': byAge['0 - 4'] ?? [],
           '5 - 9': byAge['5 - 9'] ?? [],

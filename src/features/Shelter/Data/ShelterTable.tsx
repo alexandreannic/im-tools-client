@@ -20,7 +20,7 @@ import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo
 import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {KoboShelterTa, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
-import {ShelterSelectAccepted, ShelterSelectContractor} from '@/features/Shelter/Data/ShelterTableInputs'
+import {ShelterSelectAccepted, ShelterSelectContractor, ShelterSelectStatus} from '@/features/Shelter/Data/ShelterTableInputs'
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 }
@@ -417,8 +417,8 @@ export const ShelterTable = () => {
         width: 0,
         id: 'price',
         head: m.price,
-        renderValue: row => row.ta?._price,
-        render: (row: ShelterRow) => map(row.ta?._price, _ => typeof _ === 'string' ? _ : formatLargeNumber(_)),
+        renderValue: row => row.ta?._price ?? undefined,
+        render: (row: ShelterRow) => map(row.ta?._price, _ => _ === null ? '⚠️ Missing price' : formatLargeNumber(_)),
       },
       {
         type: 'select_one',
@@ -444,9 +444,8 @@ export const ShelterTable = () => {
         options: () => Enum.keys(ShelterProgress).map(_ => ({value: _, label: m._shelter.progress[_]})),
         renderValue: (row: ShelterRow) => row.ta?.tags?.progress,
         render: (row: ShelterRow) => map(row.ta, ta => (
-          <AaSelect<ShelterProgress>
-            showUndefinedOption
-            defaultValue={ta.tags?.progress}
+          <ShelterSelectStatus
+            value={ta.tags?.progress}
             onChange={(tagChange) => {
               ctx.ta._update.call({
                 answerId: ta.id,
@@ -466,7 +465,6 @@ export const ShelterTable = () => {
                   value: null,
                 })
             }}
-            options={Enum.values(ShelterProgress).map(_ => ({value: _, children: m._shelter.progress[_],}))}
           />
         )),
       },
@@ -537,6 +535,31 @@ export const ShelterTable = () => {
                         key: 'contractor2',
                         value: tagChange,
                       })
+                    })
+                  }}
+                />
+                <ShelterSelectStatus
+                  sx={{maxWidth: 140}}
+                  label={m._shelter.progressStatus}
+                  onChange={(tagChange) => {
+                    map(getTa()?.map(_ => _.id), ids => {
+                      ctx.ta._updates.call({
+                        answerIds: ids,
+                        key: 'progress',
+                        value: tagChange,
+                      })
+                      if (tagChange === ShelterProgress.RepairWorksCompleted)
+                        ctx.ta._updates.call({
+                          answerIds: ids,
+                          key: 'workDoneAt',
+                          value: new Date(),
+                        })
+                      else
+                        ctx.ta._updates.call({
+                          answerIds: ids,
+                          key: 'workDoneAt',
+                          value: null
+                        })
                     })
                   }}
                 />

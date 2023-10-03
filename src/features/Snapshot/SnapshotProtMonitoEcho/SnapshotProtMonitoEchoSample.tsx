@@ -7,7 +7,7 @@ import {Txt} from 'mui-extension'
 import {format} from 'date-fns'
 import {DRCLogo, EULogo} from '@/shared/logo/logo'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
-import {ageGroup} from '@/core/type'
+import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
@@ -108,7 +108,7 @@ export const SnapshotProtMonitoEchoSample = () => {
               <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(ageGroup['drc'], true)} height={250} colors={t => [
+                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['drc'], true)} height={250} colors={t => [
                     snapshotAlternateColor(t),
                     t.palette.primary.main,
                   ]}/>

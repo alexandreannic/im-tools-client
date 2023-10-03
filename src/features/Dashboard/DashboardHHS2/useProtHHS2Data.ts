@@ -3,7 +3,7 @@ import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
 import {_Arr, Enum, lazy} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
-import {groupByAgeGroup} from '../../../core/type'
+import {Person} from '../../../core/type'
 import {subDays} from 'date-fns'
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
@@ -19,7 +19,7 @@ export const useProtHHS2Data = ({
     return chain(
       data!.flatMap(_ => _.persons)
         // .filter(_ => _.age !== undefined)
-        .groupBy(_ => groupByAgeGroup(ageGroup)(_, p => p.age!))
+        .groupBy(_ => Person.groupByAgeGroup(ageGroup)(_, p => p.age!))
     )
       .map(_ => Enum.entries(_).map(([group, v]) => ({
           key: group,
