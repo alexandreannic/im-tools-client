@@ -1,25 +1,30 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Enum} from '@alexandreannic/ts-utils'
+import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useMemo} from 'react'
+import {useCallback, useMemo} from 'react'
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import {ShelterNtaTags, ShelterTaPriceLevel, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
+import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
+import {DrcOffice} from '@/core/drcUa'
 
 export interface ShelterRow {
   ta?: KoboAnswer<Shelter_TA, ShelterTaTags> & {
-    _price?: number | string
+    _price?: number | null
     _priceLevel?: ShelterTaPriceLevel
   }
   nta?: KoboAnswer<Shelter_NTA, ShelterNtaTags>
+  oblastIso?: OblastISO | ''
+  oblast?: OblastName | ''
+  office?: DrcOffice | ''
   id: KoboAnswerId
 }
 
 export type UseShelterData = ReturnType<typeof useShelterData>
 
-export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][]) => {
+export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []) => {
   const {api} = useAppSettings()
   const ntaRequest = () => api.kobo.answer.searchShelterNta().then(_ => _.data)
   const taRequest = () => api.kobo.answer.searchShelterTa().then(_ => _.data)
@@ -29,16 +34,22 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][]) => 
   const {mappedData, index} = useMemo(() => {
       if (!_fetchTa.entity || !_fetchNta.entity) return {}
       const skippedNta = new Set<KoboAnswerId>()
-      const index: Record<KoboAnswerId, {
-        nta?: ShelterRow['nta'],
-        ta?: ShelterRow['ta'],
-      }> = {} as any
+      const index: Record<KoboAnswerId, Omit<ShelterRow, 'id'>> = {} as any
       _fetchNta.entity.forEach(d => {
         if (allowedOffices.length > 0 && !allowedOffices.includes(d.back_office)) {
           skippedNta.add(d.id)
         } else {
           if (!index[d.id]) index[d.id] = {}
           index[d.id].nta = d
+          index[d.id].oblastIso = fnSwitch(d.ben_det_oblast!, OblastIndex.koboOblastIndexIso, () => '')
+          index[d.id].oblast = fnSwitch(d.ben_det_oblast!, OblastIndex.koboOblastIndex, () => '')
+          index[d.id].office = fnSwitch(d.back_office!, {
+            cej: DrcOffice.Chernihiv,
+            dnk: DrcOffice.Dnipro,
+            hrk: DrcOffice.Kharkiv,
+            umy: DrcOffice.Sumy,
+            nlv: DrcOffice.Mykolaiv,
+          }, () => undefined) ?? ''
         }
       })
       _fetchTa.entity.forEach(d => {
@@ -71,19 +82,26 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][]) => 
       })
       return {
         index,
-        mappedData: Enum.entries(index)
+        mappedData: Arr(Enum.entries(index))
           // .filter(([k, v]) => !!v.nta)
           .map(([k, v]) => ({id: k, ...v}))
           .sort((a, b) => {
             if (!a.nta) return -1
             if (!b.nta) return 1
             return a.nta.submissionTime?.getTime() - b.nta?.submissionTime.getTime()
-          }) as ShelterRow[]
+          }) as _Arr<ShelterRow>
       }
     }, [_fetchTa.entity, _fetchNta.entity, allowedOffices]
   )
 
+  const fetchAll = useCallback(() => {
+    _fetchNta.fetch({force: true})
+    _fetchTa.fetch({force: true})
+  }, [])
+
   return {
+    loading: _fetchNta.loading || _fetchTa.loading,
+    fetchAll,
     _fetchNta,
     _fetchTa,
     mappedData,

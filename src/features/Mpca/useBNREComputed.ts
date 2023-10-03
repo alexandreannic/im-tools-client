@@ -1,14 +1,13 @@
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {useMemo} from 'react'
 import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
-import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
+import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {chain} from '../../utils/utils'
-import {ageGroup, groupByAgeGroup} from '../../core/type'
+import {Person} from '../../core/type'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 
-export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = KoboSafetyIncidentHelper.mapOblastIso
+export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = OblastIndex.koboOblastIndexIso
 
 export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 
@@ -40,7 +39,7 @@ export const useBNREComputed = ({
         .filter((k, v) => v > 1)
         .get()
     })(),
-    ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => groupByAgeGroup()(_, p => +p?.hh_char_hh_det_age!)))
+    ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => Person.groupByAgeGroup()(_, p => +p?.hh_char_hh_det_age!)))
       .map(_ => Enum.entries(_).map(([group, v]) => ({
           key: group,
           Male: v.filter(_ => _.hh_char_hh_det_gender === 'male').length,
@@ -48,7 +47,7 @@ export const useBNREComputed = ({
           Other: v.filter(_ => _.hh_char_hh_det_gender === undefined).length,
         })
       ))
-      .map(_ => _.sort((a, b) => Object.keys(ageGroup.drc).indexOf(b.key) - Object.keys(ageGroup.drc).indexOf(a.key)))
+      .map(_ => _.sort((a, b) => Object.keys(Person.ageGroup.drc).indexOf(b.key) - Object.keys(Person.ageGroup.drc).indexOf(a.key)))
       .get
     ,
   }

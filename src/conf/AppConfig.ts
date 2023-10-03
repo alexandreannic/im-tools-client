@@ -27,6 +27,7 @@ const _ = env(persistedTempEnvVariablesForFront)
 
 
 export const appConfig = {
+  uahToUsd: .027,
   muiProLicenseKey: _()(Env.NEXT_PUBLIC_MUI_PRO_LICENSE_KEY),
   linkToFeature: (feature: AppFeatureId, path: string) => {
     return appFeaturesIndex[feature].path + '/#' + path

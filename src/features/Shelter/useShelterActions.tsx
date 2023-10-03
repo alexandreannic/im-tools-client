@@ -60,7 +60,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
       if (answerIdsSet.has(d.id)) {
         d.tags = {...d.tags, [key]: value}
       }
-      return d
+      return {...d}
     }))
   })
 

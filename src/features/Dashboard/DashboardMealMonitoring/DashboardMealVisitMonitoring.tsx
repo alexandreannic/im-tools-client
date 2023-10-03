@@ -25,7 +25,7 @@ import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {CommentsPanel} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
-import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
 export interface DashboardPageProps {
@@ -33,7 +33,7 @@ export interface DashboardPageProps {
   data: Arr<KoboAnswer<MealVisitMonitoring>>
 }
 
-const mapOblast: Record<string, OblastISO> = KoboSafetyIncidentHelper.mapOblastIso
+const mapOblast: Record<string, OblastISO> = OblastIndex.koboOblastIndexIso
 
 const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOptions>()({
   oblast: {

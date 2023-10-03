@@ -36,6 +36,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   rowsPerPageOptions?: number[]
   columns: SheetColumnProps<T>[]
   showColumnsToggle?: boolean
+  hidePagination?: boolean
   showColumnsToggleBtnTooltip?: string
   showExportBtn?: boolean
   renderEmptyState?: ReactNode
@@ -136,6 +137,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   sort,
   onClickRows,
   select,
+  hidePagination,
   ...props
 }: SheetTableProps<T>) => {
   return (
@@ -149,6 +151,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
       <_Sheet
         id={id}
         title={title}
+        hidePagination={hidePagination}
         showExportBtn={showExportBtn}
         renderEmptyState={renderEmptyState}
         header={header}
@@ -166,6 +169,7 @@ const _Sheet = <T extends SheetRow>({
   showExportBtn,
   renderEmptyState,
   loading,
+  hidePagination,
   rowsPerPageOptions = [10, 20, 100, 500, 1000],
   title,
 }: Pick<SheetTableProps<T>, 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
@@ -307,19 +311,21 @@ const _Sheet = <T extends SheetRow>({
       {loading && (
         <LinearProgress sx={{position: 'absolute', left: 0, right: 0, top: 0}}/>
       )}
-      <TablePagination
-        rowsPerPageOptions={rowsPerPageOptions}
-        component="div"
-        count={ctx.data.filteredData?.length ?? 0}
-        rowsPerPage={ctx.data.search.limit}
-        page={ctx.data.search.offset / ctx.data.search.limit}
-        onPageChange={(event: unknown, newPage: number) => {
-          ctx.data.setSearch(prev => ({...prev, offset: newPage * ctx.data.search.limit}))
-        }}
-        onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          ctx.data.setSearch(prev => ({...prev, limit: event.target.value as any}))
-        }}
-      />
+      {!hidePagination && (
+        <TablePagination
+          rowsPerPageOptions={rowsPerPageOptions}
+          component="div"
+          count={ctx.data.filteredData?.length ?? 0}
+          rowsPerPage={ctx.data.search.limit}
+          page={ctx.data.search.offset / ctx.data.search.limit}
+          onPageChange={(event: unknown, newPage: number) => {
+            ctx.data.setSearch(prev => ({...prev, offset: newPage * ctx.data.search.limit}))
+          }}
+          onRowsPerPageChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            ctx.data.setSearch(prev => ({...prev, limit: event.target.value as any}))
+          }}
+        />
+      )}
     </>
   )
 }

@@ -360,14 +360,31 @@ export namespace Utils {
     }, 1000)
   }
 
-  export const groupBy = <T extends Record<string, any>>(
-    t: T[],
-    groups: {
-      by: ((_: T) => string),
-      sort?: (a: string, b: string) => number
-    }[],
-    finalTransform: (_: _Arr<T>) => any
-  ): Record<string, any> => {
+  export const groupBy: {
+    <T extends Record<string, any>, A extends string, R extends any>(
+      t: T[],
+      groups: [
+        {by: ((_: T) => A), sort?: (a: A, b: A) => number}
+      ],
+      finalTransform: (_: _Arr<T>) => R
+    ): Record<A, R>
+
+    <T extends Record<string, any>, A extends string, B extends string, R extends any>(
+      t: T[],
+      groups: [
+        {by: ((_: T) => A), sort?: (a: A, b: A) => number},
+        {by: ((_: T) => B), sort?: (a: B, b: B) => number}
+      ],
+      finalTransform: (_: _Arr<T>) => R
+    ): Record<A, Record<B, R>>
+
+    <T extends Record<string, any>>(
+      t: T[],
+      groups: {by: ((_: T) => string), sort?: (a: string, b: string) => number}[],
+      finalTransform: (_: _Arr<T>) => any
+    ): Record<string, any>
+
+  } = (t: any[], groups: any, finalTransform: any) => {
     if (groups.length === 0) return finalTransform(Arr(t))
     const [group, ...rest] = groups
     const res = Arr(t).groupBy(group.by)
