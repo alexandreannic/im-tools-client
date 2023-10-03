@@ -486,7 +486,10 @@ const tableTheme = (t: Theme) => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   },
-  '.table.borderY td, .table.borderY th': {
+  '.table.borderY td:last-of-type, .table.borderY th:last-of-type': {
+    paddingRight: 4,
+  },
+  '.table.borderY td:not(:last-of-type), .table.borderY th:not(:last-of-type)': {
     borderRight: `1px solid ${t.palette.divider}`,
   },
   '.table th': {
