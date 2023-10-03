@@ -417,8 +417,8 @@ export const ShelterTable = () => {
         width: 0,
         id: 'price',
         head: m.price,
-        renderValue: row => row.ta?._price,
-        render: (row: ShelterRow) => map(row.ta?._price, _ => typeof _ === 'string' ? _ : formatLargeNumber(_)),
+        renderValue: row => row.ta?._price ?? undefined,
+        render: (row: ShelterRow) => map(row.ta?._price, _ => _ === null ? '⚠️ Missing price' : formatLargeNumber(_)),
       },
       {
         type: 'select_one',

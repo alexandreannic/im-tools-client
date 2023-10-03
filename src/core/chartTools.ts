@@ -14,6 +14,13 @@ export interface ChartDataVal {
   desc?: string
 }
 
+export const makeChartData: {
+  (_: ChartDataValPercent): ChartDataValPercent
+  (_: ChartDataVal): ChartDataVal
+} = (_) => {
+  return _ as any
+}
+
 export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
 export namespace ChartTools {

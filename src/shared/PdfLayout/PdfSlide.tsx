@@ -86,11 +86,13 @@ export const Div = ({
           flex: 1,
         }
       } : {},
-      ...column && {
+      ...column ? {
         flexDirection: 'column',
         // '& > *': {
         //   flex: 1
         // },
+      } : {
+        alignItems: 'flex-start',
       },
       '& > :not(:last-child)': column ? {mb: 2} : {mr: 2},
       ...sx,

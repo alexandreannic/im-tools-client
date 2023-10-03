@@ -13,7 +13,6 @@ import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/Ko
 export interface DatabaseKoboContext {
   fetcherAnswers: UseFetcher<() => ReturnType<ApiSdk['kobo']['answer']['searchByAccess']>>
   serverId: UUID
-  formId: KoboId
   schemaHelper: UseKoboSchema
   canEdit?: boolean
   form: KoboForm
@@ -38,16 +37,15 @@ export const DatabaseKoboTableProvider = (props: {
   schema: DatabaseKoboContext['schema']
   fetcherAnswers: DatabaseKoboContext['fetcherAnswers']
   serverId: DatabaseKoboContext['serverId']
-  formId: DatabaseKoboContext['formId']
   canEdit: DatabaseKoboContext['canEdit']
   form: DatabaseKoboContext['form']
   data: KoboAnswer[]
 }) => {
   const {
     schema,
+    form,
     data,
     serverId,
-    formId,
     children,
     fetcherAnswers,
   } = props
@@ -57,12 +55,12 @@ export const DatabaseKoboTableProvider = (props: {
   const [langIndex, setLangIndex] = useState<number>(0)
 
   const asyncRefresh = useAsync(async () => {
-    await api.koboApi.synchronizeAnswers(serverId, formId)
+    await api.koboApi.synchronizeAnswers(serverId, form.id)
     await fetcherAnswers.fetch({force: true, clean: false})
   })
 
   const asyncEdit = useAsync(async (answerId: KoboAnswerId) => {
-    return api.koboApi.getEditUrl(serverId, formId, answerId).then(_ => {
+    return api.koboApi.getEditUrl(serverId, form.id, answerId).then(_ => {
       if (_.url) {
         window.open(_.url, '_blank')
       }

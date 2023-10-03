@@ -8,7 +8,7 @@ import {chain} from '../../utils/utils'
 import {OblastISOSVG, ukraineSvgPath} from '../../shared/UkraineMap/ukraineSvgPath'
 import {omit, pick} from 'lodash'
 import {OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {ageGroup} from '../../core/type'
+import {Person} from '../../core/type'
 import Answer = KoboFormProtHH.Answer
 import Gender = KoboFormProtHH.Gender
 import sortBy = ChartTools.sortBy
@@ -680,9 +680,9 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _8_individuals: (() => {
         const persons = data.flatMap(_ => _.persons)
-        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof ageGroup.bha, {value: number}>>((p, acc) => {
-          const group = Enum.keys(ageGroup.bha).find(k => {
-            const [min, max] = ageGroup.bha[k]
+        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof Person.ageGroup.bha, {value: number}>>((p, acc) => {
+          const group = Enum.keys(Person.ageGroup.bha).find(k => {
+            const [min, max] = Person.ageGroup.bha[k]
             return p.age && p.age >= min && p.age <= max
           })
           if (group) return [group, {value: (acc[group]?.value ?? 0) + 1}]
@@ -694,7 +694,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
         return {
           persons: persons,
-          byAgeGroup: sortBy.custom(Object.keys(ageGroup))(byAgeGroup),
+          byAgeGroup: sortBy.custom(Object.keys(Person.ageGroup))(byAgeGroup),
           byGender: byGender,
         }
       })()

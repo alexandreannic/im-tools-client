@@ -3,15 +3,13 @@ import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {AppFeatureId} from '@/features/appFeatureId'
 import React, {useEffect, useMemo} from 'react'
 import {Box} from '@mui/material'
-import {Access, AccessLevel, KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
+import {Access, KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
-import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {useParams} from 'react-router'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {Page} from '@/shared/Page'
-import {DrcJob, DrcOffice} from '@/core/drcUa'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {DatabaseAccessForm} from '@/features/Database/Access/DatabaseAccessForm'
@@ -19,20 +17,9 @@ import {Panel} from '@/shared/Panel'
 import {useSession} from '@/core/Session/SessionContext'
 import {AccessTable} from '@/features/Access/AccessTable'
 
-interface Form {
-  selectBy?: 'email' | 'job'
-  email?: string
-  drcOffice?: DrcOffice
-  drcJob?: DrcJob
-  accessLevel: AccessLevel
-  question: string
-  questionAnswer: string[]
-  // filters: Record<string, string[]>
-}
-
-
 export const DatabaseAccessRoute = () => {
-  const _formSchemas = useDatabaseContext().formSchemas
+  const {api} = useAppSettings()
+  const _formSchemas = useFetchers(api.koboApi.getForm, {requestKey: ([server, form]) => form})
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
   const form = _formSchemas.get(formId)
 
@@ -47,7 +34,6 @@ export const DatabaseAccessRoute = () => {
       )}
     </Page>
   )
-
 }
 
 export const DatabaseAccess = ({
