@@ -302,6 +302,7 @@ export enum DrcJob {
   'Protection Project Manager (IDP Legal Aid)' = 'Protection Project Manager (IDP Legal Aid)',
   'Protection Team Leader' = 'Protection Team Leader',
   'Protection TL' = 'Protection TL',
+  'General Protection' = 'General Protection',
   'PSS Assistant' = 'PSS Assistant',
   'PSS Officer' = 'PSS Officer',
   'Quality Management Officer' = 'Quality Management Officer',
