@@ -7,7 +7,7 @@ import {UseFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 
 export interface DatabaseKoboContext {

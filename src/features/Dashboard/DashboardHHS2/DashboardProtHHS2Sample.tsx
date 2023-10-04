@@ -44,7 +44,7 @@ export const DashboardProtHHS2Sample = ({
     <Div column>
       <Div alignItems="flex-start" responsive>
         <Div column>
-          <Div>
+          <Div sx={{alignItems: 'stretch'}}>
             <SlideWidget sx={{flex: 1}} icon="home" title={m.hhs}>
               {formatLargeNumber(data.length)}
             </SlideWidget>
@@ -57,7 +57,7 @@ export const DashboardProtHHS2Sample = ({
           </Div>
         </Div>
         <Div column>
-          <Div>
+          <Div sx={{alignItems: 'stretch'}}>
             <SlideWidget sx={{flex: 1}} icon="elderly" title={m.avgAge}>
               <Lazy deps={[data]} fn={() => computed.flatData.map(_ => _.age).compact().sum() / computed.flatData.length}>
                 {_ => _.toFixed(1)}

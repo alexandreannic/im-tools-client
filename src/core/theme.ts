@@ -411,7 +411,7 @@ const tableTheme = (t: Theme, colorOverOpaque: string) => ({
   'table td:has(.MuiOutlinedInput-notchedOutline)': {
     padding: 0,
   },
-  '.table td-sub-head': {
+  '.table .td-sub-head': {
     textAlign: 'right',
     padding: 0,
   },

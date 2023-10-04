@@ -109,7 +109,7 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
 }: {
   repeatGroupsAsColumns?: boolean
   data: T[] | undefined
-} & Pick<AAIconBtnProps, 'sx'>) => {
+} & Pick<AAIconBtnProps, 'sx' | 'tooltip'>) => {
   const {m} = useI18n()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   const ctx = useDatabaseKoboTableContext()

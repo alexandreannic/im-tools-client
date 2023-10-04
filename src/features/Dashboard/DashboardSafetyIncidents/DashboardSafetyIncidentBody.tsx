@@ -24,7 +24,7 @@ export const DashboardSafetyIncidentBody = ({
   return (
     <Div sx={{alignItems: 'flex-start'}}>
       <Div column>
-        <Div>
+        <Div sx={{alignItems: 'stretch'}}>
           <SlideWidget sx={{flex: 1}} icon="report" title={m._dashboardSafetyIncident.incidents}>
             {formatLargeNumber(data.length)}
           </SlideWidget>
@@ -79,7 +79,7 @@ export const DashboardSafetyIncidentBody = ({
         </SlidePanel>
       </Div>
       <Div column>
-        <Div>
+        <Div sx={{alignItems: 'stretch'}}>
           <Lazy deps={[data]} fn={() => data?.sum(_ => _.dead ?? 0)}>
             {_ => (
               <SlideWidget sx={{flex: 1}} title={m._dashboardSafetyIncident.dead}>

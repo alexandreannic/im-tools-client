@@ -28,7 +28,7 @@ export enum DrcDonor {
   UNHC = 'UNHC',
   DANI = 'DANI',
   DUT = 'DUT',
-  NONO = 'NONO',
+  NovoNordisk = 'NovoNordisk',
   SDCS = 'SDCS',
   MOFA = 'MOFA',
   // 'BHA' = 'BHA',
@@ -60,6 +60,7 @@ export enum DrcProject {
   'Dutch I (UKR-000294)' = 'Dutch I (UKR-000294)',
   'Dutch II (UKR-000306)' = 'Dutch II (UKR-000306)',
   'Novo-Nordisk (UKR-000274)' = 'Novo-Nordisk (UKR-000274)',
+  'Novo-Nordisk (UKR-000298)' = 'Novo-Nordisk (UKR-000298)',
   'SDC Shelter (UKR-000290)' = 'SDC Shelter (UKR-000290)',
   'DANISH MoFA (UKR-000301)' = 'DANISH MoFA (UKR-000301)',
 }
@@ -82,7 +83,7 @@ export const drcDonorProjectCode = {
   'UNHC': [DrcProject['UNHCR (UKR-000308)'],],
   'DANI': [DrcProject['DANIDA (UKR-000267)'],],
   'DUT': [DrcProject['Dutch I (UKR-000294)'], DrcProject['Dutch II (UKR-000306)']],
-  'NONO': [DrcProject['Novo-Nordisk (UKR-000274)'],],
+  'NovoNordisk': [DrcProject['Novo-Nordisk (UKR-000274)'], DrcProject['Novo-Nordisk (UKR-000298)'],],
   'SDCS': [DrcProject['SDC Shelter (UKR-000290)'],],
   'MOFA': [DrcProject['DANISH MoFA (UKR-000301)']],
 }

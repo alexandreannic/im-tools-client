@@ -42,7 +42,7 @@ export const DatabaseNew = ({
   return (
     <Modal
       loading={_server.loading || _form.loading || _create.getLoading()}
-      title={m.database.registerNewForm}
+      title={m._koboDatabase.registerNewForm}
       confirmLabel={m.register}
       onConfirm={(event, close) => {
         if (selectedForm) {

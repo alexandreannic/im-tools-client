@@ -204,7 +204,7 @@ export const _MPCADashboard = ({
   return (
     <>
       <Div column>
-        <Div>
+        <Div sx={{alignItems: 'stretch'}}>
           <SlideWidget sx={{flex: 1}} icon="person" title="Beneficiaries">
             <Lazy deps={[data]} fn={() => data.sum(_ => _.hhSize ?? 0)}>
               {_ => formatLargeNumber(_)}

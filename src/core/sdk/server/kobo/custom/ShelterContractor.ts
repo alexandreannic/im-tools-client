@@ -43,15 +43,16 @@ export class ShelterContractorPrices {
     contractor2?: ShelterContractor
     answer?: Shelter_TA
   }): number | undefined | null => {
-    if (!answer || !contractor1) return undefined
+    if (!answer || (!contractor1 && !contractor2)) return undefined
     try {
       let total = 0
-      lot1.map(question => {
-        const quantity = answer[question] as number ?? 0
-        const price = pricesCents[contractor1]![question]!
-        if (price === undefined) throw new Error()
-        total += quantity * price
-      })
+      if (KoboShelterTa.hasLot1(answer) && contractor1)
+        lot1.map(question => {
+          const quantity = answer[question] as number ?? 0
+          const price = pricesCents[contractor1]![question]!
+          if (price === undefined) throw new Error()
+          total += quantity * price
+        })
       if (KoboShelterTa.hasLot2(answer) && contractor2)
         lot2.map(question => {
           const quantity = answer[question] as number ?? 0

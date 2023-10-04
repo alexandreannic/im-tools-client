@@ -30,7 +30,7 @@ const mapPopulationGroup = (s: (keyof typeof ProtHHS_2_1Options['do_you_identify
 
 const planCode: Partial<Record<DrcDonor, AiProtectionHhs.GET<'Plan Code'>>> = {
   // [Donor.ECHO_UKR000322]: 'GP-DRC-00001',//ECHO
-  [DrcDonor.NONO]: 'GP-DRC-00002',//Novo Nordisk ------
+  [DrcDonor.NovoNordisk]: 'GP-DRC-00002',//Novo Nordisk ------
   [DrcDonor.BHA]: 'GP-DRC-00003',//BHA OK
   [DrcDonor.OKF]: 'GP-DRC-00004',//OKF ------
   [DrcDonor.UHF]: 'GP-DRC-00005',//UHF

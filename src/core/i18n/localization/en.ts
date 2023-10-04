@@ -303,9 +303,6 @@ export const en = Object.freeze({
     ukrainianCitizenShip: 'Ukrainian citizenship',
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
-    database: {
-      registerNewForm: 'Register new form',
-    },
     mealMonitoringVisit: {
       ecrec: 'ECREC activities',
       protection: 'Protection activities',
@@ -1054,6 +1051,8 @@ export const en = Object.freeze({
       }
     },
     _koboDatabase: {
+      downloadAsXLS: 'Download <b>filtered data</b> as XLS',
+      registerNewForm: 'Register new form',
       repeatGroupsAsColumns: `Display repeat groups as new columns (also visible in XLS exports).`,
       title: (form?: string) => `Kobo Database${form ? `: <b>${form}</b>` : ``}`,
       showAllQuestions: 'Show unanswered questions',

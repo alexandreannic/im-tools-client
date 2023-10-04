@@ -84,7 +84,7 @@ export const DatabaseKoboTableContent = () => {
 
 
   return (
-    <Sheet id={ctx.form.id} columns={columns} data={ctx.data} header={
+    <Sheet id={ctx.form.id} getRenderRowKey={_ => _.id} columns={columns} data={ctx.data} header={params =>
       <>
         <AaSelect<number>
           sx={{maxWidth: 128, mr: 1}}
@@ -115,8 +115,9 @@ export const DatabaseKoboTableContent = () => {
           sx={{marginLeft: 'auto'}}
         />
         <DatabaseKoboTableExportBtn
-          data={ctx.data}
+          data={params.filteredAndSortedData}
           repeatGroupsAsColumns={repeatGroupsAsColumns}
+          tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.downloadAsXLS}}/>}
         />
         <AaBtn
           variant="outlined"

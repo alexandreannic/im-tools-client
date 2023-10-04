@@ -41,7 +41,7 @@ export const SheetProvider = <T extends SheetRow>({
 }) => {
   const selected = useSetState2<string>()
   const columnsIndex = useMemo(() => Arr(columns).reduceObject<Record<string, SheetColumnProps<T>>>(_ => [_.id, _]), [columns])
-  const data = useSheetData({
+  const data = useSheetData<T>({
     columnsIndex,
     data: _data,
     defaultLimit,

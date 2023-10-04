@@ -20,7 +20,11 @@ type OrderBy = 'asc' | 'desc'
 export type SheetRow = Record<string, any>// Record<string, any/* string | number[] | string[] | Date | number | undefined*/>
 
 export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onSelect'> {
-  header?: ReactNode
+  header?: ReactNode | ((_: {
+    data: T[]
+    filteredData: T[]
+    filteredAndSortedData: T[]
+  }) => ReactNode)
   loading?: boolean
   total?: number
   defaultLimit?: number
@@ -225,7 +229,11 @@ const _Sheet = <T extends SheetRow>({
           onChange={_ => setHiddenColumns(_)}
           title={m.toggleDatatableColumns}
         />
-        {header}
+        {typeof header === 'function' ? header({
+          data: ctx.data.data as T[],
+          filteredData: ctx.data.filteredData as T[],
+          filteredAndSortedData: ctx.data.filteredAndSortedData as T[],
+        }) : header}
         {showExportBtn && (
           <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
         )}

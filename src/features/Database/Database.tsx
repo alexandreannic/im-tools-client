@@ -54,7 +54,7 @@ export const DatabaseWithContext = () => {
         <Sidebar headerId="app-header">
           {ctx.isAdmin && (
             <DatabaseNew onAdded={() => ctx._forms.fetch({force: true, clean: false})}>
-              <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m.database.registerNewForm}</AaBtn>
+              <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m._koboDatabase.registerNewForm}</AaBtn>
             </DatabaseNew>
           )}
           {ctx._forms.loading ? (
