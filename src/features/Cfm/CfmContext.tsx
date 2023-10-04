@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
+import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
@@ -7,7 +7,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo} from '@/koboDrcUaFormId'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
-import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
 import {MealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternal'
 import {Arr} from '@alexandreannic/ts-utils'
@@ -58,6 +58,8 @@ export type CfmData = {
 >
 
 export interface CfmContext {
+  langIndex: number
+  setLangIndex: Dispatch<SetStateAction<number>>
   authorizations: {
     sum: AccessSum,
     accessibleOffices?: DrcOffice[]
@@ -90,9 +92,7 @@ export const cfmMakeEditRequestKey = (form: KoboId, answerId: KoboAnswerId) => f
 export const CfmProvider = ({
   children,
   schemas,
-  langIndex = 0,
 }: {
-  langIndex?: number
   schemas: {
     internal: KoboApiForm,
     external: KoboApiForm,
@@ -102,6 +102,7 @@ export const CfmProvider = ({
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
   const {toastHttpError} = useAaToast()
+  const [langIndex, setLangIndex] = useState(0)
   const schemaInternal = useKoboSchema({schema: schemas.internal})
   const schemaExternal = useKoboSchema({schema: schemas.external})
   const translateExternal = useMemo(() => getKoboTranslations({
@@ -146,7 +147,7 @@ export const CfmProvider = ({
       const category = _.tags?.feedbackTypeOverride
       res.push({
         category,
-        priority: KoboMealCfmTag.feedbackType2priority(category),
+        priority: KoboMealCfmHelper.feedbackType2priority(category),
         feedback: _.thanks_feedback ?? _.complaint,
         formId: kobo.drcUa.form.cfmExternal,
         external_feedback_type: _.feedback_type,
@@ -159,7 +160,7 @@ export const CfmProvider = ({
     data?.entity?.[CfmDataSource.Internal].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride ?? _.feedback_type
       res.push({
-        priority: KoboMealCfmTag.feedbackType2priority(category),
+        priority: KoboMealCfmHelper.feedbackType2priority(category),
         category,
         formId: kobo.drcUa.form.cfmInternal,
         form: CfmDataSource.Internal,
@@ -170,7 +171,7 @@ export const CfmProvider = ({
     })
     return res
       .filter(_ => {
-        if (_.tags?.deletedAt) return false
+        if (_.tags?.deletedBy) return false
         if (session.email === _.tags?.focalPointEmail)
           return true
         if (!authorizations.sum.read)
@@ -190,13 +191,13 @@ export const CfmProvider = ({
     formId: params.formId,
     answerIds: [params.answerId],
     tags: {[params.key]: params.value}
-  }).then(newTags => {
+  }).then(() => {
     const formName = formIdMapping[params.formId]
     data.setEntity(prev => prev ? ({
       ...prev,
       [formName]: prev[formName].map(_ => {
         if (_.id === params.answerId) {
-          _.tags = newTags
+          _.tags = {..._.tags, [params.key]: params.value}
         }
         return _
       })
@@ -206,20 +207,20 @@ export const CfmProvider = ({
   })
 
   const asyncRemove = useAsync(async ({formId, answerId}: {formId: KoboId, answerId: KoboAnswerId}) => {
-    await Promise.all([
-      updateTag.call({
-        formId,
-        answerId,
-        key: 'deletedAt',
-        value: new Date(),
-      }),
-      updateTag.call({
-        formId,
-        answerId,
-        key: 'deletedBy',
-        value: session.email,
-      })
-    ])
+    // await Promise.all([
+    // await updateTag.call({
+    //   formId,
+    //   answerId,
+    //   key: 'deletedAt',
+    //   value: new Date(),
+    // })
+    await updateTag.call({
+      formId,
+      answerId,
+      key: 'deletedBy',
+      value: session.email ?? 'unknown',
+    })
+    // ])
   }, {
     requestKey: ([_]) => cfmMakeEditRequestKey(_.formId, _.answerId)
   })
@@ -252,6 +253,8 @@ export const CfmProvider = ({
       data,
       users,
       mappedData,
+      langIndex,
+      setLangIndex,
     }}>
       {children}
     </CfmContext.Provider>

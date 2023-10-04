@@ -15,7 +15,7 @@ export const useProtHHS2Data = ({
 }: {
   data?: _Arr<ProtHHS2Enrich>
 }) => {
-  const ageGroup = useCallback(lazy((ageGroup: Record<string, number[]>, hideOther?: boolean) => {
+  const ageGroup = useCallback(lazy((ageGroup: Person.AgeGroup, hideOther?: boolean) => {
     return chain(
       data!.flatMap(_ => _.persons)
         // .filter(_ => _.age !== undefined)

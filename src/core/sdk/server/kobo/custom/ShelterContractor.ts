@@ -61,7 +61,7 @@ export class ShelterContractorPrices {
         })
       return total / 100
     } catch (e) {
-      return '⚠️ Missing price'
+      return null
     }
   }
 }

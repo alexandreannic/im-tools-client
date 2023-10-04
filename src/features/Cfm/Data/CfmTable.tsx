@@ -78,11 +78,11 @@ export const CfmTable = ({}: any) => {
     tag,
     enumerator,
     translate,
-    defaultValue,
+    value,
     ...sheetProps
   }: Pick<SheetColumnProps<any>, 'typeIcon' | 'style' | 'styleHead' | 'width'> & {
     head: string
-    defaultValue?: KoboMealCfmTag[T]
+    value?: KoboMealCfmTag[T]
     enumerator: Record<K, string>
     translate?: Record<K, ReactNode>
     tag: T,
@@ -93,11 +93,11 @@ export const CfmTable = ({}: any) => {
       head,
       type: 'select_one',
       options: () => enumKeys.map(_ => ({value: _, label: _})),
-      renderValue: row => (row?.tags?.[tag] ?? defaultValue) as string,
+      renderValue: row => (row?.tags?.[tag] ?? value) as string,
       render: row => (
         <AaSelect
           showUndefinedOption
-          defaultValue={(row.tags as any)?.[tag] ?? defaultValue ?? ''}
+          value={(row.tags as any)?.[tag] ?? value ?? ''}
           onChange={(tagChange) => {
             ctx.updateTag.call({
               formId: row.formId,
@@ -124,7 +124,7 @@ export const CfmTable = ({}: any) => {
         typeIcon: null,
         style: {padding: 0},
         tag: 'status',
-        defaultValue: KoboMealCfmStatus.Open,
+        value: KoboMealCfmStatus.Open,
         enumerator: KoboMealCfmStatus,
         translate: {
           [KoboMealCfmStatus.Close]: <TableIcon tooltip={m._cfm.status.Close} color="success">check_circle</TableIcon>,
@@ -154,6 +154,15 @@ export const CfmTable = ({}: any) => {
           id="cfm"
           header={
             <>
+              <AaSelect<number>
+                sx={{maxWidth: 128, mr: 1}}
+                defaultValue={ctx.langIndex}
+                onChange={ctx.setLangIndex}
+                options={[
+                  {children: 'XML', value: -1},
+                  ...ctx.schemaExternal.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
+                ]}
+              />
               <AAIconBtn
                 loading={_refresh.loading.size > 0}
                 children="cloud_sync"
@@ -180,6 +189,7 @@ export const CfmTable = ({}: any) => {
                 {value: CfmDataPriority.Medium, label: CfmDataPriority.Medium},
                 {value: CfmDataPriority.High, label: CfmDataPriority.High},
               ],
+              renderValue: _ => _.priority,
               render: _ => <CfmPriorityLogo priority={_.priority}/>,
             },
             {
@@ -187,13 +197,14 @@ export const CfmTable = ({}: any) => {
               head: m.id,
               id: 'id',
               width: 78,
-              render: _ => _.id,
+              render: _ => JSON.stringify(_.tags),
             },
             {
               type: 'date',
               head: m.date,
               id: 'date',
               width: 78,
+              renderValue: _ => _.date ?? _.submissionTime,
               render: _ => formatDate(_.date ?? _.submissionTime),
             },
             {
@@ -247,9 +258,10 @@ export const CfmTable = ({}: any) => {
             {
               type: 'select_one',
               head: m._cfm.feedbackType,
-              id: 'category',
+              id: 'feedbackType',
               width: 120,
-              options: () => Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, label: v})),
+              options: () => Enum.keys(MealCfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.translateInternal.translateChoice('feedback_type', k)})),
+              renderValue: _ => _.category,
               render: row => row.form === CfmDataSource.Internal
                 ? ctx.translateInternal.translateChoice('feedback_type', row.category)
                 : <AaSelect
@@ -263,8 +275,9 @@ export const CfmTable = ({}: any) => {
             {
               type: 'select_one',
               head: m._cfm.feedbackTypeExternal,
-              id: 'category',
-              options: () => Enum.entries(MealCfmExternalOptions.feedback_type).map(([k, v]) => ({value: k, label: v})),
+              id: 'feedbackTypeExternal',
+              options: () => Enum.entries(m._cfm._feedbackType).map(([k, v]) => ({value: k, label: v})),
+              renderValue: _ => _.external_feedback_type,
               render: _ => m._cfm._feedbackType[_.external_feedback_type!],
             },
             {
@@ -284,7 +297,8 @@ export const CfmTable = ({}: any) => {
               head: m.gender,
               width: 80,
               id: 'gender',
-              options: () => Enum.entries(MealCfmInternalOptions.gender).map(([value, label]) => ({value, label})),
+              options: () => Enum.keys(MealCfmInternalOptions.gender).map(value => ({value, label: ctx.translateExternal.translateChoice('gender', value)})),
+              renderValue: _ => _.gender,
               render: _ => ctx.translateExternal.translateChoice('gender', _.gender)
             },
             {
@@ -302,8 +316,9 @@ export const CfmTable = ({}: any) => {
             {
               type: 'select_one',
               head: m.oblast,
-              options: () => Enum.entries(MealCfmInternalOptions.ben_det_oblast).map(([value, label]) => ({value, label})),
+              options: () => Enum.keys(MealCfmInternalOptions.ben_det_oblast).map(value => ({value, label: ctx.translateExternal.translateChoice('ben_det_oblast', value)})),
               id: 'oblast',
+              renderValue: _ => _.ben_det_oblast,
               render: _ => ctx.translateExternal.translateChoice('ben_det_oblast', _.ben_det_oblast),
             },
             {

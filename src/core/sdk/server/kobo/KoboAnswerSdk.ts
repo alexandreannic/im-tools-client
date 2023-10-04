@@ -15,7 +15,7 @@ import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboS
 import {ProtHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
 import {mapMealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternalMapping'
 import {mapMealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternalMapping'
-import {KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {RapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanism'
 import {mapRapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanismMapping'
 import {mapShelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shelter_CashForRepairMapping'
@@ -174,7 +174,7 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.cfmInternal,
       fnMap: mapMealCfmInternal,
-      fnMapTags: KoboMealCfmTag.map,
+      fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })
   }
@@ -183,7 +183,7 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.cfmExternal,
       fnMap: mapMealCfmExternal,
-      fnMapTags: KoboMealCfmTag.map,
+      fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })
   }

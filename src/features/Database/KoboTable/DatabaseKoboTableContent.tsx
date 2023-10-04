@@ -40,7 +40,7 @@ export const DatabaseKoboTableContent = () => {
     event: any
   }) => (
     <DatabaseKoboTableGroupModal
-      formId={ctx.formId}
+      formId={ctx.form.id}
       translateQuestion={ctx.translate.question}
       schema={ctx.schemaHelper.groupSchemas[columnId]}
       translateChoice={ctx.translate.choice}

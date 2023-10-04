@@ -62,7 +62,7 @@ export const styleUtils = (t: Theme) => ({
   color: {
     success: '#00b79f',
     error: '#cf0040',
-    warning: '#FFB900',
+    warning: '#ff9800',
     info: '#0288d1',
   },
   truncate: {
@@ -89,6 +89,7 @@ export const muiTheme = ({
   cardElevation?: number
   dark?: boolean
 }): Theme => {
+  const colorOverOpaque = dark ? '#070707' : '#fafafa'
   const defaultRadius = 12
   const fontFamily = '"Open Sans", sans-serif'
   // const mainColor = '#af161e'
@@ -221,7 +222,7 @@ export const muiTheme = ({
           ':focus': {
             outline: 0,
           },
-          ...tableTheme(baseTheme),
+          ...tableTheme(baseTheme, colorOverOpaque),
         },
       },
       MuiButton: {
@@ -380,7 +381,7 @@ export const muiTheme = ({
   })
 }
 
-const tableTheme = (t: Theme) => ({
+const tableTheme = (t: Theme, colorOverOpaque: string) => ({
   '.table': {
     minWidth: '100%',
     width: 'max-content',
@@ -504,7 +505,7 @@ const tableTheme = (t: Theme) => ({
     color: t.palette.text.secondary,
   },
   '.table tbody tr:hover td': {
-    background: t.palette.action.hover,
+    background: colorOverOpaque,
   },
   //
   // 'table.sheet': {

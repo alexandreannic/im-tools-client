@@ -35,6 +35,7 @@ export enum KoboMealCfmArea {
 }
 
 export interface KoboMealCfmTag {
+  /* @deprecated FIXME bug cannot update deletedAt deletedBy in the same time */
   deletedAt?: Date
   deletedBy?: string
   gca?: KoboMealCfmArea
@@ -46,7 +47,7 @@ export interface KoboMealCfmTag {
   feedbackTypeOverride?: MealCfmInternal['feedback_type']
 }
 
-export class KoboMealCfmTag {
+export class KoboMealCfmHelper {
 
   static readonly feedbackType2priority = (_?: MealCfmInternal['feedback_type']) => {
     return fnSwitch(_!, {

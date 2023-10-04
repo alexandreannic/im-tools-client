@@ -37,7 +37,7 @@ export type NumberKeys<T> = {
 
 export namespace Person {
 
-  type AgeGroup = (typeof ageGroup)[keyof typeof ageGroup]
+  export type AgeGroup = (typeof ageGroup)[keyof typeof ageGroup]
 
   export interface Person {
     age?: number
@@ -95,6 +95,6 @@ export namespace Person {
   ) => <T>(
     p: T, getAge: (_: T) => number
   ): keyof AG | undefined => {
-    return ageToAgeGroup(getAge(p), ag)
+    return ageToAgeGroup(getAge(p), ag) as keyof AG
   }
 }

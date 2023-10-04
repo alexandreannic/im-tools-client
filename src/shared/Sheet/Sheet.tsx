@@ -172,7 +172,7 @@ const _Sheet = <T extends SheetRow>({
   hidePagination,
   rowsPerPageOptions = [10, 20, 100, 500, 1000],
   title,
-}: Pick<SheetTableProps<T>, 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
+}: Pick<SheetTableProps<T>, 'hidePagination' | 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
   const ctx = useSheetContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   useEffect(() => ctx.select?.onSelect(ctx.selected.toArray), [ctx.selected.get])
