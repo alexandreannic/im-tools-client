@@ -197,7 +197,7 @@ export const CfmTable = ({}: any) => {
               head: m.id,
               id: 'id',
               width: 78,
-              render: _ => JSON.stringify(_.tags),
+              render: _ => _.id,
             },
             {
               type: 'date',
