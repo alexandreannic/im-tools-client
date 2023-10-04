@@ -5,28 +5,15 @@ import {makeSx} from '@/core/theme'
 
 type Option<T extends string | number = string> = {value: T, children: ReactNode, key?: string}
 
-export interface AaSelectBase<T extends string | number = string> extends Pick<FormControlProps, 'disabled' | 'id'> {
+export interface AaSelectMultipleProps<T extends string | number = string> extends Pick<FormControlProps, 'disabled' | 'id'> {
   label?: ReactNode
   showUndefinedOption?: boolean
   options: Option<T>[] | string[]
   sx?: SxProps<Theme>
-}
-
-export interface AaSelectMultiple<T extends string | number = string> extends AaSelectBase<T> {
   defaultValue?: T[]
-  value: T[]
-  multiple: true
+  value?: T[]
   onChange: (t: T[], e: any) => void
 }
-
-export interface AaSelectSimple<T extends string | number = string> extends AaSelectBase<T> {
-  defaultValue?: T
-  value?: T
-  multiple?: false
-  onChange: (t: T, e: any) => void
-}
-
-export type AaSelectProps<T extends string | number = string> = AaSelectSimple<T> | AaSelectMultiple<T>
 
 const style = makeSx({
   item: {
@@ -35,21 +22,20 @@ const style = makeSx({
   }
 })
 
-/** @deprecated*/
-export const AaSelect = <T extends string | number>({
+const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE'
+
+export const AaSelectMultiple = <T extends string | number>({
   defaultValue,
   value,
-  multiple,
   showUndefinedOption,
   label,
   id,
   onChange,
   sx,
   ...props
-}: AaSelectProps<T>) => {
+}: AaSelectMultipleProps<T>) => {
   const {m} = useI18n()
-  const [innerValue, setInnerValue] = useState<undefined | T | T[]>(multiple ? [] : undefined)
-  const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE'
+  const [innerValue, setInnerValue] = useState<T[] | undefined>(defaultValue)
 
   const options = useMemo(() => {
     const _options = props.options ?? []
@@ -61,18 +47,19 @@ export const AaSelect = <T extends string | number>({
 
   useEffect(() => {
     if (innerValue !== undefined)
-      onChange(innerValue === '' ? undefined : innerValue as any, {})
+      onChange(innerValue, {})
   }, [innerValue])
 
-  const isMultiple = multiple && Array.isArray(innerValue)
+  useEffect(() => {
+    if (value && value !== innerValue)
+      setInnerValue(value)
+  }, [value])
 
   const onSelectAll = (e: any) => {
-    if (isMultiple) {
-      if (options.length === innerValue.length)
-        setInnerValue([])
-      else {
-        setInnerValue(_ => options.map(_ => _.value))
-      }
+    if (options.length === innerValue?.length)
+      setInnerValue([])
+    else {
+      setInnerValue(_ => options.map(_ => _.value))
     }
   }
 
@@ -89,12 +76,10 @@ export const AaSelect = <T extends string | number>({
         size="small"
         margin="dense"
         id={id}
-        value={value}
-        defaultValue={defaultValue ?? (multiple ? [] : '')}
-        multiple={multiple}
-        // renderValue={_ => {
-        //   console.log('https://ee.humanitarianresponse.info/x/5on180Ku', _)
-        //   return JSON.stringify(_)
+        value={innerValue ?? []}
+        // defaultValue={defaultValue ?? []}
+        multiple={true}
+        renderValue={v => options.find(_ => v.includes(_.value))?.children + (v.length > 1 ? ` +${v.length - 1}  selected` : '')}
         onChange={e => {
           const value = e.target.value
           if (![value].flat().includes(IGNORED_VALUE_FOR_SELECT_ALL_ITEM as any)) {
@@ -110,12 +95,12 @@ export const AaSelect = <T extends string | number>({
         }
         {...props}
       >
-        {isMultiple && options.length > 5 && (
+        {options.length > 5 && (
           <MenuItem dense value={IGNORED_VALUE_FOR_SELECT_ALL_ITEM} onClick={onSelectAll} divider sx={{
             py: 0,
             fontWeight: t => t.typography.fontWeightBold,
           }}>
-            <Checkbox size="small" checked={innerValue.length === options.length} sx={{
+            <Checkbox size="small" checked={innerValue?.length === options.length} sx={{
               paddingTop: `8px !important`,
               paddingBottom: `8px !important`,
             }}/>
@@ -127,12 +112,10 @@ export const AaSelect = <T extends string | number>({
         )}
         {options.map((option, i) => (
           <MenuItem dense key={option.key ?? option.value} value={option.value} sx={style.item}>
-            {isMultiple && (
-              <Checkbox size="small" checked={innerValue.includes(option.value)} sx={{
-                paddingTop: `8px !important`,
-                paddingBottom: `8px !important`,
-              }}/>
-            )}
+            <Checkbox size="small" checked={innerValue?.includes(option.value)} sx={{
+              paddingTop: `8px !important`,
+              paddingBottom: `8px !important`,
+            }}/>
             {option.children}
           </MenuItem>
         ))}

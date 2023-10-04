@@ -14,6 +14,7 @@ import {Switch, Theme} from '@mui/material'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
+import {useExtraColumns} from '@/features/Database/KoboTable/useColumnsExtra'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
@@ -53,6 +54,7 @@ export const DatabaseKoboTableContent = () => {
     />
   ), [ctx.schema])
 
+  const extraColumns = useExtraColumns()
   const schemaColumns = useMemo(() => {
     return getColumnBySchema({
       data: ctx.data,
@@ -79,7 +81,7 @@ export const DatabaseKoboTableContent = () => {
         </>
       )
     }
-    return [c, ...schemaColumns,]
+    return [c, ...extraColumns, ...schemaColumns]
   }, [schemaColumns, ctx.asyncEdit.loading.values])
 
 
