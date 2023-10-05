@@ -27,7 +27,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
           sx={{maxWidth: 200}}
           defaultValue={[]}
           label={m.project}
-          onChange={_ => ctx.asyncUpdateTag.call({answerIds: selectedIds, value: _, key: 'project'})}
+          onChange={_ => ctx.asyncUpdateTag.call({answerIds: selectedIds, value: _, key: 'projects'})}
           options={Enum.entries(DrcProject).map(([k, v]) => ({value: k, children: v}))}
         />
       )

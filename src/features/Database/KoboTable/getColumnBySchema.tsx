@@ -12,7 +12,6 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {Utils} from '@/utils/utils'
-import removeHtml = Utils.removeHtml
 
 const ignoredColType: KoboApiColType[] = [
   'begin_group',
@@ -69,7 +68,7 @@ export const getColumnBySchema = ({
   return schema.filter(_ => !ignoredColType.includes(_.type)).flatMap(q => {
     const common = {
       id: getId(q),
-      head: removeHtml(getHead(translateQuestion(q.name))),
+      head: Utils.removeHtml(getHead(translateQuestion(q.name))),
       renderValue: (row: KoboMappedAnswer) => getVal(row, q.name),
     }
     switch (q.type) {
@@ -87,7 +86,7 @@ export const getColumnBySchema = ({
           ...common,
           type: 'string',
           typeIcon: <SheetHeadTypeIcon children="functions" tooltip="calculate"/>,
-          head: removeHtml(getHead(translateQuestion(q.name))),
+          head: Utils.removeHtml(getHead(translateQuestion(q.name))),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
           options: () => Arr(data).map(_ => _[q.name] ?? SheetUtils.blankValue).distinct(_ => _).map(_ => ({label: _, value: _})),
         }

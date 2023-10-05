@@ -63,9 +63,9 @@ export const AaSelectMultiple = <T extends string | number>({
         size="small"
         margin="dense"
         id={id}
-        defaultValue={props.defaultValue ?? ''}
+        defaultValue={props.defaultValue}
         multiple={true}
-        renderValue={v => options.find(_ => v.includes(_.value))?.children + (v.length > 1 ? ` +${v.length - 1}  selected` : '')}
+        renderValue={(v: T[]) => options.find(_ => v.includes(_.value))?.children + (v.length > 1 ? ` +${v.length - 1}  selected` : '')}
         onChange={e => {
           if (e.target.value.includes(IGNORED_VALUE_FOR_SELECT_ALL_ITEM as any)) return
           const newValue = (e.target.value as T[])
