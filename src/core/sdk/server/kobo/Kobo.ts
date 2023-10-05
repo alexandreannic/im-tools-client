@@ -49,7 +49,7 @@ export type KoboAnswerMetaData<TTag = any> = {
   validatedBy?: string
   lastValidatedTimestamp?: number
   geolocation?: [number, number]
-  tags: TTag
+  tags?: TTag
   //
   // _id: number,
   // // 'formhub/uuid': string,

@@ -20,7 +20,7 @@ export interface DatabaseKoboContext {
   form: KoboForm
   asyncRefresh: UseAsync<() => Promise<void>>
   asyncEdit: UseAsync<(answerId: KoboAnswerId) => Promise<void>>
-  asyncUpdateTag: UseAsync<(_: {answerId: KoboAnswerId, key: KeyOf<any>, value: any}) => Promise<void>>
+  asyncUpdateTag: UseAsync<(_: {answerIds: KoboAnswerId[], key: KeyOf<any>, value: any}) => Promise<void>>
   data: KoboMappedAnswer[]
   schema: KoboApiForm
   langIndex: number
@@ -78,26 +78,32 @@ export const DatabaseKoboTableProvider = (props: {
     questionIndex: schemaHelper.questionIndex,
   }), [schema, langIndex])
 
-  const getUpdateTagLoadingKey = (answerId: KoboAnswerId, key: string) => answerId + key
 
   const [mappedData, setMappedData] = useState<KoboMappedAnswer[]>(data)
 
   useEffect(() => setMappedData(data.map(_ => Kobo.mapAnswerBySchema(schemaHelper.questionIndex, _))), [data])
 
-  const asyncUpdateTag = useAsync(async ({answerId, key, value}: {answerId: KoboAnswerId, key: KeyOf<any>, value: any}) => {
-    await api.kobo.answer.updateTag({
-      formId: form.id,
-      answerIds: [answerId],
-      tags: {[key]: value}
-    })
+  const asyncUpdateTag = useAsync(async ({
+    answerIds,
+    key,
+    value
+  }: {
+    answerIds: KoboAnswerId[],
+    key: KeyOf<any>,
+    value: any,
+  }) => {
+    const index = new Set(answerIds)
     setMappedData(prev => {
       return prev?.map(_ => {
-        if (_.id === answerId) _.tags = {..._.tags, [key]: value}
+        if (index.has(_.id)) _.tags = {..._.tags, [key]: value}
         return _
       })
     })
-  }, {
-    requestKey: ([_]) => getUpdateTagLoadingKey(_.answerId, _.key)
+    await api.kobo.answer.updateTag({
+      formId: form.id,
+      answerIds: answerIds,
+      tags: {[key]: value}
+    })
   })
 
   return (

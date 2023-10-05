@@ -267,7 +267,7 @@ const _Sheet = <T extends SheetRow>({
               // borderRadius: t => t.shape.borderRadius + 'px',
             }}>
               <AAIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
-              <Box sx={{flex: 1, mr: 1, whiteSpace: 'nowrap'}}>
+              <Box sx={{mr: 1, whiteSpace: 'nowrap'}}>
                 <b>{ctx.selected.size}</b> {m.selected}
               </Box>
               {ctx.select?.selectActions}
