@@ -1,14 +1,16 @@
-import React, {Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState} from 'react'
+import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UUID} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {UseFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn, UseFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+import {KeyOf} from '@/utils/utils'
+import {cfmMakeUpdateRequestKey} from '@/features/Cfm/CfmContext'
 
 export interface DatabaseKoboContext {
   fetcherAnswers: UseFetcher<() => ReturnType<ApiSdk['kobo']['answer']['searchByAccess']>>
@@ -18,6 +20,7 @@ export interface DatabaseKoboContext {
   form: KoboForm
   asyncRefresh: UseAsync<() => Promise<void>>
   asyncEdit: UseAsync<(answerId: KoboAnswerId) => Promise<void>>
+  asyncUpdateTag: UseAsync<(_: {answerIds: KoboAnswerId[], key: KeyOf<any>, value: any}) => Promise<void>>
   data: KoboMappedAnswer[]
   schema: KoboApiForm
   langIndex: number
@@ -75,13 +78,40 @@ export const DatabaseKoboTableProvider = (props: {
     questionIndex: schemaHelper.questionIndex,
   }), [schema, langIndex])
 
-  const mappedData = useMemo(() => data.map(_ => Kobo.mapAnswerBySchema(schemaHelper.questionIndex, _)), [data])
+
+  const [mappedData, setMappedData] = useState<KoboMappedAnswer[]>(data)
+
+  useEffect(() => setMappedData(data.map(_ => Kobo.mapAnswerBySchema(schemaHelper.questionIndex, _))), [data])
+
+  const asyncUpdateTag = useAsync(async ({
+    answerIds,
+    key,
+    value
+  }: {
+    answerIds: KoboAnswerId[],
+    key: KeyOf<any>,
+    value: any,
+  }) => {
+    const index = new Set(answerIds)
+    setMappedData(prev => {
+      return prev?.map(_ => {
+        if (index.has(_.id)) _.tags = {..._.tags, [key]: value}
+        return _
+      })
+    })
+    await api.kobo.answer.updateTag({
+      formId: form.id,
+      answerIds: answerIds,
+      tags: {[key]: value}
+    })
+  })
 
   return (
     <Context.Provider value={{
       ...props,
       asyncRefresh,
       asyncEdit,
+      asyncUpdateTag,
       data: mappedData,
       schemaHelper,
       langIndex,

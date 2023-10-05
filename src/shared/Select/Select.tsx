@@ -13,7 +13,7 @@ export interface AaSelectBase<T extends string | number = string> extends Pick<F
 }
 
 export interface AaSelectMultiple<T extends string | number = string> extends AaSelectBase<T> {
-  defaultValue: T[]
+  defaultValue?: T[]
   value: T[]
   multiple: true
   onChange: (t: T[], e: any) => void
@@ -35,6 +35,7 @@ const style = makeSx({
   }
 })
 
+/** @deprecated*/
 export const AaSelect = <T extends string | number>({
   defaultValue,
   value,

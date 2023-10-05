@@ -24,12 +24,14 @@ export interface SidebarItemProps extends ButtonBaseProps {
   href?: string
   target?: string
   active?: boolean
+  dense?: boolean
   to?: string
 }
 
 export const SidebarItem = ({
   children,
   icon,
+  dense,
   iconEnd,
   className,
   active,
@@ -47,7 +49,7 @@ export const SidebarItem = ({
         display: 'flex',
         alignItems: 'center',
         textDecoration: 'inherit',
-        minHeight: 36,
+        minHeight: dense ? 30 : 36,
         overflow: 'hidden',
         minWidth: 0,
         whiteSpace: 'nowrap',

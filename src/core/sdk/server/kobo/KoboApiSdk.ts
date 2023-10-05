@@ -41,11 +41,12 @@ export class KoboApiSdk {
   }
 
   static readonly koboFormRefs = {
-    'ProtHHS_2_1': 'aQDZ2xhPUnNd43XzuQucVR',
-    'MPCA_NFI': 'a4Sx3PrFMDAMZEGsyzgJJg',
-    'MPCA_NFI_NAA': 'aBGVXW2N26DaLehmKneuyB',
-    'MPCA_NFI_Myko': 'a8WAWB9Yxu2jkgk4Ei8GTk',
-    'MPCA_NFI_Old': 'a3h8Ykmp2C8NFiw5DDGBLz',
+    Prot_CommunityLevelMonito: 'aQHBhYgevdzw8TR2Vq2ZdR',
+    Prot_HHS2: 'aQDZ2xhPUnNd43XzuQucVR',
+    MPCA_NFI: 'a4Sx3PrFMDAMZEGsyzgJJg',
+    MPCA_NFI_NAA: 'aBGVXW2N26DaLehmKneuyB',
+    MPCA_NFI_Myko: 'a8WAWB9Yxu2jkgk4Ei8GTk',
+    MPCA_NFI_Old: 'a3h8Ykmp2C8NFiw5DDGBLz',
   }
 
   /** @deprecated */
@@ -106,7 +107,7 @@ export class KoboApiSdk {
   readonly getAnswersHH2 = (filters: FiltersProps = {}) => {
     return this.getAnswersFromKoboApi({
       serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.ProtHHS_2_1,
+      formId: KoboApiSdk.koboFormRefs.Prot_HHS2,
       fnMap: mapProtHHS_2_1,
       ...filters,
     })
@@ -114,7 +115,7 @@ export class KoboApiSdk {
   readonly getAnswersShelterNTA = (filters: FiltersProps = {}) => {
     return this.getAnswersFromKoboApi({
       serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.ProtHHS_2_1,
+      formId: KoboApiSdk.koboFormRefs.Prot_HHS2,
       fnMap: mapProtHHS_2_1,
       ...filters,
     })

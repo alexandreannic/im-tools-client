@@ -225,6 +225,13 @@ export const muiTheme = ({
           ...tableTheme(baseTheme, colorOverOpaque),
         },
       },
+      MuiBadge: {
+        styleOverrides: {
+          badge: {
+            zIndex: 0,
+          }
+        }
+      },
       MuiButton: {
         styleOverrides: {
           root: {

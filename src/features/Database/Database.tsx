@@ -75,7 +75,7 @@ export const DatabaseWithContext = () => {
                 <Tooltip key={_.id} title={_.parsedName.name} placement="right-end">
                   <NavLink to={databaseModule.siteMap.home(_.serverId, _.id)}>
                     {({isActive, isPending}) => (
-                      <SidebarItem onClick={() => undefined} key={_.id} active={isActive}>{_.parsedName.name}</SidebarItem>
+                      <SidebarItem dense onClick={() => undefined} key={_.id} active={isActive}>{_.parsedName.name}</SidebarItem>
                     )}
                   </NavLink>
                 </Tooltip>
