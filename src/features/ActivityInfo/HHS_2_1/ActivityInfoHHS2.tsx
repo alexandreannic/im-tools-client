@@ -132,7 +132,7 @@ const _ActivityInfo = ({
         console.warn('No donor', _)
         // throw new Error('No donor')
       }
-      return planCode[_.tags?.ai]
+      return planCode[_.tags?.ai!]
     })).forEach(([planCode, byPlanCode]) => {
       Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
         Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {

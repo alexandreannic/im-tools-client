@@ -7,6 +7,7 @@ import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {KoboApiSdk} from '@/core/sdk/server/kobo/KoboApiSdk'
+import {projects} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
 
 export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode => {
   const ctx = useDatabaseKoboTableContext()
@@ -19,7 +20,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
           sx={{maxWidth: 200}}
           label={m.project}
           onChange={_ => ctx.asyncUpdateTag.call({answerIds: selectedIds, value: _, key: 'project'})}
-          options={Enum.entries(DrcProject).map(([k, v]) => ({value: k, children: v}))}
+          options={projects.map(k => ({value: k, children: k}))}
         />
       ),
       [KoboApiSdk.koboFormRefs.Prot_HHS2]: (
@@ -28,7 +29,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
           defaultValue={[]}
           label={m.project}
           onChange={_ => ctx.asyncUpdateTag.call({answerIds: selectedIds, value: _, key: 'projects'})}
-          options={Enum.entries(DrcProject).map(([k, v]) => ({value: k, children: v}))}
+          options={projects.map(k => ({value: k, children: k}))}
         />
       )
     }
