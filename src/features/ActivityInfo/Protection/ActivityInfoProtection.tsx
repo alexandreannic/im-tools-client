@@ -54,31 +54,7 @@ export const ActivityInfoProtection = () => {
           },
         ],
         finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
-          mapped.push({
-            oblast: oblast === '' ? undefined : oblast,
-            raion,
-            Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
-            'Population Group': populationGroup,
-            'Amount of cash in USD distributed through multi-purpose cash assistance': Math.round(group.sum(_ => _.amountUahFinal ?? 0) * conf.uahToUsd),
-            Girls: group.sum(_ => _.girls ?? 0),
-            Boys: group.sum(_ => _.boys ?? 0),
-            'Adult Men': group.sum(_ => _.men ?? 0),
-            'Adult Women': group.sum(_ => _.women ?? 0),
-            'Elderly Men': group.sum(_ => _.elderlyMen ?? 0),
-            'Elderly Women': group.sum(_ => _.elderlyWomen ?? 0),
-            'Partner Organization': 'Danish Refugee Council',
-            'Reporting Month': period,
-            'Total # of people assisted with multi-purpose cash assistance': group.sum(_ => Utils.add(
-              _.girls,
-              _.boys,
-              _.men,
-              _.women,
-              _.elderlyMen,
-              _.elderlyWomen,
-            )),
-            Durations: 'Three months',
-            'People with disability': 0,
-          })
+          return 1
         },
       })
       return mapped.map((_, i) => ({

@@ -19,7 +19,7 @@ import {Fender, Txt} from 'mui-extension'
 import {DatabaseIndex} from '@/features/Database/DatabaseIndex'
 import {useLayoutContext} from '@/shared/Layout/LayoutContext'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
-import {Arr, Enum} from '@alexandreannic/ts-utils'
+import {Enum, seq} from '@alexandreannic/ts-utils'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 
 export const databaseUrlParamsValidation = yup.object({
@@ -43,7 +43,7 @@ export const DatabaseWithContext = () => {
   const ctx = useDatabaseContext()
 
   const parsedFormNames = useMemo(() => {
-    const grouped = Arr(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
+    const grouped = seq(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
     return new Enum(grouped).transform((k, v) => [k, v.sort((a, b) => a.name.localeCompare(b.name))]).sort(([ak], [bk]) => ak.localeCompare(bk)).get()
   }, [ctx.formAccess])
 

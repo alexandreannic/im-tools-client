@@ -1,6 +1,6 @@
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1'
-import {Arr, mapFor} from '@alexandreannic/ts-utils'
+import {mapFor, seq} from '@alexandreannic/ts-utils'
 import {makeKoboBarChartComponent} from '@/features/Dashboard/shared/KoboBarChart'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ProtHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
@@ -23,7 +23,7 @@ export const enrichProtHHS_2_1 = (a: KoboAnswer<Protection_Hhs2_1, ProtHhsTags>)
         `is_member_${i}_registered`,
       ]),
     ] as [keyof Protection_Hhs2_1, keyof Protection_Hhs2_1, keyof Protection_Hhs2_1, keyof Protection_Hhs2_1][]
-    return Arr(fields)
+    return seq(fields)
       .map(([ageCol, sexCol, lackDocCol, isIdpRegisteredCol]) => {
         return ({
           age: isNaN(a[ageCol] as any) ? undefined : +a[ageCol]!,

@@ -6,7 +6,7 @@ import {useI18n} from '@/core/i18n'
 import {UUID} from '@/core/type'
 import {useAsync, UseAsync} from '@/alexlib-labo/useAsync'
 import {UseFetchersSimple} from '@/alexlib-labo/useFetchersFn'
-import {Arr, Enum} from '@alexandreannic/ts-utils'
+import {Enum, seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {AaSelect} from '@/shared/Select/Select'
 
@@ -42,7 +42,7 @@ export const AccessTable = ({
           head: m.drcJob,
           render: _ => _.drcJob,
           type: 'select_one',
-          options: () => Arr(_data.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+          options: () => seq(_data.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
           width: 80,
@@ -56,7 +56,7 @@ export const AccessTable = ({
           head: m.drcOffice,
           render: _ => _.drcOffice,
           type: 'select_one',
-          options: () => Arr(_data.get()?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+          options: () => seq(_data.get()?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
           id: 'email',

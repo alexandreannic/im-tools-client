@@ -11,10 +11,10 @@ import {chain} from '@/utils/utils'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
-import {_Arr} from '@alexandreannic/ts-utils'
+import {Seq} from '@alexandreannic/ts-utils'
 import {ProtHHS2BarChart, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
-export const getIdpsAnsweringRegistrationQuestion = (base: _Arr<ProtHHS2Enrich>) => {
+export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
     .flatMap(_ => _.persons.map(p => ({..._, ...p})))
     .filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')

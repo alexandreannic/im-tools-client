@@ -32,7 +32,7 @@ export const StepperActions = ({
   return (
     <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 3}}>
       {_stepper.currentStep > 0 && !hidePrev && (
-        <AaBtn loading={loadingPrev} sx={{marginRight: 'auto'}} onClick={prev ? () => prev(_stepper.prev) : _stepper.prev} color="primary" icon="keyboard_arrow_left">
+        <AaBtn loading={loadingPrev} sx={{marginRight: 'auto'}} onClick={prev ? () => prev(_stepper.prev) : _stepper.prev} color="primary" icon="keyboardSeqow_left">
           {m.previous}
         </AaBtn>
       )}

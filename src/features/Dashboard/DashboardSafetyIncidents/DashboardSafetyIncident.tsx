@@ -1,6 +1,6 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useMemo, useState} from 'react'
-import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {DashboardLayout} from '../shared/DashboardLayout'
 import {DashboardFilterOptions} from '../shared/DashboardFilterOptions'
@@ -23,7 +23,7 @@ import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafety
 
 export interface DashboardSafetyIncidentsPageProps {
   filters: OptionFilters
-  data: _Arr<KoboAnswer<KoboSafetyIncidentHelper.Type>>
+  data: Seq<KoboAnswer<KoboSafetyIncidentHelper.Type>>
   computed: NonNullable<ReturnType<typeof useDashboardSafetyIncident>>
 }
 
@@ -47,14 +47,14 @@ export const DashboardSafetyIncident = () => {
   const {m, formatLargeNumber, formatDateTime, formatDate} = useI18n()
 
   const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.safety_incident))
-  const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
+  const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const _answers = useFetcher((filter: Partial<Period>) => api.kobo.answer.searchSafetyIncident({
     filters: {
       start: filter.start,
       end: filter.end,
     }
-  }).then(_ => Arr(_.data)) as Promise<DashboardSafetyIncidentsPageProps['data']>)
+  }).then(_ => seq(_.data)) as Promise<DashboardSafetyIncidentsPageProps['data']>)
 
   useEffect(() => {
     _period.fetch()
@@ -82,7 +82,7 @@ export const DashboardSafetyIncident = () => {
   }
 
   const data: DashboardSafetyIncidentsPageProps['data'] | undefined = useMemo(() => {
-    return map(_answers.entity, _ => Arr(DashboardFilterHelper.filterData(_.get, filterShape, optionFilter)))
+    return map(_answers.entity, _ => seq(DashboardFilterHelper.filterData(_.get(), filterShape, optionFilter)))
   }, [_answers.entity, optionFilter])
 
   const computed = useDashboardSafetyIncident({data: _answers.entity, period: periodFilter})

@@ -4,7 +4,7 @@ import {useI18n} from '../../../core/i18n'
 import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
-import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
 import {chain, toPercent, Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
@@ -30,7 +30,8 @@ import {usePersistentState} from 'react-persistent-state'
 import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {Panel} from '@/shared/Panel'
+import ageGroups = Person.ageGroups
+import ageGroup = Person.ageGroup
 
 export const today = new Date()
 
@@ -68,8 +69,14 @@ export const MpcaDashboard = () => {
   // }, [periodFilter])
 
   const {defaultFilter, filterShape} = useMemo(() => {
-    const d = mappedData ?? Arr([])
-    const filterShape: {icon?: string, label: string, property: keyof Mpca, multiple?: boolean, options: SheetOptions[]}[] = [{
+    const d = mappedData ?? seq([])
+    const filterShape: {
+      icon?: string,
+      label: string,
+      property: keyof Mpca,
+      multiple?: boolean,
+      options: SheetOptions[]
+    }[] = [{
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
       options: Object.keys(MpcaRowSource).map(_ => SheetUtils.buildCustomOption(_, ctx.formNameTranslation[_]))
     }, {
@@ -90,7 +97,7 @@ export const MpcaDashboard = () => {
     }]
     return {
       filterShape,
-      defaultFilter: Arr(filterShape).reduceObject<any>(_ => [_.property, []]),
+      defaultFilter: seq(filterShape).reduceObject<any>(_ => [_.property, []]),
     }
   }, [mappedData])
 
@@ -104,7 +111,7 @@ export const MpcaDashboard = () => {
         const value = d[shape.property] as any
         if (filters[shape.property].length <= 0) return true
         if (shape.multiple)
-          return Arr(filters[shape.property]).intersect(value).length > 0
+          return seq(filters[shape.property]).intersect(value).length > 0
         return filters[shape.property].includes(value)
       })
     })
@@ -191,7 +198,7 @@ export const _MPCADashboard = ({
   getAmount: (_: Mpca) => number | undefined
   amountType: AmountType
   currency: Currency
-  data: _Arr<Mpca>
+  data: Seq<Mpca>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const ctx = useMPCAContext()
@@ -238,7 +245,7 @@ export const _MPCADashboard = ({
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = data.groupBy(d => format(d.date, 'yyyy-MM'))
                 return new Enum(gb)
-                  .transform((k, v) => [k, Arr(v).sum(_ => (getAmount(_) ?? 0))])
+                  .transform((k, v) => [k, seq(v).sum(_ => (getAmount(_) ?? 0))])
                   .sort(([ka], [kb]) => ka.localeCompare(kb))
                   .entries()
                   .map(([k, v]) => ({name: k, amount: v}))
@@ -262,17 +269,7 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <SlidePanel title={m.disaggregation}>
               <Lazy deps={[computed.persons, tableAgeGroup]} fn={() => {
-                const gb = Utils.groupBy({
-                  data: computed.persons,
-                  groups: [
-                    {
-                      by: _ => Person.ageToAgeGroup(_.age, Person.ageGroup[tableAgeGroup]) ?? '',
-                      sort: (a, b) => Object.keys(Person.ageGroup[tableAgeGroup]).indexOf(a) - Object.keys(Person.ageGroup[tableAgeGroup]).indexOf(b)
-                    },
-                    {by: _ => _.gender ?? Person.Gender.Other},
-                  ],
-                  finalTransform: _ => _.length
-                })
+                const gb = Person.groupByGenderAndGroup(ageGroup[tableAgeGroup])(computed.persons)
                 return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
               }}>
                 {_ =>
@@ -330,8 +327,8 @@ export const _MPCADashboard = ({
             {/*</SlidePanel>*/}
             <SlidePanel title={`${m.mpca.assistanceByLocation}`}>
               <Lazy deps={[data, currency, getAmount]} fn={() => {
-                const by = data.groupBy(_ => _.oblastIso)
-                return new Enum(by).transform((k, v) => [k, makeChartData({value: Arr(v).sum(x => getAmount(x) ?? 0)})]).get()
+                const by = data.groupBy(_ => _.oblastIso!)
+                return new Enum(by).transform((k, v) => [k, makeChartData({value: seq(v).sum(x => getAmount(x) ?? 0)})]).get()
               }}>
                 {_ => <UkraineMap data={_} sx={{mx: 2}} maximumFractionDigits={0} base={totalAmount}/>}
               </Lazy>

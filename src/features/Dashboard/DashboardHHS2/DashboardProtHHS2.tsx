@@ -1,6 +1,6 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useProtHHS2Data} from './useProtHHS2Data'
 import {DashboardProtHHS2Sample} from './DashboardProtHHS2Sample'
@@ -81,7 +81,7 @@ type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape> & {
 export interface DashboardPageProps {
   periodFilter: Partial<Period>
   optionFilter: OptionFilters
-  data: _Arr<ProtHHS2Enrich>
+  data: Seq<ProtHHS2Enrich>
   computed: NonNullable<ReturnType<typeof useProtHHS2Data>>
 }
 
@@ -90,7 +90,7 @@ export const DashboardProtHHS2 = () => {
   const {m} = useI18n()
   const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.protection_hhs2_1))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
-  const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
+  const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
   const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.answer.searchProtHhs2({
     filters: {
@@ -139,10 +139,10 @@ export const DashboardProtHHS2 = () => {
     return table
   }, [_answers.entity])
 
-  const data: _Arr<ProtHHS2Enrich> | undefined = useMemo(() => {
+  const data: Seq<ProtHHS2Enrich> | undefined = useMemo(() => {
     return map(database, _ => {
       const {hhComposition, ...basicFilters} = optionFilter
-      const filtered = Arr(DashboardFilterHelper.filterDataFromLokiJs(_, filterShape, basicFilters)) as _Arr<ProtHHS2Enrich>
+      const filtered = seq(DashboardFilterHelper.filterDataFromLokiJs(_, filterShape, basicFilters)) as Seq<ProtHHS2Enrich>
       if (hhComposition && hhComposition.length > 0)
         return filtered.filter(d => !!d.persons.find(p => {
           if (!p.age) return false

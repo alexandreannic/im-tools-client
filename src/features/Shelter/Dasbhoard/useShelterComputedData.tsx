@@ -1,6 +1,6 @@
-import {ShelterRow, UseShelterData} from '@/features/Shelter/useShelterData'
+import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {useMemo} from 'react'
-import {_Arr, fnSwitch} from '@alexandreannic/ts-utils'
+import {fnSwitch, Seq} from '@alexandreannic/ts-utils'
 import {Person} from '@/core/type'
 
 export type UseShelterComputedData = ReturnType<typeof useShelterComputedData>
@@ -8,7 +8,7 @@ export type UseShelterComputedData = ReturnType<typeof useShelterComputedData>
 export const useShelterComputedData = ({
   data
 }: {
-  data?: _Arr<ShelterRow>
+  data?: Seq<ShelterRow>
 }) => {
   return useMemo(() => {
     if (!data) return

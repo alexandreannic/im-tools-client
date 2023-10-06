@@ -5,11 +5,11 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardH
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useI18n} from '@/core/i18n'
-import {_Arr, Arr} from '@alexandreannic/ts-utils'
+import {seq, Seq} from '@alexandreannic/ts-utils'
 
 export interface SnapshotProtMonitoContext {
   computed: NonNullable<UseProtHHS2Data>
-  data: _Arr<ProtHHS2Enrich>
+  data: Seq<ProtHHS2Enrich>
   periodFilter: Period
 }
 
@@ -34,7 +34,7 @@ export const SnapshotProtMonitoringProvider = ({
       start: filter.start,
       end: filter.end,
     }
-  }).then(_ => Arr(_.data.map(enrichProtHHS_2_1)))
+  }).then(_ => seq(_.data.map(enrichProtHHS_2_1)))
 
   const _answers = useFetcher(request)
 

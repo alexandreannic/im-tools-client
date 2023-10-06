@@ -1,8 +1,8 @@
 import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 import React from 'react'
 import {Box, BoxProps, Theme, useTheme} from '@mui/material'
-import {Arr} from '@alexandreannic/ts-utils'
 import {chartConfig} from './chartConfig'
+import {seq} from '@alexandreannic/ts-utils'
 
 const RADIAN = Math.PI / 180
 
@@ -80,7 +80,7 @@ export const AAStackedBarChartSplit = ({
     '#FF6F61',
     '#7FDBFF',
   ]
-  const allKeys = Arr(data.flatMap(({key, ...other}) => Object.keys(other))).distinct(_ => _)
+  const allKeys = seq(data.flatMap(({key, ...other}) => Object.keys(other))).distinct(_ => _)
   height = height ?? width ?? 340
   width = width ?? '100%'
   return (

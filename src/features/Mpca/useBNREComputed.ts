@@ -1,11 +1,9 @@
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {useMemo} from 'react'
 import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {Person} from '../../core/type'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
-import {_Arr} from '@/alexlib-labo/Arr'
 
 export const BNREOblastToISO: Record<keyof typeof bn_ReOptions['ben_det_prev_oblast'], OblastISO> = OblastIndex.koboOblastIndexIso
 
@@ -14,7 +12,7 @@ export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 export const useBNREComputed = ({
   data,
 }: {
-  data?: _Arr<Mpca> | undefined
+  data?: Seq<Mpca> | undefined
 }) => useMemo(() => {
   if (!data) return
   // const flatData = data.flatM()
@@ -34,7 +32,7 @@ export const useBNREComputed = ({
           DrcSupportSuggestion.ThreeMonthsUnAgency,
           undefined
         ].includes(_.deduplication?.suggestion)
-      ).groupBy(_ => _.taxId)
+      ).groupBy(_ => _.taxId!)
       return new Enum(grouped)
         .transform((k, v) => [k, v.length])
         .filter((k, v) => v > 1)

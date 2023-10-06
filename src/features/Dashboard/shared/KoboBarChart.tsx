@@ -1,5 +1,5 @@
 import {ChartDataVal, ChartTools} from '../../../core/chartTools'
-import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
+import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../../core/i18n'
 import React, {useMemo} from 'react'
 import {chain} from '@/utils/utils'
@@ -31,7 +31,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
   limit?: number
   questionType?: 'multiple' | 'single'
   sortBy?: typeof ChartTools.sortBy.value
-  data: _Arr<D>,
+  data: Seq<D>,
   mergeOptions?: Partial<Record<keyof O[K], keyof O[K]>>
   overrideLabel?: Partial<Record<keyof O[K], string>>
   filterValue?: (keyof O[K])[]
@@ -42,11 +42,11 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
 }) => {
   const {m} = useI18n()
   const res = useMemo(() => {
-    const source = Arr(data).map(d => {
+    const source = seq(data).map(d => {
       if (d[question] === undefined) return
       if (mergeOptions) {
         if (questionType === 'multiple') {
-          return Arr(d[question] as string[]).map(_ => (mergeOptions as any)[_] ?? _).distinct(_ => _)
+          return seq(d[question] as string[]).map(_ => (mergeOptions as any)[_] ?? _).distinct(_ => _)
         }
         return (mergeOptions as any)[d[question]] ?? d[question]
       }
@@ -75,7 +75,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
       data={res}
       onClickData={_ => onClickData?.(_ as K)}
       labels={!onToggle ? undefined :
-        Arr(Enum.keys(res)).reduceObject((option => [
+        seq(Enum.keys(res)).reduceObject((option => [
             option,
             <Checkbox
               key={option as string}

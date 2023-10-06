@@ -11,7 +11,7 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
 import {usePersistentState} from 'react-persistent-state'
 import {useI18n} from '@/core/i18n'
-import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {ChartTools, makeChartData} from '@/core/chartTools'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
@@ -39,7 +39,7 @@ export const ShelterDashboard = () => {
   const {m} = useI18n()
 
   const {defaultFilter, filterShape} = useMemo(() => {
-    const d = ctxData.mappedData ?? Arr([])
+    const d = ctxData.mappedData ?? seq([])
     const filterShape: {icon?: string, label: string, property: keyof Mpca, multiple?: boolean, options: SheetOptions[]}[] = [{
       icon: 'location_on', label: 'Oblast', property: 'oblast',
       options: SheetUtils.buildOptions(d.map(_ => _.oblast!).compact().distinct(_ => _).sort())
@@ -49,7 +49,7 @@ export const ShelterDashboard = () => {
     }]
     return {
       filterShape,
-      defaultFilter: Arr(filterShape).reduceObject<any>(_ => [_.property, []]),
+      defaultFilter: seq(filterShape).reduceObject<any>(_ => [_.property, []]),
     }
   }, [ctxData.mappedData])
 
@@ -57,7 +57,7 @@ export const ShelterDashboard = () => {
 
   const filteredData = useMemo(() => {
     if (!ctxData.mappedData) return
-    return Arr(ctxData.mappedData).filter(d => {
+    return seq(ctxData.mappedData).filter(d => {
       if (!d.nta) return false
       if (periodFilter?.start && periodFilter.start.getTime() >= d.nta.submissionTime.getTime()) return false
       if (periodFilter?.end && periodFilter.end.getTime() <= d.nta.submissionTime.getTime()) return false
@@ -132,7 +132,7 @@ export const _ShelterDashboard = ({
   computed,
 }: {
   currency: Currency
-  data: _Arr<ShelterRow>
+  data: Seq<ShelterRow>
   computed: NonNullable<UseShelterComputedData>
 }) => {
   const {m, formatLargeNumber} = useI18n()
@@ -154,16 +154,7 @@ export const _ShelterDashboard = ({
           </SlideWidget>
         </Div>
         <Lazy deps={[data, tableType]} fn={() => {
-          const gb = Utils.groupBy({
-            data: computed.persons, groups: [
-              {
-                by: _ => Person.ageToAgeGroup(_.age, Person.ageGroup[tableType]) ?? '',
-                sort: (a, b) => Object.keys(Person.ageGroup[tableType]).indexOf(a) - Object.keys(Person.ageGroup[tableType]).indexOf(b)
-              },
-              {by: _ => _.gender ?? Person.Gender.Other},
-            ],
-            finalTransform: _ => _.length
-          })
+          const gb = Person.groupByGenderAndGroup(Person.ageGroup[tableType])(computed.persons)
           return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
         }}>
           {_ =>
@@ -191,7 +182,7 @@ export const _ShelterDashboard = ({
           }
         </Lazy>
         <Lazy deps={[data]} fn={() => {
-          const contractors = data.map(_ => Arr([_.ta?.tags.contractor1 ?? undefined, _.ta?.tags.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
+          const contractors = data.map(_ => seq([_.ta?.tags.contractor1 ?? undefined, _.ta?.tags.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
           return {
             count: contractors.length,
             contractors: ChartTools.multiple({
@@ -237,7 +228,7 @@ export const _ShelterDashboard = ({
         <Panel title={m._shelter.assessmentLocations}>
           <PanelBody>
             <Lazy deps={[data]} fn={() => {
-              const gb = Arr(data).groupBy(_ => fnSwitch(_.nta?.ben_det_oblast!, OblastIndex.koboOblastIndexIso, () => undefined))
+              const gb = seq(data).groupBy(_ => fnSwitch(_.nta?.ben_det_oblast!, OblastIndex.koboOblastIndexIso, () => undefined)!)
               return new Enum(gb).transform((k, v) => [k, makeChartData({value: v.length})]).get()
             }}>
               {_ => <UkraineMap data={_} sx={{mx: 1}} maximumFractionDigits={0} base={data.length}/>}

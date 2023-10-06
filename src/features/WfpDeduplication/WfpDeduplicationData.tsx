@@ -6,7 +6,7 @@ import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {Txt} from 'mui-extension'
 import {DrcOffice} from '@/core/drcUa'
 
@@ -31,7 +31,7 @@ export const WfpDeduplicationData = () => {
 
   const existingOrga = useMemo(() => {
     if (!_search.entity) return
-    return Arr(_search.entity.data)
+    return seq(_search.entity.data)
       .map(_ => _.existingOrga)
       .distinct(_ => _)
       .compact()

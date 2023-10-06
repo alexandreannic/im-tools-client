@@ -1,7 +1,7 @@
 import {Box} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {ViewMoreText} from '@/shared/ViewMoreText'
-import {_Arr} from '@alexandreannic/ts-utils'
+import {Seq} from '@alexandreannic/ts-utils'
 import React, {memo, ReactNode, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {AaBtn} from '@/shared/Btn/AaBtn'
@@ -9,7 +9,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 const pageSize = 5
 
 export interface CommentsPanelProps {
-  data: _Arr<{
+  data: Seq<{
     id: number | string
     title: string
     date?: Date

@@ -1,12 +1,9 @@
 import {ReactNode, useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {useI18n} from '@/core/i18n'
-import {Enum} from '@alexandreannic/ts-utils'
-import {DrcProject} from '@/core/drcUa'
 import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
-import {KoboApiSdk} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {projects} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
 import {kobo} from '@/koboDrcUaFormId'
 

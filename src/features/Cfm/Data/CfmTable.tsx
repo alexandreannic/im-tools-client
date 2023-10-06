@@ -2,7 +2,7 @@ import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {ReactNode, useCallback, useMemo} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
-import {Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmInternalOptions'
@@ -20,7 +20,6 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo} from '@/koboDrcUaFormId'
-import {MealCfmExternalOptions} from '@/core/koboModel/MealCfmExternal/MealCfmExternalOptions'
 import {Autocomplete} from '@mui/material'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
@@ -220,7 +219,7 @@ export const CfmTable = ({}: any) => {
             {
               width: 170,
               type: 'select_one',
-              options: () => Arr(ctx.mappedData).map(_ => _.tags?.focalPointEmail).compact().distinct(_ => _).map(SheetUtils.buildOption),
+              options: () => seq(ctx.mappedData).map(_ => _.tags?.focalPointEmail).compact().distinct(_ => _).map(SheetUtils.buildOption),
               renderValue: _ => _.tags?.focalPointEmail,
               head: m.focalPoint,
               id: 'focalPoint',
@@ -359,7 +358,7 @@ export const CfmTable = ({}: any) => {
                     </>
                   )}
                   <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>
-                    <TableIconBtn children="keyboard_arrow_right"/>
+                    <TableIconBtn children="keyboardSeqow_right"/>
                   </NavLink>
                 </>
               )

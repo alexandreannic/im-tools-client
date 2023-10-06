@@ -1,10 +1,10 @@
-import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
+import {Enum, map, mapFor} from '@alexandreannic/ts-utils'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React, {useMemo} from 'react'
 import {useI18n} from '../../core/i18n'
 import {usePdfContext} from '../../shared/PdfLayout/PdfLayout'
 import {Box, Divider, Icon, useTheme} from '@mui/material'
-import {PdfSlide, PdfSlideBody, Div, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
+import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {UkraineMap} from '../../shared/UkraineMap/UkraineMap'
 import {ScLineChart} from '../../shared/Chart/ScLineChart'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
@@ -29,11 +29,11 @@ export const ProtSnapshotDisplacement = ({
   const theme = useTheme()
 
   const {_12_3_1_dateDeparture, maxPeopleByOblast} = useMemo(() => {
-    const oblastPopulations = Arr([...Enum.values(computed.oblastCurrent), ...Enum.values(computed.oblastOrigins)])
+    const oblastPopulations = seq([...Enum.values(computed.oblastCurrent), ...Enum.values(computed.oblastOrigins)])
       .map(_ => _.value)
       .compact()
     return {
-      _12_3_1_dateDeparture: Arr(Object.values(computed._12_3_1_dateDeparture).map(_ => _.label!).sort((a, b) => a?.localeCompare(b))),
+      _12_3_1_dateDeparture: seq(Object.values(computed._12_3_1_dateDeparture).map(_ => _.label!).sort((a, b) => a?.localeCompare(b))),
       maxPeopleByOblast: Math.max(data.sum(_ => _.persons.length))
     }
   }, [computed])
@@ -49,8 +49,8 @@ export const ProtSnapshotDisplacement = ({
                 {label: m.departureFromAreaOfOrigin, key: 'dateOfDeparture', curve: computed._12_3_1_dateDeparture},
               ]}/>
               <Txt color="hint" size="small" sx={{display: 'flex', justifyContent: 'space-between'}}>
-                {map(_12_3_1_dateDeparture.head, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
-                {map(_12_3_1_dateDeparture.last, _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
+                {map(_12_3_1_dateDeparture.head(), _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
+                {map(_12_3_1_dateDeparture.last(), _ => <Box>{format(new Date(_), 'LLL yyyy')}</Box>)}
               </Txt>
             </SlidePanel>
             <SlidePanelTitle>{m.protHHSnapshot.percentagePopulationByOblast}</SlidePanelTitle>

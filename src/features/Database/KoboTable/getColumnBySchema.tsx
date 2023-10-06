@@ -5,7 +5,7 @@ import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
-import {Arr, map, mapFor} from '@alexandreannic/ts-utils'
+import {map, mapFor, seq} from '@alexandreannic/ts-utils'
 import {formatDate, formatDateTime} from '@/core/i18n/localization/en'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
@@ -88,7 +88,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="functions" tooltip="calculate"/>,
           head: Utils.removeHtml(getHead(translateQuestion(q.name))),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
-          options: () => Arr(data).map(_ => _[q.name] ?? SheetUtils.blankValue).distinct(_ => _).map(_ => ({label: _, value: _})),
+          options: () => seq(data).map(_ => _[q.name] ?? SheetUtils.blankValue).distinct(_ => _).map(_ => ({label: _, value: _})),
         }
       }
       case 'select_one_from_file': {
