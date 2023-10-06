@@ -5,10 +5,17 @@ import createEmotionCache from '@/core/createEmotionCache'
 import createEmotionServer from '@emotion/server/create-instance'
 import {AppType} from 'next/app'
 import {MyAppProps} from '@/pages/_app'
+import {Alert, Txt} from 'mui-extension'
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: JSX.Element[];
 }
+
+const isStupidMicrosoftBrowser = typeof window !== 'undefined' && (
+  window.navigator.userAgent.includes('Edg') ||
+  window.navigator.userAgent.includes('MSIE') ||
+  window.navigator.userAgent.includes('Trident')
+)
 
 export default function MyDocument({emotionStyleTags}: MyDocumentProps) {
   return (
@@ -17,7 +24,7 @@ export default function MyDocument({emotionStyleTags}: MyDocumentProps) {
         <meta charSet="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <base href="/"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com"/>
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
         {/*<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>*/}
         <link rel="icon" type="image/x-icon" href="/static/favicon.svg"/>
@@ -25,6 +32,14 @@ export default function MyDocument({emotionStyleTags}: MyDocumentProps) {
         <meta name="emotion-insertion-point" content=""/>
       </Head>
       <body>
+      {isStupidMicrosoftBrowser && (
+        <Alert persistentDelete deletable type="warning" dense sx={{minHeight: 30, height: 30}}>
+          This app may not working well on Edge and IE. Please install a
+          <Txt link sx={{textDecoration: 'underline'}}>
+            <a href="https://www.mozilla.org/en-US/firefox/new/">real browser</a>
+          </Txt>, not a Microsoft one.
+        </Alert>
+      )}
       <Main/>
       <NextScript/>
       <script async type="text/javascript" src="https://www.gstatic.com/charts/loader.js"/>
