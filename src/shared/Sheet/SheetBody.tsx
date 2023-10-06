@@ -21,10 +21,10 @@ export const SheetBody = (() => {
   }) => {
     return (
       <>
-        {data.map((item, i) => (
+        {data.map((item, rowI) => (
           <tr
             className="tr"
-            key={getRenderRowKey ? getRenderRowKey(item, i) : i}
+            key={getRenderRowKey ? getRenderRowKey(item, rowI) : rowI}
             // onClick={e => onClickRows?.(item, e)}
           >
             {select && (
@@ -33,7 +33,7 @@ export const SheetBody = (() => {
               </td>
             )}
             {columns.map((_, i) => {
-              const render = _.render(item, i)
+              const render = _.render(item, rowI)
               return (
                 <td
                   title={_.tooltip !== null && (_.tooltip?.(item) ?? (render as any))}

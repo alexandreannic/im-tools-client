@@ -54,12 +54,12 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
 
 interface SheetColumnPropsSelectOne<T extends SheetRow> extends SheetColumnPropsBase<T> {
   type?: Exclude<SheetPropertyType, 'date'>
-  renderValue?: (_: T) => string | string[] | Date | number | undefined
+  renderValue?: (_: T, i: number) => string | string[] | Date | number | undefined
 }
 
 interface SheetColumnPropsDate<T extends SheetRow> extends SheetColumnPropsBase<T> {
   type: 'date'
-  renderValue?: (_: T) => Date | undefined
+  renderValue?: (_: T, i: number) => Date | undefined
 }
 
 export type SheetColumnProps<T extends SheetRow> = SheetColumnPropsSelectOne<T> | SheetColumnPropsDate<T>
@@ -117,8 +117,8 @@ export class SheetUtils {
     return {value: _, label: label ?? _}
   }
 
-  static readonly getValueGetter = <T extends SheetRow>(col: Pick<SheetColumnProps<T>, 'render' | 'renderValue'>, colName: string) => {
-    return col.renderValue ?? col.render as any ?? ((_: T) => _[colName])
+  static readonly getValueGetter = <T extends SheetRow>(col: Pick<SheetColumnProps<T>, 'render' | 'renderValue'>, colName: string): (_: T, i?: number) => any => {
+    return col.renderValue ?? col.render as any ?? ((_: T, i: number) => _[colName])
   }
 }
 
@@ -189,7 +189,7 @@ const _Sheet = <T extends SheetRow>({
         data: ctx.data.filteredAndSortedData,
         schema: ctx.columns
           .filter(_ => _.renderExport)
-          .map(q => ({
+          .map((q, i) => ({
             head: q.head as string ?? q.id,
             render: (row: any) => {
               // if (!q.renderExport || !q.renderValue) return
@@ -202,7 +202,7 @@ const _Sheet = <T extends SheetRow>({
                 return q.renderExport(row)
               }
               if (q.renderValue) {
-                return q.renderValue(row)
+                return q.renderValue(row, i)
               }
               return row[q.id]
             }
@@ -218,7 +218,7 @@ const _Sheet = <T extends SheetRow>({
 
   return (
     <>
-      <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center'}}>
+      <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center', width: '100%'}}>
         <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
           <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
         </Badge>

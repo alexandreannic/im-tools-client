@@ -41,7 +41,7 @@ export const useSheetData = <T extends SheetRow>({
 
   const filteredData = useMemo(() => {
     if (!data) return
-    return multipleFilters(data, Enum.keys(filters).map(k => {
+    return multipleFilters(data, Enum.keys(filters).map((k, i) => {
       const filter = filters[k]
       if (filter === undefined) return
       const type = columnsIndex[k].type

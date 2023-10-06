@@ -19,7 +19,7 @@ export class AILocationHelper {
     }
     return res
   }
-  
+
   private static readonly settlementsIndex = (() => {
     const index: Record<string, number[]> = {}
     for (var k in settlements) {
@@ -44,6 +44,7 @@ export class AILocationHelper {
       raionName = 'Chernivetskyi'
     }
     const oblastIso = OblastIndex.searchISOByName(oblastName)
+    console.log('>>>', oblastIso)
     const list = Enum.values(raions).filter(_ => _.parent === oblastIso)
     return list.find(_ => _.en === raionName)
   }

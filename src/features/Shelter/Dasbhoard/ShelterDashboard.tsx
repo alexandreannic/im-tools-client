@@ -154,13 +154,16 @@ export const _ShelterDashboard = ({
           </SlideWidget>
         </Div>
         <Lazy deps={[data, tableType]} fn={() => {
-          const gb = Utils.groupBy(computed.persons, [
-            {
-              by: _ => Person.ageToAgeGroup(_.age, Person.ageGroup[tableType]) ?? '',
-              sort: (a, b) => Object.keys(Person.ageGroup[tableType]).indexOf(a) - Object.keys(Person.ageGroup[tableType]).indexOf(b)
-            },
-            {by: _ => _.gender ?? Person.Gender.Other},
-          ], _ => _.length)
+          const gb = Utils.groupBy({
+            data: computed.persons, groups: [
+              {
+                by: _ => Person.ageToAgeGroup(_.age, Person.ageGroup[tableType]) ?? '',
+                sort: (a, b) => Object.keys(Person.ageGroup[tableType]).indexOf(a) - Object.keys(Person.ageGroup[tableType]).indexOf(b)
+              },
+              {by: _ => _.gender ?? Person.Gender.Other},
+            ],
+            finalTransform: _ => _.length
+          })
           return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
         }}>
           {_ =>

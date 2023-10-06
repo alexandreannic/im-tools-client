@@ -32,13 +32,13 @@ export const NumberChoicesPopover = <T, >({
   anchorEl,
   onClose,
 }: {
-  mapValues?: (_: any) => any
+  mapValues?: (_: any, i: number) => any
   question: KeyOf<T>
   data: T[]
 } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
   const {m, formatLargeNumber} = useI18n()
   const chart = useMemo(() => {
-    const mapped = Arr(data).map(_ => mapValues ? mapValues(_) : _[question]).filter(_ => _ !== undefined && _ !== '').map(_ => +_)
+    const mapped = Arr(data).map((_, i) => mapValues ? mapValues(_, i) : _[question]).filter(_ => _ !== undefined && _ !== '').map(_ => +_)
     const min = Math.min(...mapped)
     const max = Math.max(...mapped)
     const sum = mapped.sum()

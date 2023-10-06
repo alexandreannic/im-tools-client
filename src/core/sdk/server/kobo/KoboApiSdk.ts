@@ -1,12 +1,7 @@
 import {ApiClient} from '../ApiClient'
-import {ApiPaginate, ApiPagination, UUID} from '../../../type'
+import {ApiPaginate, ApiPagination, UUID} from '@/core/type'
 import {ApiKoboForm, Kobo, KoboAnswer, KoboAnswerId, KoboId} from './Kobo'
-import {mapMPCA_NFI} from '../../../koboModel/MPCA_NFI/MPCA_NFIMapping'
-import {mapMPCA_NFI_Myko} from '../../../koboModel/MPCA_NFI_Myko/MPCA_NFI_MykoMapping'
-import {mapMPCA_NFI_NAA} from '../../../koboModel/MPCA_NFI_NAA/MPCA_NFI_NAAMapping'
 import {KoboApiForm} from './KoboApi'
-import {mapMPCA_NFI_Old} from '../../../koboModel/MPCA_NFI_Old/MPCA_NFI_OldMapping'
-import {mapProtHHS_2_1} from '../../../koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
 
 export interface FilterBy {
   column: string
@@ -34,19 +29,6 @@ export interface FnMap<T> {
 export class KoboApiSdk {
 
   constructor(private client: ApiClient) {
-  }
-
-  static readonly serverRefs = {
-    prod: '4820279f-6c3d-47ba-8afe-47f86b16ab5d'
-  }
-
-  static readonly koboFormRefs = {
-    Prot_CommunityLevelMonito: 'aQHBhYgevdzw8TR2Vq2ZdR',
-    Prot_HHS2: 'aQDZ2xhPUnNd43XzuQucVR',
-    MPCA_NFI: 'a4Sx3PrFMDAMZEGsyzgJJg',
-    MPCA_NFI_NAA: 'aBGVXW2N26DaLehmKneuyB',
-    MPCA_NFI_Myko: 'a8WAWB9Yxu2jkgk4Ei8GTk',
-    MPCA_NFI_Old: 'a3h8Ykmp2C8NFiw5DDGBLz',
   }
 
   /** @deprecated */
@@ -102,59 +84,6 @@ export class KoboApiSdk {
           })
         }
       )
-  }
-
-  readonly getAnswersHH2 = (filters: FiltersProps = {}) => {
-    return this.getAnswersFromKoboApi({
-      serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.Prot_HHS2,
-      fnMap: mapProtHHS_2_1,
-      ...filters,
-    })
-  }
-  readonly getAnswersShelterNTA = (filters: FiltersProps = {}) => {
-    return this.getAnswersFromKoboApi({
-      serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.Prot_HHS2,
-      fnMap: mapProtHHS_2_1,
-      ...filters,
-    })
-  }
-
-  readonly getAnswersMPCA_NFI_Old = (filters: FiltersProps = {}) => {
-    return this.getAnswersFromKoboApi({
-      serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.MPCA_NFI_Old,
-      fnMap: mapMPCA_NFI_Old,
-      ...filters,
-    })
-  }
-
-  readonly getAnswersMPCA_NFI = (filters: FiltersProps = {}) => {
-    return this.getAnswersFromKoboApi({
-      serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.MPCA_NFI,
-      fnMap: mapMPCA_NFI,
-      ...filters,
-    })
-  }
-
-  readonly getAnswersMPCA_NFI_Myko = (filters: FiltersProps = {}) => {
-    return this.getAnswersFromKoboApi({
-      serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.MPCA_NFI_Myko,
-      fnMap: mapMPCA_NFI_Myko,
-      ...filters,
-    })
-  }
-
-  readonly getAnswersMPCA_NFI_NAA = (filters: FiltersProps = {}) => {
-    return this.getAnswersFromKoboApi({
-      serverId: KoboApiSdk.serverRefs.prod,
-      formId: KoboApiSdk.koboFormRefs.MPCA_NFI_NAA,
-      fnMap: mapMPCA_NFI_NAA,
-      ...filters,
-    })
   }
 
   readonly getForm = (serverId: UUID, formId: KoboId): Promise<KoboApiForm> => {

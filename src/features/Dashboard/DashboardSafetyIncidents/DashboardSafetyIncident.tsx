@@ -46,7 +46,7 @@ export const DashboardSafetyIncident = () => {
   const {api} = useAppSettings()
   const {m, formatLargeNumber, formatDateTime, formatDate} = useI18n()
 
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.safetyIncident))
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.safety_incident))
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const _answers = useFetcher((filter: Partial<Period>) => api.kobo.answer.searchSafetyIncident({

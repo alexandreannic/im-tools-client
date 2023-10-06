@@ -46,7 +46,7 @@ const ShelterSidebar = () => {
             <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
           )}
         </NavLink>
-        <Link href={conf.linkToFeature(AppFeatureId.kobo_database, databaseModule.siteMap.access.absolute(kobo.drcUa.server.prod, kobo.drcUa.form.shelterNTA))}>
+        <Link href={conf.linkToFeature(AppFeatureId.kobo_database, databaseModule.siteMap.access.absolute(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta))}>
           <SidebarItem icon="person_add" iconEnd="open_in_new">{m.accesses}</SidebarItem>
         </Link>
         <SidebarHr/>
@@ -75,8 +75,8 @@ export const Shelter = () => {
   const _schemas = useFetcher(async () => {
     if (!access) return
     const [ta, nta] = await Promise.all([
-      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelterTA),
-      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelterNTA),
+      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
+      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta),
     ])
     return {ta, nta}
   })
@@ -107,8 +107,8 @@ export const Shelter = () => {
               <Route index element={<Navigate to={shelterModule.siteMap.dashboard}/>}/>
               <Route path={shelterModule.siteMap.dashboard} element={<ShelterDashboard/>}/>
               <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
-              <Route path={shelterModule.siteMap.nta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelterNTA} schema={_schemas.entity.nta}/>}/>
-              <Route path={shelterModule.siteMap.ta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelterTA} schema={_schemas.entity.ta}/>}/>
+              <Route path={shelterModule.siteMap.nta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_nta} schema={_schemas.entity.nta}/>}/>
+              <Route path={shelterModule.siteMap.ta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_ta} schema={_schemas.entity.ta}/>}/>
             </Routes>
           </ShelterProvider>
         )}

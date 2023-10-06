@@ -53,8 +53,8 @@ export const CfmTable = ({}: any) => {
 
   const _refresh = useAsync(async () => {
     await Promise.all([
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.cfmInternal),
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.cfmExternal),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.meal_cfmInternal),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.meal_cfmExternal),
     ])
     await ctx.data.fetch({force: true, clean: false})
   })

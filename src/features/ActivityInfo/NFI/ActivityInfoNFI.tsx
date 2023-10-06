@@ -2,14 +2,13 @@ import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
-import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
+import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
 import {Box, Icon} from '@mui/material'
 import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
-import {MPCA_NFIOptions} from '@/core/koboModel/MPCA_NFI/MPCA_NFIOptions'
+import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
-import {ActivityInfoHelper} from '../shared/activityInfoHelper'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
@@ -17,9 +16,10 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
 import {AaInput} from '@/shared/ItInput/AaInput'
-import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
+import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
+import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 
 interface Person {
   age: number
@@ -29,16 +29,16 @@ interface Person {
 interface Answer {
   id: KoboAnswerId
   start: Date
-  oblast: keyof typeof MPCA_NFIOptions['oblast'] | undefined
-  raion: keyof typeof MPCA_NFIOptions['raion'] | undefined
-  hromada: keyof typeof MPCA_NFIOptions['hromada'] | undefined
+  oblast: keyof typeof bn_OldMpcaNfiOptions['oblast'] | undefined
+  raion: keyof typeof bn_OldMpcaNfiOptions['raion'] | undefined
+  hromada: keyof typeof bn_OldMpcaNfiOptions['hromada'] | undefined
   settlement: string,
-  HKF_: NonNullable<MPCA_NFI['HKF_']>
-  HKMV_: NonNullable<MPCA_NFI['HKMV_']>
-  BK1: NonNullable<MPCA_NFI['BK_Baby_Kit_']>
-  BK2: NonNullable<MPCA_NFI['BK_Baby_Kit']>
-  BK3: NonNullable<MPCA_NFI['BK_Baby_Kit_001']>
-  BK4: NonNullable<MPCA_NFI['BK_Baby_Kit_002']>
+  HKF_: NonNullable<Bn_OldMpcaNfi['HKF_']>
+  HKMV_: NonNullable<Bn_OldMpcaNfi['HKMV_']>
+  BK1: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_']>
+  BK2: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit']>
+  BK3: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_001']>
+  BK4: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_002']>
   hh_char_hh_det?: Partial<Person>[]
 }
 
@@ -106,7 +106,7 @@ const toFormData = ({
     activities.push({
       rows,
       activity,
-      request: ActivityInfoHelper.generateRequest({
+      request: ActivityInfoSdk.makeRequest({
         activity: mapWashRMM(activity),
         formId,
         activityIdPrefix: 'drcnfi' + period.replace('-', '') + 'i',
@@ -117,11 +117,11 @@ const toFormData = ({
 
   console.log(answers.groupBy(_ => _.oblast))
   Enum.entries(answers.groupBy(_ => _.oblast)).forEach(([oblast, byOblast]) => {
-    const enOblast = BNREOptions.ben_det_prev_oblast[oblast]
+    const enOblast = bn_ReOptions.ben_det_prev_oblast[oblast]
     Enum.entries(byOblast.groupBy(_ => _.raion)).forEach(([raion, byRaion]) => {
-      const enRaion = BNREOptions.ben_det_raion[raion]
+      const enRaion = bn_ReOptions.ben_det_raion[raion]
       Enum.entries(byRaion.groupBy(_ => _.hromada)).forEach(([hromada, byHromada]) => {
-        const enHromada = BNREOptions.ben_det_hromada[hromada]
+        const enHromada = bn_ReOptions.ben_det_hromada[hromada]
         Enum.entries(byHromada.groupBy(_ => _.settlement)).forEach(([settlement, bySettlement]) => {
           const bySettlementWithPerson = bySettlement.map(_ => ({
             ..._,
@@ -179,7 +179,7 @@ export const ActivityInfoNFI = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: new Date(parseInt(year), parseInt(month)),
     }
-    return api.kobo.answer.searchBnre({filters})
+    return api.kobo.answer.searchBn_Re({filters})
       .then(_ => {
         return _.data.filter(_ => !!_.ben_det_settlement).map(_ => ({
           id: _.id,

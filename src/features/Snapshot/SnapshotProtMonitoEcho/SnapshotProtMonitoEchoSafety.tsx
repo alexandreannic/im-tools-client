@@ -5,14 +5,14 @@ import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/core/chartTools'
 import {chain, toPercent} from '@/utils/utils'
-import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {_Arr, Arr} from '@alexandreannic/ts-utils'
-import {ProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1'
+import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export const SnapshotProtMonitoEchoSafety = () => {
@@ -21,9 +21,9 @@ export const SnapshotProtMonitoEchoSafety = () => {
 
   const groupedIndividualsType = useMemo(() => {
     const res = {
-      type: Arr() as _Arr<ProtHHS_2_1['what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence']>,
-      when: Arr() as _Arr<ProtHHS_2_1['when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence']>,
-      who: Arr() as _Arr<ProtHHS_2_1['who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence']>,
+      type: Arr() as _Arr<Protection_Hhs2_1['what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence']>,
+      when: Arr() as _Arr<Protection_Hhs2_1['when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence']>,
+      who: Arr() as _Arr<Protection_Hhs2_1['who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence']>,
     }
     data.forEach(_ => {
       res.type.push(...[
@@ -116,7 +116,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   data: groupedIndividualsType.type,
                   filterValue: ['unable_unwilling_to_answer']
                 }))
-                  .map(ChartTools.setLabel(ProtHHS_2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
+                  .map(ChartTools.setLabel(Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
                   .map(ChartTools.sortBy.value)
                   .get
               }>

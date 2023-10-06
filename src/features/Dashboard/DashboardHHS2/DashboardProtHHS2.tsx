@@ -5,7 +5,7 @@ import {useI18n} from '@/core/i18n'
 import {useProtHHS2Data} from './useProtHHS2Data'
 import {DashboardProtHHS2Sample} from './DashboardProtHHS2Sample'
 import {DashboardLayout} from '../shared/DashboardLayout'
-import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {DashboardProtHHS2Document} from './DashboardProtHHS2Document'
 import {DashboardProtHHS2Livelihood} from './DashboardProtHHS2Livelihood'
 import {Box} from '@mui/material'
@@ -29,7 +29,7 @@ import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
 import {themeLightScrollbar} from '@/core/theme'
 
-const filterShape = DashboardFilterHelper.makeShape<typeof ProtHHS_2_1Options>()({
+const filterShape = DashboardFilterHelper.makeShape<typeof Protection_Hhs2_1Options>()({
   drcOffice: {
     icon: 'business',
     label: m => m.drcOffice,
@@ -88,7 +88,7 @@ export interface DashboardPageProps {
 export const DashboardProtHHS2 = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.protectionHh2))
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.protection_hhs2_1))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
@@ -113,21 +113,21 @@ export const DashboardProtHHS2 = () => {
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
-  const getChoices = useCallback(<T extends keyof typeof ProtHHS_2_1Options>(
+  const getChoices = useCallback(<T extends keyof typeof Protection_Hhs2_1Options>(
     questionName: T, {
       skipKey = [],
     }: {
-      skipKey?: (keyof typeof ProtHHS_2_1Options[T])[]
+      skipKey?: (keyof typeof Protection_Hhs2_1Options[T])[]
     } = {}
   ) => {
-    return Enum.entries(ProtHHS_2_1Options[questionName] ?? {})
+    return Enum.entries(Protection_Hhs2_1Options[questionName] ?? {})
       .map(([value, label]) => ({value, label: label}))
       .filter(_ => !(skipKey as string[]).includes(_.value))
   }, [])
 
   const database = useMemo(() => {
     if (!_answers.entity) return
-    const loki = new LokiDb(kobo.drcUa.form.protectionHh2, {
+    const loki = new LokiDb(kobo.drcUa.form.protection_hhs2_1, {
       persistenceMethod: 'memory',
     })
     const table = loki.addCollection('data', {

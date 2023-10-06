@@ -4,7 +4,7 @@ import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {chain} from '@/utils/utils'
@@ -12,7 +12,7 @@ import {Box, Checkbox} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
 
-type Filters = Pick<Record<keyof typeof ProtHHS_2_1Options['are_you_separated_from_any_of_your_households_members'], boolean>,
+type Filters = Pick<Record<keyof typeof Protection_Hhs2_1Options['are_you_separated_from_any_of_your_households_members'], boolean>,
   'partner' |
   'child_lt_18' |
   'child_gte_18' |
@@ -77,7 +77,7 @@ export const DashboardProtHHS2FamilyUnity = ({
                 filterValue: ['unable_unwilling_to_answer', 'no'],
                 data: data.map(_ => _.are_you_separated_from_any_of_your_households_members).compact()
               }))
-                .map(ChartTools.setLabel(ProtHHS_2_1Options.are_you_separated_from_any_of_your_households_members))
+                .map(ChartTools.setLabel(Protection_Hhs2_1Options.are_you_separated_from_any_of_your_households_members))
                 .get
             }>
               {_ => <HorizontalBarChartGoogle
@@ -138,7 +138,7 @@ export const DashboardProtHHS2FamilyUnity = ({
                 ...category.other_relative ? [_.where_is_your_other_relative] : [],
               ]).compact(),
               // filterValue: ['unable_unwilling_to_answer']
-            })).map(ChartTools.setLabel(ProtHHS_2_1Options.where_is_your_partner)).get
+            })).map(ChartTools.setLabel(Protection_Hhs2_1Options.where_is_your_partner)).get
             }>
               {_ => <HorizontalBarChartGoogle data={_}/>}
             </Lazy>
@@ -155,7 +155,7 @@ export const DashboardProtHHS2FamilyUnity = ({
                 ...category.other_relative ? [_.where_is_your_other_relative_remain_behind_in_the_area_of_origin] : [],
               ]).compact(),
               // filterValue: ['unable_unwilling_to_answer']
-            })).map(ChartTools.setLabel(ProtHHS_2_1Options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
+            })).map(ChartTools.setLabel(Protection_Hhs2_1Options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
             }>
               {_ => <HorizontalBarChartGoogle data={_}/>}
             </Lazy>

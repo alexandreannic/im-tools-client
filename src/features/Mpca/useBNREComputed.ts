@@ -1,13 +1,13 @@
 import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
 import {useMemo} from 'react'
-import {BNREOptions} from '../../core/koboModel/BNRE/BNREOptions'
+import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {chain} from '../../utils/utils'
 import {Person} from '../../core/type'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
 
-export const BNREOblastToISO: Record<keyof typeof BNREOptions['ben_det_prev_oblast'], OblastISO> = OblastIndex.koboOblastIndexIso
+export const BNREOblastToISO: Record<keyof typeof bn_ReOptions['ben_det_prev_oblast'], OblastISO> = OblastIndex.koboOblastIndexIso
 
 export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 

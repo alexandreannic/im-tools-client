@@ -4,7 +4,7 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
@@ -101,7 +101,7 @@ export const DashboardProtHHS2Document = ({
               data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
               filterValue: ['none', 'unable_unwilling_to_answer'],
             }))
-              .map(ChartTools.setLabel(ProtHHS_2_1Options.does_1_lack_doc))
+              .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
               .map(ChartTools.sortBy.value)
               .get}>
               {_ => <HorizontalBarChartGoogle data={_}/>}

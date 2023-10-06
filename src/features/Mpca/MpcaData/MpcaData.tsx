@@ -11,7 +11,7 @@ import {appConfig} from '@/conf/AppConfig'
 import {kobo} from '@/koboDrcUaFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
-import {BNREOptions} from '@/core/koboModel/BNRE/BNREOptions'
+import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
@@ -225,7 +225,7 @@ export const MpcaData = () => {
               head: m.status,
               render: _ => _.benefStatus,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.keys(BNREOptions.ben_det_res_stat)),
+              options: () => SheetUtils.buildOptions(Enum.keys(bn_ReOptions.ben_det_res_stat)),
             },
             {id: 'phone', head: m.phone, render: _ => _.phone},
           ]}

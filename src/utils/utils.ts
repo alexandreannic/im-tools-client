@@ -1,5 +1,6 @@
 import {_Arr, Arr, Enum, mapFor} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
+import {groupBy as _groupBy} from '@/utils/groupBy'
 
 export type KeyOf<T> = Extract<keyof T, string>
 
@@ -360,37 +361,5 @@ export namespace Utils {
     }, 1000)
   }
 
-  export const groupBy: {
-    <T extends Record<string, any>, A extends string, R extends any>(
-      t: T[],
-      groups: [
-        {by: ((_: T) => A), sort?: (a: A, b: A) => number}
-      ],
-      finalTransform: (_: _Arr<T>) => R
-    ): Record<A, R>
-
-    <T extends Record<string, any>, A extends string, B extends string, R extends any>(
-      t: T[],
-      groups: [
-        {by: ((_: T) => A), sort?: (a: A, b: A) => number},
-        {by: ((_: T) => B), sort?: (a: B, b: B) => number}
-      ],
-      finalTransform: (_: _Arr<T>) => R
-    ): Record<A, Record<B, R>>
-
-    <T extends Record<string, any>>(
-      t: T[],
-      groups: {by: ((_: T) => string), sort?: (a: string, b: string) => number}[],
-      finalTransform: (_: _Arr<T>) => any
-    ): Record<string, any>
-
-  } = (t: any[], groups: any, finalTransform: any) => {
-    if (groups.length === 0) return finalTransform(Arr(t))
-    const [group, ...rest] = groups
-    const res = Arr(t).groupBy(group.by)
-    return new Enum(res)
-      .sort(([a], [b]) => group.sort ? group.sort(a, b) : a.localeCompare(b))
-      .transform((k, v) => [k, groupBy(v, rest, finalTransform)])
-      .get() as Record<string, any>
-  }
+  export const groupBy = _groupBy
 }

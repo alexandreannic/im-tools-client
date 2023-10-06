@@ -2,10 +2,10 @@ import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/koboDrcUaFormId'
-import {mapProtHHS_2_1} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Mapping'
-import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
-import {BNRE} from '@/core/koboModel/BNRE/BNRE'
-import {mapBNRE} from '@/core/koboModel/BNRE/BNREMapping'
+import {mapProtection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Mapping'
+import {AnswersFilters, KoboApiSdk} from '@/core/sdk/server/kobo/KoboApiSdk'
+import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
+import {mapBn_Re} from '@/core/koboModel/Bn_Re/Bn_ReMapping'
 import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
 import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
@@ -20,8 +20,8 @@ import {RapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/Ra
 import {mapRapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanismMapping'
 import {mapShelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shelter_CashForRepairMapping'
 import {Shelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shelter_CashForRepair'
-import {MPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFI'
-import {mapMPCA_NFI} from '@/core/koboModel/MPCA_NFI/MPCA_NFIMapping'
+import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
+import {mapBn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiMapping'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {mapBn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplication/Bn_cashForRentApplicationMapping'
@@ -58,11 +58,11 @@ export class KoboAnswerSdk {
 
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
     switch (formId) {
-      case kobo.drcUa.form.protectionHh2:
+      case kobo.drcUa.form.protection_hhs2_1:
         return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
-      case kobo.drcUa.form.mealVisitMonitoring:
+      case kobo.drcUa.form.meal_visitMonitoring:
         return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
-      case kobo.drcUa.form.safetyIncident:
+      case kobo.drcUa.form.safety_incident:
         return Promise.resolve({start: new Date(2023, 8, 19), end: startOfDay(new Date())})
       default:
         throw new Error('To implement')
@@ -105,10 +105,10 @@ export class KoboAnswerSdk {
       .then(Kobo.mapPaginateAnswerMetaData(fnMap, fnMapTags))
   }
 
-  readonly searchBnre = (filters: KoboAnswerFilter = {}) => {
-    return this.search<BNRE>({
+  readonly searchBn_Re = (filters: KoboAnswerFilter = {}) => {
+    return this.search<Bn_Re>({
       formId: kobo.drcUa.form.bn_re,
-      fnMap: mapBNRE,
+      fnMap: mapBn_Re,
       ...filters,
     })
   }
@@ -130,15 +130,15 @@ export class KoboAnswerSdk {
   }
 
   readonly searchBn_MpcaNfiOld = (filters: KoboAnswerFilter = {}) => {
-    return this.search<MPCA_NFI>({
-      formId: kobo.drcUa.form.bn_fcrmMpca,
-      fnMap: mapMPCA_NFI,
+    return this.search<Bn_OldMpcaNfi>({
+      formId: kobo.drcUa.form.bn_oldMpcaNfi,
+      fnMap: mapBn_OldMpcaNfi,
       ...filters,
     })
   }
   readonly searchBn_RapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
     return this.search<RapidResponseMechanism>({
-      formId: kobo.drcUa.form.rapidResponseMechanism,
+      formId: kobo.drcUa.form.bn_rapidResponseMechanism,
       fnMap: mapRapidResponseMechanism,
       ...filters,
     })
@@ -146,7 +146,7 @@ export class KoboAnswerSdk {
 
   readonly searchMeal_VisitMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: kobo.drcUa.form.mealVisitMonitoring,
+      formId: kobo.drcUa.form.meal_visitMonitoring,
       fnMap: mapMealVisitMonitoring,
       ...filters,
     })
@@ -154,7 +154,7 @@ export class KoboAnswerSdk {
 
   readonly searchShelterTa = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: kobo.drcUa.form.shelterTA,
+      formId: kobo.drcUa.form.shelter_ta,
       fnMap: mapShelter_TA,
       fnMapTags: _ => ({..._, workDoneAt: _?.workDoneAt ? new Date(_.workDoneAt) : undefined}) as ShelterTaTags,
       ...filters,
@@ -163,7 +163,7 @@ export class KoboAnswerSdk {
 
   readonly searchShelterNta = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: kobo.drcUa.form.shelterNTA,
+      formId: kobo.drcUa.form.shelter_nta,
       fnMap: mapShelter_NTA,
       fnMapTags: _ => _ as ShelterNtaTags,
       ...filters,
@@ -172,7 +172,7 @@ export class KoboAnswerSdk {
 
   readonly searchMealCfmInternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: kobo.drcUa.form.cfmInternal,
+      formId: kobo.drcUa.form.meal_cfmInternal,
       fnMap: mapMealCfmInternal,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
@@ -181,7 +181,7 @@ export class KoboAnswerSdk {
 
   readonly searchMealCfmExternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: kobo.drcUa.form.cfmExternal,
+      formId: kobo.drcUa.form.meal_cfmExternal,
       fnMap: mapMealCfmExternal,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
@@ -190,8 +190,8 @@ export class KoboAnswerSdk {
 
   readonly searchProtHhs2 = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: kobo.drcUa.form.protectionHh2,
-      fnMap: mapProtHHS_2_1,
+      formId: kobo.drcUa.form.protection_hhs2_1,
+      fnMap: mapProtection_Hhs2_1,
       fnMapTags: _ => _ as ProtHhsTags,
       ...filters,
     })
@@ -210,7 +210,7 @@ export class KoboAnswerSdk {
 
   readonly searchProtHhs1 = (filters: KoboAnswerFilter = {}) => {
     return this.search({
-      formId: kobo.drcUa.form.protectionHh,
+      formId: kobo.drcUa.form.protection_hhs1,
       fnMap: KoboFormProtHH.mapAnswers,
       ...filters,
     })
@@ -218,7 +218,7 @@ export class KoboAnswerSdk {
 
   readonly searchSafetyIncident = (filters: KoboAnswerFilter = {}): Promise<ApiPaginate<KoboSafetyIncidentHelper.Type>> => {
     return this.search({
-      formId: kobo.drcUa.form.safetyIncident,
+      formId: kobo.drcUa.form.safety_incident,
       fnMap: KoboSafetyIncidentHelper.mapData,
       ...filters,
     })

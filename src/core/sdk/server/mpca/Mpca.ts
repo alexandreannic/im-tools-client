@@ -1,6 +1,6 @@
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
-import {BNRE} from '@/core/koboModel/BNRE/BNRE'
+import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
 import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {MpcaProgram, MpcaRowSource} from '@/features/Mpca/MpcaContext'
@@ -11,6 +11,8 @@ export interface Mpca {
   oblast?: OblastName
   office?: DrcOffice
   oblastIso?: OblastISO
+  raion?: string
+  hromada?: string
   date: Date
   prog?: MpcaProgram[]
   donor?: DrcDonor
@@ -18,7 +20,7 @@ export interface Mpca {
   amountUahSupposed?: number
   amountUahDedup?: number
   amountUahFinal?: number
-  benefStatus?: BNRE['ben_det_res_stat']
+  benefStatus?: Bn_Re['ben_det_res_stat']
   lastName?: string
   firstName?: string
   patronyme?: string

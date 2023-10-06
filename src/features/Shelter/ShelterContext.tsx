@@ -54,13 +54,13 @@ export const ShelterProvider = ({
   const _data = useShelterData(allowedOffices)
 
   const _ntaActions = useShelterActions<ShelterNtaTags>({
-    formId: kobo.drcUa.form.shelterNTA,
+    formId: kobo.drcUa.form.shelter_nta,
     setEntity: _data._fetchNta.setEntity,
     schema: schemaNta,
     langIndex,
   })
   const _taActions = useShelterActions<ShelterTaTags>({
-    formId: kobo.drcUa.form.shelterTA,
+    formId: kobo.drcUa.form.shelter_ta,
     setEntity: _data._fetchTa.setEntity,
     schema: schemaTa,
     langIndex,
@@ -77,8 +77,8 @@ export const ShelterProvider = ({
 
   const _refresh = useAsync(async () => {
     await Promise.all([
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelterTA),
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelterNTA),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta),
     ])
     await fetchAll()
   })

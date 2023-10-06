@@ -7,7 +7,7 @@ import {ChartTools} from '@/core/chartTools'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Document'
 import {chain, toPercent} from '@/utils/utils'
-import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
@@ -121,7 +121,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 filterValue: ['none', 'unable_unwilling_to_answer'],
               }))
-                .map(ChartTools.setLabel(ProtHHS_2_1Options.does_1_lack_doc))
+                .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
                 .map(ChartTools.sortBy.value)
                 .get}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}

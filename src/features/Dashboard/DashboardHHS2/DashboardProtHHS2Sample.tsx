@@ -5,7 +5,7 @@ import React, {useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon, useTheme} from '@mui/material'
-import {ProtHHS_2_1Options} from '../../../core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
@@ -157,7 +157,7 @@ export const DashboardProtHHS2Sample = ({
                 data: data.map(_ => _.do_you_identify_as_any_of_the_following).compact(),
               }))
                 .map(ChartTools.sortBy.value)
-                .map(ChartTools.setLabel(ProtHHS_2_1Options.do_you_identify_as_any_of_the_following))
+                .map(ChartTools.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
                 .get}
             >
               {_ => <HorizontalBarChartGoogle data={_}/>}

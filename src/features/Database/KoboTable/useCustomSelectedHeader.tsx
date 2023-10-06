@@ -8,13 +8,14 @@ import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {KoboApiSdk} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {projects} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
+import {kobo} from '@/koboDrcUaFormId'
 
 export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, ReactNode> = {
-      [KoboApiSdk.koboFormRefs.Prot_CommunityLevelMonito]: (
+      [kobo.drcUa.form.protection_communityMonitoring]: (
         <AaSelectSingle
           hideNullOption
           sx={{maxWidth: 200}}
@@ -23,7 +24,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
           options={projects.map(k => ({value: k, children: k}))}
         />
       ),
-      [KoboApiSdk.koboFormRefs.Prot_HHS2]: (
+      [kobo.drcUa.form.protection_hhs2_1]: (
         <AaSelectMultiple
           sx={{maxWidth: 200}}
           defaultValue={[]}

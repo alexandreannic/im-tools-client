@@ -8,14 +8,14 @@ import {DrcProject} from '@/core/drcUa'
 import {useI18n} from '@/core/i18n'
 import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
-import {KoboApiSdk} from '@/core/sdk/server/kobo/KoboApiSdk'
+import {kobo} from '@/koboDrcUaFormId'
 
 export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, SheetColumnProps<KoboMappedAnswer>[]> = {
-      [KoboApiSdk.koboFormRefs.Prot_CommunityLevelMonito]: [
+      [kobo.drcUa.form.protection_communityMonitoring]: [
         {
           id: 'tags_project',
           head: m.project,
@@ -36,7 +36,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           )
         }
       ],
-      [KoboApiSdk.koboFormRefs.Prot_HHS2]: [
+      [kobo.drcUa.form.protection_hhs2_1]: [
         {
           id: 'tags_project',
           head: m.project,

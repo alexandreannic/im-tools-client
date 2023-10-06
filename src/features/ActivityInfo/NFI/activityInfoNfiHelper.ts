@@ -1,9 +1,9 @@
 import {KoboAnswer} from '../../../core/sdk/server/kobo/Kobo'
-import {MPCA_NFI} from '../../../core/koboModel/MPCA_NFI/MPCA_NFI'
+import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
 import {format, subDays} from 'date-fns'
-import {MPCA_NFIOptions} from '../../../core/koboModel/MPCA_NFI/MPCA_NFIOptions'
+import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
 
-const fixWrongLocationById: Record<string, Pick<MPCA_NFI, 'hromada' | 'raion'> & {settlement: string}> = {
+const fixWrongLocationById: Record<string, Pick<Bn_OldMpcaNfi, 'hromada' | 'raion'> & {settlement: string}> = {
   412897224: {raion: 'chervonohradskyi', hromada: 'chervonohradska', settlement: 'Sosnivka'},
   413039158: {raion: 'chervonohradskyi', hromada: 'chervonohradska', settlement: 'Sosnivka'},
   413319620: {raion: 'drohobytskyi', hromada: 'truskavetska', settlement: 'Truskavets'},
@@ -77,7 +77,7 @@ const fixWrongLocationByDate = [
   {date: '2023-04-28', oblast: 'Kharkivska', raion: 'Kharkivskyi', hromada: 'Kharkivska', settlement: 'Kharkiv',},
 ]
 // 23-04-28ChernihivskaChernihivskyiKyselivska
-export const fixLocations = (answers: KoboAnswer<MPCA_NFI>[]): KoboAnswer<MPCA_NFI & {settlement?: string}>[] => {
+export const fixLocations = (answers: KoboAnswer<Bn_OldMpcaNfi>[]): KoboAnswer<Bn_OldMpcaNfi & {settlement?: string}>[] => {
   return answers.map(a => {
     const fixById: (typeof fixWrongLocationById)[keyof typeof fixWrongLocationById] = (fixWrongLocationById as any)[a.id]
     if (fixById) {
@@ -90,15 +90,15 @@ export const fixLocations = (answers: KoboAnswer<MPCA_NFI>[]): KoboAnswer<MPCA_N
       }
     }
     let fixByDate = fixWrongLocationByDate.find(_ => _.date === format(a.start, 'yyyy-MM-dd')
-      && _.oblast === MPCA_NFIOptions.oblast[a.oblast]
-      && _.raion === MPCA_NFIOptions.raion[a.raion]
-      && _.hromada === MPCA_NFIOptions.hromada[a.hromada]
+      && _.oblast === bn_OldMpcaNfiOptions.oblast[a.oblast]
+      && _.raion === bn_OldMpcaNfiOptions.raion[a.raion]
+      && _.hromada === bn_OldMpcaNfiOptions.hromada[a.hromada]
     )
     if (!fixByDate) {
       fixByDate = fixWrongLocationByDate.find(_ => _.date === format(subDays(a.start, 1), 'yyyy-MM-dd')
-        && _.oblast === MPCA_NFIOptions.oblast[a.oblast]
-        && _.raion === MPCA_NFIOptions.raion[a.raion]
-        && _.hromada === MPCA_NFIOptions.hromada[a.hromada]
+        && _.oblast === bn_OldMpcaNfiOptions.oblast[a.oblast]
+        && _.raion === bn_OldMpcaNfiOptions.raion[a.raion]
+        && _.hromada === bn_OldMpcaNfiOptions.hromada[a.hromada]
       )
     }
     if (fixByDate) {

@@ -3,7 +3,7 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {ProtHHS_2_1Options} from '@/core/koboModel/ProtHHS_2_1/ProtHHS_2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/core/chartTools'
 import {chain, mapObjectValue} from '@/utils/utils'
@@ -98,8 +98,8 @@ export const DashboardProtHHS2Livelihood = ({
                 filterValue: ['no_income', 'unable_unwilling_to_answer'],
                 data: data.map(_ => _.what_is_the_average_month_income_per_household).compact(),
               }))
-                .map(ChartTools.setLabel(ProtHHS_2_1Options.what_is_the_average_month_income_per_household))
-                .map(ChartTools.sortBy.custom(Object.keys(ProtHHS_2_1Options.what_is_the_average_month_income_per_household)))
+                .map(ChartTools.setLabel(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household))
+                .map(ChartTools.sortBy.custom(Object.keys(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household)))
                 .get
 
               const hhSize = ChartTools.sumByCategory({

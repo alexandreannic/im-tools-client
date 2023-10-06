@@ -20,8 +20,8 @@ import {useAaToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
 
 const formIdMapping: Record<string, CfmDataSource> = {
-  [kobo.drcUa.form.cfmExternal]: CfmDataSource.External,
-  [kobo.drcUa.form.cfmInternal]: CfmDataSource.Internal,
+  [kobo.drcUa.form.meal_cfmExternal]: CfmDataSource.External,
+  [kobo.drcUa.form.meal_cfmInternal]: CfmDataSource.Internal,
 }
 
 export type CfmData = {
@@ -149,7 +149,7 @@ export const CfmProvider = ({
         category,
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         feedback: _.thanks_feedback ?? _.complaint,
-        formId: kobo.drcUa.form.cfmExternal,
+        formId: kobo.drcUa.form.meal_cfmExternal,
         external_feedback_type: _.feedback_type,
         external_consent: _.consent,
         external_prot_support: _.prot_support,
@@ -162,7 +162,7 @@ export const CfmProvider = ({
       res.push({
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         category,
-        formId: kobo.drcUa.form.cfmInternal,
+        formId: kobo.drcUa.form.meal_cfmInternal,
         form: CfmDataSource.Internal,
         internal_existing_beneficiary: _.existing_beneficiary,
         internal_project_code: _.project_code,

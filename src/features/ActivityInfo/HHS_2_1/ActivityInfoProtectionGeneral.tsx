@@ -1,0 +1,264 @@
+import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
+import {AiProtectionHhs} from '@/features/ActivityInfo/HHS_2_1/activityInfoInterface'
+import {Page} from '@/shared/Page'
+import {Txt} from 'mui-extension'
+import {Panel} from '@/shared/Panel'
+import {AaInput} from '@/shared/ItInput/AaInput'
+import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
+import {AaBtn} from '@/shared/Btn/AaBtn'
+import {AaSelect} from '@/shared/Select/Select'
+import {useAaToast} from '@/core/useToast'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
+import {useI18n} from '@/core/i18n'
+import {alreadySentKobosInApril} from './missSubmittedData'
+import {format, subDays, subMonths} from 'date-fns'
+import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {DrcDonor} from '@/core/drcUa'
+
+const mapPopulationGroup = (s: (keyof typeof Protection_Hhs2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
+  returnee: 'Returnees',
+  non_displaced: 'Non-Displaced',
+  idp: 'IDPs',
+  refugee: 'Non-Displaced',
+}, _ => 'Non-Displaced')
+
+const planCode: Partial<Record<DrcDonor, AiProtectionHhs.GET<'Plan Code'>>> = {
+  // [Donor.ECHO_UKR000322]: 'GP-DRC-00001',//ECHO
+  [DrcDonor.NovoNordisk]: 'GP-DRC-00002',//Novo Nordisk ------
+  [DrcDonor.BHA]: 'GP-DRC-00003',//BHA OK
+  [DrcDonor.OKF]: 'GP-DRC-00004',//OKF ------
+  [DrcDonor.UHF]: 'GP-DRC-00005',//UHF
+  [DrcDonor.ECHO]: 'GP-DRC-00006',//ECHO
+  // [Donor.D] MoF: 'GP-DRC-00007',//Danish
+}
+
+export const ActivityInfoProtectionGeneral = () => {
+  const {api} = useAppSettings()
+  const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
+  const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
+
+  const request = (period: string) => {
+    const [year, month] = period.split('-')
+    const filters = (year === '2023' && month === '04') ? undefined : {
+      start: new Date(parseInt(year), parseInt(month) - 1),
+      end: subDays(new Date(parseInt(year), parseInt(month)), 1),
+    }
+    return api.kobo.answer.searchProtHhs2({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(res => {
+      return res
+        .filter(_ => {
+          const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
+          return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
+        })
+    })
+  }
+
+  // c
+  // onst request = (period: string) => {
+  //   const [year, month] = period.split('-')
+  //   return api.koboModel.getAnswers(serverId, formId, {
+  //     start: new Date(parseInt(year), parseInt(month) - 1),
+  //     end: new Date(parseInt(year), parseInt(month)),
+  //   }).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  // }
+  const _hhCurrent = useFetcher(request)
+
+  useEffect(() => {
+    _hhCurrent.fetch({clean: false}, period)
+  }, [period])
+
+  const filteredData = useMemo(() => {
+    return _hhCurrent.entity?.filter(_ => !selectedOblast || _.staff_to_insert_their_DRC_office === selectedOblast)
+  }, [selectedOblast, _hhCurrent.entity])
+
+  return (
+    <Page width={1200} loading={_hhCurrent.loading}>
+      {map(filteredData, _ => <_ActivityInfo
+        action={
+          <>
+            <AaInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+            <AaSelect
+              sx={{width: 200}}
+              label="Oblast"
+              defaultValue={selectedOblast?.split('_')[0] ?? ''}
+              onChange={_ => setSelectedOblast(_)}
+              options={Object.keys(Protection_Hhs2_1Options.staff_to_insert_their_DRC_office).map(_ => ({value: _, children: _.split('_')[0]}))}
+            />
+          </>
+
+        }
+        data={_}
+        period={period}
+        setPeriod={setPeriod}
+      />)}
+    </Page>
+  )
+}
+
+interface Row {
+  rows: ProtHHS2Enrich[],
+  activity: AiProtectionHhs.FormParams
+  request: any
+}
+
+const _ActivityInfo = ({
+  data,
+  period,
+  setPeriod,
+  action,
+}: {
+  action?: ReactNode
+  data: _Arr<ProtHHS2Enrich>
+  period: string
+  setPeriod: Dispatch<SetStateAction<string>>
+}) => {
+  const enrichedData = data
+
+  const {api} = useAppSettings()
+  const _submit = useAsync((i: number, p: AiProtectionHhs.FormParams[]) => api.activityInfo.submitActivity(p), {
+    requestKey: ([i]) => i
+  })
+
+  const formParams = useMemo(() => {
+    const activities: Row[] = []
+    let index = 0
+    Enum.entries(enrichedData.groupBy(_ => {
+      if (!_.tags?.ai) {
+        console.warn('No donor', _)
+        // throw new Error('No donor')
+      }
+      return planCode[_.tags?.ai!]
+    })).forEach(([planCode, byPlanCode]) => {
+      Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
+        Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
+          Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada)).forEach(([hromada, byHromada]) => {
+            const enOblast = Protection_Hhs2_1Options.what_is_your_area_of_origin_oblast[oblast]
+            const enRaion = Protection_Hhs2_1Options.what_is_your_area_of_origin_raion[raion]
+            const enHromada = Protection_Hhs2_1Options.what_is_your_area_of_origin_hromada[hromada]
+            const activity: AiProtectionHhs.FormParams = {
+              'Plan Code': planCode,
+              Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
+              Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? (('⚠️' + enRaion) as any),
+              Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? (('⚠️' + enHromada) as any),
+              subActivities: Enum.entries(byHromada.groupBy(_ => mapPopulationGroup(_.do_you_identify_as_any_of_the_following))).map(([populationGroup, byPopulationGroup]) => {
+                try {
+                  const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
+                  const childs = persons.filter(_ => _.age < 18)
+                  const adults = persons.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
+                  const elderly = persons.filter(_ => KoboFormProtHH.isElderly(_.age))
+                  return {
+                    'Reporting Month': period,
+                    'Total Individuals Reached': persons.length,
+                    'Population Group': populationGroup as any,
+                    'Adult Men': adults.count(_ => _.gender === 'male'),
+                    'Adult Women': adults.count(_ => _.gender === 'female'),
+                    'Boys': childs.count(_ => _.gender === 'male'),
+                    'Girls': childs.count(_ => _.gender === 'female'),
+                    'Elderly Women': elderly.count(_ => _.gender === 'female'),
+                    'Elderly Men': elderly.count(_ => _.gender === 'male'),
+                  }
+                } catch (e: unknown) {
+                  console.error(byPopulationGroup)
+                  throw new Error(byPopulationGroup.map(_ => _.id).join(',') + ' ' + (e as Error).message)
+                }
+              })
+            }
+            activities.push({
+              rows: byHromada,
+              activity,
+              request: AiProtectionHhs.makeForm(activity, period, index++)
+            })
+          })
+        })
+      })
+    })
+    return activities
+  }, [data])
+
+  const {m} = useI18n()
+  const {toastHttpError} = useAaToast()
+
+  return (
+    <div>
+      <Box sx={{mb: 2, display: 'flex', alignItems: 'center'}}>
+        <AaBtn sx={{marginRight: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+          _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastHttpError)
+        }}>
+          {m.submitAll} {data.length} {data.sum(_ => _.how_many_ind ?? 0)}
+        </AaBtn>
+        {action}
+      </Box>
+      <Panel sx={{overflowX: 'auto'}}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Location</TableCell>
+              <TableCell>Plan Code</TableCell>
+              <TableCell>Population Group</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Boys</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Girls</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Adult Women</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Adult Men</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Elderly Women</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Elderly Men</TableCell>
+              <TableCell sx={{textAlign: 'right'}}>Total Individuals Reached</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {formParams.map((a, i) => a.activity.subActivities.map((sa, j) =>
+              <TableRow key={j}>
+                {j === 0 && (
+                  <>
+                    <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
+                      <AaBtn
+                        tooltip="Submit 🚀"
+                        loading={_submit.getLoading(i)}
+                        variant="contained"
+                        size="small"
+                        sx={{minWidth: 50, mr: .5}}
+                        onClick={() => {
+                          _submit.call(i, [a.request]).catch(toastHttpError)
+                        }}
+                      >
+                        <Icon>send</Icon>
+                      </AaBtn>
+                      <ActivityInfoActions
+                        answers={a.rows}
+                        activity={a.activity}
+                        requestBody={a.request}
+                      />
+                    </TableCell>
+                    <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
+                      {AILocationHelper.print5w(a.activity.Oblast)}
+                      <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
+                      {AILocationHelper.print5w(a.activity.Raion)}
+                      <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
+                      {AILocationHelper.print5w(a.activity.Hromada)}
+                    </TableCell>
+                    <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
+                      {a.activity['Plan Code']}
+                    </TableCell>
+                  </>
+                )}
+                <TableCell>{sa['Population Group']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa.Boys}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa.Girls}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Adult Women']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Adult Men']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Elderly Women']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}>{sa['Elderly Men']}</TableCell>
+                <TableCell sx={{textAlign: 'right'}}><Txt bold>{sa['Total Individuals Reached']}</Txt></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Panel>
+    </div>
+  )
+}
