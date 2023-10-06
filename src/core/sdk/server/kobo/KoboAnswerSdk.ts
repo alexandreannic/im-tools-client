@@ -26,6 +26,9 @@ import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {mapBn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplication/Bn_cashForRentApplicationMapping'
 import {Bn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplication/Bn_cashForRentApplication'
+import {mapProtection_communityMonitoring} from '@/core/koboModel/Protection_communityMonitoring/Protection_communityMonitoringMapping'
+import {mapProtection_pss} from '@/core/koboModel/Protection_pss/Protection_pssMapping'
+import {mapProtection_groupSession} from '@/core/koboModel/Protection_groupSession/Protection_groupSessionMapping'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -195,17 +198,30 @@ export class KoboAnswerSdk {
       fnMapTags: _ => _ as ProtHhsTags,
       ...filters,
     })
-    // TODO DELETE !!!!
-    // .catch(() => {
-    //   const _ = json as ApiPaginate<any>
-    //   return ({
-    //     ..._,
-    //     data: _.data.map(({answers, ..._}) => ({
-    //       ...Kobo.mapAnswerMetaData(_),
-    //       ...mapProtHHS_2_1(answers) as any
-    //     }))
-    //   })
-    // })
+  }
+
+  readonly searchProtection_communityMonitoring = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.protection_communityMonitoring,
+      fnMap: mapProtection_communityMonitoring,
+      ...filters,
+    })
+  }
+
+  readonly searchProtection_pss = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.protection_pss,
+      fnMap: mapProtection_pss,
+      ...filters,
+    })
+  }
+
+  readonly searchProtection_groupSession = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.protection_groupSession,
+      fnMap: mapProtection_groupSession,
+      ...filters,
+    })
   }
 
   readonly searchProtHhs1 = (filters: KoboAnswerFilter = {}) => {

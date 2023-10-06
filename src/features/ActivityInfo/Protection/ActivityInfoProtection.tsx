@@ -18,6 +18,7 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export const ActivityInfoProtection = () => {
   const {api, conf} = useAppSettings()
@@ -36,13 +37,16 @@ export const ActivityInfoProtection = () => {
       end: endOfDay(endOfMonth(new Date(+year, +month - 1, 1))),
     }
 
-    return api.mpca.search({filters}).then(res => {
+    return api.kobo.answer.searchProtection_communityMonitoring({filters}).then(res => {
+      // searchProtection_communityMonitoring
+      // searchProtection_pss
+      // searchProtection_groupSession
       const mapped: (AiTypeMpcaRmm.Type & {oblast?: string, raion?: string})[] = []
       Utils.groupBy({
-        data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
+        data: res.data.filter(_ => _.submissionTime.getTime() >= filters.start.getTime() && _.submissionTime.getTime() <= filters.end.getTime()),
         groups: [
-          {by: (_) => _.oblast ?? ''},
-          {by: (_, [oblast,]) => _.raion && AILocationHelper.findRaion(oblast, _.raion)?.en || ''},
+          {by: (_) => OblastIndex.koboOblastIndex[_.ben_det_oblast!] ?? ''},
+          {by: (_, [oblast,]) => _.ben_det_raion && AILocationHelper.findRaion(oblast, _.raion)?.en || ''},
           {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
           {
             by: _ => fnSwitch(_.benefStatus!, {

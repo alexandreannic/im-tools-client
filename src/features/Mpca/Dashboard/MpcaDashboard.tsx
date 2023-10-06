@@ -252,7 +252,7 @@ export const _MPCADashboard = ({
                 {_ => (
                   <ScLineChart2
                     data={_ as any}
-                    height={220}
+                    height={190}
                     hideLabelToggle
                   />
                 )}
@@ -260,6 +260,7 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <SlidePanel title={m.submissionTime}>
               <KoboLineChartDate
+                height={190}
                 data={data}
                 curves={{
                   'date': _ => _.date,
@@ -273,6 +274,10 @@ export const _MPCADashboard = ({
               }}>
                 {_ =>
                   <Sheet
+                    sx={{
+                      border: '1px solid silver',
+                      borderRadius: t => t.shape.borderRadius,
+                    }}
                     hidePagination
                     header={
                       <ScRadioGroup value={tableAgeGroup} onChange={setTableAgeGroup} dense inline sx={{mb: 1}}>
