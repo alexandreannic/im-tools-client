@@ -165,7 +165,7 @@ export const _ShelterDashboard = ({
                   <Box sx={{with: '100%', display: 'flex'}}>
                     <ScRadioGroup value={tableType} onChange={setTableType} dense inline sx={{mr: 1}}>
                       {Person.ageGroups.map(_ =>
-                        <ScRadioGroupItem key={_} value={_} title={_} hideRadio/>
+                        <ScRadioGroupItem key={_} value={_} title={m._ageGroup[_]} hideRadio/>
                       )}
                     </ScRadioGroup>
                   </Box>

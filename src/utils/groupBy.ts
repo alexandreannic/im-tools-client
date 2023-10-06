@@ -66,8 +66,7 @@ export const groupBy: {
 }: any) => {
   if (groups.length === 0) return finalTransform(seq(data), collectedGroup)
   const [group, ...rest] = groups
-  console.log('data', data)
-  const res = seq(data.splice(1, 200)).groupBy(_ => group.by(_, collectedGroup))
+  const res = seq(data).groupBy(_ => group.by(_, collectedGroup))
   return new Enum(res)
     .sort(([a], [b]) => group.sort ? group.sort(a, b) : a.localeCompare(b))
     .transform((k, v) => [k, groupBy({

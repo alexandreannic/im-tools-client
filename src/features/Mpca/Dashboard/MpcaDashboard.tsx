@@ -5,7 +5,7 @@ import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
-import {chain, toPercent, Utils} from '@/utils/utils'
+import {capitalize, chain, toPercent, Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
@@ -209,7 +209,6 @@ export const _MPCADashboard = ({
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 
-  console.log(data)
   const displayAmount = (_: number) => formatLargeNumber(_, {maximumFractionDigits: 0}) + ' ' + currency
   return (
     <>
@@ -276,23 +275,11 @@ export const _MPCADashboard = ({
                   <Sheet
                     hidePagination
                     header={
-                      <DashboardFilterLabel label="ok">
-                        <Box sx={{with: '100%', display: 'flex'}}>
-                          <ScRadioGroup value={tableDataType} onChange={setTableDataType} dense inline sx={{mr: 1}}>
-                            <ScRadioGroupItem value="absolute" title={m.absolute} hideRadio/>
-                            <ScRadioGroupItem value="ratio" title={m.ratio} hideRadio/>
-                          </ScRadioGroup>
-                          <ScRadioGroup value={tableArea} onChange={setTableArea} dense inline>
-                            <ScRadioGroupItem value="oblast" title={m.oblast} hideRadio/>
-                            <ScRadioGroupItem value="office" title={m.office} hideRadio/>
-                          </ScRadioGroup>
-                          <ScRadioGroup value={tableDataType} onChange={setTableDataType} dense inline sx={{mr: 1}}>
-                            {Person.ageGroups.map(_ =>
-                              <ScRadioGroupItem key={_} value={_} title={_} hideRadio/>
-                            )}
-                          </ScRadioGroup>
-                        </Box>
-                      </DashboardFilterLabel>
+                      <ScRadioGroup value={tableAgeGroup} onChange={setTableAgeGroup} dense inline sx={{mb: 1}}>
+                        {Person.ageGroups.map(_ =>
+                          <ScRadioGroupItem key={_} value={_} title={m._ageGroup[_]} hideRadio/>
+                        )}
+                      </ScRadioGroup>
                     }
                     data={_}
                     columns={[

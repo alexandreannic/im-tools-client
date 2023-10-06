@@ -89,11 +89,11 @@ export namespace Person {
 
   export const ageGroups = Enum.keys(ageGroup)
 
-  export const ageToAgeGroup = <AG extends AgeGroup>(age: number | undefined, ag: AG): keyof AG => {
+  export const ageToAgeGroup = <AG extends AgeGroup>(age: number | undefined, ag: AG): keyof AG | undefined => {
     for (const [k, [min, max]] of Enum.entries(ag)) {
       if (age !== undefined && age >= min && age <= max) return k as any
     }
-    throw new Error(`Age ${age} is missing in group ${JSON.stringify(ag)}.`)
+    return undefined
   }
 
 
