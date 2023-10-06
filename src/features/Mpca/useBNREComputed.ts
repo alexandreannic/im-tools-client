@@ -1,11 +1,11 @@
-import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
+import {Enum} from '@alexandreannic/ts-utils'
 import {useMemo} from 'react'
 import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
-import {chain} from '../../utils/utils'
 import {Person} from '../../core/type'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {_Arr} from '@/alexlib-labo/Arr'
 
 export const BNREOblastToISO: Record<keyof typeof bn_ReOptions['ben_det_prev_oblast'], OblastISO> = OblastIndex.koboOblastIndexIso
 
@@ -17,10 +17,11 @@ export const useBNREComputed = ({
   data?: _Arr<Mpca> | undefined
 }) => useMemo(() => {
   if (!data) return
-  const flatData = Arr([] as any[])//data.flatMap(_ => (_.hh_char_hh_det ?? [{}]).map(det => ({..._, ...det})))
+  // const flatData = data.flatM()
   const deduplications = data.map(_ => _.deduplication).compact()
   return {
-    flatData,
+    // flatData,
+    persons: data.flatMap(_ => _.persons).compact(),
     deduplications,
     preventedAssistance: deduplications.filter(_ => [
       DrcSupportSuggestion.NoAssistanceFullDuplication,
@@ -39,16 +40,16 @@ export const useBNREComputed = ({
         .filter((k, v) => v > 1)
         .get()
     })(),
-    ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => Person.groupByAgeGroup()(_, p => +p?.hh_char_hh_det_age!)))
-      .map(_ => Enum.entries(_).map(([group, v]) => ({
-          key: group,
-          Male: v.filter(_ => _.hh_char_hh_det_gender === 'male').length,
-          Female: v.filter(_ => _.hh_char_hh_det_gender === 'female').length,
-          Other: v.filter(_ => _.hh_char_hh_det_gender === undefined).length,
-        })
-      ))
-      .map(_ => _.sort((a, b) => Object.keys(Person.ageGroup.drc).indexOf(b.key) - Object.keys(Person.ageGroup.drc).indexOf(a.key)))
-      .get
-    ,
+    // ageGroup: chain(flatData.filter(_ => _?.hh_char_hh_det_age !== undefined).groupBy(_ => Person.groupByAgeGroup()(_, p => +p?.hh_char_hh_det_age!)))
+    //   .map(_ => Enum.entries(_).map(([group, v]) => ({
+    //       key: group,
+    //       Male: v.filter(_ => _.hh_char_hh_det_gender === 'male').length,
+    //       Female: v.filter(_ => _.hh_char_hh_det_gender === 'female').length,
+    //       Other: v.filter(_ => _.hh_char_hh_det_gender === undefined).length,
+    //     })
+    //   ))
+    //   .map(_ => _.sort((a, b) => Object.keys(Person.ageGroup.drc).indexOf(b.key) - Object.keys(Person.ageGroup.drc).indexOf(a.key)))
+    //   .get
+    // ,
   }
 }, [data])

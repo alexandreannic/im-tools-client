@@ -1,4 +1,5 @@
-import {_Arr, Arr, Enum} from '@alexandreannic/ts-utils'
+import {Arr} from '@/alexlib-labo/Arr'
+import {Enum} from '@alexandreannic/ts-utils'
 
 export const groupBy: {
   <T extends Record<string, any>, A extends string, R extends any>(_: {
@@ -64,7 +65,8 @@ export const groupBy: {
 }: any) => {
   if (groups.length === 0) return finalTransform(Arr(data), collectedGroup)
   const [group, ...rest] = groups
-  const res = Arr(data).groupBy(_ => group.by(_, collectedGroup))
+  console.log('data', data)
+  const res = Arr(data.splice(1, 200)).groupBy(_ => group.by(_, collectedGroup))
   return new Enum(res)
     .sort(([a], [b]) => group.sort ? group.sort(a, b) : a.localeCompare(b))
     .transform((k, v) => [k, groupBy({
