@@ -1,5 +1,5 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {_Arr, Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
@@ -49,7 +49,7 @@ export const ActivityInfoProtectionGeneral = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: subDays(new Date(parseInt(year), parseInt(month)), 1),
     }
-    return api.kobo.answer.searchProtHhs2({filters}).then(_ => Arr(_.data.map(enrichProtHHS_2_1))).then(res => {
+    return api.kobo.answer.searchProtHhs2({filters}).then(_ => seq(_.data.map(enrichProtHHS_2_1))).then(res => {
       return res
         .filter(_ => {
           const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
@@ -64,7 +64,7 @@ export const ActivityInfoProtectionGeneral = () => {
   //   return api.koboModel.getAnswers(serverId, formId, {
   //     start: new Date(parseInt(year), parseInt(month) - 1),
   //     end: new Date(parseInt(year), parseInt(month)),
-  //   }).then(_ => Arr(_.data.map(KoboFormProtHH.mapAnswers)))
+  //   }).then(_ => seq(_.data.map(KoboFormProtHH.mapAnswers)))
   // }
   const _hhCurrent = useFetcher(request)
 
@@ -113,7 +113,7 @@ const _ActivityInfo = ({
   action,
 }: {
   action?: ReactNode
-  data: _Arr<ProtHHS2Enrich>
+  data: Seq<ProtHHS2Enrich>
   period: string
   setPeriod: Dispatch<SetStateAction<string>>
 }) => {
@@ -132,8 +132,9 @@ const _ActivityInfo = ({
         console.warn('No donor', _)
         // throw new Error('No donor')
       }
-      return planCode[_.tags?.ai!]
+      return planCode[_.tags?.ai!]!
     })).forEach(([planCode, byPlanCode]) => {
+      const w = byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)
       Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
         Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
           Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada)).forEach(([hromada, byHromada]) => {
@@ -147,7 +148,7 @@ const _ActivityInfo = ({
               Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? (('⚠️' + enHromada) as any),
               subActivities: Enum.entries(byHromada.groupBy(_ => mapPopulationGroup(_.do_you_identify_as_any_of_the_following))).map(([populationGroup, byPopulationGroup]) => {
                 try {
-                  const persons = byPopulationGroup.flatMap(_ => _.persons) as _Arr<{age: number, gender: KoboFormProtHH.Gender}>
+                  const persons = byPopulationGroup.flatMap(_ => _.persons) as Seq<{age: number, gender: KoboFormProtHH.Gender}>
                   const childs = persons.filter(_ => _.age < 18)
                   const adults = persons.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
                   const elderly = persons.filter(_ => KoboFormProtHH.isElderly(_.age))

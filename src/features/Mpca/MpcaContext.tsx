@@ -3,10 +3,10 @@ import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClie
 import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {_Arr, Arr} from '@alexandreannic/ts-utils'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {Seq, seq} from '@alexandreannic/ts-utils'
 
 // [DONORS according to Alix]
 
@@ -32,9 +32,9 @@ export enum MpcaProgram {
 }
 
 export interface MpcaContext {
-  data?: _Arr<Mpca>
+  data?: Seq<Mpca>
   formNameTranslation: Record<string, string>
-  fetcherData: UseFetcher<(filters?: KoboAnswerFilter) => Promise<_Arr<Mpca>>>
+  fetcherData: UseFetcher<(filters?: KoboAnswerFilter) => Promise<Seq<Mpca>>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
   _create: UseAsync<(_: string[]) => Promise<MpcaPayment>>
 }
@@ -56,7 +56,7 @@ export const MPCAProvider = ({
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)//
 
-  const fetcherData = useFetcher((_?: KoboAnswerFilter) => api.mpca.search(_).then(_ => Arr(_.data)) as Promise<_Arr<Mpca>>)
+  const fetcherData = useFetcher((_?: KoboAnswerFilter) => api.mpca.search(_).then(_ => seq(_.data)) as Promise<Seq<Mpca>>)
 
   useEffect(() => {
     fetcherData.fetch()

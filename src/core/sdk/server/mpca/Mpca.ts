@@ -4,6 +4,7 @@ import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
 import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {MpcaProgram, MpcaRowSource} from '@/features/Mpca/MpcaContext'
+import {Person} from '@/core/type'
 
 export interface Mpca {
   id: number
@@ -34,12 +35,13 @@ export interface Mpca {
   idFileURL?: KoboAttachment
   phone?: string
   deduplication?: WfpDeduplication
-  girls?: number
-  boys?: number
-  men?: number
-  women?: number
-  elderlyMen?: number
-  elderlyWomen?: number
+  persons?: Person.Person[]
+  // girls?: number
+  // boys?: number
+  // men?: number
+  // women?: number
+  // elderlyMen?: number
+  // elderlyWomen?: number
 }
 
 export class MpcaHelper {

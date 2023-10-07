@@ -1,7 +1,7 @@
 import {useAsync} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray, GenerateXlsFromArrayParams} from '@/shared/Sheet/generateXLSFile'
 import {Utils} from '@/utils/utils'
-import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
+import {Enum, map, mapFor, seq} from '@alexandreannic/ts-utils'
 import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
@@ -132,7 +132,7 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
         ...Enum.entries(ctx.schemaHelper.groupSchemas).map(([groupName, questions]) => {
           const _: GenerateXlsFromArrayParams<any> = {
             sheetName: groupName as string,
-            data: Arr(data).flatMap(d => (d[groupName] as any[])?.map(_ => ({
+            data: seq(data).flatMap(d => (d[groupName] as any[])?.map(_ => ({
               ..._,
               id: d.id,
               start: d.start,

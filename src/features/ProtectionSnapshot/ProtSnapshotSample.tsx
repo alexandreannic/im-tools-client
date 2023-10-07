@@ -1,4 +1,4 @@
-import {PdfSlide, PdfSlideBody, Div, SlidePanelDepreacted, SlideTxt, SlideWidget} from '../../shared/PdfLayout/PdfSlide'
+import {Div, PdfSlide, PdfSlideBody, SlidePanelDepreacted, SlideTxt, SlideWidget} from '../../shared/PdfLayout/PdfSlide'
 import {format, sub} from 'date-fns'
 import {Box, Icon, useTheme} from '@mui/material'
 import {AaPieChart} from '../../shared/Chart/AaPieChart'

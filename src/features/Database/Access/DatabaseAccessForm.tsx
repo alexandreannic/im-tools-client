@@ -7,7 +7,7 @@ import {Autocomplete, Box, Chip, createFilterOptions} from '@mui/material'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {Controller, useForm} from 'react-hook-form'
 import {KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
-import {Arr, map} from '@alexandreannic/ts-utils'
+import {map, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
@@ -56,9 +56,9 @@ export const DatabaseAccessForm = ({
     indexOptionsByName,
   } = useMemo(() => {
     return {
-      indexQuestion: Arr(survey).groupBy(_ => _.name),
-      indexOptionsByListName: Arr(form.content.choices).groupBy(_ => _.list_name),
-      indexOptionsByName: Arr(form.content.choices).groupBy(_ => _.name),
+      indexQuestion: seq(survey).groupBy(_ => _.name),
+      indexOptionsByListName: seq(form.content.choices).groupBy(_ => _.list_name),
+      indexOptionsByName: seq(form.content.choices).groupBy(_ => _.name),
     }
   }, [form])
 

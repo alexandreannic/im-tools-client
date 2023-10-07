@@ -4,12 +4,12 @@ import {useI18n} from '../../../core/i18n'
 import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
-import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
-import {chain, toPercent, Utils} from '@/utils/utils'
+import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
+import {capitalize, chain, toPercent, Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
-import {Period} from '@/core/type'
+import {Period, Person} from '@/core/type'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools, makeChartData} from '@/core/chartTools'
@@ -30,6 +30,8 @@ import {usePersistentState} from 'react-persistent-state'
 import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
+import ageGroups = Person.ageGroups
+import ageGroup = Person.ageGroup
 
 export const today = new Date()
 
@@ -67,8 +69,14 @@ export const MpcaDashboard = () => {
   // }, [periodFilter])
 
   const {defaultFilter, filterShape} = useMemo(() => {
-    const d = mappedData ?? Arr([])
-    const filterShape: {icon?: string, label: string, property: keyof Mpca, multiple?: boolean, options: SheetOptions[]}[] = [{
+    const d = mappedData ?? seq([])
+    const filterShape: {
+      icon?: string,
+      label: string,
+      property: keyof Mpca,
+      multiple?: boolean,
+      options: SheetOptions[]
+    }[] = [{
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
       options: Object.keys(MpcaRowSource).map(_ => SheetUtils.buildCustomOption(_, ctx.formNameTranslation[_]))
     }, {
@@ -89,7 +97,7 @@ export const MpcaDashboard = () => {
     }]
     return {
       filterShape,
-      defaultFilter: Arr(filterShape).reduceObject<any>(_ => [_.property, []]),
+      defaultFilter: seq(filterShape).reduceObject<any>(_ => [_.property, []]),
     }
   }, [mappedData])
 
@@ -103,7 +111,7 @@ export const MpcaDashboard = () => {
         const value = d[shape.property] as any
         if (filters[shape.property].length <= 0) return true
         if (shape.multiple)
-          return Arr(filters[shape.property]).intersect(value).length > 0
+          return seq(filters[shape.property]).intersect(value).length > 0
         return filters[shape.property].includes(value)
       })
     })
@@ -190,13 +198,14 @@ export const _MPCADashboard = ({
   getAmount: (_: Mpca) => number | undefined
   amountType: AmountType
   currency: Currency
-  data: _Arr<Mpca>
+  data: Seq<Mpca>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const ctx = useMPCAContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const [tableType, setTableType] = usePersistentState<'ratio' | 'absolute'>('absolute', 'mpca-dashboard-tableType')
+  const [tableDataType, setTableDataType] = usePersistentState<'ratio' | 'absolute'>('absolute', 'mpca-dashboard-tableType')
   const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', 'mpca-dashboard-tableArea')
+  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('echo', 'mpca-dashboard-ageGroup')
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 
@@ -235,7 +244,7 @@ export const _MPCADashboard = ({
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = data.groupBy(d => format(d.date, 'yyyy-MM'))
                 return new Enum(gb)
-                  .transform((k, v) => [k, v.sum(_ => (getAmount(_) ?? 0))])
+                  .transform((k, v) => [k, seq(v).sum(_ => (getAmount(_) ?? 0))])
                   .sort(([ka], [kb]) => ka.localeCompare(kb))
                   .entries()
                   .map(([k, v]) => ({name: k, amount: v}))
@@ -258,60 +267,29 @@ export const _MPCADashboard = ({
               />
             </SlidePanel>
             <SlidePanel title={m.disaggregation}>
-              <Lazy deps={[data, tableArea, tableType]} fn={() => {
-                const gb = data.groupBy(_ => _[tableArea] as string)
-                const computed = new Enum(gb).transform((k, v) => [k, {
-                  [tableArea]: k,
-                  total: v.sum(d => d.hhSize ?? 0),
-                  men: v.sum(d => d.men ?? 0),
-                  women: v.sum(d => d.women ?? 0),
-                  elderlyMen: v.sum(d => d.elderlyMen ?? 0),
-                  elderlyWomen: v.sum(d => d.elderlyWomen ?? 0),
-                  boys: v.sum(d => d.boys ?? 0),
-                  girls: v.sum(d => d.girls ?? 0),
-                }]).entries().map(([, _]) => ({
-                  ..._,
-                  sum: Utils.add(_.men, _.women, _.boys, _.girls, _.elderlyMen, _.elderlyWomen),
-                }))
-                if (tableType === 'absolute') return computed
-                return computed.map(_ => ({
-                  ..._,
-                  elderlyMen: _.elderlyMen / _.sum,
-                  elderlyWomen: _.elderlyWomen / _.sum,
-                  men: _.men / _.sum,
-                  women: _.women / _.sum,
-                  boys: _.boys / _.sum,
-                  girls: _.girls / _.sum,
-                }))
+              <Lazy deps={[computed.persons, tableAgeGroup]} fn={() => {
+                const gb = Person.groupByGenderAndGroup(ageGroup[tableAgeGroup])(computed.persons)
+                return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
               }}>
-                {_ => (
+                {_ =>
                   <Sheet
+                    hidePagination
                     header={
-                      <Box sx={{with: '100%', display: 'flex'}}>
-                        <ScRadioGroup value={tableType} onChange={setTableType} dense inline sx={{mr: 1}}>
-                          <ScRadioGroupItem value="absolute" title={m.absolute} hideRadio/>
-                          <ScRadioGroupItem value="ratio" title={m.ratio} hideRadio/>
-                        </ScRadioGroup>
-                        <ScRadioGroup value={tableArea} onChange={setTableArea} dense inline>
-                          <ScRadioGroupItem value="oblast" title={m.oblast} hideRadio/>
-                          <ScRadioGroupItem value="office" title={m.office} hideRadio/>
-                        </ScRadioGroup>
-                      </Box>
+                      <ScRadioGroup value={tableAgeGroup} onChange={setTableAgeGroup} dense inline sx={{mb: 1}}>
+                        {Person.ageGroups.map(_ =>
+                          <ScRadioGroupItem key={_} value={_} title={m._ageGroup[_]} hideRadio/>
+                        )}
+                      </ScRadioGroup>
                     }
                     data={_}
                     columns={[
-                      {id: tableArea, head: m[tableArea], type: 'string', render: (_: any) => _[tableArea]},
-                      {width: 0, id: 'elderly_men', head: '50+ Male', type: 'number', renderValue: _ => _.elderlyMen, render: _ => formatLargeNumber(_.elderlyMen)},
-                      {width: 0, id: 'elderly_women', head: '50+ Female', type: 'number', renderValue: _ => _.elderlyWomen, render: _ => formatLargeNumber(_.elderlyWomen)},
-                      {width: 0, id: 'men', head: '18-49 Male', type: 'number', renderValue: _ => _.men, render: _ => formatLargeNumber(_.men)},
-                      {width: 0, id: 'women', head: '18-49 Female', type: 'number', renderValue: _ => _.women, render: _ => formatLargeNumber(_.women)},
-                      {width: 0, id: 'boys', head: 'Boys', type: 'number', renderValue: _ => _.boys, render: _ => formatLargeNumber(_.boys)},
-                      {width: 0, id: 'girls', head: 'Girls', type: 'number', renderValue: _ => _.girls, render: _ => formatLargeNumber(_.girls)},
-                      {width: 0, id: 'sum', head: 'Total Disaggregated', type: 'number', renderValue: _ => _.sum, render: _ => <b>{formatLargeNumber(_.sum)}</b>},
-                      {width: 0, id: 'total', head: 'Total', type: 'number', renderValue: _ => _.total, render: _ => <b>{formatLargeNumber(_.total)}</b>},
+                      {width: 0, id: 'Group', head: m.ageGroup, type: 'select_one', render: _ => _.ageGroup},
+                      {width: 0, id: 'Male', head: m.male, type: 'number', renderValue: _ => _.Male, render: _ => formatLargeNumber(_.Male)},
+                      {width: 0, id: 'Female', head: m.female, type: 'number', renderValue: _ => _.Female, render: _ => formatLargeNumber(_.Female)},
+                      {width: 0, id: 'Other', head: m.other, type: 'number', renderValue: _ => _.Other ?? 0, render: _ => formatLargeNumber(_.Other ?? 0)},
                     ]}
                   />
-                )}
+                }
               </Lazy>
             </SlidePanel>
           </Div>
@@ -336,8 +314,8 @@ export const _MPCADashboard = ({
             {/*</SlidePanel>*/}
             <SlidePanel title={`${m.mpca.assistanceByLocation}`}>
               <Lazy deps={[data, currency, getAmount]} fn={() => {
-                const by = data.groupBy(_ => _.oblastIso)
-                return new Enum(by).transform((k, v) => [k, makeChartData({value: v.sum(x => getAmount(x) ?? 0)})]).get()
+                const by = data.groupBy(_ => _.oblastIso!)
+                return new Enum(by).transform((k, v) => [k, makeChartData({value: seq(v).sum(x => getAmount(x) ?? 0)})]).get()
               }}>
                 {_ => <UkraineMap data={_} sx={{mx: 2}} maximumFractionDigits={0} base={totalAmount}/>}
               </Lazy>

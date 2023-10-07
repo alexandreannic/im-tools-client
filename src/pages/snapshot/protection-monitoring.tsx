@@ -11,7 +11,7 @@ const generalStyles = <GlobalStyles styles={{
 const SnapshotProtectionMonitoringPage = () => {
   return (
     <ThemeProvider theme={muiTheme({
-      dark: false,
+      dark: true,
       fontSize: 14,
       mainColor: '#af161e',
       backgroundDefault: '#000',

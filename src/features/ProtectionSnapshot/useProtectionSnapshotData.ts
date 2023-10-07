@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {ChartDataVal, ChartTools} from '../../core/chartTools'
 import {format} from 'date-fns'
-import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
 import {KoboFormProtHH} from '../../core/koboModel/koboFormProtHH'
 import {chain} from '../../utils/utils'
@@ -19,7 +19,7 @@ const hasntIdpCertificate = (_: (KoboFormProtHH.GetType<'_14_2_1_Do_you_or_your_
 
 export type UseProtectionSnapshotData = ReturnType<typeof useProtectionSnapshotData>
 
-export const useProtectionSnapshotData = (data: _Arr<Answer>, {
+export const useProtectionSnapshotData = (data: Seq<Answer>, {
   start,
   end,
 }: {
@@ -128,7 +128,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
             throw new Error(`Should not happend`)
           })
           return maxIncome / d.persons.length
-        }).groupBy(_ => _ <= 3000) as {true: _Arr<number>, false: _Arr<number>},
+        }).groupBy(_ => _ <= 3000) as {true: Seq<number>, false: Seq<number>},
 
       _33_incomeByIndividualsBelow3000Max: data
         .filter(_ => !!_._33_What_is_the_aver_income_per_household)
@@ -144,7 +144,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
             throw new Error(`Should not happend`)
           })
           return maxIncome / d.persons.length
-        }).groupBy(_ => _ <= 3000) as {true: _Arr<number>, false: _Arr<number>},
+        }).groupBy(_ => _ <= 3000) as {true: Seq<number>, false: Seq<number>},
 
       _18_1_2_What_are_the_factors_t: chain(ChartTools.multiple({
         data: data.map(_ => _._18_1_2_What_are_the_factors_t),
@@ -680,7 +680,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
 
       _8_individuals: (() => {
         const persons = data.flatMap(_ => _.persons)
-        const byAgeGroup = Arr(persons).reduceObject<Record<keyof typeof Person.ageGroup.bha, {value: number}>>((p, acc) => {
+        const byAgeGroup = seq(persons).reduceObject<Record<keyof typeof Person.ageGroup.bha, {value: number}>>((p, acc) => {
           const group = Enum.keys(Person.ageGroup.bha).find(k => {
             const [min, max] = Person.ageGroup.bha[k]
             return p.age && p.age >= min && p.age <= max
@@ -688,7 +688,7 @@ export const useProtectionSnapshotData = (data: _Arr<Answer>, {
           if (group) return [group, {value: (acc[group]?.value ?? 0) + 1}]
         })
 
-        const byGender = Arr(persons).reduceObject<Record<Gender | 'undefined', number>>((p, acc) => {
+        const byGender = seq(persons).reduceObject<Record<Gender | 'undefined', number>>((p, acc) => {
           return [p.gender ?? 'undefined', (acc[p.gender!] ?? 0) + 1]
         })
 

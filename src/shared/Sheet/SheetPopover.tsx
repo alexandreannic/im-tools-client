@@ -2,7 +2,6 @@ import {Box, Popover, PopoverProps} from '@mui/material'
 import React, {ReactNode, useMemo} from 'react'
 import {ChartTools} from '@/core/chartTools'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {Arr} from '@alexandreannic/ts-utils'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useI18n} from '@/core/i18n'
@@ -12,6 +11,7 @@ import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {SheetOptions} from '@/shared/Sheet/sheetType'
 import {KeyOf} from '@/utils/utils'
 import {SheetRow} from '@/shared/Sheet/Sheet'
+import {seq} from '@alexandreannic/ts-utils'
 
 const RenderRow = ({label, value}: {
   label: ReactNode
@@ -38,7 +38,7 @@ export const NumberChoicesPopover = <T, >({
 } & Pick<PopoverProps, 'anchorEl' | 'onClose'>) => {
   const {m, formatLargeNumber} = useI18n()
   const chart = useMemo(() => {
-    const mapped = Arr(data).map((_, i) => mapValues ? mapValues(_, i) : _[question]).filter(_ => _ !== undefined && _ !== '').map(_ => +_)
+    const mapped = seq(data).map((_, i) => mapValues ? mapValues(_, i) : _[question]).filter(_ => _ !== undefined && _ !== '').map(_ => +_)
     const min = Math.min(...mapped)
     const max = Math.max(...mapped)
     const sum = mapped.sum()
@@ -91,15 +91,15 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
   const chart = useMemo(() => {
     const chart = (() => {
       if (multiple) {
-        const mapped = Arr(data).map(getValue).compact()
+        const mapped = seq(data).map(getValue).compact()
         return ChartTools.multiple({data: mapped})
       } else {
-        const mapped = Arr(data).map(getValue).compact()
+        const mapped = seq(data).map(getValue).compact()
         return ChartTools.single({data: mapped})
       }
     })()
     return translations
-      ? ChartTools.setLabel(Arr(translations).reduceObject<Record<string, ReactNode>>(_ => [_.value!, _.label!]))(ChartTools.sortBy.value(chart))
+      ? ChartTools.setLabel(seq(translations).reduceObject<Record<string, ReactNode>>(_ => [_.value!, _.label!]))(ChartTools.sortBy.value(chart))
       : ChartTools.sortBy.value(chart)
   }, [getValue, data, translations])
   return (

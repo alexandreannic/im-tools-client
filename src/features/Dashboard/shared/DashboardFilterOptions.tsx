@@ -1,4 +1,4 @@
-import React, {ReactNode, useMemo} from 'react'
+import React, {useMemo} from 'react'
 import {BoxProps, Checkbox, FormControlLabel, FormGroup} from '@mui/material'
 import {makeSx, Txt} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'

@@ -11,9 +11,9 @@ import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {SheetOptions} from '@/shared/Sheet/sheetType'
-import {Arr} from '@alexandreannic/ts-utils'
 import {SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, SheetFilterValueString, SheetRow} from '@/shared/Sheet/Sheet'
 import {type} from 'os'
+import {seq} from '@alexandreannic/ts-utils'
 
 export type SheetFilterDialogProps = Pick<PopoverProps, 'anchorEl'> & {
   orderBy?: OrderBy
@@ -206,7 +206,7 @@ export const SheetFilterDialogNumber = ({
   onChange: Dispatch<SetStateAction<SheetFilterValueNumber>>
 }) => {
   const {min, max} = useMemo(() => {
-    const values = Arr(data).map(_ => _[columnId] as number | undefined).compact()
+    const values = seq(data).map(_ => _[columnId] as number | undefined).compact()
     return {
       min: Math.min(...values),
       max: Math.max(...values),

@@ -2,7 +2,7 @@ import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {Arr, Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
@@ -31,10 +31,10 @@ export const ShelterTable = () => {
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  // const getNtaIds = () => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact()
-  // const getTaIds = () => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact()
-  const getNta = useCallback(() => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
-  const getTa = useCallback(() => Arr(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
+  // const getNtaIds = () => seq(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact()
+  // const getTaIds = () => seq(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact()
+  const getNta = useCallback(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
+  const getTa = useCallback(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
 
   const columns = useMemo(() => {
     return SheetUtils.buildColumns([

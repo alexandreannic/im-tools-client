@@ -7,11 +7,11 @@ import {useI18n} from '@/core/i18n'
 import {useSession} from '@/core/Session/SessionContext'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {Panel} from '@/shared/Panel'
-import {Arr} from '@alexandreannic/ts-utils'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {Txt} from 'mui-extension'
 import {Box, Switch} from '@mui/material'
 import {useRouter} from 'next/router'
+import {seq} from '@alexandreannic/ts-utils'
 
 export const AdminUsers = () => {
   const {api} = useAppSettings()
@@ -79,13 +79,13 @@ export const AdminUsers = () => {
               head: m.drcJob,
               render: _ => _.drcJob,
               type: 'select_one',
-              options: () => Arr(_users.entity?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+              options: () => seq(_users.entity?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
               id: 'drcOffice',
               head: m.drcOffice,
               render: _ => _.drcOffice,
-              options: () => Arr(_users.entity?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+              options: () => seq(_users.entity?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
               type: 'select_one',

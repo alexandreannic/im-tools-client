@@ -1,5 +1,4 @@
 import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
-import {useFetchers, UseFetchersMultiple} from '@/alexlib-labo/useFetchersFn'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -8,7 +7,7 @@ import {Access} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {KoboForm, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {Arr} from '@alexandreannic/ts-utils'
+import {seq} from '@alexandreannic/ts-utils'
 
 export interface DatabaseContext {
   _forms: UseFetcher<ApiSdk['kobo']['form']['getAll']>
@@ -33,7 +32,7 @@ export const DatabaseProvider = ({
   const {toastHttpError} = useAaToast()
 
   const getForm = useMemo(() => {
-    const index = Arr(_forms.entity).reduceObject<Record<KoboId, KoboForm>>(_ => [_.id, _])
+    const index = seq(_forms.entity).reduceObject<Record<KoboId, KoboForm>>(_ => [_.id, _])
     return (_: KoboId) => index[_]
   }, [_forms.entity])
   // const servers = useFetcher(() => api.kobo.server.getAll())

@@ -1,16 +1,15 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
-import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UUID} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useEffectFn, UseFetcher} from '@alexandreannic/react-hooks-lib'
+import {UseFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {KeyOf} from '@/utils/utils'
-import {cfmMakeUpdateRequestKey} from '@/features/Cfm/CfmContext'
 
 export interface DatabaseKoboContext {
   fetcherAnswers: UseFetcher<() => ReturnType<ApiSdk['kobo']['answer']['searchByAccess']>>

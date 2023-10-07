@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
-import {_Arr, Enum, lazy} from '@alexandreannic/ts-utils'
+import {Enum, lazy, Seq} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
 import {Person} from '../../../core/type'
 import {subDays} from 'date-fns'
@@ -13,7 +13,7 @@ export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
 export const useProtHHS2Data = ({
   data,
 }: {
-  data?: _Arr<ProtHHS2Enrich>
+  data?: Seq<ProtHHS2Enrich>
 }) => {
   const ageGroup = useCallback(lazy((ageGroup: Person.AgeGroup, hideOther?: boolean) => {
     return chain(

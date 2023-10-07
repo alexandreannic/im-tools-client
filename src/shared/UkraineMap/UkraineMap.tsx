@@ -1,4 +1,4 @@
-import {Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Enum, map, seq} from '@alexandreannic/ts-utils'
 import {UkraineSvgPath, ukraineSvgPath} from './ukraineSvgPath'
 import {alpha, Box, BoxProps, darken, useTheme} from '@mui/material'
 import {useMemo} from 'react'
@@ -48,7 +48,7 @@ export const UkraineMap = ({
 
 
   const {max, min, maxPercent, minPercent} = useMemo(() => {
-    const _data = Arr(Enum.values(filteredData)).compact().get
+    const _data = seq(Enum.values(filteredData)).compact().get()
     const values = _data.map(_ => _!.value ?? 0)
     // TODO _data.map create invalid array length
     const percents = ((_data[0] && _data[0].base !== undefined) || base !== undefined) ? _data.map(_ => {

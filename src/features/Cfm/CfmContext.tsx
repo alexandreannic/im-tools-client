@@ -10,7 +10,6 @@ import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
 import {MealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternal'
-import {Arr} from '@alexandreannic/ts-utils'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
@@ -18,6 +17,7 @@ import {DrcOffice} from '@/core/drcUa'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
+import {seq} from '@alexandreannic/ts-utils'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [kobo.drcUa.form.meal_cfmExternal]: CfmDataSource.External,
@@ -114,10 +114,10 @@ export const CfmProvider = ({
   const users = useFetcher(() => api.user.search())
 
   const authorizations: CfmContext['authorizations'] = useMemo(() => {
-    const cfmAccesses = Arr(accesses).filter(Access.filterByFeature(AppFeatureId.cfm))
+    const cfmAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.cfm))
     const sum = Access.toSum(cfmAccesses, session.admin)
-    const accessibleOffices = cfmAccesses.map(_ => _.params).flatMap(_ => _?.office).compact().get
-    const accessiblePrograms = cfmAccesses.map(_ => _.params).flatMap(_ => _?.program).compact().get
+    const accessibleOffices = cfmAccesses.map(_ => _.params).flatMap(_ => _?.office).compact().get()
+    const accessiblePrograms = cfmAccesses.map(_ => _.params).flatMap(_ => _?.program).compact().get()
     // const seeHisOwn = !!cfmAccesses.find(_ => _.params?.seeHisOwn)
     return {
       sum,

@@ -1,6 +1,6 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useMemo, useState} from 'react'
-import {Arr, Enum, map, mapFor} from '@alexandreannic/ts-utils'
+import {Enum, map, mapFor, Seq, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {DashboardLayout} from '../shared/DashboardLayout'
 import {DashboardFilterOptions} from '../shared/DashboardFilterOptions'
@@ -26,11 +26,10 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {CommentsPanel} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
-import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 
 export interface DashboardPageProps {
   filters: OptionFilters
-  data: Arr<KoboAnswer<MealVisitMonitoring>>
+  data: Seq<KoboAnswer<MealVisitMonitoring>>
 }
 
 const mapOblast: Record<string, OblastISO> = OblastIndex.koboOblastIndexIso
@@ -101,7 +100,7 @@ export const DashboardMealVisitMonitoring = () => {
   const {m, formatDateTime, formatDate} = useI18n()
 
   const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.meal_visitMonitoring))
-  const [optionFilter, setOptionFilters] = useState<OptionFilters>(Arr(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
+  const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
 
   const request = (filter: Partial<Period>) => api.kobo.answer.searchMeal_VisitMonitoring({
@@ -139,7 +138,7 @@ export const DashboardMealVisitMonitoring = () => {
   }
 
   const data = useMemo(() => {
-    return map(_answers.entity, _ => Arr(DashboardFilterHelper.filterData(_, filterShape, optionFilter)))
+    return map(_answers.entity, _ => seq(DashboardFilterHelper.filterData(_, filterShape, optionFilter)))
   }, [_answers.entity, optionFilter])
 
   return (

@@ -18,6 +18,7 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
+import {Person} from '@/core/type'
 
 export const ActivityInfoMpca = () => {
   const {api, conf} = useAppSettings()
@@ -37,7 +38,10 @@ export const ActivityInfoMpca = () => {
     }
 
     return api.mpca.search({filters}).then(res => {
-      const mapped: (AiTypeMpcaRmm.Type & {oblast?: string, raion?: string})[] = []
+      const mapped: (AiTypeMpcaRmm.Type & {
+        oblast?: string,
+        raion?: string
+      })[] = []
       Utils.groupBy({
         data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
         groups: [
@@ -54,27 +58,28 @@ export const ActivityInfoMpca = () => {
           },
         ],
         finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
+          const res = Person.groupByGenderAndGroup(Person.ageGroup.quick)(group.flatMap(_ => _.persons).compact())
           mapped.push({
             oblast: oblast === '' ? undefined : oblast,
             raion,
             Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
             'Population Group': populationGroup,
             'Amount of cash in USD distributed through multi-purpose cash assistance': Math.round(group.sum(_ => _.amountUahFinal ?? 0) * conf.uahToUsd),
-            Girls: group.sum(_ => _.girls ?? 0),
-            Boys: group.sum(_ => _.boys ?? 0),
-            'Adult Men': group.sum(_ => _.men ?? 0),
-            'Adult Women': group.sum(_ => _.women ?? 0),
-            'Elderly Men': group.sum(_ => _.elderlyMen ?? 0),
-            'Elderly Women': group.sum(_ => _.elderlyWomen ?? 0),
+            Girls: res['0 - 17'].Female,
+            Boys: res['0 - 17'].Male,
+            'Adult Women': res['18 - 49'].Female,
+            'Adult Men': res['18 - 49'].Male,
+            'Elderly Women': res['50+'].Female,
+            'Elderly Men': res['50+'].Male,
             'Partner Organization': 'Danish Refugee Council',
             'Reporting Month': period,
             'Total # of people assisted with multi-purpose cash assistance': group.sum(_ => Utils.add(
-              _.girls,
-              _.boys,
-              _.men,
-              _.women,
-              _.elderlyMen,
-              _.elderlyWomen,
+              res['0 - 17'].Female,
+              res['0 - 17'].Male,
+              res['18 - 49'].Female,
+              res['18 - 49'].Male,
+              res['50+'].Female,
+              res['50+'].Male,
             )),
             Durations: 'Three months',
             'People with disability': 0,

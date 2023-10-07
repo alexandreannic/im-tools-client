@@ -2,9 +2,9 @@ import React, {ReactNode, useContext, useMemo} from 'react'
 import {SheetColumnProps, SheetRow, SheetTableProps} from '@/shared/Sheet/Sheet'
 import {UseSetState} from '@alexandreannic/react-hooks-lib'
 import {UseSheetData, useSheetData} from '@/shared/Sheet/context/useSheetData'
-import {Arr} from '@alexandreannic/ts-utils'
 import {useSheetModal} from '@/shared/Sheet/context/useSheetModal'
 import {useSetState2} from '@/alexlib-labo/useSetState2'
+import {seq} from '@alexandreannic/ts-utils'
 
 export interface SheetContext<T extends SheetRow> {
   data: UseSheetData
@@ -40,7 +40,7 @@ export const SheetProvider = <T extends SheetRow>({
   children: ReactNode
 }) => {
   const selected = useSetState2<string>()
-  const columnsIndex = useMemo(() => Arr(columns).reduceObject<Record<string, SheetColumnProps<T>>>(_ => [_.id, _]), [columns])
+  const columnsIndex = useMemo(() => seq(columns).reduceObject<Record<string, SheetColumnProps<T>>>(_ => [_.id, _]), [columns])
   const data = useSheetData<T>({
     columnsIndex,
     data: _data,

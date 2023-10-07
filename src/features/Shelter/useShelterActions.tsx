@@ -1,5 +1,5 @@
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {Dispatch, SetStateAction, useEffect, useMemo} from 'react'
+import {Dispatch, SetStateAction, useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'

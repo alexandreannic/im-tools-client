@@ -1,6 +1,6 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useCallback, useMemo} from 'react'
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
@@ -82,14 +82,14 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
       })
       return {
         index,
-        mappedData: Arr(Enum.entries(index))
+        mappedData: seq(Enum.entries(index))
           // .filter(([k, v]) => !!v.nta)
           .map(([k, v]) => ({id: k, ...v}))
           .sort((a, b) => {
             if (!a.nta) return -1
             if (!b.nta) return 1
             return a.nta.submissionTime?.getTime() - b.nta?.submissionTime.getTime()
-          }) as _Arr<ShelterRow>
+          }) as Seq<ShelterRow>
       }
     }, [_fetchTa.entity, _fetchNta.entity, allowedOffices]
   )

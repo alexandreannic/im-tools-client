@@ -1,4 +1,4 @@
-import {Arr, fnSwitch, map, mapFor} from '@alexandreannic/ts-utils'
+import {fnSwitch, map, mapFor, seq} from '@alexandreannic/ts-utils'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {Messages} from '../i18n/localization/en'
 import {KoboAnswer} from '../sdk/server/kobo/Kobo'
@@ -42,7 +42,7 @@ export namespace KoboFormProtHH {
         `_14_2_${i + 2}_Do_you_or_your_househo_00${i + 1}`,
       ] as [string, string, string, string]),
     ]
-    return Arr(fields)
+    return seq(fields)
       .map(([ageCol, sexCol, personalDoc, statusDoc]) => {
         return ({
           age: isNaN(a[ageCol] as any) ? undefined : +a[ageCol]!,

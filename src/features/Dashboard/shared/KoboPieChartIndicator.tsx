@@ -1,7 +1,7 @@
 import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/PieChartIndicator'
 import * as React from 'react'
 import {useMemo} from 'react'
-import {_Arr} from '@alexandreannic/ts-utils'
+import {Seq} from '@alexandreannic/ts-utils'
 import {StringArrayKeys, StringKeys} from '../../../core/type'
 
 /** @deprecated*/
@@ -17,7 +17,7 @@ export const KoboPieChartIndicatorMultiple = <T, K extends StringArrayKeys<T>>({
   question: K
   filter: (_: T[K]) => boolean
   filterBase?: (_: T[K]) => boolean
-  data: _Arr<T>
+  data: Seq<T>
 } & Omit<PieChartIndicatorProps, 'value' | 'base'>) => {
   const baseData = useMemo(() => {
     const t = data.map(_ => _[question]).compact()
@@ -44,12 +44,12 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
   hideEvolution,
   ...props
 }: {
-  compare?: {before: _Arr<T>, now?: _Arr<T>}
+  compare?: {before: Seq<T>, now?: Seq<T>}
   title?: string
   question: K
   filter: (_: T[K]) => boolean
   filterBase?: (_: T[K]) => boolean
-  data: _Arr<T>
+  data: Seq<T>
   showValue?: boolean
   showBase?: boolean
   hideEvolution?: boolean
@@ -57,7 +57,7 @@ export const KoboPieChartIndicator = <T, K extends StringKeys<T> | StringArrayKe
 
   const percent = ({res, base}: {res: number, base: number}) => res / base
 
-  const run = (d: _Arr<T>) => {
+  const run = (d: Seq<T>) => {
     const t = d.map(_ => _[question] as any).compact()
     const base = filterBase ? t.filter(filterBase) : t
     return {

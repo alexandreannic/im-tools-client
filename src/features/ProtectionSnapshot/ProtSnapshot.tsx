@@ -3,7 +3,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {Period, UUID} from '@/core/type'
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {Box, useTheme} from '@mui/material'
-import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Enum, map, Seq} from '@alexandreannic/ts-utils'
 import {Fender} from 'mui-extension'
 import {Pdf} from '@/shared/PdfLayout/PdfLayout'
 import {UseProtectionSnapshotData, useProtectionSnapshotData} from './useProtectionSnapshotData'
@@ -20,7 +20,7 @@ import {ProtSnapshotLivelihood} from './ProtSnapshotLivelihood'
 import Answer = KoboFormProtHH.Answer
 
 export interface ProtSSData {
-  data: _Arr<Answer>
+  data: Seq<Answer>
   computed: UseProtectionSnapshotData
 }
 
@@ -75,14 +75,14 @@ export const ProtSnapshot = ({
     formId,
     filters: period,
     fnMap: KoboFormProtHH.mapAnswers
-  }).then(_ => Arr(_.data))
+  }).then(_ => seq(_.data))
   const _hhCurrent = useFetcher(fetch)
   const _hhPrevious = useFetcher(fetch)
   const [filters, setFilters] = useState<Partial<ProtSnapshotFilter>>({})
   const [customFilters, setCustomFilters] = useState<ProtSnapshotCustomFilters>(protSnapshotInitialFilters)
 
-  const filterValues = (data: Answer[]): _Arr<Answer> => {
-    return Arr(data).filter(row => {
+  const filterValues = (data: Answer[]): Seq<Answer> => {
+    return seq(data).filter(row => {
       const filtered = Enum.keys(filters).every(filterProperty => {
         const filterValues = filters[filterProperty] ?? []
         return filterValues.length === 0
@@ -127,11 +127,11 @@ export const ProtSnapshot = ({
     return map(_hhPrevious.entity, filterValues)
   }, [_hhPrevious.entity, filters, customFilters])
 
-  const currentComputedData = useProtectionSnapshotData(currentFilteredData ?? Arr(), {
+  const currentComputedData = useProtectionSnapshotData(currentFilteredData ?? seq(), {
     start: customFilters.previousPeriodStart,
     end: customFilters.previousPeriodEnd,
   })
-  const previousComputedData = useProtectionSnapshotData(previousFilteredData ?? Arr(), {
+  const previousComputedData = useProtectionSnapshotData(previousFilteredData ?? seq(), {
     start: customFilters.previousPeriodStart,
     end: customFilters.previousPeriodEnd,
   })
@@ -155,7 +155,7 @@ export const ProtSnapshot = ({
   }
 
   const _4_What_oblast_are_you_from_iso = useMemo(() => {
-    return _hhCurrent.entity?.map(_ => _._4_What_oblast_are_you_from_iso).distinct(_ => _).compact() ?? Arr([])
+    return _hhCurrent.entity?.map(_ => _._4_What_oblast_are_you_from_iso).distinct(_ => _).compact() ?? seq([])
   }, [_hhCurrent.entity])
 
   const selectedCurrentOblastISOs = useMemo(() => {
@@ -185,11 +185,11 @@ export const ProtSnapshot = ({
         <ProtSnapshotFilters
           className="noprint"
           current={{
-            data: currentFilteredData ?? Arr([]),
+            data: currentFilteredData ?? seq([]),
             computed: currentComputedData,
           }}
           previous={{
-            data: previousFilteredData ?? Arr([]),
+            data: previousFilteredData ?? seq([]),
             computed: previousComputedData
           }}
           filters={filters}

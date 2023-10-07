@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
 import {Box, Icon} from '@mui/material'
-import {_Arr, Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
 import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
@@ -65,7 +65,7 @@ const toFormData = ({
   formId,
 }: {
   formId: string
-  answers: _Arr<Answer>
+  answers: Seq<Answer>
   period: string
 }) => {
   const activities: Row[] = []
@@ -115,18 +115,17 @@ const toFormData = ({
     })
   }
 
-  console.log(answers.groupBy(_ => _.oblast))
-  Enum.entries(answers.groupBy(_ => _.oblast)).forEach(([oblast, byOblast]) => {
-    const enOblast = bn_ReOptions.ben_det_prev_oblast[oblast]
-    Enum.entries(byOblast.groupBy(_ => _.raion)).forEach(([raion, byRaion]) => {
-      const enRaion = bn_ReOptions.ben_det_raion[raion]
-      Enum.entries(byRaion.groupBy(_ => _.hromada)).forEach(([hromada, byHromada]) => {
-        const enHromada = bn_ReOptions.ben_det_hromada[hromada]
+  Enum.entries(answers.groupBy(_ => _.oblast!)).forEach(([oblast, byOblast]) => {
+    const enOblast = bn_ReOptions.ben_det_prev_oblast[oblast]!
+    Enum.entries(byOblast.groupBy(_ => _.raion!)).forEach(([raion, byRaion]) => {
+      const enRaion = bn_ReOptions.ben_det_raion[raion]!
+      Enum.entries(byRaion.groupBy(_ => _.hromada!)).forEach(([hromada, byHromada]) => {
+        const enHromada = bn_ReOptions.ben_det_hromada[hromada]!
         Enum.entries(byHromada.groupBy(_ => _.settlement)).forEach(([settlement, bySettlement]) => {
           const bySettlementWithPerson = bySettlement.map(_ => ({
             ..._,
             hh_char_hh_det: (_.hh_char_hh_det ?? []).filter(_ => _.age && _.gender)
-          })) as _Arr<Omit<Answer, 'hh_char_hh_det'> & {hh_char_hh_det: Person[]}>
+          })) as Seq<Omit<Answer, 'hh_char_hh_det'> & {hh_char_hh_det: Person[]}>
           const planBK = bySettlementWithPerson.filter(_ => _.BK1 > 0 || _.BK2 > 0 || _.BK3 > 0 || _.BK4 > 0)
           const planHK = bySettlementWithPerson.filter(_ => _.HKMV_ > 0 || _.HKF_ > 0)
           const planBKPersons = planBK.flatMap(_ => _.hh_char_hh_det).filter(_ => _ && _.age && _.gender)
@@ -205,7 +204,7 @@ export const ActivityInfoNFI = () => {
       })
       .then(_ => toFormData({
         formId: 'crvtph7lg6d5dhq2',
-        answers: Arr(_),
+        answers: seq(_),
         period,
       }))
   })
@@ -244,7 +243,7 @@ const _ActivityInfo = ({
         <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
         }}>
-          {m.submitAll} {Arr(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
+          {m.submitAll} {seq(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
         </AaBtn>
       </Box>
       <Panel>

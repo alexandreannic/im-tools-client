@@ -1,4 +1,5 @@
 import {Enum} from '@alexandreannic/ts-utils'
+import {KeyOf, Utils} from '@/utils/utils'
 
 export type UUID = string
 
@@ -37,7 +38,7 @@ export type NumberKeys<T> = {
 
 export namespace Person {
 
-  export type AgeGroup = (typeof ageGroup)[keyof typeof ageGroup]
+  export type AgeGroup = Record<string, number[]>
 
   export interface Person {
     age?: number
@@ -55,6 +56,11 @@ export namespace Person {
   export const isElderly = (age: number | string) => +age >= elderlyLimitIncluded
 
   export const ageGroup = Object.freeze({
+    quick: {
+      '0 - 17': [0, 17],
+      '18 - 49': [18, 49],
+      '50+': [50, Infinity],
+    },
     drc: {
       '0 - 4': [0, 4],
       '5 - 11': [5, 11],
@@ -83,10 +89,11 @@ export namespace Person {
 
   export const ageGroups = Enum.keys(ageGroup)
 
-  export const ageToAgeGroup = (age: number | undefined, ag: AgeGroup): string | undefined => {
+  export const ageToAgeGroup = <AG extends AgeGroup>(age: number | undefined, ag: AG): keyof AG | undefined => {
     for (const [k, [min, max]] of Enum.entries(ag)) {
-      if (age !== undefined && age >= min && age <= max) return k
+      if (age !== undefined && age >= min && age <= max) return k as any
     }
+    return undefined
   }
 
 
@@ -94,7 +101,25 @@ export namespace Person {
     ag: AG = Person.ageGroup.bha as unknown as AG,
   ) => <T>(
     p: T, getAge: (_: T) => number
-  ): keyof AG | undefined => {
-    return ageToAgeGroup(getAge(p), ag) as keyof AG
+  ) => {
+    return ageToAgeGroup(getAge(p), ag)
+  }
+
+  export const groupByGenderAndGroup = <AG extends AgeGroup>(
+    ag: AG = Person.ageGroup.bha as unknown as AG,
+  ) => (
+    data: Person[]
+  ) => {
+    return Utils.groupBy({
+      data,
+      groups: [
+        {
+          by: _ => Person.ageToAgeGroup(_.age, ag)!,
+          sort: (a, b) => Object.keys(ag).indexOf(a) - Object.keys(ag).indexOf(b),
+        },
+        {by: _ => _.gender ?? Person.Gender.Other},
+      ],
+      finalTransform: _ => _.length
+    })
   }
 }

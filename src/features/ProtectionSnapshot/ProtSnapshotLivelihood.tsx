@@ -1,9 +1,9 @@
-import {Arr, Enum, map} from '@alexandreannic/ts-utils'
+import {Enum, map} from '@alexandreannic/ts-utils'
 import {ProtSnapshotSlideProps} from './ProtSnapshot'
 import React from 'react'
 import {useI18n} from '../../core/i18n'
 import {Divider} from '@mui/material'
-import {PdfSlide, PdfSlideBody, Div, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
+import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanelDepreacted, SlidePanelTitle, SlideTxt} from '../../shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '../../shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Txt} from 'mui-extension'
 import {toPercent} from '../../utils/utils'
@@ -96,7 +96,7 @@ export const ProtSnapshotLivelihood = ({
             <SlideTxt dangerouslySetInnerHTML={{
               __html: m.protHHSnapshot.desc.livelihoodAbout2({
                 hhIncomeBelow3000: toPercent(
-                  computed._33_What_is_the_aver_income_per_household!.up_to_1_500_uah.value / Arr(Object.values(computed._33_What_is_the_aver_income_per_household!)).sum(_ => _.value),
+                  computed._33_What_is_the_aver_income_per_household!.up_to_1_500_uah.value / seq(Object.values(computed._33_What_is_the_aver_income_per_household!)).sum(_ => _.value),
                   0
                 ),
                 avgHHIncomeBelow3000: map(computed._33_incomeByIndividualsBelow3000, _ => toPercent(_.true.length / (_.false.length + _.true.length), 0))!,

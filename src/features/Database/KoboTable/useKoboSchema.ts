@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {Arr, mapFor} from '@alexandreannic/ts-utils'
+import {mapFor, seq} from '@alexandreannic/ts-utils'
 import {KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
@@ -84,8 +84,8 @@ export const buildKoboSchemaHelper = ({
     }
   }
 
-  const choicesIndex = Arr(schema.content.choices).groupBy(_ => _.list_name)
-  const questionIndex = Arr(schema.content.survey).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
+  const choicesIndex = seq(schema.content.choices).groupBy(_ => _.list_name)
+  const questionIndex = seq(schema.content.survey).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
 
   return {
     groupsCount: Object.keys(groupSchemas).length,

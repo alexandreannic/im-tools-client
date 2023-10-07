@@ -1,4 +1,4 @@
-import {_Arr, Arr, Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {mapObject, mapObjectValue, sortObject} from '../utils/utils'
 import {ReactNode} from 'react'
 
@@ -30,7 +30,7 @@ export namespace ChartTools {
   export const map = <K extends string, V, NK extends string, NV>(fn: (_: [K, V]) => [NK, NV]) => (obj: Record<K, V>): Record<NK, NV> => mapObject(obj, fn)
 
   export const take = <T extends string>(n: number) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
-    return Arr(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
+    return seq(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
   }
 
   export const sortBy = {
@@ -69,7 +69,7 @@ export namespace ChartTools {
     filterValue?: A[],
     percent?: boolean
   }): ChartData<Exclude<A, keyof typeof filterValue>> => {
-    const obj = Arr(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
+    const obj = seq(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
       return [curr, (acc[curr] ?? 0) + 1]
     })
     const res = {} as ChartData<A>
@@ -84,13 +84,13 @@ export namespace ChartTools {
     base = 'percentOfTotalAnswers',
     filterValue,
   }: {
-    data: _Arr<A[] | undefined>,
+    data: Seq<A[] | undefined>,
     filterValue?: A[],
     base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
   }): ChartData<A> => {
-    const filteredData = data.compact().filter(_ => filterValue ? Arr(_).intersect(filterValue).length === 0 : true)
+    const filteredData = data.compact().filter(_ => filterValue ? seq(_).intersect(filterValue).length === 0 : true)
     const flatData: A[] = filteredData.flatMap(_ => _)
-    const obj = Arr(flatData).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
+    const obj = seq(flatData).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
     const baseCount = fnSwitch(base!, {
       percentOfTotalAnswers: filteredData.length,
       percentOfTotalChoices: flatData.length,
@@ -233,8 +233,8 @@ export namespace ChartTools {
     value: (a: A) => boolean,
     base?: (a: A) => boolean,
   }): ChartDataValPercent => {
-    const v = Arr(data).count(value)
-    const b = (base ? Arr(data).count(base) : data.length) || 1
+    const v = seq(data).count(value)
+    const b = (base ? seq(data).count(base) : data.length) || 1
     return {value: v, base: b, percent: v / b}
   }
 
@@ -247,7 +247,7 @@ export namespace ChartTools {
     getDate: (_: F) => string | undefined
     percentageOf?: (_: F) => boolean
   }): ChartData<F> => {
-    const obj = Arr(data).reduceObject<Record<string, {filter: number, total: number}>>((x, acc) => {
+    const obj = seq(data).reduceObject<Record<string, {filter: number, total: number}>>((x, acc) => {
       const date = getDate(x) ?? 'undefined'
       let value = acc[date]
       if (!value) value = {filter: 0, total: 0}

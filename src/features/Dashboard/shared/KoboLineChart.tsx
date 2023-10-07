@@ -1,4 +1,4 @@
-import {_Arr, Enum} from '@alexandreannic/ts-utils'
+import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
 import {StringKeys} from '../../../core/type'
@@ -13,7 +13,7 @@ export const KoboLineChart = <T extends {end: Date}, K extends StringKeys<T>, V 
 }: {
   height?: number
   question: K
-  data: _Arr<T>
+  data: Seq<T>
   displayedValues?: V[]
   // @ts-ignore
   translations?: Partial<Record<T[K], string>>
