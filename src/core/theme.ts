@@ -460,9 +460,11 @@ const tableTheme = (t: Theme, colorOverOpaque: string) => ({
     zIndex: 10,
     right: 0,
   },
+  '.table tbody tr:not(:last-of-type) td': {
+    borderBottom: `1px solid ${t.palette.divider}`,
+  },
   '.table tbody td': {
     background: t.palette.background.paper,
-    borderBottom: `1px solid ${t.palette.divider}`,
     maxWidth: 80,
   },
   '.table thead td, .table thead th': {

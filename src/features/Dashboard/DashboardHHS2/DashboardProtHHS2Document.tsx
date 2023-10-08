@@ -13,6 +13,7 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {Seq} from '@alexandreannic/ts-utils'
 import {ProtHHS2BarChart, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {Person} from '@/core/type'
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
@@ -46,7 +47,7 @@ export const DashboardProtHHS2Document = ({
                 )}
               </Lazy>
               <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
-                data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male'),
+                data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === Person.Gender.Male),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
                 {(d, l) => (

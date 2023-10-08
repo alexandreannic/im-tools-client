@@ -1,5 +1,5 @@
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {projects, ProtHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
+import {projects, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
@@ -22,10 +22,10 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           type: 'select_multiple',
           width: 200,
           options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
-          tooltip: (row: KoboAnswer<any, ProtHhsTags>) => row.tags?.project,
-          renderValue: (row: KoboAnswer<any, ProtHhsTags>) => row.tags?.project,
+          tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project,
+          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blankValue,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
-          render: (row: KoboAnswer<any, ProtHhsTags>) => (
+          render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
             <AaSelectSingle
               hideNullOption
               value={row.tags?.project}
@@ -43,10 +43,10 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           type: 'select_multiple',
           width: 200,
           options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
-          tooltip: (row: KoboAnswer<any, ProtHhsTags>) => row.tags?.projects,
-          renderValue: (row: KoboAnswer<any, ProtHhsTags>) => row.tags?.projects,
+          tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects,
+          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects ?? SheetUtils.blankValue,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
-          render: (row: KoboAnswer<any, ProtHhsTags>) => (
+          render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
             <AaSelectMultiple
               value={row.tags?.projects ?? []}
               onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'projects'})}

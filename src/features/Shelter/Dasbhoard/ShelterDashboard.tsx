@@ -136,7 +136,7 @@ export const _ShelterDashboard = ({
   computed: NonNullable<UseShelterComputedData>
 }) => {
   const {m, formatLargeNumber} = useI18n()
-  const [tableType, setTableType] = usePersistentState<typeof Person.ageGroups[0]>('echo', 'shelter-dashboard-tableType')
+  const [tableType, setTableType] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', 'shelter-dashboard-tableType')
   const {conf} = useAppSettings()
 
   return (

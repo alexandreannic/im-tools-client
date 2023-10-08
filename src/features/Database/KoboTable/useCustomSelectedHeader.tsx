@@ -4,7 +4,7 @@ import {useI18n} from '@/core/i18n'
 import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
-import {projects} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
+import {projects} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {kobo} from '@/koboDrcUaFormId'
 
 export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode => {

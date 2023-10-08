@@ -2,12 +2,12 @@ import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useState} from 'react'
-import {useI18n} from '../../../core/i18n'
+import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon, useTheme} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '../../../core/chartTools'
+import {ChartTools} from '@/core/chartTools'
 import {chain} from '@/utils/utils'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
@@ -17,6 +17,7 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
 import {makeSx} from 'mui-extension'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {Sheet} from '@/shared/Sheet/Sheet'
 
 const css = makeSx({
   table: {
@@ -38,7 +39,7 @@ export const DashboardProtHHS2Sample = ({
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
   const theme = useTheme()
-  const [ag, setAg] = useState<keyof (typeof Person.ageGroup)>('drc')
+  const [ag, setAg] = useState<keyof (typeof Person.ageGroup)>('DRC')
   const [agDisplay, setAgDisplay] = useState<'chart' | 'table'>('chart')
   return (
     <Div column>
@@ -66,7 +67,7 @@ export const DashboardProtHHS2Sample = ({
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
               <Lazy deps={[data]} fn={() => ChartTools.percentage({
                 data: computed.flatData,
-                value: _ => _.gender === 'female'
+                value: _ => _.gender === 'Female'
               })}>
                 {_ => (
                   <PieChartIndicator value={_.value} base={_.base} title={m.females}/>
@@ -105,14 +106,15 @@ export const DashboardProtHHS2Sample = ({
             <UkraineMap data={computed.byCurrentOblast} sx={{mx: 1}} base={data.length}/>
           </SlidePanel>
           <SlidePanel title={m.ageGroup}>
-            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-              <ScRadioGroup value={ag} onChange={setAg} dense inline sx={{mb: 2}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2}}>
+              <ScRadioGroup value={ag} onChange={setAg} dense inline sx={{mr: 1}}>
                 {Enum.keys(Person.ageGroup).map(_ =>
-                  <ScRadioGroupItem dense hideRadio key={_} value={_} title={_.toUpperCase()}/>
+                  <ScRadioGroupItem dense hideRadio key={_} value={_} title={_}/>
                 )}
               </ScRadioGroup>
-              <ScRadioGroup value={agDisplay} onChange={setAgDisplay} dense inline sx={{mb: 2}}>
-                <ScRadioGroupItem dense hideRadio value="table" title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>calendar_view_month</Icon>}/>
+              <ScRadioGroup value={agDisplay} onChange={setAgDisplay} dense inline>
+                <ScRadioGroupItem dense hideRadio value="table"
+                                  title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>calendar_view_month</Icon>}/>
                 <ScRadioGroupItem
                   dense hideRadio value="chart"
                   title={<Icon color="disabled" sx={{marginBottom: '-5px', fontSize: '20px !important'}}>align_horizontal_left</Icon>}
@@ -123,28 +125,39 @@ export const DashboardProtHHS2Sample = ({
               {_ => agDisplay === 'chart' ? (
                 <AAStackedBarChart data={_} height={250}/>
               ) : (
-                <Box component="table" sx={css.table}>
-                  <tr>
-                    <td></td>
-                    <td>{m.female}</td>
-                    <td>{m.male}</td>
-                    <td>{m.other}</td>
-                  </tr>
-                  {_.map(k =>
-                    <tr key={k.key}>
-                      <td>{k.key}</td>
-                      <td>{k.Female}</td>
-                      <td>{k.Male}</td>
-                      <td>{k.Other}</td>
-                    </tr>
-                  )}
-                  <tr>
-                    <td><b>{m.total}</b></td>
-                    <td><b>{_.reduce((acc, _) => acc + (_.Female ?? 0), 0)}</b></td>
-                    <td><b>{_.reduce((acc, _) => acc + (_.Male ?? 0), 0)}</b></td>
-                    <td><b>{_.reduce((acc, _) => acc + (_.Other ?? 0), 0)}</b></td>
-                  </tr>
-                </Box>
+                <Sheet
+                  sx={{border: t => `1px solid ${t.palette.divider}`, overflow: 'hidden', borderRadius: t => t.shape.borderRadius + 'px'}}
+                  hidePagination
+                  data={_}
+                  columns={[
+                    {width: 0, id: 'Group', head: m.ageGroup, type: 'select_one', render: _ => _.key},
+                    {width: 0, id: 'Male', head: m.male, type: 'number', renderValue: _ => _.Male, render: _ => formatLargeNumber(_.Male)},
+                    {width: 0, id: 'Female', head: m.female, type: 'number', renderValue: _ => _.Female, render: _ => formatLargeNumber(_.Female)},
+                    {width: 0, id: 'Other', head: m.other, type: 'number', renderValue: _ => _.Other ?? 0, render: _ => formatLargeNumber(_.Other ?? 0)},
+                  ]}
+                />
+                // <Box component="table" sx={css.table}>
+                //   <tr>
+                //     <td></td>
+                //     <td>{m.female}</td>
+                //     <td>{m.male}</td>
+                //     <td>{m.other}</td>
+                //   </tr>
+                //   {_.map(k =>
+                //     <tr key={k.key}>
+                //       <td>{k.key}</td>
+                //       <td>{k.Female}</td>
+                //       <td>{k.Male}</td>
+                //       <td>{k.Other}</td>
+                //     </tr>
+                //   )}
+                //   <tr>
+                //     <td><b>{m.total}</b></td>
+                //     <td><b>{_.reduce((acc, _) => acc + (_.Female ?? 0), 0)}</b></td>
+                //     <td><b>{_.reduce((acc, _) => acc + (_.Male ?? 0), 0)}</b></td>
+                //     <td><b>{_.reduce((acc, _) => acc + (_.Other ?? 0), 0)}</b></td>
+                //   </tr>
+                // </Box>
               )}
             </Lazy>
           </SlidePanel>

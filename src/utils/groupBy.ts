@@ -45,6 +45,31 @@ export const groupBy: {
     data: T[],
     groups: [
       {by: ((_: T) => A), sort?: (a: A, b: A) => number},
+      {by: ((_: T, groups: [A]) => B), sort?: (a: B, b: B) => number},
+      {by: ((_: T, groups: [A, B]) => C), sort?: (a: C, b: C) => number},
+      {by: ((_: T, groups: [A, B, C]) => D), sort?: (a: D, b: D) => number},
+      {by: ((_: T, groups: [A, B, C, D]) => E), sort?: (a: E, b: E) => number},
+    ],
+    finalTransform: (_: Seq<T>, groups: [A, B, C, D, E]) => R
+  }): Record<A, Record<B, Record<C, Record<D, Record<E, R>>>>>
+
+  <T extends Record<GroupByKey, any>, A extends string, B extends string, C extends string, D extends string, E extends string, F extends string, R extends any>(_: {
+    data: T[],
+    groups: [
+      {by: ((_: T) => A), sort?: (a: A, b: A) => number},
+      {by: ((_: T, groups: [A]) => B), sort?: (a: B, b: B) => number},
+      {by: ((_: T, groups: [A, B]) => C), sort?: (a: C, b: C) => number},
+      {by: ((_: T, groups: [A, B, C]) => D), sort?: (a: D, b: D) => number},
+      {by: ((_: T, groups: [A, B, C, D]) => E), sort?: (a: E, b: E) => number},
+      {by: ((_: T, groups: [A, B, C, D, E]) => F), sort?: (a: F, b: F) => number},
+    ],
+    finalTransform: (_: Seq<T>, groups: [A, B, C, D, E, F]) => R
+  }): Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, F>>>>>>
+
+  <T extends Record<GroupByKey, any>, A extends string, B extends string, C extends string, D extends string, E extends string, R extends any>(_: {
+    data: T[],
+    groups: [
+      {by: ((_: T) => A), sort?: (a: A, b: A) => number},
       {by: ((_: T) => B), sort?: (a: B, b: B) => number},
       {by: ((_: T) => C), sort?: (a: C, b: C) => number},
       {by: ((_: T) => D), sort?: (a: D, b: D) => number},

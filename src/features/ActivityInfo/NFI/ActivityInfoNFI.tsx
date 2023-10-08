@@ -7,7 +7,6 @@ import {Box, Icon} from '@mui/material'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
 import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
-import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
@@ -20,6 +19,7 @@ import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
+import {Person} from '@/core/type'
 
 interface Person {
   age: number
@@ -106,7 +106,7 @@ const toFormData = ({
     activities.push({
       rows,
       activity,
-      request: ActivityInfoSdk.makeRequest({
+      request: ActivityInfoSdk.makeRecordRequest({
         activity: mapWashRMM(activity),
         formId,
         activityIdPrefix: 'drcnfi' + period.replace('-', '') + 'i',
@@ -155,10 +155,10 @@ const toFormData = ({
             'Total Reached (No Disaggregation)': planHKPersons.length,
             'Boys': planHKPersons.count(_ => _.age < 18 && _.gender === 'male'),
             'Girls': planHKPersons.count(_ => _.age < 18 && _.gender === 'female'),
-            'Men': planHKPersons.count(_ => _.age >= 18 && _.age < KoboFormProtHH.elderlyLimitIncluded && _.gender === 'male'),
-            'Women': planHKPersons.count(_ => _.age >= 18 && _.age < KoboFormProtHH.elderlyLimitIncluded && _.gender === 'female'),
-            'Elderly Men': planHKPersons.count(_ => _.age >= KoboFormProtHH.elderlyLimitIncluded && _.gender === 'male'),
-            'Elderly Women': planHKPersons.count(_ => _.age >= KoboFormProtHH.elderlyLimitIncluded && _.gender === 'female'),
+            'Men': planHKPersons.count(_ => _.age >= 18 && _.age < Person.elderlyLimitIncluded && _.gender === 'male'),
+            'Women': planHKPersons.count(_ => _.age >= 18 && _.age < Person.elderlyLimitIncluded && _.gender === 'female'),
+            'Elderly Men': planHKPersons.count(_ => _.age >= Person.elderlyLimitIncluded && _.gender === 'male'),
+            'Elderly Women': planHKPersons.count(_ => _.age >= Person.elderlyLimitIncluded && _.gender === 'female'),
             'People with disability': planHK.length,
           })
         })
@@ -271,10 +271,10 @@ const _ActivityInfo = ({
               </>
           },
           {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
-          {type: 'string', id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.print5w(_.activity['Oblast'])}</>},
-          {type: 'string', id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.print5w(_.activity['Raion'])}</>},
-          {type: 'string', id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.print5w(_.activity['Hromada'])}</>},
-          {type: 'string', id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.print5w(_.activity['Settlement'])}</>},
+          {type: 'string', id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.get5w(_.activity['Oblast'])}</>},
+          {type: 'string', id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.get5w(_.activity['Raion'])}</>},
+          {type: 'string', id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.get5w(_.activity['Hromada'])}</>},
+          {type: 'string', id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.get5w(_.activity['Settlement'])}</>},
           {type: 'string', id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
           {type: 'string', id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
           {type: 'number', id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},

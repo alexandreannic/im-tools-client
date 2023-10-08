@@ -362,4 +362,10 @@ export namespace Utils {
   }
 
   export const groupBy = _groupBy
+
+  export type ReverseMap<T extends Record<keyof T, keyof any>> = {
+    [P in T[keyof T]]: {
+      [K in keyof T]: T[K] extends P ? K : never
+    }[keyof T]
+  }
 }

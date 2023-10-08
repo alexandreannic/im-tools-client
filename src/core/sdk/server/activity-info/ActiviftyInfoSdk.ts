@@ -1,5 +1,6 @@
 import {ApiClient} from '../ApiClient'
-import {AiProtectionHhs} from '../../../../features/ActivityInfo/HHS_2_1/activityInfoInterface'
+import {AiTypeProtectionRmm} from '@/features/ActivityInfo/HHS_2_1/AiTypeProtectionRmm'
+import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 
 export class ActivityInfoSdk {
   constructor(private client: ApiClient) {
@@ -9,7 +10,7 @@ export class ActivityInfoSdk {
     mpca: 'cxeirf9ldwx90rs6'
   }
 
-  static readonly makeRequest = ({
+  static readonly makeRecordRequest = ({
     activityIdPrefix,
     activity,
     activityIndex,
@@ -20,7 +21,7 @@ export class ActivityInfoSdk {
     activityIndex: number
     formId: string
 
-  }) => {
+  }): ActiviftyInfoRecords => {
     return {
       'changes': [{
         'formId': formId,
@@ -31,7 +32,7 @@ export class ActivityInfoSdk {
     }
   }
 
-  readonly submitActivity = (body: AiProtectionHhs.FormParams[]) => {
+  readonly submitActivity = (body: AiTypeProtectionRmm.FormParams[]) => {
     return this.client.post(`/activity-info/activity`, {body})
   }
 
