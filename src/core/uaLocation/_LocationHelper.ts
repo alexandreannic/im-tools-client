@@ -41,12 +41,13 @@ export class AILocationHelper {
   static readonly findOblast = (name: string) => AILocationHelper.findLocation(aiOblasts, name, 'Oblast')
 
   static readonly findRaion = (oblastName: string, raionName: string): undefined | AILocation => {
-    if (raionName === 'Cnernivetskyi') {
-      raionName = 'Chernivetskyi'
-    }
+    const fixedRaion = {
+      'Cnernivetskyi': 'Chernivetskyi',
+      'Volodymyr-Volynskyi': 'Volodymyrskyi',
+    }[raionName] ?? raionName
     const oblastIso = OblastIndex.searchISOByName(oblastName)
     const list = Enum.values(raions).filter(_ => _.parent === oblastIso)
-    return list.find(_ => _.en === raionName)
+    return list.find(_ => _.en === fixedRaion)
   }
 
   static readonly findHromadaByIso = (iso: keyof typeof hromadas) => {

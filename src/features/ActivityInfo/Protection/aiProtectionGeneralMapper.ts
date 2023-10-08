@@ -60,7 +60,7 @@ export class ActivityInfoProtectionMapper {
             non_displaced: 'Non-Displaced',
           }, () => {
             // throw new Error(`Population Group should be defined Group session ${d.id}`)
-            return 'IDPs'
+            return 'Non-Displaced'
           }),
           'Protection Indicators': '# of persons reached through protection monitoring',
         })
@@ -101,7 +101,7 @@ export class ActivityInfoProtectionMapper {
             'non-displaced': 'Non-Displaced',
           }, () => {
             // throw new Error(`Population Group should be defined Group session ${d.id}`)
-            return 'IDPs'
+            return 'Non-Displaced'
           }),
           'Protection Indicators': '# of persons who participated in awareness raising activities - GP',
         })
@@ -133,7 +133,7 @@ export class ActivityInfoProtectionMapper {
               idp: 'IDPs',
               'non-displaced': 'Non-Displaced',
             }, () => {
-              return 'IDPs'
+              return 'Non-Displaced'
               // throw new Error(`Population Group should be defined Community Monitoring ${d.id}`)
             }),
             'Protection Indicators': '# of key informants reached through community level protection monitoring',
@@ -160,7 +160,7 @@ export class ActivityInfoProtectionMapper {
                 idp: 'IDPs',
                 'non-displaced': 'Non-Displaced',
               }, () => {
-                return 'IDPs'
+                return 'Non-Displaced'
                 // throw new Error(`Population Group should be defined Community Monitoring ${d.id}`)
               }),
               'Protection Indicators': '# of key informants reached through community level protection monitoring',
