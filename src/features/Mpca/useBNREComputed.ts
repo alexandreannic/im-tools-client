@@ -46,7 +46,7 @@ export const useBNREComputed = ({
     //       Other: v.filter(_ => _.hh_char_hh_det_gender === undefined).length,
     //     })
     //   ))
-    //   .map(_ => _.sort((a, b) => Object.keys(Person.ageGroup.drc).indexOf(b.key) - Object.keys(Person.ageGroup.drc).indexOf(a.key)))
+    //   .map(_ => _.sort((a, b) => Object.keys(Person.ageGroup.DRC).indexOf(b.key) - Object.keys(Person.ageGroup.DRC).indexOf(a.key)))
     //   .get
     // ,
   }

@@ -205,7 +205,7 @@ export const _MPCADashboard = ({
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [tableDataType, setTableDataType] = usePersistentState<'ratio' | 'absolute'>('absolute', 'mpca-dashboard-tableType')
   const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', 'mpca-dashboard-tableArea')
-  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('echo', 'mpca-dashboard-ageGroup')
+  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', 'mpca-dashboard-ageGroup')
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 

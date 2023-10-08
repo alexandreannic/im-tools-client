@@ -217,7 +217,7 @@ const _Sheet = <T extends SheetRow>({
   const filteredColumns = useMemo(() => ctx.columns.filter(_ => !hiddenColumns.includes(_.id)), [ctx.columns, hiddenColumns])
 
   return (
-    <>
+    <Box sx={sx}>
       <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center', width: '100%'}}>
         <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
           <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
@@ -279,7 +279,7 @@ const _Sheet = <T extends SheetRow>({
         <Box sx={{
           // width: 'max-coontent'
         }}>
-          <Box id={id} component="table" className="borderY table" sx={{...sx, minWidth: '100%'}}>
+          <Box id={id} component="table" className="borderY table" sx={{minWidth: '100%'}}>
             <SheetHead
               data={ctx.data.filteredSortedAndPaginatedData?.data}
               search={ctx.data.search}
@@ -334,7 +334,7 @@ const _Sheet = <T extends SheetRow>({
           }}
         />
       )}
-    </>
+    </Box>
   )
 }
 

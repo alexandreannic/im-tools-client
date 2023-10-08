@@ -42,7 +42,6 @@ export const ActivityInfoMpca = () => {
         oblast?: string,
         raion?: string
       })[] = []
-      console.log('res.data', res.data)
       Utils.groupBy({
         data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
         groups: [

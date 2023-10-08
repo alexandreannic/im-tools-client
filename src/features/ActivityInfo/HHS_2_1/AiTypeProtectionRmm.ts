@@ -326,69 +326,69 @@ export namespace AiTypeProtectionRmm {
 //$1: {hromada: '$2', settlement: '$3'},\n
 
 // Community Level
-const w = {
-  'changes': [{
-    'formId': 'cas3n26ldsu5aea5',
-    'recordId': 'c5hc6jilng55yjm2',
-    'parentRecordId': null,
-    'fields': {
-      'ci607odlbs8w4pe2': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',  // partner
-      'cu3do47ldu8x1eg4m': 'cqnfuewldtzuhuf2:cfbgfipleo7dg222',   // plan code
-      'cva2znrle7pd83vd': 'cg7v61llbunvy9t9:ciua21glebrkckb2',    // oblast
-      'cb7h23tle7pdocme': 'cjy8nbnlbunzcnh1h:clrmtnqlecp1fu03',   // raion
-      'cqai21ple7pe0bif': 'c700rjplbuo1fjq5m:chagq9rlebstwse2'    // hromada
-    }
-  },
-    {
-      'formId': 'cy3vehlldsu5aeb6',
-      'recordId': 'c9x69gllng5jlbf3',
-      'parentRecordId': 'c5hc6jilng55yjm2',
-      'fields': {
-        'cmxllh3ldsuvom9g': '2023-09',
-        'c19j8p9ldsv4qa3o': 'cqjd0o4ld4hbyo12:co8y3rvld4hchx14', // Population group
-        'c79be77ldswj831t': 'c3vbxtgldsw1as42:ceabnj7le4efhhpo', // Protection indicators
-        'cgwjgg2ldsx1nzsv': 0,
-        'c62l7s0lbs8mvnx3b': 0,
-        'cqvizd5lbs8mvnx3d': 0,
-        'ceij8s2lbs8mvnx3f': 0,
-        'cpbkputlbs8mvny3h': 0,
-        'cpkkgqulbs8mvny3j': 0,
-        'cmyfyd8lbs8mvny3l': 0,
-        'cj41459lbs8mvny3n': 0
-      }
-    }]
-}
+// const w = {
+//   'changes': [{
+//     'formId': 'cas3n26ldsu5aea5',
+//     'recordId': 'c5hc6jilng55yjm2',
+//     'parentRecordId': null,
+//     'fields': {
+//       'ci607odlbs8w4pe2': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',  // partner
+//       'cu3do47ldu8x1eg4m': 'cqnfuewldtzuhuf2:cfbgfipleo7dg222',   // plan code
+//       'cva2znrle7pd83vd': 'cg7v61llbunvy9t9:ciua21glebrkckb2',    // oblast
+//       'cb7h23tle7pdocme': 'cjy8nbnlbunzcnh1h:clrmtnqlecp1fu03',   // raion
+//       'cqai21ple7pe0bif': 'c700rjplbuo1fjq5m:chagq9rlebstwse2'    // hromada
+//     }
+//   },
+//     {
+//       'formId': 'cy3vehlldsu5aeb6',
+//       'recordId': 'c9x69gllng5jlbf3',
+//       'parentRecordId': 'c5hc6jilng55yjm2',
+//       'fields': {
+//         'cmxllh3ldsuvom9g': '2023-09',
+//         'c19j8p9ldsv4qa3o': 'cqjd0o4ld4hbyo12:co8y3rvld4hchx14', // Population group
+//         'c79be77ldswj831t': 'c3vbxtgldsw1as42:ceabnj7le4efhhpo', // Protection indicators
+//         'cgwjgg2ldsx1nzsv': 0,
+//         'c62l7s0lbs8mvnx3b': 0,
+//         'cqvizd5lbs8mvnx3d': 0,
+//         'ceij8s2lbs8mvnx3f': 0,
+//         'cpbkputlbs8mvny3h': 0,
+//         'cpkkgqulbs8mvny3j': 0,
+//         'cmyfyd8lbs8mvny3l': 0,
+//         'cj41459lbs8mvny3n': 0
+//       }
+//     }]
+// }
 
 // Awarness
-const x = {
-  'changes': [{
-    'formId': 'cas3n26ldsu5aea5',
-    'recordId': 'c2pjbs0lne9z9n82',
-    'parentRecordId': null,
-    'fields': {
-      'ci607odlbs8w4pe2': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',
-      'cu3do47ldu8x1eg4m': 'cqnfuewldtzuhuf2:cfbgfipleo7dg222',
-      'cva2znrle7pd83vd': 'cg7v61llbunvy9t9:ciua21glebrkckb2',
-      'cb7h23tle7pdocme': 'cjy8nbnlbunzcnh1h:clrmtnqlecp1fu03',
-      'cqai21ple7pe0bif': 'c700rjplbuo1fjq5m:chagq9rlebstwse2'
-    }
-  },
-    {
-      'formId': 'cy3vehlldsu5aeb6',
-      'recordId': 'cfbjfs6lng5reib3',
-      'parentRecordId': 'c2pjbs0lne9z9n82',
-      'fields': {
-        'cmxllh3ldsuvom9g': '2023-09',
-        'c19j8p9ldsv4qa3o': 'cqjd0o4ld4hbyo12:co8y3rvld4hchx14',
-        'c79be77ldswj831t': 'c3vbxtgldsw1as42:c6rcu2jle4efhhp6',
-        'cgwjgg2ldsx1nzsv': 0,
-        'c62l7s0lbs8mvnx3b': 0,
-        'cqvizd5lbs8mvnx3d': 0,
-        'ceij8s2lbs8mvnx3f': 0,
-        'cpbkputlbs8mvny3h': 0,
-        'cpkkgqulbs8mvny3j': 0,
-        'cmyfyd8lbs8mvny3l': 0,
-        'cj41459lbs8mvny3n': 0
-      }
-    }]
-}
+// const x = {
+//   'changes': [{
+//     'formId': 'cas3n26ldsu5aea5',
+//     'recordId': 'c2pjbs0lne9z9n82',
+//     'parentRecordId': null,
+//     'fields': {
+//       'ci607odlbs8w4pe2': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',
+//       'cu3do47ldu8x1eg4m': 'cqnfuewldtzuhuf2:cfbgfipleo7dg222',
+//       'cva2znrle7pd83vd': 'cg7v61llbunvy9t9:ciua21glebrkckb2',
+//       'cb7h23tle7pdocme': 'cjy8nbnlbunzcnh1h:clrmtnqlecp1fu03',
+//       'cqai21ple7pe0bif': 'c700rjplbuo1fjq5m:chagq9rlebstwse2'
+//     }
+//   },
+//     {
+//       'formId': 'cy3vehlldsu5aeb6',
+//       'recordId': 'cfbjfs6lng5reib3',
+//       'parentRecordId': 'c2pjbs0lne9z9n82',
+//       'fields': {
+//         'cmxllh3ldsuvom9g': '2023-09',
+//         'c19j8p9ldsv4qa3o': 'cqjd0o4ld4hbyo12:co8y3rvld4hchx14',
+//         'c79be77ldswj831t': 'c3vbxtgldsw1as42:c6rcu2jle4efhhp6',
+//         'cgwjgg2ldsx1nzsv': 0,
+//         'c62l7s0lbs8mvnx3b': 0,
+//         'cqvizd5lbs8mvnx3d': 0,
+//         'ceij8s2lbs8mvnx3f': 0,
+//         'cpbkputlbs8mvny3h': 0,
+//         'cpkkgqulbs8mvny3j': 0,
+//         'cmyfyd8lbs8mvny3l': 0,
+//         'cj41459lbs8mvny3n': 0
+//       }
+//     }]
+// }

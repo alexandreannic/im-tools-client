@@ -1,5 +1,5 @@
 import React, {ReactNode, useContext, useEffect, useState} from 'react'
-import {UseProtHHS2Data, useProtHHS2Data} from '@/features/Dashboard/DashboardHHS2/useProtHHS2Data'
+import {UseProtHHS2Data, useProtHhs2Data} from '@/features/Dashboard/DashboardHHS2/useProtHhs2Data'
 import {Period} from '@/core/type'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -43,7 +43,7 @@ export const SnapshotProtMonitoringProvider = ({
     _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
-  const computed = useProtHHS2Data({data: _answers.entity})
+  const computed = useProtHhs2Data({data: _answers.entity})
 
   return (
     <Context.Provider value={{

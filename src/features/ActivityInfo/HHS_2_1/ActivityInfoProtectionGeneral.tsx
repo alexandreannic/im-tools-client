@@ -115,7 +115,7 @@ const _ActivityInfo = ({
         console.warn('No donor', _)
         // throw new Error('No donor')
       }
-      return AiProtectionGeneralType.planCode[_.tags?.ai!]!
+      return 'OLD'
     })).forEach(([planCode, byPlanCode]) => {
       Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
         Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
@@ -124,26 +124,27 @@ const _ActivityInfo = ({
             const enRaion = Protection_Hhs2_1Options.what_is_your_area_of_origin_raion[raion]
             const enHromada = Protection_Hhs2_1Options.what_is_your_area_of_origin_hromada[hromada]
             const activity: AiTypeProtectionRmm.FormParams = {
-              'Plan Code': planCode,
+              'Plan Code': planCode as any,
               Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
               Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? (('⚠️' + enRaion) as any),
               Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? (('⚠️' + enHromada) as any),
               subActivities: Enum.entries(byHromada.groupBy(_ => AiProtectionGeneralType.mapStatus(_.do_you_identify_as_any_of_the_following))).map(([populationGroup, byPopulationGroup]) => {
                 try {
-                  const persons = byPopulationGroup.flatMap(_ => _.persons) as Seq<{age: number, gender: KoboFormProtHH.Gender}>
+                  const persons = byPopulationGroup.flatMap(_ => _.persons).compactBy('age').compactBy('gender')
                   const childs = persons.filter(_ => _.age < 18)
                   const adults = persons.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
                   const elderly = persons.filter(_ => KoboFormProtHH.isElderly(_.age))
                   return {
+                    'Protection Indicators': '# of persons reached through protection monitoring',
                     'Reporting Month': period,
                     'Total Individuals Reached': persons.length,
                     'Population Group': populationGroup as any,
-                    'Adult Men': adults.count(_ => _.gender === 'male'),
-                    'Adult Women': adults.count(_ => _.gender === 'female'),
-                    'Boys': childs.count(_ => _.gender === 'male'),
-                    'Girls': childs.count(_ => _.gender === 'female'),
-                    'Elderly Women': elderly.count(_ => _.gender === 'female'),
-                    'Elderly Men': elderly.count(_ => _.gender === 'male'),
+                    'Adult Men': adults.count(_ => _.gender === 'Male'),
+                    'Adult Women': adults.count(_ => _.gender === 'Female'),
+                    'Boys': childs.count(_ => _.gender === 'Male'),
+                    'Girls': childs.count(_ => _.gender === 'Female'),
+                    'Elderly Women': elderly.count(_ => _.gender === 'Female'),
+                    'Elderly Men': elderly.count(_ => _.gender === 'Male'),
                   }
                 } catch (e: unknown) {
                   console.error(byPopulationGroup)

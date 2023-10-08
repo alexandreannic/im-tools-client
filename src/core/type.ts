@@ -56,12 +56,12 @@ export namespace Person {
   export const isElderly = (age: number | string) => +age >= elderlyLimitIncluded
 
   export const ageGroup = Object.freeze({
-    quick: {
+    Quick: {
       '0 - 17': [0, 17],
       '18 - 49': [18, 49],
       '50+': [50, Infinity],
     },
-    drc: {
+    DRC: {
       '0 - 4': [0, 4],
       '5 - 11': [5, 11],
       '12 - 17': [12, 17],
@@ -70,13 +70,13 @@ export namespace Person {
       '50 - 59': [50, 59],
       '60+': [elderlyLimitIncluded, Infinity],
     },
-    echo: {
+    ECHO: {
       '0 - 4': [0, 4],
       '5 - 17': [5, 17],
       '18 - 49': [18, 49],
       '50+': [50, Infinity],
     },
-    bha: {
+    BHA: {
       '0 - 4': [0, 4],
       '5 - 9': [5, 9],
       '10 - 14': [10, 14],
@@ -98,7 +98,7 @@ export namespace Person {
 
 
   export const groupByAgeGroup = <AG extends AgeGroup>(
-    ag: AG = Person.ageGroup.bha as unknown as AG,
+    ag: AG = Person.ageGroup.BHA as unknown as AG,
   ) => <T>(
     p: T, getAge: (_: T) => number
   ) => {
@@ -106,7 +106,7 @@ export namespace Person {
   }
 
   export const groupByGenderAndGroup = <AG extends AgeGroup>(
-    ag: AG = Person.ageGroup.bha as unknown as AG,
+    ag: AG = Person.ageGroup.BHA as unknown as AG,
   ) => (
     data: Person[]
   ) => {
