@@ -29,7 +29,7 @@ export const SnapshotProtMonitoringProvider = ({
     end: new Date(2023, 6, 31),
   })
 
-  const request = (filter: Partial<Period>) => api.kobo.answer.searchProtHhs2({
+  const request = (filter: Partial<Period>) => api.kobo.answer.searchProtection_Hhs2({
     filters: {
       start: filter.start,
       end: filter.end,

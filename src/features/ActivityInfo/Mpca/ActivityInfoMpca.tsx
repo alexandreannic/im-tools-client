@@ -42,6 +42,7 @@ export const ActivityInfoMpca = () => {
         oblast?: string,
         raion?: string
       })[] = []
+      console.log('res.data', res.data)
       Utils.groupBy({
         data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
         groups: [
@@ -59,6 +60,7 @@ export const ActivityInfoMpca = () => {
         ],
         finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
           const res = Person.groupByGenderAndGroup(Person.ageGroup.quick)(group.flatMap(_ => _.persons).compact())
+          console.log(res)
           mapped.push({
             oblast: oblast === '' ? undefined : oblast,
             raion,
@@ -88,7 +90,7 @@ export const ActivityInfoMpca = () => {
       })
       return mapped.map((_, i) => ({
         ..._,
-        req: ActivityInfoSdk.makeRequest({
+        req: ActivityInfoSdk.makeRecordRequest({
           activityIdPrefix: 'drcmpca',
           activity: AiTypeMpcaRmm.map(_),
           activityIndex: i,
@@ -114,7 +116,7 @@ export const ActivityInfoMpca = () => {
               </Txt>
               <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
-                _submit.call(-1, fetcher.entity.filter(_ => !!_.Hromada).map((_, i) => ActivityInfoSdk.makeRequest({
+                _submit.call(-1, fetcher.entity.filter(_ => !!_.Hromada).map((_, i) => ActivityInfoSdk.makeRecordRequest({
                   activityIdPrefix: 'drcmpca',
                   activity: AiTypeMpcaRmm.map(_),
                   activityIndex: i,

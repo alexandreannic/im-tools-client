@@ -1,9 +1,9 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {Enum, fnSwitch, map, seq, Seq} from '@alexandreannic/ts-utils'
+import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {AiProtectionHhs} from '@/features/ActivityInfo/HHS_2_1/activityInfoInterface'
+import {AiTypeProtectionRmm} from '@/features/ActivityInfo/HHS_2_1/AiTypeProtectionRmm'
 import {Page} from '@/shared/Page'
 import {Txt} from 'mui-extension'
 import {Panel} from '@/shared/Panel'
@@ -19,24 +19,7 @@ import {alreadySentKobosInApril} from './missSubmittedData'
 import {format, subDays, subMonths} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
-import {DrcDonor} from '@/core/drcUa'
-
-const mapPopulationGroup = (s: (keyof typeof Protection_Hhs2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
-  returnee: 'Returnees',
-  non_displaced: 'Non-Displaced',
-  idp: 'IDPs',
-  refugee: 'Non-Displaced',
-}, _ => 'Non-Displaced')
-
-const planCode: Partial<Record<DrcDonor, AiProtectionHhs.GET<'Plan Code'>>> = {
-  // [Donor.ECHO_UKR000322]: 'GP-DRC-00001',//ECHO
-  [DrcDonor.NovoNordisk]: 'GP-DRC-00002',//Novo Nordisk ------
-  [DrcDonor.BHA]: 'GP-DRC-00003',//BHA OK
-  [DrcDonor.OKF]: 'GP-DRC-00004',//OKF ------
-  [DrcDonor.UHF]: 'GP-DRC-00005',//UHF
-  [DrcDonor.ECHO]: 'GP-DRC-00006',//ECHO
-  // [Donor.D] MoF: 'GP-DRC-00007',//Danish
-}
+import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
 
 export const ActivityInfoProtectionGeneral = () => {
   const {api} = useAppSettings()
@@ -49,7 +32,7 @@ export const ActivityInfoProtectionGeneral = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: subDays(new Date(parseInt(year), parseInt(month)), 1),
     }
-    return api.kobo.answer.searchProtHhs2({filters}).then(_ => seq(_.data.map(enrichProtHHS_2_1))).then(res => {
+    return api.kobo.answer.searchProtection_Hhs2({filters}).then(_ => seq(_.data.map(enrichProtHHS_2_1))).then(res => {
       return res
         .filter(_ => {
           const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
@@ -102,7 +85,7 @@ export const ActivityInfoProtectionGeneral = () => {
 
 interface Row {
   rows: ProtHHS2Enrich[],
-  activity: AiProtectionHhs.FormParams
+  activity: AiTypeProtectionRmm.FormParams
   request: any
 }
 
@@ -120,7 +103,7 @@ const _ActivityInfo = ({
   const enrichedData = data
 
   const {api} = useAppSettings()
-  const _submit = useAsync((i: number, p: AiProtectionHhs.FormParams[]) => api.activityInfo.submitActivity(p), {
+  const _submit = useAsync((i: number, p: AiTypeProtectionRmm.FormParams[]) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
   })
 
@@ -132,21 +115,20 @@ const _ActivityInfo = ({
         console.warn('No donor', _)
         // throw new Error('No donor')
       }
-      return planCode[_.tags?.ai!]!
+      return AiProtectionGeneralType.planCode[_.tags?.ai!]!
     })).forEach(([planCode, byPlanCode]) => {
-      const w = byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)
       Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
         Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
           Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada)).forEach(([hromada, byHromada]) => {
             const enOblast = Protection_Hhs2_1Options.what_is_your_area_of_origin_oblast[oblast]
             const enRaion = Protection_Hhs2_1Options.what_is_your_area_of_origin_raion[raion]
             const enHromada = Protection_Hhs2_1Options.what_is_your_area_of_origin_hromada[hromada]
-            const activity: AiProtectionHhs.FormParams = {
+            const activity: AiTypeProtectionRmm.FormParams = {
               'Plan Code': planCode,
               Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),
               Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? (('⚠️' + enRaion) as any),
               Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? (('⚠️' + enHromada) as any),
-              subActivities: Enum.entries(byHromada.groupBy(_ => mapPopulationGroup(_.do_you_identify_as_any_of_the_following))).map(([populationGroup, byPopulationGroup]) => {
+              subActivities: Enum.entries(byHromada.groupBy(_ => AiProtectionGeneralType.mapStatus(_.do_you_identify_as_any_of_the_following))).map(([populationGroup, byPopulationGroup]) => {
                 try {
                   const persons = byPopulationGroup.flatMap(_ => _.persons) as Seq<{age: number, gender: KoboFormProtHH.Gender}>
                   const childs = persons.filter(_ => _.age < 18)
@@ -172,7 +154,7 @@ const _ActivityInfo = ({
             activities.push({
               rows: byHromada,
               activity,
-              request: AiProtectionHhs.makeForm(activity, period, index++)
+              request: AiTypeProtectionRmm.makeForm(activity, period, index++)
             })
           })
         })
@@ -236,11 +218,11 @@ const _ActivityInfo = ({
                       />
                     </TableCell>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
-                      {AILocationHelper.print5w(a.activity.Oblast)}
+                      {AILocationHelper.get5w(a.activity.Oblast)}
                       <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
-                      {AILocationHelper.print5w(a.activity.Raion)}
+                      {AILocationHelper.get5w(a.activity.Raion)}
                       <Icon sx={{verticalAlign: 'middle'}} color="disabled">chevron_right</Icon>
-                      {AILocationHelper.print5w(a.activity.Hromada)}
+                      {AILocationHelper.get5w(a.activity.Hromada)}
                     </TableCell>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{whiteSpace: 'nowrap',}}>
                       {a.activity['Plan Code']}

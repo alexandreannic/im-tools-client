@@ -12,7 +12,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
 import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
-import {ProtHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtHhs'
+import {ProtectionCommunityMonitoring, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {mapMealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternalMapping'
 import {mapMealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternalMapping'
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
@@ -191,11 +191,11 @@ export class KoboAnswerSdk {
     })
   }
 
-  readonly searchProtHhs2 = (filters: KoboAnswerFilter = {}) => {
+  readonly searchProtection_Hhs2 = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.protection_hhs2_1,
       fnMap: mapProtection_Hhs2_1,
-      fnMapTags: _ => _ as ProtHhsTags,
+      fnMapTags: _ => _ as ProtectionHhsTags,
       ...filters,
     })
   }
@@ -204,6 +204,7 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.protection_communityMonitoring,
       fnMap: mapProtection_communityMonitoring,
+      fnMapTags: _ => _ as ProtectionCommunityMonitoring,
       ...filters,
     })
   }

@@ -1,11 +1,15 @@
 import {DrcDonor, DrcProject} from '@/core/drcUa'
 
-export interface ProtHhsTags {
-  projects?: DrcDonor[]
+export interface ProtectionCommunityMonitoring {
+  project?: DrcProject
+}
+export interface ProtectionHhsTags {
+  projects?: DrcProject[]
   ai: DrcDonor,
   ipt: DrcDonor[]
 }
 
+/** @deprecated */
 export const projects = [
   DrcProject['ECHO2 (UKR-000322)'],
   DrcProject['UHF4 (UKR-000314)'],
