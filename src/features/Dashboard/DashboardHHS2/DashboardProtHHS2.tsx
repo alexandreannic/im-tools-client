@@ -2,7 +2,7 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
-import {useProtHHS2Data} from './useProtHHS2Data'
+import {useProtHhs2Data} from './useProtHhs2Data'
 import {DashboardProtHHS2Sample} from './DashboardProtHHS2Sample'
 import {DashboardLayout} from '../shared/DashboardLayout'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
@@ -82,7 +82,7 @@ export interface DashboardPageProps {
   periodFilter: Partial<Period>
   optionFilter: OptionFilters
   data: Seq<ProtHHS2Enrich>
-  computed: NonNullable<ReturnType<typeof useProtHHS2Data>>
+  computed: NonNullable<ReturnType<typeof useProtHhs2Data>>
 }
 
 export const DashboardProtHHS2 = () => {
@@ -92,7 +92,7 @@ export const DashboardProtHHS2 = () => {
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
-  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.answer.searchProtHhs2({
+  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.answer.searchProtection_Hhs2({
     filters: {
       start: filter?.start,
       end: filter?.end,
@@ -178,7 +178,7 @@ export const DashboardProtHHS2 = () => {
   //   return res
   // }, [data, optionFilter])
 
-  const computed = useProtHHS2Data({data: data})
+  const computed = useProtHhs2Data({data: data})
 
   return (
     <DashboardLayout

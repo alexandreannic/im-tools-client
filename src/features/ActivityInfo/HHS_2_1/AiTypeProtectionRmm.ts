@@ -1,9 +1,9 @@
 import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
 import {aiRaions} from '../../../core/uaLocation/aiRaions'
 import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
+import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 
-/** @deprecated*/
-export namespace AiProtectionHhs {
+export namespace AiTypeProtectionRmm {
 
   export const inputs = {
     ID: {id: 'ci8ugsnldt0vh8z1c'},
@@ -93,6 +93,8 @@ export namespace AiProtectionHhs {
     },
     'Protection Indicators': {
       '# of persons reached through protection monitoring': 'cntvm8fle4efhhpn',
+      '# of key informants reached through community level protection monitoring': 'ceabnj7le4efhhpo',
+      '# of persons who participated in awareness raising activities - GP': 'c6rcu2jle4efhhp6',
     },
     'Partner Organization': {
       'DRC - Danish Demining Group (DRC-DDG)': 'cv9umq8lehiq43f103',
@@ -107,6 +109,9 @@ export namespace AiProtectionHhs {
       'GP-DRC-00005': 'cgoek15lgw7jc2u2',
       'GP-DRC-00006': 'cbmqt7lgw7p3163',
       'GP-DRC-00007': 'ca3hc2jlje85ybb2',
+      'GP-DRC-00008': 'cj88e64lncw3r1d2',
+      'GP-DRC-00009': 'cpg4iwslncw9r0v3',
+      'GP-DRC-00010': 'ca48ok8lncwdkna4',
     },
     Oblast: aiOblasts,
     Raion: aiRaions,
@@ -130,7 +135,7 @@ export namespace AiProtectionHhs {
     subActivities: {
       'Reporting Month': string
       'Population Group': GET<'Population Group'>
-      'Protection Indicators'?: GET<'Protection Indicators'>
+      'Protection Indicators': GET<'Protection Indicators'>
       'Collective Centre'?: string
       'Total Individuals Reached': number
       'Girls': number
@@ -244,7 +249,7 @@ export namespace AiProtectionHhs {
   //   12: 'de',
   // }
 
-  export const makeForm = (params: FormParams, period: string, index: number): any => {
+  export const makeForm = (params: FormParams, period: string, index: number): ActiviftyInfoRecords => {
     const getKeyId = (id: keyof typeof inputs) => inputs[id].id
     // const buildOption = <T extends keyof typeof inputsOptions>(t: T, defaultValue?: keyof (typeof inputsOptions)[T]) => {
     //   return {
@@ -273,7 +278,7 @@ export namespace AiProtectionHhs {
     // if(!mapMonthToId[monthNumber]) {
     //   throw new Error(`Wrong monthNumber ${monthNumber}`)
     // }
-    const recordId = 'drcprothhs' + monthNumber + 'i' + ('' + index).padStart(3, '0')
+    const recordId = 'drcprot' + monthNumber + 'i' + ('' + index).padStart(3, '0')
     return {
       'changes': [
         {
@@ -319,3 +324,71 @@ export namespace AiProtectionHhs {
 
 //^(\d+)\t([^\t]+)\t([^\t\n]+)$\n
 //$1: {hromada: '$2', settlement: '$3'},\n
+
+// Community Level
+// const w = {
+//   'changes': [{
+//     'formId': 'cas3n26ldsu5aea5',
+//     'recordId': 'c5hc6jilng55yjm2',
+//     'parentRecordId': null,
+//     'fields': {
+//       'ci607odlbs8w4pe2': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',  // partner
+//       'cu3do47ldu8x1eg4m': 'cqnfuewldtzuhuf2:cfbgfipleo7dg222',   // plan code
+//       'cva2znrle7pd83vd': 'cg7v61llbunvy9t9:ciua21glebrkckb2',    // oblast
+//       'cb7h23tle7pdocme': 'cjy8nbnlbunzcnh1h:clrmtnqlecp1fu03',   // raion
+//       'cqai21ple7pe0bif': 'c700rjplbuo1fjq5m:chagq9rlebstwse2'    // hromada
+//     }
+//   },
+//     {
+//       'formId': 'cy3vehlldsu5aeb6',
+//       'recordId': 'c9x69gllng5jlbf3',
+//       'parentRecordId': 'c5hc6jilng55yjm2',
+//       'fields': {
+//         'cmxllh3ldsuvom9g': '2023-09',
+//         'c19j8p9ldsv4qa3o': 'cqjd0o4ld4hbyo12:co8y3rvld4hchx14', // Population group
+//         'c79be77ldswj831t': 'c3vbxtgldsw1as42:ceabnj7le4efhhpo', // Protection indicators
+//         'cgwjgg2ldsx1nzsv': 0,
+//         'c62l7s0lbs8mvnx3b': 0,
+//         'cqvizd5lbs8mvnx3d': 0,
+//         'ceij8s2lbs8mvnx3f': 0,
+//         'cpbkputlbs8mvny3h': 0,
+//         'cpkkgqulbs8mvny3j': 0,
+//         'cmyfyd8lbs8mvny3l': 0,
+//         'cj41459lbs8mvny3n': 0
+//       }
+//     }]
+// }
+
+// Awarness
+// const x = {
+//   'changes': [{
+//     'formId': 'cas3n26ldsu5aea5',
+//     'recordId': 'c2pjbs0lne9z9n82',
+//     'parentRecordId': null,
+//     'fields': {
+//       'ci607odlbs8w4pe2': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',
+//       'cu3do47ldu8x1eg4m': 'cqnfuewldtzuhuf2:cfbgfipleo7dg222',
+//       'cva2znrle7pd83vd': 'cg7v61llbunvy9t9:ciua21glebrkckb2',
+//       'cb7h23tle7pdocme': 'cjy8nbnlbunzcnh1h:clrmtnqlecp1fu03',
+//       'cqai21ple7pe0bif': 'c700rjplbuo1fjq5m:chagq9rlebstwse2'
+//     }
+//   },
+//     {
+//       'formId': 'cy3vehlldsu5aeb6',
+//       'recordId': 'cfbjfs6lng5reib3',
+//       'parentRecordId': 'c2pjbs0lne9z9n82',
+//       'fields': {
+//         'cmxllh3ldsuvom9g': '2023-09',
+//         'c19j8p9ldsv4qa3o': 'cqjd0o4ld4hbyo12:co8y3rvld4hchx14',
+//         'c79be77ldswj831t': 'c3vbxtgldsw1as42:c6rcu2jle4efhhp6',
+//         'cgwjgg2ldsx1nzsv': 0,
+//         'c62l7s0lbs8mvnx3b': 0,
+//         'cqvizd5lbs8mvnx3d': 0,
+//         'ceij8s2lbs8mvnx3f': 0,
+//         'cpbkputlbs8mvny3h': 0,
+//         'cpkkgqulbs8mvny3j': 0,
+//         'cmyfyd8lbs8mvny3l': 0,
+//         'cj41459lbs8mvny3n': 0
+//       }
+//     }]
+// }

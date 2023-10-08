@@ -205,7 +205,7 @@ export const _MPCADashboard = ({
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [tableDataType, setTableDataType] = usePersistentState<'ratio' | 'absolute'>('absolute', 'mpca-dashboard-tableType')
   const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', 'mpca-dashboard-tableArea')
-  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('echo', 'mpca-dashboard-ageGroup')
+  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', 'mpca-dashboard-ageGroup')
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 
@@ -252,7 +252,7 @@ export const _MPCADashboard = ({
                 {_ => (
                   <ScLineChart2
                     data={_ as any}
-                    height={220}
+                    height={190}
                     hideLabelToggle
                   />
                 )}
@@ -260,6 +260,7 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <SlidePanel title={m.submissionTime}>
               <KoboLineChartDate
+                height={190}
                 data={data}
                 curves={{
                   'date': _ => _.date,
@@ -273,6 +274,10 @@ export const _MPCADashboard = ({
               }}>
                 {_ =>
                   <Sheet
+                    sx={{
+                      border: '1px solid silver',
+                      borderRadius: t => t.shape.borderRadius,
+                    }}
                     hidePagination
                     header={
                       <ScRadioGroup value={tableAgeGroup} onChange={setTableAgeGroup} dense inline sx={{mb: 1}}>

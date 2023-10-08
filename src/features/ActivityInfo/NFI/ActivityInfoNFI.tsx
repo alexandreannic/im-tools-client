@@ -106,7 +106,7 @@ const toFormData = ({
     activities.push({
       rows,
       activity,
-      request: ActivityInfoSdk.makeRequest({
+      request: ActivityInfoSdk.makeRecordRequest({
         activity: mapWashRMM(activity),
         formId,
         activityIdPrefix: 'drcnfi' + period.replace('-', '') + 'i',
@@ -271,10 +271,10 @@ const _ActivityInfo = ({
               </>
           },
           {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
-          {type: 'string', id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.print5w(_.activity['Oblast'])}</>},
-          {type: 'string', id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.print5w(_.activity['Raion'])}</>},
-          {type: 'string', id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.print5w(_.activity['Hromada'])}</>},
-          {type: 'string', id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.print5w(_.activity['Settlement'])}</>},
+          {type: 'string', id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.get5w(_.activity['Oblast'])}</>},
+          {type: 'string', id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.get5w(_.activity['Raion'])}</>},
+          {type: 'string', id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.get5w(_.activity['Hromada'])}</>},
+          {type: 'string', id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.get5w(_.activity['Settlement'])}</>},
           {type: 'string', id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
           {type: 'string', id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
           {type: 'number', id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},

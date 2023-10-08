@@ -40,12 +40,14 @@ export enum DrcDonor {
 
 export enum DrcProject {
   'BHA (UKR-000284)' = 'BHA (UKR-000284)',
+  'BHA2 (UKR-000345)' = 'BHA2 (UKR-000345)',
   'ECHO1 (UKR-000269)' = 'ECHO1 (UKR-000269)',
   'ECHO2 (UKR-000322)' = 'ECHO2 (UKR-000322)',
   'SDC (UKR-000226)' = 'SDC (UKR-000226)',
+  'SDC2 (UKR-000330)' = 'SDC2 (UKR-000330)',
   'FCDO (UKR-000247)' = 'FCDO (UKR-000247)',
   'OKF (UKR-000309)' = 'OKF (UKR-000309)',
-  'PSPU (UKR- 000304)' = 'PSPU (UKR- 000304)',
+  'PSPU (UKR-000304)' = 'PSPU (UKR-000304)',
   'Pooled Funds (UKR-000270)' = 'Pooled Funds (UKR-000270)',
   'Finnish MFA (UKR-000249)' = 'Finnish MFA (UKR-000249)',
   'French MFA (UKR-000293)' = 'French MFA (UKR-000293)',
@@ -67,12 +69,12 @@ export enum DrcProject {
 }
 
 export const drcDonorProjectCode = {
-  'BHA': [DrcProject['BHA (UKR-000284)'],],
+  'BHA': [DrcProject['BHA (UKR-000284)'], DrcProject['BHA2 (UKR-000345)']],
   'ECHO': [DrcProject['ECHO1 (UKR-000269)'], DrcProject['ECHO2 (UKR-000322)']],
-  'SDC': [DrcProject['SDC (UKR-000226)'],],
+  'SDC': [DrcProject['SDC (UKR-000226)'], DrcProject['SDC2 (UKR-000330)']],
   'FCDO': [DrcProject['FCDO (UKR-000247)'],],
   'OKF': [DrcProject['OKF (UKR-000309)'],],
-  'PSPU': [DrcProject['PSPU (UKR- 000304)'],],
+  'PSPU': [DrcProject['PSPU (UKR-000304)'],],
   'POFU': [DrcProject['Pooled Funds (UKR-000270)'],],
   'FINM': [DrcProject['Finnish MFA (UKR-000249)'],],
   'FREM': [DrcProject['French MFA (UKR-000293)'],],

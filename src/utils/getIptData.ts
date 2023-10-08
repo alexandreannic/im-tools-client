@@ -32,7 +32,7 @@ export const getProtHhsIptData = (data?: Seq<ProtHHS2Enrich>) => {
           // .filter(_ => _.gender === 'male' || _.gender === 'female')
         .groupBy(_ => _.gender))
       ).forEach(([gender, genderV]) => {
-        const byAge = seq(genderV).groupBy(_ => Person.groupByAgeGroup(Person.ageGroup.bha)(_, p => p.age!))
+        const byAge = seq(genderV).groupBy(_ => Person.groupByAgeGroup(Person.ageGroup.BHA)(_, p => p.age!))
         const byAgeFilled = {
           '0 - 4': byAge['0 - 4'] ?? [],
           '5 - 9': byAge['5 - 9'] ?? [],

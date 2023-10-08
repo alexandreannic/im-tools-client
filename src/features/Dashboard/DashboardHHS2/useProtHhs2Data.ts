@@ -8,29 +8,17 @@ import {subDays} from 'date-fns'
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
 
-export type UseProtHHS2Data = ReturnType<typeof useProtHHS2Data>
+export type UseProtHHS2Data = ReturnType<typeof useProtHhs2Data>
 
-export const useProtHHS2Data = ({
+export const useProtHhs2Data = ({
   data,
 }: {
   data?: Seq<ProtHHS2Enrich>
 }) => {
-  const ageGroup = useCallback(lazy((ageGroup: Person.AgeGroup, hideOther?: boolean) => {
-    return chain(
-      data!.flatMap(_ => _.persons)
-        // .filter(_ => _.age !== undefined)
-        .groupBy(_ => Person.groupByAgeGroup(ageGroup)(_, p => p.age!))
-    )
-      .map(_ => Enum.entries(_).map(([group, v]) => ({
-          key: group,
-          Male: v.filter(_ => _.gender === 'male').length,
-          Female: v.filter(_ => _.gender === 'female').length,
-          ...!hideOther && {Other: v.filter(_ => _.gender !== 'male' && _.gender !== 'female').length},
-        })
-      ))
-      .map(_ => _.sort((b, a) => Object.keys(ageGroup).indexOf(b.key) - Object.keys(ageGroup).indexOf(a.key)))
-      .get
-  }), [data])
+  const ageGroup = useCallback((ageGroup: Person.AgeGroup, hideOther?: boolean) => {
+    const gb = Person.groupByGenderAndGroup(ageGroup)(data?.flatMap(_ => _.persons)!)
+    return new Enum(gb).entries().map(([k, v]) => ({key: k, ...v}))
+  }, [data])
 
 
   return useMemo(() => {
@@ -87,7 +75,7 @@ export const useProtHHS2Data = ({
       categoryOblasts,
       ageGroup: ageGroup,
       byGender: chain(ChartTools.single({
-        data: data.flatMap(_ => _.persons.map(_ => (_.gender === undefined || _.gender === 'unable_unwilling_to_answer') ? 'other' : _.gender)),
+        data: data.flatMap(_ => _.persons.map(_ => (_.gender === undefined || _.gender === 'Other') ? 'other' : _.gender)),
       }))
         .map(ChartTools.mapValue(_ => _.value))
         .get,
