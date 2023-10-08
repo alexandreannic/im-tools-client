@@ -21,7 +21,7 @@ import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
 import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Disability'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {Period} from '@/core/type'
+import {Period, Person} from '@/core/type'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
@@ -146,12 +146,12 @@ export const DashboardProtHHS2 = () => {
       if (hhComposition && hhComposition.length > 0)
         return filtered.filter(d => !!d.persons.find(p => {
           if (!p.age) return false
-          if (p.gender === 'female') {
+          if (p.gender === Person.Gender.Female) {
             if (hhComposition.includes('girl') && p.age < 17) return true
             if (hhComposition.includes('olderFemale') && p.age > 60) return true
             if (hhComposition.includes('adultFemale')) return true
           }
-          if (p.gender === 'male') {
+          if (p.gender === Person.Gender.Male) {
             if (hhComposition.includes('boy') && p.age < 17) return true
             if (hhComposition.includes('olderMale') && p.age > 60) return true
             if (hhComposition.includes('adultMale')) return true

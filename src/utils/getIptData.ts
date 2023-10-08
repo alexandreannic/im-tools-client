@@ -3,6 +3,7 @@ import {Person} from '../core/type'
 import {ChartTools} from '../core/chartTools'
 
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import Gender = Person.Gender
 
 export const getProtHhsIptData = (data?: Seq<ProtHHS2Enrich>) => {
   const csv: {base: string, gender: string, ageGroup: string, total: number}[] = []
@@ -27,12 +28,12 @@ export const getProtHhsIptData = (data?: Seq<ProtHHS2Enrich>) => {
       )
       .groupBy(_ => _.staff_to_insert_their_DRC_office)
     Enum.entries(ChartTools.sortBy.custom(['dnipro', 'kharkiv', 'chernihiv', 'lviv'])(byOffice)).forEach(([base, v]) => {
-      Enum.entries(ChartTools.sortBy.custom(['male', 'female'])(
+      Enum.entries(ChartTools.sortBy.custom([Gender.Male, Gender.Female])(
         seq(v)
           // .filter(_ => _.gender === 'male' || _.gender === 'female')
-        .groupBy(_ => _.gender))
+          .groupBy(_ => _.gender!))
       ).forEach(([gender, genderV]) => {
-        const byAge = seq(genderV).groupBy(_ => Person.groupByAgeGroup(Person.ageGroup.BHA)(_, p => p.age!))
+        const byAge = seq(genderV).groupBy(_ => Person.groupByAgeGroup(Person.ageGroup.BHA)(_, p => p.age!)!)
         const byAgeFilled = {
           '0 - 4': byAge['0 - 4'] ?? [],
           '5 - 9': byAge['5 - 9'] ?? [],

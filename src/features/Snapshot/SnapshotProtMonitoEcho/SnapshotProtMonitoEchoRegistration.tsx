@@ -13,6 +13,7 @@ import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartInd
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {Person} from '@/core/type'
 
 export const SnapshotProtMonitoEchoRegistration = () => {
   const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
@@ -59,7 +60,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                   )}
                 </Lazy>
                 <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
-                  data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === 'male'),
+                  data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === Person.Gender.Male),
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
                   {(d, l) => (

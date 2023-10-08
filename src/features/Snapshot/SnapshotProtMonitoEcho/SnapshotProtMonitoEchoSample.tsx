@@ -84,8 +84,8 @@ export const SnapshotProtMonitoEchoSample = () => {
                       // other: m.other,
                     }}
                     data={{
-                      female: computed.byGender.female,
-                      male: computed.byGender.male,
+                      female: computed.byGender.Female,
+                      male: computed.byGender.Male,
                     }}
                     colors={{
                       female: theme.palette.primary.main,
@@ -108,7 +108,7 @@ export const SnapshotProtMonitoEchoSample = () => {
               <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['drc'], true)} height={250} colors={t => [
+                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
                     snapshotAlternateColor(t),
                     t.palette.primary.main,
                   ]}/>

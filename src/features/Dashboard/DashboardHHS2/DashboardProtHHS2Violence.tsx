@@ -11,6 +11,7 @@ import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Prote
 import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Checkbox} from '@mui/material'
+import {Person} from '@/core/type'
 
 export const DashboardProtHHS2Violence = ({
   data,
@@ -89,10 +90,10 @@ export const DashboardProtHHS2Violence = ({
           data.forEach(row => {
             row.persons.forEach(_ => {
               if (_.age) {
-                if (_.gender === 'male') {
+                if (_.gender === Person.Gender.Male) {
                   if (_.age >= 18) res.has_any_adult_male_member_experienced_violence.base += 1
                   else res.has_any_boy_member_experienced_violence.base += 1
-                } else if (_.gender === 'female') {
+                } else if (_.gender === Person.Gender.Female) {
                   if (_.age >= 18) res.has_any_adult_female_member_experienced_violence.base += 1
                   else res.has_any_girl_member_experienced_violence.base += 1
                 } else {

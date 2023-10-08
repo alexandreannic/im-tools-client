@@ -1,24 +1,20 @@
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {Enum, fnSwitch, PromiseReturn, seq} from '@alexandreannic/ts-utils'
+import {fnSwitch, PromiseReturn, seq} from '@alexandreannic/ts-utils'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {Person} from '@/core/type'
-import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {Protection_groupSession} from '@/core/koboModel/Protection_groupSession/Protection_groupSession'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
-import Gender = Person.Gender
 import {DrcProject} from '@/core/drcUa'
 import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {aiOblasts} from '@/core/uaLocation/aiOblasts'
-import {aiRaions} from '@/core/uaLocation/aiRaions'
-import {aiHromadas} from '@/core/uaLocation/aiHromadas'
+import Gender = Person.Gender
 
 const disaggregatePersons = (persons: Person.Person[]) => {
   const personsDefined = seq(persons).compactBy('age').compactBy('gender')
   const children = personsDefined.filter(_ => _.age < 18)
-  const adults = personsDefined.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
-  const elderly = personsDefined.filter(_ => KoboFormProtHH.isElderly(_.age))
+  const adults = personsDefined.filter(_ => _.age >= 18 && !Person.isElderly(_.age))
+  const elderly = personsDefined.filter(_ => Person.isElderly(_.age))
   return {
     'Adult Men': adults.count(_ => _.gender === 'Male'),
     'Adult Women': adults.count(_ => _.gender === 'Female'),

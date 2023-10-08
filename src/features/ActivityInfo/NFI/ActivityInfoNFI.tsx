@@ -7,7 +7,6 @@ import {Box, Icon} from '@mui/material'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
 import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
-import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
@@ -20,6 +19,7 @@ import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
+import {Person} from '@/core/type'
 
 interface Person {
   age: number
@@ -155,10 +155,10 @@ const toFormData = ({
             'Total Reached (No Disaggregation)': planHKPersons.length,
             'Boys': planHKPersons.count(_ => _.age < 18 && _.gender === 'male'),
             'Girls': planHKPersons.count(_ => _.age < 18 && _.gender === 'female'),
-            'Men': planHKPersons.count(_ => _.age >= 18 && _.age < KoboFormProtHH.elderlyLimitIncluded && _.gender === 'male'),
-            'Women': planHKPersons.count(_ => _.age >= 18 && _.age < KoboFormProtHH.elderlyLimitIncluded && _.gender === 'female'),
-            'Elderly Men': planHKPersons.count(_ => _.age >= KoboFormProtHH.elderlyLimitIncluded && _.gender === 'male'),
-            'Elderly Women': planHKPersons.count(_ => _.age >= KoboFormProtHH.elderlyLimitIncluded && _.gender === 'female'),
+            'Men': planHKPersons.count(_ => _.age >= 18 && _.age < Person.elderlyLimitIncluded && _.gender === 'male'),
+            'Women': planHKPersons.count(_ => _.age >= 18 && _.age < Person.elderlyLimitIncluded && _.gender === 'female'),
+            'Elderly Men': planHKPersons.count(_ => _.age >= Person.elderlyLimitIncluded && _.gender === 'male'),
+            'Elderly Women': planHKPersons.count(_ => _.age >= Person.elderlyLimitIncluded && _.gender === 'female'),
             'People with disability': planHK.length,
           })
         })

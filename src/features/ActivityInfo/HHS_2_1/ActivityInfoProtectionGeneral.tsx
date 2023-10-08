@@ -1,6 +1,5 @@
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
-import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AiTypeProtectionRmm} from '@/features/ActivityInfo/HHS_2_1/AiTypeProtectionRmm'
@@ -20,6 +19,7 @@ import {format, subDays, subMonths} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
+import {Person} from '@/core/type'
 
 export const ActivityInfoProtectionGeneral = () => {
   const {api} = useAppSettings()
@@ -132,8 +132,8 @@ const _ActivityInfo = ({
                 try {
                   const persons = byPopulationGroup.flatMap(_ => _.persons).compactBy('age').compactBy('gender')
                   const childs = persons.filter(_ => _.age < 18)
-                  const adults = persons.filter(_ => _.age >= 18 && !KoboFormProtHH.isElderly(_.age))
-                  const elderly = persons.filter(_ => KoboFormProtHH.isElderly(_.age))
+                  const adults = persons.filter(_ => _.age >= 18 && !Person.isElderly(_.age))
+                  const elderly = persons.filter(_ => Person.isElderly(_.age))
                   return {
                     'Protection Indicators': '# of persons reached through protection monitoring',
                     'Reporting Month': period,

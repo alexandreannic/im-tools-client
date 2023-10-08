@@ -22,7 +22,6 @@ import {mapShelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/S
 import {Shelter_CashForRepair} from '@/core/koboModel/Shelter_CashForRepair/Shelter_CashForRepair'
 import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
 import {mapBn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiMapping'
-import {KoboFormProtHH} from '@/core/koboModel/koboFormProtHH'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {mapBn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplication/Bn_cashForRentApplicationMapping'
 import {Bn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplication/Bn_cashForRentApplication'
@@ -221,14 +220,6 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.protection_groupSession,
       fnMap: mapProtection_groupSession,
-      ...filters,
-    })
-  }
-
-  readonly searchProtHhs1 = (filters: KoboAnswerFilter = {}) => {
-    return this.search({
-      formId: kobo.drcUa.form.protection_hhs1,
-      fnMap: KoboFormProtHH.mapAnswers,
       ...filters,
     })
   }

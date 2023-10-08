@@ -1,11 +1,9 @@
 import {format, formatDistance, formatDuration as formatDurationFns, sub} from 'date-fns'
 import {externalLinks} from '../../externalLinks'
-import {KoboFormProtHH} from '../../koboModel/koboFormProtHH'
 import {Period} from '../../type'
 import {appConfig} from '@/conf/AppConfig'
 import {capitalize} from '@/utils/utils'
 import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
-import Status = KoboFormProtHH.Status
 
 const invalidDate = ''
 
@@ -91,10 +89,10 @@ export const en = Object.freeze({
     drcOffice: 'DRC office',
     question: 'Question',
     _ageGroup: {
-      quick: 'Quick',
-      drc: 'DRC',
-      echo: 'ECHO',
-      bha: 'BHA',
+      Quick: 'Quick',
+      DRC: 'DRC',
+      ECHO: 'ECHO',
+      BHA: 'BHA',
     },
     answer: 'Answer',
     calculations: 'Calculations',
@@ -273,12 +271,6 @@ export const en = Object.freeze({
       memberWithDisability: 'HH with PwD',
       all: 'Average'
     },
-    statusType: {
-      conflict_affected_person: 'Conflict-affected person',
-      idp: 'IDP',
-      host_community_member: 'Host community member',
-      idp_returnee: 'IDP returnee',
-    } as Record<Status, string>,
     shelter: 'Shelter',
     health: 'Health',
     cash: 'Cash',
