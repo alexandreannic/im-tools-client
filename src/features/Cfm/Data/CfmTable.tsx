@@ -358,7 +358,7 @@ export const CfmTable = ({}: any) => {
                     </>
                   )}
                   <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>
-                    <TableIconBtn children="keyboardSeqow_right"/>
+                    <TableIconBtn children="keyboard_arrow_right"/>
                   </NavLink>
                 </>
               )

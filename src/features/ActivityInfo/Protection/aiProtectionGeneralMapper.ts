@@ -11,17 +11,17 @@ import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHel
 import Gender = Person.Gender
 
 const disaggregatePersons = (persons: Person.Person[]) => {
-  const personsDefined = seq(persons).compactBy('age').compactBy('gender')
-  const children = personsDefined.filter(_ => _.age < 18)
-  const adults = personsDefined.filter(_ => _.age >= 18 && !Person.isElderly(_.age))
-  const elderly = personsDefined.filter(_ => Person.isElderly(_.age))
+  const personsDefined = seq(persons)
+  const children = personsDefined.filter(_ => _.age && _.age < 18)
+  const adults = personsDefined.filter(_ => !_.age || _.age >= 18 && !Person.isElderly(_.age))
+  const elderly = personsDefined.filter(_ => _.age &&  Person.isElderly(_.age))
   return {
     'Adult Men': adults.count(_ => _.gender === 'Male'),
-    'Adult Women': adults.count(_ => _.gender === 'Female'),
+    'Adult Women': adults.count(_ => _.gender !== 'Male'),
     'Boys': children.count(_ => _.gender === 'Male'),
-    'Girls': children.count(_ => _.gender === 'Female'),
-    'Elderly Women': elderly.count(_ => _.gender === 'Female'),
+    'Girls': children.count(_ => _.gender !== 'Male'),
     'Elderly Men': elderly.count(_ => _.gender === 'Male'),
+    'Elderly Women': elderly.count(_ => _.gender !== 'Male'),
     'Total Individuals Reached': personsDefined.length,
   }
 }
