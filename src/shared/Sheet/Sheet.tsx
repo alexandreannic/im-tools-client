@@ -159,8 +159,8 @@ export const Sheet = <T extends SheetRow = SheetRow>({
         showExportBtn={showExportBtn}
         renderEmptyState={renderEmptyState}
         header={header}
-        sx={props.sx}
         loading={loading}
+        {...props}
       />
     </SheetProvider>
   )
@@ -168,7 +168,6 @@ export const Sheet = <T extends SheetRow = SheetRow>({
 
 const _Sheet = <T extends SheetRow>({
   header,
-  sx,
   id,
   showExportBtn,
   renderEmptyState,
@@ -176,6 +175,7 @@ const _Sheet = <T extends SheetRow>({
   hidePagination,
   rowsPerPageOptions = [10, 20, 100, 500, 1000],
   title,
+  ...props
 }: Pick<SheetTableProps<T>, 'hidePagination' | 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
   const ctx = useSheetContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
@@ -217,7 +217,7 @@ const _Sheet = <T extends SheetRow>({
   const filteredColumns = useMemo(() => ctx.columns.filter(_ => !hiddenColumns.includes(_.id)), [ctx.columns, hiddenColumns])
 
   return (
-    <Box sx={sx}>
+    <Box {...props}>
       <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center', width: '100%'}}>
         <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
           <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>

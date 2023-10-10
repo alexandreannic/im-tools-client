@@ -114,7 +114,7 @@ export namespace Person {
       data,
       groups: [
         {
-          by: _ => Person.ageToAgeGroup(_.age, ag)!,
+          by: _ => Person.ageToAgeGroup(_.age, ag) ?? '-',
           sort: (a, b) => Object.keys(ag).indexOf(a) - Object.keys(ag).indexOf(b),
         },
         {by: _ => _.gender ?? Person.Gender.Other},

@@ -5,7 +5,7 @@ import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
-import {capitalize, chain, toPercent, Utils} from '@/utils/utils'
+import {chain, toPercent} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
@@ -30,7 +30,6 @@ import {usePersistentState} from 'react-persistent-state'
 import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import ageGroups = Person.ageGroups
 import ageGroup = Person.ageGroup
 
 export const today = new Date()
@@ -274,13 +273,10 @@ export const _MPCADashboard = ({
               }}>
                 {_ =>
                   <Sheet
-                    sx={{
-                      border: '1px solid silver',
-                      borderRadius: t => t.shape.borderRadius,
-                    }}
+                    className="ip-border"
                     hidePagination
                     header={
-                      <ScRadioGroup value={tableAgeGroup} onChange={setTableAgeGroup} dense inline sx={{mb: 1}}>
+                      <ScRadioGroup value={tableAgeGroup} onChange={setTableAgeGroup} dense inline>
                         {Person.ageGroups.map(_ =>
                           <ScRadioGroupItem key={_} value={_} title={m._ageGroup[_]} hideRadio/>
                         )}
