@@ -1,24 +1,23 @@
+import {Pdf} from '@/shared/PdfLayout/PdfLayout'
 import React from 'react'
 import {Box, Icon, useTheme} from '@mui/material'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
-import {format} from 'date-fns'
+import {format, sub} from 'date-fns'
 import {DRCLogo, EULogo} from '@/shared/logo/logo'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
-import {Person} from '@/core/type'
+import {ageGroup} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
 import {AaPieChart} from '@/shared/Chart/AaPieChart'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
-import {useAppSettings} from '@/core/context/ConfigContext'
 
-export const SnapshotProtMonitoEchoSample = () => {
+export const SnapshotProtMonitoNN2Sample = () => {
   const theme = useTheme()
-  const {conf} = useAppSettings()
   const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
   return (
@@ -34,7 +33,7 @@ export const SnapshotProtMonitoEchoSample = () => {
         <Box>
           <Txt bold sx={{fontSize: '1.65em', fontWeight: '700'}} color="primary">
             {m.protHHSnapshot.title}&nbsp;
-            <Box sx={{display: 'inline', fontWeight: 'lighter'}}>- {m.protHHSnapshot.title2}</Box>
+            <Box sx={{display: 'inline', fontWeight: 'lighter'}}>- Mykolaivska, Ukraine</Box>
           </Txt>
           <Txt color="hint" sx={{fontSize: '1.1em', display: 'flex', alignItems: 'center'}}>
             <Icon sx={{mr: 1}}>date_range</Icon> {format(periodFilter.start, 'LLLL yyyy')}
@@ -56,13 +55,13 @@ export const SnapshotProtMonitoEchoSample = () => {
       </Box>
       <PdfSlideBody>
         <Div>
-          <Div column sx={{flex: 4}}>
+          <Div column sx={{flex: 3.6}}>
             <SlideTxt>
-              <p dangerouslySetInnerHTML={{__html: m.snapshotProtMonito.echo.desc}}/>
+              <p dangerouslySetInnerHTML={{__html: m.snapshotProtMonito.nn2.desc}}/>
             </SlideTxt>
             <Box sx={{height: 316, borderRadius: t => t.shape.borderRadius}}>
-              <PanelTitle sx={{mt: 1}}>{m.snapshotProtMonito.monitoredHhByOblast}</PanelTitle>
-              <UkraineMap data={computed.byCurrentOblast}/>
+              <PanelTitle sx={{mb: 3, mt: 1}}>{m.idpOriginOblast}</PanelTitle>
+              <UkraineMap data={computed.byOriginOblast}/>
             </Box>
           </Div>
 
@@ -92,8 +91,8 @@ export const SnapshotProtMonitoEchoSample = () => {
                       // other: m.other,
                     }}
                     data={{
-                      female: computed.byGender.Female,
-                      male: computed.byGender.Male,
+                      female: computed.byGender.female,
+                      male: computed.byGender.male,
                     }}
                     colors={{
                       female: theme.palette.primary.main,
@@ -116,7 +115,7 @@ export const SnapshotProtMonitoEchoSample = () => {
               <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
+                  <AAStackedBarChart data={computed.ageGroup(ageGroup['drc'], true)} height={250} colors={t => [
                     snapshotAlternateColor(t),
                     t.palette.primary.main,
                   ]}/>

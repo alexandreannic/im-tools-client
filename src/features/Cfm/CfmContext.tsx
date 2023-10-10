@@ -9,7 +9,7 @@ import {kobo} from '@/koboDrcUaFormId'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
-import {MealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternal'
+import {Meal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExternal'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
@@ -31,13 +31,13 @@ export type CfmData = {
   form: CfmDataSource
   feedback?: string
   category?: MealCfmInternal['feedback_type']
-  external_prot_support?: MealCfmExternal['prot_support']
+  external_prot_support?: Meal_CfmExternal['prot_support']
   internal_existing_beneficiary?: MealCfmInternal['existing_beneficiary']
   internal_project_code?: MealCfmInternal['project_code']
   // external_thanks_feedback?: MealCfmExternal['thanks_feedback']
   // external_complaint?: MealCfmExternal['complaint']
-  external_consent?: MealCfmExternal['consent']
-  external_feedback_type?: MealCfmExternal['feedback_type']
+  external_consent?: Meal_CfmExternal['consent']
+  external_feedback_type?: Meal_CfmExternal['feedback_type']
   // internal_feedback?: MealCfmInternal['feedback']
   // internal?: Pick<MealCfmInternal, 'feedback' | 'existing_beneficiary' | 'project_code'>
   // external?: Pick<MealCfmExternal, 'prot_support' | 'thanks_feedback' | 'complaint' | 'consent' | 'feedback_type'>
@@ -76,7 +76,7 @@ export interface CfmContext {
   users: UseFetcher<ApiSdk['user']['search']>
   data: UseFetcher<() => Promise<{
     [CfmDataSource.Internal]: KoboAnswer<MealCfmInternal, KoboMealCfmTag>[]
-    [CfmDataSource.External]: KoboAnswer<MealCfmExternal, KoboMealCfmTag>[]
+    [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal, KoboMealCfmTag>[]
   }>>
   mappedData: CfmData[]
 }

@@ -13,7 +13,7 @@ import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
 import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ProtectionCommunityMonitoring, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
-import {mapMealCfmExternal} from '@/core/koboModel/MealCfmExternal/MealCfmExternalMapping'
+import {mapMeal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExternalMapping'
 import {mapMealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternalMapping'
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {RapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanism'
@@ -184,7 +184,7 @@ export class KoboAnswerSdk {
   readonly searchMealCfmExternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.meal_cfmExternal,
-      fnMap: mapMealCfmExternal,
+      fnMap: mapMeal_CfmExternal,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })

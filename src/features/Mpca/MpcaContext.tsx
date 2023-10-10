@@ -18,10 +18,10 @@ import {Seq, seq} from '@alexandreannic/ts-utils'
 //   Danish MFA - UKR-000301 & Pooled Funds: 000270 (Kherson Registration); Novo Nordisk 000298 (Mykolaiv Registration)
 
 export enum MpcaRowSource {
-  RRM = 'RRM',
+  RapidResponseMechansim = 'RapidResponseMechansim',
   CashForRent = 'CashForRent',
   CashForRepairRegistration = 'CashForRepairRegistration',
-  BNRE = 'BNRE',
+  BasicNeedRegistration = 'BasicNeedRegistration',
   OldBNRE = 'OldBNRE',
 }
 

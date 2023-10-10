@@ -1,4 +1,4 @@
-import {MealCfmExternal} from './MealCfmExternal'
+import {Meal_CfmExternal} from './Meal_CfmExternal'
 
 
 const extractQuestionName = (_: Record<string, any>) => {
@@ -11,8 +11,7 @@ const extractQuestionName = (_: Record<string, any>) => {
   return output
 }
 
-export const mapMealCfmExternal = (_: Record<keyof MealCfmExternal, any>): MealCfmExternal => ({
+export const mapMeal_CfmExternal = (_: Record<keyof Meal_CfmExternal, any>): Meal_CfmExternal => ({
 	..._,
 	date: _.date ? new Date(_.date) : undefined,
-	phone: _.phone ? +_.phone : undefined,
-}) as MealCfmExternal
+}) as Meal_CfmExternal

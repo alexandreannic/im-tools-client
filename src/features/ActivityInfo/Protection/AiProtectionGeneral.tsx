@@ -3,7 +3,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {endOfDay, endOfMonth, format, startOfMonth, subMonths} from 'date-fns'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {Sheet} from '@/shared/Sheet/Sheet'
+import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -40,6 +40,15 @@ export const AiProtectionGeneral = () => {
       api.kobo.answer.searchProtection_communityMonitoring({filters}).then(ActivityInfoProtectionMapper.mapCommunityMonitoring(period)),
       api.kobo.answer.searchProtection_Hhs2({filters}).then(ActivityInfoProtectionMapper.mapHhs(period)),
     ]).then(_ => _.reduce((acc, curr) => [...acc, ...curr], []))
+      .then(_ => _.filter(_ => {
+        const hasAlreadyBeenSubmittedManually = period === '2023-09'
+          && _.Oblast === 'Dnipropetrovska_Дніпропетровська'
+          && (
+            _['Protection Indicators'] === '# of key informants reached through community level protection monitoring' ||
+            _['Protection Indicators'] === '# of persons who participated in awareness raising activities - GP'
+          )
+        return !hasAlreadyBeenSubmittedManually
+      }))
 
     // const form: (AiProtectionGeneralType.Data & {
     //   answer: any[]
@@ -84,7 +93,7 @@ export const AiProtectionGeneral = () => {
           Hromada,
           'Plan Code': PlanCode,
           subActivities: Enum.entries(grouped.groupBy(_ => _['Protection Indicators'])).flatMap(([indicator, byIndicator]) => {
-            return Enum.entries(grouped.groupBy(_ => _['Population Group'])).map(([group, v]) => {
+            return Enum.entries(byIndicator.groupBy(_ => _['Population Group'])).map(([group, v]) => {
               return {
                 'Protection Indicators': indicator,
                 'Population Group': group,
@@ -136,9 +145,14 @@ export const AiProtectionGeneral = () => {
     })
   }), [fetcher.entity])
 
-  const indexActivity = useMemo(() => seq(fetcher.entity)?.groupBy(_ => _.request.changes[0].recordId), [fetcher.entity])
+  const indexActivity = useMemo(() => {
+    const gb = seq(fetcher.entity)?.groupBy(_ => _.request.changes[0].recordId)
+    return new Enum(gb).transform((k, v) => {
+      if (v.length !== 1) throw new Error('Should contains 1 request by ID.')
+      return [k, v[0]]
+    }).get()
+  }, [fetcher.entity])
 
-  console.log('fetcher.entity', fetcher.entity)
   return (
     <Page width="full">
       <Panel>
@@ -148,7 +162,7 @@ export const AiProtectionGeneral = () => {
               <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
-                _submit.call(-1, fetcher.entity.filter(_ => !!_.request)).catch(toastHttpError)
+                _submit.call(-1, fetcher.entity.map(_ => _.request)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </AaBtn>
@@ -166,12 +180,12 @@ export const AiProtectionGeneral = () => {
                     <AAIconBtn
                       disabled={!_.Hromada} color="primary"
                       onClick={() => {
-                        _submit.call(i, [indexActivity[_.id].flatMap(_ => _.request)]).catch(toastHttpError)
+                        _submit.call(i, [indexActivity[_.id]!.request]).catch(toastHttpError)
                       }}
                     >send</AAIconBtn>
-                    <AIViewAnswers answers={indexActivity[_.id].flatMap(_ => _.answers)}/>
-                    <AIPreviewActivity activity={indexActivity[_.id].map(_ => _.params)}/>
-                    <AIPreviewRequest request={indexActivity[_.id].flatMap(_ => _.request)}/>
+                    <AIViewAnswers answers={indexActivity[_.id]!.answers}/>
+                    <AIPreviewActivity activity={indexActivity[_.id]!.params}/>
+                    <AIPreviewRequest request={indexActivity[_.id]!.request}/>
                   </>
                 )
               }
@@ -190,7 +204,8 @@ export const AiProtectionGeneral = () => {
             {
               head: 'Protection Indicators',
               id: 'Protection Indicators',
-              type: 'string',
+              options: () => seq(flatData).map(_ => _['Protection Indicators']).distinct(_ => _).map(SheetUtils.buildOption),
+              type: 'select_one',
               render: _ => _['Protection Indicators'],
             },
             {width: 0, head: 'Adult Men', id: 'Adult Men', type: 'number', render: _ => formatLargeNumber(_['Adult Men'])},

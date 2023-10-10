@@ -2,6 +2,7 @@ import {red} from '@mui/material/colors'
 import {alpha, createTheme, darken, SxProps, Theme} from '@mui/material'
 import {ThemeOptions} from '@mui/material/styles/createTheme'
 import {lighten} from '@mui/system/colorManipulator'
+import {base} from 'next/dist/build/webpack/config/blocks/base'
 
 export const combineSx = (...sxs: (SxProps<Theme> | undefined | false)[]): SxProps<Theme> => {
   return sxs.reduce((res, sx) => (sx !== undefined && sx !== false ? {...res, ...sx} : res), {} as any)
@@ -221,6 +222,11 @@ export const muiTheme = ({
           },
           ':focus': {
             outline: 0,
+          },
+          '.ip-border': {
+            overflow: 'hidden',
+            border: `1px solid ${baseTheme.palette.divider}`,
+            borderRadius: defaultRadius,
           },
           ...tableTheme(baseTheme, colorOverOpaque),
         },
