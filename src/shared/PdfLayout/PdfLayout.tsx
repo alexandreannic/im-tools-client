@@ -48,7 +48,7 @@ export const Pdf = ({children, ...props}: BoxProps) => {
       {generalStyles}
       <Box sx={{
         overflow: 'hidden',
-        background: t => 'white',//'#f6f7f9',
+        background: t => '#fff',//'#f6f7f9',
         '@media screen': {
           background: t => t.palette.background.paper,//'#f6f7f9',
           padding: 2,

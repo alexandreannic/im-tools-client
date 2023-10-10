@@ -13,7 +13,7 @@ declare let google: any
 const mapTheme = {
   occupiedColor: '#ffd0c4',
   baseColor: '#e4e4e4', // #f8f8f8
-  borderColor: 'white',
+  borderColor: '#fff',
 
 }
 const generalStyles = <GlobalStyles styles={{

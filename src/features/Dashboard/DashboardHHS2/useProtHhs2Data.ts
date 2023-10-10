@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {ChartTools} from '../../../core/chartTools'
 import {chain} from '@/utils/utils'
-import {Enum, lazy, Seq} from '@alexandreannic/ts-utils'
+import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
 import {Person} from '../../../core/type'
 import {subDays} from 'date-fns'

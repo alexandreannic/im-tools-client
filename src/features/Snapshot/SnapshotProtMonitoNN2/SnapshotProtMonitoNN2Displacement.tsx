@@ -1,12 +1,10 @@
 import React from 'react'
-import {Box, Icon} from '@mui/material'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
-import {snapshotAlternateColor, snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
 export const SnapshotProtMonitoNN2Displacement = () => {
   const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()

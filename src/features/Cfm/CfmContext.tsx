@@ -41,7 +41,11 @@ export type CfmData = {
   // internal_feedback?: MealCfmInternal['feedback']
   // internal?: Pick<MealCfmInternal, 'feedback' | 'existing_beneficiary' | 'project_code'>
   // external?: Pick<MealCfmExternal, 'prot_support' | 'thanks_feedback' | 'complaint' | 'consent' | 'feedback_type'>
-} & Pick<KoboAnswer<MealCfmInternal>,
+} & Pick<KoboAnswer<Meal_CfmExternal>,
+  'ben_det_oblast' |
+  'ben_det_raion' |
+  'ben_det_hromada'
+> & Pick<KoboAnswer<MealCfmInternal>,
   'id' |
   'start' |
   'date' |
@@ -51,10 +55,7 @@ export type CfmData = {
   'name' |
   'gender' |
   'phone' |
-  'email' |
-  'ben_det_oblast' |
-  'ben_det_raion' |
-  'ben_det_hromada'
+  'email'
 >
 
 export interface CfmContext {

@@ -6,7 +6,7 @@ import {SnapshotProtMonitoNN2} from '@/features/Snapshot/SnapshotProtMonitoNN2/S
 
 const generalStyles = <GlobalStyles styles={{
   body: {
-    background: 'white',
+    background: '#fff',
   }
 }}/>
 
@@ -16,7 +16,7 @@ const SnapshotProtectionMonitoringPage = () => {
       dark: false,
       fontSize: 14,
       mainColor: '#af161e',
-      backgroundDefault: 'white',
+      backgroundDefault: '#fff',
       backgroundPaper: '#f6f7f9',
       cardElevation: 1,
     })}>

@@ -1,14 +1,13 @@
-import {Pdf} from '@/shared/PdfLayout/PdfLayout'
 import React from 'react'
 import {Box, Icon, useTheme} from '@mui/material'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
-import {format, sub} from 'date-fns'
+import {format} from 'date-fns'
 import {DRCLogo, EULogo} from '@/shared/logo/logo'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
-import {ageGroup} from '@/core/type'
+import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
@@ -91,8 +90,8 @@ export const SnapshotProtMonitoNN2Sample = () => {
                       // other: m.other,
                     }}
                     data={{
-                      female: computed.byGender.female,
-                      male: computed.byGender.male,
+                      female: computed.byGender.Female,
+                      male: computed.byGender.Male,
                     }}
                     colors={{
                       female: theme.palette.primary.main,
@@ -115,7 +114,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
               <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(ageGroup['drc'], true)} height={250} colors={t => [
+                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
                     snapshotAlternateColor(t),
                     t.palette.primary.main,
                   ]}/>

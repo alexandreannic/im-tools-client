@@ -5,16 +5,16 @@ import {muiTheme} from '@/core/theme'
 
 const generalStyles = <GlobalStyles styles={{
   body: {
-    background: 'white',
+    background: '#fff',
   }
 }}/>
 const SnapshotProtectionMonitoringPage = () => {
   return (
     <ThemeProvider theme={muiTheme({
-      dark: true,
+      dark: false,
       fontSize: 14,
       mainColor: '#af161e',
-      backgroundDefault: '#000',
+      backgroundDefault: '#fff',
       backgroundPaper: '#f6f7f9',
       cardElevation: 1,
     })}>
