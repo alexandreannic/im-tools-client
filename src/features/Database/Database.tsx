@@ -119,7 +119,6 @@ export const DatabaseHome = () => {
       <Tabs
         value={pathname}
         sx={{
-          mb: 1,
           borderBottom: t => `1px solid ${t.palette.divider}`
         }}
       >

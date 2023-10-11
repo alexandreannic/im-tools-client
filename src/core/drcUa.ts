@@ -38,6 +38,23 @@ export enum DrcDonor {
   // 'NN2' = 'NN2',
 }
 
+export enum DrcSector {
+  NFI = 'NFI',
+  WaSH = 'WaSH',
+  Protection = 'Protection',
+  PSS = 'PSS',
+  Education = 'Education',
+  Livelihoods = 'Livelihoods',
+  FoodSecurity = 'FoodSecurity',
+  MPCA = 'MPCA',
+  Health = 'Health',
+  Nutrition = 'Nutrition',
+  Shelter = 'Shelter',
+  Evacuations = 'Evacuations',
+  GBV = 'GBV',
+  EORE = 'EORE',
+}
+
 export enum DrcProject {
   'BHA (UKR-000284)' = 'BHA (UKR-000284)',
   'BHA2 (UKR-000345)' = 'BHA2 (UKR-000345)',
@@ -188,6 +205,7 @@ export enum DrcJob {
   'Driver Demining (Ambulance)' = 'Driver Demining (Ambulance)',
   'Driver with own vechicle' = 'Driver with own vechicle',
   'Driver with own vehicle' = 'Driver with own vehicle',
+  'Economic Recovery Manager' = 'Economic Recovery Manager',
   'Economic Recovery Assistant' = 'Economic Recovery Assistant',
   'Economic Recovery Coordinator' = 'Economic Recovery Coordinator',
   'Economic Recovery Officer' = 'Economic Recovery Officer',
