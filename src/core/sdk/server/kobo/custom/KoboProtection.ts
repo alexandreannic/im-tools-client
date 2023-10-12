@@ -9,8 +9,7 @@ export interface ProtectionHhsTags {
   ipt: DrcDonor[]
 }
 
-/** @deprecated */
-export const projects = [
+export const currentProtectionProjects = [
   DrcProject['ECHO2 (UKR-000322)'],
   DrcProject['UHF4 (UKR-000314)'],
   DrcProject['UHF6 (UKR-000336)'],

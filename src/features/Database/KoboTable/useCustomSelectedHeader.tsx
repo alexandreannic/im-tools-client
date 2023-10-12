@@ -4,7 +4,7 @@ import {useI18n} from '@/core/i18n'
 import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
-import {projects} from '@/core/sdk/server/kobo/custom/KoboProtection'
+import {currentProtectionProjects} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {kobo} from '@/koboDrcUaFormId'
 
 export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode => {
@@ -18,7 +18,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
           sx={{maxWidth: 200}}
           label={m.project}
           onChange={_ => ctx.asyncUpdateTag.call({answerIds: selectedIds, value: _, key: 'project'})}
-          options={projects.map(k => ({value: k, children: k}))}
+          options={currentProtectionProjects.map(k => ({value: k, children: k}))}
         />
       ),
       [kobo.drcUa.form.protection_hhs2_1]: (
@@ -27,7 +27,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
           defaultValue={[]}
           label={m.project}
           onChange={_ => ctx.asyncUpdateTag.call({answerIds: selectedIds, value: _, key: 'projects'})}
-          options={projects.map(k => ({value: k, children: k}))}
+          options={currentProtectionProjects.map(k => ({value: k, children: k}))}
         />
       )
     }

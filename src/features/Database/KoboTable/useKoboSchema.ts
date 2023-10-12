@@ -4,7 +4,8 @@ import {KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/se
 import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Messages} from '@/core/i18n/localization/en'
-import {getKoboLabel, KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
+import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Kobo/KoboSchemaContext'
 
 export type KoboSchemaHelper = ReturnType<typeof buildKoboSchemaHelper>
 
@@ -36,7 +37,7 @@ export const buildKoboSchemaHelper = ({
   schema: KoboApiForm,
   m: Messages
 }) => {
-  const idSchema = {
+  const idSchema: KoboQuestionSchema = {
     name: 'id',
     label: mapFor(schema.content.translations.length, () => 'ID'),
     type: 'text' as const,
@@ -46,7 +47,7 @@ export const buildKoboSchemaHelper = ({
     $xpath: 'id',
   }
 
-  const submissionTimeSchema = {
+  const submissionTimeSchema: KoboQuestionSchema = {
     name: 'submissionTime',
     label: mapFor(schema.content.translations.length, () => m.submissionTime),
     type: 'date' as const,
@@ -85,7 +86,7 @@ export const buildKoboSchemaHelper = ({
   }
 
   const choicesIndex = seq(schema.content.choices).groupBy(_ => _.list_name)
-  const questionIndex = seq(schema.content.survey).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
+  const questionIndex = seq(sanitizedForm.content.survey).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
 
   return {
     groupsCount: Object.keys(groupSchemas).length,

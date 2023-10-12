@@ -2,51 +2,37 @@ import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} fr
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
-import React, {useState} from 'react'
+import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import React, {useMemo, useState} from 'react'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
-import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {Txt} from 'mui-extension'
 import {useModal} from '@/shared/Modal/useModal'
+import {Sheet} from '@/shared/Sheet/Sheet'
+import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
+import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 
-export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>({
-  translateQuestion,
-  translateChoice,
-  schema,
-  langIndex,
-}: {
-  langIndex: number
-  translateQuestion: KoboTranslateQuestion
-  translateChoice: KoboTranslateChoice
-  schema: KoboApiForm
-}) => {
+/** @deprecated FIXME it does not include context */
+export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>() => {
+  const ctxSchema = useKoboSchemaContext()
   const [open, close] = useModal((answer: T) => (
     <DatabaseKoboAnswerView
       open={true}
-      translateQuestion={translateQuestion}
-      translateChoice={translateChoice}
       onClose={close}
       answer={answer}
-      schema={schema}
     />
-  ), [schema, langIndex])
+  ), [ctxSchema.schemaHelper.sanitizedSchema, ctxSchema.langIndex])
   return [open, close]
 }
 
 export const DatabaseKoboAnswerView = ({
   onClose,
   answer,
-  schema,
-  translateQuestion,
-  translateChoice,
 }: {
-  translateChoice: KoboTranslateChoice
-  translateQuestion: KoboTranslateQuestion
   answer: KoboMappedAnswer<any>
-  schema: KoboApiForm
   onClose: () => void
   open: boolean
 }) => {
+  const ctxSchema = useKoboSchemaContext()
   const {m} = useI18n()
   const [showQuestionWithoutAnswer, setShowQuestionWithoutAnswer] = useState(false)
   return (
@@ -63,10 +49,7 @@ export const DatabaseKoboAnswerView = ({
       <DialogContent>
         <KoboAnswerFormView
           showQuestionWithoutAnswer={showQuestionWithoutAnswer}
-          translateChoice={translateChoice}
-          translateQuestion={translateQuestion}
           answer={answer}
-          schema={schema}
         />
       </DialogContent>
       <DialogActions>
@@ -78,73 +61,78 @@ export const DatabaseKoboAnswerView = ({
 
 const KoboAnswerFormView = ({
   answer,
-  schema,
-  translateQuestion,
-  translateChoice,
   showQuestionWithoutAnswer,
 }: {
   showQuestionWithoutAnswer?: boolean
-  translateQuestion: KoboTranslateQuestion
-  translateChoice: KoboTranslateChoice
   answer: KoboMappedAnswer<any>
-  schema: KoboApiForm
 }) => {
+  const ctxSchema = useKoboSchemaContext()
   return (
     <Box>
-      {schema.content.survey.filter(q => showQuestionWithoutAnswer || q.type === 'begin_group' || (answer[q.name] !== '' && answer[q.name])).map(q => (
-        <Box key={q.name} sx={{mb: 1.5}}>
-          <KoboAnswerQuestionView
-            schema={q}
-            answer={answer}
-            translateChoice={translateChoice}
-            translateQuestion={translateQuestion}
-          />
-        </Box>
-      ))}
+      {ctxSchema.schemaHelper.sanitizedSchema.content.survey
+        .filter(q => showQuestionWithoutAnswer || q.type === 'begin_group' || (answer[q.name] !== '' && answer[q.name]))
+        .map(q => (
+          <Box key={q.name} sx={{mb: 1.5}}>
+            <KoboAnswerQuestionView
+              answer={answer}
+              questionSchema={q}
+            />
+          </Box>
+        ))}
     </Box>
   )
 }
 
 const KoboAnswerQuestionView = ({
-  schema,
+  questionSchema,
   answer: row,
-  translateQuestion,
-  translateChoice,
 }: {
-  schema: KoboQuestionSchema
+  questionSchema: KoboQuestionSchema
   answer: KoboMappedAnswer<any>
-  translateChoice: KoboTranslateChoice
-  translateQuestion: KoboTranslateQuestion
 }) => {
+  const ctx = useKoboSchemaContext()
   const {formatDateTime} = useI18n()
-  switch (schema.type) {
+  const {m} = useI18n()
+  const columns = useMemo(() => {
+    if (questionSchema.type === 'begin_repeat')
+      return getColumnBySchema({
+        data: row[questionSchema.name],
+        m,
+        schema: ctx.schemaHelper.groupSchemas[questionSchema.name],
+        translateQuestion: ctx.translate.question,
+        translateChoice: ctx.translate.choice,
+        choicesIndex: ctx.schemaHelper.choicesIndex,
+        groupSchemas: ctx.schemaHelper.groupSchemas,
+      })
+  }, [ctx.schemaHelper.sanitizedSchema, ctx.langIndex])
+  switch (questionSchema.type) {
     case 'begin_group': {
       return <Box sx={{pt: 1, mt: 2, borderTop: t => `1px solid ${t.palette.divider}`}}>
-        <Txt bold block size="title">{translateQuestion(schema.name)}</Txt>
+        <Txt bold block size="title">{ctx.translate.question(questionSchema.name)}</Txt>
       </Box>
     }
     case 'image': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboAttachedImg attachments={row.attachments} size={84} fileName={row[schema.name] as string}/>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboAttachedImg attachments={row.attachments} size={84} fileName={row[questionSchema.name] as string}/>
       </>
     }
     case 'text': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="short_text">{row[schema.name]}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="short_text">{row[questionSchema.name]}</KoboQuestionAnswerView>
       </>
     }
     case 'note': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="information">{row[schema.name]}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="information">{row[questionSchema.name]}</KoboQuestionAnswerView>
       </>
     }
     case 'begin_repeat': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <pre>{JSON.stringify(row[schema.name], null, 2)}</pre>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <Sheet columns={columns!} data={row[questionSchema.name]} id={questionSchema.name}/>
       </>
     }
     case 'start':
@@ -152,38 +140,38 @@ const KoboAnswerQuestionView = ({
     case 'datetime':
     case 'date': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="event">{formatDateTime(row[schema.name])}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="event">{formatDateTime(row[questionSchema.name])}</KoboQuestionAnswerView>
       </>
     }
     case 'select_multiple': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="check_box">{translateChoice(schema.name, row[schema.name])}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="check_box">{ctx.translate.choice(questionSchema.name, row[questionSchema.name])}</KoboQuestionAnswerView>
       </>
     }
     case 'select_one': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="radio_button_checked">{translateChoice(schema.name, row[schema.name])}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="radio_button_checked">{ctx.translate.choice(questionSchema.name, row[questionSchema.name])}</KoboQuestionAnswerView>
       </>
     }
     case 'calculate':
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="functions">{row[schema.name]}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="functions">{row[questionSchema.name]}</KoboQuestionAnswerView>
       </>
     case 'decimal':
     case 'integer': {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="tag">{row[schema.name]}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="tag">{row[questionSchema.name]}</KoboQuestionAnswerView>
       </>
     }
     default: {
       return <>
-        <KoboQuestionLabelView>{translateQuestion(schema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="short_text">{JSON.stringify(row[schema.name])}</KoboQuestionAnswerView>
+        <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
+        <KoboQuestionAnswerView icon="short_text">{JSON.stringify(row[questionSchema.name])}</KoboQuestionAnswerView>
       </>
     }
   }
@@ -194,7 +182,7 @@ const KoboQuestionLabelView = ({
 }: {
   children: string
 }) => {
-  return <Txt bold block sx={{mb: .5}}>{children}</Txt>
+  return <Txt bold block sx={{mb: .5}} dangerouslySetInnerHTML={{__html: children}}/>
 }
 
 const KoboQuestionAnswerView = ({
