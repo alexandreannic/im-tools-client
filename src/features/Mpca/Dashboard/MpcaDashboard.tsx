@@ -5,7 +5,7 @@ import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
-import {chain, toPercent} from '@/utils/utils'
+import {chain, toPercent, Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
@@ -15,7 +15,7 @@ import {Lazy} from '@/shared/Lazy'
 import {ChartTools, makeChartData} from '@/core/chartTools'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {Box} from '@mui/material'
+import {Box, LinearProgress} from '@mui/material'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {SheetOptions} from '@/shared/Sheet/sheetType'
@@ -31,6 +31,8 @@ import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import ageGroup = Person.ageGroup
+import groupBy = Utils.groupBy
+import {AaInput} from '@/shared/ItInput/AaInput'
 
 export const today = new Date()
 
@@ -206,6 +208,8 @@ export const _MPCADashboard = ({
   const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', 'mpca-dashboard-tableArea')
   const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', 'mpca-dashboard-ageGroup')
 
+  const [targets, setTargets] = usePersistentState<Record<any, number>>({}, 'mpca-targets')
+
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 
   const displayAmount = (_: number) => formatLargeNumber(_, {maximumFractionDigits: 0}) + ' ' + currency
@@ -257,15 +261,29 @@ export const _MPCADashboard = ({
                 )}
               </Lazy>
             </SlidePanel>
-            <SlidePanel title={m.submissionTime}>
-              <KoboLineChartDate
-                height={190}
-                data={data}
-                curves={{
-                  'date': _ => _.date,
-                }}
-              />
+            <SlidePanel title={m.form}>
+              <Lazy deps={[data]} fn={() => chain(ChartTools.single({
+                data: data.map(_ => _.source),
+              })).map(ChartTools.setLabel(ctx.formNameTranslation)).get}>
+                {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
             </SlidePanel>
+            <SlidePanel title={m.program}>
+              <Lazy deps={[data]} fn={() => ChartTools.multiple({
+                data: data.map(_ => _.prog),
+              })}>
+                {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
+            </SlidePanel>
+            {/*<SlidePanel title={m.submissionTime}>*/}
+            {/*  <KoboLineChartDate*/}
+            {/*    height={190}*/}
+            {/*    data={data}*/}
+            {/*    curves={{*/}
+            {/*      'date': _ => _.date,*/}
+            {/*    }}*/}
+            {/*  />*/}
+            {/*</SlidePanel>*/}
             <SlidePanel title={m.disaggregation}>
               <Lazy deps={[computed.persons, tableAgeGroup]} fn={() => {
                 const gb = Person.groupByGenderAndGroup(ageGroup[tableAgeGroup])(computed.persons)
@@ -321,20 +339,6 @@ export const _MPCADashboard = ({
                 {_ => <UkraineMap data={_} sx={{mx: 2}} maximumFractionDigits={0} base={totalAmount}/>}
               </Lazy>
             </SlidePanel>
-            <SlidePanel title={m.form}>
-              <Lazy deps={[data]} fn={() => chain(ChartTools.single({
-                data: data.map(_ => _.source),
-              })).map(ChartTools.setLabel(ctx.formNameTranslation)).get}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
-              </Lazy>
-            </SlidePanel>
-            <SlidePanel title={m.program}>
-              <Lazy deps={[data]} fn={() => ChartTools.multiple({
-                data: data.map(_ => _.prog),
-              })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
-              </Lazy>
-            </SlidePanel>
             <SlidePanel title={m.donor}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
                 data: data.map(_ => _.donor ?? ''),
@@ -347,6 +351,76 @@ export const _MPCADashboard = ({
                 data: data.map(_ => _.project ?? SheetUtils.blankValue),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
+              </Lazy>
+            </SlidePanel>
+          </Div>
+        </Div>
+        <Div>
+          <Div column>
+            <SlidePanel>
+              <Lazy deps={[data, getAmount]} fn={() => {
+                const gb = groupBy({
+                  data,
+                  groups: [
+                    {by: _ => _.project!,},
+                    {by: _ => _.oblast!,},
+                  ],
+                  finalTransform: _ => _,
+                  // finalTransform: (d) => {
+                  //   return formatLargeNumber(d.sum(_ => getAmount(_) ?? 0), {maximumFractionDigits: 0})
+                  // }
+                })
+                return new Enum(gb).entries().flatMap(([project, byProject]) => {
+                  const gb = new Enum(byProject).entries().map(([oblast, byOblast]) => ({
+                      project,
+                      oblast: oblast,
+                      total: byOblast.sum(_ => getAmount(_) ?? 0)
+                    })
+                  )
+                  const w = Enum.values(byProject)
+                  return [
+                    ...gb,
+                    {project, oblast: 'TOTAL', total: seq(Enum.values(byProject).flat()).sum(_ => _.amountUahFinal ?? 0)}
+                  ]
+                })
+                // return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
+              }}>
+                {_ =>
+                  <Sheet
+                    defaultLimit={100}
+                    className="ip-border"
+                    data={_}
+                    columns={[
+                      {width: 0, id: 'donor', head: m.donor, type: 'select_one', render: _ => _.project},
+                      {width: 0, id: 'project', head: m.project, type: 'select_one', render: _ => _.project},
+                      {
+                        width: 0, id: 'oblast', head: m.oblast, type: 'select_one', render: _ => {
+                          if (_.oblast === 'TOTAL') return <b>Total</b>
+                          return _.oblast
+                        }
+                      },
+                      {width: 0, id: 'total', head: m.amountUSD, type: 'number', render: _ => formatLargeNumber(_.total, {maximumFractionDigits: 0})},
+                      {
+                        width: 0, id: 'target', head: m.target, type: 'number', render: _ =>
+                          <AaInput
+                            type="number"
+                            helperText={null}
+                            value={targets[_.project + _.oblast] ?? 0}
+                            onChange={e => setTargets(prev => ({...prev, [_.project + _.oblast]: +e.target.value}))}
+                          />
+                      },
+                      {
+                        width: 0, id: 'target_ratio', head: '', type: 'number', render: _ => {
+                          const percent = (targets[_.project + _.oblast] ?? 0) / _.total
+                          return <>
+                            {toPercent(percent)}
+                            <LinearProgress value={percent * 100} variant="determinate"/>
+                          </>
+                        }
+                      },
+                    ]}
+                  />
+                }
               </Lazy>
             </SlidePanel>
           </Div>

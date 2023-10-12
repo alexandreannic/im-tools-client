@@ -173,7 +173,7 @@ const _Sheet = <T extends SheetRow>({
   renderEmptyState,
   loading,
   hidePagination,
-  rowsPerPageOptions = [10, 20, 100, 500, 1000],
+  rowsPerPageOptions,
   title,
   ...props
 }: Pick<SheetTableProps<T>, 'hidePagination' | 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
