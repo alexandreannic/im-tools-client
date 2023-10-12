@@ -2,25 +2,25 @@ import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} fr
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import React, {useMemo, useState} from 'react'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Txt} from 'mui-extension'
 import {useModal} from '@/shared/Modal/useModal'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
-import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 
-/** @deprecated FIXME it does not include context */
-export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>() => {
-  const ctxSchema = useKoboSchemaContext()
+export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboApiForm) => {
   const [open, close] = useModal((answer: T) => (
-    <DatabaseKoboAnswerView
-      open={true}
-      onClose={close}
-      answer={answer}
-    />
-  ), [ctxSchema.schemaHelper.sanitizedSchema, ctxSchema.langIndex])
+    <KoboSchemaProvider schema={schema}>
+      <DatabaseKoboAnswerView
+        open={true}
+        onClose={close}
+        answer={answer}
+      />
+    </KoboSchemaProvider>
+  ), [schema])
   return [open, close]
 }
 
@@ -32,7 +32,6 @@ export const DatabaseKoboAnswerView = ({
   onClose: () => void
   open: boolean
 }) => {
-  const ctxSchema = useKoboSchemaContext()
   const {m} = useI18n()
   const [showQuestionWithoutAnswer, setShowQuestionWithoutAnswer] = useState(false)
   return (

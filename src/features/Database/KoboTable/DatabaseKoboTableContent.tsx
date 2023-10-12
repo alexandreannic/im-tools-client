@@ -6,7 +6,6 @@ import React, {useMemo, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
 import {DatabaseKoboTableExportBtn} from '@/features/Database/KoboTable/DatabaseKoboTableExportBtn'
-import {useModal} from '@/shared/Modal/useModal'
 import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
@@ -30,29 +29,6 @@ export const DatabaseKoboTableContent = () => {
     group: KoboAnswer[],
     event: any
   } | undefined>()
-
-  // const [groupModalOpen, groupModalClose] = useModal(({
-  //   columnId,
-  //   group,
-  //   event,
-  // }: {
-  //   columnId: string
-  //   group: KoboAnswer[]
-  //   event: any
-  // }) => (
-  //   <DatabaseKoboTableGroupModal
-  //     formId={ctx.form.id}
-  //     // translateQuestion={ctx.translate.question}
-  //     // schema={ctx.schemaHelper.groupSchemas[columnId]}
-  //     // translateChoice={ctx.translate.choice}
-  //     // choicesIndex={ctx.schemaHelper.choicesIndex}
-  //     // groupSchemas={ctx.schemaHelper.groupSchemas}
-  //     name={columnId}
-  //     anchorEl={event.target}
-  //     groupData={group}
-  //     onClose={groupModalClose}
-  //   />
-  // ), [ctxSchema.schema])
 
   const extraColumns = useCustomColumns()
   const schemaColumns = useMemo(() => {

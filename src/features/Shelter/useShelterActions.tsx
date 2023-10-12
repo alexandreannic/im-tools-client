@@ -90,7 +90,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
     }).catch(toastHttpError)
   }, {requestKey: _ => _[0]})
 
-  const [openModalAnswer] = useDatabaseKoboAnswerView<ShelterRow['ta']>()
+  const [openModalAnswer] = useDatabaseKoboAnswerView<ShelterRow['ta']>(schema)
 
   useEffectFn(_updates.errors.keys, _updates.errors.size > 0 ? toastHttpError : () => {})
   useEffectFn(_update.errors.keys, _update.errors.size > 0 ? toastHttpError : () => {})
