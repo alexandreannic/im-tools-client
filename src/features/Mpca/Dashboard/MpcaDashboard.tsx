@@ -33,6 +33,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import ageGroup = Person.ageGroup
 import groupBy = Utils.groupBy
 import {AaInput} from '@/shared/ItInput/AaInput'
+import {Panel} from '@/shared/Panel'
 
 export const today = new Date()
 
@@ -357,7 +358,7 @@ export const _MPCADashboard = ({
         </Div>
         <Div>
           <Div column>
-            <SlidePanel>
+            <Panel title="MPCA Target Helper">
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = groupBy({
                   data,
@@ -366,9 +367,6 @@ export const _MPCADashboard = ({
                     {by: _ => _.oblast!,},
                   ],
                   finalTransform: _ => _,
-                  // finalTransform: (d) => {
-                  //   return formatLargeNumber(d.sum(_ => getAmount(_) ?? 0), {maximumFractionDigits: 0})
-                  // }
                 })
                 return new Enum(gb).entries().flatMap(([project, byProject]) => {
                   const gb = new Enum(byProject).entries().map(([oblast, byOblast]) => ({
@@ -377,18 +375,15 @@ export const _MPCADashboard = ({
                       total: byOblast.sum(_ => getAmount(_) ?? 0)
                     })
                   )
-                  const w = Enum.values(byProject)
                   return [
                     ...gb,
                     {project, oblast: 'TOTAL', total: seq(Enum.values(byProject).flat()).sum(_ => _.amountUahFinal ?? 0)}
                   ]
                 })
-                // return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
               }}>
                 {_ =>
                   <Sheet
                     defaultLimit={100}
-                    className="ip-border"
                     data={_}
                     columns={[
                       {width: 0, id: 'donor', head: m.donor, type: 'select_one', render: _ => _.project},
@@ -414,7 +409,7 @@ export const _MPCADashboard = ({
                           const percent = (targets[_.project + _.oblast] ?? 0) / _.total
                           return <>
                             {toPercent(percent)}
-                            <LinearProgress value={percent * 100} variant="determinate"/>
+                            <LinearProgress value={Math.min(100, percent * 100)} variant="determinate"/>
                           </>
                         }
                       },
@@ -422,7 +417,7 @@ export const _MPCADashboard = ({
                   />
                 }
               </Lazy>
-            </SlidePanel>
+            </Panel>
           </Div>
         </Div>
         {/*<Div>*/}
