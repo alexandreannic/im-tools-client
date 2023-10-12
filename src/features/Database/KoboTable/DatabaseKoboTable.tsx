@@ -17,6 +17,7 @@ import {UUID} from '@/core/type'
 import {KoboForm, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/koboDrcUaFormId'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -77,16 +78,17 @@ export const DatabaseTablePage = ({
     <Page loading={_formSchema.loading || _answers.loading} width="full">
       <Panel>
         {map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (
-          <DatabaseKoboTableProvider
-            canEdit={access.write}
-            serverId={serverId}
-            fetcherAnswers={_answers}
-            schema={schema}
-            data={data.data}
-            form={form}
-          >
-            <DatabaseKoboTableContent/>
-          </DatabaseKoboTableProvider>
+          <KoboSchemaProvider schema={schema}>
+            <DatabaseKoboTableProvider
+              canEdit={access.write}
+              serverId={serverId}
+              fetcherAnswers={_answers}
+              data={data.data}
+              form={form}
+            >
+              <DatabaseKoboTableContent/>
+            </DatabaseKoboTableProvider>
+          </KoboSchemaProvider>
         ))}
       </Panel>
     </Page>

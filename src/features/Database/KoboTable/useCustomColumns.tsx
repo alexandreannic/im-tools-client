@@ -1,5 +1,5 @@
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {projects, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
+import {currentProtectionProjects, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
@@ -31,7 +31,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
               value={row.tags?.project}
               placeholder={m.project}
               onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'project'})}
-              options={projects.map(k => ({value: k, children: k}))}
+              options={currentProtectionProjects.map(k => ({value: k, children: k}))}
             />
           )
         }
@@ -50,7 +50,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
             <AaSelectMultiple
               value={row.tags?.projects ?? []}
               onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'projects'})}
-              options={projects.map(k => ({value: k, children: k}))}
+              options={currentProtectionProjects.map(k => ({value: k, children: k}))}
             />
           )
         }

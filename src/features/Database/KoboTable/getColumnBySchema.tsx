@@ -10,8 +10,8 @@ import {formatDate, formatDateTime} from '@/core/i18n/localization/en'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
-import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {Utils} from '@/utils/utils'
+import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Kobo/KoboSchemaContext'
 
 const ignoredColType: KoboApiColType[] = [
   'begin_group',
