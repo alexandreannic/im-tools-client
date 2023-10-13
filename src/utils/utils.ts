@@ -16,7 +16,9 @@ export const toPercent = <T extends number | undefined>(value: T, fractionDigits
   return value !== undefined ? (value * 100).toFixed(fractionDigits) + '%' : undefined as any
 }
 
-export const objectToQueryString = (obj: {[key: string]: any} = {}): string => {
+export const objectToQueryString = (obj: {
+  [key: string]: any
+} = {}): string => {
   const params = new URLSearchParams()
   for (const [key, value] of Object.entries(obj)) {
     if (value !== null && value !== undefined) {
@@ -125,8 +127,12 @@ export function groupByPredicates<T>(arr: T[], groupingFunctions: Array<(item: T
   return result
 }
 
-export function groupByAndTransform<T>(arr: T[], predicates: ((item: T) => any)[], transformFn?: (value: T[]) => any): {[key: string]: any} {
-  const result: {[key: string]: any} = {}
+export function groupByAndTransform<T>(arr: T[], predicates: ((item: T) => any)[], transformFn?: (value: T[]) => any): {
+  [key: string]: any
+} {
+  const result: {
+    [key: string]: any
+  } = {}
 
   arr.forEach((item) => {
     let currentLevel = result
@@ -367,5 +373,17 @@ export namespace Utils {
     [P in T[keyof T]]: {
       [K in keyof T]: T[K] extends P ? K : never
     }[keyof T]
+  }
+}
+
+export const tryy = <T>(fn: () => T) => {
+  return {
+    catchh: <C>(fnCatch: (e: Error) => C): T | C => {
+      try {
+        return fn()
+      } catch (e: any) {
+        return fnCatch(e)
+      }
+    }
   }
 }

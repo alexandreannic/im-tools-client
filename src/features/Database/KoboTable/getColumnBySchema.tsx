@@ -88,7 +88,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="functions" tooltip="calculate"/>,
           head: Utils.removeHtml(getHead(translateQuestion(q.name))),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
-          options: () => seq(data).map(_ => _[q.name] ?? SheetUtils.blankValue).distinct(_ => _).map(_ => ({label: _, value: _})),
+          options: () => seq(data).map(_ => _[q.name] ?? SheetUtils.blank).distinct(_ => _).map(_ => ({label: _, value: _})),
         }
       }
       case 'select_one_from_file': {
@@ -173,7 +173,7 @@ export const getColumnBySchema = ({
           type: 'select_one',
           typeIcon: <SheetHeadTypeIcon children="radio_button_checked" tooltip={q.type}/>,
           options: () => [SheetUtils.blankOption, ...choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)}))],
-          renderValue: row => getVal(row, q.name) ?? SheetUtils.blankValue,
+          renderValue: row => getVal(row, q.name) ?? SheetUtils.blank,
           render: row => map(getVal(row, q.name) as string | undefined, v => {
             const render = translateChoice(q.name, v)
             if (render)
@@ -193,7 +193,7 @@ export const getColumnBySchema = ({
           type: 'select_multiple',
           typeIcon: <SheetHeadTypeIcon children="check_box" tooltip={q.type}/>,
           options: () => [SheetUtils.blankOption, ...choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)}))],
-          renderValue: row => getVal(row, q.name) ?? SheetUtils.blankValue,
+          renderValue: row => getVal(row, q.name) ?? SheetUtils.blank,
           render: row => map(getVal(row, q.name) as string[] | undefined, v => {
             try {
               const render = v.map(_ => translateChoice(q.name, _,)).join(' | ')

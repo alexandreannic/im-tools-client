@@ -54,12 +54,12 @@ export const DatabaseKoboTableContent = () => {
       render: _ => (
         <>
           <TableIconBtn tooltip={m.view} children="visibility" onClick={() => setOpenModalAnswer(_)}/>
-          <TableIconBtn disabled={!ctx.canEdit} tooltip={m.edit} loading={ctx.asyncEdit.loading.has(_.id)} onClick={() => ctx.asyncEdit.call(_.id)} children="edit"/>
+          <TableIconBtn disabled={!ctx.canEdit} tooltip={m.edit} target="_blank" href={ctx.asyncEdit(_.id)} children="edit"/>
         </>
       )
     }
     return [...extraColumns, c, ...schemaColumns]
-  }, [schemaColumns, ctx.asyncEdit.loading.values])
+  }, [schemaColumns])
 
   const selectedHeader = useCustomSelectedHeader(selectedIds)
 

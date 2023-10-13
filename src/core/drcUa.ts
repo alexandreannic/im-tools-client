@@ -1,3 +1,5 @@
+import {Enum, seq} from '@alexandreannic/ts-utils'
+
 export enum DrcOffice {
   Kyiv = 'Kyiv',
   Sumy = 'Sumy',
@@ -8,34 +10,6 @@ export enum DrcOffice {
   Dnipro = 'Dnipro',
   Poltava = 'Poltava',
   Chernivtsi = 'Chernivtsi',
-}
-
-export enum DrcDonor {
-  BHA = 'BHA',
-  ECHO = 'ECHO',
-  SDC = 'SDC',
-  FCDO = 'FCDO',
-  OKF = 'OKF',
-  PSPU = 'PSPU',
-  POFU = 'POFU',
-  FINM = 'FINM',
-  FREM = 'FREM',
-  EUIC = 'EUIC',
-  PMRA = 'PMRA',
-  PMKA = 'PMKA',
-  SIDA = 'SIDA',
-  UHF = 'UHF',
-  UNHC = 'UNHC',
-  DANI = 'DANI',
-  DUT = 'DUT',
-  NovoNordisk = 'NovoNordisk',
-  SDCS = 'SDCS',
-  MOFA = 'MOFA',
-  // 'BHA' = 'BHA',
-  // 'OKF' = 'OKF',
-  // 'ECHO' = 'ECHO',
-  // 'UHF_IV' = 'UHF IV',
-  // 'NN2' = 'NN2',
 }
 
 export enum DrcSector {
@@ -55,6 +29,31 @@ export enum DrcSector {
   EORE = 'EORE',
 }
 
+export enum DrcDonor {
+  BHA = 'BHA',
+  ECHO = 'ECHO',
+  SDC = 'SDC',
+  FCDO = 'FCDO',
+  OKF = 'OKF',
+  PSPU = 'PSPU',
+  PoolFunds = 'PoolFunds',
+  FINM = 'FINM',
+  FREM = 'FREM',
+  EUIC = 'EUIC',
+  PMRA = 'PMRA',
+  PMKA = 'PMKA',
+  SIDA = 'SIDA',
+  UHF = 'UHF',
+  UNHC = 'UNHC',
+  DANI = 'DANI',
+  DUT = 'DUT',
+  NovoNordisk = 'NovoNordisk',
+  SDCS = 'SDCS',
+  MOFA = 'MOFA',
+  AugustinusFonden = 'AugustinusFonden',
+  HoffmansAndHusmans = 'HoffmansAndHusmans',
+}
+
 export enum DrcProject {
   'BHA (UKR-000284)' = 'BHA (UKR-000284)',
   'BHA2 (UKR-000345)' = 'BHA2 (UKR-000345)',
@@ -66,6 +65,8 @@ export enum DrcProject {
   'OKF (UKR-000309)' = 'OKF (UKR-000309)',
   'PSPU (UKR-000304)' = 'PSPU (UKR-000304)',
   'Pooled Funds (UKR-000270)' = 'Pooled Funds (UKR-000270)',
+  'Pooled Funds Old (MPCA) (UKR-000270)' = 'Pooled Funds Old (MPCA) (UKR-000270)',
+  'Pooled Funds (UKR-000342)' = 'Pooled Funds (UKR-000342)',
   'Finnish MFA (UKR-000249)' = 'Finnish MFA (UKR-000249)',
   'French MFA (UKR-000293)' = 'French MFA (UKR-000293)',
   'EU IcSP (UKR-000255)' = 'EU IcSP (UKR-000255)',
@@ -77,36 +78,49 @@ export enum DrcProject {
   'UHF6 (UKR-000336)' = 'UHF6 (UKR-000336)',
   'UNHCR (UKR-000308)' = 'UNHCR (UKR-000308)',
   'DANIDA (UKR-000267)' = 'DANIDA (UKR-000267)',
+  'DANIDA (UKR-000xxx)' = 'DANIDA (UKR-000xxx)',
   'Dutch I (UKR-000294)' = 'Dutch I (UKR-000294)',
   'Dutch II (UKR-000306)' = 'Dutch II (UKR-000306)',
   'Novo-Nordisk (UKR-000274)' = 'Novo-Nordisk (UKR-000274)',
   'Novo-Nordisk (UKR-000298)' = 'Novo-Nordisk (UKR-000298)',
   'SDC Shelter (UKR-000290)' = 'SDC Shelter (UKR-000290)',
   'DANISH MoFA (UKR-000301)' = 'DANISH MoFA (UKR-000301)',
+  'Hoffmans & Husmans (UKR-000341)' = 'Hoffmans & Husmans (UKR-000341)',
+  'Augustinus Fonden (UKR-000340)' = 'Augustinus Fonden (UKR-000340)',
 }
 
-export const drcDonorProjectCode = {
-  'BHA': [DrcProject['BHA (UKR-000284)'], DrcProject['BHA2 (UKR-000345)']],
-  'ECHO': [DrcProject['ECHO1 (UKR-000269)'], DrcProject['ECHO2 (UKR-000322)']],
-  'SDC': [DrcProject['SDC (UKR-000226)'], DrcProject['SDC2 (UKR-000330)']],
-  'FCDO': [DrcProject['FCDO (UKR-000247)'],],
-  'OKF': [DrcProject['OKF (UKR-000309)'],],
-  'PSPU': [DrcProject['PSPU (UKR-000304)'],],
-  'POFU': [DrcProject['Pooled Funds (UKR-000270)'],],
-  'FINM': [DrcProject['Finnish MFA (UKR-000249)'],],
-  'FREM': [DrcProject['French MFA (UKR-000293)'],],
-  'EUIC': [DrcProject['EU IcSP (UKR-000255)'],],
-  'PMRA': [DrcProject['PM WRA (UKR-000230)'],],
-  'PMKA': [DrcProject['PM WKA (UKR-000231)'],],
-  'SIDA': [DrcProject['SIDA 518-570A'],],
-  'UHF': [DrcProject['UHF3 (UKR-000276)'], DrcProject['UHF4 (UKR-000314)'], DrcProject['UHF6 (UKR-000336)']],
-  'UNHC': [DrcProject['UNHCR (UKR-000308)'],],
-  'DANI': [DrcProject['DANIDA (UKR-000267)'],],
-  'DUT': [DrcProject['Dutch I (UKR-000294)'], DrcProject['Dutch II (UKR-000306)']],
-  'NovoNordisk': [DrcProject['Novo-Nordisk (UKR-000274)'], DrcProject['Novo-Nordisk (UKR-000298)'],],
-  'SDCS': [DrcProject['SDC Shelter (UKR-000290)'],],
-  'MOFA': [DrcProject['DANISH MoFA (UKR-000301)']],
+export const drcDonorProjectCode: Record<DrcDonor, DrcProject[]> = {
+  [DrcDonor.BHA]: [DrcProject['BHA (UKR-000284)'], DrcProject['BHA2 (UKR-000345)']],
+  [DrcDonor.ECHO]: [DrcProject['ECHO1 (UKR-000269)'], DrcProject['ECHO2 (UKR-000322)']],
+  [DrcDonor.SDC]: [DrcProject['SDC (UKR-000226)'], DrcProject['SDC2 (UKR-000330)']],
+  [DrcDonor.FCDO]: [DrcProject['FCDO (UKR-000247)'],],
+  [DrcDonor.OKF]: [DrcProject['OKF (UKR-000309)'],],
+  [DrcDonor.PSPU]: [DrcProject['PSPU (UKR-000304)'],],
+  [DrcDonor.PoolFunds]: [DrcProject['Pooled Funds (UKR-000270)'], DrcProject['Pooled Funds (UKR-000342)']],
+  [DrcDonor.FINM]: [DrcProject['Finnish MFA (UKR-000249)'],],
+  [DrcDonor.FREM]: [DrcProject['French MFA (UKR-000293)'],],
+  [DrcDonor.EUIC]: [DrcProject['EU IcSP (UKR-000255)'],],
+  [DrcDonor.PMRA]: [DrcProject['PM WRA (UKR-000230)'],],
+  [DrcDonor.PMKA]: [DrcProject['PM WKA (UKR-000231)'],],
+  [DrcDonor.SIDA]: [DrcProject['SIDA 518-570A'],],
+  [DrcDonor.UHF]: [DrcProject['UHF3 (UKR-000276)'], DrcProject['UHF4 (UKR-000314)'], DrcProject['UHF6 (UKR-000336)']],
+  [DrcDonor.UNHC]: [DrcProject['UNHCR (UKR-000308)'],],
+  [DrcDonor.DANI]: [DrcProject['DANIDA (UKR-000267)'], DrcProject['DANIDA (UKR-000xxx)']],
+  [DrcDonor.DUT]: [DrcProject['Dutch I (UKR-000294)'], DrcProject['Dutch II (UKR-000306)']],
+  [DrcDonor.NovoNordisk]: [DrcProject['Novo-Nordisk (UKR-000274)'], DrcProject['Novo-Nordisk (UKR-000298)'],],
+  [DrcDonor.SDCS]: [DrcProject['SDC Shelter (UKR-000290)'],],
+  [DrcDonor.MOFA]: [DrcProject['DANISH MoFA (UKR-000301)']],
+  [DrcDonor.AugustinusFonden]: [DrcProject['Augustinus Fonden (UKR-000340)']],
+  [DrcDonor.HoffmansAndHusmans]: [DrcProject['Hoffmans & Husmans (UKR-000341)']],
 }
+
+export const donorByProject: Record<DrcProject, DrcDonor> = Enum.entries(drcDonorProjectCode)
+  .reduce((acc, [donor, projects]) => {
+    projects.forEach(project => {
+      acc[project] = donor
+    })
+    return acc
+  }, {} as Record<DrcProject, DrcDonor>)
 
 export enum DrcJob {
   // 'Protection Coordinator' = 'Protection Coordinator',

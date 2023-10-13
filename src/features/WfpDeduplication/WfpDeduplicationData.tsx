@@ -126,7 +126,7 @@ export const WfpDeduplicationData = () => {
               tooltip: _ => m.mpca.status[_.status],
               renderExport: false,
               render: _ => <DeduplicationStatusIcon status={_.status}/>,
-              renderValue: _ => _.status ?? SheetUtils.blankValue,
+              renderValue: _ => _.status ?? SheetUtils.blank,
             },
             {
               id: 'existingOrga',
