@@ -48,7 +48,10 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
     sortableColumns?: string[]
     sortBy?: KeyOf<T>
     orderBy?: OrderBy
-    onSortChange: (_: {sortBy?: KeyOf<T>; orderBy?: OrderBy}) => void
+    onSortChange: (_: {
+      sortBy?: KeyOf<T>;
+      orderBy?: OrderBy
+    }) => void
   }
 }
 
@@ -88,19 +91,26 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   stickyEnd?: boolean
 }
 
-export type SheetFilterValueString = {filterBlank?: boolean, value?: string} | undefined
+export type SheetFilterValueString =
+  {
+    filterBlank?: boolean,
+    value?: string
+  }
+  | undefined
 export type SheetFilterValueSelect = string[]
 export type SheetFilterValueDate = [Date | undefined, Date | undefined]
 export type SheetFilterValueNumber = [number | undefined, number | undefined]
 export type SheetFilterValue = SheetFilterValueString | SheetFilterValueSelect | SheetFilterValueDate | SheetFilterValueNumber
+
+export type SheetBlankValue = ''
 
 export class SheetUtils {
 
   // static readonly FILTER_BLANK_TEXT = 'FILTER_BLANK_TEXT_someRandomTextToAvoidCollision_9fa3'
   static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
 
-  static readonly blankValue = ''
-  static readonly blankOption: SheetOptions = {value: SheetUtils.blankValue, label: <i>BLANK</i>}
+  static readonly blank: SheetBlankValue = ''
+  static readonly blankOption: SheetOptions = {value: SheetUtils.blank, label: <i>BLANK</i>}
 
   static readonly buildOptions = (opt: string[], addBlank?: boolean): SheetOptions[] => {
     return [

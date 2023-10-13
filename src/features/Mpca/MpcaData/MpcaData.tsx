@@ -109,7 +109,7 @@ export const MpcaData = () => {
               head: m.project,
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
-              render: _ => _.project ?? SheetUtils.blankValue
+              render: _ => _.project ?? SheetUtils.blank
             },
             {
               id: 'prog',
@@ -124,14 +124,14 @@ export const MpcaData = () => {
               head: m.oblast,
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.values(OblastIndex.oblastByISO), true),
-              render: _ => _.oblast ?? SheetUtils.blankValue,
+              render: _ => _.oblast ?? SheetUtils.blank,
             },
             {
               id: 'office',
               head: m.office,
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.values(DrcOffice), true),
-              render: _ => _.office ?? SheetUtils.blankValue,
+              render: _ => _.office ?? SheetUtils.blank,
             },
             {
               id: 'hhSize',
@@ -171,7 +171,7 @@ export const MpcaData = () => {
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
               tooltip: _ => _.deduplication && m.mpca.status[_.deduplication.status],
-              renderValue: _ => _.deduplication?.status ?? SheetUtils.blankValue,
+              renderValue: _ => _.deduplication?.status ?? SheetUtils.blank,
               render: _ => _.deduplication && <DeduplicationStatusIcon status={_.deduplication.status}/>,
             },
             {
@@ -179,7 +179,7 @@ export const MpcaData = () => {
               head: m.suggestion,
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.keys(DrcSupportSuggestion), true),
-              render: _ => _.deduplication?.suggestion ?? SheetUtils.blankValue,
+              render: _ => _.deduplication?.suggestion ?? SheetUtils.blank,
             },            // {
             //   id: 'deduplicationFile',
             //   head: 'deduplicationFile',
