@@ -23,7 +23,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           width: 200,
           options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
           tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project,
-          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blankValue,
+          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blank,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
             <AaSelectSingle
@@ -44,7 +44,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           width: 200,
           options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
           tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects,
-          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects ?? SheetUtils.blankValue,
+          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects ?? SheetUtils.blank,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
             <AaSelectMultiple

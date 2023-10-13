@@ -5,7 +5,7 @@ import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
-import {chain, toPercent, Utils} from '@/utils/utils'
+import {chain, toPercent, tryy, Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
@@ -13,26 +13,26 @@ import {Period, Person} from '@/core/type'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools, makeChartData} from '@/core/chartTools'
-import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {SheetOptions} from '@/shared/Sheet/sheetType'
-import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
+import {Sheet, SheetBlankValue, SheetUtils} from '@/shared/Sheet/Sheet'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {Mpca, MpcaHelper} from '@/core/sdk/server/mpca/Mpca'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {usePersistentState} from 'react-persistent-state'
-import {DrcOffice} from '@/core/drcUa'
+import {donorByProject, DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
+import {AaInput} from '@/shared/ItInput/AaInput'
+import {Panel} from '@/shared/Panel'
 import ageGroup = Person.ageGroup
 import groupBy = Utils.groupBy
-import {AaInput} from '@/shared/ItInput/AaInput'
 
 export const today = new Date()
 
@@ -47,6 +47,15 @@ export enum Currency {
   UAH = 'UAH',
 }
 
+interface Helper {
+  donor: DrcDonor | SheetBlankValue
+  project: DrcProject | SheetBlankValue
+  office: DrcOffice | 'Total' | SheetBlankValue
+  committedAmount: number
+  individuals: number
+  rows: number
+}
+
 export const MpcaDashboard = () => {
   const {conf} = useAppSettings()
   const ctx = useMPCAContext()
@@ -56,11 +65,11 @@ export const MpcaDashboard = () => {
   const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, 'mpca-dashboard-currency')
 
   const mappedData = useMemo(() => ctx.data?.map(_ => {
-    if (_.donor === undefined) _.donor = SheetUtils.blankValue as any
-    if (_.project === undefined) _.project = SheetUtils.blankValue as any
-    if (_.oblastIso === undefined) _.oblastIso = SheetUtils.blankValue as any
-    if (_.oblast === undefined) _.oblast = SheetUtils.blankValue as any
-    if (_.office === undefined) _.office = SheetUtils.blankValue as any
+    if (_.donor === undefined) _.donor = SheetUtils.blank as any
+    if (_.project === undefined) _.project = SheetUtils.blank as any
+    if (_.oblastIso === undefined) _.oblastIso = SheetUtils.blank as any
+    if (_.oblast === undefined) _.oblast = SheetUtils.blank as any
+    if (_.office === undefined) _.office = SheetUtils.blank as any
     return _
   }), [ctx.data])
 
@@ -348,7 +357,7 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <SlidePanel title={m.project}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
-                data: data.map(_ => _.project ?? SheetUtils.blankValue),
+                data: data.map(_ => _.project ?? SheetUtils.blank),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
@@ -357,63 +366,89 @@ export const _MPCADashboard = ({
         </Div>
         <Div>
           <Div column>
-            <SlidePanel>
+            <Panel title="MPCA Budget Helper">
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = groupBy({
                   data,
                   groups: [
-                    {by: _ => _.project!,},
-                    {by: _ => _.oblast!,},
+                    {by: _ => _.project ?? SheetUtils.blank,},
+                    {by: _ => _.office ?? SheetUtils.blank,},
                   ],
                   finalTransform: _ => _,
-                  // finalTransform: (d) => {
-                  //   return formatLargeNumber(d.sum(_ => getAmount(_) ?? 0), {maximumFractionDigits: 0})
-                  // }
                 })
-                return new Enum(gb).entries().flatMap(([project, byProject]) => {
-                  const gb = new Enum(byProject).entries().map(([oblast, byOblast]) => ({
+                return [...MpcaHelper.projects, SheetUtils.blank].flatMap(project => {
+                  const donor = project === SheetUtils.blank ? SheetUtils.blank : donorByProject[project]
+                  const resOffices = seq([...Enum.values(DrcOffice), SheetUtils.blank,]).map(office => {
+                    const d = gb[project]?.[office] ?? seq()
+                    return {
                       project,
-                      oblast: oblast,
-                      total: byOblast.sum(_ => getAmount(_) ?? 0)
-                    })
-                  )
-                  const w = Enum.values(byProject)
+                      office,
+                      donor,
+                      availableAmount: project !== SheetUtils.blank && office !== SheetUtils.blank
+                        ? MpcaHelper.budgets[project]?.[office]
+                        : undefined,
+                      committedAmount: d.sum(_ => _.amountUahFinal ?? 0),
+                      individuals: d.sum(_ => _.persons?.length ?? 0),
+                      rows: d.length,
+                    }
+                  })
                   return [
-                    ...gb,
-                    {project, oblast: 'TOTAL', total: seq(Enum.values(byProject).flat()).sum(_ => _.amountUahFinal ?? 0)}
+                    ...resOffices, {
+                      project,
+                      donor,
+                      availableAmount: resOffices.sum(_ => _.availableAmount ?? 0),
+                      office: 'Total',
+                      committedAmount: resOffices.sum(_ => _.committedAmount),
+                      individuals: resOffices.sum(_ => _.individuals),
+                      rows: resOffices.sum(_ => _.rows),
+                    }
                   ]
                 })
-                // return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
               }}>
                 {_ =>
                   <Sheet
-                    defaultLimit={100}
-                    className="ip-border"
+                    defaultLimit={200}
+                    rowsPerPageOptions={[200, 1000]}
                     data={_}
                     columns={[
-                      {width: 0, id: 'donor', head: m.donor, type: 'select_one', render: _ => _.project},
+                      {width: 0, id: 'donor', head: m.donor, type: 'select_one', render: _ => _.donor},
                       {width: 0, id: 'project', head: m.project, type: 'select_one', render: _ => _.project},
                       {
-                        width: 0, id: 'oblast', head: m.oblast, type: 'select_one', render: _ => {
-                          if (_.oblast === 'TOTAL') return <b>Total</b>
-                          return _.oblast
+                        width: 0, id: 'office', head: m.office, type: 'select_one', render: _ => {
+                          if (_.office === 'Total') return <b>Total</b>
+                          return _.office
                         }
                       },
-                      {width: 0, id: 'total', head: m.amountUSD, type: 'number', render: _ => formatLargeNumber(_.total, {maximumFractionDigits: 0})},
                       {
-                        width: 0, id: 'target', head: m.target, type: 'number', render: _ =>
-                          <AaInput
-                            type="number"
-                            helperText={null}
-                            value={targets[_.project + _.oblast] ?? 0}
-                            onChange={e => setTargets(prev => ({...prev, [_.project + _.oblast]: +e.target.value}))}
-                          />
+                        width: 0,
+                        id: 'buget',
+                        head: 'Budget available',
+                        type: 'number',
+                        renderValue: _ => _.availableAmount,
+                        render: _ => formatLargeNumber(_.availableAmount, {maximumFractionDigits: 0})
                       },
                       {
-                        width: 0, id: 'target_ratio', head: '', type: 'number', render: _ => {
-                          const percent = (targets[_.project + _.oblast] ?? 0) / _.total
+                        width: 0,
+                        id: 'total',
+                        head: 'Committed',
+                        type: 'number',
+                        renderValue: _ => _.committedAmount,
+                        render: _ => formatLargeNumber(_.committedAmount, {maximumFractionDigits: 0})
+                      },
+                      {
+                        width: 0,
+                        id: 'target_ratio',
+                        head: 'Rest',
+                        type: 'number',
+                        tooltip: _ => `${formatLargeNumber(_.committedAmount)} / ${formatLargeNumber(_.availableAmount)}`,
+                        render: _ => {
+                          if (_.availableAmount === undefined || (_.office === 'Total' && _.availableAmount === 0)) return
+                          const percent = tryy(() => _.committedAmount / _.availableAmount!).catchh(() => undefined)
                           return <>
-                            {toPercent(percent)}
+                            <Box component="span" sx={{display: 'flex', justifyContent: 'space-between'}}>
+                              <span>{formatLargeNumber(_.availableAmount - _.committedAmount, {maximumFractionDigits: 0})}</span>
+                              <span>{toPercent(percent)}</span>
+                            </Box>
                             <LinearProgress value={percent * 100} variant="determinate"/>
                           </>
                         }
@@ -422,7 +457,7 @@ export const _MPCADashboard = ({
                   />
                 }
               </Lazy>
-            </SlidePanel>
+            </Panel>
           </Div>
         </Div>
         {/*<Div>*/}

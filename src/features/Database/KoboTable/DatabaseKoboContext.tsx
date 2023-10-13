@@ -15,8 +15,12 @@ export interface DatabaseKoboContext {
   canEdit?: boolean
   form: KoboForm
   asyncRefresh: UseAsync<() => Promise<void>>
-  asyncEdit: UseAsync<(answerId: KoboAnswerId) => Promise<void>>
-  asyncUpdateTag: UseAsync<(_: {answerIds: KoboAnswerId[], key: KeyOf<any>, value: any}) => Promise<void>>
+  asyncEdit: (answerId: KoboAnswerId) => string
+  asyncUpdateTag: UseAsync<(_: {
+    answerIds: KoboAnswerId[],
+    key: KeyOf<any>,
+    value: any
+  }) => Promise<void>>
   data: KoboMappedAnswer[]
 }
 
@@ -40,7 +44,7 @@ export const DatabaseKoboTableProvider = (props: {
     children,
     fetcherAnswers,
   } = props
-  const {api} = useAppSettings()
+  const {api, conf} = useAppSettings()
   const {toastHttpError, toastLoading} = useAaToast()
 
   const asyncRefresh = useAsync(async () => {
@@ -48,13 +52,14 @@ export const DatabaseKoboTableProvider = (props: {
     await fetcherAnswers.fetch({force: true, clean: false})
   })
 
-  const asyncEdit = useAsync(async (answerId: KoboAnswerId) => {
-    return api.koboApi.getEditUrl(serverId, form.id, answerId).then(_ => {
-      if (_.url) {
-        window.open(_.url, '_blank')
-      }
-    }).catch(toastHttpError)
-  }, {requestKey: _ => _[0]})
+  const asyncEdit = (answerId: KoboAnswerId) => `${conf.apiURL}/kobo-api/${serverId}/${form.id}/${answerId}/edit-url`
+  // const asyncEdit = useAsync(async (answerId: KoboAnswerId) => {
+  //   return api.koboApi.getEditUrl(serverId, form.id, answerId).then(_ => {
+  //     if (_.url) {
+  //       window.open(_.url, '_blank')
+  //     }
+  //   }).catch(toastHttpError)
+  // }, {requestKey: _ => _[0]})
 
 
   const [mappedData, setMappedData] = useState<KoboMappedAnswer[]>(data)
