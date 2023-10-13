@@ -421,19 +421,19 @@ export const _MPCADashboard = ({
                       },
                       {
                         width: 0,
-                        id: 'buget',
-                        head: 'Budget available',
-                        type: 'number',
-                        renderValue: _ => _.availableAmount,
-                        render: _ => formatLargeNumber(_.availableAmount, {maximumFractionDigits: 0})
-                      },
-                      {
-                        width: 0,
                         id: 'total',
                         head: 'Committed',
                         type: 'number',
                         renderValue: _ => _.committedAmount,
                         render: _ => formatLargeNumber(_.committedAmount, {maximumFractionDigits: 0})
+                      },
+                      {
+                        width: 0,
+                        id: 'buget',
+                        head: 'Budget available',
+                        type: 'number',
+                        renderValue: _ => _.availableAmount,
+                        render: _ => formatLargeNumber(_.availableAmount, {maximumFractionDigits: 0})
                       },
                       {
                         width: 0,
@@ -443,7 +443,7 @@ export const _MPCADashboard = ({
                         tooltip: _ => `${formatLargeNumber(_.committedAmount)} / ${formatLargeNumber(_.availableAmount)}`,
                         render: _ => {
                           if (_.availableAmount === undefined || (_.office === 'Total' && _.availableAmount === 0)) return
-                          const percent = tryy(() => _.committedAmount / _.availableAmount!).catchh(() => undefined)
+                          const percent = tryy(() => _.committedAmount / _.availableAmount!).catchh(() => 0)
                           return <>
                             <Box component="span" sx={{display: 'flex', justifyContent: 'space-between'}}>
                               <span>{formatLargeNumber(_.availableAmount - _.committedAmount, {maximumFractionDigits: 0})}</span>
