@@ -1,7 +1,7 @@
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {ReactNode, useCallback, useMemo} from 'react'
 import {Page} from '@/shared/Page'
-import {Sheet, SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
+import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
@@ -23,6 +23,8 @@ import {kobo} from '@/koboDrcUaFormId'
 import {Autocomplete} from '@mui/material'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
+import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }

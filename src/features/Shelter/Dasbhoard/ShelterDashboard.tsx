@@ -8,7 +8,7 @@ import {Period, Person} from '@/core/type'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
+import {Sheet} from '@/shared/Sheet/Sheet'
 import {usePersistentState} from 'react-persistent-state'
 import {useI18n} from '@/core/i18n'
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
@@ -22,12 +22,13 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
-import {SheetOptions} from '@/shared/Sheet/sheetType'
+import {SheetOptions} from '@/shared/Sheet/util/sheetType'
 import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 const today = new Date()
 
@@ -66,8 +67,6 @@ export const ShelterDashboard = () => {
       return true
     })
   }, [ctxData, filters, periodFilter])
-
-  console.log(filters)
 
   const computed = useShelterComputedData({data: filteredData})
 

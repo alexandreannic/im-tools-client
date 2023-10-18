@@ -1,7 +1,7 @@
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
-import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
+import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
@@ -21,6 +21,8 @@ import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {KoboShelterTa, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
 import {ShelterSelectAccepted, ShelterSelectContractor, ShelterSelectStatus} from '@/features/Shelter/Data/ShelterTableInputs'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+
 
 export interface ShelterDataFilters extends KoboAnswerFilter {
 }
@@ -167,7 +169,7 @@ export const ShelterTable = () => {
         type: 'number',
         width: 0,
         head: m._shelter.scoreDisplacement,
-        renderValue: _ => _.nta?.displ_score,
+        renderValue: _ => Utils.safeNumber(_.nta?.displ_score),
         render: _ => _.nta?.displ_score,
       },
       {
@@ -176,7 +178,7 @@ export const ShelterTable = () => {
         type: 'number',
         width: 0,
         head: m._shelter.scoreSocio,
-        renderValue: _ => _.nta?.socio_score,
+        renderValue: _ => Utils.safeNumber(_.nta?.socio_score),
         render: _ => Utils.add(_.nta?.socio_score!) < 6 ? <Txt bold color="error">{_.nta?.socio_score}</Txt> : _.nta?.socio_score,
       },
       {
@@ -390,6 +392,7 @@ export const ShelterTable = () => {
         options: () => Enum.keys(ShelterContractor).map(_ => ({value: _, label: _})),
         typeIcon: null,
         renderValue: row => row.ta?.tags?.contractor2,
+        renderOption: row => row.ta?.tags?.contractor2,
         render: row => map(row.ta, ta => (
           <>
             <AaSelect
@@ -427,7 +430,11 @@ export const ShelterTable = () => {
         width: 0,
         align: 'center',
         typeIcon: null,
-        options: () => SheetUtils.buildOptions(Object.keys(ShelterTaPriceLevel)),
+        options: () => [
+          SheetUtils.buildCustomOption(ShelterTaPriceLevel.Light, <><TableIcon color="success">looks_one</TableIcon> {ShelterTaPriceLevel.Light}</>),
+          SheetUtils.buildCustomOption(ShelterTaPriceLevel.Medium, <><TableIcon color="warning">looks_two</TableIcon> {ShelterTaPriceLevel.Medium}</>),
+          SheetUtils.buildCustomOption(ShelterTaPriceLevel.Heavy, <><TableIcon color="error">looks_3</TableIcon> {ShelterTaPriceLevel.Heavy}</>),
+        ],
         renderValue: (row: ShelterRow) => row.ta?._priceLevel,
         render: (row: ShelterRow) => fnSwitch(row.ta?._priceLevel!, {
           [ShelterTaPriceLevel.Light]: <TableIcon color="success">looks_one</TableIcon>,

@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
+import {Sheet} from '@/shared/Sheet/Sheet'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
@@ -12,6 +12,7 @@ import {DrcOffice} from '@/core/drcUa'
 
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {format} from 'date-fns'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const DeduplicationStatusIcon = ({status}: {status: WfpDeduplicationStatus}) => {
   return fnSwitch(status, {

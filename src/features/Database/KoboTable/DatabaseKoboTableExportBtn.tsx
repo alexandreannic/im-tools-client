@@ -1,5 +1,5 @@
 import {useAsync} from '@alexandreannic/react-hooks-lib'
-import {generateXLSFromArray, GenerateXlsFromArrayParams} from '@/shared/Sheet/generateXLSFile'
+import {generateXLSFromArray, GenerateXlsFromArrayParams} from '@/shared/Sheet/util/generateXLSFile'
 import {Utils} from '@/utils/utils'
 import {Enum, map, mapFor, seq} from '@alexandreannic/ts-utils'
 import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'

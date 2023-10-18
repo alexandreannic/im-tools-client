@@ -1,8 +1,8 @@
 import {Checkbox} from '@mui/material'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import React from 'react'
-import {SheetRow} from '@/shared/Sheet/Sheet'
 import {SheetContext} from '@/shared/Sheet/context/SheetContext'
+import {SheetRow} from '@/shared/Sheet/util/sheetType'
 
 export const SheetBody = (() => {
   const Component = <T extends SheetRow>({
@@ -33,7 +33,7 @@ export const SheetBody = (() => {
               </td>
             )}
             {columns.map((_, i) => {
-              const render = _.render(item, rowI)
+              const render = _.render(item)
               return (
                 <td
                   title={_.tooltip !== null && (_.tooltip?.(item) ?? (render as any))}

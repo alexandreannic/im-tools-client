@@ -17,8 +17,8 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
-import {SheetOptions} from '@/shared/Sheet/sheetType'
-import {Sheet, SheetBlankValue, SheetUtils} from '@/shared/Sheet/Sheet'
+import {SheetBlankValue, SheetOptions} from '@/shared/Sheet/util/sheetType'
+import {Sheet} from '@/shared/Sheet/Sheet'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
@@ -33,6 +33,7 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {Panel} from '@/shared/Panel'
 import ageGroup = Person.ageGroup
 import groupBy = Utils.groupBy
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const today = new Date()
 

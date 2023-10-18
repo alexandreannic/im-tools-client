@@ -77,19 +77,32 @@ export const DatabaseTablePage = ({
   return (
     <Page loading={_formSchema.loading || _answers.loading} width="full">
       <Panel>
-        {map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (
-          <KoboSchemaProvider schema={schema}>
+        {_answers.entity && _formSchema.entity && _form.entity && (
+          <KoboSchemaProvider schema={_formSchema.entity!}>
             <DatabaseKoboTableProvider
               canEdit={access.write}
               serverId={serverId}
               fetcherAnswers={_answers}
-              data={data.data}
-              form={form}
+              data={_answers.entity!.data}
+              form={_form.entity!}
             >
               <DatabaseKoboTableContent/>
             </DatabaseKoboTableProvider>
           </KoboSchemaProvider>
-        ))}
+        )}
+        {/*{map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (*/}
+        {/*  <KoboSchemaProvider schema={schema}>*/}
+        {/*    <DatabaseKoboTableProvider*/}
+        {/*      canEdit={access.write}*/}
+        {/*      serverId={serverId}*/}
+        {/*      fetcherAnswers={_answers}*/}
+        {/*      data={data.data}*/}
+        {/*      form={form}*/}
+        {/*    >*/}
+        {/*      <DatabaseKoboTableContent/>*/}
+        {/*    </DatabaseKoboTableProvider>*/}
+        {/*  </KoboSchemaProvider>*/}
+        {/*))}*/}
       </Panel>
     </Page>
   )

@@ -1,5 +1,6 @@
-import {ReactNode, useEffect, useMemo, useState} from 'react'
+import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {SxProps, Theme} from '@mui/material'
+import {compareArray} from '@/utils/utils'
 
 interface MultipleChoicesBase<T, V> {
   label?: ReactNode
@@ -8,7 +9,8 @@ interface MultipleChoicesBase<T, V> {
 }
 
 interface MultipleChoicesMultiple<T extends string, V> extends MultipleChoicesBase<T, V> {
-  initialValue: T[]
+  initialValue?: T[]
+  value?: T[]
   onChange: (t: T[], e?: any) => void
   children: (_: {
     allChecked?: boolean,
@@ -21,36 +23,21 @@ interface MultipleChoicesMultiple<T extends string, V> extends MultipleChoicesBa
       key?: string | number
       onChange: () => void
     }[]
-  }) => JSX.Element
+  }) => React.JSX.Element
 }
-
-// interface MultipleChoicesSimple<T, V> extends MultipleChoicesBase<T, V> {
-//   initialValue: T
-//   multiple?: false
-//   onChange: (t: T, e?: any) => void
-//   children: (_: {
-//     options: {
-//       value: T
-//       checked?: boolean
-//       children?: ReactNode
-//       key?: string
-//       onChange?: () => void
-//     }[]
-//   }) => ReactNode
-// }
 
 type MultipleChoices<T extends string, V> = MultipleChoicesMultiple<T, V> //| MultipleChoicesSimple<T, V>
 
-
 export const MultipleChoices = <T extends string, V extends string = string>({
   initialValue,
+  value,
   onChange,
   options,
   children,
   sx
 }: MultipleChoices<T, V>) => {
 
-  const [innerValue, setInnerValue] = useState<T[]>(initialValue ?? [])
+  const [innerValue, setInnerValue] = useState<T[]>(value ?? initialValue ?? [])
 
   const allValues = useMemo(() => options.map(_ => _.value), [options])
 
@@ -69,7 +56,12 @@ export const MultipleChoices = <T extends string, V extends string = string>({
   }
 
   useEffect(() => {
-    if (innerValue !== initialValue)
+    if (!compareArray(value, innerValue))
+      setInnerValue(value ?? [])
+  }, [value])
+
+  useEffect(() => {
+    if (!compareArray(innerValue, initialValue))
       onChange(innerValue)
   }, [innerValue])
 

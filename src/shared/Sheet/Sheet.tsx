@@ -1,175 +1,62 @@
-import {Badge, Box, BoxProps, Icon, LinearProgress, TablePagination,} from '@mui/material'
-import React, {CSSProperties, ReactNode, useEffect, useMemo} from 'react'
+import {Badge, Box, Icon, LinearProgress, TablePagination,} from '@mui/material'
+import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
-import {KeyOf, Utils} from '@/utils/utils'
+import {Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {AAIconBtn} from '../IconBtn'
 import {useAsync, useMemoFn} from '@alexandreannic/react-hooks-lib'
-import {generateXLSFromArray} from '@/shared/Sheet/generateXLSFile'
+import {generateXLSFromArray} from '@/shared/Sheet/util/generateXLSFile'
 import {SheetBody} from './SheetBody'
 import {SheetHead} from './SheetHead'
-import {SheetOptions, SheetPropertyType} from '@/shared/Sheet/sheetType'
+import {SheetRow, SheetTableProps} from '@/shared/Sheet/util/sheetType'
 import {format} from 'date-fns'
 import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
 import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
-
-type OrderBy = 'asc' | 'desc'
-
-export type SheetRow = Record<string, any>// Record<string, any/* string | number[] | string[] | Date | number | undefined*/>
-
-export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onSelect'> {
-  header?: ReactNode | ((_: {
-    data: T[]
-    filteredData: T[]
-    filteredAndSortedData: T[]
-  }) => ReactNode)
-  loading?: boolean
-  total?: number
-  defaultLimit?: number
-  title?: string
-  readonly select?: {
-    readonly onSelect: (_: string[]) => void
-    readonly getId: (_: T) => string
-    readonly selectActions?: ReactNode
-  }
-  readonly data?: T[]
-  getRenderRowKey?: (_: T, index: number) => string
-  onClickRows?: (_: T, event: React.MouseEvent<HTMLElement>) => void
-  rowsPerPageOptions?: number[]
-  columns: SheetColumnProps<T>[]
-  showColumnsToggle?: boolean
-  hidePagination?: boolean
-  showColumnsToggleBtnTooltip?: string
-  showExportBtn?: boolean
-  renderEmptyState?: ReactNode
-  sort?: {
-    sortableColumns?: string[]
-    sortBy?: KeyOf<T>
-    orderBy?: OrderBy
-    onSortChange: (_: {
-      sortBy?: KeyOf<T>;
-      orderBy?: OrderBy
-    }) => void
-  }
-}
-
-interface SheetColumnPropsSelectOne<T extends SheetRow> extends SheetColumnPropsBase<T> {
-  type?: Exclude<SheetPropertyType, 'date'>
-  renderValue?: (_: T, i: number) => string | string[] | Date | number | undefined
-}
-
-interface SheetColumnPropsDate<T extends SheetRow> extends SheetColumnPropsBase<T> {
-  type: 'date'
-  renderValue?: (_: T, i: number) => Date | undefined
-}
-
-export type SheetColumnProps<T extends SheetRow> = SheetColumnPropsSelectOne<T> | SheetColumnPropsDate<T>
-
-export interface SheetColumnPropsBase<T extends SheetRow> {
-  id: string
-  // type?: SheetPropertyType//'number' | 'date' | 'string' | 'select_one' | 'select_multiple'
-  // renderValue?: (_: T) => string | number | undefined
-  render: (_: T, i: number) => ReactNode
-  noSort?: boolean
-  width?: number
-  head?: string
-  align?: 'center' | 'right'
-  onClick?: (_: T) => void
-  renderExport?: boolean | ((_: T) => string | number | undefined | Date)
-  hidden?: boolean
-  alwaysVisible?: boolean
-  tooltip?: null | ((_: T) => undefined | string)
-  style?: CSSProperties
-  styleHead?: CSSProperties
-  typeIcon?: ReactNode
-  options?: () => SheetOptions[]
-  className?: string | ((_: T) => string | undefined)
-  // sx?: (_: T) => SxProps<Theme> | undefined
-  // style?: CSSProperties
-  stickyEnd?: boolean
-}
-
-export type SheetFilterValueString =
-  {
-    filterBlank?: boolean,
-    value?: string
-  }
-  | undefined
-export type SheetFilterValueSelect = string[]
-export type SheetFilterValueDate = [Date | undefined, Date | undefined]
-export type SheetFilterValueNumber = [number | undefined, number | undefined]
-export type SheetFilterValue = SheetFilterValueString | SheetFilterValueSelect | SheetFilterValueDate | SheetFilterValueNumber
-
-export type SheetBlankValue = ''
-
-export class SheetUtils {
-
-  // static readonly FILTER_BLANK_TEXT = 'FILTER_BLANK_TEXT_someRandomTextToAvoidCollision_9fa3'
-  static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
-
-  static readonly blank: SheetBlankValue = ''
-  static readonly blankOption: SheetOptions = {value: SheetUtils.blank, label: <i>BLANK</i>}
-
-  static readonly buildOptions = (opt: string[], addBlank?: boolean): SheetOptions[] => {
-    return [
-      ...(addBlank ? [SheetUtils.blankOption] : []),
-      ...opt.map(SheetUtils.buildOption),
-    ]
-  }
-
-  static readonly buildOption = (_: string): SheetOptions => {
-    return {value: _, label: _}
-  }
-
-  static readonly buildCustomOption = (_: string, label?: string): SheetOptions => {
-    return {value: _, label: label ?? _}
-  }
-
-  static readonly getValueGetter = <T extends SheetRow>(col: Pick<SheetColumnProps<T>, 'render' | 'renderValue'>, colName: string): (_: T, i?: number) => any => {
-    return col.renderValue ?? col.render as any ?? ((_: T, i: number) => _[colName])
-  }
-}
-
+import {SheetModal} from '@/shared/Sheet/SheetModal'
 
 export const Sheet = <T extends SheetRow = SheetRow>({
-  id,
-  loading,
   total,
   data,
-  title,
-  showExportBtn,
   columns,
   getRenderRowKey,
-  header,
   defaultLimit,
   showColumnsToggle,
   showColumnsToggleBtnTooltip,
-  renderEmptyState,
   rowsPerPageOptions = [20, 100, 500, 1000],
-  sort,
-  onClickRows,
   select,
-  hidePagination,
   ...props
 }: SheetTableProps<T>) => {
+
+  const mappedColumns = useMemo(() => {
+    return columns.map(col => {
+      if (col.type === 'select_one' || col.type === 'select_multiple') {
+        return {
+          ...col,
+          type: col.type as any,
+          renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id]),
+          renderOption: (col).renderOption ?? col.render,
+        }
+      }
+      return {
+        ...col,
+        type: col.type ?? 'string',
+        renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id])
+      }
+    })
+  }, [columns])
+
   return (
     <SheetProvider
-      columns={columns}
+      columns={mappedColumns}
       data={data}
       defaultLimit={defaultLimit}
       select={select}
       getRenderRowKey={getRenderRowKey}
     >
       <_Sheet
-        id={id}
-        title={title}
-        hidePagination={hidePagination}
-        showExportBtn={showExportBtn}
-        renderEmptyState={renderEmptyState}
-        header={header}
-        loading={loading}
+        rowsPerPageOptions={rowsPerPageOptions}
         {...props}
       />
     </SheetProvider>
@@ -212,7 +99,7 @@ const _Sheet = <T extends SheetRow>({
                 return q.renderExport(row)
               }
               if (q.renderValue) {
-                return q.renderValue(row, i)
+                return q.renderValue(row)
               }
               return row[q.id]
             }
@@ -344,6 +231,7 @@ const _Sheet = <T extends SheetRow>({
           }}
         />
       )}
+      <SheetModal/>
     </Box>
   )
 }

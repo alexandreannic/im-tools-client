@@ -1,23 +1,20 @@
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
-import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
-import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
+import {Sheet} from '@/shared/Sheet/Sheet'
+import {useMPCAContext} from '../MpcaContext'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
-import {Enum, map} from '@alexandreannic/ts-utils'
+import {map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
 import {kobo} from '@/koboDrcUaFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
-import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
-import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
-import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
 import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -87,7 +84,7 @@ export const MpcaData = () => {
               id: 'source',
               head: m.form,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.keys(MpcaRowSource)),
+              // options: () => SheetUtils.buildOptions(Enum.keys(MpcaRowSource)),
               render: _ => _.source
             },
             {
@@ -101,21 +98,21 @@ export const MpcaData = () => {
               id: 'donor',
               head: m.donor,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.keys(DrcDonor), true),
+              // options: () => SheetUtils.buildOptions(Enum.keys(DrcDonor), true),
               render: _ => _.donor ?? ''
             },
             {
               id: 'project',
               head: m.project,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+              // options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
               render: _ => _.project ?? SheetUtils.blank
             },
             {
               id: 'prog',
               head: m.program,
               type: 'select_multiple',
-              options: () => SheetUtils.buildOptions(Enum.keys(MpcaProgram), true),
+              // options: () => SheetUtils.buildOptions(Enum.keys(MpcaProgram), true),
               renderValue: _ => _.prog,
               render: _ => _.prog?.join(' | '),
             },
@@ -123,14 +120,14 @@ export const MpcaData = () => {
               id: 'oblast',
               head: m.oblast,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.values(OblastIndex.oblastByISO), true),
+              // options: () => SheetUtils.buildOptions(Enum.values(OblastIndex.oblastByISO), true),
               render: _ => _.oblast ?? SheetUtils.blank,
             },
             {
               id: 'office',
               head: m.office,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.values(DrcOffice), true),
+              // options: () => SheetUtils.buildOptions(Enum.values(DrcOffice), true),
               render: _ => _.office ?? SheetUtils.blank,
             },
             {
@@ -169,7 +166,7 @@ export const MpcaData = () => {
               width: 0,
               head: m.deduplication,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
+              // options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
               tooltip: _ => _.deduplication && m.mpca.status[_.deduplication.status],
               renderValue: _ => _.deduplication?.status ?? SheetUtils.blank,
               render: _ => _.deduplication && <DeduplicationStatusIcon status={_.deduplication.status}/>,
@@ -178,7 +175,7 @@ export const MpcaData = () => {
               id: 'suggestion',
               head: m.suggestion,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.keys(DrcSupportSuggestion), true),
+              // options: () => SheetUtils.buildOptions(Enum.keys(DrcSupportSuggestion), true),
               render: _ => _.deduplication?.suggestion ?? SheetUtils.blank,
             },            // {
             //   id: 'deduplicationFile',
@@ -225,7 +222,7 @@ export const MpcaData = () => {
               head: m.status,
               render: _ => _.benefStatus,
               type: 'select_one',
-              options: () => SheetUtils.buildOptions(Enum.keys(bn_ReOptions.ben_det_res_stat)),
+              // options: () => SheetUtils.buildOptions(Enum.keys(bn_ReOptions.ben_det_res_stat)),
             },
             {id: 'phone', head: m.phone, render: _ => _.phone},
           ]}

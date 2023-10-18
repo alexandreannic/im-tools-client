@@ -1,9 +1,9 @@
 import {fnSwitch, map} from '@alexandreannic/ts-utils'
 import {Box, Checkbox} from '@mui/material'
 import React from 'react'
-import {SheetColumnProps, SheetRow} from '@/shared/Sheet/Sheet'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {SheetContext} from '@/shared/Sheet/context/SheetContext'
+import {SheetColumnProps, SheetRow} from '@/shared/Sheet/util/sheetType'
 
 export const SheetHead = (() => {
   const Component = <T extends SheetRow>({
@@ -16,8 +16,8 @@ export const SheetHead = (() => {
     search,
     onOpenFilter,
   }: {
-    onOpenFilter: (_: SheetColumnProps<T>, event: any) => void
-    onOpenStats: (_: SheetColumnProps<T>, event: any) => void
+    onOpenFilter: (columnId: string, event: any) => void
+    onOpenStats: (columnId: string, event: any) => void
   } & Pick<SheetContext<T>, 'selected' | 'columns' | 'columnsIndex' | 'select'> & {
     data?: T[]
     search: SheetContext<T>['data']['search']
@@ -83,8 +83,8 @@ export const SheetHead = (() => {
               <SheetHeadContent
                 column={c}
                 active={active}
-                onOpenStats={e => onOpenStats(c, e)}
-                onOpenFilter={e => onOpenFilter(c, e)}
+                onOpenStats={e => onOpenStats(c.id, e)}
+                onOpenFilter={e => onOpenFilter(c.id, e)}
               />
             </td>
           )
@@ -134,7 +134,7 @@ export const SheetHeadContent = ({
         //     return column.type
         // }
       })()*/}
-      {(column.options || ['date', 'number'].includes(column.type!)) && (
+      {['select_one', 'select_multiple', 'date', 'number'].includes(column.type!) && (
         <TableIconBtn children="bar_chart" onClick={e => onOpenStats(e)}/>
       )}
       {column.type && (
