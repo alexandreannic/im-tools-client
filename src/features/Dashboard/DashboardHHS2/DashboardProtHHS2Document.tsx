@@ -3,7 +3,7 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {Box, Icon, useTheme} from '@mui/material'
+import {Box, Icon} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
@@ -13,10 +13,8 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ProtHHS2BarChart, ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {filterByAgegroup, Person} from '@/core/type'
+import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
-import ageGroups = Person.ageGroups
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base

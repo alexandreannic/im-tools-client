@@ -193,9 +193,9 @@ export const getColumnBySchema = ({
           ...common,
           type: 'select_multiple',
           typeIcon: <SheetHeadTypeIcon children="check_box" tooltip={q.type}/>,
-          // options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
+          options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
           renderValue: row => getVal(row, q.name) ?? SheetUtils.blank,
-          renderOption: row => getVal(row, q.name) ?? SheetUtils.blank,
+          // renderOption: row => translateChoice(q.name, getVal(row, q.name)) ?? SheetUtils.blank,
           render: row => map(getVal(row, q.name) as string[] | undefined, v => {
             try {
               const render = v.map(_ => translateChoice(q.name, _,)).join(' | ')
