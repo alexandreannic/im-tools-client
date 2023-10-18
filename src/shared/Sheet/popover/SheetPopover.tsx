@@ -8,9 +8,8 @@ import {useI18n} from '@/core/i18n'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
-import {SheetOptions} from '@/shared/Sheet/sheetType'
+import {SheetOptions, SheetRow} from '@/shared/Sheet/util/sheetType'
 import {KeyOf} from '@/utils/utils'
-import {SheetRow} from '@/shared/Sheet/Sheet'
 import {seq} from '@alexandreannic/ts-utils'
 
 const RenderRow = ({label, value}: {

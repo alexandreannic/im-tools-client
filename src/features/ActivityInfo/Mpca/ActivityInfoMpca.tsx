@@ -134,7 +134,7 @@ export const ActivityInfoMpca = () => {
             {
               width: 120,
               id: 'actions',
-              render: (_, i) => {
+              render: _ => {
                 return (
                   <>
                     <AAIconBtn disabled={!_.Hromada} color="primary">send</AAIconBtn>
@@ -148,7 +148,7 @@ export const ActivityInfoMpca = () => {
               id: 'id',
               type: 'string',
               head: 'Record ID',
-              render: (_, i) => _.req.changes[0].recordId,
+              render: _ => _.req.changes[0].recordId,
             },
             {head: 'oblast', id: 'oblast', type: 'string', render: _ => _.oblast},
             {head: 'raion', id: 'raion', type: 'string', render: _ => _.raion},

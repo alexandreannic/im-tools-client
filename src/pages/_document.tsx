@@ -8,7 +8,7 @@ import {MyAppProps} from '@/pages/_app'
 import {Alert, Txt} from 'mui-extension'
 
 interface MyDocumentProps extends DocumentProps {
-  emotionStyleTags: JSX.Element[];
+  emotionStyleTags: React.JSX.Element[];
 }
 
 const isStupidMicrosoftBrowser = typeof window !== 'undefined' && (

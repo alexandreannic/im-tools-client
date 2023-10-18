@@ -20,7 +20,6 @@ export class ActivityInfoSdk {
     activity: any
     activityIndex: number
     formId: string
-
   }): ActiviftyInfoRecords => {
     return {
       'changes': [{

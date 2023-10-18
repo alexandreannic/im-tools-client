@@ -263,6 +263,10 @@ export const convertNumberIndexToLetter = (_: number) => {
 
 export namespace Utils {
 
+  export  type NonNullableKeys<T> = {
+    [K in keyof T]-?: NonNullable<T[K]>;
+  }
+
   export const removeAccent = (str: string): string => {
     const accentMap: Record<string, string> = {
       'à': 'a',
@@ -374,6 +378,16 @@ export namespace Utils {
       [K in keyof T]: T[K] extends P ? K : never
     }[keyof T]
   }
+}
+
+export const compareArray = <T extends string | number>(a?: T[], b?: T[]) => {
+  if (a === undefined || b === undefined) {
+    return a === b;
+  }
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] === b[i]) return false
+  }
+  return true
 }
 
 export const tryy = <T>(fn: () => T) => {

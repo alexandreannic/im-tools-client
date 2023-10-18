@@ -2,7 +2,6 @@ import {useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {I18nContextProps} from '@/core/i18n/I18n'
 import {KoboApiColType, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
 import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {map, mapFor, seq} from '@alexandreannic/ts-utils'
@@ -12,6 +11,8 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {Utils} from '@/utils/utils'
 import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Kobo/KoboSchemaContext'
+import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 const ignoredColType: KoboApiColType[] = [
   'begin_group',
@@ -172,7 +173,7 @@ export const getColumnBySchema = ({
           ...common,
           type: 'select_one',
           typeIcon: <SheetHeadTypeIcon children="radio_button_checked" tooltip={q.type}/>,
-          options: () => [SheetUtils.blankOption, ...choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)}))],
+          // options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
           renderValue: row => getVal(row, q.name) ?? SheetUtils.blank,
           render: row => map(getVal(row, q.name) as string | undefined, v => {
             const render = translateChoice(q.name, v)
@@ -192,14 +193,15 @@ export const getColumnBySchema = ({
           ...common,
           type: 'select_multiple',
           typeIcon: <SheetHeadTypeIcon children="check_box" tooltip={q.type}/>,
-          options: () => [SheetUtils.blankOption, ...choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)}))],
+          // options: () => choicesIndex[q.select_from_list_name!].map(_ => ({value: _.name, label: translateChoice(q.name, _.name)})),
           renderValue: row => getVal(row, q.name) ?? SheetUtils.blank,
+          renderOption: row => getVal(row, q.name) ?? SheetUtils.blank,
           render: row => map(getVal(row, q.name) as string[] | undefined, v => {
             try {
               const render = v.map(_ => translateChoice(q.name, _,)).join(' | ')
               return <span title={render}>{render}</span>
             } catch (e: any) {
-              console.error(v)
+              console.warn('Cannot translate')
               return JSON.stringify(v)
             }
           })

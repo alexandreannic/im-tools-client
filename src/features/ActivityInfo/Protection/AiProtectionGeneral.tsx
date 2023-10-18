@@ -3,7 +3,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {endOfDay, endOfMonth, format, startOfMonth, subMonths} from 'date-fns'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {Sheet, SheetUtils} from '@/shared/Sheet/Sheet'
+import {Sheet} from '@/shared/Sheet/Sheet'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -17,6 +17,7 @@ import {Utils} from '@/utils/utils'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {AiTypeProtectionRmm} from '@/features/ActivityInfo/HHS_2_1/AiTypeProtectionRmm'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const AiProtectionGeneral = () => {
   const {api, conf} = useAppSettings()
@@ -24,7 +25,7 @@ export const AiProtectionGeneral = () => {
   const {formatLargeNumber, m} = useI18n()
   const {toastHttpError} = useAaToast()
 
-  const _submit = useAsync((i: number, p: any) => api.activityInfo.submitActivity(p), {
+  const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
   })
 
@@ -162,7 +163,7 @@ export const AiProtectionGeneral = () => {
               <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
-                _submit.call(-1, fetcher.entity.map(_ => _.request)).catch(toastHttpError)
+                _submit.call('all', fetcher.entity.map(_ => _.request)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </AaBtn>
@@ -174,13 +175,13 @@ export const AiProtectionGeneral = () => {
             {
               width: 150,
               id: 'actions',
-              render: (_, i) => {
+              render: _ => {
                 return (
                   <>
                     <AAIconBtn
                       disabled={!_.Hromada} color="primary"
                       onClick={() => {
-                        _submit.call(i, [indexActivity[_.id]!.request]).catch(toastHttpError)
+                        _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
                       }}
                     >send</AAIconBtn>
                     <AIViewAnswers answers={indexActivity[_.id]!.answers}/>
@@ -194,7 +195,7 @@ export const AiProtectionGeneral = () => {
               id: 'id',
               type: 'string',
               head: 'ID',
-              render: (_, i) => _.id,
+              render: _ => _.id,
             },
             {head: 'Oblast', id: 'Oblast', type: 'string', render: _ => _.Oblast},
             {head: 'Raion', id: 'Raion', type: 'string', render: _ => _.Raion},

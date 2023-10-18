@@ -4,7 +4,7 @@ import {makeSx, Txt} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'
 import {useI18n} from '../../../core/i18n'
 import {combineSx} from '../../../core/theme'
-import {SheetOptions} from '@/shared/Sheet/sheetType'
+import {SheetOptions} from '@/shared/Sheet/util/sheetType'
 
 const css = makeSx({
   optionSelectAll: {

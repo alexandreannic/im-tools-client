@@ -69,7 +69,7 @@ export const DashboardLayout = ({
     icon?: string
     name: string
     title: ReactNode
-    component: () => JSX.Element
+    component: () => React.JSX.Element
   }[]
 }) => {
   const [activeSection, setActiveSection] = useState(sections?.[0]?.name ?? '')

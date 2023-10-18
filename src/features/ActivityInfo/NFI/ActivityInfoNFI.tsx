@@ -20,6 +20,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {Person} from '@/core/type'
+import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 
 interface Person {
   age: number
@@ -56,7 +57,7 @@ interface Answer {
 interface Row {
   rows: Answer[],
   activity: WashRMM
-  request: any
+  request: ActiviftyInfoRecords
 }
 
 const toFormData = ({
@@ -180,7 +181,7 @@ export const ActivityInfoNFI = () => {
     }
     return api.kobo.answer.searchBn_Re({filters})
       .then(_ => {
-        return _.data.filter(_ => !!_.ben_det_settlement).map(_ => ({
+        return _.data.filter(_ => !!_.ben_det_settlement).map((_, i) => ({
           id: _.id,
           oblast: _.ben_det_oblast,
           raion: _.ben_det_raion,
@@ -249,16 +250,16 @@ const _ActivityInfo = ({
       <Panel>
         <Sheet<Row> id="ai-nfi" data={data} columns={[
           {
-            id: 'actions', head: '', width: 200, render: (_, i) =>
+            id: 'actions', head: '', width: 200, render: _ =>
               <>
                 <AaBtn
                   tooltip="Submit 🚀"
-                  loading={_submit.getLoading(i)}
+                  loading={_submit.getLoading(-1)}
                   variant="contained"
                   size="small"
                   sx={{minWidth: 50, mr: .5}}
                   onClick={() => {
-                    _submit.call(i, [_.request]).catch(toastHttpError)
+                    _submit.call(-1, [_.request]).catch(toastHttpError)
                   }}
                 >
                   <Icon>send</Icon>

@@ -2,13 +2,14 @@ import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {currentProtectionProjects, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {SheetColumnProps, SheetUtils} from '@/shared/Sheet/Sheet'
 import {Enum} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/drcUa'
 import {useI18n} from '@/core/i18n'
 import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {kobo} from '@/koboDrcUaFormId'
+import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
   const ctx = useDatabaseKoboTableContext()
