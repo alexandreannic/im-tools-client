@@ -105,6 +105,11 @@ export namespace Person {
     return ageToAgeGroup(getAge(p), ag)
   }
 
+  export const filterByAgegroup = <AG extends AgeGroup>(ag: AG) => (key: keyof AG) => (p: Person) => {
+    const [min, max] = ag[key]
+    return p.age && p.age >= min && p.age <= max
+  }
+
   export const groupByGenderAndGroup = <AG extends AgeGroup>(
     ag: AG = Person.ageGroup.BHA as unknown as AG,
   ) => (

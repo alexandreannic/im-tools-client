@@ -1,9 +1,9 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import React from 'react'
+import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {useTheme} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '../../../core/chartTools'
@@ -11,9 +11,12 @@ import {chain} from '@/utils/utils'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
-import {Seq} from '@alexandreannic/ts-utils'
-import {ProtHHS2BarChart, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {Person} from '@/core/type'
+import {Enum, Seq} from '@alexandreannic/ts-utils'
+import {ProtHHS2BarChart, ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {filterByAgegroup, Person} from '@/core/type'
+import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
+import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
+import ageGroups = Person.ageGroups
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
@@ -30,7 +33,22 @@ export const DashboardProtHHS2Document = ({
   computed,
 }: DashboardPageProps) => {
   const {formatLargeNumber, m} = useI18n()
-  const theme = useTheme()
+  const [gender, setGender] = useState<Person.Gender[]>([])
+  const [ageGroup, setAgeGroup] = useState<(keyof typeof Person.ageGroup.Quick)[]>([])
+
+  const filterPerson = (_: Seq<ProtHHS2Person>) => _.filter(_ => gender.length === 0 || gender.includes(_.gender!))
+    .filter(_ => {
+      if (ageGroup.length === 0) return true
+      return !!ageGroup.find(g => Person.filterByAgegroup(Person.ageGroup.Quick)(g)(_))
+    })
+
+  const filteredPersons = useMemo(() => {
+    return filterPerson(data.flatMap(_ => _.persons))
+  }, [gender, data, ageGroup])
+
+  const filteredPersonsLastMonth = useMemo(() => {
+    return filterPerson(computed.lastMonth.flatMap(_ => _.persons))
+  }, [gender, computed.lastMonth, ageGroup])
 
   return (
     <>
@@ -91,15 +109,30 @@ export const DashboardProtHHS2Document = ({
           </SlidePanel>
         </Div>
         <Div column sx={{flex: 1}}>
-          <SlidePanel>
-            <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartTools.percentage({
-              data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
-              value: _ => _.includes('tin') || _.includes('passport'),
+          <SlidePanel title={m.lackOfPersonalDoc}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+              <Box sx={{mb: 1, display: 'flex', alignItems: 'center'}}>
+                <Icon color="disabled" sx={{mr: 1}}>filter_alt</Icon>
+                <ScRadioGroup<Person.Gender> value={gender} onChange={_ => setGender(_)} multiple inline dense>
+                  {Enum.values(Person.Gender).map(_ =>
+                    <ScRadioGroupItem hideRadio key={_} value={_} title={_}/>
+                  )}
+                </ScRadioGroup>
+              </Box>
+              <ScRadioGroup<any> value={ageGroup} onChange={_ => setAgeGroup(_)} multiple inline dense sx={{mb: 1}}>
+                {Enum.keys(Person.ageGroup.Quick).map(_ =>
+                  <ScRadioGroupItem hideRadio key={_} value={_} title={_}/>
+                )}
+              </ScRadioGroup>
+            </Box>
+            <Lazy deps={[filteredPersons, filteredPersonsLastMonth]} fn={(x) => ChartTools.percentage({
+              data: x.map(_ => _.lackDoc).compact().filter(_ => !_.includes('unable_unwilling_to_answer')),
+              value: _ => !_.includes('none'),
             })}>
-              {(_, last) => <PieChartIndicator sx={{mb: 2}} title={m.lackOfPersonalDoc} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
+              {(_, last) => <PieChartIndicator dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
             </Lazy>
-            <Lazy deps={[data]} fn={() => chain(ChartTools.multiple({
-              data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
+            <Lazy deps={[filteredPersons]} fn={() => chain(ChartTools.multiple({
+              data: filteredPersons.map(_ => _.lackDoc).compact(),
               filterValue: ['none', 'unable_unwilling_to_answer'],
             }))
               .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
