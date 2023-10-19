@@ -18,6 +18,7 @@ import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProjects} from '@/shared/SelectDrcProject'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {DrcProject} from '@/core/drcUa'
+import {Checkbox, Switch} from '@mui/material'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -254,14 +255,14 @@ export const MpcaData = () => {
               renderValue: row => row.tags?.committed ? 'true' : 'false',
               renderOption: row => row.tags?.committed ? m.mpca.committed : SheetUtils.blankLabel,
               render: row => (
-                row.tags?.committed
-                  ? formatDate(row.tags?.committed)
-                  : <AAIconBtn size="small" color="primary" onClick={() => ctx.asyncUpdates.call({
+                <>
+                  <Switch size="small" checked={!!row.tags?.committed} onChange={(e, checked) => ctx.asyncUpdates.call({
                     formId: MpcaHelper.sourceToId[row.source],
                     answerIds: [row.id],
                     key: 'committed',
-                    value: new Date(),
-                  })}>check_circle_outline</AAIconBtn>
+                    value: checked ? new Date() : null,
+                  })}/>
+                </>
               )
             }
           ]}
