@@ -17,23 +17,22 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
-import {SheetBlankValue, SheetOptions} from '@/shared/Sheet/util/sheetType'
+import {SheetOptions} from '@/shared/Sheet/util/sheetType'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {MpcaType, MpcaHelper, MpcaRowSource, MpcaProgram} from '@/core/sdk/server/mpca/MpcaType'
+import {MpcaHelper, MpcaProgram, MpcaRowSource, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {usePersistentState} from 'react-persistent-state'
-import {donorByProject, DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
+import {donorByProject, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {AaInput} from '@/shared/ItInput/AaInput'
 import {Panel} from '@/shared/Panel'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import ageGroup = Person.ageGroup
 import groupBy = Utils.groupBy
-import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const today = new Date()
 
@@ -48,15 +47,6 @@ export enum Currency {
   UAH = 'UAH',
 }
 
-interface Helper {
-  donor: DrcDonor | SheetBlankValue
-  project: DrcProject | SheetBlankValue
-  office: DrcOffice | 'Total' | SheetBlankValue
-  committedAmount: number
-  individuals: number
-  rows: number
-}
-
 export const MpcaDashboard = () => {
   const {conf} = useAppSettings()
   const ctx = useMPCAContext()
@@ -66,8 +56,8 @@ export const MpcaDashboard = () => {
   const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, 'mpca-dashboard-currency')
 
   const mappedData = useMemo(() => ctx.data?.map(_ => {
-    if (_.donor === undefined) _.donor = SheetUtils.blank as any
-    if (_.project === undefined) _.project = SheetUtils.blank as any
+    if (_.finalDonor === undefined) _.finalDonor = SheetUtils.blank as any
+    if (_.finalProject === undefined) _.finalProject = SheetUtils.blank as any
     if (_.oblastIso === undefined) _.oblastIso = SheetUtils.blank as any
     if (_.oblast === undefined) _.oblast = SheetUtils.blank as any
     if (_.office === undefined) _.office = SheetUtils.blank as any
@@ -91,11 +81,11 @@ export const MpcaDashboard = () => {
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
       options: Object.keys(MpcaRowSource).map(_ => SheetUtils.buildCustomOption(_, ctx.formNameTranslation[_]))
     }, {
-      icon: 'handshake', label: 'Donor', property: 'donor',
-      options: SheetUtils.buildOptions(d.map(_ => _.donor!).distinct(_ => _).sort())
+      icon: 'handshake', label: 'Donor', property: 'finalDonor',
+      options: SheetUtils.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
     }, {
-      icon: 'inventory_2', label: 'Project', property: 'project',
-      options: SheetUtils.buildOptions(d.map(_ => _.project!).distinct(_ => _).sort())
+      icon: 'inventory_2', label: 'Project', property: 'finalProject',
+      options: SheetUtils.buildOptions(d.map(_ => _.finalProject!).distinct(_ => _).sort())
     }, {
       icon: 'groups', label: 'Prog', property: 'prog', multiple: true,
       options: SheetUtils.buildOptions([...Object.keys(MpcaProgram), ''].sort())
@@ -112,7 +102,7 @@ export const MpcaDashboard = () => {
     }
   }, [mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter)
+  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter, 'mpca-dashboard-filters')
 
   const filteredData = useMemo(() => {
     return mappedData?.filter(d => {
@@ -351,14 +341,14 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <SlidePanel title={m.donor}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
-                data: data.map(_ => _.donor ?? ''),
+                data: data.map(_ => _.finalDonor ?? ''),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.project}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
-                data: data.map(_ => _.project ?? SheetUtils.blank),
+                data: data.map(_ => _.finalProject ?? SheetUtils.blank),
               })}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
@@ -372,7 +362,7 @@ export const _MPCADashboard = ({
                 const gb = groupBy({
                   data,
                   groups: [
-                    {by: _ => _.project ?? SheetUtils.blank,},
+                    {by: _ => _.finalProject ?? SheetUtils.blank,},
                     {by: _ => _.office ?? SheetUtils.blank,},
                   ],
                   finalTransform: _ => _,

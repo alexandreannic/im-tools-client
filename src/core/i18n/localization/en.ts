@@ -1044,6 +1044,8 @@ export const en = Object.freeze({
     _wfpDeduplication: {},
     mpca: {
       committed: 'Committed',
+      projectOverride: 'Project override',
+      projectFinal: 'Project Final',
       assistanceByLocation: 'Assistance by location',
       drcSupportSuggestion: {
         ThreeMonthsUnAgency: '3 Months Assistance - UN Agency',

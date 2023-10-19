@@ -5,9 +5,11 @@ import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import {MpcaType, MpcaTypeTag} from '@/core/sdk/server/mpca/MpcaType'
-import {Seq, seq} from '@alexandreannic/ts-utils'
+import {MpcaHelper, MpcaType, MpcaTypeTag} from '@/core/sdk/server/mpca/MpcaType'
+import {Enum, map, Seq, seq} from '@alexandreannic/ts-utils'
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {Utils} from '@/utils/utils'
+import {donorByProject} from '@/core/drcUa'
 
 // [DONORS according to Alix]
 
@@ -19,7 +21,7 @@ import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 //   Danish MFA - UKR-000301 & Pooled Funds: 000270 (Kherson Registration); Novo Nordisk 000298 (Mykolaiv Registration)
 
 interface UpdateTag<K extends keyof MpcaTypeTag> {
-  formId: KoboId
+  formId?: KoboId
   answerIds: KoboAnswerId[],
   key: K,
   value: MpcaTypeTag[K] | null
@@ -64,12 +66,47 @@ export const MPCAProvider = ({
     fetcherData.fetch()
   }, [])
 
+  const mappedData = useMemo(() => {
+    return fetcherData.entity?.map(_ => {
+      _.finalProject = _.tags?.projects?.[0] ?? _.project
+      _.finalDonor = map(_.tags?.projects?.[0], p => donorByProject[p]) ?? _.donor
+      return _
+    })
+  }, [fetcherData.entity])
+
   const asyncUpdates = useAsync(async <K extends keyof MpcaTypeTag>({
     formId,
     answerIds,
     key,
     value
   }: UpdateTag<K>) => {
+    if (formId) {
+      await updateByFormId({
+        formId,
+        answerIds,
+        key,
+        value,
+      })
+    } else {
+      const data = answerIds.map(_ => fetcherData.entity![dataIndex[_]])
+      const gb = seq(data).groupBy(_ => _.source)
+      await Promise.all(Enum.entries(gb).map(([formName, answers]) => {
+        return updateByFormId({
+          formId: MpcaHelper.formNameToId[formName],
+          answerIds: answers.map(_ => _.id),
+          key,
+          value,
+        })
+      }))
+    }
+  })
+
+  const updateByFormId = async <K extends keyof MpcaTypeTag>({
+    formId,
+    answerIds,
+    key,
+    value
+  }: Utils.NonNullableKey<UpdateTag<K>, 'formId'>) => {
     const newTags = {[key]: value}
     await api.kobo.answer.updateTag({
       formId,
@@ -86,12 +123,12 @@ export const MPCAProvider = ({
       })
       return copy
     })
-  })
+  }
 
 
   return (
     <Context.Provider value={{
-      data: fetcherData.entity,
+      data: mappedData,
       fetcherData,
       _getPayments,
       _create,

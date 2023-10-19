@@ -37,7 +37,9 @@ export interface MpcaType {
   date: Date
   prog?: MpcaProgram[]
   donor?: DrcDonor
+  finalDonor?: DrcDonor
   project?: DrcProject
+  finalProject?: DrcProject
   amountUahSupposed?: number
   amountUahDedup?: number
   amountUahFinal?: number
@@ -120,7 +122,7 @@ export class MpcaHelper {
     },
   }
 
-  static readonly sourceToId: Record<MpcaRowSource, KoboId> = {
+  static readonly formNameToId: Record<MpcaRowSource, KoboId> = {
     RapidResponseMechansim: kobo.drcUa.form.bn_rapidResponseMechanism,
     CashForRent: kobo.drcUa.form.bn_cashForRentApplication,
     CashForRepairRegistration: kobo.drcUa.form.bn_cashForRepair,
@@ -144,7 +146,7 @@ export class MpcaHelper {
 
   static readonly map = (_: Record<keyof MpcaType, any>): MpcaType => {
     _.date = new Date(_.date)
-    if(_.tags?.committed) _.tags.committed = new Date(_.tags.committed)
+    if (_.tags?.committed) _.tags.committed = new Date(_.tags.committed)
     return _
   }
 }
