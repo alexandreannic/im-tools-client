@@ -4,7 +4,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useMPCAContext} from '../MpcaContext'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
-import {map} from '@alexandreannic/ts-utils'
+import {Enum, map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
@@ -13,8 +13,11 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {MpcaHelper, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {SelectDrcProjects} from '@/shared/SelectDrcProject'
+import {AAIconBtn} from '@/shared/IconBtn'
+import {DrcProject} from '@/core/drcUa'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -37,7 +40,7 @@ export const MpcaData = () => {
   return (
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
-        <Sheet<Mpca>
+        <Sheet<MpcaType>
           id="mpca"
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}
@@ -45,7 +48,7 @@ export const MpcaData = () => {
           getRenderRowKey={_ => '' + _.id}
           data={ctx.data}
           select={{
-            getId: _ => '' + _.id,
+            getId: _ => _.id,
             onSelect: _ => setSelected(_),
             selectActions: (
               <>
@@ -100,6 +103,24 @@ export const MpcaData = () => {
               type: 'select_one',
               // options: () => SheetUtils.buildOptions(Enum.keys(DrcDonor), true),
               render: _ => _.donor ?? ''
+            },
+            {
+              id: 'donor',
+              head: m.project,
+              width: 200,
+              type: 'select_multiple',
+              renderValue: row => row.tags?.projects,
+              options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+              render: _ => (
+                <SelectDrcProjects value={_.tags?.projects ?? []} onChange={p => {
+                  ctx.asyncUpdates.call({
+                    formId: MpcaHelper.sourceToId[_.source],
+                    answerIds: [_.id],
+                    key: 'projects',
+                    value: p,
+                  })
+                }}/>
+              )
             },
             {
               id: 'project',
@@ -225,6 +246,24 @@ export const MpcaData = () => {
               // options: () => SheetUtils.buildOptions(Enum.keys(bn_ReOptions.ben_det_res_stat)),
             },
             {id: 'phone', head: m.phone, render: _ => _.phone},
+            {
+              id: 'committed',
+              type: 'select_one',
+              head: m.mpca.committed,
+              tooltip: null,
+              renderValue: row => row.tags?.committed ? 'true' : 'false',
+              renderOption: row => row.tags?.committed ? m.mpca.committed : SheetUtils.blankLabel,
+              render: row => (
+                row.tags?.committed
+                  ? formatDate(row.tags?.committed)
+                  : <AAIconBtn size="small" color="primary" onClick={() => ctx.asyncUpdates.call({
+                    formId: MpcaHelper.sourceToId[row.source],
+                    answerIds: [row.id],
+                    key: 'committed',
+                    value: new Date(),
+                  })}>check_circle_outline</AAIconBtn>
+              )
+            }
           ]}
         />
       </Panel>

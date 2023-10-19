@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import React, {useCallback, useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {MpcaProgram, MpcaRowSource, useMPCAContext} from '../MpcaContext'
+import {useMPCAContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
@@ -23,7 +23,7 @@ import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {Mpca, MpcaHelper} from '@/core/sdk/server/mpca/Mpca'
+import {MpcaType, MpcaHelper, MpcaRowSource, MpcaProgram} from '@/core/sdk/server/mpca/MpcaType'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {usePersistentState} from 'react-persistent-state'
 import {donorByProject, DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
@@ -84,7 +84,7 @@ export const MpcaDashboard = () => {
     const filterShape: {
       icon?: string,
       label: string,
-      property: keyof Mpca,
+      property: keyof MpcaType,
       multiple?: boolean,
       options: SheetOptions[]
     }[] = [{
@@ -112,7 +112,7 @@ export const MpcaDashboard = () => {
     }
   }, [mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof Mpca, string[]>>(defaultFilter)
+  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter)
 
   const filteredData = useMemo(() => {
     return mappedData?.filter(d => {
@@ -130,7 +130,7 @@ export const MpcaDashboard = () => {
 
   const computed = useBNREComputed({data: filteredData})
 
-  const getAmount = useCallback((_: Mpca) => {
+  const getAmount = useCallback((_: MpcaType) => {
     const amount = _[amountType]
     if (!amount) return
     return amount * fnSwitch(currency, {
@@ -206,10 +206,10 @@ export const _MPCADashboard = ({
   currency,
   getAmount,
 }: {
-  getAmount: (_: Mpca) => number | undefined
+  getAmount: (_: MpcaType) => number | undefined
   amountType: AmountType
   currency: Currency
-  data: Seq<Mpca>
+  data: Seq<MpcaType>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const ctx = useMPCAContext()

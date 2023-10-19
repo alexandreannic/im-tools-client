@@ -1043,6 +1043,7 @@ export const en = Object.freeze({
     pin: 'Pin',
     _wfpDeduplication: {},
     mpca: {
+      committed: 'Committed',
       assistanceByLocation: 'Assistance by location',
       drcSupportSuggestion: {
         ThreeMonthsUnAgency: '3 Months Assistance - UN Agency',
