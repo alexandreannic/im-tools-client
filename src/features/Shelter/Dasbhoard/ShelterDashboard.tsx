@@ -21,7 +21,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Panel, PanelBody} from '@/shared/Panel'
-import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {SheetOptions} from '@/shared/Sheet/util/sheetType'
 import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
@@ -41,7 +41,7 @@ export const ShelterDashboard = () => {
 
   const {defaultFilter, filterShape} = useMemo(() => {
     const d = ctxData.mappedData ?? seq([])
-    const filterShape: {icon?: string, label: string, property: keyof Mpca, multiple?: boolean, options: SheetOptions[]}[] = [{
+    const filterShape: {icon?: string, label: string, property: keyof MpcaType, multiple?: boolean, options: SheetOptions[]}[] = [{
       icon: 'location_on', label: 'Oblast', property: 'oblast',
       options: SheetUtils.buildOptions(d.map(_ => _.oblast!).compact().distinct(_ => _).sort())
     }, {
@@ -54,7 +54,7 @@ export const ShelterDashboard = () => {
     }
   }, [ctxData.mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof Mpca, string[]>>(defaultFilter)
+  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter)
 
   const filteredData = useMemo(() => {
     if (!ctxData.mappedData) return

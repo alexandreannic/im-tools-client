@@ -13,8 +13,11 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {Mpca} from '@/core/sdk/server/mpca/Mpca'
+import {MpcaHelper, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {SelectDrcProject} from '@/shared/SelectDrcProject'
+import {Switch} from '@mui/material'
+import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -37,7 +40,7 @@ export const MpcaData = () => {
   return (
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
-        <Sheet<Mpca>
+        <Sheet<MpcaType>
           id="mpca"
           title={m.data}
           // header={<PanelTitle>{m.data}</PanelTitle>}
@@ -45,10 +48,31 @@ export const MpcaData = () => {
           getRenderRowKey={_ => '' + _.id}
           data={ctx.data}
           select={{
-            getId: _ => '' + _.id,
+            getId: _ => _.id,
             onSelect: _ => setSelected(_),
             selectActions: (
               <>
+                <SelectDrcProject sx={{width: 140, mr: 1}} options={MpcaHelper.projects} onChange={p => {
+                  ctx.asyncUpdates.call({
+                    answerIds: selected,
+                    key: 'projects',
+                    value: p ? [p] : null,
+                  })
+                }}/>
+                <AaSelectSingle
+                  label={m.mpca.committed}
+                  sx={{width: 140, mr: 1}}
+                  options={[
+                    {value: new Date() as any, children: 'Committed'},
+                  ]}
+                  onChange={p => {
+                    ctx.asyncUpdates.call({
+                      answerIds: selected,
+                      key: 'committed',
+                      value: p,
+                    })
+                  }}
+                />
                 <AaBtn
                   disabled
                   sx={{mr: 1}}
@@ -99,14 +123,40 @@ export const MpcaData = () => {
               head: m.donor,
               type: 'select_one',
               // options: () => SheetUtils.buildOptions(Enum.keys(DrcDonor), true),
-              render: _ => _.donor ?? ''
+              render: _ => _.finalDonor ?? ''
             },
             {
               id: 'project',
               head: m.project,
               type: 'select_one',
+              width: 160,
               // options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
               render: _ => _.project ?? SheetUtils.blank
+            },
+            {
+              id: 'project_overridden',
+              head: m.mpca.projectOverride,
+              width: 180,
+              type: 'select_one',
+              renderValue: row => row.tags?.projects?.[0],
+              renderOption: row => row.tags?.projects?.[0],
+              render: _ => (
+                <SelectDrcProject label={null} options={MpcaHelper.projects} value={_.tags?.projects?.[0]} onChange={p => {
+                  ctx.asyncUpdates.call({
+                    formId: MpcaHelper.formNameToId[_.source],
+                    answerIds: [_.id],
+                    key: 'projects',
+                    value: p ? [p] : null,
+                  })
+                }}/>
+              )
+            },
+            {
+              id: 'project_final',
+              width: 160,
+              head: m.mpca.projectFinal,
+              type: 'select_one',
+              render: _ => _.finalProject ?? SheetUtils.blank
             },
             {
               id: 'prog',
@@ -225,6 +275,24 @@ export const MpcaData = () => {
               // options: () => SheetUtils.buildOptions(Enum.keys(bn_ReOptions.ben_det_res_stat)),
             },
             {id: 'phone', head: m.phone, render: _ => _.phone},
+            {
+              id: 'committed',
+              type: 'select_one',
+              head: m.mpca.committed,
+              tooltip: null,
+              renderValue: row => row.tags?.committed ? 'true' : 'false',
+              renderOption: row => row.tags?.committed ? m.mpca.committed : SheetUtils.blankLabel,
+              render: row => (
+                <>
+                  <Switch size="small" checked={!!row.tags?.committed} onChange={(e, checked) => ctx.asyncUpdates.call({
+                    formId: MpcaHelper.formNameToId[row.source],
+                    answerIds: [row.id],
+                    key: 'committed',
+                    value: checked ? new Date() : null,
+                  })}/>
+                </>
+              )
+            }
           ]}
         />
       </Panel>

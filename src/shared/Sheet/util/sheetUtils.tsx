@@ -7,7 +7,8 @@ export class SheetUtils {
   static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
 
   static readonly blank: SheetBlankValue = ''
-  static readonly blankOption: SheetOptions = {value: SheetUtils.blank, label: <i>BLANK</i>}
+  static readonly blankLabel: SheetBlankValue = <i>BLANK</i>
+  static readonly blankOption: SheetOptions = {value: SheetUtils.blank, label: SheetUtils.blankLabel}
 
   static readonly buildOptions = (opt: string[], addBlank?: boolean): SheetOptions[] => {
     return [

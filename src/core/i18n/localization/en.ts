@@ -1043,6 +1043,10 @@ export const en = Object.freeze({
     pin: 'Pin',
     _wfpDeduplication: {},
     mpca: {
+      committed: 'Committed',
+      commit: 'Commit',
+      projectOverride: 'Project override',
+      projectFinal: 'Project Final',
       assistanceByLocation: 'Assistance by location',
       drcSupportSuggestion: {
         ThreeMonthsUnAgency: '3 Months Assistance - UN Agency',

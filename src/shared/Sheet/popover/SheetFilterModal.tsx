@@ -24,8 +24,8 @@ export type SheetFilterDialogProps = Pick<PopoverProps, 'anchorEl'> & {
   columnId: string
   filterActive?: boolean
   title: ReactNode
-  options?: SheetOptions[]
   data: SheetRow[]
+  options?: SheetOptions[]
 } & ({
   renderValue: any
   onChange?: (columnName: string, value: SheetFilterValueNumber) => void

@@ -5,7 +5,7 @@ import {makeSx} from '@/core/theme'
 
 type Option<T extends string | number = string> = {value: T, children: ReactNode, key?: string}
 
-export interface AaSelectMultipleProps<T extends string | number = string> extends Pick<FormControlProps, 'disabled' | 'id'> {
+export interface AaSelectMultipleProps<T extends string | number = string> extends Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> {
   label?: ReactNode
   showUndefinedOption?: boolean
   options: Option<T>[] | string[]

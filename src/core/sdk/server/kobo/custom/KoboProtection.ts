@@ -10,9 +10,9 @@ export interface ProtectionHhsTags {
 }
 
 export const currentProtectionProjects = [
-  DrcProject['ECHO2 (UKR-000322)'],
-  DrcProject['UHF4 (UKR-000314)'],
-  DrcProject['UHF6 (UKR-000336)'],
-  DrcProject['SDC (UKR-000226)'],
-  DrcProject['OKF (UKR-000309)'],
+  DrcProject['UKR-000322 ECHO2'],
+  DrcProject['UKR-000314 UHF4'],
+  DrcProject['UKR-000336 UHF6'],
+  DrcProject['UKR-000226 SDC'],
+  DrcProject['UKR-000309 OKF'],
 ]
