@@ -70,6 +70,7 @@ export const MPCAProvider = ({
     return fetcherData.entity?.map(_ => {
       _.finalProject = _.tags?.projects?.[0] ?? _.project
       _.finalDonor = map(_.tags?.projects?.[0], p => donorByProject[p]) ?? _.donor
+      _.amountUahCommitted = !!_.tags?.committed ? _.amountUahFinal : 0
       return _
     })
   }, [fetcherData.entity])

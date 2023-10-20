@@ -16,7 +16,7 @@ import {formatLargeNumber} from '@/core/i18n/localization/en'
 import {MpcaHelper, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
-import {Switch} from '@mui/material'
+import {Box, Divider, FormControlLabel, Switch, Theme} from '@mui/material'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 
 export const getKoboImagePath = (url: string): string => {
@@ -59,20 +59,35 @@ export const MpcaData = () => {
                     value: p ? [p] : null,
                   })
                 }}/>
-                <AaSelectSingle
-                  label={m.mpca.committed}
-                  sx={{width: 140, mr: 1}}
-                  options={[
-                    {value: new Date() as any, children: 'Committed'},
-                  ]}
-                  onChange={p => {
-                    ctx.asyncUpdates.call({
-                      answerIds: selected,
-                      key: 'committed',
-                      value: p,
-                    })
-                  }}
+                <FormControlLabel
+                  sx={{pl: .5, pr: 1.5, py: .5, ml: 0, mr: 1, border: t => '1px solid ' + t.palette.divider, borderRadius: 100}}
+                  label={m.mpca.commit}
+                  control={
+                    <Switch size="small" onChange={(p, checked) => {
+                      ctx.asyncUpdates.call({
+                        answerIds: selected,
+                        key: 'committed',
+                        value: checked ? new Date() : undefined,
+                      })
+                    }}/>
+
+                  }
                 />
+                {/*<AaSelectSingle*/}
+                {/*  label={m.mpca.committed}*/}
+                {/*  sx={{width: 140, mr: 1}}*/}
+                {/*  options={[*/}
+                {/*    {value: new Date() as any, children: 'Committed'},*/}
+                {/*  ]}*/}
+                {/*  onChange={p => {*/}
+                {/*    ctx.asyncUpdates.call({*/}
+                {/*      answerIds: selected,*/}
+                {/*      key: 'committed',*/}
+                {/*      value: p,*/}
+                {/*    })*/}
+                {/*  }}*/}
+                {/*/>*/}
+                <Box sx={{borderLeft: t => '1px solid ' + t.palette.divider, height: 30, ml: 1, mr: 2}}/>
                 <AaBtn
                   disabled
                   sx={{mr: 1}}

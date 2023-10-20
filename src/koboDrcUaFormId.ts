@@ -7,6 +7,7 @@ export const kobo = {
       safety_incident: 'aAJNkn7v9fRL2XqQCgEkXf',
       bn_rapidResponseMechanism: 'aMJL9DG8qEcULqTZTKQbrq',
       bn_cashForRentApplication: 'aBupWbhtUmA7so3532tYLa',
+      bn_cashForRentRegistration: 'ajNzDaUuLkcEvjQhVsAmao',
       bn_cashForRepair: 'a9CjhyhTKVojCdArKmw9yM',
       bn_oldMpcaNfi: 'a4Sx3PrFMDAMZEGsyzgJJg' as const,
       bn_oldMpcaNfiMyko: 'a8WAWB9Yxu2jkgk4Ei8GTk' as const,

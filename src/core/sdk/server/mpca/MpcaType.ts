@@ -43,6 +43,7 @@ export interface MpcaType {
   amountUahSupposed?: number
   amountUahDedup?: number
   amountUahFinal?: number
+  amountUahCommitted?: number
   benefStatus?: Bn_Re['ben_det_res_stat']
   lastName?: string
   firstName?: string

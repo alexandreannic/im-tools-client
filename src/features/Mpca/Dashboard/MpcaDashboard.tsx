@@ -40,6 +40,7 @@ enum AmountType {
   amountUahSupposed = 'amountUahSupposed',
   amountUahDedup = 'amountUahDedup',
   amountUahFinal = 'amountUahFinal',
+  amountUahCommitted = 'amountUahCommitted',
 }
 
 export enum Currency {
@@ -146,6 +147,7 @@ export const MpcaDashboard = () => {
               <ScRadioGroupItem value={AmountType.amountUahSupposed} title="Estimated" description="Estimated when filling the form"/>
               <ScRadioGroupItem value={AmountType.amountUahDedup} title="Deduplicated" description="Amount given after WFP deduplication"/>
               <ScRadioGroupItem value={AmountType.amountUahFinal} title="Reel" description="Deduplicated amount or Estimated if none"/>
+              <ScRadioGroupItem value={AmountType.amountUahCommitted} title="Committed" description="Real amount if committed"/>
             </ScRadioGroup>
             <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
               <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
@@ -195,6 +197,7 @@ export const _MPCADashboard = ({
   computed,
   currency,
   getAmount,
+  amountType,
 }: {
   getAmount: (_: MpcaType) => number | undefined
   amountType: AmountType
@@ -357,7 +360,7 @@ export const _MPCADashboard = ({
         </Div>
         <Div>
           <Div column>
-            <Panel title="MPCA Budget Helper">
+            <Panel title="MPCA Budget Helper (UAH)">
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = groupBy({
                   data,
@@ -378,7 +381,7 @@ export const _MPCADashboard = ({
                       availableAmount: project !== SheetUtils.blank && office !== SheetUtils.blank
                         ? MpcaHelper.budgets[project]?.[office]
                         : undefined,
-                      committedAmount: d.sum(_ => _.amountUahFinal ?? 0),
+                      committedAmount: d.sum(_ => _[amountType] ?? 0),
                       individuals: d.sum(_ => _.persons?.length ?? 0),
                       rows: d.length,
                     }

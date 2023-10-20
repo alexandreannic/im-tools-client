@@ -1,5 +1,5 @@
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
-import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
+import {Sidebar, SidebarBody, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
 import {MPCAProvider} from './MpcaContext'
@@ -13,6 +13,17 @@ import {WfpDeduplicationData} from '@/features/WfpDeduplication/WfpDeduplication
 import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
+import {kobo} from '@/koboDrcUaFormId'
+import {DatabaseTablePage} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
+
+const relatedKoboForms: (keyof typeof kobo.drcUa.form)[] = [
+  'bn_re',
+  'bn_rapidResponseMechanism',
+  'bn_cashForRepair',
+  'bn_oldMpcaNfi',
+]
 
 export const mpcaModule = {
   basePath: '/mpca',
@@ -22,6 +33,7 @@ export const mpcaModule = {
     dashboard: '/',
     paymentTools: '/payment-tools',
     paymentTool: (id = ':id') => '/payment-tool/' + id,
+    form: (id = ':id') => '/form/' + id,
   }
 }
 
@@ -41,6 +53,16 @@ const MPCASidebar = () => {
             <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
           )}
         </NavLink>
+        <SidebarHr/>
+        <SidebarSection title={m.koboForms}>
+          {relatedKoboForms.map(_ =>
+            <NavLink key={_} to={path(mpcaModule.siteMap.form(_))}>
+              {({isActive, isPending}) => (
+                <SidebarItem dense active={isActive} icon="calendar_view_month">{KoboFormSdk.parseFormName(m._koboForm[_]).name}</SidebarItem>
+              )}
+            </NavLink>
+          )}
+        </SidebarSection>
         {/*<NavLink to={path(mpcaModule.siteMap.paymentTools)}>*/}
         {/*  <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>*/}
         {/*</NavLink>*/}
@@ -73,6 +95,9 @@ export const Mpca = () => {
             <Route path={mpcaModule.siteMap.data} element={<MpcaData/>}/>
             <Route path={mpcaModule.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
             <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
+            {relatedKoboForms.map(_ =>
+              <Route key={_} path={mpcaModule.siteMap.form(_)} element={<DatabaseTablePage formId={kobo.drcUa.form[_]}/>}/>
+            )}
           </Routes>
         </Layout>
       </MPCAProvider>

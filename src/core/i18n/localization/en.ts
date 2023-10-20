@@ -4,6 +4,7 @@ import {Period} from '../../type'
 import {appConfig} from '@/conf/AppConfig'
 import {capitalize} from '@/utils/utils'
 import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {kobo} from '@/koboDrcUaFormId'
 
 const invalidDate = ''
 
@@ -438,7 +439,7 @@ export const en = Object.freeze({
           outOfWork,
         }: {
           outOfWork?: string
-        //}) => `<b>${outOfWork}</b> of respondents reported household members being out of work and seeking employment remains quite high, with main unemployment factor being the lack of available jobs.`,
+          //}) => `<b>${outOfWork}</b> of respondents reported household members being out of work and seeking employment remains quite high, with main unemployment factor being the lack of available jobs.`,
         }) => `The percentage of surveyed individuals out of work and seeking employment remains quite high at <b>${outOfWork}</b> of responses, with main unemployment factor being the lack of available jobs. As a result of the limited livelihood opportunities or challenges in accessing livelihoods, a considerable proportion of the surveyed population is currently dependent on social protection schemes and humanitarian assistance.`,
         needs: ({
           healthPn,
@@ -446,7 +447,7 @@ export const en = Object.freeze({
         }: {
           healthPn?: string
           damagedAcc?: string
-        // }) => `Health continues to be the first priority for the vast majority of households surveyed, cited by a total of <b>${healthPn}</b> of respondents as a priority need. <b>${damagedAcc}</b> of respondents reported damage to their accommodation.`,
+          // }) => `Health continues to be the first priority for the vast majority of households surveyed, cited by a total of <b>${healthPn}</b> of respondents as a priority need. <b>${damagedAcc}</b> of respondents reported damage to their accommodation.`,
         }) => `<b>${healthPn}</b> of respondents indicated health as a priority need. <b>${damagedAcc}</b> of respondents reported damage to their accommodation.`,
         safety: ({
           fearOfShelling,
@@ -1041,7 +1042,32 @@ export const en = Object.freeze({
     returnToOrigin: `Return to area of origin`,
     dateOfDeparture: `Date of departure`,
     pin: 'Pin',
+    koboForms: 'Kobo forms',
     _wfpDeduplication: {},
+    _koboForm: (() => {
+      const _: Record<keyof typeof kobo.drcUa.form, string> = {
+        safety_incident: '[Safety] Incident tracker',
+        bn_rapidResponseMechanism: '[Basic Needs] Rapid Response Mechanism',
+        bn_cashForRentApplication: '[Basic Needs] Cash for Rent Application',
+        bn_cashForRentRegistration: '[Basic Needs] Cash for Rent Registration',
+        bn_cashForRepair: '[Basic Needs] Cash for Repair',
+        bn_oldMpcaNfi: '[Basic Needs] MPCA-NFI Registration (Archived)',
+        bn_oldMpcaNfiMyko: '[Basic Needs] MPCA-NFI Registration NLV (Archived)',
+        bn_oldMpcaNfiNaa: '[Basic Needs] MPCA-NFI Registration NAA (Archived)',
+        bn_re: '[Basic Needs] Registration & Evaluation',
+        meal_visitMonitoring: '[MEAL] VisitMonitoring',
+        meal_cfmInternal: '[MEAL] CfmInternal',
+        meal_cfmExternal: '[MEAL] CfmExternal',
+        shelter_nta: '[Shelter] Non-Technical Assessment',
+        shelter_ta: '[Shelter] Technical Assessment',
+        protection_hhs2_1: '[Protection] HHS v2.1',
+        protection_communityMonitoring: '[Protection] Community-Level Monitoring',
+        protection_groupSession: '[Protection] Group Info Session',
+        protection_pss: '[Protection] PSS',
+        protection_hhs1: '[Protection] HHS v1',
+      }
+      return _
+    })(),
     mpca: {
       committed: 'Committed',
       commit: 'Commit',
