@@ -7,7 +7,7 @@ import {makeSx} from 'mui-extension'
 const css = makeSx({
   i: {
     textAlign: 'center',
-    mr: 2,
+    mr: 1.5,
   },
 })
 
@@ -57,7 +57,7 @@ export const SidebarItem = ({
         textOverflow: 'ellipsis',
         color: t => t.palette.text.secondary,
         pr: 1,
-        pl: 2,
+        pl: 1.5,
         my: 1 / 2,
         borderTopRightRadius: 42,
         borderBottomRightRadius: 42,
