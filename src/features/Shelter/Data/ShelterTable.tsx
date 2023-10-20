@@ -586,7 +586,7 @@ export const ShelterTable = () => {
           }
           data={ctx.data.mappedData}
           loading={ctx.fetching}
-          getRenderRowKey={_ => '' + _.id}
+          getRenderRowKey={_ => _.id}
           columns={columns}
         />
       </Panel>

@@ -74,12 +74,12 @@ export class ActivityInfoProtectionMapper {
 
     res.data.forEach(d => {
       const project = fnSwitch(d.project!, {
-        bha: DrcProject['BHA2 (UKR-000345)'],
-        echo: DrcProject['ECHO2 (UKR-000322)'],
-        novo: DrcProject['Novo-Nordisk (UKR-000298)'],
-        okf: DrcProject['OKF (UKR-000309)'],
-        uhf4: DrcProject['UHF4 (UKR-000314)'],
-        uhf6: DrcProject['UHF6 (UKR-000336)'],
+        bha: DrcProject['UKR-000345 BHA2'],
+        echo: DrcProject['UKR-000322 ECHO2'],
+        novo: DrcProject['UKR-000298 Novo-Nordisk'],
+        okf: DrcProject['UKR-000309 OKF'],
+        uhf4: DrcProject['UKR-000314 UHF4'],
+        uhf6: DrcProject['UKR-000336 UHF6'],
       }, () => undefined)
       d.hh_char_hh_det!.forEach(ind => {
         data.push({

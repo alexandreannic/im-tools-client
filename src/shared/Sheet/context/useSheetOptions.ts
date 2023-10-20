@@ -41,7 +41,7 @@ export const useSheetOptions = <T extends SheetRow>({
             .sort((a, b) => (col.renderValue(b) ?? '').localeCompare(col.renderValue(a) ?? ''))
             .map(_ => SheetUtils.buildCustomOption(
               col.renderValue(_) as string,
-              col.render(_) as string,
+              col.renderOption(_) as string,
             )))
         } else if (col.type === 'select_multiple') {
           optionsRef.set(columnId, seq(data.filterExceptBy(columnId))

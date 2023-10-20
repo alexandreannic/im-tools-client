@@ -263,6 +263,10 @@ export const convertNumberIndexToLetter = (_: number) => {
 
 export namespace Utils {
 
+  export type NonNullableKey<T, K extends keyof T> = Omit<T, K> & {
+    [P in K]-?: NonNullable<T[P]>;
+  }
+
   export  type NonNullableKeys<T> = {
     [K in keyof T]-?: NonNullable<T[K]>;
   }
@@ -382,7 +386,7 @@ export namespace Utils {
 
 export const compareArray = <T extends string | number>(a?: T[], b?: T[]) => {
   if (a === undefined || b === undefined) {
-    return a === b;
+    return a === b
   }
   for (let i = 0; i < a.length; i++) {
     if (a[i] === b[i]) return false

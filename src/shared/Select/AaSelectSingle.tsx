@@ -3,7 +3,11 @@ import React, {ReactNode, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {makeSx} from '@/core/theme'
 
-type Option<T extends string | number = string> = {value: T, children: ReactNode, key?: string}
+type Option<T extends string | number = string> = {
+  value: T,
+  children: ReactNode,
+  key?: string
+}
 
 export interface AaSelectSingleProps<T extends string | number = string> extends Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> {
   label?: ReactNode
@@ -75,7 +79,7 @@ export const AaSelectSingle = <T extends string | number>({
         {...props}
       >
         {!hideNullOption && (
-          <MenuItem dense value={IGNORED_VALUE_EMPTY} sx={style.item}/>
+          <MenuItem dense value={null as any} sx={style.item}/>
         )}
         {options.map((option, i) => (
           <MenuItem dense key={option.key ?? option.value} value={option.value} sx={style.item}>

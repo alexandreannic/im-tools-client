@@ -42,16 +42,16 @@ export namespace AiProtectionGeneralType {
   }, _ => 'Non-Displaced')
 
   export const planCode = Object.freeze({
-    [DrcProject['ECHO1 (UKR-000269)']]: 'GP-DRC-00001',
-    [DrcProject['Novo-Nordisk (UKR-000298)']]: 'GP-DRC-00002',
-    [DrcProject['BHA (UKR-000284)']]: 'GP-DRC-00003',
-    [DrcProject['OKF (UKR-000309)']]: 'GP-DRC-00004',
-    [DrcProject['UHF4 (UKR-000314)']]: 'GP-DRC-00005',
-    [DrcProject['ECHO2 (UKR-000322)']]: 'GP-DRC-00006',
-    [DrcProject['PSPU (UKR-000304)']]: 'GP-DRC-00007',
-    [DrcProject['BHA2 (UKR-000345)']]: 'GP-DRC-00008',
-    [DrcProject['UHF6 (UKR-000336)']]: 'GP-DRC-00009',
-    [DrcProject['SDC2 (UKR-000330)']]: 'GP-DRC-00010',
+    [DrcProject['UKR-000269 ECHO1']]: 'GP-DRC-00001',
+    [DrcProject['UKR-000298 Novo-Nordisk']]: 'GP-DRC-00002',
+    [DrcProject['UKR-000284 BHA']]: 'GP-DRC-00003',
+    [DrcProject['UKR-000309 OKF']]: 'GP-DRC-00004',
+    [DrcProject['UKR-000314 UHF4']]: 'GP-DRC-00005',
+    [DrcProject['UKR-000322 ECHO2']]: 'GP-DRC-00006',
+    [DrcProject['UKR-000304 PSPU']]: 'GP-DRC-00007',
+    [DrcProject['UKR-000345 BHA2']]: 'GP-DRC-00008',
+    [DrcProject['UKR-000336 UHF6']]: 'GP-DRC-00009',
+    [DrcProject['UKR-000330 SDC2']]: 'GP-DRC-00010',
   })
 
   // export const planCode: Partial<Record<DrcDonor, AiProtectionHhs.GET<'Plan Code'>>> = {
