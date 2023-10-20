@@ -21,7 +21,6 @@ const isolateGroups = (survey: KoboApiForm['content']['survey']) => {
         i++
         groupSchemas[groupname].push(survey[i])
       }
-      i++
     }
   }
   return {

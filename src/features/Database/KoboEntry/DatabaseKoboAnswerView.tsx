@@ -146,7 +146,9 @@ const KoboAnswerQuestionView = ({
     case 'select_multiple': {
       return <>
         <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
-        <KoboQuestionAnswerView icon="check_box">{ctx.translate.choice(questionSchema.name, row[questionSchema.name])}</KoboQuestionAnswerView>
+        {(row[questionSchema.name] as string[])?.map(_ =>
+          <KoboQuestionAnswerView key={_} icon="check_box">{ctx.translate.choice(questionSchema.name, _)}</KoboQuestionAnswerView>
+        )}
       </>
     }
     case 'select_one': {
