@@ -31,7 +31,9 @@ export const SheetProvider = <T extends SheetRow>({
   // orderBy,
   getRenderRowKey,
   data: _data,
+  id,
 }: {
+  id: string
   defaultLimit?: number
   columns: SheetInnerColumnProps<T>[]
   data: SheetTableProps<T>['data']
@@ -44,6 +46,7 @@ export const SheetProvider = <T extends SheetRow>({
   const selected = useSetState2<string>()
   const columnsIndex = useMemo(() => seq(columns).reduceObject<Record<string, SheetInnerColumnProps<T>>>(_ => [_.id, _]), [columns])
   const data = useSheetData<T>({
+    id,
     columnsIndex,
     data: _data,
     defaultLimit,

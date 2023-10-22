@@ -49,6 +49,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
 
   return (
     <SheetProvider
+      id={props.id}
       columns={mappedColumns}
       data={data}
       defaultLimit={defaultLimit}
@@ -116,7 +117,10 @@ const _Sheet = <T extends SheetRow>({
   return (
     <Box {...props}>
       <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center', width: '100%'}}>
-        <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => ctx.data.setFilters({})}>
+        <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => {
+          ctx.data.setFilters({})
+          ctx.data.resetSearch()
+        }}>
           <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
         </Badge>
         <DatatableColumnToggle

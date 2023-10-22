@@ -294,6 +294,7 @@ export const _MPCADashboard = ({
               }}>
                 {_ =>
                   <Sheet
+                    id="mpca-dashboard-pop"
                     className="ip-border"
                     hidePagination
                     header={
@@ -401,6 +402,7 @@ export const _MPCADashboard = ({
               }}>
                 {_ =>
                   <Sheet
+                    id="mpca-dashboard-helper"
                     defaultLimit={200}
                     rowsPerPageOptions={[200, 1000]}
                     data={_}
@@ -408,7 +410,9 @@ export const _MPCADashboard = ({
                       {width: 0, id: 'donor', head: m.donor, type: 'select_one', render: _ => _.donor},
                       {width: 0, id: 'project', head: m.project, type: 'select_one', render: _ => _.project},
                       {
-                        width: 0, id: 'office', head: m.office, type: 'select_one', render: _ => {
+                        width: 0, id: 'office', head: m.office, type: 'select_one',
+                        renderValue: _ => _.office,
+                        render: _ => {
                           if (_.office === 'Total') return <b>Total</b>
                           return _.office
                         }
@@ -435,6 +439,10 @@ export const _MPCADashboard = ({
                         head: 'Rest',
                         type: 'number',
                         tooltip: _ => `${formatLargeNumber(_.committedAmount)} / ${formatLargeNumber(_.availableAmount)}`,
+                        renderValue: _ => {
+                          if (_.availableAmount) return _.availableAmount - _.committedAmount
+                          return -_.committedAmount
+                        },
                         render: _ => {
                           if (_.availableAmount === undefined || (_.office === 'Total' && _.availableAmount === 0)) return
                           const percent = tryy(() => _.committedAmount / _.availableAmount!).catchh(() => 0)

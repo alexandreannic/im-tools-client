@@ -66,21 +66,21 @@ export const ActivityInfoMpca = () => {
             Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
             'Population Group': populationGroup,
             'Amount of cash in USD distributed through multi-purpose cash assistance': Math.round(group.sum(_ => _.amountUahFinal ?? 0) * conf.uahToUsd),
-            Girls: res['0 - 17'].Female,
-            Boys: res['0 - 17'].Male,
-            'Adult Women': res['18 - 49'].Female,
-            'Adult Men': res['18 - 49'].Male,
-            'Elderly Women': res['50+'].Female,
-            'Elderly Men': res['50+'].Male,
+            Girls: res['0 - 17']?.Female,
+            Boys: res['0 - 17']?.Male,
+            'Adult Women': res['18 - 49']?.Female,
+            'Adult Men': res['18 - 49']?.Male,
+            'Elderly Women': res['50+']?.Female,
+            'Elderly Men': res['50+']?.Male,
             'Partner Organization': 'Danish Refugee Council',
             'Reporting Month': period,
             'Total # of people assisted with multi-purpose cash assistance': group.sum(_ => Utils.add(
-              res['0 - 17'].Female,
-              res['0 - 17'].Male,
-              res['18 - 49'].Female,
-              res['18 - 49'].Male,
-              res['50+'].Female,
-              res['50+'].Male,
+              res['0 - 17']?.Female,
+              res['0 - 17']?.Male,
+              res['18 - 49']?.Female,
+              res['18 - 49']?.Male,
+              res['50+']?.Female,
+              res['50+']?.Male,
             )),
             Durations: 'Three months',
             'People with disability': 0,
@@ -107,6 +107,7 @@ export const ActivityInfoMpca = () => {
     <Page width="full">
       <Panel>
         <Sheet
+          id="ai-mpca"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
               <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>

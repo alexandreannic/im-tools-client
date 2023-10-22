@@ -158,6 +158,7 @@ export const AiProtectionGeneral = () => {
     <Page width="full">
       <Panel>
         <Sheet
+          id="ai-prot"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
               <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>

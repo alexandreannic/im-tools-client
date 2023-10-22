@@ -160,6 +160,7 @@ export const _ShelterDashboard = ({
             <Panel title={m.ageGroup}>
               <PanelBody>
                 <Sheet
+                  id="shelter-dashboard-pop"
                   className="ip-border"
                   hidePagination
                   header={

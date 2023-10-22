@@ -126,6 +126,7 @@ export const DashboardProtHHS2Sample = ({
                 <AAStackedBarChart data={_} height={250}/>
               ) : (
                 <Sheet
+                  id="prot-dash-population"
                   sx={{border: t => `1px solid ${t.palette.divider}`, overflow: 'hidden', borderRadius: t => t.shape.borderRadius + 'px'}}
                   hidePagination
                   data={_}

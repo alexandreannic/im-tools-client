@@ -26,6 +26,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
     filteredData: T[]
     filteredAndSortedData: T[]
   }) => ReactNode)
+  id: string
   loading?: boolean
   total?: number
   defaultLimit?: number

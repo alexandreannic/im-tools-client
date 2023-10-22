@@ -1,6 +1,5 @@
 import React from 'react'
-import {SnapshotProtMonitoEcho} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
-import {createTheme, GlobalStyles, ThemeProvider} from '@mui/material'
+import {GlobalStyles, ThemeProvider} from '@mui/material'
 import {muiTheme} from '@/core/theme'
 import {SnapshotProtMonitoNN2} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2'
 
