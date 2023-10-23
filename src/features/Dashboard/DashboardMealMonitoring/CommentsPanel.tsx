@@ -6,9 +6,8 @@ import React, {memo, ReactNode, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 
-const pageSize = 5
-
 export interface CommentsPanelProps {
+  pageSize?: number
   data: Seq<{
     id: number | string
     title: string
@@ -20,9 +19,10 @@ export interface CommentsPanelProps {
 
 export const CommentsPanel = memo(({
   data,
+  pageSize = 5,
 }: CommentsPanelProps) => {
   const [limit, setLimit] = useState(pageSize)
-  const {m, formatDate} = useI18n()
+  const {m, formatDateTime} = useI18n()
   return (
     <Box sx={{maxHeight: '650px', overflowY: 'auto'}}>
       {data.slice(0, limit).map(row => (
@@ -36,11 +36,13 @@ export const CommentsPanel = memo(({
         }}>
           <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
             <Txt block bold size="big">{row.title}</Txt>
-            <Txt color="hint">{formatDate(row.date)}</Txt>
+            <Txt color="hint">{formatDateTime(row.date)}</Txt>
           </Box>
-          <Txt block color="hint" sx={{mb: 1}}>
-            <ViewMoreText limit={210} children={row.desc ?? m.noComment}/>
-          </Txt>
+          {row.desc && (
+            <Txt block color="hint" sx={{mb: 1}}>
+              <ViewMoreText limit={210} children={row.desc}/>
+            </Txt>
+          )}
           <Box sx={{display: 'flex', flexWrap: 'wrap', '& > *': {mb: 1, mr: 1}}}>
             {row.children}
           </Box>

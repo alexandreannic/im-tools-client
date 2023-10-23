@@ -1221,5 +1221,7 @@ export const en = Object.freeze({
     shouldDelete: 'Delete?',
     remove: 'Delete',
     sync: 'Sync',
+    pullLast: 'Pull last',
+    pullLastTitle: 'Pull last',
   },
 })

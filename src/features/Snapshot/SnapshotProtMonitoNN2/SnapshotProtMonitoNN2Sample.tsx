@@ -4,7 +4,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
-import {format} from 'date-fns'
+import {format, subDays} from 'date-fns'
 import {DRCLogo, EULogo} from '@/shared/logo/logo'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
 import {Person} from '@/core/type'
@@ -37,7 +37,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
           <Txt color="hint" sx={{fontSize: '1.1em', display: 'flex', alignItems: 'center'}}>
             <Icon sx={{mr: 1}}>date_range</Icon> {format(periodFilter.start, 'LLLL yyyy')}
             {periodFilter.start.getMonth() !== periodFilter.end.getMonth() &&
-              <>&nbsp;-&nbsp;{format(periodFilter.end, 'LLLL yyyy')}</>
+              <>&nbsp;-&nbsp;{format(subDays(periodFilter.end, 1), 'LLLL yyyy')}</>
             }
 
             <Icon sx={{mx: 1.5, fontSize: 10}}>fiber_manual_record</Icon>

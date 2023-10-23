@@ -69,7 +69,7 @@ export const DashboardSafetyIncidentBody = ({
           })}
         </SlidePanel>
         <SlidePanel title={m._dashboardSafetyIncident.attackTypes}>
-          <SafetyIncidentsTrackerBarChart data={data} question="attack_type"/>
+          <SafetyIncidentsTrackerBarChart data={data} question="attack_type" questionType="multiple"/>
         </SlidePanel>
         <SlidePanel title={m._dashboardSafetyIncident.target}>
           <SafetyIncidentsTrackerBarChart data={data} question="what_destroyed" questionType="multiple"/>
@@ -124,7 +124,7 @@ export const DashboardSafetyIncidentBody = ({
             date: _.date_time,
             desc: _.Attack_details,
           }) as CommentsPanelProps['data'][0])}>
-            {_ => <CommentsPanel data={_}/>}
+            {_ => <CommentsPanel pageSize={10} data={_}/>}
           </Lazy>
         </SlidePanel>
       </Div>

@@ -31,13 +31,18 @@ export const SafetyIncidentsTrackerBarChart = makeKoboBarChartComponent<SafetyIn
   options: SafetyIncidentTrackerOptions
 })
 
-
 const filterShape = DashboardFilterHelper.makeShape<typeof SafetyIncidentTrackerOptions>()({
   oblast: {
     icon: 'location_on',
     options: 'oblast',
     label: m => m.oblast,
   },
+  attackType: {
+    icon: 'rocket_launch',
+    options: 'attack_type',
+    label: m => m._dashboardSafetyIncident.attackTypes,
+    multiple: true,
+  }
 })
 
 type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape>
