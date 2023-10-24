@@ -1069,6 +1069,7 @@ export const en = Object.freeze({
       return _
     })(),
     mpca: {
+      pullLastDataDesc: 'Get last Kobo submissions and rebuild the database.',
       committed: 'Committed',
       commit: 'Commit',
       projectOverride: 'Project override',
@@ -1215,6 +1216,7 @@ export const en = Object.freeze({
     viewNLess: (n: number) => `View ${n} less`,
     viewMore: 'More',
     viewLess: 'Less',
+    timeConsumingOperation: 'Time consuming operation.',
     showDummyAccounts: 'Show dummy accounts',
     filterBlanks: 'Filter blanks',
     total: 'Total',

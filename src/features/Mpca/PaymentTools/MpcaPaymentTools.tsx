@@ -1,5 +1,5 @@
 import {Page} from '@/shared/Page'
-import {useMPCAContext} from '../MpcaContext'
+import {useMpcaContext} from '../MpcaContext'
 import {useEffect} from 'react'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Panel, PanelTitle} from '@/shared/Panel'
@@ -11,7 +11,7 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 
 export const MpcaPaymentTools = () => {
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const {_getPayments} = useMPCAContext()
+  const {_getPayments} = useMpcaContext()
   const navigate = useNavigate()
 
   useEffect(() => {

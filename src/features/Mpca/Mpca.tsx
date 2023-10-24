@@ -2,7 +2,7 @@ import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {Sidebar, SidebarBody, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
-import {MPCAProvider} from './MpcaContext'
+import {MpcaProvider, useMpcaContext} from './MpcaContext'
 import React, {useMemo} from 'react'
 import {MpcaData} from '@/features/Mpca/MpcaData/MpcaData'
 import {MpcaDashboard} from '@/features/Mpca/Dashboard/MpcaDashboard'
@@ -13,10 +13,15 @@ import {WfpDeduplicationData} from '@/features/WfpDeduplication/WfpDeduplication
 import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
-import {kobo} from '@/koboDrcUaFormId'
-import {DatabaseTablePage} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {AaBtn} from '@/shared/Btn/AaBtn'
+import {AaInput} from '@/shared/ItInput/AaInput'
+import {AAIconBtn} from '@/shared/IconBtn'
+import {Box, Tooltip} from '@mui/material'
+import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
+import {kobo} from '@/koboDrcUaFormId'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
+import {DatabaseTablePage} from '@/features/Database/KoboTable/DatabaseKoboTable'
 
 const relatedKoboForms: (keyof typeof kobo.drcUa.form)[] = [
   'bn_re',
@@ -37,12 +42,25 @@ export const mpcaModule = {
   }
 }
 
-const MPCASidebar = () => {
+const MpcaSidebar = () => {
   const path = (page: string) => '' + page
-  const {m} = useI18n()
+  const {m, formatLargeNumber} = useI18n()
+  const ctx = useMpcaContext()
   return (
     <Sidebar>
       <SidebarBody>
+        <SidebarItem sx={{pr: 0}} iconEnd={
+          <Tooltip placement="right" title={m.mpca.pullLastDataDesc + ' ' + m.timeConsumingOperation}>
+            <AaBtn onClick={ctx.refresh.call} loading={ctx.refresh.getLoading()} icon="cloud_sync">{m.pullLast}</AaBtn>
+          </Tooltip>
+        }>
+          <Box>
+            <Txt color="hint" block uppercase sx={{fontSize: '0.75rem'}}>{m.data}</Txt>
+            <Txt color="default">{formatLargeNumber(ctx.data?.length)}</Txt>
+          </Box>
+
+        </SidebarItem>
+        <SidebarHr/>
         <NavLink to={path(mpcaModule.siteMap.dashboard)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="equalizer" active={isActive}>{m.dashboard}</SidebarItem>
@@ -84,9 +102,9 @@ export const Mpca = () => {
   }
   return (
     <Router>
-      <MPCAProvider>
+      <MpcaProvider>
         <Layout
-          sidebar={<MPCASidebar/>}
+          sidebar={<MpcaSidebar/>}
           header={<AppHeader id="app-header"/>}
         >
           <Routes>
@@ -100,7 +118,7 @@ export const Mpca = () => {
             )}
           </Routes>
         </Layout>
-      </MPCAProvider>
+      </MpcaProvider>
     </Router>
   )
 }

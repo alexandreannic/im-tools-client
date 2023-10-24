@@ -1,6 +1,6 @@
 import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClient'
-import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {UseAsync, useAsync, useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
@@ -28,6 +28,7 @@ interface UpdateTag<K extends keyof MpcaTypeTag> {
 }
 
 export interface MpcaContext {
+  refresh: UseAsync<() => Promise<void>>
   data?: Seq<MpcaType>
   formNameTranslation: Record<string, string>
   asyncUpdates: UseAsync<<K extends keyof MpcaTypeTag>(_: UpdateTag<K>) => Promise<void>>
@@ -38,9 +39,9 @@ export interface MpcaContext {
 
 const Context = React.createContext({} as MpcaContext)
 
-export const useMPCAContext = () => useContext(Context)
+export const useMpcaContext = () => useContext(Context)
 
-export const MPCAProvider = ({
+export const MpcaProvider = ({
   children,
   sdk = new MicrosoftGraphClient(),
 }: {
@@ -61,6 +62,11 @@ export const MPCAProvider = ({
     })
     return index
   }, [fetcherData.entity])
+
+  const asyncRefresh = useAsync(async () => {
+    await api.mpca.refresh()
+    await fetcherData.fetch({clean: false, force: true})
+  })
 
   useEffect(() => {
     fetcherData.fetch()
@@ -133,6 +139,7 @@ export const MPCAProvider = ({
       fetcherData,
       _getPayments,
       _create,
+      refresh: asyncRefresh,
       asyncUpdates,
       formNameTranslation: {
         BNRE: 'Basic Need Registration & Evaluation',

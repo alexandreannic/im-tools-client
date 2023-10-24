@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {useMPCAContext} from '../MpcaContext'
+import {useMpcaContext} from '../MpcaContext'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {map} from '@alexandreannic/ts-utils'
@@ -26,7 +26,7 @@ export const getKoboImagePath = (url: string): string => {
 export const MpcaData = () => {
   const {m, formatDate} = useI18n()
   const {api} = useAppSettings()
-  const ctx = useMPCAContext()
+  const ctx = useMpcaContext()
   const _servers = useFetcher(api.kobo.server.getAll)
   const [selected, setSelected] = useState<string[]>([])
   const _payment = useAsync(api.mpcaPayment.create)

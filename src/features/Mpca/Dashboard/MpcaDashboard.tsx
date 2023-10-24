@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import React, {useCallback, useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
-import {useMPCAContext} from '../MpcaContext'
+import {useMpcaContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
@@ -50,7 +50,7 @@ export enum Currency {
 
 export const MpcaDashboard = () => {
   const {conf} = useAppSettings()
-  const ctx = useMPCAContext()
+  const ctx = useMpcaContext()
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m, formatLargeNumber} = useI18n()
   const [amountType, setAmountType] = usePersistentState<AmountType>(AmountType.amountUahFinal, 'mpca-dashboard-amountType')
@@ -205,7 +205,7 @@ export const _MPCADashboard = ({
   data: Seq<MpcaType>
   computed: NonNullable<UseBNREComputed>
 }) => {
-  const ctx = useMPCAContext()
+  const ctx = useMpcaContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [tableDataType, setTableDataType] = usePersistentState<'ratio' | 'absolute'>('absolute', 'mpca-dashboard-tableType')
   const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', 'mpca-dashboard-tableArea')
