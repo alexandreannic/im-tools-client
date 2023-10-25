@@ -52,12 +52,12 @@ const ShelterSidebar = () => {
         <SidebarHr/>
         <NavLink to={path(shelterModule.siteMap.nta)}>
           {({isActive, isPending}) => (
-            <SidebarItem active={isActive} icon="view_compact_alt">NTA</SidebarItem>
+            <SidebarItem active={isActive} icon="calendar_view_month">NTA</SidebarItem>
           )}
         </NavLink>
         <NavLink to={path(shelterModule.siteMap.ta)}>
           {({isActive, isPending}) => (
-            <SidebarItem active={isActive} icon="view_compact_alt">TA</SidebarItem>
+            <SidebarItem active={isActive} icon="calendar_view_month">TA</SidebarItem>
           )}
         </NavLink>
       </SidebarBody>
@@ -104,7 +104,7 @@ export const Shelter = () => {
             schemaTa={_schemas.entity.ta}
           >
             <Routes>
-              <Route index element={<Navigate to={shelterModule.siteMap.dashboard}/>}/>
+              <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
               <Route path={shelterModule.siteMap.dashboard} element={<ShelterDashboard/>}/>
               <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
               <Route path={shelterModule.siteMap.nta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_nta} schema={_schemas.entity.nta}/>}/>

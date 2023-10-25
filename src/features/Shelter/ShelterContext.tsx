@@ -1,11 +1,10 @@
-import React, {ReactNode, useCallback, useContext, useMemo, useState} from 'react'
+import React, {ReactNode, useContext, useEffect, useMemo, useState} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {kobo} from '@/koboDrcUaFormId'
 import {UseShelterData, useShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
-import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
@@ -14,13 +13,10 @@ import {seq} from '@alexandreannic/ts-utils'
 
 export interface ShelterContext {
   access: AccessSum
-  refresh: UseAsync<() => Promise<void>>
   data: UseShelterData
   nta: UseShelterActions<ShelterNtaTags>
   ta: UseShelterActions<ShelterTaTags>
   langIndex: number
-  fetching?: boolean
-  fetchAll: () => Promise<void>
 }
 
 const Context = React.createContext({} as ShelterContext)
@@ -66,32 +62,18 @@ export const ShelterProvider = ({
     langIndex,
   })
 
-  const fetchAll = useCallback(async () => {
-    await Promise.all([
-      _data._fetchNta.fetch({force: true, clean: false}),
-      _data._fetchTa.fetch({force: true, clean: false}),
-    ])
+  useEffect(() => {
+    _data.fetchAll()
   }, [])
 
-  const fetching = _data._fetchTa.loading || _data._fetchNta.loading
-
-  const _refresh = useAsync(async () => {
-    await Promise.all([
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta),
-    ])
-    await fetchAll()
-  })
-
+  useEffect(() => console.log(schemaTa), [schemaTa])
+  useEffect(() => console.log(schemaNta), [schemaNta])
   return (
     <Context.Provider value={{
       access,
       data: _data,
-      fetching,
-      refresh: _refresh,
       nta: _ntaActions,
       ta: _taActions,
-      fetchAll,
       langIndex,
     }}>
       {children}

@@ -9,6 +9,8 @@ import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcOffice} from '@/core/drcUa'
+import {useAsync} from '@/alexlib-labo/useAsync'
+import {kobo} from '@/koboDrcUaFormId'
 
 export interface ShelterRow {
   ta?: KoboAnswer<Shelter_TA, ShelterTaTags> & {
@@ -63,7 +65,7 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
         })
         const nta = index[refId].nta
         const priceLevel = () => {
-          if (!price || typeof price != 'number') return
+          if (!price || typeof price !== 'number') return
           if (nta?.dwelling_type === 'house') {
             if (price < 100000) return ShelterTaPriceLevel.Light
             if (price >= 100000 && price <= 200000) return ShelterTaPriceLevel.Medium
@@ -94,14 +96,25 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
     }, [_fetchTa.entity, _fetchNta.entity, allowedOffices]
   )
 
+  const asyncResync = useAsync(async () => {
+    await Promise.all([
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta),
+    ])
+    await fetchAll()
+  })
+
   const fetchAll = useCallback(() => {
-    _fetchNta.fetch({force: true})
-    _fetchTa.fetch({force: true})
+    console.error('fetch from data', _fetchNta.entity)
+    _fetchNta.fetch({force: false, clean: false})
+    _fetchTa.fetch({force: false, clean: false})
   }, [])
 
   return {
     loading: _fetchNta.loading || _fetchTa.loading,
     fetchAll,
+    asyncResync,
+    fetching: _fetchTa.loading || _fetchNta.loading,
     _fetchNta,
     _fetchTa,
     mappedData,

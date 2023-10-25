@@ -2,6 +2,7 @@ import {Func} from '@alexandreannic/react-hooks-lib'
 import {UseMap2, useMap2} from '@/alexlib-labo/useMap'
 
 export interface UseAsync<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> {
+  isLoading: boolean
   loading: UseMap2<K, boolean>,
   errors: UseMap2<K, E>
   call: F,
@@ -56,7 +57,10 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
       })
   }
 
+  const isLoading = loading.keys.length > 0
+
   return {
+    isLoading,
     loading,
     errors,
     call,

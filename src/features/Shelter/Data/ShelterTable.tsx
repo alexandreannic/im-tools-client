@@ -1,5 +1,4 @@
-import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
@@ -22,10 +21,6 @@ import {KoboShelterTa, ShelterProgress, ShelterTagValidation, ShelterTaPriceLeve
 import {formatDateTime} from '@/core/i18n/localization/en'
 import {ShelterSelectAccepted, ShelterSelectContractor, ShelterSelectStatus} from '@/features/Shelter/Data/ShelterTableInputs'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-
-
-export interface ShelterDataFilters extends KoboAnswerFilter {
-}
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -485,10 +480,6 @@ export const ShelterTable = () => {
     ])
   }, [ctx.data.mappedData])
 
-  useEffect(() => {
-    ctx.fetchAll()
-  }, [])
-
   return (
     <Page width="full">
       <Panel>
@@ -577,15 +568,15 @@ export const ShelterTable = () => {
           header={
             <>
               <AAIconBtn
-                loading={ctx.refresh.loading.size > 0}
+                loading={ctx.data.asyncResync.isLoading}
                 children="cloud_sync"
                 tooltip={m._koboDatabase.pullData}
-                onClick={ctx.refresh.call}
+                onClick={ctx.data.asyncResync.call}
               />
             </>
           }
           data={ctx.data.mappedData}
-          loading={ctx.fetching}
+          loading={ctx.data.fetching}
           getRenderRowKey={_ => _.id}
           columns={columns}
         />
