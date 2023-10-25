@@ -406,13 +406,15 @@ const tableTheme = (t: Theme, colorOverOpaque: string) => ({
   '.table-head-type-icon': {
     ml: '2px', marginRight: 'auto', color: alpha(t.palette.text.disabled, .18)
   },
-  '.table .MuiOutlinedInput-input': {
-    paddingLeft: '4px',
-    paddingTop: '5px',
-    paddingBottom: '5px',
-  },
   '.table .MuiCheckbox-root': {
     padding: '6px',
+  },
+  '.table .MuiInputBase-root, .table .MuiFormControl-root': {
+    height: '100%',
+  },
+  '.table .MuiInputBase-input': {
+    paddingTop: '0 !important',
+    paddingBottom: '0 !important',
   },
   '.table .MuiOutlinedInput-notchedOutline': {
     border: 'none',
