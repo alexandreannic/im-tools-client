@@ -467,7 +467,7 @@ export const en = Object.freeze({
       },
       basicNeeds: `Basic Needs`,
       livelihood: `Livelihoods & Coping mechanisms`,
-      safetyProtectionIncidents: 'Safety & Protection Incidents',
+      safetyProtectionIncidents: 'Safety & Major Stress Factors',
       displacementDesc: `Majority of the IDPs surveyed during the monitoring period reported having left their place of habitual residence between February and May 2022. Main factors influencing departure reported included shelling and attacks on civilians, destruction or damage of housing, land or property due to conflict, as well as occupation of property, exposure to UXOs/landmines and lack of access to livelihoods.`,
       integrateIntoTheLocalCommunity: 'Integrate into the local community',
       monitoredHhByOblast: 'Monitored HH By Oblast',

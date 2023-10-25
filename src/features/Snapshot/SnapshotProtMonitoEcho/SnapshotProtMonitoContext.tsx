@@ -39,7 +39,9 @@ export const SnapshotProtMonitoringProvider = ({
       start: filter.start,
       end: filter.end,
     }
-  }).then(_ => seq(_.data.map(enrichProtHHS_2_1)))
+  })
+    .then(_ => _.data.filter(_ => !filters.currentOblast || filters.currentOblast.includes(_.where_are_you_current_living_oblast)))
+    .then(_ => seq(_.map(enrichProtHHS_2_1)))
 
   const _answers = useFetcher(request)
 

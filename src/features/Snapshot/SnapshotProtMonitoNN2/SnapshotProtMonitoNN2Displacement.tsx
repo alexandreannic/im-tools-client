@@ -16,7 +16,11 @@ export const SnapshotProtMonitoNN2Displacement = () => {
         <Div>
           <Div column>
             <SlideTxt sx={{mb: .5}} block>
-              <p dangerouslySetInnerHTML={{__html: m.snapshotProtMonito.nn2.displacement}}/>
+              IDPs surveyed in Mykolaiv Oblast are originally from Kherson Oblast and from different parts of Mykolaiv Oblast itself. The primary drivers prompting their departure
+              encompassed a range of factors, such as shelling and attacks on civilians, the destruction of critical infrastructure, housing, land, or property due to conflict, and
+              the pervasive fear of conscription. Notably, respondents reported that adult men often refrain from leaving their homes to evade conscription, and the requirement of
+              holding an exemption certificate adds an additional layer of limitation to their access to formal employment. A significant 90% of surveyed IDPs expressed their
+              intention to return to their place of habitual residence once the security situation improves.
             </SlideTxt>
 
             <SlidePanel>

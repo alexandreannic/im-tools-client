@@ -28,11 +28,18 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
                 base: _ => _ !== undefined,
               })}>
                 {_ =>
-                  <p dangerouslySetInnerHTML={{
-                    __html: m.snapshotProtMonito.echo.livelihood({
-                      outOfWork: toPercent(_.percent, 0),
-                    })
-                  }}/>
+                  <p
+                    // dangerouslySetInnerHTML={{
+                    // __html: m.snapshotProtMonito.echo.livelihood({
+                    //   outOfWork: toPercent(_.percent, 0),
+                  >
+                    The percentage of surveyed individuals out of work and seeking employment
+                    remains quite high at 18% of responses. The primary factors contributing to unemployment
+                    were reported to be lack of available jobs, lack of childcare, and skills not matching
+                    the demand. As a result of the limited livelihood opportunities or challenges in accessing
+                    livelihoods, a considerable proportion of the surveyed population is currently dependent on
+                    social protection schemes and humanitarian assistance.
+                  </p>
                 }
               </Lazy>
             </SlideTxt>

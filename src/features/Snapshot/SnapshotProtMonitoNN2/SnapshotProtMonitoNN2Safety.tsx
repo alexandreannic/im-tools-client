@@ -35,9 +35,15 @@ export const SnapshotProtMonitoNN2Safety = () => {
                 }
               }}>
                 {_ =>
-                  <p dangerouslySetInnerHTML={{
-                    __html: m.snapshotProtMonito.nn2.safety(_)
-                  }}/>
+                  <p
+                    //   dangerouslySetInnerHTML={{
+                    //   __html: m.snapshotProtMonito.nn2.safety(_)
+                    // }}
+                  >
+                    96% of respondents indicating feeling unsafe or very unsafe reported shelling/threat of shelling as the main factor. Families with members serving with the
+                    military in the frontlines, as well as isolated elderly and persons with disabilities who were unable to flee because of age or physical impairment and/or lack
+                    of financial resources and who suffer from the breakdown of their usual support system, are particularly prone to high levels of anxiety and loneliness.
+                  </p>
                 }
               </Lazy>
             </SlideTxt>
@@ -62,7 +68,6 @@ export const SnapshotProtMonitoNN2Safety = () => {
                 data={data}
                 {...snapShotDefaultPieProps}
               />
-              <SlidePanelTitle sx={{mt: 3}}>{m.details}</SlidePanelTitle>
               <ProtHHS2BarChart
                 questionType="single"
                 data={data}
@@ -93,7 +98,6 @@ export const SnapshotProtMonitoNN2Safety = () => {
                 data={data}
                 {...snapShotDefaultPieProps}
               />
-              <SlidePanelTitle sx={{mt: 3}}>{m.details}</SlidePanelTitle>
               <ProtHHS2BarChart
                 questionType="multiple"
                 data={data}

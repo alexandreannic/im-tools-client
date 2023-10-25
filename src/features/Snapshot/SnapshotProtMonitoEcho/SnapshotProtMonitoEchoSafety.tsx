@@ -96,16 +96,24 @@ export const SnapshotProtMonitoEchoSafety = () => {
                 }
               }}>
                 {_ =>
-                  <p dangerouslySetInnerHTML={{
-                    __html: m.snapshotProtMonito.echo.safety({
-                      poorSafety: toPercent(_.senseOfSafety.percent, 0),
-                      poorSafetyChernihiv: toPercent(_.poorSafetyChernihiv.percent, 0),
-                      poorSafetySumy: toPercent(_.poorSafetySumy.percent, 0),
-                      poorSafetyUrban: toPercent(_.senseOfSafetyUrban.percent, 0),
-                      poorSafetyRural: toPercent(_.senseOfSafetyRural.percent, 0),
-                      protectionIncident: toPercent(_.incidents.percent, 0)
-                    })
-                  }}/>
+                  <p
+                    //   dangerouslySetInnerHTML={{
+                    //   __html: m.snapshotProtMonito.echo.safety({
+                    //     poorSafety: toPercent(_.senseOfSafety.percent, 0),
+                    //     poorSafetyChernihiv: toPercent(_.poorSafetyChernihiv.percent, 0),
+                    //     poorSafetySumy: toPercent(_.poorSafetySumy.percent, 0),
+                    //     poorSafetyUrban: toPercent(_.senseOfSafetyUrban.percent, 0),
+                    //     poorSafetyRural: toPercent(_.senseOfSafetyRural.percent, 0),
+                    //     protectionIncident: toPercent(_.incidents.percent, 0)
+                    //   })
+                    // }}
+                  >
+                    Perceptions of safety vary significantly depending on the surveyed area.
+                    Overall 25% of respondents indicated a poor sense of safety (feeling unsafe or very unsafe)
+                    mainly due to shelling or threats of shelling. This figure is particularly high in the areas of
+                    Kherson and Chernihiv at 58% and 42%. 1% of respondents reported protection incidents experienced
+                    by household members over the past 6 months.
+                  </p>
                 }
               </Lazy>
             </SlideTxt>
@@ -124,6 +132,14 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   <HorizontalBarChartGoogle data={_}/>
                 )}
               </Lazy>
+            </SlidePanel>
+            <SlidePanel title={m.protHHS2.freedomOfMovement}>
+              <ProtHHS2BarChart
+                questionType="multiple"
+                data={data}
+                question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
+                filterValue={['no', 'unable_unwilling_to_answer']}
+              />
             </SlidePanel>
           </Div>
           <Div column>

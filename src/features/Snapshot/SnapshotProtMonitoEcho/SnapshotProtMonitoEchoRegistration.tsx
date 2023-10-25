@@ -28,13 +28,19 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               const z = ChartTools.byCategory({
                 categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
                 data: computed.flatData,
-                filter: _ => !_.lackDoc.includes('none'),
+                filter: _ => _.lackDoc.includes('passport') || _.lackDoc.includes('tin'),
               })
               return z[OblastIndex.findISOByName('Kharkivska')]
             }}>
               {_ =>
                 <SlideTxt>
-                  <p dangerouslySetInnerHTML={{__html: m.snapshotProtMonito.echo.registration({hrkLackPersonalDoc: toPercent(_.percent, 0)})}}/>
+                  <b>52%</b> of individuals surveyed in Kharkiv oblast lack personal documentation and face
+                  subsequent challenges in accessing services as well as limitations to their freedom
+                  of movement. Significant challenges in accessing the compensation mechanism for damaged
+                  and destroyed property are still being reported, including due to the lack of essential
+                  ownership documents and registration certificates. 70% of respondents residing in rental
+                  accommodation reported not possessing any formal lease agreement, exposing them to risks
+                  of eviction.
                 </SlideTxt>
               }
             </Lazy>

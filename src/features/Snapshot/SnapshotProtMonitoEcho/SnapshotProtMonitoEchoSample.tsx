@@ -35,7 +35,24 @@ export const SnapshotProtMonitoEchoSample = () => {
         <Div>
           <Div column sx={{flex: 4}}>
             <SlideTxt>
-              <p dangerouslySetInnerHTML={{__html: m.snapshotProtMonito.echo.desc}}/>
+              This snapshot summarizes the findings of <b>Protection Monitoring</b> (PM)
+              implemented through household surveys in the following oblasts:
+              <ul style={{columns: 2}}>
+                <li>Chernihivska</li>
+                <li>Dnipropetrovska</li>
+                <li>Ivano-Frankivska</li>
+                <li>Kharkivska</li>
+                <li>Lvivska</li>
+                <li>Khersonska</li>
+                <li>Mykolaivska</li>
+                <li>Sumska</li>
+                <li>Volynska</li>
+                <li>Zaporizska</li>
+              </ul>
+              DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people
+              directly exposed to and affected by the current armed conflict in order to understand
+              the protection needs facing affected populations; informing DRC and the protection
+              communities' response.
             </SlideTxt>
             <Box sx={{height: 316, borderRadius: t => t.shape.borderRadius}}>
               <PanelTitle sx={{mt: 1}}>{m.snapshotProtMonito.monitoredHhByOblast}</PanelTitle>

@@ -36,9 +36,14 @@ export const SnapshotProtMonitoNN2Needs = () => {
                 }
               }}>
                 {_ =>
-                  <p dangerouslySetInnerHTML={{
-                    __html: m.snapshotProtMonito.nn2.needs(_)
-                  }}/>
+                  <p
+                    // dangerouslySetInnerHTML={{
+                    // __html: m.snapshotProtMonito.nn2.needs(_)
+                  >
+                    <b>{_.healthPn}</b> of respondents indicated health as a priority need. <b>{_.damagedAcc}</b> of respondents reported damage to their accommodation. Significant
+                    challenges in accessing the
+                    compensation mechanism for damaged and destroyed property are still being reported, including due to the lack of essential ownership documents.
+                  </p>
                 }
               </Lazy>
             </SlideTxt>

@@ -45,10 +45,10 @@ const _SnapshotProtMonitoring = () => {
   if (!data || !computed) return <>...</>
   return (
     <Pdf>
-      <SnapshotProtMonitoEchoSample/>
-      <SnapshotProtMonitoEchoDisplacement/>
-      <SnapshotProtMonitoEchoRegistration/>
-      <SnapshotProtMonitoEchoSafety/>
+      {/*<SnapshotProtMonitoEchoSample/>*/}
+      {/*<SnapshotProtMonitoEchoDisplacement/>*/}
+      {/*<SnapshotProtMonitoEchoRegistration/>*/}
+      {/*<SnapshotProtMonitoEchoSafety/>*/}
       <SnapshotProtMonitoEchoNeeds/>
       <SnapshotProtMonitoEchoLivelihood/>
     </Pdf>

@@ -1,7 +1,6 @@
 import {Enum, mapFor, seq} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
 import {groupBy as _groupBy} from '@/utils/groupBy'
-import {undefined} from 'zod'
 
 export type KeyOf<T> = Extract<keyof T, string>
 
@@ -376,8 +375,6 @@ export namespace Utils {
     }[keyof T]
   }
 }
-
-export const yyyyMMtoDate =
 
 export const compareArray = <T extends string | number>(a?: T[], b?: T[]) => {
   if (a === undefined || b === undefined) {

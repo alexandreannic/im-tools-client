@@ -18,7 +18,11 @@ export const SnapshotProtMonitoEchoDisplacement = () => {
         <Div>
           <Div column>
             <SlideTxt sx={{mb: .5}} block>
-              <p dangerouslySetInnerHTML={{__html: m.snapshotProtMonito.echo.displacement}}/>
+              The main factors influencing departure from areas of origin included shelling and attacks on civilians,
+              occupation of property, destruction or damage of housing, land or property due to conflict,
+              infrastructure damage/destruction and exposure to UXOs/landmines. The scarcity of affordable housing,
+              compounded by the increasing expenses related to rent and utilities, poses a significant obstacle
+              to the integration of IDPs.
             </SlideTxt>
 
             <SlidePanel>
