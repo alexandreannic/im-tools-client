@@ -202,11 +202,19 @@ export const CfmTable = ({}: any) => {
             },
             {
               type: 'date',
+              head: m.koboSubmissionTime,
+              id: 'submission_time',
+              width: 78,
+              renderValue: _ => _.submissionTime,
+              render: _ => formatDate(_.submissionTime),
+            },
+            {
+              type: 'date',
               head: m.date,
               id: 'date',
               width: 78,
-              renderValue: _ => _.date ?? _.submissionTime,
-              render: _ => formatDate(_.date ?? _.submissionTime),
+              renderValue: _ => _.date,
+              render: _ => formatDate(_.date),
             },
             {
               type: 'select_one',
@@ -215,6 +223,12 @@ export const CfmTable = ({}: any) => {
               width: 80,
               options: () => Enum.keys(CfmDataSource).map(_ => ({value: _, label: m._cfm.form[_]})),
               render: _ => m._cfm.form[_.form]
+            },
+            {
+              type: 'select_one',
+              head: m.project,
+              id: 'project',
+              render: _ => _.project,
             },
             column.office,
             column.program,

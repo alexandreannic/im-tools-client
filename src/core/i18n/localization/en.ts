@@ -226,6 +226,7 @@ export const en = Object.freeze({
     selectAll: 'Select all',
     ageGroup: 'Age groups',
     ratio: 'Ratio',
+    koboSubmissionTime: 'Kobo submission',
     absolute: 'Absolute',
     contact: (_: string) => `Contact <b>${_}</b>.`,
     intentions: 'Intentions',

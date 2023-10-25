@@ -30,6 +30,7 @@ export type CfmData = {
   tags?: KoboMealCfmTag
   form: CfmDataSource
   feedback?: string
+  project?: string
   category?: MealCfmInternal['feedback_type']
   external_prot_support?: Meal_CfmExternal['prot_support']
   internal_existing_beneficiary?: MealCfmInternal['existing_beneficiary']
@@ -161,6 +162,7 @@ export const CfmProvider = ({
     data?.entity?.[CfmDataSource.Internal].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride ?? _.feedback_type
       res.push({
+        project: !_.project_code || _.project_code === 'Other' ? _.project_code_specify : _.project_code,
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         category,
         formId: kobo.drcUa.form.meal_cfmInternal,
