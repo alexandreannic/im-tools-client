@@ -1,6 +1,7 @@
 import {Enum, mapFor, seq} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
 import {groupBy as _groupBy} from '@/utils/groupBy'
+import {undefined} from 'zod'
 
 export type KeyOf<T> = Extract<keyof T, string>
 
@@ -263,14 +264,6 @@ export const convertNumberIndexToLetter = (_: number) => {
 
 export namespace Utils {
 
-  export type NonNullableKey<T, K extends keyof T> = Omit<T, K> & {
-    [P in K]-?: NonNullable<T[P]>;
-  }
-
-  export  type NonNullableKeys<T> = {
-    [K in keyof T]-?: NonNullable<T[K]>;
-  }
-
   export const removeAccent = (str: string): string => {
     const accentMap: Record<string, string> = {
       'à': 'a',
@@ -383,6 +376,8 @@ export namespace Utils {
     }[keyof T]
   }
 }
+
+export const yyyyMMtoDate =
 
 export const compareArray = <T extends string | number>(a?: T[], b?: T[]) => {
   if (a === undefined || b === undefined) {

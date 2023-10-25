@@ -47,6 +47,7 @@ export const en = Object.freeze({
   formatDuration,
   formatLargeNumber,
   messages: {
+    snapshot: 'Snapshot',
     invalid: 'Invalid',
     others: 'Others',
     other: 'Other',

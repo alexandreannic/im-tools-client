@@ -10,6 +10,7 @@ import {Enum, map, Seq, seq} from '@alexandreannic/ts-utils'
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {Utils} from '@/utils/utils'
 import {donorByProject} from '@/core/drcUa'
+import {NonNullableKey} from '@/utils/utilsType'
 
 // [DONORS according to Alix]
 
@@ -113,7 +114,7 @@ export const MpcaProvider = ({
     answerIds,
     key,
     value
-  }: Utils.NonNullableKey<UpdateTag<K>, 'formId'>) => {
+  }: NonNullableKey<UpdateTag<K>, 'formId'>) => {
     const newTags = {[key]: value}
     await api.kobo.answer.updateTag({
       formId,

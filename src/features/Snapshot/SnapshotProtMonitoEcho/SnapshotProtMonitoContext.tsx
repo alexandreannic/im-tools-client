@@ -27,15 +27,12 @@ export const SnapshotProtMonitoringProvider = ({
     currentOblast?: Protection_Hhs2_1['where_are_you_current_living_oblast'][],
     drcOffice?: Protection_Hhs2_1['staff_to_insert_their_DRC_office'][],
   }
-  initialPeriodFilter?: Period,
+  initialPeriodFilter: Period,
   children: ReactNode
 }) => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const [periodFilter, setPeriodFilter] = useState<Period>(initialPeriodFilter ?? {
-    start: new Date(2023, 7, 1),
-    end: new Date(2023, 7, 31),
-  })
+  const [periodFilter, setPeriodFilter] = useState<Period>(initialPeriodFilter)
 
   const request = (filter: Partial<Period>) => api.kobo.answer.searchProtection_Hhs2({
     filters: {
