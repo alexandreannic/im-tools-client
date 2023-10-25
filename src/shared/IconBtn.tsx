@@ -1,4 +1,4 @@
-import {Icon, Tooltip} from '@mui/material'
+import {Box, Icon, Tooltip} from '@mui/material'
 import {IconBtnProps} from 'mui-extension/lib/IconBtn/IconBtn'
 import React, {ReactNode} from 'react'
 import {IconBtn} from 'mui-extension'
@@ -23,7 +23,7 @@ export const AAIconBtn = ({
   )
   return tooltip ? (
     <Tooltip title={tooltip}>
-      {content}
+      {props.disabled ? <Box sx={props.sx}>{content}</Box> : content}
     </Tooltip>
   ) : content
 }
