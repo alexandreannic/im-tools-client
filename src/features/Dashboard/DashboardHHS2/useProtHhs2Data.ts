@@ -20,7 +20,6 @@ export const useProtHhs2Data = ({
     return new Enum(gb).entries().map(([k, v]) => ({key: k, ...v}))
   }, [data])
 
-
   return useMemo(() => {
     if (!data || data.length === 0) return
     const sorted = data.sort((a, b) => a.end.getTime() - b.end.getTime())

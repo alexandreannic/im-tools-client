@@ -32,15 +32,18 @@ export const PanelFeatures = ({
         left: 0,
         bottom: 0,
       } : {},
-      '&:hover .panel-actions': {
+      position: 'relative',
+      background: 'white',
+      '&:hover .panel-features': {
         display: 'block',
       },
     }}>
       <Box className="panel-features" sx={{
-        p: 1,
+        p: .5,
         position: 'absolute',
         display: 'none',
-        top: 0,
+        background: 'white',
+        top: -30,
         right: 0,
       }}>
         {expendable && (
