@@ -1,4 +1,4 @@
-import {Box} from '@mui/material'
+import {Box, Icon} from '@mui/material'
 import React, {ReactNode, useCallback, useEffect} from 'react'
 import {Txt} from 'mui-extension'
 import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
@@ -7,7 +7,7 @@ import {endOfMonth, startOfMonth} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Enum, seq} from '@alexandreannic/ts-utils'
-import {Person} from '@/core/type'
+import {Period, Person} from '@/core/type'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
 
@@ -29,11 +29,11 @@ export const Pan = ({
           // p: .5
         }}>
           <Box sx={{
-            border: t => `1px solid ${t.palette.divider}`,
+            // border: t => `1px solid ${t.palette.divider}`,
             p: 1,
-            borderRadius: '8px',
+            // borderRadius: '8px',
           }}>
-            <Txt block size="big" bold sx={{textAlign: 'center', mb: 1}}>{title}</Txt>
+            {/*<Txt block size="big" bold sx={{textAlign: 'center', mb: 1}}>{title}</Txt>*/}
             {children}
           </Box>
         </Box>
@@ -42,13 +42,15 @@ export const Pan = ({
   )
 }
 
+const period: Period = {
+  start: startOfMonth(new Date(2023, 6)),
+  end: endOfMonth(new Date(2023, 8)),
+}
+
 export default () => {
   const {api} = useAppSettings()
   const req = () => api.kobo.answer.searchProtection_Hhs2({
-    filters: {
-      start: startOfMonth(new Date(2023, 6)),
-      end: endOfMonth(new Date(2023, 8)),
-    }
+    filters: period
   }).then(_ => seq(_.data).map(enrichProtHHS_2_1))
 
   const fetcher = useFetcher(req)
@@ -84,19 +86,19 @@ export default () => {
         ]}/>
       </Pan>
       <Pan title={title('Intentions per displacement status')}>
-        <Txt bold block color="hint" size="small">IDPs</Txt>
+        <Txt bold block color="hint" size="small"><Icon sx={{fontSize: 10, mr: .5}}>fiber_manual_record</Icon>IDPs</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           filterValue={['unable_unwilling_to_answer']}
         />
-        <Txt bold block color="hint" size="small" sx={{mt: 3}}>NON-DISPLACED</Txt>
+        <Txt bold block color="hint" size="small" sx={{mt: 3}}><Icon sx={{fontSize: 10, mr: .5}}>fiber_manual_record</Icon>NON-DISPLACED</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'non_displaced')}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           filterValue={['unable_unwilling_to_answer']}
         />
-        <Txt bold block color="hint" size="small" sx={{mt: 3}}>REFUGEES AND RETURNEES</Txt>
+        <Txt bold block color="hint" size="small" sx={{mt: 3}}><Icon sx={{fontSize: 10, mr: .5}}>fiber_manual_record</Icon>REFUGEES AND RETURNEES</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'refugee' || _.do_you_identify_as_any_of_the_following === 'returnee')}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
