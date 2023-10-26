@@ -38,16 +38,16 @@ export const SnapshotProtMonitoEchoSample = () => {
               This snapshot summarizes the findings of <b>Protection Monitoring</b> (PM)
               implemented through household surveys in the following oblasts:
               <ul style={{columns: 2}}>
-                <li>Chernihivska</li>
-                <li>Dnipropetrovska</li>
-                <li>Ivano-Frankivska</li>
-                <li>Kharkivska</li>
-                <li>Lvivska</li>
-                <li>Khersonska</li>
-                <li>Mykolaivska</li>
-                <li>Sumska</li>
-                <li>Volynska</li>
-                <li>Zaporizska</li>
+                <li>Chernihiv</li>
+                <li>Dnipropetrovsk</li>
+                <li>Donetsk</li>
+                <li>Ivano-Frankivsk</li>
+                <li>Kharkiv</li>
+                <li>Lviv</li>
+                <li>Kherson</li>
+                <li>Mykolaiv</li>
+                <li>Volyn</li>
+                <li>Zaporizhzhia</li>
               </ul>
               DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people
               directly exposed to and affected by the current armed conflict in order to understand

@@ -23,7 +23,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
   const {formatLargeNumber, m} = useI18n()
   return (
     <PdfSlide>
-      <SnapshotHeader period={periodFilter} logo={<DRCLogo/>}/>
+      <SnapshotHeader subTitle="Mykolaiv oblast" period={periodFilter} logo={<DRCLogo/>}/>
       <PdfSlideBody>
         <Div>
           <Div column sx={{flex: 3.6}}>

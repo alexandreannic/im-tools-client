@@ -169,6 +169,8 @@ export const SnapshotProtMonitoEchoSafety = () => {
                 data={data}
                 question="what_are_the_main_factors_that_make_this_location_feel_unsafe"
                 filterValue={['unable_unwilling_to_answer']}
+                // mergeOptions={{
+                //   intercommunity_tensions: 'other_specify',
               />
             </SlidePanel>
           </Div>

@@ -45,7 +45,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               }
             </Lazy>
             <SlidePanel>
-              <SlidePanelTitle sx={{mb: 2}}>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
+              <SlidePanelTitle sx={{mb: 1}}>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
               <Div>
                 <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
                   data: getIdpsAnsweringRegistrationQuestion(d),
@@ -60,7 +60,8 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                       {...snapShotDefaultPieProps}
                       sx={{
                         ...snapShotDefaultPieProps.sx,
-                        flex: 1
+                        flex: 1,
+                        mb: 0,
                       }}
                     />
                   )}
@@ -78,7 +79,8 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                       {...snapShotDefaultPieProps}
                       sx={{
                         ...snapShotDefaultPieProps.sx,
-                        flex: 1
+                        flex: 1,
+                        mb: 0,
                       }}
                     />
                   )}

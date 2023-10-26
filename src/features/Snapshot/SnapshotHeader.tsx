@@ -17,8 +17,12 @@ const periodToString = (period: NullableKey<Period, 'end'>) => {
 
 export const SnapshotHeader = ({
   period,
-  logo
+  logo,
+  title,
+  subTitle,
 }: {
+  title?: string
+  subTitle?: string
   period: NullableKey<Period, 'end'>
   logo: ReactNode
 }) => {
@@ -34,8 +38,8 @@ export const SnapshotHeader = ({
     }}>
       <Box>
         <Txt bold sx={{fontSize: '1.65em', fontWeight: '700'}} color="primary">
-          {m.protHHSnapshot.title}&nbsp;
-          <Box sx={{display: 'inline', fontWeight: 'lighter'}}>- {m.protHHSnapshot.title2}</Box>
+          {title ?? m.protHHSnapshot.title}&nbsp;
+          <Box sx={{display: 'inline', fontWeight: 'lighter'}}>- {subTitle ?? m.protHHSnapshot.title2}</Box>
         </Txt>
         <SnapshotPeriod period={period}/>
       </Box>
