@@ -84,19 +84,19 @@ export default () => {
         ]}/>
       </Pan>
       <Pan title={title('Intentions per displacement status')}>
-        <Txt bold block color="hint" uppercase size="small">IDPs</Txt>
+        <Txt bold block color="hint" size="small">IDPs</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           filterValue={['unable_unwilling_to_answer']}
         />
-        <Txt bold block color="hint" uppercase size="small" sx={{mt: 3}}>Non-displaced</Txt>
+        <Txt bold block color="hint" size="small" sx={{mt: 3}}>NON-DISPLACED</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'non_displaced')}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           filterValue={['unable_unwilling_to_answer']}
         />
-        <Txt bold block color="hint" uppercase size="small" sx={{mt: 3}}>Refugees and returnees</Txt>
+        <Txt bold block color="hint" size="small" sx={{mt: 3}}>REFUGEES AND RETURNEES</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'refugee' || _.do_you_identify_as_any_of_the_following === 'returnee')}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
@@ -106,7 +106,8 @@ export default () => {
       <Pan title={title('Sense of safety: Influencing factors')}>
         <ProtHHS2BarChart
           data={data}
-          question="please_rate_your_sense_of_safety_in_this_location"
+          questionType="multiple"
+          question="what_are_the_main_factors_that_make_this_location_feel_unsafe"
           filterValue={['unable_unwilling_to_answer']}
         />
       </Pan>
@@ -120,7 +121,7 @@ export default () => {
       </Pan>
       <Pan title={title('Concerns related to current accommodation')}>
         <ProtHHS2BarChart
-          data={data}
+          data={data.filter(_ => !_.what_are_your_main_concerns_regarding_your_accommodation?.includes('none'))}
           questionType="multiple"
           question="what_are_your_main_concerns_regarding_your_accommodation"
           filterValue={['unable_unwilling_to_answer']}
@@ -139,6 +140,9 @@ export default () => {
           data={data}
           questionType="multiple"
           question="what_are_the_main_sources_of_income_of_your_household"
+          mergeOptions={{
+            remittances: 'other_specify',
+          }}
           filterValue={['unable_unwilling_to_answer']}
         />
       </Pan>

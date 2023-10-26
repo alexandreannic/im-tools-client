@@ -2411,10 +2411,10 @@ export const Protection_Hhs2_1Options = {
   },
   what_are_your_households_intentions_in_terms_of_place_of_residence: {
     'stay_in_place_of_habitual_residence': `Stay in place of habitual residence`,
-    'return_to_the_area_of_origin': `Return to the place of habitual residence?`,
+    'return_to_the_area_of_origin': `Return to the place of habitual residence`,
     'relocate_to_another_area_in_ukraine': `Relocate to another area in Ukraine`,
     'relocate_to_a_country_outside_of_ukraine': `Relocate to a country outside of Ukraine`,
-    'integrate_into_the_local_community_of_current_place_of_residence': `Integrate into the local community of current place of residence`,
+    'integrate_into_the_local_community_of_current_place_of_residence': `Integrate into the local community`,
     'unable_unwilling_to_answer': `Unable/unwilling to answer`
   },
   what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community: {
