@@ -9,6 +9,8 @@ import {SnapshotProtMonitoNN2Livelihood} from '@/features/Snapshot/SnapshotProtM
 import {SnapshotProtMonitoNN2Sample} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Sample'
 import {SnapshotProtMonitoNN2Displacement} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Displacement'
 import {Theme} from '@mui/material'
+import {Period} from '@/core/type'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 
@@ -29,12 +31,14 @@ export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dens
     mb: 1,
   }
 }
-export const SnapshotProtMonitoNN2 = () => {
+export const SnapshotProtMonitoNN2 = ({period}: {
+  period: Period
+}) => {
   return (
-    <SnapshotProtMonitoringProvider filters={{currentOblast: ['UA48']}} initialPeriodFilter={{
-      start: new Date(2023, 5, 1),
-      end: new Date(2023, 6, 31),
-    }}>
+    <SnapshotProtMonitoringProvider
+      filters={{currentOblast: [OblastIndex.oblastIsoByName['Mykolaivska']]}}
+      initialPeriodFilter={period}
+    >
       <_SnapshotProtMonitoring/>
     </SnapshotProtMonitoringProvider>
   )

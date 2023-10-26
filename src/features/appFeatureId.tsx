@@ -14,6 +14,7 @@ export enum AppFeatureId {
   cfm = 'cfm',
   admin = 'admin',
   playground = 'playground',
+  snapshot = 'snapshot',
 }
 
 export interface AppFeature {
@@ -98,6 +99,14 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     path: '/cfm',
     showIf: (u, accesses) => true
     // showIf: (u, accesses) => u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.cfm)
+  },
+  snapshot: {
+    id: AppFeatureId.snapshot,
+    name: 'Snapshots',
+    materialIcons: 'photo_camera',
+    color: 'silver',
+    path: '/snapshot',
+    showIf: _ => _ && _?.admin
   },
   admin: {
     id: AppFeatureId.admin,

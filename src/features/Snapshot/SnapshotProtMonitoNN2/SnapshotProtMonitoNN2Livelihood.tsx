@@ -79,6 +79,7 @@ export const SnapshotProtMonitoNN2Livelihood = () => {
                     value={_.value}
                     base={_.base} evolution={_.percent - last.percent}
                     {...snapShotDefaultPieProps}
+                    sx={{mb: 0}}
                   />}
                 </Lazy>
               </SlidePanel>
@@ -94,6 +95,7 @@ export const SnapshotProtMonitoNN2Livelihood = () => {
                     base={_.base}
                     evolution={_.percent - last.percent}
                     {...snapShotDefaultPieProps}
+                    sx={{mb: 0}}
                   />}
                 </Lazy>
               </SlidePanel>

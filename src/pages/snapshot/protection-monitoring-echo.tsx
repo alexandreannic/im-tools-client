@@ -2,6 +2,7 @@ import React from 'react'
 import {SnapshotProtMonitoEcho} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {GlobalStyles, ThemeProvider} from '@mui/material'
 import {muiTheme} from '@/core/theme'
+import {endOfMonth, startOfMonth} from 'date-fns'
 
 const generalStyles = <GlobalStyles styles={{
   body: {
@@ -19,7 +20,10 @@ const SnapshotProtectionMonitoringPage = () => {
       cardElevation: 1,
     })}>
       {generalStyles}
-      <SnapshotProtMonitoEcho/>
+      <SnapshotProtMonitoEcho period={{
+        start: startOfMonth(new Date(2023, 8)),
+        end: endOfMonth(new Date(2023, 8)),
+      }}/>
     </ThemeProvider>
   )
 }

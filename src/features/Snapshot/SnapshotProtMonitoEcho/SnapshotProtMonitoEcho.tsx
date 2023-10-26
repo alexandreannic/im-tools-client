@@ -10,6 +10,7 @@ import {SnapshotProtMonitoEchoSample} from '@/features/Snapshot/SnapshotProtMoni
 import {SnapshotProtMonitoEchoDisplacement} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoDisplacement'
 import {SnapshotProtMonitoEchoRegistration} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoRegistration'
 import {Theme} from '@mui/material'
+import {Period} from '@/core/type'
 
 export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 
@@ -30,9 +31,10 @@ export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dens
     mb: 1,
   }
 }
-export const SnapshotProtMonitoEcho = () => {
+
+export const SnapshotProtMonitoEcho = ({period}: {period: Period}) => {
   return (
-    <SnapshotProtMonitoringProvider>
+    <SnapshotProtMonitoringProvider initialPeriodFilter={period}>
       <_SnapshotProtMonitoring/>
     </SnapshotProtMonitoringProvider>
   )

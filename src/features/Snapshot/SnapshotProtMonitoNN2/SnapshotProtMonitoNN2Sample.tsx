@@ -14,6 +14,8 @@ import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
 import {AaPieChart} from '@/shared/Chart/AaPieChart'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+import {SnapshotPeriod} from '@/features/Snapshot/SnapshotPeriod'
+import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 
 export const SnapshotProtMonitoNN2Sample = () => {
   const theme = useTheme()
@@ -21,42 +23,14 @@ export const SnapshotProtMonitoNN2Sample = () => {
   const {formatLargeNumber, m} = useI18n()
   return (
     <PdfSlide>
-      <Box sx={{
-        px: 2,
-        py: 1,
-        borderBottom: t => `1px solid ${t.palette.divider}`,
-        mb: 0,
-        display: 'flex',
-        alignItems: 'center'
-      }}>
-        <Box>
-          <Txt bold sx={{fontSize: '1.65em', fontWeight: '700'}} color="primary">
-            {m.protHHSnapshot.title}&nbsp;
-            <Box sx={{display: 'inline', fontWeight: 'lighter'}}>- Mykolaivska, Ukraine</Box>
-          </Txt>
-          <Txt color="hint" sx={{fontSize: '1.1em', display: 'flex', alignItems: 'center'}}>
-            <Icon sx={{mr: 1}}>date_range</Icon> {format(periodFilter.start, 'LLLL yyyy')}
-            {periodFilter.start.getMonth() !== periodFilter.end.getMonth() &&
-              <>&nbsp;-&nbsp;{format(subDays(periodFilter.end, 1), 'LLLL yyyy')}</>
-            }
-
-            <Icon sx={{mx: 1.5, fontSize: 10}}>fiber_manual_record</Icon>
-            <Box component="a" target="_blank" href="https://infoportal-ua.drc.ngo/dashboard/protection-monitoring" sx={{color: '#4c8cca', display: 'flex', alignItems: 'center'}}>
-              <Icon sx={{mr: .5}} fontSize="small">open_in_new</Icon>
-              Interactive dashboard
-            </Box>
-          </Txt>
-        </Box>
-        <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
-          <EULogo/>
-          <DRCLogo/>
-        </Box>
-      </Box>
+      <SnapshotHeader subTitle="Mykolaiv oblast" period={periodFilter} logo={<DRCLogo/>}/>
       <PdfSlideBody>
         <Div>
           <Div column sx={{flex: 3.6}}>
             <SlideTxt>
-              <p dangerouslySetInnerHTML={{__html: m.snapshotProtMonito.nn2.desc}}/>
+              This snapshot summarizes the findings of Protection Monitoring (PM) implemented through household surveys in Mykolaiv Oblast between August and September 2023. DRC
+              protection monitoring targeted Internally Displaced Persons (IDPs) and people directly exposed to and affected by the current armed conflict in order to understand
+              the protection needs facing affected populations; informing DRC and the protection communities' response.
             </SlideTxt>
             <Box sx={{height: 316, borderRadius: t => t.shape.borderRadius}}>
               <PanelTitle sx={{mb: 3, mt: 1}}>{m.idpOriginOblast}</PanelTitle>

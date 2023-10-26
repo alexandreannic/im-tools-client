@@ -1,6 +1,7 @@
 import React, {CSSProperties, ReactNode} from 'react'
 import {BoxProps} from '@mui/material'
 import {KeyOf, Utils} from '@/utils/utils'
+import {NonNullableKeys} from '@/utils/utilsType'
 
 export type SheetPropertyType = 'date' | 'number' | 'string' | 'select_one' | 'select_multiple'
 
@@ -117,7 +118,7 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   stickyEnd?: boolean
 }
 
-export type SheetInnerColumnProps<T extends SheetRow> = Omit<SheetColumnProps<T>, 'renderValue' | 'type'> & Utils.NonNullableKeys<(
+export type SheetInnerColumnProps<T extends SheetRow> = Omit<SheetColumnProps<T>, 'renderValue' | 'type'> & NonNullableKeys<(
   SheetColumnPropsText<T> |
   SheetColumnPropsSelectOne<T> |
   SheetColumnPropsSelectMultiple<T> |
