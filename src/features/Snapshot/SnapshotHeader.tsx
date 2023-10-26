@@ -24,7 +24,7 @@ export const SnapshotHeader = ({
   title?: string
   subTitle?: string
   period: NullableKey<Period, 'end'>
-  logo: ReactNode
+  logo?: ReactNode
 }) => {
   const {m} = useI18n()
   return (

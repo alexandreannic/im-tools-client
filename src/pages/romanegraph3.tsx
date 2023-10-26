@@ -10,6 +10,8 @@ import {Enum, seq} from '@alexandreannic/ts-utils'
 import {Period, Person} from '@/core/type'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
+import {DRCLogo, EULogo} from '@/shared/logo/logo'
+import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 
 export const Pan = ({
   title,
@@ -24,6 +26,7 @@ export const Pan = ({
       margin: 'auto',
       my: 1,
     }}>
+      <Txt block size="big" bold sx={{textAlign: 'center', mt: 2, mb: 1}}>{title}</Txt>
       <PanelFeatures savableAsImg>
         <Box sx={{
           // p: .5
@@ -73,6 +76,7 @@ export default () => {
 
   return (
     <>
+      <SnapshotHeader period={period}/>
       <Pan title={title('Household respondents per displacement group')}>
         <ProtHHS2BarChart
           data={data}
