@@ -43,6 +43,41 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
                 }
               </Lazy>
             </SlideTxt>
+
+            <Div>
+              <SlidePanel sx={{flex: 1}}>
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                  value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
+                  data: d,
+                  base: _ => _ !== undefined,
+                })}>
+                  {(_, last) => <PieChartIndicator
+                    title={m.hhOutOfWork}
+                    value={_.value}
+                    base={_.base} evolution={_.percent - last.percent}
+                    {...snapShotDefaultPieProps}
+                    sx={{mb: 0}}
+                  />}
+                </Lazy>
+              </SlidePanel>
+
+              <SlidePanel sx={{flex: 1}}>
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                  value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
+                  data: d,
+                })}>
+                  {(_, last) => <PieChartIndicator
+                    title={m.hhWithGapMeetingBasicNeeds}
+                    value={_.value}
+                    base={_.base}
+                    evolution={_.percent - last.percent}
+                    {...snapShotDefaultPieProps}
+                    sx={{mb: 0}}
+                  />}
+                </Lazy>
+              </SlidePanel>
+            </Div>
+
             <SlidePanel>
               <SlidePanelTitle>{m.monthlyIncomePerHH}</SlidePanelTitle>
               <Lazy deps={[data]} fn={() => {
@@ -74,38 +109,6 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
             </SlidePanel>
           </Div>
           <Div column>
-            <Div>
-              <SlidePanel sx={{flex: 1}}>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
-                  value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
-                  data: d,
-                  base: _ => _ !== undefined,
-                })}>
-                  {(_, last) => <PieChartIndicator
-                    title={m.hhOutOfWork}
-                    value={_.value}
-                    base={_.base} evolution={_.percent - last.percent}
-                    {...snapShotDefaultPieProps}
-                  />}
-                </Lazy>
-              </SlidePanel>
-
-              <SlidePanel sx={{flex: 1}}>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
-                  value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
-                  data: d,
-                })}>
-                  {(_, last) => <PieChartIndicator
-                    title={m.hhWithGapMeetingBasicNeeds}
-                    value={_.value}
-                    base={_.base}
-                    evolution={_.percent - last.percent}
-                    {...snapShotDefaultPieProps}
-                  />}
-                </Lazy>
-              </SlidePanel>
-            </Div>
-
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.mainSourceOfIncome}</SlidePanelTitle>
               <ProtHHS2BarChart

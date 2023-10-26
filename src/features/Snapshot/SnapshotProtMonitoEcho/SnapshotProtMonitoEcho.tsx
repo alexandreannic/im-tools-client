@@ -31,6 +31,7 @@ export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dens
     mb: 1,
   }
 }
+
 export const SnapshotProtMonitoEcho = ({period}: {period: Period}) => {
   return (
     <SnapshotProtMonitoringProvider initialPeriodFilter={period}>
@@ -45,10 +46,10 @@ const _SnapshotProtMonitoring = () => {
   if (!data || !computed) return <>...</>
   return (
     <Pdf>
-      {/*<SnapshotProtMonitoEchoSample/>*/}
-      {/*<SnapshotProtMonitoEchoDisplacement/>*/}
-      {/*<SnapshotProtMonitoEchoRegistration/>*/}
-      {/*<SnapshotProtMonitoEchoSafety/>*/}
+      <SnapshotProtMonitoEchoSample/>
+      <SnapshotProtMonitoEchoDisplacement/>
+      <SnapshotProtMonitoEchoRegistration/>
+      <SnapshotProtMonitoEchoSafety/>
       <SnapshotProtMonitoEchoNeeds/>
       <SnapshotProtMonitoEchoLivelihood/>
     </Pdf>

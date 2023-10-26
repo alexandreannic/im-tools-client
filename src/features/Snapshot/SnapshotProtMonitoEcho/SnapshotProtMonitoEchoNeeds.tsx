@@ -5,9 +5,10 @@ import {useI18n} from '@/core/i18n'
 import {ChartTools} from '@/core/chartTools'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
+import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+
 
 export const SnapshotProtMonitoEchoNeeds = () => {
   const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
@@ -31,7 +32,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                     value: _ => _.do_you_have_access_to_health_care_in_your_current_location !== 'yes',
                   }).percent, 0),
                   healthPn: toPercent(ChartTools.percentage({
-                    data,
+                    data: data.filter(_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer'),
                     value: _ => _.what_is_your_1_priority?.includes('health_1_2')
                       || _.what_is_your_2_priority?.includes('health_1_2')
                       || _.what_is_your_3_priority?.includes('health_1_2'),
@@ -48,6 +49,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
             <SlidePanel>
               <KoboPieChartIndicator
                 {...snapShotDefaultPieProps}
+                sx={{mb: 0}}
                 title={m.protHHS2.barriersToAccessHealth}
                 compare={{before: computed.lastMonth}}
                 question="do_you_have_access_to_health_care_in_your_current_location"
@@ -66,6 +68,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
             <SlidePanel>
               <KoboPieChartIndicator
                 {...snapShotDefaultPieProps}
+                sx={{mb: 0}}
                 title={m.protHHS2.unregisteredDisability}
                 question="do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov"
                 filter={_ => _ !== 'yes_all'}
@@ -97,7 +100,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 question="what_are_your_main_concerns_regarding_your_accommodation"
                 filter={_ => !_.includes('none')}
                 data={data}
-                sx={{mb: 1}}
+                sx={{mb: 0}}
               />
               <ProtHHS2BarChart
                 questionType="multiple"

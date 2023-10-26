@@ -137,6 +137,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
               <ProtHHS2BarChart
                 questionType="multiple"
                 data={data}
+                limit={5}
                 question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
                 filterValue={['no', 'unable_unwilling_to_answer']}
               />
@@ -162,7 +163,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
                 base={_ => _.please_rate_your_sense_of_safety_in_this_location !== 'unable_unwilling_to_answer' &&
                   _.please_rate_your_sense_of_safety_in_this_location !== undefined}
               />
-              <SlidePanelTitle sx={{mt: 4}}>{m.influencingFactors}</SlidePanelTitle>
+              <SlidePanelTitle sx={{mt: 2}}>{m.influencingFactors}</SlidePanelTitle>
               <ProtHHS2BarChart
                 questionType="multiple"
                 data={data}
