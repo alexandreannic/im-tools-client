@@ -6,17 +6,17 @@ import {layoutConfig} from './index'
 import {defaultSpacing} from '../../core/theme'
 import {AppHeader} from './Header/AppHeader'
 
-export const sidebarWith = 220
-
 export interface LayoutProps {
   sidebar?: ReactElement<any>
   header?: ReactElement<any>
   title?: string
   children?: ReactNode
   mobileBreakpoint?: number
+  // loading?: boolean
 }
 
 export const Layout = ({
+  // loading,
   sidebar,
   header = <AppHeader id="app-header"/>,
   title,

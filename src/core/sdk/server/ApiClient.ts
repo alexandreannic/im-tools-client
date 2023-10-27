@@ -69,13 +69,13 @@ export class ApiClient {
   constructor({baseUrl, headers, requestInterceptor, mapData, mapError}: ApiClientParams) {
     const client = axios.create({
       baseURL: baseUrl,
-      headers: {...headers},
+      headers: headers,
       withCredentials: true,
     })
-    client.interceptors.request.use(request => {
-      // console.log('Starting Request', JSON.stringify(request, null, 2))
-      return request
-    })
+    // client.interceptors.request.use(request => {
+    // console.log('Starting Request', JSON.stringify(request, null, 2))
+    // return request
+    // })
 
     this.baseUrl = baseUrl
 

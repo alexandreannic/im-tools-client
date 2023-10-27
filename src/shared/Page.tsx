@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Box, BoxProps, LinearProgress} from '@mui/material'
+import {Box, BoxProps, LinearProgress, Skeleton} from '@mui/material'
 import {Page as MxPage, Txt} from 'mui-extension'
 
 export interface PageProps extends BoxProps {
@@ -36,7 +36,11 @@ export const PageTitle = ({
   sx,
   logo,
   ...props
-}: BoxProps & {logo?: ReactNode, subTitle?: string, action?: ReactNode}) => {
+}: BoxProps & {
+  logo?: ReactNode,
+  subTitle?: string,
+  action?: ReactNode
+}) => {
   return (
     <Box sx={{display: 'flex', mt: 0, mb: 2, alignItems: 'center', ...sx}}>
       {logo && (
@@ -50,6 +54,20 @@ export const PageTitle = ({
         <Box sx={{ml: 'auto'}}>{action}</Box>
       )}
     </Box>
+  )
+}
+
+export const PagePlaceholder = (props: Pick<PageProps, 'width'>) => {
+  const width = typeof props.width === 'string' ? ({
+    xs: 780,
+    md: 1000,
+    lg: 1200,
+    full: 3000,
+  })[props.width] : props.width
+  return (
+    <Page {...props}>
+      <Skeleton variant="rounded" sx={{width: '100%', height: 'calc(100vh - 100px)'}}/>
+    </Page>
   )
 }
 

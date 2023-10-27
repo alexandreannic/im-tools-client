@@ -23,7 +23,7 @@ export const AAIconBtn = ({
   )
   return tooltip ? (
     <Tooltip title={tooltip}>
-      {props.disabled ? <Box sx={props.sx}>{content}</Box> : content}
+      {props.disabled ? <Box component="span" sx={props.sx}>{content}</Box> : content}
     </Tooltip>
   ) : content
 }

@@ -17,6 +17,12 @@ import Link from 'next/link'
 import {databaseModule} from '@/features/Database/databaseModule'
 import {ShelterDashboard} from '@/features/Shelter/Dasbhoard/ShelterDashboard'
 import {DatabaseTablePage} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {useShelterData} from '@/features/Shelter/useShelterData'
+import {seq} from '@alexandreannic/ts-utils'
+import {Access} from '@/core/sdk/server/access/Access'
+import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
+import {Skeleton} from '@mui/material'
+import {PagePlaceholder} from '@/shared/Page'
 
 export const shelterModule = {
   basePath: '/shelter',
@@ -66,13 +72,28 @@ const ShelterSidebar = () => {
 }
 
 export const Shelter = () => {
-  const {m} = useI18n()
   const {session, accesses} = useSession()
-  const access = useMemo(() => !!appFeaturesIndex.shelter.showIf?.(session, accesses), [accesses])
+  const canOpen = useMemo(() => !!appFeaturesIndex.shelter.showIf?.(session, accesses), [accesses])
+  return canOpen ? <ShelterWithAccess/> : <NoFeatureAccessPage/>
+}
+
+export const ShelterWithAccess = () => {
+  const {session, accesses} = useSession()
   const {api} = useAppSettings()
   const {toastHttpError} = useAaToast()
 
-  const _schemas = useFetcher(async () => {
+  const {access, allowedOffices} = useMemo(() => {
+    const cfmAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))
+    const allowedOffices = cfmAccesses.flatMap(_ => {
+      return _.params?.filters?.back_office as Shelter_NTA['back_office'][] | undefined
+    }).compact()
+    return {
+      access: Access.toSum(cfmAccesses, session.admin),
+      allowedOffices,
+    }
+  }, [session, accesses])
+
+  const fetcherSchema = useFetcher(async () => {
     if (!access) return
     const [ta, nta] = await Promise.all([
       api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
@@ -80,17 +101,17 @@ export const Shelter = () => {
     ])
     return {ta, nta}
   })
-  useEffectFn(_schemas.error, toastHttpError)
+
+  const fetcherData = useShelterData(allowedOffices)
+
+  useEffectFn(fetcherSchema.error, toastHttpError)
+
 
   useEffect(() => {
-    _schemas.fetch()
+    fetcherData.fetchAll()
+    fetcherSchema.fetch()
   }, [])
 
-  if (!access) {
-    return (
-      <NoFeatureAccessPage/>
-    )
-  }
   return (
     <Router>
       <Layout
@@ -98,17 +119,21 @@ export const Shelter = () => {
         sidebar={<ShelterSidebar/>}
         header={<AppHeader id="app-header"/>}
       >
-        {_schemas.entity && (
+        {fetcherSchema.loading ? (
+          <PagePlaceholder width="full"/>
+        ) : fetcherSchema.entity && (
           <ShelterProvider
-            schemaNta={_schemas.entity.nta}
-            schemaTa={_schemas.entity.ta}
+            access={access}
+            data={fetcherData}
+            schemaNta={fetcherSchema.entity.nta}
+            schemaTa={fetcherSchema.entity.ta}
           >
             <Routes>
               <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
               <Route path={shelterModule.siteMap.dashboard} element={<ShelterDashboard/>}/>
               <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
-              <Route path={shelterModule.siteMap.nta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_nta} schema={_schemas.entity.nta}/>}/>
-              <Route path={shelterModule.siteMap.ta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_ta} schema={_schemas.entity.ta}/>}/>
+              <Route path={shelterModule.siteMap.nta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_nta} schema={fetcherSchema.entity.nta}/>}/>
+              <Route path={shelterModule.siteMap.ta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_ta} schema={fetcherSchema.entity.ta}/>}/>
             </Routes>
           </ShelterProvider>
         )}
@@ -116,4 +141,6 @@ export const Shelter = () => {
     </Router>
   )
 }
+
+
 
