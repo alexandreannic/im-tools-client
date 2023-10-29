@@ -16,8 +16,7 @@ import {formatLargeNumber} from '@/core/i18n/localization/en'
 import {MpcaHelper, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
-import {Box, Divider, FormControlLabel, Switch, Theme} from '@mui/material'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {Box, FormControlLabel, Switch} from '@mui/material'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -43,6 +42,7 @@ export const MpcaData = () => {
         <Sheet<MpcaType>
           id="mpca"
           title={m.data}
+          showExportBtn
           // header={<PanelTitle>{m.data}</PanelTitle>}
           loading={ctx.fetcherData.loading}
           getRenderRowKey={_ => '' + _.id}

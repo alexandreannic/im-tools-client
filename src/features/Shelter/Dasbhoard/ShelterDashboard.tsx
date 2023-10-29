@@ -8,7 +8,6 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {usePersistentState} from 'react-persistent-state'
 import {useI18n} from '@/core/i18n'
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
@@ -28,6 +27,7 @@ import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 const today = new Date()
 
@@ -53,7 +53,7 @@ export const ShelterDashboard = () => {
     }
   }, [ctxData.mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter)
+  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter, {storageKey: 'shelter-dashboard'})
 
   const filteredData = useMemo(() => {
     if (!ctxData.mappedData) return
@@ -134,7 +134,7 @@ export const _ShelterDashboard = ({
   computed: NonNullable<UseShelterComputedData>
 }) => {
   const {m, formatLargeNumber} = useI18n()
-  const [tableType, setTableType] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', 'shelter-dashboard-tableType')
+  const [tableType, setTableType] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', {storageKey: 'shelter-dashboard-tableType'})
   const {conf} = useAppSettings()
 
   return (

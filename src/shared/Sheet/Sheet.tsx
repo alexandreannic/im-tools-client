@@ -12,7 +12,7 @@ import {SheetHead} from './SheetHead'
 import {SheetRow, SheetTableProps} from '@/shared/Sheet/util/sheetType'
 import {format} from 'date-fns'
 import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
-import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
+import {DatatableColumnToggle} from '@/shared/Sheet/DatatableColumnsToggle'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {SheetModal} from '@/shared/Sheet/SheetModal'
 import {SheetErrorBoundary} from '@/shared/Sheet/SheetErrorBundary'
@@ -115,7 +115,7 @@ const _Sheet = <T extends SheetRow>({
 
   const filterCount = useMemoFn(ctx.data.filters, _ => Enum.keys(_).length)
 
-  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], SheetUtils.localStorageKey.column + id)
+  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], {storageKey: SheetUtils.localStorageKey.column + id})
   const filteredColumns = useMemo(() => ctx.columns.filter(_ => !hiddenColumns.includes(_.id)), [ctx.columns, hiddenColumns])
 
   return (

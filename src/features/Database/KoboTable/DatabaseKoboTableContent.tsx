@@ -21,7 +21,7 @@ import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 export const DatabaseKoboTableContent = () => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
-  const [repeatGroupsAsColumns, setRepeatGroupAsColumns] = usePersistentState<boolean>(false, `database-${ctx.form.id}-repeat-groups`)
+  const [repeatGroupsAsColumns, setRepeatGroupAsColumns] = usePersistentState<boolean>(false, {storageKey: `database-${ctx.form.id}-repeat-groups`})
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const ctxSchema = useKoboSchemaContext()
   const [openModalAnswer, setOpenModalAnswer] = useState<KoboAnswer | undefined>()

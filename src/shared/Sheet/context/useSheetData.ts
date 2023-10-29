@@ -13,8 +13,7 @@ import {
 } from '@/shared/Sheet/util/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import safeNumber = Utils.safeNumber
-import {usePersistentState} from 'react-persistent-state'
-import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 export type UseSheetData<T extends SheetRow> = ReturnType<typeof useSheetData<T>>
 

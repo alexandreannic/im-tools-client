@@ -25,7 +25,6 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {MpcaHelper, MpcaProgram, MpcaRowSource, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
-import {usePersistentState} from 'react-persistent-state'
 import {donorByProject, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -33,6 +32,7 @@ import {Panel} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import ageGroup = Person.ageGroup
 import groupBy = Utils.groupBy
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 export const today = new Date()
 
@@ -103,7 +103,7 @@ export const MpcaDashboard = () => {
     }
   }, [mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter, 'mpca-dashboard-filters')
+  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter, {storageKey: 'mpca-dashboard-filters'})
 
   const filteredData = useMemo(() => {
     return mappedData?.filter(d => {
@@ -207,11 +207,11 @@ export const _MPCADashboard = ({
 }) => {
   const ctx = useMpcaContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const [tableDataType, setTableDataType] = usePersistentState<'ratio' | 'absolute'>('absolute', 'mpca-dashboard-tableType')
-  const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', 'mpca-dashboard-tableArea')
-  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', 'mpca-dashboard-ageGroup')
+  const [tableDataType, setTableDataType] = usePersistentState<'ratio' | 'absolute'>('absolute', {storageKey: 'mpca-dashboard-tableType'})
+  const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', {storageKey: 'mpca-dashboard-tableArea'})
+  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', {storageKey: 'mpca-dashboard-ageGroup'})
 
-  const [targets, setTargets] = usePersistentState<Record<any, number>>({}, 'mpca-targets')
+  const [targets, setTargets] = usePersistentState<Record<any, number>>({}, {storageKey: 'mpca-targets'})
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 

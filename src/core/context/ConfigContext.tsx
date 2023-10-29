@@ -21,7 +21,7 @@ export const AppSettingsProvider = ({
   api: ApiSdk,
   children: ReactNode
 }) => {
-  const [darkTheme, setDarkTheme] = usePersistentState(false, 'dark-theme')
+  const [darkTheme, setDarkTheme] = usePersistentState(false, {storageKey: 'dark-theme'})
   return (
     <_ConfigContext.Provider value={{
       api,
