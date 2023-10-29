@@ -14,6 +14,7 @@ import {
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import safeNumber = Utils.safeNumber
 import {usePersistentState} from 'react-persistent-state'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export type UseSheetData<T extends SheetRow> = ReturnType<typeof useSheetData<T>>
 
@@ -28,11 +29,13 @@ export const useSheetData = <T extends SheetRow>({
   data?: T[]
   columnsIndex: Record<KeyOf<T>, SheetInnerColumnProps<T>>
 }) => {
-  const [filters, setFilters] = usePersistentState<Record<KeyOf<T>, SheetFilterValue>>({} as any, `datatable-filters-${id}`)
+  const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilterValue>>({} as any)
   const [search, setSearch] = usePersistentState<SheetSearch<any>>({
     limit: defaultLimit,
     offset: 0,
-  }, `datatable-paginate-${id}`)
+  }, {
+    storageKey: `datatable-paginate-${id}`,
+  })
 
   const resetSearch = () => setSearch({limit: defaultLimit, offset: 0,})
 

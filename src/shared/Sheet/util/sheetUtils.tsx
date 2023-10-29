@@ -3,6 +3,10 @@ import React, {ReactNode} from 'react'
 
 export class SheetUtils {
 
+  static readonly localStorageKey = {
+    column: 'database-columns-',
+    filters: 'datatable-filters-',
+  }
   // static readonly FILTER_BLANK_TEXT = 'FILTER_BLANK_TEXT_someRandomTextToAvoidCollision_9fa3'
   static readonly buildColumns = <T extends SheetRow = SheetRow>(_: SheetColumnProps<T>[]) => _
 

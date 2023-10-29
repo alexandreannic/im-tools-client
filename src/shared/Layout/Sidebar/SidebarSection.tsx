@@ -11,7 +11,7 @@ export const SidebarSection = ({
   title: ReactNode
   children: ReactNode
 }) => {
-  const [open, setOpen] = usePersistentState(true, 'sidebar-section-' + title)
+  const [open, setOpen] = usePersistentState(true, {'sidebar-section-' + title)
   return (
     <Box sx={{
       mt: .5,

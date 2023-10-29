@@ -15,6 +15,8 @@ import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContex
 import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {SheetModal} from '@/shared/Sheet/SheetModal'
+import {SheetErrorBoundary} from '@/shared/Sheet/SheetErrorBundary'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const Sheet = <T extends SheetRow = SheetRow>({
   total,
@@ -48,19 +50,21 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   }, [columns])
 
   return (
-    <SheetProvider
-      id={props.id}
-      columns={mappedColumns}
-      data={data}
-      defaultLimit={defaultLimit}
-      select={select}
-      getRenderRowKey={getRenderRowKey}
-    >
-      <_Sheet
-        rowsPerPageOptions={rowsPerPageOptions}
-        {...props}
-      />
-    </SheetProvider>
+    <SheetErrorBoundary>
+      <SheetProvider
+        id={props.id}
+        columns={mappedColumns}
+        data={data}
+        defaultLimit={defaultLimit}
+        select={select}
+        getRenderRowKey={getRenderRowKey}
+      >
+        <_Sheet
+          rowsPerPageOptions={rowsPerPageOptions}
+          {...props}
+        />
+      </SheetProvider>
+    </SheetErrorBoundary>
   )
 }
 
@@ -111,7 +115,7 @@ const _Sheet = <T extends SheetRow>({
 
   const filterCount = useMemoFn(ctx.data.filters, _ => Enum.keys(_).length)
 
-  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], 'database-columns-' + id)
+  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], SheetUtils.localStorageKey.column + id)
   const filteredColumns = useMemo(() => ctx.columns.filter(_ => !hiddenColumns.includes(_.id)), [ctx.columns, hiddenColumns])
 
   return (

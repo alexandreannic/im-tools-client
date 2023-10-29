@@ -53,8 +53,8 @@ export const MpcaDashboard = () => {
   const ctx = useMpcaContext()
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m, formatLargeNumber} = useI18n()
-  const [amountType, setAmountType] = usePersistentState<AmountType>(AmountType.amountUahFinal, 'mpca-dashboard-amountType')
-  const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, 'mpca-dashboard-currency')
+  const [amountType, setAmountType] = usePersistentState<AmountType>(AmountType.amountUahFinal, {storageKey: 'mpca-dashboard-amountType'})
+  const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, {storageKey: 'mpca-dashboard-currency'})
 
   const mappedData = useMemo(() => ctx.data?.map(_ => {
     if (_.finalDonor === undefined) _.finalDonor = SheetUtils.blank as any

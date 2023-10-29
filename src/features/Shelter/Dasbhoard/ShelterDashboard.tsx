@@ -3,7 +3,6 @@ import {UseShelterComputedData, useShelterComputedData} from '@/features/Shelter
 import {ShelterRow, useShelterData} from '@/features/Shelter/useShelterData'
 import {Div, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Lazy} from '@/shared/Lazy'
-import {Utils} from '@/utils/utils'
 import {Period, Person} from '@/core/type'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Box} from '@mui/material'
@@ -35,7 +34,7 @@ const today = new Date()
 // TODO Data re-fetched to bypass offices access filter. Need to find a more proper way
 export const ShelterDashboard = () => {
   const ctxData = useShelterData()
-  const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, 'mpca-dashboard-currency')
+  const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, {storageKey: 'mpca-dashboard-currency'})
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m} = useI18n()
 
