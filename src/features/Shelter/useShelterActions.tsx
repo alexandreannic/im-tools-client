@@ -41,7 +41,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
   }, [schema, langIndex])
 
 
-  const _updates = useAsync(async <K extends keyof T>({
+  const asyncUpdates = useAsync(async <K extends keyof T>({
     answerIds,
     key,
     value
@@ -64,7 +64,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
     }))
   })
 
-  const _update = useAsync(<K extends keyof T>({answerId, key, value}: {
+  const asyncUpdate = useAsync(<K extends keyof T>({answerId, key, value}: {
     answerId: KoboAnswerId,
     key: K,
     value: T[K] | null
@@ -83,8 +83,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
     requestKey: ([_]) => _.answerId
   })
 
-
-  const _edit = useAsync(async (answerId: KoboAnswerId) => {
+  const asyncEdit = useAsync(async (answerId: KoboAnswerId) => {
     return api.koboApi.getEditUrl(kobo.drcUa.server.prod, formId, answerId).then(_ => {
       if (_.url) window.open(_.url, '_blank')
     }).catch(toastHttpError)
@@ -92,15 +91,15 @@ export const useShelterActions = <T extends Record<string, any>, >({
 
   const [openModalAnswer] = useDatabaseKoboAnswerView<ShelterRow['ta']>(schema)
 
-  useEffectFn(_updates.errors.keys, _updates.errors.size > 0 ? toastHttpError : () => {})
-  useEffectFn(_update.errors.keys, _update.errors.size > 0 ? toastHttpError : () => {})
-  useEffectFn(_edit.errors.keys, _edit.errors.size > 0 ? toastHttpError : () => {})
+  useEffectFn(asyncUpdates.lastError, toastHttpError)
+  useEffectFn(asyncUpdate.lastError, toastHttpError)
+  useEffectFn(asyncEdit.lastError, toastHttpError)
 
   return {
-    _helper: helper,
-    _update,
-    _updates,
-    _edit,
+    helper,
+    asyncUpdate,
+    asyncUpdates,
+    asyncEdit,
     openModalAnswer,
   }
 }

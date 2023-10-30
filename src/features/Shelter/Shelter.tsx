@@ -106,7 +106,6 @@ export const ShelterWithAccess = () => {
 
   useEffectFn(fetcherSchema.error, toastHttpError)
 
-
   useEffect(() => {
     fetcherData.fetchAll()
     fetcherSchema.fetch()

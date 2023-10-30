@@ -30,14 +30,15 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
   const {api} = useAppSettings()
   const ntaRequest = () => api.kobo.answer.searchShelterNta().then(_ => _.data)
   const taRequest = () => api.kobo.answer.searchShelterTa().then(_ => _.data)
-  const _fetchNta = useFetcher(ntaRequest)
-  const _fetchTa = useFetcher(taRequest)
+  const fetcherNta = useFetcher(ntaRequest)
+  const fetcherTa = useFetcher(taRequest)
 
   const {mappedData, index} = useMemo(() => {
-      if (!_fetchTa.entity || !_fetchNta.entity) return {}
+      if (!fetcherTa.entity || !fetcherNta.entity) return {}
       const skippedNta = new Set<KoboAnswerId>()
       const index: Record<KoboAnswerId, Omit<ShelterRow, 'id'>> = {} as any
-      _fetchNta.entity.forEach(d => {
+
+      fetcherNta.entity.forEach(d => {
         if (allowedOffices.length > 0 && !allowedOffices.includes(d.back_office)) {
           skippedNta.add(d.id)
         } else {
@@ -54,7 +55,8 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
           }, () => undefined) ?? ''
         }
       })
-      _fetchTa.entity.forEach(d => {
+
+    fetcherTa.entity.forEach(d => {
         const refId = d.nta_id ? d.nta_id.replaceAll(/[^\d]/g, '') : d.id
         if (skippedNta.has(refId)) return
         if (!index[refId]) index[refId] = {}
@@ -93,10 +95,10 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
             return a.nta.submissionTime?.getTime() - b.nta?.submissionTime.getTime()
           }) as Seq<ShelterRow>
       }
-    }, [_fetchTa.entity, _fetchNta.entity, allowedOffices]
+    }, [fetcherTa.entity, fetcherNta.entity, allowedOffices]
   )
 
-  const asyncResync = useAsync(async () => {
+  const asyncSyncAnswers = useAsync(async () => {
     await Promise.all([
       api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
       api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta),
@@ -105,18 +107,17 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
   })
 
   const fetchAll = useCallback(() => {
-    console.error('fetch from data', _fetchNta.entity)
-    _fetchNta.fetch({force: false, clean: false})
-    _fetchTa.fetch({force: false, clean: false})
+    fetcherNta.fetch({force: false, clean: false})
+    fetcherTa.fetch({force: false, clean: false})
   }, [])
 
   return {
-    loading: _fetchNta.loading || _fetchTa.loading,
+    loading: fetcherNta.loading || fetcherTa.loading,
     fetchAll,
-    asyncResync,
-    fetching: _fetchTa.loading || _fetchNta.loading,
-    _fetchNta,
-    _fetchTa,
+    asyncSyncAnswers,
+    fetching: fetcherTa.loading || fetcherNta.loading,
+    fetcherNta: fetcherNta,
+    fetrcherTa: fetcherTa,
     mappedData,
     index,
   }

@@ -1,12 +1,10 @@
 import React, {ReactNode, useContext, useState} from 'react'
-import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {kobo} from '@/koboDrcUaFormId'
 import {UseShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
 import {AccessSum} from '@/core/sdk/server/access/Access'
-import {useSession} from '@/core/Session/SessionContext'
 
 export interface ShelterContext {
   access: AccessSum
@@ -33,19 +31,17 @@ export const ShelterProvider = ({
   schemaNta: KoboApiForm
   children: ReactNode
 }) => {
-  const {api} = useAppSettings()
   const [langIndex, setLangIndex] = useState<number>(0)
-  const {session, accesses} = useSession()
 
-  const _ntaActions = useShelterActions<ShelterNtaTags>({
+  const ntaActions = useShelterActions<ShelterNtaTags>({
     formId: kobo.drcUa.form.shelter_nta,
-    setEntity: data._fetchNta.setEntity,
+    setEntity: data.fetcherNta.setEntity,
     schema: schemaNta,
     langIndex,
   })
-  const _taActions = useShelterActions<ShelterTaTags>({
+  const taActions = useShelterActions<ShelterTaTags>({
     formId: kobo.drcUa.form.shelter_ta,
-    setEntity: data._fetchTa.setEntity,
+    setEntity: data.fetrcherTa.setEntity,
     schema: schemaTa,
     langIndex,
   })
@@ -54,8 +50,8 @@ export const ShelterProvider = ({
     <Context.Provider value={{
       access,
       data,
-      nta: _ntaActions,
-      ta: _taActions,
+      nta: ntaActions,
+      ta: taActions,
       langIndex,
     }}>
       {children}
