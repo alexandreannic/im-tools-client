@@ -1198,6 +1198,8 @@ export const en = Object.freeze({
       scoreDamage: 'Damage',
       scoreSocio: 'Socio',
       scoreDisplacement: 'Displ.',
+      settlement: 'Settlement',
+      street: 'Street',
       progress: {
         ContractorVisitDone: 'Contractor visit done',
         WorkEstimatesReceived: 'Work estimates received',

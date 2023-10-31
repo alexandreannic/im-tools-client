@@ -16,6 +16,10 @@ export enum ShelterContractor {
   'Ukr Bud Tekhnolohiyi' = 'Ukr Bud Tekhnolohiyi',
   'Skytown' = 'Skytown',
   'Zhilvest' = 'Zhilvest',
+  'Framplus' = 'Framplus',
+  'Kronos' = 'Kronos',
+  'Monolit' = 'Monolit'
+  
 }
 
 export class ShelterContractorPrices {
@@ -371,7 +375,48 @@ const pricesCents: Partial<Record<ShelterContractor, Partial<Record<keyof Shelte
     steel_radiator_2000: 2213400,
     bimetallic_radiator_sections_length_mm_pc: 1699962,
     wall_mountes_cable_wiring_lm: 42839,
+  },
+  [ShelterContractor['Framplus']]: {
+    dismantling_of_structures2: 113855,
+    wall_repair_clay_bricks_m: 856776,
+    wall_repair_concrete_blocks_m: 808767,
+    reinforced_concrete_lintels_foundations_columns_ring_beam_m: 856776,
+    reinforced_floor_screed_m: 808767,
+    floor_base_m: 58903,
+    minor_welding_works_kg: 16988,
+    mineral_wool_for_external_walls_m: 251124,
+    mineral_wool_for_the_ceiling_m: 53622,
+    plaster_primer_and_finishing_painting_m: 88078,
+    wooden_lathing__mm_x__mm_ml: 46273,
+    wooden_beams__mm_x__mm_ml: 92214,
+    roof_shiffer_m: 73860,
+    roof_metal_sheets_m: 76630,
+    roof_onduline_sheets_m: 82502,
+    bitumen_paint_m: 21899,
+    gypsum_boards_for_ceiling_m: 103219,
+    waterproofing_barrier_sheet_m: 10082,
+    steam_vapor_barrier_sheet_m: 10082,
+    external_doors_pc: 2233896,
+    internal_wooden_doors_pc: 2100541,
+    electrical_wiring_lm: 42728,
+    double_electrical_sockets_pc: 32942,
+    double_switches_pc: 40808,
+    circuit_breaker_box_pc: 39884,
+    ppr_pipes_cold_and_hot_water_supply_lm: 42580,
+    ppr_heating_pipes_lm: 42580,
+    kitchen_sink_pc: 618947,
+    washing_basin_with_mixer_and_sifon_pc: 1186265,
+    steel_bathtub_pc: 2103902,
+    compact_toilet_bowl_including_seat_and_lid_pc: 920185,
+    water_heater_of_up_to__liters_dry_ten_pc: 2305909,
+    steel_radiator_600mm: 1819541,
+    steel_radiator_800mm: 1819541,
+    steel_radiator_1000: 2213400,
+    steel_radiator_2000: 2213400,
+    bimetallic_radiator_sections_length_mm_pc: 1699962,
+    wall_mountes_cable_wiring_lm: 42839,
   }
+  
 }
 const oblasts = {
   mykolaivska: [
@@ -392,5 +437,10 @@ const oblasts = {
     ShelterContractor['Osnova-R'],
     ShelterContractor['Kramelitbud'],
     ShelterContractor['Artbudservice'],
+    ShelterContractor['Donmegastroy'],
+    ShelterContractor['Framplus'],
+    ShelterContractor['Kronos'],
+    ShelterContractor['Monolit'],
   ]
+
 }

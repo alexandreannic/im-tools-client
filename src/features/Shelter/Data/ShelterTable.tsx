@@ -94,6 +94,21 @@ export const ShelterTable = () => {
         renderValue: _ => _.nta?.ben_det_raion,
       },
       {
+        id: 'settelment',
+        type: 'string',
+        // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+        head: m._shelter.settlement,
+        render: _ => _.nta?.settlement,
+        renderValue: _ => _.nta?.settlement,
+      },   {
+        id: 'street',
+        type: 'string',
+        // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+        head: m._shelter.street,
+        render: _ => _.nta?.street,
+        renderValue: _ => _.nta?.street,
+      },
+      {
         id: 'owner_tenant_type',
         type: 'select_one',
         head: m._shelter.owner,
