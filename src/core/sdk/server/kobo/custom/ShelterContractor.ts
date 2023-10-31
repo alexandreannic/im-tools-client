@@ -19,7 +19,7 @@ export enum ShelterContractor {
   'Framplus' = 'Framplus',
   'Kronos' = 'Kronos',
   'Monolit' = 'Monolit'
-  
+
 }
 
 export class ShelterContractorPrices {
@@ -126,6 +126,66 @@ const lot2: (keyof Shelter_TA)[] = [
   'bimetallic_radiator_sections_length_mm_pc',
   'wall_mountes_cable_wiring_lm',
 ]
+
+const WAITING_FOR_PRICES_LOT1: Partial<Record<keyof Shelter_TA, number>> = {
+  dismantling_of_structures: -1,
+  singleshutter_window_tripleglazed_m: -1,
+  singleshutter_windowdoubleglazed_m: -1,
+  doubleshutter_window_tripleglazed_m: -1,
+  doubleshutter_window_doubleglazed_m: -1,
+  glass_replacement_doubleglazed_m: -1,
+  glass_replacement_tripleglazed_m: -1,
+  outer_seels_galvanized_with_pvc_coating_lm: -1,
+  window_slopes_m: -1,
+  minor_window_repairs_pc: -1,
+  doubleglazed_upvc_door_m: -1,
+}
+
+const WAITING_FOR_PRICES_LOT2: Partial<Record<keyof Shelter_TA, number>> = {
+  dismantling_of_structures2: -1,
+  wall_repair_clay_bricks_m: -1,
+  wall_repair_concrete_blocks_m: -1,
+  reinforced_concrete_lintels_foundations_columns_ring_beam_m: -1,
+  reinforced_floor_screed_m: -1,
+  floor_base_m: -1,
+  minor_welding_works_kg: -1,
+  mineral_wool_for_external_walls_m: -1,
+  mineral_wool_for_the_ceiling_m: -1,
+  plaster_primer_and_finishing_painting_m: -1,
+  wooden_lathing__mm_x__mm_ml: -1,
+  wooden_beams__mm_x__mm_ml: -1,
+  roof_shiffer_m: -1,
+  roof_metal_sheets_m: -1,
+  roof_onduline_sheets_m: -1,
+  bitumen_paint_m: -1,
+  gypsum_boards_for_ceiling_m: -1,
+  waterproofing_barrier_sheet_m: -1,
+  steam_vapor_barrier_sheet_m: -1,
+  external_doors_pc: -1,
+  internal_wooden_doors_pc: -1,
+  electrical_wiring_lm: -1,
+  double_electrical_sockets_pc: -1,
+  double_switches_pc: -1,
+  circuit_breaker_box_pc: -1,
+  ppr_pipes_cold_and_hot_water_supply_lm: -1,
+  ppr_heating_pipes_lm: -1,
+  kitchen_sink_pc: -1,
+  washing_basin_with_mixer_and_sifon_pc: -1,
+  steel_bathtub_pc: -1,
+  compact_toilet_bowl_including_seat_and_lid_pc: -1,
+  water_heater_of_up_to__liters_dry_ten_pc: -1,
+  steel_radiator_600mm: -1,
+  steel_radiator_800mm: -1,
+  steel_radiator_1000: -1,
+  steel_radiator_2000: -1,
+  bimetallic_radiator_sections_length_mm_pc: -1,
+  wall_mountes_cable_wiring_lm: -1,
+}
+
+const WAITING_FOR_PRICES = {
+  ...WAITING_FOR_PRICES_LOT1,
+  ...WAITING_FOR_PRICES_LOT2,
+}
 
 const pricesCents: Partial<Record<ShelterContractor, Partial<Record<keyof Shelter_TA, number>>>> = {
   [ShelterContractor['Zhilvest']]: {
@@ -375,6 +435,7 @@ const pricesCents: Partial<Record<ShelterContractor, Partial<Record<keyof Shelte
     steel_radiator_2000: 2213400,
     bimetallic_radiator_sections_length_mm_pc: 1699962,
     wall_mountes_cable_wiring_lm: 42839,
+    ...WAITING_FOR_PRICES_LOT1,
   },
   [ShelterContractor['Framplus']]: {
     dismantling_of_structures2: 113855,
@@ -415,28 +476,32 @@ const pricesCents: Partial<Record<ShelterContractor, Partial<Record<keyof Shelte
     steel_radiator_2000: 2213400,
     bimetallic_radiator_sections_length_mm_pc: 1699962,
     wall_mountes_cable_wiring_lm: 42839,
-  }
-  
+  },
+  [ShelterContractor['Framplus']]: WAITING_FOR_PRICES,
+  [ShelterContractor['Kronos']]: WAITING_FOR_PRICES,
+  [ShelterContractor['Monolit']]: WAITING_FOR_PRICES,
 }
 const oblasts = {
   mykolaivska: [
     ShelterContractor['Dosvid 2002'],
     ShelterContractor['Osnova-R'],
     ShelterContractor['Megalit'],
-    ShelterContractor['Kramelitbud'],
+    // ShelterContractor['Kramelitbud'],
     ShelterContractor['Donmegastroy'],
+    ShelterContractor['Kronos'],
+    ShelterContractor['Monolit'],
   ],
   sumska: [
     ShelterContractor['Dosvid 2002'],
     ShelterContractor['Osnova-R'],
-    ShelterContractor['Kramelitbud'],
+    // ShelterContractor['Kramelitbud'],
     ShelterContractor['Zhilvest'],
   ],
   kharkivska: [
     ShelterContractor['Dosvid 2002'],
     ShelterContractor['Osnova-R'],
-    ShelterContractor['Kramelitbud'],
-    ShelterContractor['Artbudservice'],
+    // ShelterContractor['Kramelitbud'],
+    // ShelterContractor['Artbudservice'],
     ShelterContractor['Donmegastroy'],
     ShelterContractor['Framplus'],
     ShelterContractor['Kronos'],

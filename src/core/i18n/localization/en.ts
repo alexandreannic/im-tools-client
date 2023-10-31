@@ -1176,7 +1176,6 @@ export const en = Object.freeze({
       windowsSum: 'Σ Window',
       agreement: 'Agreement',
       workOrder: 'Work order',
-      donor: 'Donor',
       contractor1: 'Contractor lot 1',
       contractor2: 'Contractor lot 2',
       lot1: 'Lot 1',

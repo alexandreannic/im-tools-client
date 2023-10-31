@@ -2,6 +2,7 @@ import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import {NumberKeys} from '@/core/type'
 import {map} from '@alexandreannic/ts-utils'
+import {DrcProject} from '@/core/drcUa'
 
 export namespace KoboShelterTa {
   const lot1: NumberKeys<Shelter_TA>[] = [
@@ -110,5 +111,16 @@ export interface ShelterTaTags {
   agreement?: string
   workOrder?: string
   donor?: string
+  project?: DrcProject
   workDoneAt?: Date
 }
+
+export const shelterDrcProject = [
+  // HRK
+  DrcProject['UKR-000308 UNHCR'],
+  DrcProject['UKR-000314 UHF4'],
+  DrcProject['UKR-000322 ECHO2'],
+  DrcProject['UKR-000336 UHF6'],
+  DrcProject['UKR-000345 BHA2'],
+  DrcProject['UKR-000298 Novo-Nordisk'],
+]
