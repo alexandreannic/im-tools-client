@@ -110,6 +110,18 @@ export const ShelterTable = () => {
         renderValue: _ => _.nta?.street,
       },
       {
+        type: 'string',
+        id: 'name',
+        head: m.name,
+        render: (row: ShelterRow) => row.nta?.interviewee_name,
+      },
+      {
+        type: 'string',
+        id: 'name',
+        head: m.taxID,
+        render: (row: ShelterRow) => row.nta?.pay_det_tax_id_num,
+      },
+      {
         id: 'owner_tenant_type',
         type: 'select_one',
         head: m._shelter.owner,

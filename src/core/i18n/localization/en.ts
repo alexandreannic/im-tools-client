@@ -1031,7 +1031,6 @@ export const en = Object.freeze({
       factorInfluencingSenseOfSafety: 'Factors influencing the sense of safety',
     },
     sort: 'Sort',
-    taxId: 'Tax ID',
     amount: 'Amount',
     target: 'Target',
     amountUAH: 'Amount UAH',
