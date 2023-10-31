@@ -17,10 +17,11 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {ShelterRow} from '@/features/Shelter/useShelterData'
-import {KoboShelterTa, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {KoboShelterTa, shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
 import {ShelterSelectAccepted, ShelterSelectContractor, ShelterSelectStatus} from '@/features/Shelter/Data/ShelterTableInputs'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {SelectDrcProject} from '@/shared/SelectDrcProject'
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -92,6 +93,33 @@ export const ShelterTable = () => {
         head: m.raion,
         render: _ => ctx.nta._helper.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
         renderValue: _ => _.nta?.ben_det_raion,
+      },
+      {
+        id: 'settelment',
+        type: 'string',
+        // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+        head: m._shelter.settlement,
+        render: _ => _.nta?.settlement,
+        renderValue: _ => _.nta?.settlement,
+      }, {
+        id: 'street',
+        type: 'string',
+        // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+        head: m._shelter.street,
+        render: _ => _.nta?.street,
+        renderValue: _ => _.nta?.street,
+      },
+      {
+        type: 'string',
+        id: 'name',
+        head: m.name,
+        render: (row: ShelterRow) => row.nta?.interviewee_name,
+      },
+      {
+        type: 'string',
+        id: 'name',
+        head: m.taxID,
+        render: (row: ShelterRow) => row.nta?.pay_det_tax_id_num,
       },
       {
         id: 'owner_tenant_type',
@@ -299,24 +327,26 @@ export const ShelterTable = () => {
       },
       {
         id: 'donor',
-        head: m._shelter.donor,
+        head: m.donor,
+        type: 'select_one',
+        renderValue: _ => _.ta?.tags?.donor,
+        typeIcon: null,
+        render: row => row.ta?.tags?.donor,
+      },
+      {
+        id: 'project',
+        head: m.project,
+        width: 174,
         type: 'string',
         renderValue: _ => _.ta?.tags?.donor,
         typeIcon: null,
         render: row => map(row.ta, ta => (
-          <DebouncedInput<string>
-            debounce={1250}
-            value={row.ta?.tags?.donor}
-            onChange={_ => ctx.ta._update.call({answerId: ta.id, key: 'donor', value: _})}
-          >
-            {(value, onChange) => (
-              <AaInput
-                helperText={null}
-                defaultValue={value}
-                onChange={e => onChange(e.target.value)}
-              />
-            )}
-          </DebouncedInput>
+          <SelectDrcProject
+            label={null}
+            options={shelterDrcProject}
+            value={row.ta?.tags?.project}
+            onChange={_ => ctx.ta._update.call({answerId: ta.id, key: 'project', value: _})}
+          />
         ))
       },
       {
@@ -579,6 +609,7 @@ export const ShelterTable = () => {
           loading={ctx.data.fetching}
           getRenderRowKey={_ => _.id}
           columns={columns}
+          showExportBtn
         />
       </Panel>
     </Page>
