@@ -124,21 +124,21 @@ export const MpcaData = () => {
               head: m.form,
               type: 'select_one',
               // options: () => SheetUtils.buildOptions(Enum.keys(MpcaRowSource)),
-              render: _ => _.source
+              render: _ => _.source,
             },
             {
               id: 'date',
               head: m.date,
               type: 'date',
               renderValue: _ => _.date,
-              render: _ => formatDate(_.date)
+              render: _ => formatDate(_.date),
             },
             {
               id: 'donor',
               head: m.donor,
               type: 'select_one',
               // options: () => SheetUtils.buildOptions(Enum.keys(DrcDonor), true),
-              render: _ => _.finalDonor ?? ''
+              render: _ => _.finalDonor ?? '',
             },
             {
               id: 'project',
@@ -146,7 +146,7 @@ export const MpcaData = () => {
               type: 'select_one',
               width: 160,
               // options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
-              render: _ => _.project ?? SheetUtils.blank
+              render: _ => _.project ?? SheetUtils.blank,
             },
             {
               id: 'project_overridden',
@@ -171,7 +171,7 @@ export const MpcaData = () => {
               width: 160,
               head: m.mpca.projectFinal,
               type: 'select_one',
-              render: _ => _.finalProject ?? SheetUtils.blank
+              render: _ => _.finalProject ?? SheetUtils.blank,
             },
             {
               id: 'prog',
@@ -180,6 +180,7 @@ export const MpcaData = () => {
               // options: () => SheetUtils.buildOptions(Enum.keys(MpcaProgram), true),
               renderValue: _ => _.prog,
               render: _ => _.prog?.join(' | '),
+              renderExport: _ => _.prog?.join(' | '),
             },
             {
               id: 'oblast',
@@ -199,7 +200,7 @@ export const MpcaData = () => {
               id: 'hhSize',
               head: m.hhSize,
               type: 'number',
-              render: _ => _.hhSize
+              render: _ => _.hhSize,
             },
             {
               id: 'amountUahSupposed',
@@ -265,15 +266,29 @@ export const MpcaData = () => {
               type: 'string',
               id: 'taxId',
               head: m.taxID,
-              render: _ => _.taxId
+              render: _ => _.taxId,
             },
             {
-              id: 'taxIdImg', align: 'center', head: m.taxID, render: _ => map(_.taxIdFileURL, url =>
+              id: 'taxIdImg',
+              align: 'center',
+              head: m.taxID,
+              renderExport: false,
+              render: _ => map(_.taxIdFileURL, url =>
                 <TableImg url={getKoboImagePath(url.download_small_url)}/>
               )
             },
-            {type: 'string', id: 'passportSerie', head: m.passportSerie, render: _ => _.passportSerie},
-            {type: 'string', id: 'passportNum', head: m.passportNumber, render: _ => _.passportNum},
+            {
+              type: 'string',
+              id: 'passportSerie',
+              head: m.passportSerie,
+              render: _ => _.passportSerie
+            },
+            {
+              type: 'string',
+              id: 'passportNum',
+              head: m.passportNumber,
+              render: _ => _.passportNum
+            },
             {
               id: 'idFileImg', head: m.id, align: 'center', render: _ => map(_.idFileURL, url =>
                 <TableImg url={getKoboImagePath(url.download_small_url)}/>

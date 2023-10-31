@@ -38,12 +38,13 @@ export const PanelFeatures = ({
         display: 'block',
       },
     }}>
+      <Box ref={content}>{children}</Box>
       <Box className="panel-features" sx={{
         p: .5,
         position: 'absolute',
         display: 'none',
         background: 'white',
-        top: -30,
+        top: -1,
         right: 0,
       }}>
         {expendable && (
@@ -57,7 +58,6 @@ export const PanelFeatures = ({
           </IconBtn>
         )}
       </Box>
-      <Box ref={content}>{children}</Box>
     </Box>
   )
 }

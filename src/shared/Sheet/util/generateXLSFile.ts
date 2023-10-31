@@ -11,8 +11,8 @@ export interface GenerateXlsFromArrayParams<T = any> {
 }
 
 export const generateXLSFromArray = async <T>(fileName: string, params: GenerateXlsFromArrayParams<T>[] | GenerateXlsFromArrayParams<T>) => {
-  const workbook = new ExcelJS.Workbook();
-  [params].flatMap(_ => _).map(({
+  const workbook = new ExcelJS.Workbook()
+  ;[params].flatMap(_ => _).map(({
     data, schema, sheetName
   }) => {
     const sheet = workbook.addWorksheet(sheetName)

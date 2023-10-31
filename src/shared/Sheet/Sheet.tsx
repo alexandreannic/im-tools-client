@@ -39,6 +39,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
           type: col.type as any,
           renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id]),
           renderOption: col.renderOption ?? col.render,
+          renderExport: col.renderExport === false ? false : col.renderExport ?? col.renderValue ?? col.render as any,
         }
       }
       return {
@@ -90,12 +91,11 @@ const _Sheet = <T extends SheetRow>({
         sheetName: 'data',
         data: ctx.data.filteredAndSortedData,
         schema: ctx.columns
-          .filter(_ => _.renderExport)
+          .filter(_ => _.renderExport !== false)
           .map((q, i) => ({
             head: q.head as string ?? q.id,
             render: (row: any) => {
               // if (!q.renderExport || !q.renderValue) return
-              if (q.renderExport === false) return
               if (q.renderExport === true) return fnSwitch(q.type!, {
                 number: () => map(row[q.id], _ => +_),
                 date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
