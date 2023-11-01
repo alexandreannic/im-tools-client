@@ -304,7 +304,7 @@ export const MpcaData = () => {
               type: 'select_one',
               // options: () => SheetUtils.buildOptions(Enum.keys(bn_ReOptions.ben_det_res_stat)),
             },
-            {id: 'phone', head: m.phone, render: _ => _.phone},
+            {id: 'phone', type: 'string', head: m.phone, render: _ => _.phone},
             {
               id: 'committed',
               type: 'select_one',

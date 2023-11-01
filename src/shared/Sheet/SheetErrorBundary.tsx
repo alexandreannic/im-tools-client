@@ -37,16 +37,18 @@ export class SheetErrorBoundary extends Component<ErrorBoundaryProps, ErrorBound
     console.error(error)
   }
 
-  readonly hardRefresh = () => {
-    const cleanLs = (key: string) => {
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i)
-        if (key && key.includes(key)) {
-          localStorage.removeItem(key)
+  readonly refreshPage = (hard?: boolean) => {
+    if (hard) {
+      const cleanLs = (key: string) => {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i)
+          if (key && key.includes(key)) {
+            localStorage.removeItem(key)
+          }
         }
       }
+      Enum.values(SheetUtils.localStorageKey).map(cleanLs)
     }
-    Enum.values(SheetUtils.localStorageKey).map(cleanLs)
     location.reload()
   }
 
@@ -56,9 +58,10 @@ export class SheetErrorBoundary extends Component<ErrorBoundaryProps, ErrorBound
       return (
         <Box sx={{p: 2}}>
           <Txt bold size="title" block sx={{mb: 1}}>{en.messages.somethingWentWrong}</Txt>
-          <Box sx={{mb: 1}}>If the problem persist, please contact {appConfig.contact}.</Box>
+          <Box sx={{mb: 1}}>If the problem persist, please contact <b>{appConfig.contact}</b> and include the snippet below.</Box>
 
-          <AaBtn icon="refresh" onClick={this.hardRefresh} color="primary" variant="contained">Hard refresh</AaBtn>
+          <AaBtn icon="refresh" onClick={() => this.refreshPage()} color="primary" variant="contained" sx={{mr: 1}}>{en.messages.refresh}</AaBtn>
+          <AaBtn icon="settings_backup_restore" onClick={() => this.refreshPage(true)} color="primary" variant="text">{en.messages.hardRefresh}</AaBtn>
 
           <Box sx={t => ({
             fontFamily: 'monospace',

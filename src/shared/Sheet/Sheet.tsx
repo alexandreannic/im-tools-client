@@ -44,7 +44,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
       }
       return {
         ...col,
-        type: col.type ?? 'string',
+        type: col.type,
         renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id])
       }
     })

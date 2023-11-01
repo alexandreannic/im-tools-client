@@ -87,12 +87,18 @@ interface SheetColumnPropsNumber<T extends SheetRow> {
   renderValue?: (_: T) => number | undefined
 }
 
+interface SheetColumnPropsUndefined<T> {
+  type?: undefined
+  renderValue?: (_: T) => string | boolean | number | undefined
+}
+
 export type SheetColumnProps<T extends SheetRow> = SheetColumnPropsBase<T> & (
   SheetColumnPropsText<T> |
   SheetColumnPropsSelectOne<T> |
   SheetColumnPropsDate<T> |
   SheetColumnPropsNumber<T> |
-  SheetColumnPropsSelectMultiple<T>
+  SheetColumnPropsSelectMultiple<T> |
+  SheetColumnPropsUndefined<T>
   )
 
 export interface SheetColumnPropsBase<T extends SheetRow> {
@@ -118,26 +124,14 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   stickyEnd?: boolean
 }
 
-export type SheetInnerColumnProps<T extends SheetRow> = Omit<SheetColumnProps<T>, 'renderValue' | 'type'> & NonNullableKeys<(
-  SheetColumnPropsText<T> |
-  SheetColumnPropsSelectOne<T> |
-  SheetColumnPropsSelectMultiple<T> |
-  SheetColumnPropsDate<T> |
-  SheetColumnPropsNumber<T>
-  )>
-
-// const test = <T, >(_: Partial<SheetInnerColumnProps<any>>) => {
-//
-// }
-//
-// test({
-//   type: 'date',
-//   renderValue: _ => new Date()
-// })
-// test({
-//   type: 'number',
-//   renderValue: _ => '1'
-// })
+export type SheetInnerColumnProps<T extends SheetRow> = Omit<SheetColumnProps<T>, 'renderValue' | 'type'> & (
+  NonNullableKeys<SheetColumnPropsText<T>> |
+  NonNullableKeys<SheetColumnPropsSelectOne<T>> |
+  NonNullableKeys<SheetColumnPropsSelectMultiple<T>> |
+  NonNullableKeys<SheetColumnPropsDate<T>> |
+  NonNullableKeys<SheetColumnPropsNumber<T>> |
+  SheetColumnPropsUndefined<T>
+  )
 
 export type SheetFilterValueString = {
   filterBlank?: boolean,

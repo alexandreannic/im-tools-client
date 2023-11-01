@@ -33,6 +33,8 @@ import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import ageGroup = Person.ageGroup
 import groupBy = Utils.groupBy
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
+import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
 
 export const today = new Date()
 
@@ -211,6 +213,7 @@ export const _MPCADashboard = ({
   const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', {storageKey: 'mpca-dashboard-tableArea'})
   const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', {storageKey: 'mpca-dashboard-ageGroup'})
 
+
   const [targets, setTargets] = usePersistentState<Record<any, number>>({}, {storageKey: 'mpca-targets'})
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
@@ -242,18 +245,16 @@ export const _MPCADashboard = ({
         <Div sx={{alignItems: 'flex-start'}}>
           <Div column>
             <SlidePanel BodyProps={{sx: {pt: 0}}}>
-
               <SlideWidget title="Total amount">
                 {displayAmount(totalAmount)}
               </SlideWidget>
-
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = data.groupBy(d => format(d.date, 'yyyy-MM'))
                 return new Enum(gb)
                   .transform((k, v) => [k, seq(v).sum(_ => (getAmount(_) ?? 0))])
                   .sort(([ka], [kb]) => ka.localeCompare(kb))
                   .entries()
-                  .map(([k, v]) => ({name: k, amount: v}))
+                  .map(([k, v]) => ({name: k, [m.amount]: v}))
               }}>
                 {_ => (
                   <ScLineChart2
@@ -264,6 +265,7 @@ export const _MPCADashboard = ({
                 )}
               </Lazy>
             </SlidePanel>
+            <MpcaDashboardDeduplication data={data}/>
             <SlidePanel title={m.form}>
               <Lazy deps={[data]} fn={() => chain(ChartTools.single({
                 data: data.map(_ => _.source),

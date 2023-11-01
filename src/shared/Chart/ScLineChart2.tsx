@@ -8,6 +8,7 @@ import {chartConfig} from '@/shared/Chart/chartConfig'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
 
 export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
+  colorsByKey?: (t: Theme) => Record<string, string>
   colors?: (t: Theme) => string[]
   /**
    * This props may be needed because sometimes label are not showing because of animation.
@@ -19,6 +20,7 @@ export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
   height?: number
   hideYTicks?: boolean
   hideXTicks?: boolean
+  hideLegend?: boolean
   percent?: boolean
 }
 
@@ -35,10 +37,12 @@ export type ScLineChart2Data = Record<string, number> & {
 export const ScLineChart2 = ({
   data,
   sx,
+  colorsByKey,
   colors = chartConfig.defaultColors,
   translation,
   hideYTicks,
   hideXTicks,
+  hideLegend,
   disableAnimation,
   hideLabelToggle,
   percent,
@@ -68,7 +72,9 @@ export const ScLineChart2 = ({
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={data}>
             <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>
+            {!hideLegend && (
             <Legend/>
+            )}
             <XAxis dataKey="name"/>
             <YAxis/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}} formatter={_ => percent ? `${_}%'` : formatLargeNumber(_ as any, {maximumFractionDigits: 2})}/>
@@ -79,7 +85,7 @@ export const ScLineChart2 = ({
                 name={map(translation, _ => _[line]) ?? line}
                 type="monotone"
                 dataKey={line}
-                stroke={colors(theme)[i] ?? colors(theme)[0]}
+                stroke={colorsByKey?.(theme)[line] ?? colors(theme)[i] ?? colors(theme)[0]}
                 strokeWidth={2}
               >
                 {showCurves[i] && (
@@ -87,7 +93,7 @@ export const ScLineChart2 = ({
                     dataKey={lines[i]}
                     position="top"
                     style={{
-                      fill: colors(theme)[i] ?? colors(theme)[0],
+                      fill: colorsByKey?.(theme)[line] ?? colors(theme)[i] ?? colors(theme)[0],
                       fontSize: styleUtils(theme).fontSize.small,
                     }}
                   />

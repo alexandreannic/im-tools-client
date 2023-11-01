@@ -149,7 +149,7 @@ export const SlidePanelTitle = ({icon, uppercase = true, dangerouslySetInnerHTML
   </Txt>
 }
 
-export const SlidePanel = ({savableAsImg = true, expendable = true, children, sx, BodyProps, ...props}: PanelProps & {BodyProps?: Omit<PanelBodyProps, 'ref' | 'children'>}) => {
+export const SlidePanel = ({savableAsImg = false, expendable = false, children, sx, BodyProps, ...props}: PanelProps & {BodyProps?: Omit<PanelBodyProps, 'ref' | 'children'>}) => {
   return (
     <Panel elevation={0} {...props} savableAsImg={savableAsImg} expendable={expendable} sx={{
       ...sx,

@@ -29,8 +29,6 @@ export const ShelterTable = () => {
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  // const getNtaIds = () => seq(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact()
-  // const getTaIds = () => seq(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact()
   const getNta = useCallback(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
   const getTa = useCallback(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
 
