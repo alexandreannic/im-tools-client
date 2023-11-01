@@ -82,7 +82,7 @@ export const WfpDeduplicationData = () => {
             // },
             {
               id: 'taxId',
-              head: m.taxId,
+              head: m.taxID,
               renderExport: true,
               render: _ => _.taxId ?? <Txt color="error">{m.mpca.uploadWfpTaxIdMapping}</Txt>,
               type: 'string',

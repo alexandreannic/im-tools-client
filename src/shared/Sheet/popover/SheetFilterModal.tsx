@@ -213,6 +213,7 @@ export const SheetFilterDialogNumber = ({
 }) => {
   const ctx = useSheetContext()
   const col = ctx.columnsIndex[columnId]
+  if (!col.type) return
   const {min, max} = useMemo(() => {
     const values = seq(data).map(_ => col.renderValue(_) as number | undefined).compact()
     return {

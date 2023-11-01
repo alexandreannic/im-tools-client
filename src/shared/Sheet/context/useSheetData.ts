@@ -55,7 +55,8 @@ export const useSheetData = <T extends SheetRow>({
   const filteredAndSortedData = useMemo(() => {
     return map(filteredData, search.sortBy, (d, sortBy) => {
       const col = columnsIndex[sortBy]
-      const sorted = d.sort(fnSwitch(col.type!, {
+      if (!col.type) return
+      const sorted = d.sort(fnSwitch(col.type, {
         number: () => (a: T, b: T) => {
           const av = safeNumber(col.renderValue(a) as number, Number.MIN_SAFE_INTEGER)
           const bv = safeNumber(col.renderValue(b) as number, Number.MIN_SAFE_INTEGER)
@@ -154,6 +155,7 @@ const filterBy = <T extends SheetRow>({
         }
       }
       default: {
+        if (!col.type) return
         return row => {
           const typedFilter = filter as SheetFilterValueString
           const v = col.renderValue(row)

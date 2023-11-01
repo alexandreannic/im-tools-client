@@ -12,6 +12,7 @@ export const SheetModal = () => {
       {map(ctx.modal.filterPopover.get, popover => {
         const id = popover.columnId
         const column = ctx.columnsIndex[id]
+        if (!column.type) return
         return (
           <SheetFilterModal
             data={ctx.data.filterExceptBy(id) ?? []}
