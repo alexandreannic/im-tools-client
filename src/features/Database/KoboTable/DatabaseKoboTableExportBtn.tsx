@@ -59,7 +59,8 @@ const renderExportSchema = <T extends KoboMappedAnswer>({
         return {
           head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
           render: (row: T) => {
-            return translateChoice(q.name, getVal(row, q.name) as string)
+            const val = getVal(row, q.name)
+            return translateChoice(q.name, val) ?? val
           },
         }
       }

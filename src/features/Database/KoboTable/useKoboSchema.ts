@@ -36,26 +36,35 @@ export const buildKoboSchemaHelper = ({
   schema: KoboApiForm,
   m: Messages
 }) => {
-  const idSchema: KoboQuestionSchema = {
-    name: 'id',
-    label: mapFor(schema.content.translations.length, () => 'ID'),
-    type: 'text' as const,
-    $kuid: 'id',
-    $autoname: 'id',
-    $qpath: 'id',
-    $xpath: 'id',
+  const customSchema = {
+    id: {
+      name: 'id',
+      label: mapFor(schema.content.translations.length, () => 'ID'),
+      type: 'text' as const,
+      $kuid: 'id',
+      $autoname: 'id',
+      $qpath: 'id',
+      $xpath: 'id',
+    },
+    submissionTime: {
+      name: 'submissionTime',
+      label: mapFor(schema.content.translations.length, () => m.submissionTime),
+      type: 'date' as const,
+      $kuid: 'submissionTime',
+      $autoname: 'submissionTime',
+      $qpath: 'submissionTime',
+      $xpath: 'submissionTime',
+    },
+    submittedBy: {
+      name: 'submitted_by',
+      label: mapFor(schema.content.translations.length, () => m.submittedBy),
+      type: 'text' as const,
+      $kuid: 'submitted_by',
+      $autoname: 'submitted_by',
+      $qpath: 'submitted_by',
+      $xpath: 'submitted_by',
+    },
   }
-
-  const submissionTimeSchema: KoboQuestionSchema = {
-    name: 'submissionTime',
-    label: mapFor(schema.content.translations.length, () => m.submissionTime),
-    type: 'date' as const,
-    $kuid: 'submissionTime',
-    $autoname: 'submissionTime',
-    $qpath: 'submissionTime',
-    $xpath: 'submissionTime',
-  }
-
   const {groupSchemas, surveyCleaned} = isolateGroups(schema.content.survey)
 
   const sanitizedForm: KoboApiForm = {
@@ -63,29 +72,26 @@ export const buildKoboSchemaHelper = ({
     content: {
       ...schema.content,
       survey: [
-        idSchema,
-        submissionTimeSchema,
+        customSchema.id,
+        customSchema.submissionTime,
         ...surveyCleaned.map(_ => {
           return {
             ..._,
             label: _.label?.map(_ => Utils.removeHtml(_))
           }
         }),
-        {
-          name: 'submitted_by',
-          label: mapFor(schema.content.translations.length, () => m.submittedBy),
-          type: 'text' as const,
-          $kuid: 'submitted_by',
-          $autoname: 'submitted_by',
-          $qpath: 'submitted_by',
-          $xpath: 'submitted_by',
-        },
+        customSchema.submittedBy,
       ]
     }
   }
 
   const choicesIndex = seq(schema.content.choices).groupBy(_ => _.list_name)
-  const questionIndex = seq(sanitizedForm.content.survey).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
+  const questionIndex = seq([
+    customSchema.id,
+    customSchema.submissionTime,
+    ...schema.content.survey,
+    customSchema.submittedBy,
+  ]).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
 
   return {
     groupsCount: Object.keys(groupSchemas).length,

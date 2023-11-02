@@ -133,7 +133,7 @@ export class KoboAnswerSdk {
 
   readonly searchBn_MpcaNfiOld = (filters: KoboAnswerFilter = {}) => {
     return this.search<Bn_OldMpcaNfi>({
-      formId: kobo.drcUa.form.bn_oldMpcaNfi,
+      formId: kobo.drcUa.form.bn_1_mpcaNfi,
       fnMap: mapBn_OldMpcaNfi,
       ...filters,
     })

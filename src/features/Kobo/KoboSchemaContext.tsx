@@ -35,7 +35,7 @@ export const KoboSchemaProvider = ({
 
   const schemaHelper = useKoboSchema({schema: schema})
   const {translateQuestion, translateChoice} = useMemo(() => getKoboTranslations({
-    schema: schemaHelper.sanitizedSchema,
+    schema,
     langIndex,
     questionIndex: schemaHelper.questionIndex,
   }), [schema, langIndex])
