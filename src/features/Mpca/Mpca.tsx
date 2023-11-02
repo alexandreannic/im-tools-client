@@ -17,15 +17,19 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Box, Tooltip} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, koboFormName} from '@/koboDrcUaFormId'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {DatabaseTablePage} from '@/features/Database/KoboTable/DatabaseKoboTable'
 
 const relatedKoboForms: (keyof typeof kobo.drcUa.form)[] = [
   'bn_re',
-  'bn_rapidResponseMechanism',
-  'bn_cashForRepair',
-  'bn_oldMpcaNfi',
+  'bn_rapidResponse',
+  'shelter_cashForRepair',
+  'bn_1_mpcaNfi',
+  'bn_0_mpcaReg',
+  'bn_0_mpcaRegESign',
+  'bn_0_mpcaRegNoSig',
+  'bn_0_mpcaRegNewShort',
 ]
 
 export const mpcaModule = {
@@ -71,13 +75,18 @@ const MpcaSidebar = () => {
         </NavLink>
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
-          {relatedKoboForms.map(_ =>
-            <NavLink key={_} to={path(mpcaModule.siteMap.form(_))}>
-              {({isActive, isPending}) => (
-                <SidebarItem dense active={isActive} icon="calendar_view_month">{KoboFormSdk.parseFormName(m._koboForm[_]).name}</SidebarItem>
-              )}
-            </NavLink>
-          )}
+          {relatedKoboForms.map(_ => {
+            const name = KoboFormSdk.parseFormName(koboFormName[_]).name
+            return (
+              <Tooltip key={_} title={name} placement="right">
+                <NavLink to={path(mpcaModule.siteMap.form(_))}>
+                  {({isActive, isPending}) => (
+                    <SidebarItem dense active={isActive} icon="calendar_view_month">{name}</SidebarItem>
+                  )}
+                </NavLink>
+              </Tooltip>
+            )
+          })}
         </SidebarSection>
         {/*<NavLink to={path(mpcaModule.siteMap.paymentTools)}>*/}
         {/*  <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>*/}

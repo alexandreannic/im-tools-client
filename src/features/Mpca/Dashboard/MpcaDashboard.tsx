@@ -23,7 +23,7 @@ import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {MpcaHelper, MpcaProgram, MpcaRowSource, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
+import {MpcaHelper, MpcaProgram, MpcaRowSource, mpcaRowSources, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {donorByProject, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
@@ -35,6 +35,8 @@ import groupBy = Utils.groupBy
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
+import {koboFormName} from '@/koboDrcUaFormId'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 
 export const today = new Date()
 
@@ -82,7 +84,7 @@ export const MpcaDashboard = () => {
       options: SheetOptions[]
     }[] = [{
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
-      options: Object.keys(MpcaRowSource).map(_ => SheetUtils.buildCustomOption(_, ctx.formNameTranslation[_]))
+      options: Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboFormSdk.parseFormName(koboFormName[_]).name))
     }, {
       icon: 'handshake', label: 'Donor', property: 'finalDonor',
       options: SheetUtils.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
@@ -209,12 +211,7 @@ export const _MPCADashboard = ({
 }) => {
   const ctx = useMpcaContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const [tableDataType, setTableDataType] = usePersistentState<'ratio' | 'absolute'>('absolute', {storageKey: 'mpca-dashboard-tableType'})
-  const [tableArea, setTableArea] = usePersistentState<'office' | 'oblast'>('office', {storageKey: 'mpca-dashboard-tableArea'})
   const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', {storageKey: 'mpca-dashboard-ageGroup'})
-
-
-  const [targets, setTargets] = usePersistentState<Record<any, number>>({}, {storageKey: 'mpca-targets'})
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 
@@ -269,7 +266,7 @@ export const _MPCADashboard = ({
             <SlidePanel title={m.form}>
               <Lazy deps={[data]} fn={() => chain(ChartTools.single({
                 data: data.map(_ => _.source),
-              })).map(ChartTools.setLabel(ctx.formNameTranslation)).get}>
+              })).map(ChartTools.setLabel(new Enum(koboFormName).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
@@ -363,7 +360,7 @@ export const _MPCADashboard = ({
         </Div>
         <Div>
           <Div column>
-            <Panel title="MPCA Budget Helper (UAH)">
+            <Panel title="Budget Tracker (UAH)">
               <Lazy deps={[data, getAmount]} fn={() => {
                 const gb = groupBy({
                   data,

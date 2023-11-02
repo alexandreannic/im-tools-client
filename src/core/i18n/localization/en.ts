@@ -1046,30 +1046,6 @@ export const en = Object.freeze({
     pin: 'Pin',
     koboForms: 'Kobo forms',
     _wfpDeduplication: {},
-    _koboForm: (() => {
-      const _: Record<keyof typeof kobo.drcUa.form, string> = {
-        safety_incident: '[Safety] Incident tracker',
-        bn_rapidResponseMechanism: '[Basic Needs] Rapid Response Mechanism',
-        bn_cashForRentApplication: '[Basic Needs] Cash for Rent Application',
-        bn_cashForRentRegistration: '[Basic Needs] Cash for Rent Registration',
-        bn_cashForRepair: '[Basic Needs] Cash for Repair',
-        bn_oldMpcaNfi: '[Basic Needs] MPCA-NFI Registration (Archived)',
-        bn_oldMpcaNfiMyko: '[Basic Needs] MPCA-NFI Registration NLV (Archived)',
-        bn_oldMpcaNfiNaa: '[Basic Needs] MPCA-NFI Registration NAA (Archived)',
-        bn_re: '[Basic Needs] Registration & Evaluation',
-        meal_visitMonitoring: '[MEAL] VisitMonitoring',
-        meal_cfmInternal: '[MEAL] CfmInternal',
-        meal_cfmExternal: '[MEAL] CfmExternal',
-        shelter_nta: '[Shelter] Non-Technical Assessment',
-        shelter_ta: '[Shelter] Technical Assessment',
-        protection_hhs2_1: '[Protection] HHS v2.1',
-        protection_communityMonitoring: '[Protection] Community-Level Monitoring',
-        protection_groupSession: '[Protection] Group Info Session',
-        protection_pss: '[Protection] PSS',
-        protection_hhs1: '[Protection] HHS v1',
-      }
-      return _
-    })(),
     mpca: {
       pullLastDataDesc: 'Get last Kobo submissions and rebuild the database.',
       committed: 'Committed',
@@ -1215,6 +1191,7 @@ export const en = Object.freeze({
     note: 'Note',
     projectCode: 'Project Code',
     form: 'Form',
+    koboId: 'Kobo _id',
     viewNMore: (n: number) => `View ${n} more`,
     viewNLess: (n: number) => `View ${n} less`,
     viewMore: 'More',

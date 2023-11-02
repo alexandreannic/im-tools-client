@@ -117,7 +117,7 @@ export class KoboAnswerSdk {
 
   readonly searcheBn_cashForRepair = (filters: KoboAnswerFilter = {}) => {
     return this.search<Shelter_CashForRepair>({
-      formId: kobo.drcUa.form.bn_cashForRepair,
+      formId: kobo.drcUa.form.shelter_cashForRepair,
       fnMap: mapShelter_CashForRepair,
       ...filters,
     })
@@ -140,7 +140,7 @@ export class KoboAnswerSdk {
   }
   readonly searchBn_RapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
     return this.search<RapidResponseMechanism>({
-      formId: kobo.drcUa.form.bn_rapidResponseMechanism,
+      formId: kobo.drcUa.form.bn_rapidResponse,
       fnMap: mapRapidResponseMechanism,
       ...filters,
     })

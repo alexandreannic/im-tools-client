@@ -12,13 +12,30 @@ export interface MpcaTypeTag {
   committed?: Date
 }
 
-export enum MpcaRowSource {
-  RapidResponseMechansim = 'RapidResponseMechansim',
-  CashForRent = 'CashForRent',
-  CashForRepairRegistration = 'CashForRepairRegistration',
-  BasicNeedRegistration = 'BasicNeedRegistration',
-  OldBNRE = 'OldBNRE',
+const buildEnumFromObject = <T extends keyof typeof kobo.drcUa.form>(t: T[]): { [K in T]: K } => {
+  return t.reduce((acc, curr) => ({...acc, [curr]: curr}), {} as any)
 }
+
+export const mpcaRowSources = buildEnumFromObject([
+  'bn_rapidResponse',
+  'shelter_cashForRepair',
+  'shelter_cashForRepair',
+  'bn_re',
+  'bn_0_mpcaReg',
+  'bn_0_mpcaRegESign',
+  'bn_0_mpcaRegNoSig',
+  'bn_0_mpcaRegNewShort',
+])
+
+export type MpcaRowSource = keyof typeof mpcaRowSources
+//
+// export enum MpcaRowSource {
+//   RapidResponseMechansim = 'RapidResponseMechansim',
+//   CashForRent = 'CashForRent',
+//   CashForRepairRegistration = 'CashForRepairRegistration',
+//   BasicNeedRegistration = 'BasicNeedRegistration',
+//   OldBNRE = 'OldBNRE',
+// }
 
 export enum MpcaProgram {
   CashForRent = 'CashForRent',
@@ -121,14 +138,6 @@ export class MpcaHelper {
     [DrcProject['UKR-000298 Novo-Nordisk']]: {
       [DrcOffice.Mykolaiv]: 28231000,
     },
-  }
-
-  static readonly formNameToId: Record<MpcaRowSource, KoboId> = {
-    RapidResponseMechansim: kobo.drcUa.form.bn_rapidResponseMechanism,
-    CashForRent: kobo.drcUa.form.bn_cashForRentApplication,
-    CashForRepairRegistration: kobo.drcUa.form.bn_cashForRepair,
-    BasicNeedRegistration: kobo.drcUa.form.bn_re,
-    OldBNRE: kobo.drcUa.form.bn_oldMpcaNfi,
   }
 
   static readonly projects = Enum.keys({// [DrcProject['Novo-Nordisk (UKR-000274)']]: true,

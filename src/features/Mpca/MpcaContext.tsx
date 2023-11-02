@@ -31,7 +31,6 @@ interface UpdateTag<K extends keyof MpcaTypeTag> {
 export interface MpcaContext {
   refresh: UseAsync<() => Promise<void>>
   data?: Seq<MpcaType>
-  formNameTranslation: Record<string, string>
   asyncUpdates: UseAsync<<K extends keyof MpcaTypeTag>(_: UpdateTag<K>) => Promise<void>>
   fetcherData: UseFetcher<(filters?: KoboAnswerFilter) => Promise<Seq<MpcaType>>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
@@ -100,7 +99,7 @@ export const MpcaProvider = ({
       const gb = seq(data).groupBy(_ => _.source)
       await Promise.all(Enum.entries(gb).map(([formName, answers]) => {
         return updateByFormId({
-          formId: MpcaHelper.formNameToId[formName],
+          formId: kobo.drcUa.form[formName],
           answerIds: answers.map(_ => _.id),
           key,
           value,
@@ -142,13 +141,6 @@ export const MpcaProvider = ({
       _create,
       refresh: asyncRefresh,
       asyncUpdates,
-      formNameTranslation: {
-        BNRE: 'Basic Need Registration & Evaluation',
-        CashForRent: 'Cash for Rent Application',
-        CashForRepairRegistration: 'Cash For Repair Registration',
-        RRM: 'Rapid Response Mechanism',
-        OldBNRE: 'Basic Need Registration (Old version)',
-      }
     }}>
       {children}
     </Context.Provider>

@@ -8,7 +8,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, koboFormName} from '@/koboDrcUaFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
@@ -17,6 +17,7 @@ import {MpcaHelper, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
 import {Box, FormControlLabel, Switch} from '@mui/material'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -115,7 +116,7 @@ export const MpcaData = () => {
           columns={[
             {
               id: 'id',
-              head: m.id,
+              head: m.koboId,
               type: 'string',
               render: _ => _.id,
             },
@@ -124,7 +125,7 @@ export const MpcaData = () => {
               head: m.form,
               type: 'select_one',
               // options: () => SheetUtils.buildOptions(Enum.keys(MpcaRowSource)),
-              render: _ => _.source,
+              render: _ => KoboFormSdk.parseFormName(koboFormName[_.source]).name,
             },
             {
               id: 'date',
@@ -158,7 +159,7 @@ export const MpcaData = () => {
               render: _ => (
                 <SelectDrcProject label={null} options={MpcaHelper.projects} value={_.tags?.projects?.[0]} onChange={p => {
                   ctx.asyncUpdates.call({
-                    formId: MpcaHelper.formNameToId[_.source],
+                    formId: kobo.drcUa.form[_.source],
                     answerIds: [_.id],
                     key: 'projects',
                     value: p ? [p] : null,
@@ -315,7 +316,7 @@ export const MpcaData = () => {
               render: row => (
                 <>
                   <Switch size="small" checked={!!row.tags?.committed} onChange={(e, checked) => ctx.asyncUpdates.call({
-                    formId: MpcaHelper.formNameToId[row.source],
+                    formId: kobo.drcUa.form[row.source],
                     answerIds: [row.id],
                     key: 'committed',
                     value: checked ? new Date() : null,
