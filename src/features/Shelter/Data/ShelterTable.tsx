@@ -335,7 +335,7 @@ export const ShelterTable = () => {
         id: 'project',
         head: m.project,
         width: 174,
-        type: 'string',
+        type: 'select_one',
         renderValue: _ => _.ta?.tags?.donor,
         typeIcon: null,
         render: row => map(row.ta, ta => (
@@ -537,6 +537,19 @@ export const ShelterTable = () => {
                       })
                     })
                   }}
+                />
+                <SelectDrcProject
+                  sx={{maxWidth: 140}}
+                  onChange={(tagChange) => {
+                    map(getTa()?.map(_ => _.id), ids => {
+                      ctx.ta._updates.call({
+                        answerIds: ids,
+                        key: 'project',
+                        value: tagChange,
+                      })
+                    })
+                  }}
+                  options={shelterDrcProject}
                 />
                 <ShelterSelectContractor
                   sx={{maxWidth: 140}}
