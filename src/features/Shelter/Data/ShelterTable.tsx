@@ -343,7 +343,7 @@ export const ShelterTable = () => {
             label={null}
             options={shelterDrcProject}
             value={row.ta?.tags?.project}
-            onChange={_ => ctx.ta._update.call({answerId: ta.id, key: 'project', value: _})}
+            onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'project', value: _})}
           />
         ))
       },
@@ -542,8 +542,8 @@ export const ShelterTable = () => {
                 <SelectDrcProject
                   sx={{maxWidth: 140}}
                   onChange={(tagChange) => {
-                    map(getTa()?.map(_ => _.id), ids => {
-                      ctx.ta._updates.call({
+                    map(selectedTa.map(_ => _.id), ids => {
+                      ctx.ta.asyncUpdates.call({
                         answerIds: ids,
                         key: 'project',
                         value: tagChange,
