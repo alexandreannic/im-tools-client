@@ -1,8 +1,10 @@
 import {Func} from '@alexandreannic/react-hooks-lib'
 import {UseMap2, useMap2} from '@/alexlib-labo/useMap'
+import {useState} from 'react'
 
 export interface UseAsync<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> {
   isLoading: boolean
+  lastError?: E
   loading: UseMap2<K, boolean>,
   errors: UseMap2<K, E>
   call: F,
@@ -42,8 +44,10 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
 ) => {
   const loading = useMap2<K, boolean>()
   const errors = useMap2<K, E>()
+  const [lastError, setLastError] = useState<E | undefined>()
 
   const call = (...args: Parameters<F>) => {
+    setLastError(undefined)
     loading.set(requestKey(args), true)
     return caller(...args)
       .then(_ => {
@@ -51,6 +55,7 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
         return _
       })
       .catch((e: E) => {
+        setLastError(e)
         loading.delete(requestKey(args))
         errors.set(requestKey(args), mapError(e))
         throw e
@@ -60,6 +65,7 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
   const isLoading = loading.keys.length > 0
 
   return {
+    lastError,
     isLoading,
     loading,
     errors,

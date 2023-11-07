@@ -29,8 +29,8 @@ export const ShelterTable = () => {
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  const getNta = useCallback(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
-  const getTa = useCallback(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
+  const selectedNta = useMemo(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
+  const selectedTa = useMemo(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
 
   const columns = useMemo(() => {
     return SheetUtils.buildColumns([
@@ -46,7 +46,7 @@ export const ShelterTable = () => {
             {map(_.nta, answer =>
               <>
                 <TableIconBtn tooltip={m.view} children="visibility" onClick={() => ctx.nta.openModalAnswer(answer)}/>
-                <TableIconBtn tooltip={m.edit} loading={ctx.nta._edit.loading.has(answer.id)} onClick={() => ctx.nta._edit.call(answer.id)} children="edit"/>
+                <TableIconBtn tooltip={m.edit} loading={ctx.nta.asyncEdit.loading.has(answer.id)} onClick={() => ctx.nta.asyncEdit.call(answer.id)} children="edit"/>
               </>
             ) ?? (
               <>
@@ -81,7 +81,7 @@ export const ShelterTable = () => {
         type: 'select_one',
         options: () => Enum.entries(Shelter_NTAOptions.ben_det_oblast).map(([value, label]) => ({value, label})),
         head: m.oblast,
-        render: _ => ctx.nta._helper.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
+        render: _ => ctx.nta.helper.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
         renderValue: _ => _.nta?.ben_det_oblast,
       },
       {
@@ -89,7 +89,7 @@ export const ShelterTable = () => {
         type: 'string',
         // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
         head: m.raion,
-        render: _ => ctx.nta._helper.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
+        render: _ => ctx.nta.helper.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
         renderValue: _ => _.nta?.ben_det_raion,
       },
       {
@@ -125,7 +125,7 @@ export const ShelterTable = () => {
         head: m._shelter.owner,
         options: () => Enum.entries(Shelter_NTAOptions.owner_tenant_type).map(([value, label]) => ({value, label})),
         renderValue: _ => _.nta?.owner_tenant_type,
-        render: _ => ctx.nta._helper.translateChoice('owner_tenant_type', _.nta?.owner_tenant_type),
+        render: _ => ctx.nta.helper.translateChoice('owner_tenant_type', _.nta?.owner_tenant_type),
       },
       {
         id: 'document_type',
@@ -133,14 +133,14 @@ export const ShelterTable = () => {
         head: m._shelter.documentType,
         options: () => Enum.entries(Shelter_NTAOptions.document_type).map(([value, label]) => ({value, label})),
         renderValue: _ => _.nta?.document_type,
-        render: _ => ctx.nta._helper.translateChoice('document_type', _.nta?.document_type),
+        render: _ => ctx.nta.helper.translateChoice('document_type', _.nta?.document_type),
       },
       {
         id: 'dwelling_type',
         type: 'select_one',
         head: m._shelter.accommodation,
         options: () => Enum.entries(Shelter_NTAOptions.dwelling_type).map(([value, label]) => ({value, label})),
-        render: _ => ctx.nta._helper.translateChoice('dwelling_type', _.nta?.dwelling_type),
+        render: _ => ctx.nta.helper.translateChoice('dwelling_type', _.nta?.dwelling_type),
         renderValue: _ => _.nta?.dwelling_type,
       },
       {
@@ -227,7 +227,7 @@ export const ShelterTable = () => {
           <ShelterSelectAccepted
             value={nta.tags?.validation}
             onChange={(tagChange) => {
-              ctx.nta._update.call({
+              ctx.nta.asyncUpdate.call({
                 answerId: nta.id,
                 key: 'validation',
                 value: tagChange,
@@ -250,7 +250,7 @@ export const ShelterTable = () => {
         render: _ => map(_.ta, form =>
           <>
             <TableIconBtn tooltip={m.view} children="visibility" onClick={() => ctx.ta.openModalAnswer(form)}/>
-            <TableIconBtn tooltip={m.edit} loading={ctx.ta._edit.loading.has(form.id)} onClick={() => ctx.ta._edit.call(form.id)} children="edit"/>
+            <TableIconBtn tooltip={m.edit} loading={ctx.ta.asyncEdit.loading.has(form.id)} onClick={() => ctx.ta.asyncEdit.call(form.id)} children="edit"/>
           </>
         ),
       },
@@ -289,7 +289,7 @@ export const ShelterTable = () => {
           <DebouncedInput<string>
             debounce={1250}
             value={row.ta?.tags?.agreement}
-            onChange={_ => ctx.ta._update.call({answerId: ta.id, key: 'agreement', value: _})}
+            onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'agreement', value: _})}
           >
             {(value, onChange) => (
               <AaInput
@@ -311,7 +311,7 @@ export const ShelterTable = () => {
           <DebouncedInput<string>
             debounce={1250}
             value={row.ta?.tags?.workOrder}
-            onChange={_ => ctx.ta._update.call({answerId: ta.id, key: 'workOrder', value: _})}
+            onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'workOrder', value: _})}
           >
             {(value, onChange) => (
               <AaInput
@@ -343,7 +343,7 @@ export const ShelterTable = () => {
             label={null}
             options={shelterDrcProject}
             value={row.ta?.tags?.project}
-            onChange={_ => ctx.ta._update.call({answerId: ta.id, key: 'project', value: _})}
+            onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'project', value: _})}
           />
         ))
       },
@@ -379,7 +379,7 @@ export const ShelterTable = () => {
             value={ta.tags?.contractor1}
             oblast={ta?.ben_det_oblast}
             onChange={(tagChange) => {
-              ctx.ta._update.call({
+              ctx.ta.asyncUpdate.call({
                 answerId: ta.id,
                 key: 'contractor1',
                 value: tagChange,
@@ -423,7 +423,7 @@ export const ShelterTable = () => {
               showUndefinedOption
               value={ta.tags?.contractor2}
               onChange={(tagChange) => {
-                ctx.ta._update.call({
+                ctx.ta.asyncUpdate.call({
                   answerId: ta.id,
                   key: 'contractor2',
                   value: tagChange,
@@ -477,19 +477,19 @@ export const ShelterTable = () => {
           <ShelterSelectStatus
             value={ta.tags?.progress}
             onChange={(tagChange) => {
-              ctx.ta._update.call({
+              ctx.ta.asyncUpdate.call({
                 answerId: ta.id,
                 key: 'progress',
                 value: tagChange,
               })
               if (tagChange === ShelterProgress.RepairWorksCompleted)
-                ctx.ta._update.call({
+                ctx.ta.asyncUpdate.call({
                   answerId: ta.id,
                   key: 'workDoneAt',
                   value: new Date(),
                 })
               else if (ta.tags?.workDoneAt)
-                ctx.ta._update.call({
+                ctx.ta.asyncUpdate.call({
                   answerId: ta.id,
                   key: 'workDoneAt',
                   value: null,
@@ -526,11 +526,12 @@ export const ShelterTable = () => {
                 }
               }}>
                 <ShelterSelectAccepted
+                  disabled={selectedNta.length === 0}
                   sx={{maxWidth: 110}}
                   label={m._shelter.validationStatus}
                   onChange={(tagChange) => {
-                    map(getNta()?.map(_ => _.id), ids => {
-                      ctx.nta._updates.call({
+                    map(selectedNta?.map(_ => _.id), ids => {
+                      ctx.nta.asyncUpdates.call({
                         answerIds: ids,
                         key: 'validation',
                         value: tagChange,
@@ -541,8 +542,8 @@ export const ShelterTable = () => {
                 <SelectDrcProject
                   sx={{maxWidth: 140}}
                   onChange={(tagChange) => {
-                    map(getTa()?.map(_ => _.id), ids => {
-                      ctx.ta._updates.call({
+                    map(selectedTa.map(_ => _.id), ids => {
+                      ctx.ta.asyncUpdates.call({
                         answerIds: ids,
                         key: 'project',
                         value: tagChange,
@@ -552,11 +553,12 @@ export const ShelterTable = () => {
                   options={shelterDrcProject}
                 />
                 <ShelterSelectContractor
+                  disabled={selectedTa.length === 0}
                   sx={{maxWidth: 140}}
                   label={m._shelter.contractor1}
                   onChange={(tagChange) => {
-                    map(getTa()?.map(_ => _.id), ids => {
-                      ctx.ta._updates.call({
+                    map(selectedTa?.map(_ => _.id), ids => {
+                      ctx.ta.asyncUpdates.call({
                         answerIds: ids,
                         key: 'contractor1',
                         value: tagChange,
@@ -565,11 +567,12 @@ export const ShelterTable = () => {
                   }}
                 />
                 <ShelterSelectContractor
+                  disabled={selectedTa.length === 0}
                   sx={{maxWidth: 140}}
                   label={m._shelter.contractor2}
                   onChange={(tagChange) => {
-                    map(getTa()?.map(_ => _.id), ids => {
-                      ctx.ta._updates.call({
+                    map(selectedTa?.map(_ => _.id), ids => {
+                      ctx.ta.asyncUpdates.call({
                         answerIds: ids,
                         key: 'contractor2',
                         value: tagChange,
@@ -578,23 +581,24 @@ export const ShelterTable = () => {
                   }}
                 />
                 <ShelterSelectStatus
+                  disabled={selectedTa.length === 0}
                   sx={{maxWidth: 140}}
                   label={m._shelter.progressStatus}
                   onChange={(tagChange) => {
-                    map(getTa()?.map(_ => _.id), ids => {
-                      ctx.ta._updates.call({
+                    map(selectedTa?.map(_ => _.id), ids => {
+                      ctx.ta.asyncUpdates.call({
                         answerIds: ids,
                         key: 'progress',
                         value: tagChange,
                       })
                       if (tagChange === ShelterProgress.RepairWorksCompleted)
-                        ctx.ta._updates.call({
+                        ctx.ta.asyncUpdates.call({
                           answerIds: ids,
                           key: 'workDoneAt',
                           value: new Date(),
                         })
                       else
-                        ctx.ta._updates.call({
+                        ctx.ta.asyncUpdates.call({
                           answerIds: ids,
                           key: 'workDoneAt',
                           value: null
@@ -609,10 +613,10 @@ export const ShelterTable = () => {
           header={
             <>
               <AAIconBtn
-                loading={ctx.data.asyncResync.isLoading}
+                loading={ctx.data.asyncSyncAnswers.isLoading}
                 children="cloud_sync"
                 tooltip={m._koboDatabase.pullData}
-                onClick={ctx.data.asyncResync.call}
+                onClick={ctx.data.asyncSyncAnswers.call}
               />
             </>
           }

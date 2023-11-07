@@ -85,6 +85,7 @@ export const AaSelect = <T extends string | number>({
         //     <CircularProgress size={20}/>
         //   // </InputAdornment>
         // }
+        disabled={props.disabled}
         label={label}
         size="small"
         margin="dense"
