@@ -83,6 +83,13 @@ export const ShelterTable = () => {
         render: _ => formatDate(_.nta?.submissionTime),
       },
       {
+        id: 'office',
+        type: 'select_one',
+        head: m.office,
+        render: _ => ctx.nta.helper.translateChoice('back_office', _.nta?.back_office),
+        renderValue: _ => _.nta?.back_office,
+      },
+      {
         id: 'oblast',
         type: 'select_one',
         options: () => Enum.entries(Shelter_NTAOptions.ben_det_oblast).map(([value, label]) => ({value, label})),
