@@ -14,12 +14,23 @@ export const useShelterData = (allowedOffices: Shelter_NTA['back_office'][] = []
 
   const req = () => api.shelter.search().then(_ => allowedOffices.length === 0 ? _.data : _.data.filter(_ => allowedOffices.includes(_.nta?.back_office)))
   const fetcher = useFetcher(req)
-  const index: undefined | Readonly<Record<KoboAnswerId, number>> = useMemo(() => {
+  const index: undefined | Record<KoboAnswerId, number> = useMemo(() => {
     if (!fetcher.entity) return
     return fetcher.entity.reduce((acc, _, i) => {
       acc[_.id] = i
       return acc
     }, {} as Record<KoboAnswerId, number>)
+    // const index: Record<'all' | 'nta' | 'ta', Record<KoboAnswerId, number>> = {
+    //   all: {},
+    //   nta: {},
+    //   ta: {},
+    // }
+    // fetcher.entity.forEach((_, i) => {
+    //   index.all[_.id] = i
+    //   if (_.nta) index.all[_.nta.id] = i
+    //   if (_.ta) index.all[_.ta.id] = i
+    // })
+    // return index
   }, [fetcher.entity])
 
   const fetchAll = fetcher.fetch

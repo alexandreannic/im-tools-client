@@ -50,7 +50,8 @@ export class KoboAnswerSdk {
 
 
   readonly updateTag = ({formId, answerIds, tags}: {formId: KoboId, answerIds: KoboAnswerId[], tags: Record<string, any>}) => {
-    return this.client.post(`/kobo/answer/${formId}/tag`, {body: {tags, answerIds: answerIds}})
+    return Promise.reject()
+    // return this.client.post(`/kobo/answer/${formId}/tag`, {body: {tags, answerIds: answerIds}})
   }
 
   readonly getAllFromLocalForm = (filters: AnswersFilters = {}) => {

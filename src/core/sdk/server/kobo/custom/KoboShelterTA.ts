@@ -110,7 +110,7 @@ export interface ShelterTaTags {
   contractor2?: ShelterContractor
   agreement?: string
   workOrder?: string
-  donor?: string
+  // donor?: string
   project?: DrcProject
   workDoneAt?: Date
 }

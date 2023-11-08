@@ -9,7 +9,7 @@ export class ShelterSdk {
   }
 
   readonly search = () => {
-    return this.client.post<ApiPaginate<ShelterEntity>>(`/shelter/search`).then(logThen('SHELTER'))
+    return this.client.post<ApiPaginate<ShelterEntity>>(`/shelter/search`)
     // .then(res => res.map(User.map))
   }
 }

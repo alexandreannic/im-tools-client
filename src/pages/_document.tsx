@@ -6,6 +6,7 @@ import createEmotionServer from '@emotion/server/create-instance'
 import {AppType} from 'next/app'
 import {MyAppProps} from '@/pages/_app'
 import {Alert, Txt} from 'mui-extension'
+import {Box} from '@mui/material'
 
 interface MyDocumentProps extends DocumentProps {
   emotionStyleTags: React.JSX.Element[];
@@ -38,6 +39,9 @@ export default function MyDocument({emotionStyleTags}: MyDocumentProps) {
             <a href="https://www.mozilla.org/en-US/firefox/new/">real browser</a>
           </Txt>, not a Microsoft one.
         </Alert>
+      )}
+      {process.env.NODE_ENV === 'development' && (
+        <Box sx={{zIndex: 1000, height: 4, background: 'blue', position: 'fixed', top: 0, right: 0, left: 0}}/>
       )}
       <Main/>
       <NextScript/>

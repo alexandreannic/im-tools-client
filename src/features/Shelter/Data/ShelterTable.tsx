@@ -38,7 +38,6 @@ export const ShelterTable = () => {
     }
   }, [ctx.data.index, selectedIds])
 
-  console.log(ctx.data.mappedData)
   const columns = useMemo(() => {
     return SheetUtils.buildColumns([
       {
@@ -331,19 +330,11 @@ export const ShelterTable = () => {
         ))
       },
       {
-        id: 'donor',
-        head: m.donor,
-        type: 'select_one',
-        renderValue: _ => _.ta?.tags?.donor,
-        typeIcon: null,
-        render: row => row.ta?.tags?.donor,
-      },
-      {
         id: 'project',
         head: m.project,
         width: 174,
         type: 'select_one',
-        renderValue: _ => _.ta?.tags?.donor,
+        renderValue: _ => _.ta?.tags?.project,
         typeIcon: null,
         render: row => map(row.ta, ta => (
           <SelectDrcProject

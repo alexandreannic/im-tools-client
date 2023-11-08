@@ -1141,6 +1141,7 @@ export const en = Object.freeze({
       }
     },
     _shelter: {
+      cannotUpdateTag: (rowsCount: number, key: string, value: string) => `Update failed for ${key}=${value} on ${rowsCount} rows. Table not edited.`,
       assignedContractor: 'Assigned contractors',
       assessmentLocations: 'Assessments locations',
       repairCost: 'Total repairs cost',

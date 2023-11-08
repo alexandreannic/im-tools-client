@@ -39,10 +39,11 @@ export const ShelterProvider = ({
     key: any
     value: any
   }) => data.fetcher.setEntity(prev => {
-    if (data.index || !prev) return prev
+    if (!data.index || !prev) return prev
     const set = new Set(answerIds)
     return prev.map(_ => {
-      if (set.has(_.id) && _[form]) {
+      if (set.has(_[form]?.id ?? '-1')) console.log(_[form]?.tags)
+      if (set.has(_[form]?.id ?? '!') && _[form]) {
         _[form]!.tags = {
           ...(_[form]?.tags ?? {}),
           [key]: value,
@@ -53,14 +54,16 @@ export const ShelterProvider = ({
   })
 
   const ntaActions = useShelterActions<ShelterNtaTags>({
+    form: 'nta',
     formId: kobo.drcUa.form.shelter_nta,
-    onChange: updateTag('nta'),
+    setEntity: data.fetcher.setEntity,
     schema: schemaNta,
     langIndex,
   })
   const taActions = useShelterActions<ShelterTaTags>({
+    form: 'ta',
     formId: kobo.drcUa.form.shelter_ta,
-    onChange: updateTag('ta'),
+    setEntity: data.fetcher.setEntity,
     schema: schemaTa,
     langIndex,
   })
