@@ -5,6 +5,7 @@ import {UseShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
 import {AccessSum} from '@/core/sdk/server/access/Access'
+import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 
 export interface ShelterContext {
   access: AccessSum
@@ -33,15 +34,33 @@ export const ShelterProvider = ({
 }) => {
   const [langIndex, setLangIndex] = useState<number>(0)
 
+  const updateTag = (form: 'ta' | 'nta') => ({answerIds, key, value}: {
+    answerIds: KoboAnswerId[]
+    key: any
+    value: any
+  }) => data.fetcher.setEntity(prev => {
+    if (data.index || !prev) return prev
+    const set = new Set(answerIds)
+    return prev.map(_ => {
+      if (set.has(_.id) && _[form]) {
+        _[form]!.tags = {
+          ...(_[form]?.tags ?? {}),
+          [key]: value,
+        }
+      }
+      return _
+    })
+  })
+
   const ntaActions = useShelterActions<ShelterNtaTags>({
     formId: kobo.drcUa.form.shelter_nta,
-    setEntity: data.fetcherNta.setEntity,
+    onChange: updateTag('nta'),
     schema: schemaNta,
     langIndex,
   })
   const taActions = useShelterActions<ShelterTaTags>({
     formId: kobo.drcUa.form.shelter_ta,
-    setEntity: data.fetrcherTa.setEntity,
+    onChange: updateTag('ta'),
     schema: schemaTa,
     langIndex,
   })

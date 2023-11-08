@@ -1,6 +1,6 @@
 import {Page} from '@/shared/Page'
 import {UseShelterComputedData, useShelterComputedData} from '@/features/Shelter/Dasbhoard/useShelterComputedData'
-import {ShelterRow, useShelterData} from '@/features/Shelter/useShelterData'
+import {useShelterData} from '@/features/Shelter/useShelterData'
 import {Div, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Lazy} from '@/shared/Lazy'
 import {Period, Person} from '@/core/type'
@@ -28,6 +28,8 @@ import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
+
+import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 
 const today = new Date()
 
@@ -130,7 +132,7 @@ export const _ShelterDashboard = ({
   computed,
 }: {
   currency: Currency
-  data: Seq<ShelterRow>
+  data: Seq<ShelterEntity>
   computed: NonNullable<UseShelterComputedData>
 }) => {
   const {m, formatLargeNumber} = useI18n()

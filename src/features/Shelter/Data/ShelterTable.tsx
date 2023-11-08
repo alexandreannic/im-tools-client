@@ -16,12 +16,13 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {ShelterRow} from '@/features/Shelter/useShelterData'
 import {KoboShelterTa, shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {formatDateTime} from '@/core/i18n/localization/en'
 import {ShelterSelectAccepted, ShelterSelectContractor, ShelterSelectStatus} from '@/features/Shelter/Data/ShelterTableInputs'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
+
+import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -29,9 +30,15 @@ export const ShelterTable = () => {
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  const selectedNta = useMemo(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.nta).compact(), [ctx.data.index, selectedIds])
-  const selectedTa = useMemo(() => seq(selectedIds).map(_ => ctx.data.index?.[_]?.ta).compact(), [ctx.data.index, selectedIds])
+  const {selectedNta, selectedTa} = useMemo(() => {
+    const selected = selectedIds.map(_ => ctx.data.mappedData[ctx.data.index![_]])
+    return {
+      selectedNta: seq(selected).map(_ => _.nta).compact(),
+      selectedTa: seq(selected).map(_ => _.ta).compact(),
+    }
+  }, [ctx.data.index, selectedIds])
 
+  console.log(ctx.data.mappedData)
   const columns = useMemo(() => {
     return SheetUtils.buildColumns([
       {
@@ -111,13 +118,13 @@ export const ShelterTable = () => {
         type: 'string',
         id: 'name',
         head: m.name,
-        render: (row: ShelterRow) => row.nta?.interviewee_name,
+        render: (row: ShelterEntity) => row.nta?.interviewee_name,
       },
       {
         type: 'string',
-        id: 'name',
+        id: 'taxId',
         head: m.taxID,
-        render: (row: ShelterRow) => row.nta?.pay_det_tax_id_num,
+        render: (row: ShelterEntity) => row.nta?.pay_det_tax_id_num,
       },
       {
         id: 'owner_tenant_type',
@@ -222,8 +229,8 @@ export const ShelterTable = () => {
           {value: ShelterTagValidation.Rejected, label: <TableIcon color="error">cancel</TableIcon>},
           {value: ShelterTagValidation.Pending, label: <TableIcon color="warning">schedule</TableIcon>},
         ],
-        renderValue: (row: ShelterRow) => row.nta?.tags?.validation,
-        render: (row: ShelterRow) => map(row.nta, nta => (
+        renderValue: (row: ShelterEntity) => row.nta?.tags?.validation,
+        render: (row: ShelterEntity) => map(row.nta, nta => (
           <ShelterSelectAccepted
             value={nta.tags?.validation}
             onChange={(tagChange) => {
@@ -444,7 +451,7 @@ export const ShelterTable = () => {
         id: 'price',
         head: m.price,
         renderValue: row => row.ta?._price ?? undefined,
-        render: (row: ShelterRow) => map(row.ta?._price, _ => _ === null ? '⚠️ Missing price' : formatLargeNumber(_)),
+        render: (row: ShelterEntity) => map(row.ta?._price, _ => _ === null ? '⚠️ Missing price' : formatLargeNumber(_)),
       },
       {
         type: 'select_one',
@@ -458,8 +465,8 @@ export const ShelterTable = () => {
           SheetUtils.buildCustomOption(ShelterTaPriceLevel.Medium, <><TableIcon color="warning">looks_two</TableIcon> {ShelterTaPriceLevel.Medium}</>),
           SheetUtils.buildCustomOption(ShelterTaPriceLevel.Heavy, <><TableIcon color="error">looks_3</TableIcon> {ShelterTaPriceLevel.Heavy}</>),
         ],
-        renderValue: (row: ShelterRow) => row.ta?._priceLevel,
-        render: (row: ShelterRow) => fnSwitch(row.ta?._priceLevel!, {
+        renderValue: (row: ShelterEntity) => row.ta?._priceLevel,
+        render: (row: ShelterEntity) => fnSwitch(row.ta?._priceLevel!, {
           [ShelterTaPriceLevel.Light]: <TableIcon color="success">looks_one</TableIcon>,
           [ShelterTaPriceLevel.Medium]: <TableIcon color="warning">looks_two</TableIcon>,
           [ShelterTaPriceLevel.Heavy]: <TableIcon color="error">looks_3</TableIcon>,
@@ -472,8 +479,8 @@ export const ShelterTable = () => {
         width: 190,
         typeIcon: null,
         options: () => Enum.keys(ShelterProgress).map(_ => ({value: _, label: m._shelter.progress[_]})),
-        renderValue: (row: ShelterRow) => row.ta?.tags?.progress,
-        render: (row: ShelterRow) => map(row.ta, ta => (
+        renderValue: (row: ShelterEntity) => row.ta?.tags?.progress,
+        render: (row: ShelterEntity) => map(row.ta, ta => (
           <ShelterSelectStatus
             value={ta.tags?.progress}
             onChange={(tagChange) => {
@@ -503,7 +510,7 @@ export const ShelterTable = () => {
         head: m._shelter.workDoneAt,
         type: 'date',
         renderValue: _ => _.ta?.tags?.workDoneAt,
-        render: (row: ShelterRow) => map(row.ta, ta => formatDateTime(row.ta?.tags?.workDoneAt))
+        render: (row: ShelterEntity) => map(row.ta, ta => formatDateTime(row.ta?.tags?.workDoneAt))
       },
     ])
   }, [ctx.data.mappedData])

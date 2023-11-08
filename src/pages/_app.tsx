@@ -53,6 +53,7 @@ const App = ({
       <>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width"/>
+          {/*<meta name="viewport" content="width=device-width, initial-scale=1"/>*/}
         </Head>
         <AppWithConfig {...props}/>
       </>

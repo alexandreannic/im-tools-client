@@ -13,6 +13,7 @@ import {AccessSdk} from '@/core/sdk/server/access/AccessSdk'
 import {UserSdk} from '@/core/sdk/server/user/UserSdk'
 import {ProxySdk} from '@/core/sdk/server/proxy/ProxySdk'
 import {MpcaSdk} from '@/core/sdk/server/mpca/MpcaSdk'
+import {ShelterSdk} from '@/core/sdk/server/shelter/ShelterSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -45,4 +46,5 @@ export class ApiSdk {
   readonly access = new AccessSdk(this.client)
   readonly user = new UserSdk(this.client)
   readonly proxy = new ProxySdk(this.client)
+  readonly shelter = new ShelterSdk(this.client)
 }
