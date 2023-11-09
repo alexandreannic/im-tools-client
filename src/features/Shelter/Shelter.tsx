@@ -21,7 +21,6 @@ import {useShelterData} from '@/features/Shelter/useShelterData'
 import {seq} from '@alexandreannic/ts-utils'
 import {Access} from '@/core/sdk/server/access/Access'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
-import {Skeleton} from '@mui/material'
 import {PagePlaceholder} from '@/shared/Page'
 
 export const shelterModule = {
