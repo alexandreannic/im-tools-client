@@ -48,13 +48,16 @@ export const AiShelter = () => {
     // })
   }, [period])
 
-  console.log(fetcher.entity?.map(_ => _.nta).compact().map(_ =>
-    _.total_apt_damage_light +
-    _.total_apt_damage_medium +
-    _.total_damage_heavy +
-    _.total_damage_light +
-    _.total_damage_medium
-  ))
+  console.log(fetcher.entity?.map(_ => _.nta).compact().map(_ => {
+    const a = Utils.add(
+      _.total_apt_damage_light,
+      _.total_apt_damage_medium,
+      _.total_damage_heavy,
+      _.total_damage_light,
+      _.total_damage_medium
+    )
+    if(a === 0) return {a, _}
+  }))
 
   return (
     <Page width="full">
