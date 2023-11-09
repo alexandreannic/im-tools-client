@@ -19,6 +19,7 @@ import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Box, Divider} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
+import {appConfig} from '@/conf/AppConfig'
 
 export const cfmModule = {
   basePath: '/cfm',
@@ -31,6 +32,7 @@ export const cfmModule = {
 
 const FcmSidebar = () => {
   const path = (page: string) => '' + page
+  const {conf} = useAppSettings()
   const {m} = useI18n()
   const ctx = useCfmContext()
   const _stats = useMemo(() => {
@@ -85,8 +87,8 @@ const FcmSidebar = () => {
         <SidebarHr/>
         <SidebarItem
           icon="view_compact_alt"
-          onClick={() => {}}
-          href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/EaaeqVp3BrpEtgDgRqXi7qABsfhNgrJGOo6JkiRGXrV33g?e=XVcMi9"
+          onClick={() => void 0}
+          href={conf.externalLink.mealReferralMatrix}
           target="_blank"
           iconEnd="open_in_new"
         >
@@ -95,17 +97,17 @@ const FcmSidebar = () => {
         <SidebarItem
           href={ctx.schemaExternal.sanitizedSchema.deployment__links.url}
           target="_blank"
-          icon="fact_check"
+          icon="calendar_view_month"
           iconEnd="open_in_new"
-          onClick={() => {}}
+          onClick={() => void 0}
         >
           {m._cfm.formLong.External}
         </SidebarItem>
         <SidebarItem
           href={ctx.schemaInternal.sanitizedSchema.deployment__links.url}
           target="_blank"
-          onClick={() => {}}
-          icon="fact_check"
+          onClick={() => void 0}
+          icon="calendar_view_month"
           iconEnd="open_in_new"
         >
           {m._cfm.formLong.Internal}

@@ -46,6 +46,9 @@ export const appConfig = {
     authority: _(required)(Env.NEXT_PUBLIC_MS_AUTHORITY),
   },
   appOff: _(bool, defaultValue(false))(Env.NEXT_PUBLIC_APP_OFF),
+  externalLink: {
+    mealReferralMatrix: 'https://drcngo.sharepoint.com/:x:/r/sites/UKRPortal/_layouts/15/Doc.aspx?sourcedoc=%7B401B9D94-94AF-4D88-A85D-BBCCAC7196FE%7D&file=DRC%20Ukraine%20CFM%20Referral%20Matrix_updated.xlsx&action=default&mobileredirect=true'
+  }
 }
 
 export type AppConfig = typeof appConfig
