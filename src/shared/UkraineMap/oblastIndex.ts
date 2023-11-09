@@ -1,5 +1,6 @@
 import {Enum} from '@alexandreannic/ts-utils'
 import {Utils} from '@/utils/utils'
+import {ReverseMap} from '@/utils/utilsType'
 
 export interface Oblast {
   name: string
@@ -123,7 +124,7 @@ export class OblastIndex {
     zhytomyrska: 'UA18',
   }
 
-  static readonly isoToKoboOblastValue: Utils.ReverseMap<typeof OblastIndex.koboOblastIndexIso> = Object.fromEntries(
+  static readonly isoToKoboOblastValue: ReverseMap<typeof OblastIndex.koboOblastIndexIso> = Object.fromEntries(
     Object.entries(OblastIndex.koboOblastIndexIso).map(([key, value]) => [
       value,
       key,

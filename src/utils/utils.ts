@@ -261,9 +261,9 @@ export const convertNumberIndexToLetter = (_: number) => {
   return (_ + 9).toString(36).toUpperCase()
 }
 
-export namespace Utils {
+export class Utils {
 
-  export const removeAccent = (str: string): string => {
+  static readonly removeAccent = (str: string): string => {
     const accentMap: Record<string, string> = {
       'à': 'a',
       'á': 'a',
@@ -303,38 +303,38 @@ export namespace Utils {
     return str.replace(/[àáâãäåçèéêëìíîïðñòóôõöøùúûüýÿćđē]/g, match => accentMap[match] || match)
   }
 
-  export const pattern = {
+  static readonly pattern = {
     email: '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
     drcEmail: '^[a-zA-Z0-9._-]+@drc\.ngo$',
     // url: 'http',
     url: 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
   }
 
-  export const regexp = mapObjectValue(pattern, _ => new RegExp(_))
+  static readonly regexp = mapObjectValue(Utils.pattern, _ => new RegExp(_))
 
 
-  export const add = (...args: (string | number | undefined)[]) => {
-    return args.reduce<number>((acc, _) => acc + safeNumber(_, 0), 0)
+  static readonly add = (...args: (string | number | undefined)[]) => {
+    return args.reduce<number>((acc, _) => acc + Utils.safeNumber(_, 0), 0)
   }
 
-  export const safeNumber: {
+  static readonly safeNumber: {
     (_: undefined | string | number, defaultValue?: undefined): number | undefined
     (_: undefined | string | number, defaultValue: number): number
   } = (_, defaultValue) => (isNaN(_ as number) ? defaultValue : +_!) as number
 
-  export const removeHtml: {
+  static readonly removeHtml: {
     (_: string): string
     (_: undefined): undefined
     (_?: string): string | undefined
   } = (_) => _?.replace(/(<([^>]+)>)/gi, '') as any
 
-  export function assert(condition: any, msg?: string): asserts condition {
+  static readonly assert = (condition: any, msg?: string): asserts condition => {
     if (!condition) {
       throw new Error(msg)
     }
   }
 
-  export const slugify: {
+  static readonly slugify: {
     (_: string): string
     (_: undefined): undefined
     (_?: string): string | undefined
@@ -343,7 +343,7 @@ export namespace Utils {
     .replaceAll(/[àâ]/g, 'a')
     .replaceAll(/[^a-zA-Z0-9_-]/g, '') as any
 
-  export const dateToPeriod = (date: Date) => {
+  static readonly dateToPeriod = (date: Date) => {
     const start = startOfMonth(date)
     return {
       start,
@@ -351,12 +351,12 @@ export namespace Utils {
     }
   }
 
-  export const logThen = (log: string) => <T>(args: T): T => {
+  static readonly logThen = (log: string) => <T>(args: T): T => {
     console.log(log, args)
     return args
   }
 
-  export const openCanvasInNewTab = (canvas: HTMLCanvasElement, name: string) => {
+  static readonly openCanvasInNewTab = (canvas: HTMLCanvasElement, name: string) => {
     setTimeout(() => {
       // w.document.write('<static src="' + canvas.toDataURL('png') + '" />')
       canvas.toBlob((blob) => {
@@ -367,13 +367,7 @@ export namespace Utils {
     }, 1000)
   }
 
-  export const groupBy = _groupBy
-
-  export type ReverseMap<T extends Record<keyof T, keyof any>> = {
-    [P in T[keyof T]]: {
-      [K in keyof T]: T[K] extends P ? K : never
-    }[keyof T]
-  }
+  static readonly groupBy = _groupBy
 }
 
 export const compareArray = <T extends string | number>(a?: T[], b?: T[]) => {
@@ -397,3 +391,4 @@ export const tryy = <T>(fn: () => T) => {
     }
   }
 }
+

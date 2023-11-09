@@ -1,5 +1,6 @@
 import {Enum} from '@alexandreannic/ts-utils'
-import {KeyOf, Utils} from '@/utils/utils'
+import {Utils} from '@/utils/utils'
+import {subDays} from 'date-fns'
 
 export type UUID = string
 
@@ -11,6 +12,16 @@ export interface ApiPaginate<T> {
 export interface Period {
   start: Date
   end: Date
+}
+
+export class PeriodHelper {
+  static readonly fromyyyMM = (yyyyMM: string): Period => {
+    const [year, month] = yyyyMM.split('-')
+    return {
+      start: new Date(parseInt(year), parseInt(month) - 1),
+      end: subDays(new Date(parseInt(year), parseInt(month)), 1),
+    }
+  }
 }
 
 export interface ApiPagination {

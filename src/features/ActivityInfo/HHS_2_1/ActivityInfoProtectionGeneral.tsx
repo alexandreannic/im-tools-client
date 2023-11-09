@@ -19,7 +19,7 @@ import {format, subDays, subMonths} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
-import {Person} from '@/core/type'
+import {PeriodHelper, Person} from '@/core/type'
 
 export const ActivityInfoProtectionGeneral = () => {
   const {api} = useAppSettings()
@@ -27,16 +27,12 @@ export const ActivityInfoProtectionGeneral = () => {
   const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
 
   const request = (period: string) => {
-    const [year, month] = period.split('-')
-    const filters = (year === '2023' && month === '04') ? undefined : {
-      start: new Date(parseInt(year), parseInt(month) - 1),
-      end: subDays(new Date(parseInt(year), parseInt(month)), 1),
-    }
+    const filters = period === '2023-04' ? undefined : PeriodHelper.fromyyyMM(period)
     return api.kobo.answer.searchProtection_Hhs2({filters}).then(_ => seq(_.data.map(enrichProtHHS_2_1))).then(res => {
       return res
         .filter(_ => {
           const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)
-          return year === '2023' && month === '04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
+          return period === '2023-04' ? isPartOfAprilSubmit : !isPartOfAprilSubmit
         })
     })
   }
