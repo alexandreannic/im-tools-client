@@ -89,7 +89,7 @@ export default () => {
           }}
         />
       </Pan>
-      <Pan title={title('Опитанні сімї за віком і статтю Female - Жінка; Male - Чоловік; Other - Інше')}>
+      <Pan title={title('Опитанні сім\'ї за віком і статтю Female - Жінка; Male - Чоловік; Other - Інше')}>
         <AAStackedBarChart data={ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
           t.palette.primary.main,
           snapshotAlternateColor(t),
@@ -159,7 +159,7 @@ export default () => {
             lack_of_access_to_specialized_medical_services:'Недостатній доступ до спеціалізованих медичних послуг',
             other_specify:'Інше',
             lack_of_access_to_basic_services:'Недостатній доступ до базових послуг',
-            missing_family_members:'Сум за членами сімї',
+            missing_family_members:'Сум за членами сім\'ї',
             stigmatization_discrimination:'Стигматизація/Дискримінація',
             fear_of_conscription:'Страх призову до армії'
           }}
@@ -201,7 +201,7 @@ export default () => {
             not_accessible_for_persons_with_disabilities:'Не доступність для людей з особливими потребами',
             other_specify:'Інше',
             safety_risks_associated_with_access_to_presence_at_health_facility:'Ризики безпеки повязані з доступом/перебуванням в медичному закладі',
-            language_barriers:'Мовний барєр',
+            language_barriers:'Мовний бар\'єр',
             requirement_for_civil_documentation:'Вимоги цивільної документації',
             discrimination_restriction_of_access:'Дискримінація/заборона доступу'
           }}
@@ -222,8 +222,8 @@ export default () => {
             salary_formal_employment:'Заробітня плата - офіційне працевлаштування',
             casual_labour:'Непостійна(Тимчасова) робота',
             savings:'Власні накопичення',
-            no_resources_coming_into_the_household:'Відсутність джерел, які надходять в сімю',
-            assistance_from_family_friends:'Допомога від сімї/друзів',
+            no_resources_coming_into_the_household:'Відсутність джерел, які надходять в сім\'ю',
+            assistance_from_family_friends:'Допомога від сім\'ї/друзів',
             other_specify:'Інше',
             business_self_employment:'Підприємництво/Самозайнятість'
           }}
