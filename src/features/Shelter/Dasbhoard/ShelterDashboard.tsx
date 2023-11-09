@@ -30,18 +30,19 @@ import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
+import {useShelterContext} from '@/features/Shelter/ShelterContext'
 
 const today = new Date()
 
 // TODO Data re-fetched to bypass offices access filter. Need to find a more proper way
 export const ShelterDashboard = () => {
-  const ctxData = useShelterData()
+  const ctx = useShelterContext()
   const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, {storageKey: 'mpca-dashboard-currency'})
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m} = useI18n()
 
   const {defaultFilter, filterShape} = useMemo(() => {
-    const d = ctxData.mappedData ?? seq([])
+    const d = ctx.data.mappedData ?? seq([])
     const filterShape: {icon?: string, label: string, property: keyof MpcaType, multiple?: boolean, options: SheetOptions[]}[] = [{
       icon: 'location_on', label: 'Oblast', property: 'oblast',
       options: SheetUtils.buildOptions(d.map(_ => _.oblast!).compact().distinct(_ => _).sort())
@@ -53,13 +54,13 @@ export const ShelterDashboard = () => {
       filterShape,
       defaultFilter: seq(filterShape).reduceObject<any>(_ => [_.property, []]),
     }
-  }, [ctxData.mappedData])
+  }, [ctx.data.mappedData])
 
   const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter, {storageKey: 'shelter-dashboard'})
 
   const filteredData = useMemo(() => {
-    if (!ctxData.mappedData) return
-    return seq(ctxData.mappedData).filter(d => {
+    if (!ctx.data.mappedData) return
+    return seq(ctx.data.mappedData).filter(d => {
       if (!d.nta) return false
       if (periodFilter?.start && periodFilter.start.getTime() >= d.nta.submissionTime.getTime()) return false
       if (periodFilter?.end && periodFilter.end.getTime() <= d.nta.submissionTime.getTime()) return false
@@ -67,16 +68,12 @@ export const ShelterDashboard = () => {
       if (filters.office.length > 0 && !filters.office?.includes(d.office!)) return false
       return true
     })
-  }, [ctxData, filters, periodFilter])
+  }, [ctx.data, filters, periodFilter])
 
   const computed = useShelterComputedData({data: filteredData})
 
-  useEffect(() => {
-    ctxData.fetchAll()
-  }, [])
-
   return (
-    <Page loading={ctxData.loading} width="lg">
+    <Page loading={ctx.data.loading} width="lg">
       <Box sx={{display: 'flex', alignItems: 'center', ...themeLightScrollbar, whiteSpace: 'nowrap'}}>
         <PeriodPicker
           defaultValue={[periodFilter.start, periodFilter.end]}
@@ -186,7 +183,7 @@ export const _ShelterDashboard = ({
           }
         </Lazy>
         <Lazy deps={[data]} fn={() => {
-          const contractors = data.map(_ => seq([_.ta?.tags.contractor1 ?? undefined, _.ta?.tags.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
+          const contractors = data.map(_ => seq([_.ta?.tags?.contractor1 ?? undefined, _.ta?.tags?.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
           return {
             count: contractors.length,
             contractors: ChartTools.multiple({

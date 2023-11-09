@@ -101,7 +101,7 @@ export const ShelterWithAccess = () => {
     return {ta, nta}
   })
 
-  const fetcherData = useShelterData(allowedOffices)
+  const fetcherData = useShelterData()
 
   useEffectFn(fetcherSchema.error, toastHttpError)
 
@@ -123,6 +123,7 @@ export const ShelterWithAccess = () => {
           <ShelterProvider
             access={access}
             data={fetcherData}
+            allowedOffices={allowedOffices}
             schemaNta={fetcherSchema.entity.nta}
             schemaTa={fetcherSchema.entity.ta}
           >

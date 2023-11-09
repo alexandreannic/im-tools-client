@@ -513,6 +513,12 @@ export const ShelterTable = () => {
     ])
   }, [ctx.data.mappedData])
 
+  const allowedData = useMemo(() => {
+    if (ctx.allowedOffices.length === 0)
+      return ctx.data.mappedData
+    return ctx.data.mappedData.filter(_ => ctx.allowedOffices.includes(_.nta?.back_office))
+  }, [ctx.data])
+
   return (
     <Page width="full">
       <Panel>
@@ -625,7 +631,7 @@ export const ShelterTable = () => {
               />
             </>
           }
-          data={ctx.data.mappedData}
+          data={allowedData}
           loading={ctx.data.fetching}
           getRenderRowKey={_ => _.id}
           columns={columns}

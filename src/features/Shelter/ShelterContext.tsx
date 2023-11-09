@@ -6,6 +6,7 @@ import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboS
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
 import {AccessSum} from '@/core/sdk/server/access/Access'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
+import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 
 export interface ShelterContext {
   access: AccessSum
@@ -13,6 +14,7 @@ export interface ShelterContext {
   nta: UseShelterActions<ShelterNtaTags>
   ta: UseShelterActions<ShelterTaTags>
   langIndex: number
+  allowedOffices: Shelter_NTA['back_office'][]
 }
 
 const Context = React.createContext({} as ShelterContext)
@@ -23,6 +25,7 @@ export const ShelterProvider = ({
   schemaTa,
   schemaNta,
   children,
+  allowedOffices,
   access,
   data,
 }: {
@@ -31,6 +34,7 @@ export const ShelterProvider = ({
   schemaTa: KoboApiForm
   schemaNta: KoboApiForm
   children: ReactNode
+  allowedOffices: ShelterContext['allowedOffices']
 }) => {
   const [langIndex, setLangIndex] = useState<number>(0)
 
@@ -75,6 +79,7 @@ export const ShelterProvider = ({
       nta: ntaActions,
       ta: taActions,
       langIndex,
+      allowedOffices,
     }}>
       {children}
     </Context.Provider>
