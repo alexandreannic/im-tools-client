@@ -342,6 +342,7 @@ export const ShelterTable = () => {
         width: 174,
         type: 'select_one',
         renderValue: _ => _.ta?.tags?.project,
+        renderOption: _ => _.ta?.tags?.project,
         typeIcon: null,
         render: row => map(row.ta, ta => (
           <SelectDrcProject

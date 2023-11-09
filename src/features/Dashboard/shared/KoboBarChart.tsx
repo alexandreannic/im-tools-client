@@ -69,7 +69,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
       .map(sortBy ?? ChartTools.sortBy.value)
       .map(limit ? ChartTools.take(limit) : _ => _)
       .get as Record<K, ChartDataVal>
-  }, [data, question])
+  }, [data, question, overrideLabel])
   return (
     <HorizontalBarChartGoogle
       data={res}

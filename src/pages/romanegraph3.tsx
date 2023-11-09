@@ -1,17 +1,19 @@
-import {Box, Icon} from '@mui/material'
-import React, {ReactNode, useCallback, useEffect} from 'react'
+import {Box} from '@mui/material'
+import React, {ReactNode, useCallback, useEffect, useState} from 'react'
 import {Txt} from 'mui-extension'
 import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {endOfMonth, startOfMonth} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {Enum, seq} from '@alexandreannic/ts-utils'
+import {DeepPartial, Enum, seq} from '@alexandreannic/ts-utils'
 import {Period, Person} from '@/core/type'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
-import {DRCLogo, EULogo} from '@/shared/logo/logo'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
+import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
+import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 export const Pan = ({
   title,
@@ -50,8 +52,93 @@ const period: Period = {
   end: endOfMonth(new Date(2023, 8)),
 }
 
+const translationsUa: DeepPartial<typeof Protection_Hhs2_1Options> = {
+  'do_you_identify_as_any_of_the_following': {
+    idp: 'Внутрішньо переміщена особа',
+    non_displaced: 'Не переміщена особа',
+    returnee: 'Особа, котра повернулася',
+    refugee: 'Біженець'
+  },
+  'what_are_your_households_intentions_in_terms_of_place_of_residence': {
+    return_to_the_area_of_origin: 'Повернутися до місця постійного проживання',
+    integrate_into_the_local_community_of_current_place_of_residence: 'Інтегруватися місцеву громаду',
+    relocate_to_another_area_in_ukraine: 'Переїхати до іншої області України',
+    relocate_to_a_country_outside_of_ukraine: 'Переїхати до іншої країни',
+    // stay_in_place_of_habitual_residence: 'Залишатися в місці постійного проживання',
+    // relocate_to_another_area_in_ukraine: 'Переїхати до іншої області України',
+    // relocate_to_a_country_outside_of_ukraine: 'Переїхати до іншої країни'
+  },
+  // 'what_are_your_households_intentions_in_terms_of_place_of_residence': {
+  // },
+  // 'what_are_your_households_intentions_in_terms_of_place_of_residence': {
+  //   stay_in_place_of_habitual_residence: 'Залишатися в місці постійного проживання',
+  // },
+  'what_are_the_main_factors_that_make_this_location_feel_unsafe': {
+    bombardment_shelling_or_threat_of_shelling: 'Бомбардування/обстріли або загроза обстрілів',
+    presence_of_armed_or_security_actors: 'Присутність збройних сил або силових структур',
+    landmines_or_uxos_contamination: 'Міни або забруднення боєприпасами які не вибухнули',
+    criminality: 'Кримінал',
+    fighting_between_armed_or_security_actors: 'Битви між збройними силами або силовими структурами',
+    risks_of_eviction: 'Ризики примусового виселення',
+    intercommunity_tensions: 'Напруга всередині громади',
+    other_specify: 'Інше'
+  },
+  'what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members': {
+    worries_about_the_future: 'Переживання за майбутнє',
+    worries_about_the_children: 'Переживання за дітей',
+    displacement_related_stress: 'Стрес повязаний за переміщенням',
+    fear_of_being_killed_or_injured_by_armed_violence: 'Страх бути вбитим або пораненим через збройне насилля',
+    fear_of_property_being_damaged_or_destroyedby_armed_violence: 'Страх за можливість пошкодження або руйнування майна через збройний конфлікт',
+    lack_of_access_to_employment_opportunities: 'Недостатній доступ до можливостей працевлаштування',
+    lack_of_access_to_specialized_medical_services: 'Недостатній доступ до спеціалізованих медичних послуг',
+    other_specify: 'Інше',
+    lack_of_access_to_basic_services: 'Недостатній доступ до базових послуг',
+    missing_family_members: 'Сум за членами сім\'ї',
+    stigmatization_discrimination: 'Стигматизація/Дискримінація',
+    fear_of_conscription: 'Страх призову до армії'
+  },
+  'what_are_your_main_concerns_regarding_your_accommodation': {
+    accommodations_condition: 'Умови проживання',
+    risk_of_eviction: 'Ризик примусового виселення',
+    lack_of_functioning_utilities: 'Відсутність функціонуючих комунальних послуг',
+    lack_of_financial_compensation_or_rehabilitation_for_damage_or_destruction_of_housing: 'Відсутність пітримки відновлення житла',
+    overcrowded_lack_of_privacy: 'Забагато людей/Відсутність приватності',
+    security_and_safety_risks: 'Ризики захисту та безпеки',
+    lack_of_connectivity: 'Відсутність зєднання',
+    lack_or_loss_of_ownership_documentation: 'Відсутність чи втрата документів про право власності',
+    not_disability_inclusive: 'Не інклюзивне для людей з особливими потребами'
+  },
+  'what_are_the_barriers_to_accessing_health_services': {
+    lack_of_specialized_health_care_services: 'Відсутність спеціалізованих медичних послуг',
+    cost_of_the_services_provided_medication: 'Вартість наданих послуг/ліків',
+    distance_lack_of_transportation_means_to_access_facilities: 'Відстань - нестача засобів пересування, щоб дістатися до медичних закладів',
+    lack_of_available_health_facility: 'Відсутність доступного медичного закладу',
+    cost_associated_with_transportation_to_facilities: 'Вартість поїздки до медичних закладів',
+    lack_shortage_of_medication: 'Відсутність/дефіцит ліків',
+    long_waiting_time: 'Тривалий час очікування',
+    not_accessible_for_persons_with_disabilities: 'Не доступність для людей з особливими потребами',
+    other_specify: 'Інше',
+    safety_risks_associated_with_access_to_presence_at_health_facility: 'Ризики безпеки повязані з доступом/перебуванням в медичному закладі',
+    language_barriers: 'Мовний бар\'єр',
+    requirement_for_civil_documentation: 'Вимоги цивільної документації',
+    discrimination_restriction_of_access: 'Дискримінація/заборона доступу'
+  },
+  'what_are_the_main_sources_of_income_of_your_household': {
+    social_protection_payments: 'Виплати соціального захисту (пенсії, виплати тощо)',
+    humanitarian_assistance: 'Гуманітарна допомога(грошова або не грошова)',
+    salary_formal_employment: 'Заробітня плата - офіційне працевлаштування',
+    casual_labour: 'Непостійна(Тимчасова) робота',
+    savings: 'Власні накопичення',
+    no_resources_coming_into_the_household: 'Відсутність джерел, які надходять в сім\'ю',
+    assistance_from_family_friends: 'Допомога від сім\'ї/друзів',
+    other_specify: 'Інше',
+    business_self_employment: 'Підприємництво/Самозайнятість'
+  },
+}
+
 export default () => {
   const {api} = useAppSettings()
+  const [lang, setLang] = usePersistentState('en', {storageKey: 'romanegraph3'})
   const req = () => api.kobo.answer.searchProtection_Hhs2({
     filters: period
   }).then(_ => seq(_.data).map(enrichProtHHS_2_1))
@@ -74,82 +161,101 @@ export default () => {
   let index = 0
   const title = (title: string) => `Graph ${++index}. ${title}`
 
+  console.log(ageGroup(Person.ageGroup['DRC'], true))
   return (
     <>
       <SnapshotHeader period={period}/>
-      <Pan title={title('Household respondents per displacement group')}>
+      <ScRadioGroup inline dense sx={{display: 'inline-flex'}} value={lang} onChange={setLang}>
+        <ScRadioGroupItem value="en">EN</ScRadioGroupItem>
+        <ScRadioGroupItem value="ua">UA</ScRadioGroupItem>
+      </ScRadioGroup>
+      <Pan title={title('Сімї за статусом переміщеної особи')}>
         <ProtHHS2BarChart
           data={data}
           question="do_you_identify_as_any_of_the_following"
+          overrideLabel={lang === 'en' ? undefined : translationsUa.do_you_identify_as_any_of_the_following}
         />
       </Pan>
-      <Pan title={title('Surveyed households per age and gender groups')}>
-        <AAStackedBarChart data={ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
+      <Pan title={title('Опитанні сім\'ї за віком і статтю Female - Жінка; Male - Чоловік; Other - Інше')}>
+        <AAStackedBarChart data={lang === 'en'
+          ? ageGroup(Person.ageGroup['DRC'], true)
+          : ageGroup(Person.ageGroup['DRC'], true).map(_ => ({
+            key: _.key,
+            Жінка: _.Female,
+            Чоловік: _.Male,
+            Інше: _.Other,
+          }))
+        } height={250} colors={t => [
           t.palette.primary.main,
           snapshotAlternateColor(t),
         ]}/>
       </Pan>
-      <Pan title={title('Intentions per displacement status')}>
-        <Txt bold block color="hint" size="small"><Icon sx={{fontSize: 10, mr: .5}}>fiber_manual_record</Icon>IDPs</Txt>
+      <Pan title={title('Наміри щодо статусу переміщенної особи')}>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')}
-          question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           filterValue={['unable_unwilling_to_answer']}
+          question="what_are_your_households_intentions_in_terms_of_place_of_residence"
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence}
         />
-        <Txt bold block color="hint" size="small" sx={{mt: 3}}><Icon sx={{fontSize: 10, mr: .5}}>fiber_manual_record</Icon>NON-DISPLACED</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'non_displaced')}
-          question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           filterValue={['unable_unwilling_to_answer']}
+          question="what_are_your_households_intentions_in_terms_of_place_of_residence"
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence}
         />
-        <Txt bold block color="hint" size="small" sx={{mt: 3}}><Icon sx={{fontSize: 10, mr: .5}}>fiber_manual_record</Icon>REFUGEES AND RETURNEES</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'refugee' || _.do_you_identify_as_any_of_the_following === 'returnee')}
+          filterValue={['unable_unwilling_to_answer']}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
-          filterValue={['unable_unwilling_to_answer']}
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence}
         />
       </Pan>
-      <Pan title={title('Sense of safety: Influencing factors')}>
+      <Pan title={title('Відчуття безпеки: Фактори, які впливають на це')}>
         <ProtHHS2BarChart
           data={data}
           questionType="multiple"
+          filterValue={['unable_unwilling_to_answer']}
           question="what_are_the_main_factors_that_make_this_location_feel_unsafe"
-          filterValue={['unable_unwilling_to_answer']}
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_the_main_factors_that_make_this_location_feel_unsafe}
         />
       </Pan>
-      <Pan title={title('Major stress factors')}>
+      <Pan title={title('Найбільші фактори стресу')}>
         <ProtHHS2BarChart
           data={data}
           questionType="multiple"
-          question="what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members"
           filterValue={['unable_unwilling_to_answer']}
+          question="what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members"
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
         />
       </Pan>
-      <Pan title={title('Concerns related to current accommodation')}>
+      <Pan title={title('Переживання щодо поточного місця проживання')}>
         <ProtHHS2BarChart
           data={data.filter(_ => !_.what_are_your_main_concerns_regarding_your_accommodation?.includes('none'))}
           questionType="multiple"
+          filterValue={['unable_unwilling_to_answer']}
           question="what_are_your_main_concerns_regarding_your_accommodation"
-          filterValue={['unable_unwilling_to_answer']}
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_your_main_concerns_regarding_your_accommodation}
         />
       </Pan>
-      <Pan title={title('Barriers to access healthcare')}>
+      <Pan title={title('Перешкоди доступу до медичних послуг')}>
         <ProtHHS2BarChart
           data={data}
           questionType="multiple"
+          filterValue={['unable_unwilling_to_answer']}
           question="what_are_the_barriers_to_accessing_health_services"
-          filterValue={['unable_unwilling_to_answer']}
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_the_barriers_to_accessing_health_services}
         />
       </Pan>
-      <Pan title={title('Main sources of income per displacement status')}>
+      <Pan title={title('Головні джерела доходу переміщених осіб')}>
         <ProtHHS2BarChart
           data={data}
           questionType="multiple"
-          question="what_are_the_main_sources_of_income_of_your_household"
           mergeOptions={{
             remittances: 'other_specify',
           }}
           filterValue={['unable_unwilling_to_answer']}
+          question="what_are_the_main_sources_of_income_of_your_household"
+          overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_the_main_sources_of_income_of_your_household}
         />
       </Pan>
     </>
