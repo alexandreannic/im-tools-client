@@ -1,12 +1,12 @@
 export namespace AiTypeSnfiRmm {
-  type Opt<T extends keyof typeof options> = keyof (typeof options)[T]
+  export type Opt<T extends keyof typeof options> = keyof (typeof options)[T]
 
   export interface Type {
     'Reporting Partner': Opt<'Reporting Partner'>,
     'Report to a planned project': Opt<'Report to a planned project'>,
-    'Plan Code': Opt<'Plan Code'>,
+    'Plan Code': any,
     'Implementing Partner': Opt<'Implementing Partner'>,
-    'SNFI indictors': Opt<'SNFI indictors'>,
+    'SNFI indictors': any,
     'Distribution through IOM NFI Common Pipeline'?: Opt<'Distribution through IOM NFI Common Pipeline'>,
     'Oblast': string,
     'Raion': string,
