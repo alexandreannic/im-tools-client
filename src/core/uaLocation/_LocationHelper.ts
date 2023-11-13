@@ -13,7 +13,6 @@ import settlements from './settlements.json'
 export class AILocationHelper {
 
   private static readonly findLocation = <K extends string>(loc: Record<K, string>, name: string, type: string): K | undefined => {
-    console.log('>>', name)
     const res = Enum.keys(loc).find(_ => _.includes(name))
     if (!res) {
       console.error(`Cannot find ${type} ${name}`)
@@ -47,7 +46,7 @@ export class AILocationHelper {
     }[raionName] ?? raionName
     const oblastIso = OblastIndex.searchISOByName(oblastName)
     const list = Enum.values(raions).filter(_ => _.parent === oblastIso)
-    return list.find(_ => _.en === fixedRaion)
+    return list.find(_ => _.en.toLowerCase() === fixedRaion.toLowerCase())
   }
 
   static readonly findHromadaByIso = (iso: keyof typeof hromadas) => {
@@ -64,7 +63,7 @@ export class AILocationHelper {
     }
     const raionIso = AILocationHelper.findRaion(oblastName, raionName)?.iso
     const list = Enum.values(hromadas).filter(_ => _.parent === raionIso)
-    return list.find(_ => _.en === hromadaName)
+    return list.find(_ => _.en.toLowerCase() === hromadaName.toLowerCase())
   }
 
   static readonly findSettlement = (oblastName: string, raionName: string, hromadaName: string, settlementName: string) => {

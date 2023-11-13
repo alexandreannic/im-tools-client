@@ -56,6 +56,8 @@ export namespace Person {
     gender?: Gender
   }
 
+  export const create = (_: Person) => _
+
   export enum Gender {
     Male = 'Male',
     Female = 'Female',

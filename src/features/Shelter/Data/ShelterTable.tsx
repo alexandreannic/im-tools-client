@@ -141,6 +141,12 @@ export const ShelterTable = () => {
         render: _ => ctx.nta.helper.translateChoice('owner_tenant_type', _.nta?.owner_tenant_type),
       },
       {
+        id: 'hhSize',
+        type: 'number',
+        head: m.hhSize,
+        render: _ => _.nta?.ben_det_hh_size,
+      },
+      {
         id: 'document_type',
         type: 'select_one',
         head: m._shelter.documentType,

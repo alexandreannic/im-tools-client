@@ -12,18 +12,33 @@ import {Period, PeriodHelper} from '@/core/type'
 import {AiTypeSnfiRmm} from '@/features/ActivityInfo/Shelter/AiTypeSnfiRmm'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
+import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
+import {AAIconBtn} from '@/shared/IconBtn'
+import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AiShelterData} from '@/features/ActivityInfo/Shelter/aiShelterData'
+import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
+import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
+import {AaBtn} from '@/shared/Btn/AaBtn'
+import {useAaToast} from '@/core/useToast'
+import {useAsync} from '@/alexlib-labo/useAsync'
 
 export const AiShelter = () => {
   const {api} = useAppSettings()
-  const req = (period: Period) => api.shelter.search(period).then(_ => seq(_.data)).then(res => {
-    const formatted: AiTypeSnfiRmm.Type[] = []
+  const {toastHttpError} = useAaToast()
+  const req = (period: Period) => api.shelter.search(period).then(_ => seq(_.data).compactBy('nta').compactBy('ta').map(x => ({...x, ...getAiLocation(x.nta)}))).then(res => {
+    const formatted: {
+      all: ShelterEntity[],
+      activity: AiTypeSnfiRmm.Type,
+      request: any,
+    }[] = []
+    let index = 0
     Utils.groupBy({
       data: res,
       groups: [
-        {by: _ => _.ta?.tags?.project ?? ''},
-        {by: _ => _.nta?.ben_det_oblast ?? ''},
-        {by: _ => _.nta?.ben_det_raion ?? ''},
-        {by: _ => _.nta?.ben_det_hromada ?? ''},
+        {by: _ => _.ta?.tags?.project!},
+        {by: _ => _.Oblast!},
+        {by: _ => _.Raion!},
+        {by: _ => _.Hromada!},
         // {by: _ => _.}
         {
           by: row => {
@@ -34,7 +49,7 @@ export const AiShelter = () => {
             return map(row.nta?.total_apt_damage ?? row.nta?.total_damage, _ => {
               if (+_ < 6) return ShelterTaPriceLevel.Light
               return ShelterTaPriceLevel.Medium
-            }) ?? '!!!!!'
+            })!
           },
         },
         {
@@ -52,30 +67,54 @@ export const AiShelter = () => {
           }, () => 'Non-Displaced') as AiTypeSnfiRmm.Opt<'Population Group'>
         }
       ],
-      finalTransform: (grouped, [project, oblast, raion, hromada, damageLeve, complete, status]) => {
-        formatted.push({
-          'SNFI indictors': '',
+      finalTransform: (grouped, [project, oblast, raion, hromada, damageLevel, complete, status]) => {
+        // TODO NOT EVERYTHING IN AGE GROUP
+        // const persons = grouped.flatMap(_ => _.nta?.hh_char_hh_det?.map(_ => Person.create({
+        //   age: _.hh_char_hh_det_age,
+        //   gender: fnSwitch(_.hh_char_hh_det_gender!, {
+        //     male: Gender.Male,
+        //     female: Gender.Female,
+        //   }, () => Gender.Other)
+        // }))).compact().compactBy('age')
+        const indicator = grouped.sum(_ => _.nta?.ben_det_hh_size ?? 0)
+        const planCode = AiShelterData.planCode[project]
+        const validPlanCode = !!AiTypeSnfiRmm.options['Plan Code'][planCode]
+        const activity: AiTypeSnfiRmm.Type = {
+          'SNFI indictors': fnSwitch(damageLevel, {
+            [ShelterTaPriceLevel.Light]: 'light_repair',
+            [ShelterTaPriceLevel.Medium]: 'medium_repair',
+            [ShelterTaPriceLevel.Heavy]: 'medium_repair',
+          }, () => undefined),
           'Implementing Partner': 'Danish Refugee Council',
-          'Plan Code': project,
+          'Report to a planned project': validPlanCode ? 'Yes' : 'No',
+          ...(validPlanCode ? {'Plan Code': planCode} : {}),
+          // 'Plan Code': AiShelterData.planCode[project],
           'Reporting Partner': 'Danish Refugee Council',
-          'Report to a planned project': 'Yes',
           'Oblast': oblast,
           'Raion': raion,
           'Hromada': hromada,
-          'Settlement': '_NTA TODO',
-          'Collective Site': '_NTA TODO',
           'Implementation status': complete,
           'Reporting Date (YYYY-MM-DD)': format(period.end, 'yyyy-MM-dd'),
-          'Population Group': status,
-          'Indicator Value (HHs reached, buildings, etc.)': 0,
-          '# Individuals Reached': 0,
-          'Girls (0-17)': 0,
-          'Boys (0-17)': 0,
-          'Women (18-59)': 0,
-          'Men (18-59)': 0,
-          'Elderly Women (60+)': 0,
-          'Elderly Men (60+)': 0,
-          'People with disability': 0,
+          // 'Population Group': status,
+          'Indicator Value (HHs reached, buildings, etc.)': indicator,
+          // '# Individuals Reached': persons.length,
+          // 'Girls (0-17)': persons.count(_ => _.age < 18 && _.gender === Gender.Female),
+          // 'Boys (0-17)': persons.count(_ => _.age < 18 && _.gender === Gender.Male),
+          // 'Women (18-59)': persons.count(_ => _.age >= 18 && _.age < 60 && _.gender === Gender.Female),
+          // 'Men (18-59)': persons.count(_ => _.age >= 18 && _.age < 60 && _.gender === Gender.Male),
+          // 'Elderly Women (60+)': persons.count(_ => _.age >= 60 && _.gender === Gender.Female),
+          // 'Elderly Men (60+)': persons.count(_ => _.age >= 60 && _.gender === Gender.Male),
+          // 'People with disability': 0,
+        }
+        formatted.push({
+          all: grouped.map(_ => _.nta),
+          activity,
+          request: ActivityInfoSdk.makeRecordRequest({
+            activity: AiTypeSnfiRmm.map(activity),
+            formId: 'ckrgu2uldtxbgbg1h',
+            activityIdPrefix: 'drcsta',
+            activityIndex: index++,
+          })
         })
       },
     })
@@ -88,6 +127,10 @@ export const AiShelter = () => {
   useEffect(() => {
     fetcher.fetch({}, PeriodHelper.fromyyyMM(period))
   }, [period])
+
+  const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
+    requestKey: ([i]) => i
+  })
 
   // console.log(fetcher.entity?.map(_ => _.nta).compact().map(_ => {
   //   const a = Utils.add(
@@ -103,24 +146,57 @@ export const AiShelter = () => {
   return (
     <Page width="full">
       <Panel>
-        <AaInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
-        <Sheet id="ai-shelter" data={fetcher.entity} loading={fetcher.loading} columns={[
-          {type: 'select_one', id: 'Plan Code', head: 'Plan Code', render: row => row['Plan Code']},
-          {type: 'select_one', id: 'SNFI indictors', head: 'SNFI indictors', render: row => row['SNFI indictors']},
-          {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row['Oblast']},
-          {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row['Raion']},
-          {type: 'select_one', id: 'Hromada', head: 'Hromada', render: row => row['Hromada']},
-          {type: 'select_one', id: 'Implementation status', head: 'Implementation status', render: row => row['Implementation status']},
-          {type: 'select_one', id: 'Population Group', head: 'Population Group', render: row => row['Population Group']},
-          {type: 'number', id: 'Indicator Value (HHs reached, buildings, etc.)', head: 'Indicator Value (HHs reached, buildings, etc.)', render: row => row['Indicator Value (HHs reached, buildings, etc.)']},
-          {type: 'number', id: '# Individuals Reached', head: '# Individuals Reached', render: row => row['# Individuals Reached']},
-          {type: 'number', id: 'Girls (0-17)', head: 'Girls (0-17)', render: row => row['Girls (0-17)']},
-          {type: 'number', id: 'Boys (0-17)', head: 'Boys (0-17)', render: row => row['Boys (0-17)']},
-          {type: 'number', id: 'Women (18-59)', head: 'Women (18-59)', render: row => row['Women (18-59)']},
-          {type: 'number', id: 'Men (18-59)', head: 'Men (18-59)', render: row => row['Men (18-59)']},
-          {type: 'number', id: 'Elderly Women (60+)', head: 'Elderly Women (60+)', render: row => row['Elderly Women (60+)']},
-          {type: 'number', id: 'Elderly Men (60+)', head: 'Elderly Men (60+)', render: row => row['Elderly Men (60+)']},
-          {type: 'number', id: 'People with disability', head: 'People with disability', render: row => row['People with disability']},
+        <Sheet
+          header={
+            <>
+              <AaInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
+              <AaBtn
+                loading={_submit.isLoading}
+                icon="send"
+                variant="contained"
+                sx={{ml: 'auto'}}
+                onClick={() => {
+                  if (!fetcher.entity) return
+                  _submit.call('all', fetcher.entity.map(_ => _.request)).catch(toastHttpError)
+                }}
+              >
+                {m.submitAll}
+              </AaBtn>
+            </>
+          }
+          defaultLimit={100} id="ai-shelter" data={fetcher.entity} loading={fetcher.loading} columns={[
+          {
+            id: 'actions', width: 160, head: '', render: _ => (
+              <>
+                <AAIconBtn
+                  disabled={!_.activity.Hromada} color="primary"
+                  onClick={() => {
+                    // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
+                  }}
+                >send</AAIconBtn>
+                <AIViewAnswers answers={_.all}/>
+                <AIPreviewActivity activity={_.activity}/>
+                <AIPreviewRequest request={_.request}/>
+              </>
+            )
+          },
+          {type: 'select_one', id: 'Report to a planned project', head: 'Report to a planned project', render: row => row.activity['Report to a planned project']},
+          {type: 'select_one', id: 'Plan Code', head: 'Plan Code', render: row => row.activity['Plan Code']},
+          {type: 'select_one', id: 'SNFI indictors', head: 'SNFI indictors', render: row => row.activity['SNFI indictors']},
+          {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},
+          {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row.activity['Raion']},
+          {type: 'select_one', id: 'Hromada', head: 'Hromada', render: row => row.activity['Hromada']},
+          {type: 'select_one', id: 'Implementation status', head: 'Implementation status', render: row => row.activity['Implementation status']},
+          {type: 'select_one', id: 'Population Group', head: 'Population Group', render: row => row.activity['Population Group']},
+          {type: 'number', id: 'Indicator Value (HHs reached, buildings, etc.)', head: 'Indicator Value (HHs reached, buildings, etc.)', render: row => row.activity['Indicator Value (HHs reached, buildings, etc.)']},
+          {type: 'number', id: '# Individuals Reached', head: '# Individuals Reached', render: row => row.activity['# Individuals Reached']},
+          {type: 'number', id: 'Girls (0-17)', head: 'Girls (0-17)', render: row => row.activity['Girls (0-17)']},
+          {type: 'number', id: 'Boys (0-17)', head: 'Boys (0-17)', render: row => row.activity['Boys (0-17)']},
+          {type: 'number', id: 'Women (18-59)', head: 'Women (18-59)', render: row => row.activity['Women (18-59)']},
+          {type: 'number', id: 'Men (18-59)', head: 'Men (18-59)', render: row => row.activity['Men (18-59)']},
+          {type: 'number', id: 'Elderly Women (60+)', head: 'Elderly Women (60+)', render: row => row.activity['Elderly Women (60+)']},
+          {type: 'number', id: 'Elderly Men (60+)', head: 'Elderly Men (60+)', render: row => row.activity['Elderly Men (60+)']},
+          {type: 'number', id: 'People with disability', head: 'People with disability', render: row => row.activity['People with disability']},
         ]}/>
       </Panel>
     </Page>

@@ -26,7 +26,7 @@ const disaggregatePersons = (persons: Person.Person[]) => {
   }
 }
 
-const getAiLocation = (d: Pick<Protection_groupSession, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>) => {
+export const getAiLocation = (d: Pick<Protection_groupSession, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>) => {
   const oblast = OblastIndex.koboOblastIndex[d.ben_det_oblast!]
   // @ts-ignore
   const raion = AILocationHelper.findRaion(oblast, bn_ReOptions.ben_det_raion[d.ben_det_raion!])
