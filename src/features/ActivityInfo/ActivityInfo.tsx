@@ -7,6 +7,7 @@ import {ActivityInfoMpca} from '@/features/ActivityInfo/Mpca/ActivityInfoMpca'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Enum} from '@alexandreannic/ts-utils'
 import {AiProtectionGeneral} from '@/features/ActivityInfo/Protection/AiProtectionGeneral'
+import {AiShelter} from '@/features/ActivityInfo/Shelter/AiShelter'
 
 export const activityInfoModule = {
   basePath: '/activity-info',
@@ -14,7 +15,8 @@ export const activityInfoModule = {
     mpca: '/mpca',
     protection_general: '/protection_general',
     protection_general2: '/protection_general2',
-    nfi: '/nfi'
+    nfi: '/nfi',
+    shelter: '/shelter',
   }
 }
 
@@ -22,8 +24,9 @@ const ActivityInfoSidebar = () => {
   const translate: Record<keyof typeof activityInfoModule['siteMap'], string> = {
     protection_general: 'Protection',
     protection_general2: 'Protection 2',
-    nfi: 'NFI',
+    nfi: 'WASH (NFI)',
     mpca: 'MPCA',
+    shelter: 'SNFI',
   }
   return (
     <Sidebar>
@@ -45,6 +48,7 @@ export const ActivityInfo = () => {
           <Route path={activityInfoModule.siteMap.protection_general} element={<ActivityInfoProtectionGeneral/>}/>
           <Route path={activityInfoModule.siteMap.protection_general2} element={<AiProtectionGeneral/>}/>
           <Route path={activityInfoModule.siteMap.nfi} element={<ActivityInfoNFI/>}/>
+          <Route path={activityInfoModule.siteMap.shelter} element={<AiShelter/>}/>
         </Routes>
       </Layout>
     </Router>
