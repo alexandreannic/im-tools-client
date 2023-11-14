@@ -2,6 +2,8 @@ import {bool, defaultValue, env, required} from '@alexandreannic/ts-utils'
 import {AppFeatureId, appFeaturesIndex} from '@/features/appFeatureId'
 
 enum Env {
+  NEXT_PUBLIC_SENTRY_DNS = 'NEXT_PUBLIC_SENTRY_DNS',
+  NEXT_PUBLIC_BASE_URL = 'NEXT_PUBLIC_BASE_URL',
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = 'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',
   NEXT_PUBLIC_GOOGLE_MAPS_ID = 'NEXT_PUBLIC_GOOGLE_MAPS_ID',
   NEXT_PUBLIC_API_BASE_URL = 'NEXT_PUBLIC_API_BASE_URL',
@@ -13,6 +15,8 @@ enum Env {
 }
 
 const persistedTempEnvVariablesForFront: { [key in Env]: string | undefined } = {
+  NEXT_PUBLIC_SENTRY_DNS: process.env.NEXT_PUBLIC_SENTRY_DNS,
+  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   NEXT_PUBLIC_GOOGLE_MAPS_ID: process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID,
   NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -34,6 +38,10 @@ export const appConfig = {
   },
   contact: 'alexandre.annic@drc.ngo',
   apiURL: _(required)(Env.NEXT_PUBLIC_API_BASE_URL),
+  baseURL: _(defaultValue('https://infoportal-ua.drc.ngo/'))(Env.NEXT_PUBLIC_BASE_URL),
+  sentry: {
+    dsn: _()(Env.NEXT_PUBLIC_SENTRY_DNS)
+  },
   gooogle: {
     apiKey: _(required)(Env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY),
     mapId: _(required)(Env.NEXT_PUBLIC_GOOGLE_MAPS_ID),

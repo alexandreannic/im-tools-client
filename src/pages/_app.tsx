@@ -22,6 +22,7 @@ import {LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LicenseInfo} from '@mui/x-license-pro'
 import {useRouter} from 'next/router'
+import {initSentry} from '@/plugins/Sentry'
 
 LicenseInfo.setLicenseKey(appConfig.muiProLicenseKey ?? '')
 
@@ -42,6 +43,7 @@ const App = ({
 
   const router = useRouter()
   useEffect(() => {
+    initSentry(appConfig)
     api.session.track(router.pathname)
   }, [router])
 
