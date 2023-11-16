@@ -8,7 +8,6 @@ import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo} from '@/koboDrcUaFormId'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
 import {Meal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExternal'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
@@ -18,6 +17,8 @@ import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
 import {seq} from '@alexandreannic/ts-utils'
+import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
+import {OblastIndex, OblastName} from '@/shared/UkraineMap/oblastIndex'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [kobo.drcUa.form.meal_cfmExternal]: CfmDataSource.External,
@@ -29,24 +30,27 @@ export type CfmData = {
   formId: KoboId
   tags?: KoboMealCfmTag
   form: CfmDataSource
+  comments?: string
   feedback?: string
+  additionalInformation?: string
   project?: string
-  category?: MealCfmInternal['feedback_type']
+  oblast: OblastName
+  category?: Meal_CfmInternal['feedback_type']
   external_prot_support?: Meal_CfmExternal['prot_support']
-  internal_existing_beneficiary?: MealCfmInternal['existing_beneficiary']
-  internal_project_code?: MealCfmInternal['project_code']
+  internal_existing_beneficiary?: Meal_CfmInternal['existing_beneficiary']
+  internal_project_code?: Meal_CfmInternal['project_code']
   // external_thanks_feedback?: MealCfmExternal['thanks_feedback']
   // external_complaint?: MealCfmExternal['complaint']
   external_consent?: Meal_CfmExternal['consent']
   external_feedback_type?: Meal_CfmExternal['feedback_type']
-  // internal_feedback?: MealCfmInternal['feedback']
-  // internal?: Pick<MealCfmInternal, 'feedback' | 'existing_beneficiary' | 'project_code'>
+  // internal_feedback?: Meal_CfmInternal['feedback']
+  // internal?: Pick<Meal_CfmInternal, 'feedback' | 'existing_beneficiary' | 'project_code'>
   // external?: Pick<MealCfmExternal, 'prot_support' | 'thanks_feedback' | 'complaint' | 'consent' | 'feedback_type'>
-} & Pick<KoboAnswer<Meal_CfmExternal>,
-  'ben_det_oblast' |
+} & Pick<KoboAnswer<Meal_CfmInternal>,
+  // 'ben_det_oblast' |
   'ben_det_raion' |
   'ben_det_hromada'
-> & Pick<KoboAnswer<MealCfmInternal>,
+> & Pick<KoboAnswer<Meal_CfmInternal>,
   'id' |
   'start' |
   'date' |
@@ -72,12 +76,19 @@ export interface CfmContext {
   schemaExternal: UseKoboSchema,
   translateExternal: ReturnType<typeof getKoboTranslations>,
   translateInternal: ReturnType<typeof getKoboTranslations>,
-  updateTag: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag, value: any}) => Promise<Record<string, any>>>
-  asyncRemove: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId}) => Promise<void>>
-  asyncEdit: UseAsync<(_: {formId: KoboId, answerId: KoboAnswerId}) => Promise<void>>
+  updateTag: UseAsync<(_: {
+    formId: KoboId,
+    answerId: KoboAnswerId,
+    key: keyof KoboMealCfmTag,
+    value: any
+  }) => Promise<Record<string, any>>>
+  asyncRemove: UseAsync<(_: {
+    formId: KoboId,
+    answerId: KoboAnswerId
+  }) => Promise<void>>
   users: UseFetcher<ApiSdk['user']['search']>
   data: UseFetcher<() => Promise<{
-    [CfmDataSource.Internal]: KoboAnswer<MealCfmInternal, KoboMealCfmTag>[]
+    [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal, KoboMealCfmTag>[]
     [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal, KoboMealCfmTag>[]
   }>>
   mappedData: CfmData[]
@@ -150,12 +161,13 @@ export const CfmProvider = ({
       res.push({
         category,
         priority: KoboMealCfmHelper.feedbackType2priority(category),
-        feedback: _.thanks_feedback ?? _.complaint,
         formId: kobo.drcUa.form.meal_cfmExternal,
         external_feedback_type: _.feedback_type,
         external_consent: _.consent,
         external_prot_support: _.prot_support,
         form: CfmDataSource.External,
+        oblast: OblastIndex.koboOblastIndex[_.ben_det_oblast!],
+        feedback: _.complaint ?? _.thanks_feedback ?? _.request,
         ..._,
       })
     })
@@ -169,6 +181,7 @@ export const CfmProvider = ({
         form: CfmDataSource.Internal,
         internal_existing_beneficiary: _.existing_beneficiary,
         internal_project_code: _.project_code,
+        oblast: OblastIndex.koboOblastIndex[_.ben_det_oblast!],
         ..._,
       })
     })
@@ -190,7 +203,12 @@ export const CfmProvider = ({
       .sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
   }, [data])
 
-  const updateTag = useAsync((params: {formId: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag, value: any}) => api.kobo.answer.updateTag({
+  const updateTag = useAsync((params: {
+    formId: KoboId,
+    answerId: KoboAnswerId,
+    key: keyof KoboMealCfmTag,
+    value: any
+  }) => api.kobo.answer.updateTag({
     formId: params.formId,
     answerIds: [params.answerId],
     tags: {[params.key]: params.value}
@@ -209,7 +227,10 @@ export const CfmProvider = ({
     requestKey: ([_]) => cfmMakeUpdateRequestKey(_.formId, _.answerId, _.key)
   })
 
-  const asyncRemove = useAsync(async ({formId, answerId}: {formId: KoboId, answerId: KoboAnswerId}) => {
+  const asyncRemove = useAsync(async ({formId, answerId}: {
+    formId: KoboId,
+    answerId: KoboAnswerId
+  }) => {
     // await Promise.all([
     // await updateTag.call({
     //   formId,
@@ -228,16 +249,6 @@ export const CfmProvider = ({
     requestKey: ([_]) => cfmMakeEditRequestKey(_.formId, _.answerId)
   })
 
-  const asyncEdit = useAsync(async ({formId, answerId}: {formId: KoboId, answerId: KoboAnswerId}) => {
-    return api.koboApi.getEditUrl(kobo.drcUa.server.prod, formId, answerId).then(_ => {
-      if (_.url) {
-        window.open(_.url, '_blank')
-      }
-    })
-      .catch(toastHttpError)
-  }, {requestKey: ([_]) => cfmMakeEditRequestKey(_.formId, _.answerId)})
-
-
   useEffect(() => {
     data.fetch()
     users.fetch()
@@ -248,7 +259,6 @@ export const CfmProvider = ({
       authorizations,
       schemaInternal,
       asyncRemove,
-      asyncEdit,
       schemaExternal,
       translateExternal,
       translateInternal,

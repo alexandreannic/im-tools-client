@@ -2,7 +2,7 @@ import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmC
 import {useNavigate, useParams} from 'react-router'
 import {Page, PageTitle} from '@/shared/Page'
 import * as yup from 'yup'
-import {Fender} from 'mui-extension'
+import {Fender, Txt} from 'mui-extension'
 import {Box, Divider, Grid, Icon} from '@mui/material'
 import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {ListRow} from '@/shared/ListRow'
@@ -17,12 +17,13 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {AaSelect} from '@/shared/Select/Select'
 import {Enum} from '@alexandreannic/ts-utils'
-import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmInternalOptions'
 import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {cfmModule} from '@/features/Cfm/CfmModule'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
+import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
+import {useAppSettings} from '@/core/context/ConfigContext'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -47,10 +48,13 @@ export const CfmEntryRoute = () => {
   )
 }
 
-export const CfmEntry = ({entry}: {entry: CfmData}) => {
+export const CfmEntry = ({entry}: {
+  entry: CfmData
+}) => {
   const {m, formatDateTime} = useI18n()
   const ctx = useCfmContext()
   const navigate = useNavigate()
+  const {api} = useAppSettings()
   const {session} = useSession()
   const canEdit = ctx.authorizations.sum.write || session.email === entry.tags?.focalPointEmail
   return (
@@ -100,8 +104,8 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
                   variant="outlined"
                   color="primary"
                   icon="edit"
-                  loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(entry.formId, entry.id))}
-                  onClick={() => ctx.asyncEdit.call({formId: entry.formId, answerId: entry.id})}
+                  href={api.koboApi.getEditUrl({formId: entry.formId, answerId: entry.id})}
+                  target="_blank"
                 >{m.edit}</AaBtn>
               )}
             >{m._cfm.reporterDetails}</PanelHead>
@@ -111,7 +115,7 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
               <ListRow icon="email" label={entry.email}/>
               <ListRow icon="female" label={ctx.translateExternal.translateChoice('gender', entry.gender)}/>
               <Divider/>
-              <ListRow icon="location_on" label={m.oblast}>{ctx.translateExternal.translateChoice('ben_det_oblast', entry.ben_det_oblast)}</ListRow>
+              <ListRow icon="location_on" label={m.oblast}>{entry.oblast}</ListRow>
               <ListRow icon="" label={m.raion}>{ctx.translateExternal.translateChoice('ben_det_raion', entry.ben_det_raion)}</ListRow>
               <ListRow icon="" label={m.hromada}>{ctx.translateExternal.translateChoice('ben_det_hromada', entry.ben_det_hromada)}</ListRow>
               {entry.form === CfmDataSource.Internal ? (
@@ -225,9 +229,11 @@ export const CfmEntry = ({entry}: {entry: CfmData}) => {
             onChange={newValue => {
               ctx.updateTag.call({formId: entry.formId, answerId: entry.id, key: 'feedbackTypeOverride', value: newValue})
             }}
-            options={Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
+            options={Enum.entries(Meal_CfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
           />
-          {entry.feedback}
+          <Box>{entry.feedback}</Box>
+          {entry.comments && <Txt block sx={{mt: 2}} bold size="big">{m.comments}</Txt>}
+          {entry.comments}
         </PanelBody>
       </Panel>
       {canEdit && (

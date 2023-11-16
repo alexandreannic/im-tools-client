@@ -23,6 +23,7 @@ export interface AaBtnProps extends ButtonProps {
   icon?: string
   iconAfter?: string
   iconSx?: ButtonProps['sx']
+  target?: '_blank'
 }
 
 export const AaBtn = forwardRef(({

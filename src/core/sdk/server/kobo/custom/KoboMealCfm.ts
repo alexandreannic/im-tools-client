@@ -1,6 +1,6 @@
 import {DrcOffice} from '@/core/drcUa'
-import {MealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternal'
 import {fnSwitch} from '@alexandreannic/ts-utils'
+import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
 
 export enum CfmDataSource {
   Internal = 'Internal',
@@ -44,12 +44,12 @@ export interface KoboMealCfmTag {
   notes?: string
   focalPointEmail?: string
   status?: KoboMealCfmStatus
-  feedbackTypeOverride?: MealCfmInternal['feedback_type']
+  feedbackTypeOverride?: Meal_CfmInternal['feedback_type']
 }
 
 export class KoboMealCfmHelper {
 
-  static readonly feedbackType2priority = (_?: MealCfmInternal['feedback_type']) => {
+  static readonly feedbackType2priority = (_?: Meal_CfmInternal['feedback_type']) => {
     return fnSwitch(_!, {
       apprec_com: CfmDataPriority.Low,
       request_info: CfmDataPriority.Medium,

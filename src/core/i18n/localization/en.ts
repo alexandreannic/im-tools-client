@@ -1105,6 +1105,7 @@ export const en = Object.freeze({
       openKoboForm: 'Open Kobo form',
     },
     _cfm: {
+      additionalInformation: 'Details',
       deleteWarning: `In case of mistake, you can still recover deleted data by contacting ${appConfig.contact}.`,
       _feedbackType: {
         'thanks': 'Thanks',

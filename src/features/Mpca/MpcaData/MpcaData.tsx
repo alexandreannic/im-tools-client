@@ -153,8 +153,8 @@ export const MpcaData = () => {
               head: m.mpca.projectOverride,
               width: 180,
               type: 'select_one',
-              renderValue: row => row.tags?.projects?.[0],
-              renderOption: row => row.tags?.projects?.[0],
+              renderValue: row => row.tags?.projects?.[0] ?? SheetUtils.blank,
+              renderOption: row => row.tags?.projects?.[0] ?? SheetUtils.blank,
               render: _ => (
                 <SelectDrcProject label={null} options={MpcaHelper.projects} value={_.tags?.projects?.[0]} onChange={p => {
                   ctx.asyncUpdates.call({

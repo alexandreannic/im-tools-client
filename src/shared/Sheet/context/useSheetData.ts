@@ -12,7 +12,6 @@ import {
   SheetSearch
 } from '@/shared/Sheet/util/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
-import safeNumber = Utils.safeNumber
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 export type UseSheetData<T extends SheetRow> = ReturnType<typeof useSheetData<T>>
@@ -58,8 +57,8 @@ export const useSheetData = <T extends SheetRow>({
       if (!col.type) return
       const sorted = d.sort(fnSwitch(col.type, {
         number: () => (a: T, b: T) => {
-          const av = safeNumber(col.renderValue(a) as number, Number.MIN_SAFE_INTEGER)
-          const bv = safeNumber(col.renderValue(b) as number, Number.MIN_SAFE_INTEGER)
+          const av = Utils.safeNumber(col.renderValue(a) as number, Number.MIN_SAFE_INTEGER)
+          const bv = Utils.safeNumber(col.renderValue(b) as number, Number.MIN_SAFE_INTEGER)
           return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
         },
         date: () => (a: T, b: T) => {

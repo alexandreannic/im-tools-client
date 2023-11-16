@@ -5,7 +5,6 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
-import {MealCfmInternalOptions} from '@/core/koboModel/MealCfmInternal/MealCfmInternalOptions'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {DebouncedInput} from '@/shared/DebouncedInput'
@@ -25,7 +24,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
+import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -276,7 +275,7 @@ export const CfmTable = ({}: any) => {
               head: m._cfm.feedbackType,
               id: 'feedbackType',
               width: 120,
-              options: () => Enum.keys(MealCfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.translateInternal.translateChoice('feedback_type', k)})),
+              options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.translateInternal.translateChoice('feedback_type', k)})),
               renderValue: _ => _.category,
               render: row => row.form === CfmDataSource.Internal
                 ? ctx.translateInternal.translateChoice('feedback_type', row.category)
@@ -285,7 +284,7 @@ export const CfmTable = ({}: any) => {
                   onChange={newValue => {
                     ctx.updateTag.call({formId: row.formId, answerId: row.id, key: 'feedbackTypeOverride', value: newValue})
                   }}
-                  options={Enum.entries(MealCfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
+                  options={Enum.entries(Meal_CfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
                 />
             },
             {
@@ -304,6 +303,12 @@ export const CfmTable = ({}: any) => {
             },
             {
               type: 'string',
+              head: m.comments,
+              id: 'comments',
+              render: _ => _.comments,
+            },
+            {
+              type: 'string',
               head: m.name,
               id: 'name',
               render: _ => _.name,
@@ -313,7 +318,7 @@ export const CfmTable = ({}: any) => {
               head: m.gender,
               width: 80,
               id: 'gender',
-              options: () => Enum.keys(MealCfmInternalOptions.gender).map(value => ({value, label: ctx.translateExternal.translateChoice('gender', value)})),
+              options: () => Enum.keys(Meal_CfmInternalOptions.gender).map(value => ({value, label: ctx.translateExternal.translateChoice('gender', value)})),
               renderValue: _ => _.gender,
               render: _ => ctx.translateExternal.translateChoice('gender', _.gender)
             },
@@ -332,10 +337,9 @@ export const CfmTable = ({}: any) => {
             {
               type: 'select_one',
               head: m.oblast,
-              options: () => Enum.keys(MealCfmInternalOptions.ben_det_oblast).map(value => ({value, label: ctx.translateExternal.translateChoice('ben_det_oblast', value)})),
+              options: () => Enum.keys(Meal_CfmInternalOptions.ben_det_oblast).map(value => ({value, label: ctx.translateExternal.translateChoice('ben_det_oblast', value)})),
               id: 'oblast',
-              renderValue: _ => _.ben_det_oblast,
-              render: _ => ctx.translateExternal.translateChoice('ben_det_oblast', _.ben_det_oblast),
+              render: _ => _.oblast,
             },
             {
               type: 'string',
@@ -360,7 +364,6 @@ export const CfmTable = ({}: any) => {
                     <>
                       <TableIconBtn
                         tooltip={m.edit}
-                        loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(row.formId, row.id))}
                         href={api.koboApi.getEditUrl({formId: row.formId, answerId: row.id})}
                         target="_blank"
                         children="edit"

@@ -6,7 +6,7 @@ export class ShelterSdk {
   constructor(private client: ApiClient) {
   }
 
-  readonly search = (period: Period) => {
+  readonly search = (period: Partial<Period> = {}) => {
     return this.client.post<ApiPaginate<ShelterEntity>>(`/shelter/search`, {body: period}).then(_ => ({
       ..._, data: _.data.map(_ => {
         if (_.nta) _.nta.submissionTime = new Date(_.nta.submissionTime)

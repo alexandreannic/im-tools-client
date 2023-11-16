@@ -21,7 +21,6 @@ ben_det_oblast: {
 	'kirovohradska': `Кіровоградська`,
 	'kyivska': `Київська`,
 	'luhanska': `Луганська`,
-	'sevastopilska': `Sevastopilska`,
 	'lvivska': `Львівська`,
 	'mykolaivska': `Миколаївська`,
 	'odeska': `Одеська`,

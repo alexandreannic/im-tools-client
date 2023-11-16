@@ -1,17 +1,7 @@
-export const MealCfmInternalOptions = {
+export const Meal_CfmInternalOptions = {
 existing_beneficiary: {
 	'yes': `Yes`,
 	'no': `No`
-},
-feedback_type: {
-	'apprec_com': `0. Appreciation or compliments`,
-	'request_info': `1. Request for information`,
-	'request_assistance': `2. Request for support or assistance`,
-	'non_s_feedback': `3. Non-sensitive programmatic feedback`,
-	'sen_feedback': `4. sensitive – protection issue reported`,
-	'coc': `5. Sensitive CoC violation by DRC staff and representatives.`,
-	'violation_other': `6. Sensitive- seriously violation by other humanitarian actor (non-drc staff)`,
-	'sen_safety': `7. sensitive- safety and security threat.`
 },
 project_code: {
 	'UKR_000284': `UKR-000284`,
@@ -56,4 +46,23 @@ ben_det_oblast: {
 	'zakarpatska': `Zakarpatska`,
 	'zaporizka': `Zaporizka`,
 	'zhytomyrska': `Zhytomyrska`
+},
+feedback_type: {
+	'apprec_com': `0. Appreciation or compliments`,
+	'request_info': `1. Request for information`,
+	'request_assistance': `2. Request for support or assistance`,
+	'non_s_feedback': `3. Non-sensitive programmatic feedback`,
+	'sen_feedback': `4. sensitive – protection issue reported`,
+	'coc': `5. Sensitive CoC violation by DRC staff and representatives.`,
+	'violation_other': `6. Sensitive- seriously violation by other humanitarian actor (non-drc staff)`,
+	'sen_safety': `7. sensitive- safety and security threat.`
+},
+feedback_method: {
+	'in_person_complaint': `In person complaint`,
+	'feedback_or_complaints_suggestion_box': `Feedback or complaints suggestion box`,
+	'community_committee': `Community Committee`,
+	'phone': `Phone`,
+	'email': `Email`,
+	'facebook': `Facebook`,
+	'other': `Other`
 }}

@@ -14,7 +14,6 @@ import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ProtectionCommunityMonitoring, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {mapMeal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExternalMapping'
-import {mapMealCfmInternal} from '@/core/koboModel/MealCfmInternal/MealCfmInternalMapping'
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {RapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanism'
 import {mapRapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanismMapping'
@@ -28,6 +27,7 @@ import {Bn_cashForRentApplication} from '@/core/koboModel/Bn_cashForRentApplicat
 import {mapProtection_communityMonitoring} from '@/core/koboModel/Protection_communityMonitoring/Protection_communityMonitoringMapping'
 import {mapProtection_pss} from '@/core/koboModel/Protection_pss/Protection_pssMapping'
 import {mapProtection_groupSession} from '@/core/koboModel/Protection_groupSession/Protection_groupSessionMapping'
+import {mapMeal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalMapping'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -175,7 +175,7 @@ export class KoboAnswerSdk {
   readonly searchMealCfmInternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.meal_cfmInternal,
-      fnMap: mapMealCfmInternal,
+      fnMap: mapMeal_CfmInternal,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })
