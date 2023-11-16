@@ -25,6 +25,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -360,7 +361,8 @@ export const CfmTable = ({}: any) => {
                       <TableIconBtn
                         tooltip={m.edit}
                         loading={ctx.asyncEdit.loading.has(cfmMakeEditRequestKey(row.formId, row.id))}
-                        onClick={() => ctx.asyncEdit.call({formId: row.formId, answerId: row.id})}
+                        href={api.koboApi.getEditUrl({formId: row.formId, answerId: row.id})}
+                        target="_blank"
                         children="edit"
                       />
                       <Modal

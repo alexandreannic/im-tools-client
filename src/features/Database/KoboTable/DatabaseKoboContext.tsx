@@ -44,14 +44,14 @@ export const DatabaseKoboTableProvider = (props: {
     children,
     fetcherAnswers,
   } = props
-  const {api, conf} = useAppSettings()
+  const {api} = useAppSettings()
 
   const asyncRefresh = useAsync(async () => {
     await api.koboApi.synchronizeAnswers(serverId, form.id)
     await fetcherAnswers.fetch({force: true, clean: false})
   })
 
-  const asyncEdit = (answerId: KoboAnswerId) => `${conf.apiURL}/kobo-api/${serverId}/${form.id}/${answerId}/edit-url`
+  const asyncEdit = (answerId: KoboAnswerId) => api.koboApi.getEditUrl({serverId, formId: form.id, answerId})
   // const asyncEdit = useAsync(async (answerId: KoboAnswerId) => {
   //   return api.koboApi.getEditUrl(serverId, form.id, answerId).then(_ => {
   //     if (_.url) {

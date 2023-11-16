@@ -2,6 +2,8 @@ import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, UUID} from '@/core/type'
 import {ApiKoboForm, Kobo, KoboAnswer, KoboAnswerId, KoboId} from './Kobo'
 import {KoboApiForm} from './KoboApi'
+import {appConfig, AppConfig} from '@/conf/AppConfig'
+import {kobo} from '@/koboDrcUaFormId'
 
 export interface FilterBy {
   column: string
@@ -28,7 +30,7 @@ export interface FnMap<T> {
 
 export class KoboApiSdk {
 
-  constructor(private client: ApiClient) {
+  constructor(private client: ApiClient, private conf: AppConfig = appConfig) {
   }
 
   /** @deprecated */
@@ -90,8 +92,13 @@ export class KoboApiSdk {
     return this.client.get(`/kobo-api/${serverId}/${formId}`)
   }
 
-  readonly getEditUrl = (serverId: UUID, formId: KoboId, answerId: KoboAnswerId): Promise<{url: string, detail?: string}> => {
-    return this.client.get(`/kobo-api/${serverId}/${formId}/${answerId}/edit-url`)
+  readonly getEditUrl = ({serverId = kobo.drcUa.server.prod, formId, answerId}: {
+    serverId?: UUID,
+    formId: KoboId,
+    answerId: KoboAnswerId
+  }): string => {
+    return `${this.conf.apiURL}/kobo-api/${serverId}/${formId}/${answerId}/edit-url`
+
   }
 
   readonly getForms = (serverId: UUID): Promise<ApiKoboForm[]> => {

@@ -52,7 +52,7 @@ export const ShelterTable = () => {
             {map(_.nta, answer =>
               <>
                 <TableIconBtn tooltip={m.view} children="visibility" onClick={() => ctx.nta.openModalAnswer(answer)}/>
-                <TableIconBtn tooltip={m.edit} loading={ctx.nta.asyncEdit.loading.has(answer.id)} onClick={() => ctx.nta.asyncEdit.call(answer.id)} children="edit"/>
+                <TableIconBtn tooltip={m.edit} href={ctx.nta.asyncEdit(answer.id)} target="_blank" children="edit"/>
               </>
             ) ?? (
               <>
@@ -269,7 +269,7 @@ export const ShelterTable = () => {
         render: _ => map(_.ta, form =>
           <>
             <TableIconBtn tooltip={m.view} children="visibility" onClick={() => ctx.ta.openModalAnswer(form)}/>
-            <TableIconBtn tooltip={m.edit} loading={ctx.ta.asyncEdit.loading.has(form.id)} onClick={() => ctx.ta.asyncEdit.call(form.id)} children="edit"/>
+            <TableIconBtn tooltip={m.edit} href={ctx.ta.asyncEdit(form.id)} target="_blank" children="edit"/>
           </>
         ),
       },

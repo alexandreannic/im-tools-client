@@ -96,17 +96,12 @@ export const useShelterActions = <T extends Record<string, any>, >({
     requestKey: ([_]) => _.answerId
   })
 
-  const asyncEdit = useAsync(async (answerId: KoboAnswerId) => {
-    return api.koboApi.getEditUrl(kobo.drcUa.server.prod, formId, answerId).then(_ => {
-      if (_.url) window.open(_.url, '_blank')
-    }).catch(toastHttpError)
-  }, {requestKey: _ => _[0]})
+  const asyncEdit = (answerId: KoboAnswerId) => api.koboApi.getEditUrl({formId, answerId})
 
   const [openModalAnswer] = useDatabaseKoboAnswerView<ShelterEntity['ta']>(schema)
 
   // useEffectFn(asyncUpdates.lastError, toastHttpError)
   // useEffectFn(asyncUpdate.lastError, toastHttpError)
-  useEffectFn(asyncEdit.lastError, toastHttpError)
 
   return {
     helper,
