@@ -25,6 +25,7 @@ export const kobo = {
       protection_hhs2_1: 'aQDZ2xhPUnNd43XzuQucVR',
       protection_communityMonitoring: 'aQHBhYgevdzw8TR2Vq2ZdR',
       protection_groupSession: 'a8Tn94arrSaH2FQBhUa9Zo',
+      shelter_cash_for_shelter: 'aQgRrYdwHuvWbj23LpywPF',
       protection_pss: 'a52hN5iiCW73mxqqfmEAfp',
       protection_hhs1: 'aFU8x6tHksveU2c3hK7RUG',
       //
@@ -73,5 +74,6 @@ export const koboFormName: Record<keyof typeof kobo.drcUa.form, string> = {
   protection_groupSession: 'protection_groupSession',
   protection_pss: 'protection_pss',
   protection_hhs1: 'protection_hhs1',
+  shelter_cash_for_shelter: 'shelter_cash_for_shelter'
 //
 }

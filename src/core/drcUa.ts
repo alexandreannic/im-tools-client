@@ -88,7 +88,6 @@ export enum DrcProject {
   'UKR-000341 Hoffmans & Husmans' = 'UKR-000341 Hoffmans & Husmans',
   'UKR-000340 Augustinus Fonden' = 'UKR-000340 Augustinus Fonden',
 }
-
 export const drcProjects = Enum.keys(DrcProject)
 
 export const drcDonorProjectCode: Record<DrcDonor, DrcProject[]> = {

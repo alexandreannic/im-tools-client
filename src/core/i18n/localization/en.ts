@@ -68,6 +68,7 @@ export const en = Object.freeze({
     connectAs: 'Connect as',
     focalPoint: 'Focal point',
     project: 'Project',
+    tagval: 'Stages of assistance',
     name: 'Name',
     violence: 'Violence',
     copyingMechanisms: 'Coping mechanisms',
