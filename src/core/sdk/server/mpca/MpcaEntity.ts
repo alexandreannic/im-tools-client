@@ -43,7 +43,7 @@ export enum MpcaProgram {
   MPCA = 'MPCA',
 }
 
-export interface MpcaType {
+export interface MpcaEntity {
   id: KoboAnswerId
   source: MpcaRowSource
   oblast?: OblastName
@@ -154,7 +154,7 @@ export class MpcaHelper {
     [DrcProject['UKR-000330 SDC2']]: true,
   })
 
-  static readonly map = (_: Record<keyof MpcaType, any>): MpcaType => {
+  static readonly map = (_: Record<keyof MpcaEntity, any>): MpcaEntity => {
     _.date = new Date(_.date)
     if (_.tags?.committed) _.tags.committed = new Date(_.tags.committed)
     return _

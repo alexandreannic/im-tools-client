@@ -3,7 +3,7 @@ import {useMemo} from 'react'
 import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {OblastIndex, OblastISO} from '../../shared/UkraineMap/oblastIndex'
 import {DrcSupportSuggestion} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
-import {MpcaType} from '@/core/sdk/server/mpca/MpcaType'
+import {MpcaEntity} from '@/core/sdk/server/mpca/MpcaEntity'
 
 export const BNREOblastToISO: Record<keyof typeof bn_ReOptions['ben_det_prev_oblast'], OblastISO> = OblastIndex.koboOblastIndexIso
 
@@ -12,7 +12,7 @@ export type UseBNREComputed = ReturnType<typeof useBNREComputed>
 export const useBNREComputed = ({
   data,
 }: {
-  data?: Seq<MpcaType> | undefined
+  data?: Seq<MpcaEntity> | undefined
 }) => useMemo(() => {
   if (!data) return
   // const flatData = data.flatM()

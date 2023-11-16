@@ -13,7 +13,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {MpcaHelper, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
+import {MpcaHelper, MpcaEntity} from '@/core/sdk/server/mpca/MpcaEntity'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
 import {Box, FormControlLabel, Switch} from '@mui/material'
@@ -27,7 +27,6 @@ export const MpcaData = () => {
   const {m, formatDate} = useI18n()
   const {api} = useAppSettings()
   const ctx = useMpcaContext()
-  const _servers = useFetcher(api.kobo.server.getAll)
   const [selected, setSelected] = useState<string[]>([])
   const _payment = useAsync(api.mpcaPayment.create)
 
@@ -40,7 +39,7 @@ export const MpcaData = () => {
   return (
     <Page width="full">
       <Panel sx={{overflow: 'visible'}}>
-        <Sheet<MpcaType>
+        <Sheet<MpcaEntity>
           id="mpca"
           title={m.data}
           showExportBtn

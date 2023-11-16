@@ -23,7 +23,7 @@ import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {MpcaHelper, MpcaProgram, MpcaRowSource, mpcaRowSources, MpcaType} from '@/core/sdk/server/mpca/MpcaType'
+import {MpcaHelper, MpcaProgram, MpcaRowSource, mpcaRowSources, MpcaEntity} from '@/core/sdk/server/mpca/MpcaEntity'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {donorByProject, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
@@ -31,12 +31,12 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {Panel} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import ageGroup = Person.ageGroup
-import groupBy = Utils.groupBy
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
 import {koboFormName} from '@/koboDrcUaFormId'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
+import { groupBy } from '@/utils/groupBy'
 
 export const today = new Date()
 
@@ -79,7 +79,7 @@ export const MpcaDashboard = () => {
     const filterShape: {
       icon?: string,
       label: string,
-      property: keyof MpcaType,
+      property: keyof MpcaEntity,
       multiple?: boolean,
       options: SheetOptions[]
     }[] = [{
@@ -107,7 +107,7 @@ export const MpcaDashboard = () => {
     }
   }, [mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof MpcaType, string[]>>(defaultFilter, {storageKey: 'mpca-dashboard-filters'})
+  const [filters, setFilters] = usePersistentState<Record<keyof MpcaEntity, string[]>>(defaultFilter, {storageKey: 'mpca-dashboard-filters'})
 
   const filteredData = useMemo(() => {
     return mappedData?.filter(d => {
@@ -125,7 +125,7 @@ export const MpcaDashboard = () => {
 
   const computed = useBNREComputed({data: filteredData})
 
-  const getAmount = useCallback((_: MpcaType) => {
+  const getAmount = useCallback((_: MpcaEntity) => {
     const amount = _[amountType]
     if (!amount) return
     return amount * fnSwitch(currency, {
@@ -203,10 +203,10 @@ export const _MPCADashboard = ({
   getAmount,
   amountType,
 }: {
-  getAmount: (_: MpcaType) => number | undefined
+  getAmount: (_: MpcaEntity) => number | undefined
   amountType: AmountType
   currency: Currency
-  data: Seq<MpcaType>
+  data: Seq<MpcaEntity>
   computed: NonNullable<UseBNREComputed>
 }) => {
   const ctx = useMpcaContext()

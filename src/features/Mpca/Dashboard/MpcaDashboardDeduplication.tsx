@@ -7,7 +7,7 @@ import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React, {useState} from 'react'
-import {MpcaType} from '@/core/sdk/server/mpca/MpcaType'
+import {MpcaEntity} from '@/core/sdk/server/mpca/MpcaEntity'
 import {useI18n} from '@/core/i18n'
 import {Box, Checkbox, Theme, useTheme} from '@mui/material'
 import {Txt} from 'mui-extension'
@@ -30,7 +30,7 @@ const defaultDisplayedCurves = {
 export const MpcaDashboardDeduplication = ({
   data,
 }: {
-  data: Seq<MpcaType>
+  data: Seq<MpcaEntity>
 }) => {
   const {m} = useI18n()
   const theme = useTheme()

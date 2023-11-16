@@ -5,7 +5,7 @@ import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import {MpcaHelper, MpcaType, MpcaTypeTag} from '@/core/sdk/server/mpca/MpcaType'
+import {MpcaHelper, MpcaEntity, MpcaTypeTag} from '@/core/sdk/server/mpca/MpcaEntity'
 import {Enum, map, Seq, seq} from '@alexandreannic/ts-utils'
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {Utils} from '@/utils/utils'
@@ -30,9 +30,9 @@ interface UpdateTag<K extends keyof MpcaTypeTag> {
 
 export interface MpcaContext {
   refresh: UseAsync<() => Promise<void>>
-  data?: Seq<MpcaType>
+  data?: Seq<MpcaEntity>
   asyncUpdates: UseAsync<<K extends keyof MpcaTypeTag>(_: UpdateTag<K>) => Promise<void>>
-  fetcherData: UseFetcher<(filters?: KoboAnswerFilter) => Promise<Seq<MpcaType>>>
+  fetcherData: UseFetcher<(filters?: KoboAnswerFilter) => Promise<Seq<MpcaEntity>>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
   _create: UseAsync<(_: string[]) => Promise<MpcaPayment>>
 }
@@ -54,7 +54,7 @@ export const MpcaProvider = ({
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)//
 
-  const fetcherData = useFetcher((_?: KoboAnswerFilter) => api.mpca.search(_).then(_ => seq(_.data)) as Promise<Seq<MpcaType>>)
+  const fetcherData = useFetcher((_?: KoboAnswerFilter) => api.mpca.search(_).then(_ => seq(_.data)) as Promise<Seq<MpcaEntity>>)
   const dataIndex = useMemo(() => {
     const index: Record<KoboAnswerId, number> = {}
     fetcherData.entity?.forEach((_, i) => {
