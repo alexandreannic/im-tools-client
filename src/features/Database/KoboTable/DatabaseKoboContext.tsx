@@ -76,7 +76,7 @@ export const DatabaseKoboTableProvider = (props: {
     })
     const updatedIds = new Set(params.answerIds)
     setMappedData(prev => prev.map(_ => updatedIds.has(_.id) ? ({..._, tags: params.tags as any}) : _))
-    req.catch(e => {
+    return req.catch(e => {
       toastError(m._koboDatabase.tagNotUpdated)
       fetcherAnswers.fetch({force: true, clean: false})
     })
