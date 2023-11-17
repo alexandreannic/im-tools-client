@@ -37,7 +37,17 @@ export type KoboAttachment = {
   id: string
 }
 
-export type KoboAnswerMetaData<TTag = any> = {
+export enum KoboValidation {
+  Approved = 'Approved',
+  Rejected = 'Rejected',
+  Pending = 'Pending',
+}
+
+export interface KoboBaseTags {
+  _validation?: KoboValidation
+}
+
+export type KoboAnswerMetaData<TTag extends KoboBaseTags = KoboBaseTags> = {
   start: Date
   end: Date
   version: string
@@ -49,7 +59,7 @@ export type KoboAnswerMetaData<TTag = any> = {
   validatedBy?: string
   lastValidatedTimestamp?: number
   geolocation?: [number, number]
-  tags: TTag
+  tags?: TTag
   //
   // _id: number,
   // // 'formhub/uuid': string,
@@ -73,14 +83,14 @@ export type KoboMappedAnswerType = string | string[] | Date | number | undefined
 
 export type KoboAnswer<
   TQuestion extends Record<string, any> = Record<string, string | undefined>,
-  TTags extends Record<string, any> | undefined = undefined
+  TTags extends KoboBaseTags = KoboBaseTags
 > = (KoboAnswerMetaData<TTags> & TQuestion)
 
 export type KoboMappedAnswer<T extends Record<string, any> = Record<string, KoboMappedAnswerType>> = (KoboAnswerMetaData & T)
 
 export class Kobo {
 
-  static readonly mapPaginateAnswerMetaData = <TAnswer extends Record<string, any>, TTag extends Record<string, any> | undefined = undefined>(
+  static readonly mapPaginateAnswerMetaData = <TAnswer extends Record<string, any>, TTag extends KoboBaseTags>(
     fnMap: (x: any) => TAnswer,
     fnMapTags: (x: any) => TTag
   ) => (_: ApiPaginate<Record<string, any>>): ApiPaginate<KoboAnswer<TAnswer, TTag>> => {
@@ -118,7 +128,7 @@ export class Kobo {
   static readonly mapAnswerMetaData = (
     k: Partial<Record<keyof KoboAnswerMetaData, any>>,
     fnMapTags: (x: any) => any = _ => _
-  ): KoboAnswer<any> => {
+  ): KoboAnswer<any, KoboBaseTags> => {
     delete (k as any)['deviceid']
     return {
       ...k,

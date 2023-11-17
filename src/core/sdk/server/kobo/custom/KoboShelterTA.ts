@@ -3,6 +3,7 @@ import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import {NumberKeys} from '@/core/type'
 import {map} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/drcUa'
+import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
 export namespace KoboShelterTa {
   const lot1: NumberKeys<Shelter_TA>[] = [
@@ -94,7 +95,7 @@ export enum ShelterTagValidation {
   Pending = 'Pending',
 }
 
-export interface ShelterNtaTags {
+export interface ShelterNtaTags extends KoboBaseTags {
   validation?: ShelterTagValidation
 }
 
@@ -104,7 +105,7 @@ export enum ShelterTaPriceLevel {
   Heavy = 'Heavy',
 }
 
-export interface ShelterTaTags {
+export interface ShelterTaTags extends KoboBaseTags {
   progress?: ShelterProgress
   contractor1?: ShelterContractor
   contractor2?: ShelterContractor

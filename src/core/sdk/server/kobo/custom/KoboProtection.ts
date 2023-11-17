@@ -1,9 +1,11 @@
 import {DrcDonor, DrcProject} from '@/core/drcUa'
+import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
-export interface ProtectionCommunityMonitoring {
+export interface ProtectionCommunityMonitoringTags extends KoboBaseTags {
   project?: DrcProject
 }
-export interface ProtectionHhsTags {
+
+export interface ProtectionHhsTags extends KoboBaseTags {
   projects?: DrcProject[]
   ai: DrcDonor,
   ipt: DrcDonor[]

@@ -127,7 +127,7 @@ export class ActivityInfoProtectionMapper {
               }, () => undefined)
             }]),
             'Reporting Month': reportingMonth,
-            'Plan Code': fnSwitch(d.tags.project!, AiProtectionGeneralType.planCode, () => undefined)!,
+            'Plan Code': fnSwitch(d.tags?.project!, AiProtectionGeneralType.planCode, () => undefined)!,
             'Population Group': fnSwitch(d.informant_status!, {
               returnee: 'Returnees',
               idp: 'IDPs',
@@ -154,7 +154,7 @@ export class ActivityInfoProtectionMapper {
                 }, () => undefined)
               }]),
               'Reporting Month': reportingMonth,
-              'Plan Code': fnSwitch(d.tags.project!, AiProtectionGeneralType.planCode, () => undefined)!,
+              'Plan Code': fnSwitch(d.tags?.project!, AiProtectionGeneralType.planCode, () => undefined)!,
               'Population Group': fnSwitch(ind.hh_char_hh_det_status!, {
                 returnee: 'Returnees',
                 idp: 'IDPs',

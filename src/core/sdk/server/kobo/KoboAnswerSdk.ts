@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
-import {Kobo, KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboAnswerId, KoboBaseTags, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/koboDrcUaFormId'
 import {mapProtection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Mapping'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
@@ -12,7 +12,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
 import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
-import {ProtectionCommunityMonitoring, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
+import {ProtectionCommunityMonitoringTags, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {mapMeal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExternalMapping'
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {RapidResponseMechanism} from '@/core/koboModel/RapidResponseMechanism/RapidResponseMechanism'
@@ -50,6 +50,7 @@ export class KoboAnswerSdk {
 
 
   readonly updateTag = ({formId, answerIds, tags}: {formId: KoboId, answerIds: KoboAnswerId[], tags: Record<string, any>}) => {
+    // return Promise.reject()
     return this.client.post(`/kobo/answer/${formId}/tag`, {body: {tags, answerIds: answerIds}})
   }
 
@@ -81,7 +82,7 @@ export class KoboAnswerSdk {
 
   readonly searchByAccess = <
     TQuestion extends Record<string, any> = Record<string, string | undefined>,
-    TTags extends Record<string, any> | undefined = undefined
+    TTags extends KoboBaseTags = KoboBaseTags
   >({
     formId,
     filters = {},
@@ -95,7 +96,7 @@ export class KoboAnswerSdk {
 
   readonly search = <
     TQuestion extends Record<string, any> = Record<string, string | undefined>,
-    TTags extends Record<string, any> | undefined = undefined
+    TTags extends KoboBaseTags = KoboBaseTags
   >({
     formId,
     filters = {},
@@ -203,7 +204,7 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.protection_communityMonitoring,
       fnMap: mapProtection_communityMonitoring,
-      fnMapTags: _ => _ as ProtectionCommunityMonitoring,
+      fnMapTags: _ => _ as ProtectionCommunityMonitoringTags,
       ...filters,
     })
   }
