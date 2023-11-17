@@ -1,13 +1,13 @@
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcDonor, DrcOffice, DrcProject} from '@/core/drcUa'
 import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
-import {KoboAnswerId, KoboAttachment, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswerId, KoboAttachment, KoboBaseTags, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Person} from '@/core/type'
 import {DeepPartial, Enum} from '@alexandreannic/ts-utils'
 import {kobo} from '@/koboDrcUaFormId'
 
-export interface MpcaTypeTag {
+export interface MpcaTypeTag extends KoboBaseTags {
   projects?: DrcProject[]
   committed?: Date
 }

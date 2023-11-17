@@ -1,4 +1,4 @@
-import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboBaseTags, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
@@ -9,7 +9,7 @@ import {DatabaseKoboTableExportBtn} from '@/features/Database/KoboTable/Database
 import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
-import {Switch, Theme} from '@mui/material'
+import {Icon, Switch, Theme, useTheme} from '@mui/material'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
@@ -17,10 +17,14 @@ import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'
 import {useCustomSelectedHeader} from '@/features/Database/KoboTable/useCustomSelectedHeader'
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
+import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {useAppSettings} from '@/core/context/ConfigContext'
 
 export const DatabaseKoboTableContent = () => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
+  const theme = useTheme()
   const [repeatGroupsAsColumns, setRepeatGroupAsColumns] = usePersistentState<boolean>(false, {storageKey: `database-${ctx.form.id}-repeat-groups`})
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const ctxSchema = useKoboSchemaContext()
@@ -47,9 +51,9 @@ export const DatabaseKoboTableContent = () => {
   }, [ctxSchema.schemaUnsanitized, ctxSchema.langIndex, repeatGroupsAsColumns])
 
   const columns = useMemo(() => {
-    const c: SheetColumnProps<any> = {
+    const action: SheetColumnProps<any> = {
       id: 'actions',
-      head: 'Action',
+      head: '',
       width: 0,
       tooltip: null,
       render: _ => (
@@ -59,7 +63,36 @@ export const DatabaseKoboTableContent = () => {
         </>
       )
     }
-    return [...extraColumns, c, ...schemaColumns]
+    const validation: SheetColumnProps<any> = {
+      id: 'validation',
+      head: m.validation,
+      width: 0,
+      type: 'select_one',
+      tooltip: null,
+      renderValue: (row: KoboAnswer) => row.tags?._validation,
+      renderOption: (row: KoboAnswer) => m[row.tags?._validation!],
+      render: (row: KoboAnswer) => (
+        <>
+          <AaSelectSingle
+            disabled={ctx.fetcherAnswers.loading}
+            value={row.tags?._validation}
+            options={[
+              {children: <Icon sx={{color: theme.palette.success.main}} title={m.Approved}>check_circle</Icon>, value: KoboValidation.Approved},
+              {children: <Icon sx={{color: theme.palette.error.main}} title={m.Rejected}>error</Icon>, value: KoboValidation.Rejected},
+              {children: <Icon sx={{color: theme.palette.warning.main}} title={m.Pending}>schedule</Icon>, value: KoboValidation.Pending},
+            ]}
+            onChange={(e) => {
+              ctx.updateTag({
+                formId: ctx.form.id,
+                answerIds: [row.id],
+                tags: {_validation: e},
+              })
+            }}
+          />
+        </>
+      )
+    }
+    return [...extraColumns, action, validation, ...schemaColumns]
   }, [schemaColumns])
 
   const selectedHeader = useCustomSelectedHeader(selectedIds)

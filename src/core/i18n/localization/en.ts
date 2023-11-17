@@ -99,8 +99,12 @@ export const en = Object.freeze({
     answer: 'Answer',
     calculations: 'Calculations',
     value: 'Value',
+    Pending: 'Pending',
+    Approved: 'Approved',
+    Rejected: 'Rejected',
     mykolaiv: 'Mykolaiv',
     lastConnectedAt: 'Last connection',
+    validation: 'Validation',
     perpetrators: 'Perpetrators',
     kyiv: 'Kyiv',
     view: 'View',
@@ -1093,6 +1097,7 @@ export const en = Object.freeze({
       }
     },
     _koboDatabase: {
+      tagNotUpdated: 'Failed to update tag. Reloading clean data set...',
       downloadAsXLS: 'Download <b>filtered data</b> as XLS',
       registerNewForm: 'Register new form',
       repeatGroupsAsColumns: `Display repeat groups as new columns (also visible in XLS exports).`,

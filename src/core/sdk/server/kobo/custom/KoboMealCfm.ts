@@ -1,6 +1,7 @@
 import {DrcOffice} from '@/core/drcUa'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
+import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
 export enum CfmDataSource {
   Internal = 'Internal',
@@ -34,7 +35,7 @@ export enum KoboMealCfmArea {
   NGCA = 'NGCA',
 }
 
-export interface KoboMealCfmTag {
+export interface KoboMealCfmTag extends KoboBaseTags {
   /* @deprecated FIXME bug cannot update deletedAt deletedBy in the same time */
   deletedAt?: Date
   deletedBy?: string
