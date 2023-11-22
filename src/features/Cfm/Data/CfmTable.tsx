@@ -25,6 +25,7 @@ import {Modal} from 'mui-extension/lib/Modal'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -337,7 +338,7 @@ export const CfmTable = ({}: any) => {
             {
               type: 'select_one',
               head: m.oblast,
-              options: () => Enum.keys(Meal_CfmInternalOptions.ben_det_oblast).map(value => ({value, label: ctx.translateExternal.translateChoice('ben_det_oblast', value)})),
+              options: () => OblastIndex.names.map(value => ({value, label: value})),
               id: 'oblast',
               render: _ => _.oblast,
             },

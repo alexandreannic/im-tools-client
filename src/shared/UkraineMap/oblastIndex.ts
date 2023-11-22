@@ -32,6 +32,36 @@ export class OblastIndex {
       .find(([k, v]) => v === name)?.[0]!
   }
 
+  static readonly names: OblastName[] = [
+    `Autonomous Republic of Crimea`,
+    `Cherkaska`,
+    `Chernihivska`,
+    `Chernivetska`,
+    `Dnipropetrovska`,
+    `Donetska`,
+    `Ivano-Frankivska`,
+    `Kharkivska`,
+    `Khersonska`,
+    `Khmelnytska`,
+    `Kirovohradska`,
+    `Kyiv`,
+    `Kyivska`,
+    `Luhanska`, // UA-09 in Real but UA-44 in Activity Info
+    `Lvivska`,
+    `Mykolaivska`,
+    `Odeska`,
+    `Poltavska`,
+    `Rivnenska`,
+    `Sevastopol`,
+    `Sumska`,
+    `Ternopilska`,
+    `Vinnytska`,
+    `Volynska`,
+    `Zakarpatska`,
+    `Zaporizka`,
+    `Zhytomyrska`
+  ]
+
   static readonly oblastByISO = Object.freeze({
     'UA01': `Autonomous Republic of Crimea`,
     'UA71': `Cherkaska`,

@@ -16,9 +16,9 @@ import {DrcOffice} from '@/core/drcUa'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
-import {seq} from '@alexandreannic/ts-utils'
+import {Seq, seq} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
-import {OblastIndex, OblastName} from '@/shared/UkraineMap/oblastIndex'
+import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [kobo.drcUa.form.meal_cfmExternal]: CfmDataSource.External,
@@ -35,6 +35,7 @@ export type CfmData = {
   additionalInformation?: string
   project?: string
   oblast: OblastName
+  oblastIso: OblastISO
   category?: Meal_CfmInternal['feedback_type']
   external_prot_support?: Meal_CfmExternal['prot_support']
   internal_existing_beneficiary?: Meal_CfmInternal['existing_beneficiary']
@@ -91,7 +92,7 @@ export interface CfmContext {
     [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal, KoboMealCfmTag>[]
     [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal, KoboMealCfmTag>[]
   }>>
-  mappedData: CfmData[]
+  mappedData: Seq<CfmData>
 }
 
 const CfmContext = React.createContext({} as CfmContext)
@@ -167,6 +168,7 @@ export const CfmProvider = ({
         external_prot_support: _.prot_support,
         form: CfmDataSource.External,
         oblast: OblastIndex.koboOblastIndex[_.ben_det_oblast!],
+        oblastIso: OblastIndex.koboOblastIndexIso[_.ben_det_oblast!],
         feedback: _.complaint ?? _.thanks_feedback ?? _.request,
         ..._,
       })
@@ -182,10 +184,11 @@ export const CfmProvider = ({
         internal_existing_beneficiary: _.existing_beneficiary,
         internal_project_code: _.project_code,
         oblast: OblastIndex.koboOblastIndex[_.ben_det_oblast!],
+        oblastIso: OblastIndex.koboOblastIndexIso[_.ben_det_oblast!],
         ..._,
       })
     })
-    return res
+    return seq(res)
       .filter(_ => {
         if (_.tags?.deletedBy) return false
         if (session.email === _.tags?.focalPointEmail)

@@ -50,7 +50,7 @@ export const ActivityInfoMpca = () => {
           {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
           {
             by: _ => fnSwitch(_.benefStatus!, {
-              idp: 'IDPs',
+              idp:'IDPs',
               long_res: 'Non-Displaced',
               ret: 'Returnees',
               ref_asy: 'Returnees',

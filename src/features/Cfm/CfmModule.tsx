@@ -19,7 +19,8 @@ import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Box, Divider} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
-import {appConfig} from '@/conf/AppConfig'
+import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
+import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 
 export const cfmModule = {
   basePath: '/cfm',
@@ -54,26 +55,6 @@ const FcmSidebar = () => {
   return (
     <Sidebar>
       <SidebarBody>
-        <Box sx={{pl: 2}}>
-          <PieChartIndicator
-            dense
-            showValue
-            title={m._cfm.openTickets}
-            value={_stats.open}
-            base={_stats.total ?? 1}
-          />
-          <Divider sx={{my: 1.5}}/>
-          <PieChartIndicator
-            dense
-            showValue
-            title={m._cfm.openTicketsHigh}
-            value={_stats.coc}
-            base={_stats.total ?? 1}
-          />
-        </Box>
-      </SidebarBody>
-      <SidebarBody>
-        <SidebarHr/>
         <NavLink to={path(cfmModule.siteMap.data)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
@@ -112,6 +93,35 @@ const FcmSidebar = () => {
         >
           {m._cfm.formLong.Internal}
         </SidebarItem>
+      </SidebarBody>
+      <SidebarHr/>
+      <SidebarBody>
+        <Box sx={{pl: 2}}>
+          <PieChartIndicator
+            dense
+            showValue
+            title={m._cfm.openTickets}
+            value={_stats.open}
+            base={_stats.total ?? 1}
+          />
+          {/*<Divider sx={{my: 1.5}}/>*/}
+          <PieChartIndicator
+            sx={{mt: 2}}
+            dense
+            showValue
+            title={m._cfm.openTicketsHigh}
+            value={_stats.coc}
+            base={_stats.total ?? 1}
+          />
+        </Box>
+        <KoboUkraineMap
+          sx={{ml: 1, mt: 2}}
+          fillBaseOn="value"
+          data={ctx.mappedData}
+          value={_ => true}
+          getOblast={_ => _.oblastIso!}
+          base={_ => _.oblastIso !== undefined}
+        />
       </SidebarBody>
     </Sidebar>
   )
