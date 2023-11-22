@@ -123,7 +123,7 @@ export const CfmTable = ({}: any) => {
         head: m.status,
         width: 0,
         typeIcon: null,
-        style: {padding: 0},
+        style: () => ({padding: 0}),
         tag: 'status',
         value: KoboMealCfmStatus.Open,
         enumerator: KoboMealCfmStatus,

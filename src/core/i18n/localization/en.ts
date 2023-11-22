@@ -324,6 +324,14 @@ export const en = Object.freeze({
       securityConcerns: 'Security concerns',
       hasPriorityQueuesForVulnerableIndividuals: 'Priority queues for vulnerable individuals',
     },
+    _mealVerif: {
+      allIndicators: 'All indicators',
+      allValidIndicators: 'All valid indicators',
+      allErrorIndicators: 'All valid indicators',
+      valid: 'Validity',
+      viewData: 'View Data',
+      viewDataCheck: 'View Verification Data',
+    },
     protHHS2: {
       freedomOfMovement: 'Barriers to Freedom of Movement',
       _hhComposition: {

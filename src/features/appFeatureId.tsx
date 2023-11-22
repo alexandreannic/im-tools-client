@@ -9,6 +9,7 @@ export enum AppFeatureId {
   kobo_database = 'kobo_database',
   mpca = 'mpca',
   shelter = 'shelter',
+  meal_verification = 'meal_verification',
   wfp_deduplication = 'wfp_deduplication',
   activity_info = 'activity_info',
   cfm = 'cfm',
@@ -106,6 +107,14 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'photo_camera',
     color: 'silver',
     path: '/snapshot',
+    showIf: _ => _ && _?.admin
+  },
+  meal_verification: {
+    id: AppFeatureId.meal_verification,
+    name: 'Meal Verification',
+    materialIcons: 'photo_camera',
+    color: 'blue',
+    path: '/meal-verification',
     showIf: _ => _ && _?.admin
   },
   admin: {

@@ -5,6 +5,7 @@ export const kobo = {
     },
     form: {
       safety_incident: 'aAJNkn7v9fRL2XqQCgEkXf',
+      ecrec_cashRegistration: 'aE5md7RfHiy4LJmddoFAQH',
       bn_rapidResponse: 'aMJL9DG8qEcULqTZTKQbrq',
       bn_cashForRentApplication: 'aBupWbhtUmA7so3532tYLa',
       bn_cashForRentRegistration: 'ajNzDaUuLkcEvjQhVsAmao',
@@ -17,6 +18,7 @@ export const kobo = {
       bn_0_mpcaRegNoSig: 'aHuWQPkrC43qBfTmJvoLqg',
       bn_0_mpcaRegESign: 'a8JXohrBDqTdCc86Ysz26r',
       bn_re: 'aKgX4MNs6gCemDQKPeXxY8',
+      meal_ecrecVerification: 'aEN2tkQhpsfX4G3i6Re7bi',
       meal_visitMonitoring: 'a8GkjWBQDfxVADGHWJDrUw',
       meal_cfmInternal: 'aN3Y8JeH2fU3GthrWAs9FG',
       meal_cfmExternal: 'aJaGLvGEdpYWk5ift8k87y',
@@ -51,6 +53,7 @@ export const kobo = {
 
 export const koboFormName: Record<keyof typeof kobo.drcUa.form, string> = {
   safety_incident: 'safety_incident',
+  ecrec_cashRegistration: '[Ecrec] Sectoral Cash Registration',
   bn_rapidResponse: '[Basic Needs] Rapid Response Mechanism',
   bn_cashForRentApplication: 'bn_cashForRentApplication',
   bn_cashForRentRegistration: 'bn_cashForRentRegistration',
@@ -65,6 +68,7 @@ export const koboFormName: Record<keyof typeof kobo.drcUa.form, string> = {
   meal_visitMonitoring: 'meal_visitMonitoring',
   meal_cfmInternal: 'meal_cfmInternal',
   meal_cfmExternal: 'meal_cfmExternal',
+  meal_ecrecVerification: '[MEAL] Verification EcRec',
   shelter_cashForRepair: '[Shelter] CASH for Repairs Registration Form',
   shelter_nta: 'shelter_nta',
   shelter_ta: 'shelter_ta',

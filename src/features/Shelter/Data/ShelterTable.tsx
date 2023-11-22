@@ -259,7 +259,7 @@ export const ShelterTable = () => {
       {
         id: 'TA',
         width: 0,
-        style: {borderLeft: '4px solid ' + theme.palette.divider},
+        style: () => ({borderLeft: '4px solid ' + theme.palette.divider}),
         styleHead: {borderLeft: '4px solid ' + theme.palette.divider},
         head: m._shelter.taForm,
         type: 'select_one',

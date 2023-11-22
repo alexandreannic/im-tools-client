@@ -28,6 +28,10 @@ import {mapProtection_communityMonitoring} from '@/core/koboModel/Protection_com
 import {mapProtection_pss} from '@/core/koboModel/Protection_pss/Protection_pssMapping'
 import {mapProtection_groupSession} from '@/core/koboModel/Protection_groupSession/Protection_groupSessionMapping'
 import {mapMeal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalMapping'
+import {mapMeal_EcrecVerification} from '@/core/koboModel/Meal_EcrecVerification/Meal_EcrecVerificationMapping'
+import {Meal_EcrecVerification} from '@/core/koboModel/Meal_EcrecVerification/Meal_EcrecVerification'
+import {mapEcrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ecrec_CashRegistrationMapping'
+import {Ecrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ecrec_CashRegistration'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -229,6 +233,22 @@ export class KoboAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.safety_incident,
       fnMap: KoboSafetyIncidentHelper.mapData,
+      ...filters,
+    })
+  }
+
+  readonly searchMeal_ecrecVerification = (filters: KoboAnswerFilter = {}): Promise<ApiPaginate<KoboAnswer<Meal_EcrecVerification>>> => {
+    return this.search({
+      formId: kobo.drcUa.form.meal_ecrecVerification,
+      fnMap: mapMeal_EcrecVerification,
+      ...filters,
+    })
+  }
+
+  readonly searchEcrec_cashRegistration = (filters: KoboAnswerFilter = {}): Promise<ApiPaginate<KoboAnswer<Ecrec_CashRegistration>>> => {
+    return this.search({
+      formId: kobo.drcUa.form.ecrec_cashRegistration,
+      fnMap: mapEcrec_CashRegistration,
       ...filters,
     })
   }

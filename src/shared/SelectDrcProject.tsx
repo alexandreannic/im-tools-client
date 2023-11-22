@@ -18,12 +18,14 @@ export const SelectDrcProjects = (props: Omit<AaSelectMultipleProps<DrcProject>,
   )
 }
 
-export const SelectDrcProject = (props: Omit<AaSelectSingleProps<DrcProject>, 'options'> & {
+export const SelectDrcProject = (props: Omit<AaSelectSingleProps<DrcProject>, 'onChange' | 'hideNullOption' | 'options'> & {
   options?: DrcProject[]
+  onChange: (_: DrcProject | null) => void
 }) => {
   const {m} = useI18n()
   return (
     <AaSelectSingle<DrcProject>
+      hideNullOption={false}
       label={m.project}
       options={drcProjects}
       {...props}

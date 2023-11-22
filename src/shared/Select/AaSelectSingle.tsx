@@ -9,16 +9,21 @@ type Option<T extends string | number = string> = {
   key?: string
 }
 
-export interface AaSelectSingleProps<T extends string | number = string> extends Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> {
+export type AaSelectSingleProps<T extends string | number = string> = {
   label?: ReactNode
-  hideNullOption?: boolean
   options: Option<T>[] | string[]
   sx?: SxProps<Theme>
   defaultValue?: T
   value?: T
   multiple?: false
+  hideNullOption?: boolean
+} & Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> & ({
+  hideNullOption?: false
   onChange: (t: T | null, e: any) => void
-}
+} | {
+  hideNullOption: true
+  onChange: (t: T, e: any) => void
+})
 
 const style = makeSx({
   item: {
@@ -66,7 +71,7 @@ export const AaSelectSingle = <T extends string | number>({
         onChange={e => {
           const value = e.target.value as T
           if (value === IGNORED_VALUE_EMPTY)
-            onChange(null, e)
+            onChange(null as any, e)
           onChange(value, e)
           // setInnerValue(value)
         }}

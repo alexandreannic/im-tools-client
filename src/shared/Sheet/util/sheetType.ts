@@ -117,7 +117,7 @@ export interface SheetColumnPropsBase<T extends SheetRow> {
   hidden?: boolean
   alwaysVisible?: boolean
   tooltip?: null | ((_: T) => undefined | string)
-  style?: CSSProperties
+  style?: (_: T) => CSSProperties
   styleHead?: CSSProperties
   typeIcon?: ReactNode
   className?: string | ((_: T) => string | undefined)
