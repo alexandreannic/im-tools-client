@@ -309,7 +309,6 @@ export const en = Object.freeze({
     raion: 'Raion',
     hromada: 'Hromada',
     noIdps: 'Non-IDPs',
-    selectForm: 'Select form',
     register: 'Register',
     noIdpsOnly: 'Non-IDPs only',
     uaCitizen: 'UA citizen',

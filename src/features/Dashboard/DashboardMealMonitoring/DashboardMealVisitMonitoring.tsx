@@ -98,7 +98,6 @@ export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<Meal_VisitM
 export const DashboardMealVisitMonitoring = () => {
   const {api} = useAppSettings()
   const {m, formatDateTime, formatDate} = useI18n()
-
   const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.meal_visitMonitoring))
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})

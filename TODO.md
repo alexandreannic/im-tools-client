@@ -6,5 +6,6 @@
 - Harmonize files component nanes like MpcaData or MpcaTable.
 - Find consistent name for types over component
 - Harmonize entry component of module like CfmModule.tsx
-- Change prefix Aa to IF
+- Change prefix Aa to IF͐
 - Clean koboDrcUaForm. 
+- Harmonize all fetchAll to getAll in SDK

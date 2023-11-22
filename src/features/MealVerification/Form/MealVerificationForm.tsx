@@ -13,6 +13,10 @@ import {Panel, PanelBody} from '@/shared/Panel'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
 import {Txt} from 'mui-extension'
+import {useAsync} from '@/alexlib-labo/useAsync'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
+import {useAaToast} from '@/core/useToast'
+import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 
 const verifiableForms: (keyof typeof kobo.drcUa.form)[] = [
   'ecrec_cashRegistration',
@@ -25,8 +29,7 @@ export interface MealVerificationForm {
   name: string
   desc?: string
   filters: Record<KoboAnswerId, SheetFilterValue>
-  requestedDataIds: KoboAnswerId[]
-  selectedDataIds: KoboAnswerId[]
+  answerIds: KoboAnswerId[]
 }
 
 const RenderRow = ({icon, label, children}: {
@@ -47,10 +50,25 @@ const RenderRow = ({icon, label, children}: {
   )
 }
 
+const getRandomElements = <T, >(array: T[], coefficient: number): T[] => {
+  if (coefficient < 0 || coefficient > 1) {
+    throw new Error('Percentage must be between 0 and 100')
+  }
+  const numElementsToSelect = Math.floor((coefficient) * array.length)
+  const shuffledArray = array.slice().sort(() => Math.random() - 0.5)
+  return shuffledArray.slice(0, numElementsToSelect)
+}
+
+
 export const MealVerificationForm = () => {
   const {api} = useAppSettings()
+  const {toastHttpError} = useAaToast()
   const [activeStep, setActiveStep] = React.useState(0)
   const t = useTheme()
+
+  const asyncCreate = useAsync(api.mealVerification.create)
+
+  useEffectFn(asyncCreate.lastError, toastHttpError)
 
   const nextStep = () => {
     setActiveStep(_ => _ + 1)
@@ -89,7 +107,14 @@ export const MealVerificationForm = () => {
   )
 
   const submit = (form: MealVerificationForm) => {
-    console.log(form)
+    const numElementsToSelect = Math.floor((sampleSizeRatio) * form.answerIds.length)
+    const answers: MealVerificationAnsers[] = form.answerIds
+      .sort(() => Math.random() - 0.5)
+      .map((a, i) => ({
+        koboAnswerId: a,
+        status: i <= numElementsToSelect ? MealVerificationAnswersStatus.Selected : undefined
+      }))
+    asyncCreate.call({...form, answers})
   }
 
   const {m} = useI18n()
@@ -127,11 +152,11 @@ export const MealVerificationForm = () => {
                 <Txt color="hint" sx={{mb: 1}}>{m._mealVerif.applyFilters}</Txt>
                 <MealVerificationFormData
                   formId={form.watch('formId')}
-                  onDataChange={_ => form.setValue('selectedDataIds', _)}
+                  onDataChange={_ => form.setValue('answerIds', _)}
                   onFiltersChange={_ => form.setValue('filters', _)}
                 />
                 <Box sx={{mb: 2}}>
-                  <NextBtn label={m._mealVerif.selectedNRows(form.watch('selectedDataIds')?.length)}/>
+                  <NextBtn label={m._mealVerif.selectedNRows(form.watch('answerIds')?.length)}/>
                   <BackBtn/>
                 </Box>
               </StepContent>
@@ -173,12 +198,17 @@ export const MealVerificationForm = () => {
                   <Txt bold block size="big">{JSON.stringify(form.watch('filters'))}</Txt>
                 </RenderRow>
                 <RenderRow label={m.data} icon="table_view">
-                  <Box dangerouslySetInnerHTML={{__html: m._mealVerif.selectedData(form.watch().selectedDataIds?.length)}}/>
+                  <Box dangerouslySetInnerHTML={{__html: m._mealVerif.selectedData(form.watch().answerIds?.length)}}/>
                   <Box sx={{mt: .5}}>
                     <Icon color="disabled" sx={{verticalAlign: 'top', mr: 1}}>subdirectory_arrow_right</Icon>
                     {m._mealVerif.sampleSize(sampleSizeRatio * 100)}
                     <Icon color="disabled" sx={{verticalAlign: 'top', mx: 1}}>east</Icon>
-                    <Txt sx={{borderRadius: 1000, border: '1px solid ' + t.palette.success.light, py: .5, px: 1, color: t.palette.success.main}} dangerouslySetInnerHTML={{__html: m._mealVerif.dataToBeVerified(parseInt(form.watch().selectedDataIds?.length * .2))}}/>
+                    <Txt sx={{borderRadius: 1000, border: '1px solid ' + t.palette.success.light, py: .5, px: 1, color: t.palette.success.main}}
+                         dangerouslySetInnerHTML={{
+                           __html: m._mealVerif.dataToBeVerified(
+                             Math.floor(sampleSizeRatio * form.watch().answerIds?.length)
+                           )
+                         }}/>
                   </Box>
                 </RenderRow>
 

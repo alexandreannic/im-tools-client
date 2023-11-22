@@ -65,7 +65,7 @@ const translationsUa: DeepPartial<typeof Protection_Hhs2_1Options> = {
     integrate_into_the_local_community_of_current_place_of_residence: 'Інтегруватися місцеву громаду',
     relocate_to_another_area_in_ukraine: 'Переїхати до іншої області України',
     relocate_to_a_country_outside_of_ukraine: 'Переїхати до іншої країни',
-    // stay_in_place_of_habitual_residence: 'Залишатися в місці постійного проживання',
+    stay_in_place_of_habitual_residence: 'Залишатися в місці постійного проживання',
     // relocate_to_another_area_in_ukraine: 'Переїхати до іншої області України',
     // relocate_to_a_country_outside_of_ukraine: 'Переїхати до іншої країни'
   },
