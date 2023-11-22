@@ -16,7 +16,7 @@ import {useAaToast} from '@/core/useToast'
 import Link from 'next/link'
 import {databaseModule} from '@/features/Database/databaseModule'
 import {ShelterDashboard} from '@/features/Shelter/Dasbhoard/ShelterDashboard'
-import {DatabaseTablePage} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {useShelterData} from '@/features/Shelter/useShelterData'
 import {seq} from '@alexandreannic/ts-utils'
 import {Access} from '@/core/sdk/server/access/Access'
@@ -131,8 +131,8 @@ export const ShelterWithAccess = () => {
               <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
               <Route path={shelterModule.siteMap.dashboard} element={<ShelterDashboard/>}/>
               <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
-              <Route path={shelterModule.siteMap.nta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_nta} schema={fetcherSchema.entity.nta}/>}/>
-              <Route path={shelterModule.siteMap.ta} element={<DatabaseTablePage formId={kobo.drcUa.form.shelter_ta} schema={fetcherSchema.entity.ta}/>}/>
+              <Route path={shelterModule.siteMap.nta} element={<DatabaseTable formId={kobo.drcUa.form.shelter_nta} schema={fetcherSchema.entity.nta}/>}/>
+              <Route path={shelterModule.siteMap.ta} element={<DatabaseTable formId={kobo.drcUa.form.shelter_ta} schema={fetcherSchema.entity.ta}/>}/>
             </Routes>
           </ShelterProvider>
         )}

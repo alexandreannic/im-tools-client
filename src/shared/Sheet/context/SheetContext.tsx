@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useMemo} from 'react'
+import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {UseSetState} from '@alexandreannic/react-hooks-lib'
 import {UseSheetData, useSheetData} from '@/shared/Sheet/context/useSheetData'
 import {SheetModal, useSheetModal} from '@/shared/Sheet/context/useSheetModal'
@@ -6,6 +6,7 @@ import {useSetState2} from '@/alexlib-labo/useSetState2'
 import {seq} from '@alexandreannic/ts-utils'
 import {SheetInnerColumnProps, SheetRow, SheetTableProps} from '@/shared/Sheet/util/sheetType'
 import {UseSheetOptions, useSheetOptions} from '@/shared/Sheet/context/useSheetOptions'
+import {Paginate} from '@/utils/utils'
 
 export interface SheetContext<T extends SheetRow> {
   data: UseSheetData<T>
@@ -29,6 +30,8 @@ export const SheetProvider = <T extends SheetRow>({
   select,
   // sortBy,
   // orderBy,
+  onDataChange,
+  onFiltersChange,
   getRenderRowKey,
   data: _data,
   id,
@@ -39,8 +42,11 @@ export const SheetProvider = <T extends SheetRow>({
   data: SheetTableProps<T>['data']
   getRenderRowKey: SheetTableProps<T>['getRenderRowKey']
   select: SheetTableProps<T>['select']
+  onFiltersChange: SheetTableProps<T>['onFiltersChange']
+  onDataChange: SheetTableProps<T>['onDataChange']
   // sortBy?: KeyOf<T>
   // orderBy?: OrderBy
+
   children: ReactNode
 }) => {
   const selected = useSetState2<string>()
@@ -51,6 +57,16 @@ export const SheetProvider = <T extends SheetRow>({
     data: _data,
     defaultLimit,
   })
+
+  useEffect(() => {
+    onFiltersChange?.(data.filters)
+    onDataChange?.({
+      data: data.data,
+      filteredData: data.filteredData,
+      filteredAndSortedData: data.filteredAndSortedData,
+      filteredSortedAndPaginatedData: data.filteredSortedAndPaginatedData,
+    })
+  }, [data, data.filters])
 
   const options = useSheetOptions<T>({
     data,

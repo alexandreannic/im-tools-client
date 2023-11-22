@@ -1,3 +1,5 @@
+import {Enum, seq} from '@alexandreannic/ts-utils'
+
 export const kobo = {
   drcUa: {
     server: {
@@ -24,6 +26,7 @@ export const kobo = {
       meal_cfmExternal: 'aJaGLvGEdpYWk5ift8k87y',
       shelter_nta: 'aL8oHMzJJ9soPepvK6YU9E',
       shelter_ta: 'aTP5nwZjpyR7oy7bdMZktC',
+      shelter_north: 'aCPdwVnnsYeReynJ7YnLGH',
       protection_hhs2_1: 'aQDZ2xhPUnNd43XzuQucVR',
       protection_communityMonitoring: 'aQHBhYgevdzw8TR2Vq2ZdR',
       protection_groupSession: 'a8Tn94arrSaH2FQBhUa9Zo',
@@ -51,7 +54,11 @@ export const kobo = {
   }
 }
 
-export const koboFormName: Record<keyof typeof kobo.drcUa.form, string> = {
+export type KoboFormName = keyof typeof kobo.drcUa.form
+
+export const koboFormById: Record<string, KoboFormName> = seq(Enum.entries(kobo.drcUa.form)).reduceObject(([k, v]) => [v, k])
+
+export const koboFormName: Record<KoboFormName, string> = {
   safety_incident: 'safety_incident',
   ecrec_cashRegistration: '[Ecrec] Sectoral Cash Registration',
   bn_rapidResponse: '[Basic Needs] Rapid Response Mechanism',
@@ -70,8 +77,9 @@ export const koboFormName: Record<keyof typeof kobo.drcUa.form, string> = {
   meal_cfmExternal: 'meal_cfmExternal',
   meal_ecrecVerification: '[MEAL] Verification EcRec',
   shelter_cashForRepair: '[Shelter] CASH for Repairs Registration Form',
-  shelter_nta: 'shelter_nta',
-  shelter_ta: 'shelter_ta',
+  shelter_nta: '[Shelter] NTA',
+  shelter_ta: '[Shelter] TA',
+  shelter_north: '[Shelter] North',
   protection_hhs2_1: 'protection_hhs2_1',
   protection_communityMonitoring: 'protection_communityMonitoring',
   protection_groupSession: 'protection_groupSession',

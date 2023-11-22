@@ -12,6 +12,11 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, ReactNode> = {
+      // [kobo.drcUa.form.ecrec_cashRegistration]: {
+      //   return (
+      //
+      //   )
+      // },
       [kobo.drcUa.form.protection_communityMonitoring]: (
         <AaSelectSingle
           hideNullOption

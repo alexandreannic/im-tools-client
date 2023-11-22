@@ -28,7 +28,30 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
             <AaSelectSingle
+              disabled={!ctx.canEdit}
               hideNullOption
+              value={row.tags?.project}
+              placeholder={m.project}
+              onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'project'})}
+              options={currentProtectionProjects.map(k => ({value: k, children: k}))}
+            />
+          )
+        }
+      ],
+      [kobo.drcUa.form.shelter_north]: [
+        {
+          id: 'tags_project',
+          head: m.project,
+          type: 'select_multiple',
+          width: 200,
+          options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+          tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project,
+          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blank,
+          // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
+          render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
+            <AaSelectSingle
+              hideNullOption
+              disabled={!ctx.canEdit}
               value={row.tags?.project}
               placeholder={m.project}
               onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'project'})}
@@ -49,6 +72,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
             <AaSelectMultiple
+              disabled={!ctx.canEdit}
               value={row.tags?.projects ?? []}
               onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'projects'})}
               options={currentProtectionProjects.map(k => ({value: k, children: k}))}

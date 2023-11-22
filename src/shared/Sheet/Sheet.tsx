@@ -28,6 +28,8 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   showColumnsToggleBtnTooltip,
   rowsPerPageOptions = [20, 100, 500, 1000],
   select,
+  onFiltersChange,
+  onDataChange,
   ...props
 }: SheetTableProps<T>) => {
 
@@ -59,6 +61,8 @@ export const Sheet = <T extends SheetRow = SheetRow>({
         defaultLimit={defaultLimit}
         select={select}
         getRenderRowKey={getRenderRowKey}
+        onFiltersChange={onFiltersChange}
+        onDataChange={onDataChange}
       >
         <_Sheet
           rowsPerPageOptions={rowsPerPageOptions}
