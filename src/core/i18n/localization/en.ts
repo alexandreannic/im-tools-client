@@ -292,6 +292,8 @@ export const en = Object.freeze({
     noIdp: 'Non-IDP',
     comparedToPreviousMonth: 'Compared to 30 days ago',
     idps: 'IDPs',
+    nonDisplaced: 'Non-displaced',
+    refugeesAndReturnees: 'Refugees and returnees',
     poc: 'Person of concern',
     global: 'Global',
     donor: 'Donor',

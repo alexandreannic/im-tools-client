@@ -8,6 +8,9 @@ export const ua = {
   formatDuration,
   formatLargeNumber,
   messages: {
+    idps: 'Внутрішньо переміщені особи',
+    nonDisplaced: 'Не переміщений',
+    refugeesAndReturnees: 'Біженці та ті, що повернулись з-за кордону',
     area: 'Область',
     answers: 'Відповіді',
     noDataAtm: 'На даний момент немає даних',
@@ -21,6 +24,9 @@ export const ua = {
     yourAnswers: 'Ваші відповіді',
     confirm: 'Підтвердити',
     formSubmitted: 'Відповіді успішно відправлені',
+    protHHSnapshot: {
+
+    },
     formOutcome: {
       title: 'Які 3 результати ...',
       questions: {

@@ -17,9 +17,8 @@ import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmEntryRoute} from '@/features/Cfm/Data/CfmEntry'
 import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {Box, Divider} from '@mui/material'
+import {Box} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
-import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 
 export const cfmModule = {

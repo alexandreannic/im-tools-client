@@ -1,4 +1,4 @@
-import {Box} from '@mui/material'
+import {Box, Icon} from '@mui/material'
 import React, {ReactNode, useCallback, useEffect, useState} from 'react'
 import {Txt} from 'mui-extension'
 import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
@@ -14,6 +14,7 @@ import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
+import {useI18n} from '@/core/i18n'
 
 export const Pan = ({
   title,
@@ -138,7 +139,8 @@ const translationsUa: DeepPartial<typeof Protection_Hhs2_1Options> = {
 
 export default () => {
   const {api} = useAppSettings()
-  const [lang, setLang] = usePersistentState('en', {storageKey: 'romanegraph3'})
+  const {m, currentLang: lang, setLang} = useI18n()
+  // const [lang, setLang] = usePersistentState('en', {storageKey: 'romanegraph3'})
   const req = () => api.kobo.answer.searchProtection_Hhs2({
     filters: period
   }).then(_ => seq(_.data).map(enrichProtHHS_2_1))
@@ -161,7 +163,6 @@ export default () => {
   let index = 0
   const title = (title: string) => `Graph ${++index}. ${title}`
 
-  console.log(ageGroup(Person.ageGroup['DRC'], true))
   return (
     <>
       <SnapshotHeader period={period}/>
@@ -169,14 +170,16 @@ export default () => {
         <ScRadioGroupItem value="en">EN</ScRadioGroupItem>
         <ScRadioGroupItem value="ua">UA</ScRadioGroupItem>
       </ScRadioGroup>
-      <Pan title={title('Сімї за статусом переміщеної особи')}>
+      <Pan title={title('Household respondents per displacement group')}>
+        {/*<Pan title={title('Сімї за статусом переміщеної особи')}>*/}
         <ProtHHS2BarChart
           data={data}
           question="do_you_identify_as_any_of_the_following"
           overrideLabel={lang === 'en' ? undefined : translationsUa.do_you_identify_as_any_of_the_following}
         />
       </Pan>
-      <Pan title={title('Опитанні сім\'ї за віком і статтю Female - Жінка; Male - Чоловік; Other - Інше')}>
+      <Pan title={title('Surveyed households per age and gender groups')}>
+        {/*<Pan title={title('Опитанні сім\'ї за віком і статтю Female - Жінка; Male - Чоловік; Other - Інше')}>*/}
         <AAStackedBarChart data={lang === 'en'
           ? ageGroup(Person.ageGroup['DRC'], true)
           : ageGroup(Person.ageGroup['DRC'], true).map(_ => ({
@@ -190,19 +193,23 @@ export default () => {
           snapshotAlternateColor(t),
         ]}/>
       </Pan>
-      <Pan title={title('Наміри щодо статусу переміщенної особи')}>
+      {/*<Pan title={title('Наміри щодо статусу переміщенної особи')}>*/}
+      <Pan title={title('Intentions per displacement status')}>
+        <Txt bold block color="hint" size="small">{m.idps}</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')}
           filterValue={['unable_unwilling_to_answer']}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence}
         />
+        <Txt bold block color="hint" size="small" sx={{mt: 3}}>{m.nonDisplaced}</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'non_displaced')}
           filterValue={['unable_unwilling_to_answer']}
           question="what_are_your_households_intentions_in_terms_of_place_of_residence"
           overrideLabel={lang === 'en' ? undefined : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence}
         />
+        <Txt bold block color="hint" size="small" sx={{mt: 3}}>{m.refugeesAndReturnees}</Txt>
         <ProtHHS2BarChart
           data={data.filter(_ => _.do_you_identify_as_any_of_the_following === 'refugee' || _.do_you_identify_as_any_of_the_following === 'returnee')}
           filterValue={['unable_unwilling_to_answer']}
