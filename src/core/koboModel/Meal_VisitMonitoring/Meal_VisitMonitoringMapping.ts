@@ -1,4 +1,4 @@
-import {MealVisitMonitoring} from './MealVisitMonitoring'
+import {Meal_VisitMonitoring} from './Meal_VisitMonitoring'
 
 
 const extractQuestionName = (_: Record<string, any>) => {
@@ -11,7 +11,7 @@ const extractQuestionName = (_: Record<string, any>) => {
   return output
 }
 
-export const mapMealVisitMonitoring = (_: Record<keyof MealVisitMonitoring, any>): MealVisitMonitoring => ({
+export const mapMeal_VisitMonitoring = (_: Record<keyof Meal_VisitMonitoring, any>): Meal_VisitMonitoring => ({
 	..._,
 	mdd: _.mdd ? new Date(_.mdd) : undefined,
 	mdd_001: _.mdd_001?.split(' '),
@@ -22,4 +22,4 @@ export const mapMealVisitMonitoring = (_: Record<keyof MealVisitMonitoring, any>
 	sei: _.sei?.split(' '),
 	sst: _.sst?.split(' '),
 	visp: _.visp?.split(' '),
-}) as MealVisitMonitoring
+}) as Meal_VisitMonitoring

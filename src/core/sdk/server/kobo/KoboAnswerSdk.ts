@@ -6,7 +6,6 @@ import {mapProtection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protectio
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
 import {mapBn_Re} from '@/core/koboModel/Bn_Re/Bn_ReMapping'
-import {mapMealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringMapping'
 import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
 import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
@@ -32,6 +31,7 @@ import {mapMeal_EcrecVerification} from '@/core/koboModel/Meal_EcrecVerification
 import {Meal_EcrecVerification} from '@/core/koboModel/Meal_EcrecVerification/Meal_EcrecVerification'
 import {mapEcrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ecrec_CashRegistrationMapping'
 import {Ecrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ecrec_CashRegistration'
+import {mapMeal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoringMapping'
 
 export interface KoboAnswerFilter {
   paginate?: ApiPagination
@@ -154,7 +154,7 @@ export class KoboAnswerSdk {
   readonly searchMeal_VisitMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: kobo.drcUa.form.meal_visitMonitoring,
-      fnMap: mapMealVisitMonitoring,
+      fnMap: mapMeal_VisitMonitoring,
       ...filters,
     })
   }

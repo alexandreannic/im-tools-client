@@ -10,8 +10,6 @@ import {makeKoboBarChartComponent} from '../shared/KoboBarChart'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {kobo} from '@/koboDrcUaFormId'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {MealVisitMonitoring} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoring'
-import {MealVisitMonitoringOptions} from '@/core/koboModel/MealVisitMonitoring/MealVisitMonitoringOptions'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
@@ -26,15 +24,17 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {CommentsPanel} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {Meal_VisitMonitoringOptions} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
+import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
 
 export interface DashboardPageProps {
   filters: OptionFilters
-  data: Seq<KoboAnswer<MealVisitMonitoring>>
+  data: Seq<KoboAnswer<Meal_VisitMonitoring>>
 }
 
 const mapOblast: Record<string, OblastISO> = OblastIndex.koboOblastIndexIso
 
-const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOptions>()({
+const filterShape = DashboardFilterHelper.makeShape<typeof Meal_VisitMonitoringOptions>()({
   oblast: {
     icon: 'location_on',
     options: 'mdro',
@@ -91,8 +91,8 @@ const filterShape = DashboardFilterHelper.makeShape<typeof MealVisitMonitoringOp
 
 type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape>
 
-export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<MealVisitMonitoring, typeof MealVisitMonitoringOptions>({
-  options: MealVisitMonitoringOptions
+export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<Meal_VisitMonitoring, typeof Meal_VisitMonitoringOptions>({
+  options: Meal_VisitMonitoringOptions
 })
 
 export const DashboardMealVisitMonitoring = () => {
@@ -123,16 +123,16 @@ export const DashboardMealVisitMonitoring = () => {
     _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
-  const getChoices = <T extends keyof typeof MealVisitMonitoringOptions>(
+  const getChoices = <T extends keyof typeof Meal_VisitMonitoringOptions>(
     questionName: T, {
       skipKey = [],
       // renameOptions
     }: {
-      skipKey?: (keyof typeof MealVisitMonitoringOptions[T])[]
+      skipKey?: (keyof typeof Meal_VisitMonitoringOptions[T])[]
       // renameOptions?: Record<keyof typeof ProtHHS_2_1Options[T], string>
     } = {}
   ) => {
-    return Enum.entries(MealVisitMonitoringOptions[questionName] ?? {})
+    return Enum.entries(Meal_VisitMonitoringOptions[questionName] ?? {})
       .map(([value, label]) => ({value, label: label}))
       .filter(_ => !(skipKey as string[]).includes(_.value))
   }
@@ -266,7 +266,7 @@ export const DashboardMealVisitMonitoring = () => {
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
                   <Lazy deps={[data]} fn={() => data.map(row => ({
                     id: row.id,
-                    title: (MealVisitMonitoringOptions.mdp as any)[row.mdp],
+                    title: (Meal_VisitMonitoringOptions.mdp as any)[row.mdp!],
                     date: row.mdd ?? row.end,
                     desc: row.fcpc,
                     children: (
