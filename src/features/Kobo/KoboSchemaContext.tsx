@@ -1,6 +1,7 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState} from 'react'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {MealVerificationAnsers} from '@/core/sdk/server/mealVerification/MealVerification'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string

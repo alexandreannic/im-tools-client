@@ -46,7 +46,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     id: AppFeatureId.shelter,
     name: 'Shelter',
     materialIcons: 'home_work',
-    color: 'brown',
+    color: '#742020',
     path: '/shelter',
     showIf: (u, accesses) => {
       // return u && ([
@@ -95,7 +95,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
   cfm: {
     id: AppFeatureId.cfm,
     name: 'CFM',
-    materialIcons: 'sms_failed',
+    materialIcons: 'support_agent',
     color: '#1c2c73',
     path: '/cfm',
     showIf: (u, accesses) => true
@@ -112,8 +112,8 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
   meal_verification: {
     id: AppFeatureId.meal_verification,
     name: 'Meal Verification',
-    materialIcons: 'photo_camera',
-    color: 'blue',
+    materialIcons: 'troubleshoot',
+    color: '#afd0d6',
     path: '/meal-verification',
     showIf: _ => _ && _?.admin
   },

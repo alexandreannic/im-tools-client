@@ -94,7 +94,7 @@ export const PieChartIndicator = ({
       }}>
         <Donut percent={value / base} size={dense ? 44 : 55}/>
         <Box sx={{ml: dense ? 1 : 1.5}}>
-          <SlidePanelTitle icon={titleIcon} noWrap={noWrap}>
+          <SlidePanelTitle icon={titleIcon} noWrap={noWrap} sx={{mb: 0}}>
             {title}
           </SlidePanelTitle>
           <Box sx={{display: 'inline-flex', lineHeight: 1, alignItems: 'flex-start'}}>

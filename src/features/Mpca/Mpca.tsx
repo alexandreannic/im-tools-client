@@ -19,7 +19,7 @@ import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {kobo, koboFormName} from '@/koboDrcUaFormId'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
-import {DatabaseTablePage} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 
 const relatedKoboForms: (keyof typeof kobo.drcUa.form)[] = [
   'bn_re',
@@ -121,7 +121,7 @@ export const Mpca = () => {
             <Route path={mpcaModule.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
             <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
             {relatedKoboForms.map(_ =>
-              <Route key={_} path={mpcaModule.siteMap.form(_)} element={<DatabaseTablePage formId={kobo.drcUa.form[_]}/>}/>
+              <Route key={_} path={mpcaModule.siteMap.form(_)} element={<DatabaseTable formId={kobo.drcUa.form[_]}/>}/>
             )}
           </Routes>
         </Layout>

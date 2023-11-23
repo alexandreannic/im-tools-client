@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo} from 'react'
+import React, {memo, useEffect, useMemo} from 'react'
 import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {useParams} from 'react-router'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {map} from '@alexandreannic/ts-utils'
+import {map, mapFor} from '@alexandreannic/ts-utils'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
@@ -14,10 +14,14 @@ import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {DatabaseKoboTableProvider} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {UUID} from '@/core/type'
-import {KoboForm, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboForm, KoboId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/koboDrcUaFormId'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
+import {Box, Skeleton} from '@mui/material'
+import {Paginate} from '@/utils/utils'
+import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
+import {DatabaseKoboTableSkeleton} from '@/features/Database/KoboTable/DatabaseKoboTableSkeleton'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -25,27 +29,44 @@ export const DatabaseTableRoute = () => {
   return (
     <>
       {map(ctx.getForm(formId), form =>
-        <DatabaseTablePage
-          serverId={serverId}
-          form={form}
-          formId={formId}
-        />
+        <Page width="full">
+          <Panel>
+            <DatabaseTable
+              serverId={serverId}
+              form={form}
+              formId={formId}
+            />
+          </Panel>
+        </Page>
       )}
     </>
   )
 }
 
-export const DatabaseTablePage = ({
-  serverId = kobo.drcUa.server.prod,
-  form,
-  schema,
-  formId,
-}: {
+export interface DatabaseTableProps {
   form?: KoboForm
   schema?: KoboApiForm
   serverId?: UUID
   formId: KoboId
-}) => {
+  onFiltersChange?: (_: Record<string, SheetFilterValue>) => void
+  onDataChange?: (_: {
+    data?: KoboMappedAnswer[]
+    filteredData?: KoboMappedAnswer[]
+    filteredAndSortedData?: KoboMappedAnswer[]
+    filteredSortedAndPaginatedData?: Paginate<KoboMappedAnswer>
+  }) => void
+  overrideEditAccess?: boolean
+}
+
+export const DatabaseTable = ({
+  serverId = kobo.drcUa.server.prod,
+  form,
+  schema,
+  formId,
+  onFiltersChange,
+  onDataChange,
+  overrideEditAccess,
+}: DatabaseTableProps) => {
   const {api} = useAppSettings()
   const {accesses, session} = useSession()
   const {toastHttpError, toastLoading} = useAaToast()
@@ -75,35 +96,41 @@ export const DatabaseTablePage = ({
   useEffectFn(_answers.error, toastHttpError)
 
   return (
-    <Page loading={_formSchema.loading || _answers.loading} width="full">
-      <Panel>
-        {_answers.entity && _formSchema.entity && _form.entity && (
-          <KoboSchemaProvider schema={_formSchema.entity!}>
+    <>
+      {(_formSchema.loading || _answers.loading) && (
+        <DatabaseKoboTableSkeleton/>
+      )}
+      {_formSchema.entity && (
+        <KoboSchemaProvider schema={_formSchema.entity!}>
+          {_answers.entity && _form.entity && (
             <DatabaseKoboTableProvider
-              canEdit={access.write}
+              canEdit={overrideEditAccess ?? access.write}
               serverId={serverId}
               fetcherAnswers={_answers}
               data={_answers.entity!.data}
               form={_form.entity!}
             >
-              <DatabaseKoboTableContent/>
+              <DatabaseKoboTableContent
+                onFiltersChange={onFiltersChange}
+                onDataChange={onDataChange}
+              />
             </DatabaseKoboTableProvider>
-          </KoboSchemaProvider>
-        )}
-        {/*{map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (*/}
-        {/*  <KoboSchemaProvider schema={schema}>*/}
-        {/*    <DatabaseKoboTableProvider*/}
-        {/*      canEdit={access.write}*/}
-        {/*      serverId={serverId}*/}
-        {/*      fetcherAnswers={_answers}*/}
-        {/*      data={data.data}*/}
-        {/*      form={form}*/}
-        {/*    >*/}
-        {/*      <DatabaseKoboTableContent/>*/}
-        {/*    </DatabaseKoboTableProvider>*/}
-        {/*  </KoboSchemaProvider>*/}
-        {/*))}*/}
-      </Panel>
-    </Page>
+          )}
+        </KoboSchemaProvider>
+      )}
+      {/*{map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (*/}
+      {/*  <KoboSchemaProvider schema={schema}>*/}
+      {/*    <DatabaseKoboTableProvider*/}
+      {/*      canEdit={access.write}*/}
+      {/*      serverId={serverId}*/}
+      {/*      fetcherAnswers={_answers}*/}
+      {/*      data={data.data}*/}
+      {/*      form={form}*/}
+      {/*    >*/}
+      {/*      <DatabaseKoboTableContent/>*/}
+      {/*    </DatabaseKoboTableProvider>*/}
+      {/*  </KoboSchemaProvider>*/}
+      {/*))}*/}
+    </>
   )
 }

@@ -14,6 +14,7 @@ import {UserSdk} from '@/core/sdk/server/user/UserSdk'
 import {ProxySdk} from '@/core/sdk/server/proxy/ProxySdk'
 import {MpcaSdk} from '@/core/sdk/server/mpca/MpcaSdk'
 import {ShelterSdk} from '@/core/sdk/server/shelter/ShelterSdk'
+import {MealVerificationClient} from '@/core/sdk/server/mealVerification/MealVerificationClient'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -39,6 +40,7 @@ export class ApiSdk {
     form: new KoboFormSdk(this.client),
   }
   readonly koboApi = new KoboApiSdk(this.client)
+  readonly mealVerification = new MealVerificationClient(this.client)
   readonly activityInfo = new ActivityInfoSdk(this.client)
   readonly mpca = new MpcaSdk(this.client)
   readonly mpcaPayment = new MpcaPaymentSdk(this.client)

@@ -1,6 +1,6 @@
 import React, {CSSProperties, ReactNode} from 'react'
 import {BoxProps} from '@mui/material'
-import {KeyOf, Utils} from '@/utils/utils'
+import {KeyOf, Paginate, Utils} from '@/utils/utils'
 import {NonNullableKeys} from '@/utils/utilsType'
 
 export type SheetPropertyType = 'date' | 'number' | 'string' | 'select_one' | 'select_multiple'
@@ -47,6 +47,13 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   showColumnsToggleBtnTooltip?: string
   showExportBtn?: boolean
   renderEmptyState?: ReactNode
+  onFiltersChange?: (_: Record<KeyOf<T>, SheetFilterValue>) => void
+  onDataChange?: (_: {
+    data?: T[]
+    filteredData?: T[]
+    filteredAndSortedData?: T[]
+    filteredSortedAndPaginatedData?: Paginate<T>
+  }) => void
   sort?: {
     sortableColumns?: string[]
     sortBy?: KeyOf<T>

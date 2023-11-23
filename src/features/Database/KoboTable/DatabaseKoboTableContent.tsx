@@ -1,4 +1,4 @@
-import {KoboAnswer, KoboBaseTags, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
@@ -17,11 +17,13 @@ import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'
 import {useCustomSelectedHeader} from '@/features/Database/KoboTable/useCustomSelectedHeader'
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
-import {useAppSettings} from '@/core/context/ConfigContext'
+import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
 
-export const DatabaseKoboTableContent = () => {
+export const DatabaseKoboTableContent = ({
+  onFiltersChange,
+  onDataChange,
+}: Pick<DatabaseTableProps, 'onFiltersChange' | 'onDataChange'>) => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
   const theme = useTheme()
@@ -74,7 +76,7 @@ export const DatabaseKoboTableContent = () => {
       render: (row: KoboAnswer) => (
         <>
           <AaSelectSingle
-            disabled={ctx.fetcherAnswers.loading}
+            disabled={!ctx.canEdit || ctx.fetcherAnswers.loading}
             value={row.tags?._validation}
             options={[
               {children: <Icon sx={{color: theme.palette.success.main}} title={m.Approved}>check_circle</Icon>, value: KoboValidation.Approved},
@@ -100,7 +102,9 @@ export const DatabaseKoboTableContent = () => {
   return (
     <>
       <Sheet
-        select={selectedHeader ? {
+        onFiltersChange={onFiltersChange}
+        onDataChange={onDataChange}
+        select={ctx.canEdit && selectedHeader ? {
           onSelect: setSelectedIds,
           selectActions: selectedHeader,
           getId: _ => _.id,
