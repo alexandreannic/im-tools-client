@@ -32,7 +32,6 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   onDataChange,
   ...props
 }: SheetTableProps<T>) => {
-
   const mappedColumns = useMemo(() => {
     return columns.map(col => {
       if (col.type === 'select_one' || col.type === 'select_multiple') {

@@ -66,7 +66,7 @@ export const SheetProvider = <T extends SheetRow>({
       filteredAndSortedData: data.filteredAndSortedData,
       filteredSortedAndPaginatedData: data.filteredSortedAndPaginatedData,
     })
-  }, [data, data.filters])
+  }, [data.filters])
 
   const options = useSheetOptions<T>({
     data,

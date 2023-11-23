@@ -1,4 +1,4 @@
-import React, {ReactNode, useCallback, useContext, useEffect, useState} from 'react'
+import React, {ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UUID} from '@/core/type'
@@ -49,24 +49,25 @@ export const DatabaseKoboTableProvider = (props: {
   } = props
   const {api} = useAppSettings()
   const {toastError} = useAaToast()
+  const hasBeenCalled = useRef(false)
+
+  const mapData = (data: KoboAnswer[]) => data.map(_ => Kobo.mapAnswerBySchema(ctxSchema.schemaHelper.questionIndex, _))
+
   const asyncRefresh = useAsync(async () => {
     await api.koboApi.synchronizeAnswers(serverId, form.id)
     await fetcherAnswers.fetch({force: true, clean: false})
   })
 
   const asyncEdit = (answerId: KoboAnswerId) => api.koboApi.getEditUrl({serverId, formId: form.id, answerId})
-  // const asyncEdit = useAsync(async (answerId: KoboAnswerId) => {
-  //   return api.koboApi.getEditUrl(serverId, form.id, answerId).then(_ => {
-  //     if (_.url) {
-  //       window.open(_.url, '_blank')
-  //     }
-  //   }).catch(toastHttpError)
-  // }, {requestKey: _ => _[0]})
 
+  const [mappedData, setMappedData] = useState<KoboMappedAnswer[]>(mapData(data))
 
-  const [mappedData, setMappedData] = useState<KoboMappedAnswer[]>([])
-
-  useEffect(() => setMappedData(data.map(_ => Kobo.mapAnswerBySchema(ctxSchema.schemaHelper.questionIndex, _))), [data])
+  useEffect(() => {
+    if (!hasBeenCalled.current) {
+      setMappedData(mapData(data))
+      hasBeenCalled.current = true
+    }
+  }, [data])
 
   const updateTag = useCallback((params: Parameters<ApiSdk['kobo']['answer']['updateTag']>[0]) => {
     const req = api.kobo.answer.updateTag({

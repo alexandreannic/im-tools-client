@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react'
+import React, {memo, useEffect, useMemo} from 'react'
 import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {useParams} from 'react-router'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -21,6 +21,7 @@ import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
 import {Box, Skeleton} from '@mui/material'
 import {Paginate} from '@/utils/utils'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
+import {DatabaseKoboTableSkeleton} from '@/features/Database/KoboTable/DatabaseKoboTableSkeleton'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -97,37 +98,24 @@ export const DatabaseTable = ({
   return (
     <>
       {(_formSchema.loading || _answers.loading) && (
-        <>
-          <Box>
-            <Skeleton sx={{mx: 1, height: 50}}/>
-          </Box>
-          <table className="table borderY">
-            <tbody>
-            {mapFor(20, i => (
-              <tr className="tr" key={i}>
-                {mapFor(12, i => (
-                  <td className="td" key={i}><Skeleton sx={{mx: 1}}/></td>
-                ))}
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </>
+        <DatabaseKoboTableSkeleton/>
       )}
-      {_answers.entity && _formSchema.entity && _form.entity && (
+      {_formSchema.entity && (
         <KoboSchemaProvider schema={_formSchema.entity!}>
-          <DatabaseKoboTableProvider
-            canEdit={overrideEditAccess ?? access.write}
-            serverId={serverId}
-            fetcherAnswers={_answers}
-            data={_answers.entity!.data}
-            form={_form.entity!}
-          >
-            <DatabaseKoboTableContent
-              onFiltersChange={onFiltersChange}
-              onDataChange={onDataChange}
-            />
-          </DatabaseKoboTableProvider>
+          {_answers.entity && _form.entity && (
+            <DatabaseKoboTableProvider
+              canEdit={overrideEditAccess ?? access.write}
+              serverId={serverId}
+              fetcherAnswers={_answers}
+              data={_answers.entity!.data}
+              form={_form.entity!}
+            >
+              <DatabaseKoboTableContent
+                onFiltersChange={onFiltersChange}
+                onDataChange={onDataChange}
+              />
+            </DatabaseKoboTableProvider>
+          )}
         </KoboSchemaProvider>
       )}
       {/*{map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (*/}

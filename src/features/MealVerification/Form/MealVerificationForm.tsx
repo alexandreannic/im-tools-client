@@ -17,6 +17,8 @@ import {useAsync} from '@/alexlib-labo/useAsync'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useAaToast} from '@/core/useToast'
 import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
+import {useNavigate} from 'react-router'
+import {mealVerificationModule} from '@/features/MealVerification/MealVerification'
 
 const verifiableForms: (keyof typeof kobo.drcUa.form)[] = [
   'ecrec_cashRegistration',
@@ -62,12 +64,12 @@ const getRandomElements = <T, >(array: T[], coefficient: number): T[] => {
 
 export const MealVerificationForm = () => {
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError, toastSuccess} = useAaToast()
   const [activeStep, setActiveStep] = React.useState(0)
   const t = useTheme()
+  const navigate = useNavigate()
 
   const asyncCreate = useAsync(api.mealVerification.create)
-
   useEffectFn(asyncCreate.lastError, toastHttpError)
 
   const nextStep = () => {
@@ -106,15 +108,21 @@ export const MealVerificationForm = () => {
     </AaBtn>
   )
 
-  const submit = (form: MealVerificationForm) => {
-    const numElementsToSelect = Math.floor((sampleSizeRatio) * form.answerIds.length)
-    const answers: MealVerificationAnsers[] = form.answerIds
-      .sort(() => Math.random() - 0.5)
-      .map((a, i) => ({
-        koboAnswerId: a,
-        status: i <= numElementsToSelect ? MealVerificationAnswersStatus.Selected : undefined
-      }))
-    asyncCreate.call({...form, answers})
+  const submit = async ({answerIds, ...form}: MealVerificationForm) => {
+    try {
+      const numElementsToSelect = Math.floor((sampleSizeRatio) * answerIds.length)
+      const answers: MealVerificationAnsers[] = answerIds
+        .sort(() => Math.random() - 0.5)
+        .map((a, i) => ({
+          koboAnswerId: a,
+          status: i <= numElementsToSelect ? MealVerificationAnswersStatus.Selected : undefined
+        }))
+      await asyncCreate.call({...form, answers})
+      toastSuccess(m._mealVerif.requested)
+      navigate(mealVerificationModule.siteMap.index)
+    } catch (e) {
+
+    }
   }
 
   const {m} = useI18n()

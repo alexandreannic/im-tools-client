@@ -1,9 +1,10 @@
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {UUID} from '@/core/type'
 
 export class MealVerificationHelper {
 
   static readonly mapEntity = (_: MealVerification): MealVerification => {
-    _.createdAt = new Date(_.createdBy)
+    _.createdAt = new Date(_.createdAt)
     return _
   }
 }
@@ -18,6 +19,7 @@ export interface MealVerificationAnsers {
 }
 
 export interface MealVerification {
+  id: UUID
   formId: KoboId
   name: string
   desc?: string
