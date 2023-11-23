@@ -403,9 +403,6 @@ const tableTheme = (t: Theme, colorOverOpaque: string) => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
   },
-  '.table div::-webkit-resizer': {
-    background: 'transparent'
-  },
   '.table-head-type-icon': {
     ml: '2px', marginRight: 'auto', color: alpha(t.palette.text.disabled, .18)
   },
