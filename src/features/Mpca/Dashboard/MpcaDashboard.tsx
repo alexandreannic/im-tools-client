@@ -34,7 +34,7 @@ import ageGroup = Person.ageGroup
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
-import {koboFormName} from '@/koboDrcUaFormId'
+import {koboFormTranslation} from '@/koboDrcUaFormId'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import { groupBy } from '@/utils/groupBy'
 
@@ -84,7 +84,7 @@ export const MpcaDashboard = () => {
       options: SheetOptions[]
     }[] = [{
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
-      options: Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboFormSdk.parseFormName(koboFormName[_]).name))
+      options: Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboFormSdk.parseFormName(koboFormTranslation[_]).name))
     }, {
       icon: 'handshake', label: 'Donor', property: 'finalDonor',
       options: SheetUtils.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
@@ -266,7 +266,7 @@ export const _MPCADashboard = ({
             <SlidePanel title={m.form}>
               <Lazy deps={[data]} fn={() => chain(ChartTools.single({
                 data: data.map(_ => _.source),
-              })).map(ChartTools.setLabel(new Enum(koboFormName).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
+              })).map(ChartTools.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>

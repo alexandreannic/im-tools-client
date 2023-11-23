@@ -1,5 +1,6 @@
 import {Enum, seq} from '@alexandreannic/ts-utils'
 
+/** @deprecated*/
 export const kobo = {
   drcUa: {
     server: {
@@ -20,7 +21,8 @@ export const kobo = {
       bn_0_mpcaRegNoSig: 'aHuWQPkrC43qBfTmJvoLqg',
       bn_0_mpcaRegESign: 'a8JXohrBDqTdCc86Ysz26r',
       bn_re: 'aKgX4MNs6gCemDQKPeXxY8',
-      meal_ecrecVerification: 'aEN2tkQhpsfX4G3i6Re7bi',
+      meal_verificationEcrec: 'aEN2tkQhpsfX4G3i6Re7bi',
+      meal_verificationWinterization: 'aAWVLi8bSb2S8bHc5CcL8i',
       meal_visitMonitoring: 'a8GkjWBQDfxVADGHWJDrUw',
       meal_cfmInternal: 'aN3Y8JeH2fU3GthrWAs9FG',
       meal_cfmExternal: 'aJaGLvGEdpYWk5ift8k87y',
@@ -56,9 +58,11 @@ export const kobo = {
 
 export type KoboFormName = keyof typeof kobo.drcUa.form
 
+/** @deprecated*/
 export const koboFormById: Record<string, KoboFormName> = seq(Enum.entries(kobo.drcUa.form)).reduceObject(([k, v]) => [v, k])
 
-export const koboFormName: Record<KoboFormName, string> = {
+/** @deprecated*/
+export const koboFormTranslation: Record<KoboFormName, string> = {
   safety_incident: 'safety_incident',
   ecrec_cashRegistration: '[Ecrec] Sectoral Cash Registration',
   bn_rapidResponse: '[Basic Needs] Rapid Response Mechanism',
@@ -75,7 +79,8 @@ export const koboFormName: Record<KoboFormName, string> = {
   meal_visitMonitoring: 'meal_visitMonitoring',
   meal_cfmInternal: 'meal_cfmInternal',
   meal_cfmExternal: 'meal_cfmExternal',
-  meal_ecrecVerification: '[MEAL] Verification EcRec',
+  meal_verificationEcrec: '[MEAL] Verification EcRec',
+  meal_verificationWinterization: '[MEAL] Verification Winterization',
   shelter_cashForRepair: '[Shelter] CASH for Repairs Registration Form',
   shelter_nta: '[Shelter] NTA',
   shelter_ta: '[Shelter] TA',
@@ -86,4 +91,28 @@ export const koboFormName: Record<KoboFormName, string> = {
   protection_pss: 'protection_pss',
   protection_hhs1: 'protection_hhs1',
 //
+}
+
+export class KoboIndex {
+
+  static readonly searchByName = (name: keyof typeof kobo.drcUa.form) => {
+    const id = kobo.drcUa.form[name]
+    const translation = koboFormTranslation[name]
+    return {
+      name,
+      id,
+      translation,
+    }
+  }
+
+  static readonly searchById = (id: string) => {
+    const name = koboFormById[id]
+    const translation = koboFormTranslation[name]
+    if (name)
+      return {
+        name,
+        id,
+        translation,
+      }
+  }
 }

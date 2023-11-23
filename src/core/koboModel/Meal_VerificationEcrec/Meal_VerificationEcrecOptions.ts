@@ -1,4 +1,4 @@
-export const Meal_EcrecVerificationOptions = {
+export const Meal_VerificationEcrecOptions = {
 back_office: {
 	'lwo': `Lviv (LWO)`,
 	'chj': `Chernihiv (CHJ)`,

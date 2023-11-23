@@ -54,7 +54,7 @@ export const DashboardSafetyIncident = () => {
   const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.safety_incident))
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
-  const _answers = useFetcher((filter: Partial<Period>) => api.kobo.answer.searchSafetyIncident({
+  const _answers = useFetcher((filter: Partial<Period>) => api.kobo.typedAnswers.searchSafetyIncident({
     filters: {
       start: filter.start,
       end: filter.end,

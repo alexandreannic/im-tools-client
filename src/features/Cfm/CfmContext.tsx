@@ -149,8 +149,8 @@ export const CfmProvider = ({
 
   const data = useFetcher(async (filters?: CfmDataFilters) => {
     const [external, internal] = await Promise.all([
-      api.kobo.answer.searchMealCfmExternal(filters).then(_ => _.data),
-      api.kobo.answer.searchMealCfmInternal(filters).then(_ => _.data),
+      api.kobo.typedAnswers.searchMealCfmExternal(filters).then(_ => _.data),
+      api.kobo.typedAnswers.searchMealCfmInternal(filters).then(_ => _.data),
     ])
     return {[CfmDataSource.External]: external, [CfmDataSource.Internal]: internal}
   })

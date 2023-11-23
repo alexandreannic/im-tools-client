@@ -9,14 +9,39 @@ import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {mealVerificationModule} from '@/features/MealVerification/MealVerification'
 import {NavLink} from 'react-router-dom'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {Modal} from 'mui-extension'
+import {Modal, Txt} from 'mui-extension'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useSession} from '@/core/Session/SessionContext'
+import {mealVerificationActivitiesIndex} from '@/features/MealVerification/mealVerificationConfig'
+import {kobo, KoboIndex} from '@/koboDrcUaFormId'
+import {AppFeatureId} from '@/features/appFeatureId'
+import {databaseModule} from '@/features/Database/databaseModule'
+import Link from 'next/link'
+import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 
-export const MealVerificationIndex = () => {
+const LinkToForm = ({
+  koboFormId,
+}: {
+  koboFormId: KoboId
+}) => {
+  const {conf} = useAppSettings()
+  return (
+    <Link href={conf.linkToFeature(
+      AppFeatureId.kobo_database,
+      databaseModule.siteMap.database.absolute(kobo.drcUa.server.prod, koboFormId)
+    )}>
+      <Txt link sx={{verticalAlign: 'middle',}}>
+        <Icon fontSize="inherit" sx={{mr: .5}}>open_in_new</Icon>
+        {KoboIndex.searchById(koboFormId)?.translation}
+      </Txt>
+    </Link>
+  )
+}
+
+export const MealVerificationList = () => {
   const ctx = useMealVerificationContext()
-  const {api} = useAppSettings()
+  const {api, conf} = useAppSettings()
   const {session} = useSession()
   const asyncRemove = useAsync(api.mealVerification.remove)
   const {m, formatDateTime} = useI18n()
@@ -26,7 +51,7 @@ export const MealVerificationIndex = () => {
   }, [])
 
   return (
-    <Page>
+    <Page width="full">
       <Panel>
         <Sheet
           header={
@@ -75,9 +100,21 @@ export const MealVerificationIndex = () => {
               render: _ => JSON.stringify(_.filters)
             },
             {
+              type: 'select_one',
+              id: 'filters',
+              head: m._mealVerif.activityForm,
+              render: _ => <LinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].activity.koboFormId}/>
+            },
+            {
+              type: 'select_one',
+              id: 'filters',
+              head: m._mealVerif.verificationForm,
+              render: _ => <LinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].verification.koboFormId}/>
+            },
+            {
               id: 'actions',
               head: '',
-              width: 0,
+              width: 1,
               align: 'right',
               render: _ => (
                 <>

@@ -1,6 +1,6 @@
 import {Layout} from '@/shared/Layout'
 import React from 'react'
-import {MealVerificationIndex} from '@/features/MealVerification/MealVerificationIndex'
+import {MealVerificationList} from '@/features/MealVerification/MealVerificationList'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {MealVerificationForm} from '@/features/MealVerification/Form/MealVerificationForm'
 import {MealVerificationTable} from '@/features/MealVerification/MealVerificationTable'
@@ -45,7 +45,7 @@ export const MealVerification = () => {
       <Router>
         <Layout sidebar={<MealVerificationSidebar/>}>
           <Routes>
-            <Route index path={mealVerificationModule.siteMap.index} element={<MealVerificationIndex/>}/>
+            <Route index path={mealVerificationModule.siteMap.index} element={<MealVerificationList/>}/>
             <Route path={mealVerificationModule.siteMap.form} element={<MealVerificationForm/>}/>
             <Route path={mealVerificationModule.siteMap.data()} element={<MealVerificationTable/>}/>
           </Routes>

@@ -1,9 +1,9 @@
-import {Meal_EcrecVerificationOptions} from './Meal_EcrecVerificationOptions'
+import {Meal_VerificationEcrecOptions} from './Meal_VerificationEcrecOptions'
 
-type Opt<T extends keyof typeof Meal_EcrecVerificationOptions> = keyof (typeof Meal_EcrecVerificationOptions)[T]
+type Opt<T extends keyof typeof Meal_VerificationEcrecOptions> = keyof (typeof Meal_VerificationEcrecOptions)[T]
 
 // Form id: aEN2tkQhpsfX4G3i6Re7bi
-export interface Meal_EcrecVerification {
+export interface Meal_VerificationEcrec {
   start: string,
   end: string,
   // [select_one] 1.1 Select Office

@@ -4,8 +4,6 @@ import {map, Seq, seq} from '@alexandreannic/ts-utils'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {Ecrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ecrec_CashRegistration'
-import {Meal_EcrecVerification} from '@/core/koboModel/Meal_EcrecVerification/Meal_EcrecVerification'
 import {alpha, Icon, Tooltip, useTheme} from '@mui/material'
 import {toPercent} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
@@ -23,38 +21,13 @@ import {useParams} from 'react-router'
 import * as yup from 'yup'
 import {useMealVerificationContext} from '@/features/MealVerification/MealVerificationContext'
 import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
-
-const columnsToCompare: Seq<keyof Ecrec_CashRegistration & keyof Meal_EcrecVerification> = seq([
-  // 'pay_det_tax_id_num',
-  'back_donor',
-  'back_consent',
-  'back_consent_no_note',
-  'ben_det_surname',
-  'ben_det_first_name',
-  'ben_det_pat_name',
-  'ben_det_ph_number',
-  'ben_det_oblast',
-  'ben_det_raion',
-  'ben_det_hromada',
-  'ben_det_settlement',
-  'ben_det_res_stat',
-  'ben_det_income',
-  'ben_det_hh_size',
-  'land_own',
-  'land_cultivate',
-  'not_many_livestock',
-  'many_sheep_goat',
-  'many_milking',
-  'many_cow',
-  'many_pig',
-  'many_poultry',
-  // 'fin_det_res',
-  // 'fin_det_enum',
-])
+import {mealVerificationActivities, MealVerificationActivity} from '@/features/MealVerification/mealVerificationConfig'
+import {ApiSdk} from '@/core/sdk/server/ApiSdk'
+import {ApiPaginate} from '@/core/type'
 
 interface MergedData {
-  dataCheck?: KoboAnswer<Meal_EcrecVerification>
-  data: KoboAnswer<Ecrec_CashRegistration>
+  dataCheck?: KoboAnswer<any>
+  data: KoboAnswer<any>
   ok: number
 }
 
@@ -64,32 +37,43 @@ export const MealVerificationTable = () => {
   const {id} = paramSchema.validateSync(useParams())
   const {api} = useAppSettings()
   const ctx = useMealVerificationContext()
-  const entity = useMemo(() => ctx.fetcherVerifications.entity?.find(_ => _.id === id), [id])
+  const {entity, activity} = useMemo(() => {
+    const entity = ctx.fetcherVerifications.entity?.find(_ => _.id === id)
+    return {
+      entity,
+      activity: mealVerificationActivities.find(_ => _.name === entity?.activity)
+    }
+  }, [id])
   const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm(kobo.drcUa.server.prod, formId))
   const fetcherToVerifyAnswers = useFetcher(api.mealVerification.getAnswers)
 
   useEffect(() => {
     ctx.fetcherVerifications.fetch({force: true})
-    if (entity) {
-      fetcherSchema.fetch({}, entity.formId)
+    if (entity && activity) {
+      fetcherSchema.fetch({}, activity.activity.koboFormId)
       fetcherToVerifyAnswers.fetch({}, entity.id)
     }
   }, [])
 
   return (
     <>
-      {fetcherSchema.entity && fetcherToVerifyAnswers.entity && (
+      {fetcherSchema.entity && fetcherToVerifyAnswers.entity && activity && (
         <KoboSchemaProvider schema={fetcherSchema.entity}>
-          <MealVerificationEcrec toVerifyAnswers={fetcherToVerifyAnswers.entity}/>
+          <MealVerificationEcrec activity={activity} toVerifyAnswers={fetcherToVerifyAnswers.entity}/>
         </KoboSchemaProvider>
       )}
     </>
   )
 }
 
-const MealVerificationEcrec = ({
-  toVerifyAnswers
+const MealVerificationEcrec = <
+  TData extends keyof ApiSdk['kobo']['typedAnswers'] = any,
+  TCheck extends keyof ApiSdk['kobo']['typedAnswers'] = any,
+>({
+  toVerifyAnswers,
+  activity
 }: {
+  activity: MealVerificationActivity<TData, TCheck>
   toVerifyAnswers: MealVerificationAnsers[]
 }) => {
   const {api} = useAppSettings()
@@ -97,12 +81,12 @@ const MealVerificationEcrec = ({
   const t = useTheme()
   const ctx = useKoboSchemaContext()
 
-  const fetcherVerif = useFetcher(api.kobo.answer.searchMeal_ecrecVerification)
-  const req = () => api.kobo.answer.searchEcrec_cashRegistration().then(_ => {
+  const req = () => api.kobo.typedAnswers[activity.activity.fetch]().then(_ => {
     const idsToVerify = new Set(toVerifyAnswers.filter(_ => _.status === MealVerificationAnswersStatus.Selected).map(_ => _.koboAnswerId))
-    return _.data.filter(_ => idsToVerify.has(_.id))
+    return (_.data as KoboAnswer<any, any>[]).filter(_ => idsToVerify.has(_.id)) as any[]
   })
   const fetcherData = useFetcher(req)
+  const fetcherVerif = useFetcher(() => api.kobo.typedAnswers[activity.verification.fetch]() as Promise<ApiPaginate<any>>)
 
   const [openModalAnswer, setOpenModalAnswer] = useState<KoboAnswer<any> | undefined>()
   const [display, setDisplay] = useState<'data' | 'dataCheck' | 'all'>('all')
@@ -114,19 +98,19 @@ const MealVerificationEcrec = ({
 
   const mergedData: Seq<MergedData> | undefined = useMemo(() => {
     return map(fetcherVerif.entity?.data, fetcherData.entity, (verif, data) => {
-      const indexedVerif = seq(verif).groupBy(_ => _.pay_det_tax_id_num ?? '')
+      const indexedVerif = seq(verif).groupBy(_ => _[activity.joinColumn] ?? '')
       return seq(data).map(_ => {
-        const refArr = indexedVerif[_.pay_det_tax_id_num!]
+        const refArr = indexedVerif[_[activity.joinColumn]!]
         if (!refArr) return {
           data: _,
           ok: 0,
         }
-        if (refArr.length > 1) throw new Error(_.pay_det_tax_id_num + ' exist ' + refArr?.length)
+        if (refArr.length > 1) throw new Error(_[activity.joinColumn] + ' exist ' + refArr?.length)
         const ref = refArr[0]
         return {
           dataCheck: ref,
           data: _,
-          ok: columnsToCompare.sum(c => _[c] === ref?.[c] ? 1 : 0),
+          ok: seq(activity.columns).sum(c => _[c] === ref?.[c] ? 1 : 0),
         }
       }).compact().sortByNumber(_ => _.dataCheck ? 1 : 0)
     })
@@ -140,7 +124,7 @@ const MealVerificationEcrec = ({
     const verified = mergedData.filter(_ => _.dataCheck)
     return {
       indicatorsOk: mergedData.sum(_ => _.ok ?? 0),
-      indicatorsVerified: verified.length * columnsToCompare.length,
+      indicatorsVerified: verified.length * activity.columns.length,
       verifiedRows: verified.length,
     }
   }, [mergedData])
@@ -184,7 +168,7 @@ const MealVerificationEcrec = ({
                   ...ctx.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
                 ]}
               />
-              <ScRadioGroup inline dense value={display} onChange={setDisplay}>
+              <ScRadioGroup inline dense value={display} onChange={setDisplay} sx={{mr: 1}}>
                 <ScRadioGroupItem hideRadio value="all" title={
                   <Tooltip title={m._mealVerif.showBoth}>
                     <Icon sx={{verticalAlign: 'middle', transform: 'rotate(90deg)'}}>hourglass_full</Icon>
@@ -206,6 +190,7 @@ const MealVerificationEcrec = ({
           columns={[
             {
               id: 'actions',
+              renderExport: false,
               head: '',
               style: _ => ({fontWeight: t.typography.fontWeightBold}),
               render: _ => (
@@ -219,7 +204,7 @@ const MealVerificationEcrec = ({
               id: 'taxid',
               head: m.taxID,
               type: 'string',
-              render: _ => _.data.pay_det_tax_id_num
+              render: _ => _.data[activity.joinColumn]
             },
             {
               id: 'status',
@@ -233,7 +218,7 @@ const MealVerificationEcrec = ({
                 : <><TableIcon color="warning">schedule</TableIcon> {m._mealVerif.notVerified}</>,
               render: _ => _.dataCheck ? <TableIcon color="success">check_circle</TableIcon> : <TableIcon color="warning">schedule</TableIcon>,
             },
-            ...columnsToCompare.map(c => {
+            ...activity.columns.map(c => {
               return {
                 id: c,
                 type: 'select_one',
@@ -246,6 +231,19 @@ const MealVerificationEcrec = ({
                       color: t.palette.error.dark,
                       background: alpha(t.palette.error.main, .2)
                     }
+                },
+                renderExport: (_: MergedData) => {
+                  const isOption = ctx.schemaHelper.questionIndex[c].type === 'select_one' || ctx.schemaHelper.questionIndex[c].type === 'select_multiple'
+                  const dataCheck = _.dataCheck && isOption ? ctx.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
+                  const data = isOption ? ctx.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
+                  switch (display) {
+                    case 'data':
+                      return data
+                    case 'dataCheck':
+                      return dataCheck ?? '???'
+                    case 'all':
+                      return (data ?? '""') + ' = ' + (dataCheck ?? '???')
+                  }
                 },
                 renderOption: (_: MergedData) => _.dataCheck
                   ? _.dataCheck?.[c] === _.data?.[c] ? <Icon color="success">check</Icon> : <Icon color="error">close</Icon>
@@ -280,7 +278,7 @@ const MealVerificationEcrec = ({
               align: 'right',
               style: _ => ({fontWeight: t.typography.fontWeightBold}),
               render: _ => (
-                _.dataCheck ? toPercent(_.ok / columnsToCompare.length) : ''
+                _.dataCheck ? toPercent(_.ok / activity.columns.length) : ''
               )
             }
           ]}/>

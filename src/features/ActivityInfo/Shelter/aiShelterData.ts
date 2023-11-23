@@ -18,33 +18,33 @@ export namespace AiShelterData {
     [DrcProject['UKR-000308 UNHCR']]: PlanCode['DRC-SN-00015'],
   } as any
 }
-
-export const mapBnre = (api: ApiSdk) => {
-  api.kobo.answer.searchBn_Re()
-    .then(_ => _.data)
-    .then(_ => _.filter(_ =>
-      _.back_prog_type.filter(_ => _.includes('esk'))
-    ))
-    .then(data => data.map(_ => ({..._, ...getAiLocation(_)})))
-    .then(data => {
-      Utils.groupBy({
-        data,
-        groups: [
-          {by: _ => _.back_donor!},
-          {by: _ => _.Oblast ?? ''},
-          {by: _ => _.Raion ?? ''},
-          {by: _ => _.Hromada ?? ''},
-          {
-            by: row => fnSwitch(row?.ben_det_res_stat!, {
-              idp: 'IDPs',
-              ret: 'Returnees',
-            }, () => 'Non-Displaced') as AiTypeSnfiRmm.Opt<'Population Group'>
-          }
-        ],
-        finalTransform: (grouped, [project, oblast, raion, hromada]) => grouped
-      })
-    })
-}
+//
+// export const mapBnre = (api: ApiSdk) => {
+//   api.kobo.typedAnswers.searchBn_Re()
+//     .then(_ => _.data)
+//     .then(_ => _.filter(_ =>
+//       _.back_prog_type?.filter(_ => _.includes('esk'))
+//     ))
+//     .then(data => data.map(_ => ({..._, ...getAiLocation(_)})))
+//     .then(data => {
+//       Utils.groupBy({
+//         data,
+//         groups: [
+//           {by: _ => _.back_donor!},
+//           {by: _ => _.Oblast ?? ''},
+//           {by: _ => _.Raion ?? ''},
+//           {by: _ => _.Hromada ?? ''},
+//           {
+//             by: row => fnSwitch(row?.ben_det_res_stat!, {
+//               idp: 'IDPs',
+//               ret: 'Returnees',
+//             }, () => 'Non-Displaced') as AiTypeSnfiRmm.Opt<'Population Group'>
+//           }
+//         ],
+//         finalTransform: (grouped, [project, oblast, raion, hromada]) => grouped
+//       })
+//     })
+// }
 
 const _15_light_HRK_Repaired = {
   'changes': [

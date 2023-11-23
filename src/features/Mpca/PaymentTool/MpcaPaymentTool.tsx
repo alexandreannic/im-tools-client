@@ -34,7 +34,7 @@ export const MpcaPaymentTool = () => {
   const _update = useAsync(api.mpcaPayment.update)
   const _answers = useFetcher((ids: KoboAnswerId[]) => {
       // const fnMap = mapMpcaKoboAnswer()
-      return api.kobo.answer.searchBn_Re()
+      return api.kobo.typedAnswers.searchBn_Re()
         .then(_ => _.data.filter(_ => ids.includes(_.id)))//.map(fnMap))
     }
   )

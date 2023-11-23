@@ -15,6 +15,7 @@ import {ProxySdk} from '@/core/sdk/server/proxy/ProxySdk'
 import {MpcaSdk} from '@/core/sdk/server/mpca/MpcaSdk'
 import {ShelterSdk} from '@/core/sdk/server/shelter/ShelterSdk'
 import {MealVerificationClient} from '@/core/sdk/server/mealVerification/MealVerificationClient'
+import {KoboTypedAnswerSdk} from '@/core/sdk/server/kobo/KoboTypedAnswerSdk'
 
 export class ApiSdk {
   constructor(private client: ApiClient) {
@@ -35,6 +36,7 @@ export class ApiSdk {
   readonly session = new SessionSdk(this.client)
   readonly nfi = new NfiMPcaSdk(this.client)
   readonly kobo = {
+    typedAnswers: new KoboTypedAnswerSdk(this.client),
     answer: new KoboAnswerSdk(this.client),
     server: new KoboServerSdk(this.client),
     form: new KoboFormSdk(this.client),

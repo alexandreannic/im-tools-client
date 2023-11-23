@@ -34,7 +34,7 @@ export const SnapshotProtMonitoringProvider = ({
   const {m} = useI18n()
   const [periodFilter, setPeriodFilter] = useState<Period>(initialPeriodFilter)
 
-  const request = (filter: Partial<Period>) => api.kobo.answer.searchProtection_Hhs2({
+  const request = (filter: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
     filters: {
       start: filter.start,
       end: filter.end,

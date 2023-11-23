@@ -145,11 +145,13 @@ export const SheetFilterDialogSelect = ({
   const [filter, setFilter] = useState<string>('')
   return (
     <MultipleChoices
-      options={options?.filter(_ => filter === '' || (_.value ?? '').includes(filter)).map((_, i) => ({
-        key: i,
-        value: _.value ?? '',
-        children: _.label
-      })) ?? []}
+      options={options
+        ?.filter(_ => filter === '' || ((typeof _.label ==='string' ? _.label : _.value).toLowerCase() ?? '').includes(filter.toLowerCase()))
+        .map((_, i) => ({
+          key: i,
+          value: _.value ?? '',
+          children: _.label
+        })) ?? []}
       value={value as any}
       onChange={onChange}
     >

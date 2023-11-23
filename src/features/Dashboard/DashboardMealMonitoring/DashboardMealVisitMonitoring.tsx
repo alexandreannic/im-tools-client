@@ -102,7 +102,7 @@ export const DashboardMealVisitMonitoring = () => {
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
 
-  const request = (filter: Partial<Period>) => api.kobo.answer.searchMeal_VisitMonitoring({
+  const request = (filter: Partial<Period>) => api.kobo.typedAnswers.searchMeal_VisitMonitoring({
     filters: {
       start: filter.start,
       end: filter.end,

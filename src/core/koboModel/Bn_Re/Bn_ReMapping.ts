@@ -14,6 +14,7 @@ const extractQuestionName = (_: Record<string, any>) => {
 export const mapBn_Re = (_: Record<keyof Bn_Re, any>): Bn_Re => ({
 	..._,
 	back_prog_type: _.back_prog_type?.split(' '),
+	back_donor: _.back_donor?.split(' '),
 	ben_det_ph_number: _.ben_det_ph_number ? +_.ben_det_ph_number : undefined,
 	ben_det_income: _.ben_det_income ? +_.ben_det_income : undefined,
 	ben_det_hh_size: _.ben_det_hh_size ? +_.ben_det_hh_size : undefined,
@@ -29,6 +30,10 @@ export const mapBn_Re = (_: Record<keyof Bn_Re, any>): Bn_Re => ({
 	nfi_dist_wkb2: _.nfi_dist_wkb2 ? +_.nfi_dist_wkb2 : undefined,
 	nfi_dist_wkb3: _.nfi_dist_wkb3 ? +_.nfi_dist_wkb3 : undefined,
 	nfi_dist_wkb4: _.nfi_dist_wkb4 ? +_.nfi_dist_wkb4 : undefined,
+	nfi_kit_cc: _.nfi_kit_cc ? +_.nfi_kit_cc : undefined,
+	nfi_bed: _.nfi_bed ? +_.nfi_bed : undefined,
 	estimate_sqm_damage: _.estimate_sqm_damage ? +_.estimate_sqm_damage : undefined,
+	mains_utilities: _.mains_utilities?.split(' '),
+	mains_fuel: _.mains_fuel?.split(' '),
 	cfr_accom_cond_occ_rat: _.cfr_accom_cond_occ_rat ? +_.cfr_accom_cond_occ_rat : undefined,
 }) as Bn_Re

@@ -20,7 +20,7 @@ export interface MealVerificationAnsers {
 
 export interface MealVerification {
   id: UUID
-  formId: KoboId
+  activity: KoboId
   name: string
   desc?: string
   createdAt: Date

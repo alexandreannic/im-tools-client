@@ -48,6 +48,7 @@ export interface DatabaseTableProps {
   schema?: KoboApiForm
   serverId?: UUID
   formId: KoboId
+  dataFilter?: (_: KoboMappedAnswer) => boolean
   onFiltersChange?: (_: Record<string, SheetFilterValue>) => void
   onDataChange?: (_: {
     data?: KoboMappedAnswer[]
@@ -65,6 +66,7 @@ export const DatabaseTable = ({
   formId,
   onFiltersChange,
   onDataChange,
+  dataFilter,
   overrideEditAccess,
 }: DatabaseTableProps) => {
   const {api} = useAppSettings()
@@ -75,7 +77,7 @@ export const DatabaseTable = ({
   const _form = useFetcher(() => form ? Promise.resolve(form) : api.kobo.form.get(formId))
   const _answers = useFetcher(() => api.kobo.answer.searchByAccess({
     formId,
-  }))
+  }).then(_ => dataFilter ? ({..._, data: _.data.filter(dataFilter)}) : _))
 
   const access = useMemo(() => {
     const list = accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId)
@@ -107,7 +109,7 @@ export const DatabaseTable = ({
               canEdit={overrideEditAccess ?? access.write}
               serverId={serverId}
               fetcherAnswers={_answers}
-              data={_answers.entity!.data}
+              data={_answers.entity?.data}
               form={_form.entity!}
             >
               <DatabaseKoboTableContent

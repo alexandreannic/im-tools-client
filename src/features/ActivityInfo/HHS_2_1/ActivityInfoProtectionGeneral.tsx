@@ -28,7 +28,7 @@ export const ActivityInfoProtectionGeneral = () => {
 
   const request = (period: string) => {
     const filters = period === '2023-04' ? undefined : PeriodHelper.fromyyyMM(period)
-    return api.kobo.answer.searchProtection_Hhs2({filters}).then(_ => seq(_.data.map(enrichProtHHS_2_1))).then(res => {
+    return api.kobo.typedAnswers.searchProtection_Hhs2({filters}).then(_ => seq(_.data.map(enrichProtHHS_2_1))).then(res => {
       return res
         .filter(_ => {
           const isPartOfAprilSubmit = alreadySentKobosInApril.has(_.id)

@@ -115,7 +115,13 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'troubleshoot',
     color: '#afd0d6',
     path: '/meal-verification',
-    showIf: _ => _ && _?.admin
+    showIf: (_, accesses) => _ && _?.admin || accesses && !!accesses
+      .filter(Access.filterByFeature(AppFeatureId.kobo_database))
+      .find(_ => {
+        return _.params?.koboFormId === kobo.drcUa.form.bn_re ||
+          _.params?.koboFormId === kobo.drcUa.form.ecrec_cashRegistration ||
+          _.params?.koboFormId === kobo.drcUa.form.meal_visitMonitoring
+      })
   },
   admin: {
     id: AppFeatureId.admin,

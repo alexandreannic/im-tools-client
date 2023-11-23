@@ -37,9 +37,9 @@ export const AiProtectionGeneral = () => {
     }
     const mappedData = await Promise.all([
       // searchProtection_pss
-      api.kobo.answer.searchProtection_groupSession({filters}).then(ActivityInfoProtectionMapper.mapGroupSession(period)),
-      api.kobo.answer.searchProtection_communityMonitoring({filters}).then(ActivityInfoProtectionMapper.mapCommunityMonitoring(period)),
-      api.kobo.answer.searchProtection_Hhs2({filters}).then(ActivityInfoProtectionMapper.mapHhs(period)),
+      api.kobo.typedAnswers.searchProtection_groupSession({filters}).then(ActivityInfoProtectionMapper.mapGroupSession(period)),
+      api.kobo.typedAnswers.searchProtection_communityMonitoring({filters}).then(ActivityInfoProtectionMapper.mapCommunityMonitoring(period)),
+      api.kobo.typedAnswers.searchProtection_Hhs2({filters}).then(ActivityInfoProtectionMapper.mapHhs(period)),
     ]).then(_ => _.reduce((acc, curr) => [...acc, ...curr], []))
       .then(_ => _.filter(_ => {
         const hasAlreadyBeenSubmittedManually = period === '2023-09'

@@ -5,15 +5,16 @@ import {memo, useState} from 'react'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
 import {MealVerificationForm} from '@/features/MealVerification/Form/MealVerificationForm'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
+import {MealVerificationActivity} from '@/features/MealVerification/mealVerificationConfig'
 
 export const MealVerificationFormData = ({
-  formId,
+  activity,
   onFiltersChange,
   onDataChange,
 }: {
   onFiltersChange: (_: MealVerificationForm['filters']) => void
   onDataChange: (_: MealVerificationForm['answerIds']) => void
-  formId: KoboAnswerId
+  activity: MealVerificationActivity
 }) => {
   const [selectedIds, setSelectedIds] = useState<KoboAnswerId[] | undefined>()
   const [selectedFilters, setSelectedFilters] = useState<Record<string, SheetFilterValue> | undefined>()
@@ -26,6 +27,7 @@ export const MealVerificationFormData = ({
     <>
       <Box sx={{
         p: 1,
+        fontWeight: t.typography.fontWeightBold,
         borderRadius: t.shape.borderRadius + 'px',
         mb: 1,
         background: alpha(t.palette.primary.main, .1),
@@ -35,8 +37,10 @@ export const MealVerificationFormData = ({
       </Box>
       <Box sx={{border: '1px solid ' + t.palette.divider, borderRadius: t.shape.borderRadius + 'px'}}>
         <DatabaseTable
-          overrideEditAccess={false} formId={formId}
+          overrideEditAccess={false}
+          formId={activity.activity.koboFormId}
           onFiltersChange={setSelectedFilters}
+          dataFilter={activity.activity.filters}
           onDataChange={data => setSelectedIds(data.filteredData?.map(_ => _.id))}
         />
       </Box>

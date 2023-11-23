@@ -1,4 +1,4 @@
-import {Meal_EcrecVerification} from './Meal_EcrecVerification'
+import {Meal_VerificationEcrec} from './Meal_VerificationEcrec'
 
 
 const extractQuestionName = (_: Record<string, any>) => {
@@ -11,7 +11,7 @@ const extractQuestionName = (_: Record<string, any>) => {
   return output
 }
 
-export const mapMeal_EcrecVerification = (_: Record<keyof Meal_EcrecVerification, any>): Meal_EcrecVerification => ({
+export const mapMeal_VerificationEcrec = (_: Record<keyof Meal_VerificationEcrec, any>): Meal_VerificationEcrec => ({
 	..._,
 	ben_det_ph_number: _.ben_det_ph_number ? +_.ben_det_ph_number : undefined,
 	ben_det_income: _.ben_det_income ? +_.ben_det_income : undefined,
@@ -21,4 +21,4 @@ export const mapMeal_EcrecVerification = (_: Record<keyof Meal_EcrecVerification
 	many_cow: _.many_cow ? +_.many_cow : undefined,
 	many_pig: _.many_pig ? +_.many_pig : undefined,
 	many_poultry: _.many_poultry ? +_.many_poultry : undefined,
-}) as Meal_EcrecVerification
+}) as Meal_VerificationEcrec

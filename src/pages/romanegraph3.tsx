@@ -141,7 +141,7 @@ export default () => {
   const {api} = useAppSettings()
   const {m, currentLang: lang, setLang} = useI18n()
   // const [lang, setLang] = usePersistentState('en', {storageKey: 'romanegraph3'})
-  const req = () => api.kobo.answer.searchProtection_Hhs2({
+  const req = () => api.kobo.typedAnswers.searchProtection_Hhs2({
     filters: period
   }).then(_ => seq(_.data).map(enrichProtHHS_2_1))
 

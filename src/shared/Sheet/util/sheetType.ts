@@ -10,6 +10,7 @@ export type OrderBy = 'asc' | 'desc'
 export interface SheetOptions {
   value: string
   // label?: string
+  // Should be string to filter options in filters popup
   label?: ReactNode
 }
 

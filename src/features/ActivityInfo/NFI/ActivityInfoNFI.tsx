@@ -15,12 +15,12 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
 import {AaInput} from '@/shared/ItInput/AaInput'
-import {bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {Person} from '@/core/type'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
+import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 
 interface Person {
   age: number
@@ -117,11 +117,11 @@ const toFormData = ({
   }
 
   Enum.entries(answers.groupBy(_ => _.oblast!)).forEach(([oblast, byOblast]) => {
-    const enOblast = bn_ReOptions.ben_det_prev_oblast[oblast]!
+    const enOblast = Bn_ReOptions.ben_det_prev_oblast[oblast]!
     Enum.entries(byOblast.groupBy(_ => _.raion!)).forEach(([raion, byRaion]) => {
-      const enRaion = bn_ReOptions.ben_det_raion[raion]!
+      const enRaion = Bn_ReOptions.ben_det_raion[raion]!
       Enum.entries(byRaion.groupBy(_ => _.hromada!)).forEach(([hromada, byHromada]) => {
-        const enHromada = bn_ReOptions.ben_det_hromada[hromada]!
+        const enHromada = Bn_ReOptions.ben_det_hromada[hromada]!
         Enum.entries(byHromada.groupBy(_ => _.settlement)).forEach(([settlement, bySettlement]) => {
           const bySettlementWithPerson = bySettlement.map(_ => ({
             ..._,
@@ -179,7 +179,7 @@ export const ActivityInfoNFI = () => {
       start: new Date(parseInt(year), parseInt(month) - 1),
       end: new Date(parseInt(year), parseInt(month)),
     }
-    return api.kobo.answer.searchBn_Re({filters})
+    return api.kobo.typedAnswers.searchBn_Re({filters})
       .then(_ => {
         return _.data.filter(_ => !!_.ben_det_settlement).map((_, i) => ({
           id: _.id,
