@@ -3,7 +3,7 @@ import React, {ReactNode} from 'react'
 import {Page} from '@/shared/Page'
 import {Box, Icon, Step, StepContent, StepLabel, Stepper, useTheme} from '@mui/material'
 import {useI18n} from '@/core/i18n'
-import {koboFormById, koboFormTranslation, KoboIndex} from '@/koboDrcUaFormId'
+import {KoboIndex} from '@/koboDrcUaFormId'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Controller, useForm} from 'react-hook-form'
 import {MealVerificationFormData} from '@/features/MealVerification/Form/MealVerificationFormData'
@@ -19,9 +19,7 @@ import {useAaToast} from '@/core/useToast'
 import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useNavigate} from 'react-router'
 import {mealVerificationModule} from '@/features/MealVerification/MealVerification'
-import {mealVerificationActivities, mealVerificationActivitiesIndex} from '@/features/MealVerification/mealVerificationConfig'
-
-const sampleSizeRatio = .2
+import {mealVerificationActivities, mealVerificationActivitiesIndex, mealVerificationConf} from '@/features/MealVerification/mealVerificationConfig'
 
 export interface MealVerificationForm {
   activity: string
@@ -98,7 +96,7 @@ export const MealVerificationForm = () => {
 
   const submit = async ({answerIds, ...form}: MealVerificationForm) => {
     try {
-      const numElementsToSelect = Math.floor((sampleSizeRatio) * answerIds.length)
+      const numElementsToSelect = Math.floor((mealVerificationConf.sampleSizeRatio) * answerIds.length)
       const answers: MealVerificationAnsers[] = answerIds
         .sort(() => Math.random() - 0.5)
         .map((a, i) => ({
@@ -211,12 +209,12 @@ export const MealVerificationForm = () => {
                   <Box dangerouslySetInnerHTML={{__html: m._mealVerif.selectedData(form.watch().answerIds?.length)}}/>
                   <Box sx={{mt: .5}}>
                     <Icon color="disabled" sx={{verticalAlign: 'top', mr: 1}}>subdirectory_arrow_right</Icon>
-                    {m._mealVerif.sampleSize(sampleSizeRatio * 100)}
+                    {m._mealVerif.sampleSize(mealVerificationConf.sampleSizeRatio * 100)}
                     <Icon color="disabled" sx={{verticalAlign: 'top', mx: 1}}>east</Icon>
                     <Txt sx={{borderRadius: 1000, border: '1px solid ' + t.palette.success.light, py: .5, px: 1, color: t.palette.success.main}}
                          dangerouslySetInnerHTML={{
                            __html: m._mealVerif.dataToBeVerified(
-                             Math.floor(sampleSizeRatio * form.watch().answerIds?.length)
+                             Math.floor(mealVerificationConf.sampleSizeRatio * form.watch().answerIds?.length)
                            )
                          }}/>
                   </Box>

@@ -38,7 +38,7 @@ export const PageTitle = ({
   ...props
 }: BoxProps & {
   logo?: ReactNode,
-  subTitle?: string,
+  subTitle?: ReactNode,
   action?: ReactNode
 }) => {
   return (

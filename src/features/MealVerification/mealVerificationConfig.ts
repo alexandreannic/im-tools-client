@@ -5,6 +5,11 @@ import {KeyOf} from '@/utils/utils'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {seq} from '@alexandreannic/ts-utils'
 
+export const mealVerificationConf = {
+  sampleSizeRatio: .2,
+  numericToleranceMargin: .1,
+}
+
 export type MealVerificationActivity<
   TData extends keyof ApiSdk['kobo']['typedAnswers'] = any,
   TCheck extends keyof ApiSdk['kobo']['typedAnswers'] = any,
@@ -46,7 +51,7 @@ export const mealVerificationActivities = seq([
     columns: [
       'back_donor',
       'back_consent',
-      'back_consent_no_note',
+      // 'back_consent_no_note',
       'ben_det_surname',
       'ben_det_first_name',
       'ben_det_pat_name',

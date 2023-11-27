@@ -2,10 +2,10 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {map, Seq, seq} from '@alexandreannic/ts-utils'
 import React, {useEffect, useMemo, useState} from 'react'
-import {Page} from '@/shared/Page'
+import {Page, PageTitle} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {alpha, Icon, Tooltip, useTheme} from '@mui/material'
-import {toPercent} from '@/utils/utils'
+import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
+import {capitalize, toPercent} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
@@ -20,8 +20,8 @@ import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
 import {useMealVerificationContext} from '@/features/MealVerification/MealVerificationContext'
-import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
-import {mealVerificationActivities, MealVerificationActivity} from '@/features/MealVerification/mealVerificationConfig'
+import {MealVerification, MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
+import {mealVerificationActivities, MealVerificationActivity, mealVerificationConf} from '@/features/MealVerification/mealVerificationConfig'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {ApiPaginate} from '@/core/type'
 
@@ -37,29 +37,37 @@ export const MealVerificationTable = () => {
   const {id} = paramSchema.validateSync(useParams())
   const {api} = useAppSettings()
   const ctx = useMealVerificationContext()
+  const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm(kobo.drcUa.server.prod, formId))
+  const fetcherToVerifyAnswers = useFetcher(api.mealVerification.getAnswers)
+
+  useEffect(() => {
+    ctx.fetcherVerifications.fetch({force: true})
+  }, [])
+
   const {entity, activity} = useMemo(() => {
     const entity = ctx.fetcherVerifications.entity?.find(_ => _.id === id)
     return {
       entity,
       activity: mealVerificationActivities.find(_ => _.name === entity?.activity)
     }
-  }, [id])
-  const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm(kobo.drcUa.server.prod, formId))
-  const fetcherToVerifyAnswers = useFetcher(api.mealVerification.getAnswers)
+  }, [id, ctx.fetcherVerifications.entity])
 
   useEffect(() => {
-    ctx.fetcherVerifications.fetch({force: true})
     if (entity && activity) {
       fetcherSchema.fetch({}, activity.activity.koboFormId)
       fetcherToVerifyAnswers.fetch({}, entity.id)
     }
-  }, [])
+  }, [entity, activity])
 
   return (
     <>
-      {fetcherSchema.entity && fetcherToVerifyAnswers.entity && activity && (
+      {fetcherSchema.entity && fetcherToVerifyAnswers.entity && activity && entity && (
         <KoboSchemaProvider schema={fetcherSchema.entity}>
-          <MealVerificationEcrec activity={activity} toVerifyAnswers={fetcherToVerifyAnswers.entity}/>
+          <MealVerificationEcrec
+            activity={activity}
+            toVerifyAnswers={fetcherToVerifyAnswers.entity}
+            mealVerification={entity}
+          />
         </KoboSchemaProvider>
       )}
     </>
@@ -70,14 +78,16 @@ const MealVerificationEcrec = <
   TData extends keyof ApiSdk['kobo']['typedAnswers'] = any,
   TCheck extends keyof ApiSdk['kobo']['typedAnswers'] = any,
 >({
+  mealVerification,
   toVerifyAnswers,
   activity
 }: {
+  mealVerification: MealVerification,
   activity: MealVerificationActivity<TData, TCheck>
   toVerifyAnswers: MealVerificationAnsers[]
 }) => {
   const {api} = useAppSettings()
-  const {m} = useI18n()
+  const {m, formatDateTime, dateFromNow} = useI18n()
   const t = useTheme()
   const ctx = useKoboSchemaContext()
 
@@ -96,6 +106,15 @@ const MealVerificationEcrec = <
     fetcherData.fetch()
   }, [])
 
+  const areEquals = (c: string, _: Pick<MergedData, 'data' | 'dataCheck'>) => {
+    if (!_.dataCheck) return true
+    if (_.dataCheck[c] === undefined && _.data?.[c] === undefined) return true
+    if (ctx.schemaHelper.questionIndex[c].type === 'datetime' || ctx.schemaHelper.questionIndex[c].type === 'integer') {
+      return Math.abs(_.dataCheck[c] - _.data?.[c]) <= _.data?.[c] * mealVerificationConf.numericToleranceMargin
+    }
+    return _.dataCheck[c] === _.data?.[c]
+  }
+
   const mergedData: Seq<MergedData> | undefined = useMemo(() => {
     return map(fetcherVerif.entity?.data, fetcherData.entity, (verif, data) => {
       const indexedVerif = seq(verif).groupBy(_ => _[activity.joinColumn] ?? '')
@@ -107,11 +126,14 @@ const MealVerificationEcrec = <
         }
         if (refArr.length > 1) throw new Error(_[activity.joinColumn] + ' exist ' + refArr?.length)
         const ref = refArr[0]
-        return {
+        const dataMerge = {
           dataCheck: ref,
           data: _,
-          ok: seq(activity.columns).sum(c => _[c] === ref?.[c] ? 1 : 0),
         }
+        return {
+          ...dataMerge,
+          ok: seq(activity.columns).sum(c => areEquals(c, dataMerge) ? 1 : 0),
+        } as MergedData
       }).compact().sortByNumber(_ => _.dataCheck ? 1 : 0)
     })
   }, [
@@ -131,6 +153,12 @@ const MealVerificationEcrec = <
 
   return (
     <Page width="full">
+      <PageTitle subTitle={
+        <Box>
+          {capitalize(dateFromNow(mealVerification.createdAt))} by <b>{mealVerification.createdBy}</b>
+          <Box>{mealVerification.desc}</Box>
+        </Box>
+      }>{mealVerification.name}</PageTitle>
       {stats && (
         <Div sx={{mb: 1, alignItems: 'stretch'}}>
           <SlidePanel sx={{flex: 1}}>
@@ -147,6 +175,9 @@ const MealVerificationEcrec = <
           </SlideWidget>
           <SlideWidget title={m._mealVerif.allErrorIndicators} sx={{flex: 1}} icon="error">
             {stats.indicatorsVerified - stats.indicatorsOk}
+          </SlideWidget>
+          <SlideWidget title={m._mealVerif.numericToleranceMargin} sx={{flex: 1}} icon="expand">
+            {toPercent(mealVerificationConf.numericToleranceMargin)}
           </SlideWidget>
         </Div>
       )}
@@ -175,12 +206,12 @@ const MealVerificationEcrec = <
                   </Tooltip>
                 }/>
                 <ScRadioGroupItem hideRadio value="data" title={
-                  <Tooltip title={m._mealVerif.showData}>
+                  <Tooltip title={m._mealVerif.activityForm}>
                     <Icon sx={{verticalAlign: 'middle', transform: 'rotate(90deg)'}}>hourglass_bottom</Icon>
                   </Tooltip>
                 }/>
                 <ScRadioGroupItem hideRadio value="dataCheck" title={
-                  <Tooltip title={m._mealVerif.showVerif}>
+                  <Tooltip title={m._mealVerif.verificationForm}>
                     <Icon sx={{verticalAlign: 'middle', transform: 'rotate(90deg)'}}>hourglass_top</Icon>
                   </Tooltip>
                 }/>
@@ -219,12 +250,13 @@ const MealVerificationEcrec = <
               render: _ => _.dataCheck ? <TableIcon color="success">check_circle</TableIcon> : <TableIcon color="warning">schedule</TableIcon>,
             },
             ...activity.columns.map(c => {
+
               return {
                 id: c,
                 type: 'select_one',
                 head: ctx.translate.question(c),
                 style: (_: MergedData) => {
-                  if (!_.dataCheck || _.dataCheck?.[c] === _.data?.[c]) {
+                  if (areEquals(c, _)) {
                     return {}
                   } else
                     return {
@@ -246,10 +278,10 @@ const MealVerificationEcrec = <
                   }
                 },
                 renderOption: (_: MergedData) => _.dataCheck
-                  ? _.dataCheck?.[c] === _.data?.[c] ? <Icon color="success">check</Icon> : <Icon color="error">close</Icon>
+                  ? areEquals(c, _) ? <Icon color="success">check</Icon> : <Icon color="error">close</Icon>
                   : '',
                 renderValue: (_: MergedData) => _.dataCheck
-                  ? _.dataCheck?.[c] === _.data?.[c] ? '1' : '0'
+                  ? areEquals(c, _) ? '1' : '0'
                   : '',
                 render: (_: MergedData) => {
                   const isOption = ctx.schemaHelper.questionIndex[c].type === 'select_one' || ctx.schemaHelper.questionIndex[c].type === 'select_multiple'
@@ -261,16 +293,11 @@ const MealVerificationEcrec = <
                     case 'dataCheck':
                       return dataCheck ?? <TableIcon color="disabled">schedule</TableIcon>
                     case 'all':
-                      return <>{data ?? '""'} = {dataCheck ?? <TableIcon color="disabled">schedule</TableIcon>}</>
+                      return <>{data ?? '""'} = {_.dataCheck ? dataCheck ?? '""' : <TableIcon color="disabled">schedule</TableIcon>}</>
                   }
                 }
               } as const
             }),
-            // {
-            //   id: 'fin_det_oth_doc_im',
-            //   head: ctx.translate.question('fin_det_oth_doc_im'),
-            //   render: _ => _.dataCheck?.fin_det_oth_doc_im,
-            // },
             {
               id: 'total',
               head: m.total,

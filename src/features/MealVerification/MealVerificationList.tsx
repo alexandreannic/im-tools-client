@@ -4,7 +4,7 @@ import {useMealVerificationContext} from '@/features/MealVerification/MealVerifi
 import {Panel} from '@/shared/Panel'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
-import {Avatar, Box, Dialog, Icon, useTheme} from '@mui/material'
+import {Avatar, Box, Icon, useTheme} from '@mui/material'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {mealVerificationModule} from '@/features/MealVerification/MealVerification'
 import {NavLink} from 'react-router-dom'
@@ -27,7 +27,7 @@ const LinkToForm = ({
 }) => {
   const {conf} = useAppSettings()
   return (
-    <Link href={conf.linkToFeature(
+    <Link target="_blank" href={conf.linkToFeature(
       AppFeatureId.kobo_database,
       databaseModule.siteMap.database.absolute(kobo.drcUa.server.prod, koboFormId)
     )}>
@@ -41,7 +41,7 @@ const LinkToForm = ({
 
 export const MealVerificationList = () => {
   const ctx = useMealVerificationContext()
-  const {api, conf} = useAppSettings()
+  const {api} = useAppSettings()
   const {session} = useSession()
   const asyncRemove = useAsync(api.mealVerification.remove)
   const {m, formatDateTime} = useI18n()
@@ -103,12 +103,16 @@ export const MealVerificationList = () => {
               type: 'select_one',
               id: 'filters',
               head: m._mealVerif.activityForm,
+              renderOption: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].activity.koboFormId)?.translation,
+              renderValue: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].activity.koboFormId)?.translation,
               render: _ => <LinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].activity.koboFormId}/>
             },
             {
               type: 'select_one',
               id: 'filters',
               head: m._mealVerif.verificationForm,
+              renderOption: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].verification.koboFormId)?.translation,
+              renderValue: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].verification.koboFormId)?.translation,
               render: _ => <LinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].verification.koboFormId}/>
             },
             {

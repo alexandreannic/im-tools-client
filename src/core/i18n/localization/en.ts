@@ -27,8 +27,12 @@ export const formatDateTime = (d?: Date): string => {
   return formatDate(d) + ' ' + formatTime(d)
 }
 
-export const dateFromNow = (d?: Date): string | undefined => {
-  return d ? formatDistance(d, new Date(), {addSuffix: true}) : undefined
+export const dateFromNow: {
+  (d: Date): string
+  (d?: undefined): undefined
+  (d?: Date): string | undefined
+} = (d) => {
+  return d ? formatDistance(d, new Date(), {addSuffix: true}) : undefined as any
 }
 
 export const formatLargeNumber = (n?: number, options?: Intl.NumberFormatOptions): string => {
@@ -336,12 +340,11 @@ export const en = Object.freeze({
       hasPriorityQueuesForVulnerableIndividuals: 'Priority queues for vulnerable individuals',
     },
     _mealVerif: {
+      numericToleranceMargin: 'Tolerance margin',
       activityForm: 'Activity form',
       verificationForm: 'Verification form',
-      koboForm: `Kobo form`,
-      showData: 'Show data',
-      showVerif: 'Show Meal verification',
       showBoth: 'Show side by side',
+      koboForm: `Kobo form`,
       newRequest: 'New request',
       requested: 'Request created!',
       verified: 'Verified',
@@ -356,9 +359,9 @@ export const en = Object.freeze({
       selectedNRows: (n: number) => `Select ${n} rows`,
       giveANameToId: 'Give a name to identify this set of verifications',
       giveDetails: 'Give some details',
-      allIndicators: 'All indicators',
-      allValidIndicators: 'All valid indicators',
-      allErrorIndicators: 'All invalid indicators',
+      allIndicators: 'Indicators',
+      allValidIndicators: 'Valid indicators',
+      allErrorIndicators: 'Invalid indicators',
       valid: 'Validity',
       viewData: 'View Data',
       viewDataCheck: 'View Verification Data',
