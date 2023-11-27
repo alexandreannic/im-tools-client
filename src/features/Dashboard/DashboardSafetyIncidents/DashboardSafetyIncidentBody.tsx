@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
@@ -10,16 +10,58 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {CommentsPanel, CommentsPanelProps} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {DashboardSafetyIncidentsPageProps, SafetyIncidentsTrackerBarChart} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncident'
+import {MinusRusData} from '@/features/Dashboard/DashboardSafetyIncidents/minusRusParser'
+import {Txt} from 'mui-extension'
+import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {Messages} from '@/core/i18n/localization/en'
+import {Box} from '@mui/material'
+
+const minusResKeys: Seq<keyof Messages['_dashboardSafetyIncident']['minusRusLabel']> = seq([
+  'prisoners',
+  'killed',
+  'aircraft',
+  'armored_combat_vehicles',
+  'artillery',
+  'helicopters',
+  'wounded',
+  'ships_boats',
+  'tanks',
+])
 
 export const DashboardSafetyIncidentBody = ({
   data,
+  minusRus,
   computed,
 }: {
+  minusRus?: Seq<MinusRusData>
   data: DashboardSafetyIncidentsPageProps['data']
   computed: DashboardSafetyIncidentsPageProps['computed']
 }) => {
   const {m, formatLargeNumber} = useI18n()
   const [mapType, setMapType] = useState<'incident' | 'attack'>('incident')
+  const [minusRusDate, setMinusRusDate] = useState<string>('yyyy-MM-dd')
+  const [minusRusCurveType, setMinusRusCurveType] = useState<'relative' | 'cumulative'>('relative')
+  const [minusRusCurves, setMinusRusCurves] = useState<{
+    prisoners: boolean
+    killed: boolean
+    aircraft: boolean
+    armored_combat_vehicles: boolean
+    artillery: boolean
+    helicopters: boolean
+    wounded: boolean
+    ships_boats: boolean
+    tanks: boolean
+  }>({
+    prisoners: false,
+    killed: true,
+    aircraft: false,
+    armored_combat_vehicles: false,
+    artillery: false,
+    helicopters: false,
+    wounded: false,
+    ships_boats: false,
+    tanks: false,
+  })
 
   return (
     <Div sx={{alignItems: 'flex-start'}}>
@@ -109,11 +151,64 @@ export const DashboardSafetyIncidentBody = ({
               .map(([k, v]) => ({name: k, ...v}))
           }}>
             {_ => (
-              <ScLineChart2 height={300} data={_ as any} translation={{
+              <ScLineChart2 height={280} data={_ as any} translation={{
                 total: m._dashboardSafetyIncident.incidents,
                 dead: m._dashboardSafetyIncident.dead,
                 injured: m._dashboardSafetyIncident.injured,
               } as any}/>
+            )}
+          </Lazy>
+        </SlidePanel>
+        <SlidePanel title={m._dashboardSafetyIncident.minusRusTitle}>
+          <Txt block dangerouslySetInnerHTML={{__html: m._dashboardSafetyIncident.dataTakenFromMinusRus}}/>
+          <Box sx={{my: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+            <ScRadioGroup inline dense value={minusRusCurveType} onChange={setMinusRusCurveType}>
+              <ScRadioGroupItem hideRadio value="relative">{m.relative}</ScRadioGroupItem>
+              <ScRadioGroupItem hideRadio value="cumulative">{m.cumulative}</ScRadioGroupItem>
+            </ScRadioGroup>
+            <ScRadioGroup inline dense value={minusRusDate} onChange={setMinusRusDate}>
+              <ScRadioGroupItem hideRadio value="yyyy-MM-dd">{m.daily}</ScRadioGroupItem>
+              <ScRadioGroupItem hideRadio value="yyyy-MM">{m.monthly}</ScRadioGroupItem>
+            </ScRadioGroup>
+            <AaSelectMultiple
+              sx={{width: 200}}
+              options={minusResKeys.map(_ => ({value: _, children: m._dashboardSafetyIncident.minusRusLabel[_]}))}
+              value={minusResKeys.filter(_ => minusRusCurves[_])}
+              onChange={e => {
+                setMinusRusCurves(prev => {
+                  Enum.keys(prev).forEach(_ => {
+                    if (e.includes(_)) prev[_] = true
+                    else prev[_] = false
+                  })
+                  return {...prev}
+                })
+              }}
+            />
+          </Box>
+
+          <Lazy deps={[minusRus, minusRusDate, minusRusCurveType, minusRusCurves]} fn={() => {
+            if (!minusRus) return []
+            const gb = minusRus?.sortByNumber(_ => _.date.getTime()).groupBy(_ => format(_.date, minusRusDate))
+            const res = new Enum(gb).entries().map(([k, v]) => {
+              return {
+                name: k,
+                ...Enum.entries(minusRusCurves).filter(([k, v]) => v).reduce((acc, [k]) => ({
+                  ...acc,
+                  [k]: v.sum(_ => _[k])
+                }), {}),
+              }
+            })
+            if (minusRusCurveType === 'cumulative') return res
+            return res.filter((_, i) => i > 0).map((_, i) => ({
+              ...Enum.entries(minusRusCurves).filter(([k, v]) => v).reduce((acc, [k]) => ({
+                ...acc,
+                // @ts-ignore
+                [k]: _[k] - res[i][k]
+              }), {}),
+            }))
+          }}>
+            {_ => (
+              <ScLineChart2 hideLabelToggle height={280} data={_ as any} translation={m._dashboardSafetyIncident.minusRusLabel}/>
             )}
           </Lazy>
         </SlidePanel>
