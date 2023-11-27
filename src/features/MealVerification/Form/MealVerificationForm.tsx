@@ -101,7 +101,7 @@ export const MealVerificationForm = () => {
         .sort(() => Math.random() - 0.5)
         .map((a, i) => ({
           koboAnswerId: a,
-          status: i <= numElementsToSelect ? MealVerificationAnswersStatus.Selected : undefined
+          status: i <= numElementsToSelect - 1 ? MealVerificationAnswersStatus.Selected : undefined
         }))
       await asyncCreate.call({...form, answers})
       toastSuccess(m._mealVerif.requested)
