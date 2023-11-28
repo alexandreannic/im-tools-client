@@ -1,5 +1,5 @@
 import {Pdf} from '@/shared/PdfLayout/PdfLayout'
-import React from 'react'
+import React, {useMemo, useState} from 'react'
 import {SnapshotProtMonitoringProvider, useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {useI18n} from '@/core/i18n'
 import {SnapshotProtMonitoEchoSafety} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoSafety'
@@ -9,8 +9,11 @@ import {SnapshotProtMonitoEchoLivelihood} from '@/features/Snapshot/SnapshotProt
 import {SnapshotProtMonitoEchoSample} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoSample'
 import {SnapshotProtMonitoEchoDisplacement} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoDisplacement'
 import {SnapshotProtMonitoEchoRegistration} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoRegistration'
-import {Theme} from '@mui/material'
+import {Box, Theme} from '@mui/material'
 import {Period} from '@/core/type'
+import {PeriodPickerMui} from '@/shared/PeriodPicker/PeriodPickerMui'
+import {endOfMonth, startOfMonth} from 'date-fns'
+import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 
 export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 
@@ -32,16 +35,26 @@ export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dens
   }
 }
 
-export const SnapshotProtMonitoEcho = ({period}: {period: Period}) => {
+export const SnapshotProtMonitoEcho = () => {
+  const [period, setPeriod] = useState<Partial<Period>>({
+    start: startOfMonth(new Date()),
+    end: endOfMonth(new Date()),
+  })
+  const value: [Date | undefined, Date | undefined] = useMemo(() => [period.start, period.end], [period])
   return (
-    <SnapshotProtMonitoringProvider initialPeriodFilter={period}>
-      <_SnapshotProtMonitoring/>
-    </SnapshotProtMonitoringProvider>
+    <>
+      <Box sx={{'@media print': {display: 'none'}}}>
+        <PeriodPickerMui value={value} onChange={_ => setPeriod({start: _[0], end: _[1]})}/>
+      </Box>
+      <SnapshotProtMonitoringProvider period={period}>
+        <_SnapshotProtMonitoring/>
+      </SnapshotProtMonitoringProvider>
+    </>
   )
 }
 
 const _SnapshotProtMonitoring = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
   if (!data || !computed) return <>...</>
   return (

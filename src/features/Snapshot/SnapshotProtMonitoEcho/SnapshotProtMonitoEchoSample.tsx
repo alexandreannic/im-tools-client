@@ -21,11 +21,11 @@ import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 export const SnapshotProtMonitoEchoSample = () => {
   const theme = useTheme()
   const {conf} = useAppSettings()
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
   return (
     <PdfSlide>
-      <SnapshotHeader period={periodFilter} logo={
+      <SnapshotHeader period={period} logo={
         <>
           <EULogo/>
           <DRCLogo/>

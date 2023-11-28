@@ -11,7 +11,7 @@ import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEch
 
 
 export const SnapshotProtMonitoEchoNeeds = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
 
   return (

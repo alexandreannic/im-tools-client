@@ -10,7 +10,7 @@ import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
 
 export const SnapshotProtMonitoNN2Needs = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
 
   return (

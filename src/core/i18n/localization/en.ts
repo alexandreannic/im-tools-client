@@ -441,7 +441,7 @@ export const en = Object.freeze({
         tanks: 'Tanks',
       },
       minusRusTitle: 'Russia\'s estimated losses',
-      dataTakenFromMinusRus: 'Data extracted in real-time from <a class="link" href="https://www.minusrus.com/en">https://www.minusrus.com/en</a>.',
+      dataTakenFromMinusRus: 'Data extracted in real-time from <a class="link" target="_blank" href="https://www.minusrus.com/en">https://www.minusrus.com/en</a>.',
       aggravatingFactors: 'Aggravating factors',
       lastAttacks: 'Last attacks',
       title: 'Safety Incidents Tracker',

@@ -16,7 +16,7 @@ import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {Person} from '@/core/type'
 
 export const SnapshotProtMonitoEchoRegistration = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
   return (
     <PdfSlide>

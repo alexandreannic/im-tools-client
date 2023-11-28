@@ -10,7 +10,7 @@ import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelp
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
 export const SnapshotProtMonitoNN2Safety = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
 
   return (

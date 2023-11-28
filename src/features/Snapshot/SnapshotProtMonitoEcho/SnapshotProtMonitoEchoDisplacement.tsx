@@ -9,7 +9,7 @@ import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
 export const SnapshotProtMonitoEchoDisplacement = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
   return (
     <PdfSlide>

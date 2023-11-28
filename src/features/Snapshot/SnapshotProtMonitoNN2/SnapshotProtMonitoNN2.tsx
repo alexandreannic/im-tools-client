@@ -1,5 +1,5 @@
 import {Pdf} from '@/shared/PdfLayout/PdfLayout'
-import React from 'react'
+import React, {useMemo, useState} from 'react'
 import {SnapshotProtMonitoringProvider, useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {useI18n} from '@/core/i18n'
 import {SnapshotProtMonitoNN2Safety} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Safety'
@@ -8,9 +8,11 @@ import {SnapshotProtMonitoNN2Needs} from '@/features/Snapshot/SnapshotProtMonito
 import {SnapshotProtMonitoNN2Livelihood} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Livelihood'
 import {SnapshotProtMonitoNN2Sample} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Sample'
 import {SnapshotProtMonitoNN2Displacement} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Displacement'
-import {Theme} from '@mui/material'
+import {Box, Theme} from '@mui/material'
 import {Period} from '@/core/type'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {PeriodPickerMui} from '@/shared/PeriodPicker/PeriodPickerMui'
+import {endOfMonth, startOfMonth} from 'date-fns'
 
 export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 
@@ -31,21 +33,29 @@ export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dens
     mb: 1,
   }
 }
-export const SnapshotProtMonitoNN2 = ({period}: {
-  period: Period
-}) => {
+export const SnapshotProtMonitoNN2 = () => {
+  const [period, setPeriod] = useState<Partial<Period>>({
+    start: startOfMonth(new Date()),
+    end: endOfMonth(new Date()),
+  })
+  const value: [Date | undefined, Date | undefined] = useMemo(() => [period.start, period.end], [period])
   return (
-    <SnapshotProtMonitoringProvider
-      filters={{currentOblast: [OblastIndex.oblastIsoByName['Mykolaivska']]}}
-      initialPeriodFilter={period}
-    >
-      <_SnapshotProtMonitoring/>
-    </SnapshotProtMonitoringProvider>
+    <>
+      <Box sx={{'@media print': {display: 'none'}}}>
+        <PeriodPickerMui value={value} onChange={_ => setPeriod({start: _[0], end: _[1]})}/>
+      </Box>
+      <SnapshotProtMonitoringProvider
+        filters={{currentOblast: [OblastIndex.oblastIsoByName['Mykolaivska']]}}
+        period={period}
+      >
+        <_SnapshotProtMonitoring/>
+      </SnapshotProtMonitoringProvider>
+    </>
   )
 }
 
 const _SnapshotProtMonitoring = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
   if (!data || !computed) return <>...</>
   return (

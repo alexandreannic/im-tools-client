@@ -19,11 +19,11 @@ import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 
 export const SnapshotProtMonitoNN2Sample = () => {
   const theme = useTheme()
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
   return (
     <PdfSlide>
-      <SnapshotHeader subTitle="Mykolaiv oblast" period={periodFilter} logo={<DRCLogo/>}/>
+      <SnapshotHeader subTitle="Mykolaiv oblast" period={period} logo={<DRCLogo/>}/>
       <PdfSlideBody>
         <Div>
           <Div column sx={{flex: 3.6}}>

@@ -11,7 +11,7 @@ import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_H
 export interface SnapshotProtMonitoContext {
   computed: NonNullable<UseProtHHS2Data>
   data: Seq<ProtHHS2Enrich>
-  periodFilter: Period
+  period: Partial<Period>
 }
 
 const Context = React.createContext({} as SnapshotProtMonitoContext)
@@ -20,24 +20,23 @@ export const useSnapshotProtMonitoringContext = () => useContext<SnapshotProtMon
 
 export const SnapshotProtMonitoringProvider = ({
   filters = {},
-  initialPeriodFilter,
+  period,
   children,
 }: {
   filters?: {
     currentOblast?: Protection_Hhs2_1['where_are_you_current_living_oblast'][],
     drcOffice?: Protection_Hhs2_1['staff_to_insert_their_DRC_office'][],
   }
-  initialPeriodFilter: Period,
+  period: Partial<Period>,
   children: ReactNode
 }) => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const [periodFilter, setPeriodFilter] = useState<Period>(initialPeriodFilter)
 
   const request = (filter: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
     filters: {
-      start: filter.start,
-      end: filter.end,
+      start: filter.start ?? undefined,
+      end: filter.end ?? undefined,
     }
   })
     .then(_ => _.data.filter(_ => !filters.currentOblast || filters.currentOblast.includes(_.where_are_you_current_living_oblast)))
@@ -47,14 +46,14 @@ export const SnapshotProtMonitoringProvider = ({
 
   useEffect(() => {
     // if (periodFilter.start || periodFilter.end)
-    _answers.fetch({force: true, clean: false}, periodFilter)
-  }, [periodFilter])
+    _answers.fetch({force: true, clean: false}, period)
+  }, [period])
 
   const computed = useProtHhs2Data({data: _answers.entity})
 
   return (
     <Context.Provider value={{
-      periodFilter,
+      period,
       data: _answers.entity!,
       computed: computed!,
     }}>

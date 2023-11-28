@@ -20,10 +20,7 @@ const SnapshotProtectionMonitoringPage = () => {
       cardElevation: 1,
     })}>
       {generalStyles}
-      <SnapshotProtMonitoEcho period={{
-        start: startOfMonth(new Date(2023, 8)),
-        end: endOfMonth(new Date(2023, 8)),
-      }}/>
+      <SnapshotProtMonitoEcho/>
     </ThemeProvider>
   )
 }

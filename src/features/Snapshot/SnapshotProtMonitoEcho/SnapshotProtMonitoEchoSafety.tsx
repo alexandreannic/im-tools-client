@@ -16,7 +16,7 @@ import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_H
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export const SnapshotProtMonitoEchoSafety = () => {
-  const {data, computed, periodFilter} = useSnapshotProtMonitoringContext()
+  const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
 
   const groupedIndividualsType = useMemo(() => {

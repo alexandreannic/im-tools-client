@@ -21,10 +21,7 @@ const SnapshotProtectionMonitoringPage = () => {
       cardElevation: 1,
     })}>
       {generalStyles}
-      <SnapshotProtMonitoNN2 period={{
-        start: startOfMonth(new Date(2023, 7)),
-        end: endOfMonth(new Date(2023, 8)),
-      }}/>
+      <SnapshotProtMonitoNN2/>
     </ThemeProvider>
   )
 }
