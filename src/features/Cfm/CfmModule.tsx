@@ -20,6 +20,7 @@ import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Box} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
+import {Fender} from 'mui-extension'
 
 export const cfmModule = {
   basePath: '/cfm',
@@ -171,7 +172,7 @@ export const CfmModule = () => {
         </CfmProvider>
       ) : _schemas.loading && (
         <>
-          {/*<Fender type="loading"/>*/}
+          <Fender type="loading"/>
         </>
       )}
     </>

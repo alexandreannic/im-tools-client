@@ -101,7 +101,7 @@ export const MealVerificationList = () => {
             },
             {
               type: 'select_one',
-              id: 'filters',
+              id: 'activity',
               head: m._mealVerif.activityForm,
               renderOption: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].activity.koboFormId)?.translation,
               renderValue: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].activity.koboFormId)?.translation,
@@ -109,7 +109,7 @@ export const MealVerificationList = () => {
             },
             {
               type: 'select_one',
-              id: 'filters',
+              id: 'verification',
               head: m._mealVerif.verificationForm,
               renderOption: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].verification.koboFormId)?.translation,
               renderValue: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].verification.koboFormId)?.translation,

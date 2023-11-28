@@ -1,5 +1,5 @@
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/koboDrcUaFormId'
 import {KoboTypedAnswerSdk} from '@/core/sdk/server/kobo/KoboTypedAnswerSdk'
 import {KeyOf} from '@/utils/utils'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
@@ -39,12 +39,12 @@ export const mealVerificationActivities = seq([
   registerActivity({
     name: 'ECREC Cash Registration',
     activity: {
-      koboFormId: kobo.drcUa.form.ecrec_cashRegistration,
+      koboFormId: KoboIndex.byName('ecrec_cashRegistration').id,
       fetch: 'searchEcrec_cashRegistration',
       filters: _ => true,
     },
     verification: {
-      koboFormId: kobo.drcUa.form.meal_verificationEcrec,
+      koboFormId: KoboIndex.byName('meal_verificationEcrec').id,
       fetch: 'searchMeal_verificationEcrec',
     },
     joinColumn: 'pay_det_tax_id_num',
@@ -76,12 +76,12 @@ export const mealVerificationActivities = seq([
   registerActivity({
     name: 'Cash for Fuel & Cash for Utilities',
     activity: {
-      koboFormId: kobo.drcUa.form.bn_re,
+      koboFormId: KoboIndex.byName('bn_re').id,
       fetch: 'searchBn_Re',
       filters: _ => !!(_.back_prog_type && [_.back_prog_type].flat().find(_ => /^c(sf|fu)/.test(_))),
     },
     verification: {
-      koboFormId: kobo.drcUa.form.meal_verificationWinterization,
+      koboFormId: KoboIndex.byName('meal_verificationWinterization').id,
       fetch: 'searchMeal_verificationWinterization',
     },
     joinColumn: 'pay_det_tax_id_num',

@@ -95,7 +95,7 @@ export const koboFormTranslation: Record<KoboFormName, string> = {
 
 export class KoboIndex {
 
-  static readonly searchByName = (name: keyof typeof kobo.drcUa.form) => {
+  static readonly byName = (name: keyof typeof kobo.drcUa.form) => {
     const id = kobo.drcUa.form[name]
     const translation = koboFormTranslation[name]
     return {

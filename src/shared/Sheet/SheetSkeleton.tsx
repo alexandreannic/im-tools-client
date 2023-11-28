@@ -2,7 +2,7 @@ import {Box, Skeleton} from '@mui/material'
 import {mapFor} from '@alexandreannic/ts-utils'
 import React, {memo} from 'react'
 
-export const DatabaseKoboTableSkeleton = memo(() => {
+export const SheetSkeleton = memo(() => {
   return (
     <>
       <Box>

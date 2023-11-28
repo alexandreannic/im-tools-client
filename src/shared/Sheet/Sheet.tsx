@@ -17,6 +17,7 @@ import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {SheetModal} from '@/shared/Sheet/SheetModal'
 import {SheetErrorBoundary} from '@/shared/Sheet/SheetErrorBundary'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 
 export const Sheet = <T extends SheetRow = SheetRow>({
   total,
@@ -224,9 +225,11 @@ const _Sheet = <T extends SheetRow>({
           </Box>
         </Box>
       </Box>
-      {loading && (
+      {loading && (ctx.data.data ? (
         <LinearProgress sx={{position: 'absolute', left: 0, right: 0, top: 0}}/>
-      )}
+      ) : (
+        <SheetSkeleton/>
+      ))}
       {!hidePagination && (
         <TablePagination
           rowsPerPageOptions={rowsPerPageOptions}

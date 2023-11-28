@@ -31,6 +31,7 @@ const Context = React.createContext({} as DatabaseKoboContext)
 export const useDatabaseKoboTableContext = () => useContext<DatabaseKoboContext>(Context)
 
 export const DatabaseKoboTableProvider = (props: {
+  dataFilter?: (_: KoboMappedAnswer) => boolean
   children: ReactNode
   fetcherAnswers: DatabaseKoboContext['fetcherAnswers']
   serverId: DatabaseKoboContext['serverId']
@@ -51,7 +52,10 @@ export const DatabaseKoboTableProvider = (props: {
   const {toastError} = useAaToast()
   const hasBeenCalled = useRef(false)
 
-  const mapData = (data: KoboAnswer[]) => data.map(_ => Kobo.mapAnswerBySchema(ctxSchema.schemaHelper.questionIndex, _))
+  const mapData = (data: KoboAnswer[]) => {
+    const mapped = data.map(_ => Kobo.mapAnswerBySchema(ctxSchema.schemaHelper.questionIndex, _))
+    return props.dataFilter ? mapped.filter(props.dataFilter) : mapped
+  }
 
   const asyncRefresh = useAsync(async () => {
     await api.koboApi.synchronizeAnswers(serverId, form.id)

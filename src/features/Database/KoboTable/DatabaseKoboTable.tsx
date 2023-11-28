@@ -21,7 +21,7 @@ import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
 import {Box, Skeleton} from '@mui/material'
 import {Paginate} from '@/utils/utils'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
-import {DatabaseKoboTableSkeleton} from '@/features/Database/KoboTable/DatabaseKoboTableSkeleton'
+import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -75,9 +75,7 @@ export const DatabaseTable = ({
 
   const _formSchema = useFetcher(() => schema ? Promise.resolve(schema) : api.koboApi.getForm(serverId, formId))
   const _form = useFetcher(() => form ? Promise.resolve(form) : api.kobo.form.get(formId))
-  const _answers = useFetcher(() => api.kobo.answer.searchByAccess({
-    formId,
-  }).then(_ => dataFilter ? ({..._, data: _.data.filter(dataFilter)}) : _))
+  const _answers = useFetcher(() => api.kobo.answer.searchByAccess({formId}))
 
   const access = useMemo(() => {
     const list = accesses.filter(Access.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === formId)
@@ -100,12 +98,13 @@ export const DatabaseTable = ({
   return (
     <>
       {(_formSchema.loading || _answers.loading) && (
-        <DatabaseKoboTableSkeleton/>
+        <SheetSkeleton/>
       )}
       {_formSchema.entity && (
         <KoboSchemaProvider schema={_formSchema.entity!}>
           {_answers.entity && _form.entity && (
             <DatabaseKoboTableProvider
+              dataFilter={dataFilter}
               canEdit={overrideEditAccess ?? access.write}
               serverId={serverId}
               fetcherAnswers={_answers}
