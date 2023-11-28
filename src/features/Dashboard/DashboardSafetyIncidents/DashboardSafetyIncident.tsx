@@ -1,4 +1,4 @@
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
@@ -20,9 +20,6 @@ import {SafetyIncidentTrackerOptions} from '@/core/koboModel/SafetyIncidentTrack
 import {DashboardSafetyIncidentBody} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncidentBody'
 import {useDashboardSafetyIncident} from '@/features/Dashboard/DashboardSafetyIncidents/useDashboardSafetyIncident'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
-import {ca} from 'date-fns/locale'
-import {useAaToast} from '@/core/useToast'
-import {MinusRusData, parseMinusRus} from '@/features/Dashboard/DashboardSafetyIncidents/minusRusParser'
 
 export interface DashboardSafetyIncidentsPageProps {
   filters: OptionFilters
@@ -53,9 +50,7 @@ type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape>
 export const DashboardSafetyIncident = () => {
   const {api} = useAppSettings()
   const {m, formatLargeNumber, formatDateTime, formatDate} = useI18n()
-  const {toastError} = useAaToast()
-  const fetcherMinusRus = useFetcher(() => api.proxyRequest('GET', 'https://www.minusrus.com/en')
-    .then(parseMinusRus) as Promise<Seq<MinusRusData>>)
+
   const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.safety_incident))
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
@@ -68,10 +63,8 @@ export const DashboardSafetyIncident = () => {
 
   useEffect(() => {
     _period.fetch()
-    fetcherMinusRus.fetch()
   }, [])
 
-  useEffectFn(fetcherMinusRus.error, () => toastError('Failed to parse minusrus.com'))
   useEffect(() => {
     map(_period.entity, setPeriodFilter)
   }, [_period.entity])
@@ -152,7 +145,7 @@ export const DashboardSafetyIncident = () => {
       beforeSection={
         data && computed && (
           <>
-            <DashboardSafetyIncidentBody data={data} minusRus={fetcherMinusRus.entity} computed={computed}/>
+            <DashboardSafetyIncidentBody data={data} computed={computed}/>
             {/*<DashboardSafetyIncidentAgravatingFactors data={data} computed={computed}/>*/}
           </>
         )
