@@ -74,7 +74,7 @@ export const MinusRusChartPanel = () => {
   const {api} = useAppSettings()
   const {toastError} = useAaToast()
   const {m} = useI18n()
-  const fetcherMinusRus = useFetcher(() => api.proxyRequest('GET', 'https://www.minusrus.com/en')
+  const fetcherMinusRus = useFetcher(() => api.proxyRequest('GET', 'https://russialoses-dev.herokuapp.com')
     .then(parseMinusRus) as Promise<Seq<MinusRusData>>)
 
   const [minusRusDate, setMinusRusDate] = useState<string>('yyyy-MM-dd')
@@ -109,7 +109,7 @@ export const MinusRusChartPanel = () => {
 
   return (
     <SlidePanel title={m._dashboardSafetyIncident.minusRusTitle}>
-      <Txt block dangerouslySetInnerHTML={{__html: m._dashboardSafetyIncident.dataTakenFromMinusRus}}/>
+      {/*<Txt block dangerouslySetInnerHTML={{__html: m._dashboardSafetyIncident.dataTakenFromMinusRus}}/>*/}
       <Box sx={{my: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
         <ScRadioGroup inline dense value={minusRusCurveType} onChange={setMinusRusCurveType}>
           <ScRadioGroupItem hideRadio value="relative">{m.relative}</ScRadioGroupItem>

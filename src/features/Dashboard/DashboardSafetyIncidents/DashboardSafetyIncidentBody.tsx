@@ -11,6 +11,7 @@ import {CommentsPanel, CommentsPanelProps} from '@/features/Dashboard/DashboardM
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {DashboardSafetyIncidentsPageProps, SafetyIncidentsTrackerBarChart} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncident'
 import {MinusRusChartPanel} from '@/features/Dashboard/DashboardSafetyIncidents/MinusRusChartPanel'
+import {useSession} from '@/core/Session/SessionContext'
 
 export const DashboardSafetyIncidentBody = ({
   data,
@@ -21,7 +22,7 @@ export const DashboardSafetyIncidentBody = ({
 }) => {
   const {m, formatLargeNumber} = useI18n()
   const [mapType, setMapType] = useState<'incident' | 'attack'>('incident')
-
+  const {session} = useSession()
   return (
     <Div sx={{alignItems: 'flex-start'}}>
       <Div column>
@@ -119,7 +120,9 @@ export const DashboardSafetyIncidentBody = ({
             )}
           </Lazy>
         </SlidePanel>
-        <MinusRusChartPanel/>
+        {(session?.admin || session?.drcJob === 'Head of Safety') && (
+          <MinusRusChartPanel/>
+        )}
         <SlidePanel title={m._dashboardSafetyIncident.lastAttacks}>
           <Lazy deps={[data]} fn={() => data?.filter(_ => _.attack === 'yes').map(_ => ({
             id: _.id,

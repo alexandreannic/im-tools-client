@@ -1,8 +1,11 @@
 import {DashboardSafetyIncident} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncident'
+import {SessionProvider} from '@/core/Session/SessionContext'
 
 const DashboardSafetyIncidentTrackerPage = () => {
   return (
-    <DashboardSafetyIncident/>
+    <SessionProvider>
+      <DashboardSafetyIncident/>
+    </SessionProvider>
   )
 }
 
