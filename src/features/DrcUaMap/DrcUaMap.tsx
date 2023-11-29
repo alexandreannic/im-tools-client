@@ -121,8 +121,7 @@ const drawUA = (selector: string, theme: Theme) => {
 
   const data = google.visualization.arrayToDataTable([
     ['State', 'Population'],
-    ...Enum.keys(OblastIndex.oblastByISO)
-      .map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
+    ...OblastIndex.isos.map(_ => [_.replace('UA', 'UA-'), occupiedOblasts.includes(_) ? 2 : 1]),
   ])
 
   const chart = new google.visualization.GeoChart(document.querySelector(selector)!)

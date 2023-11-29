@@ -5,7 +5,7 @@ export namespace KoboSafetyIncidentHelper {
 
   export const mapData = (_: any) => {
     const d = mapSafetyIncidentTracker(_)
-    return {...d, oblastISO: OblastIndex.koboOblastIndexIso[d.oblast!]}
+    return {...d, oblastISO: OblastIndex.byKoboName(d.oblast!).iso}
   }
 
   export type Type = ReturnType<typeof mapData>

@@ -167,8 +167,8 @@ export const CfmProvider = ({
         external_consent: _.consent,
         external_prot_support: _.prot_support,
         form: CfmDataSource.External,
-        oblast: OblastIndex.koboOblastIndex[_.ben_det_oblast!],
-        oblastIso: OblastIndex.koboOblastIndexIso[_.ben_det_oblast!],
+        oblast: OblastIndex.byKoboName(_.ben_det_oblast!)!.name,
+        oblastIso: OblastIndex.byKoboName(_.ben_det_oblast!)!.iso,
         feedback: _.complaint ?? _.thanks_feedback ?? _.request,
         ..._,
       })
@@ -183,8 +183,8 @@ export const CfmProvider = ({
         form: CfmDataSource.Internal,
         internal_existing_beneficiary: _.existing_beneficiary,
         internal_project_code: _.project_code,
-        oblast: OblastIndex.koboOblastIndex[_.ben_det_oblast!],
-        oblastIso: OblastIndex.koboOblastIndexIso[_.ben_det_oblast!],
+        oblast: OblastIndex.byKoboName(_.ben_det_oblast!).name,
+        oblastIso: OblastIndex.byKoboName(_.ben_det_oblast!).iso,
         ..._,
       })
     })

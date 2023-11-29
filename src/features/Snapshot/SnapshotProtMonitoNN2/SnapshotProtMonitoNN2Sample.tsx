@@ -1,12 +1,10 @@
 import React from 'react'
-import {Box, Icon, useTheme} from '@mui/material'
+import {Box, useTheme} from '@mui/material'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
-import {Txt} from 'mui-extension'
-import {format, subDays} from 'date-fns'
-import {DRCLogo, EULogo} from '@/shared/logo/logo'
-import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
+import {DRCLogo} from '@/shared/logo/logo'
+import {AAStackedBarChart, commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
 import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
@@ -14,7 +12,6 @@ import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
 import {AaPieChart} from '@/shared/Chart/AaPieChart'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
-import {SnapshotPeriod} from '@/features/Snapshot/SnapshotPeriod'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 
 export const SnapshotProtMonitoNN2Sample = () => {
@@ -73,7 +70,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
                       // other: theme.palette.divider,
                     }}
                   >
-                    <Legend iconType="circle" layout="vertical" verticalAlign="middle" align="right"/>
+                    <Legend {...commonLegendProps} layout="vertical" verticalAlign="middle" align="right"/>
                   </AaPieChart>
                 </SlidePanel>
                 <SlidePanel>

@@ -1,5 +1,5 @@
-import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
-import React from 'react'
+import {Bar, BarChart, Legend, LegendProps, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
+import React, {forwardRef} from 'react'
 import {Box, BoxProps, Theme, useTheme} from '@mui/material'
 import {chartConfig} from './chartConfig'
 import {seq} from '@alexandreannic/ts-utils'
@@ -9,6 +9,11 @@ const RADIAN = Math.PI / 180
 const renderCustomizedLabel = ({x, y, stroke, value, ...rest}: any) => {
   return <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">{value}</text>
 }
+
+export const commonLegendProps = {
+  formatter: (_: any) => <Box component="span" sx={{verticalAlign: 'middle', color: t => t.palette.text.primary}}>{_}</Box>,
+  iconType: 'circle'
+} as const
 
 export const AAStackedBarChart = ({
   data,
@@ -46,7 +51,7 @@ export const AAStackedBarChart = ({
           <XAxis type="number" domain={[0, 10]}/>
           <YAxis dataKey="key" type="category" width={110}/>
           <Tooltip/>
-          <Legend/>
+          <Legend {...commonLegendProps}/>
           {Object.keys(first).map((k, i) =>
             <Bar key={k} dataKey={k} stackId="a" fill={colors(theme)[i]}/>
           )}
@@ -101,7 +106,7 @@ export const AAStackedBarChartSplit = ({
           <XAxis type="number" domain={[0, 100]}/>
           <YAxis dataKey="key" type="category" width={110}/>
           <Tooltip/>
-          <Legend/>
+          <Legend {...commonLegendProps}/>
           {allKeys.map((k, i) =>
             <Bar key={k} dataKey={k} stackId={k} fill={colors[i]}/>
           )}

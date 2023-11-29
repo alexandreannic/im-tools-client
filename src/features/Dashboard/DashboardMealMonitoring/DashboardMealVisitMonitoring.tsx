@@ -23,7 +23,7 @@ import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {CommentsPanel} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
-import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {OblastIndex, OblastISO, OblastKoboName} from '@/shared/UkraineMap/oblastIndex'
 import {Meal_VisitMonitoringOptions} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
 import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
 
@@ -32,7 +32,7 @@ export interface DashboardPageProps {
   data: Seq<KoboAnswer<Meal_VisitMonitoring>>
 }
 
-const mapOblast: Record<string, OblastISO> = OblastIndex.koboOblastIndexIso
+const mapOblast = (_: OblastKoboName) => OblastIndex.byKoboName(_).iso
 
 const filterShape = DashboardFilterHelper.makeShape<typeof Meal_VisitMonitoringOptions>()({
   oblast: {
@@ -202,7 +202,7 @@ export const DashboardMealVisitMonitoring = () => {
                   <KoboUkraineMap
                     fillBaseOn="value"
                     data={data}
-                    getOblast={_ => mapOblast[_.md_det_oblast!]}
+                    getOblast={_ => mapOblast(_.md_det_oblast!)}
                     value={_ => true}
                     base={_ => _.md_det_oblast !== undefined}
                   />

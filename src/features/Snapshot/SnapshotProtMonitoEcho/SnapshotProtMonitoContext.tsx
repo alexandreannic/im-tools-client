@@ -7,6 +7,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useI18n} from '@/core/i18n'
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export interface SnapshotProtMonitoContext {
   computed: NonNullable<UseProtHHS2Data>
@@ -40,7 +41,13 @@ export const SnapshotProtMonitoringProvider = ({
     }
   })
     .then(_ => _.data.filter(_ => !filters.currentOblast || filters.currentOblast.includes(_.where_are_you_current_living_oblast)))
-    .then(_ => seq(_.map(enrichProtHHS_2_1)))
+    .then(_ => seq(_.map(enrichProtHHS_2_1))
+      // .filter(_ =>
+      //   _.where_are_you_current_living_oblast !== OblastIndex.findISOByName('Dnipropetrovska') &&
+      //   _.where_are_you_current_living_oblast !== OblastIndex.findISOByName('Volynska') &&
+      //   _.where_are_you_current_living_oblast !== OblastIndex.findISOByName('Ivano-Frankivska')
+      // )
+    )
 
   const _answers = useFetcher(request)
 

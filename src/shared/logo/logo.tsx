@@ -2,7 +2,7 @@ import {Box, BoxProps, useTheme} from '@mui/material'
 import React from 'react'
 
 export const EULogo = ({
-  height = 38,
+  height = 36,
   sx,
   ...props
 }: {
@@ -55,6 +55,38 @@ export const DRCLogo = ({
       alt="DRC Logo"
       {...props}
     />
+  )
+}
 
+export const UhfLogo = ({
+  height = 36,
+  ...props
+}: {
+  height?: number
+} & BoxProps) => {
+  return (
+    <Box
+      component="img"
+      src="/static/logo-uhf.png"
+      height={height}
+      alt="UHF Logo"
+      {...props}
+    />
+  )
+}
+export const UsaidLogo = ({
+  height = 36,
+  ...props
+}: {
+  height?: number
+} & BoxProps) => {
+  return (
+    <Box
+      component="img"
+      src="/static/logo-usaid.png"
+      height={height}
+      alt="USAID Logo"
+      {...props}
+    />
   )
 }

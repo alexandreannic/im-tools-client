@@ -33,12 +33,10 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
                     // __html: m.snapshotProtMonito.echo.livelihood({
                     //   outOfWork: toPercent(_.percent, 0),
                   >
-                    The percentage of surveyed individuals out of work and seeking employment
-                    remains quite high at 18% of responses. The primary factors contributing to unemployment
-                    were reported to be lack of available jobs, lack of childcare, and skills not matching
-                    the demand. As a result of the limited livelihood opportunities or challenges in accessing
-                    livelihoods, a considerable proportion of the surveyed population is currently dependent on
-                    social protection schemes and humanitarian assistance.
+                    A prevalent concern raised by household respondents continues to be the limited availability of livelihood opportunities, with <b>16%</b> of respondents
+                    reporting being out of work and seeking employment. Among single female caregivers, <b>42%</b> reported housework and childcare responsibilities as the key
+                    factor influencing their employment status, directly linked with the lack of kindergartens. As a result of limited livelihood and economic opportunities, a
+                    considerable portion of the population is currently dependent on social protection schemes and humanitarian assistance.
                   </p>
                 }
               </Lazy>

@@ -30,17 +30,13 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 data: computed.flatData,
                 filter: _ => _.lackDoc.includes('passport') || _.lackDoc.includes('tin'),
               })
-              return z[OblastIndex.findISOByName('Kharkivska')]
+              return z[OblastIndex.byName('Kharkivska').iso]
             }}>
               {_ =>
                 <SlideTxt>
-                  <b>52%</b> of individuals surveyed in Kharkiv oblast lack personal documentation and face
-                  subsequent challenges in accessing services as well as limitations to their freedom
-                  of movement. Significant challenges in accessing the compensation mechanism for damaged
-                  and destroyed property are still being reported, including due to the lack of essential
-                  ownership documents and registration certificates. 70% of respondents residing in rental
-                  accommodation reported not possessing any formal lease agreement, exposing them to risks
-                  of eviction.
+                  Significant challenges in accessing the compensation mechanism for damaged and destroyed property are still being reported, including due to a lack of required
+                  documentation. While a low level of awareness on land and property rights has been identified, requests for legal awareness and assistance on HLP-related issues
+                  (including obtaining property documentation and applying for compensation) have become more widespread, especially along frontline areas and the Russian border.
                 </SlideTxt>
               }
             </Lazy>

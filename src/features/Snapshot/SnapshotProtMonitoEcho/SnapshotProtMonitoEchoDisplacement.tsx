@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Icon} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
@@ -7,10 +7,12 @@ import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelp
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
 import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+import {Txt} from 'mui-extension'
 
 export const SnapshotProtMonitoEchoDisplacement = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
+  const t = useTheme()
   return (
     <PdfSlide>
       <SlideHeader>{m.displacement}</SlideHeader>
@@ -18,11 +20,9 @@ export const SnapshotProtMonitoEchoDisplacement = () => {
         <Div>
           <Div column>
             <SlideTxt sx={{mb: .5}} block>
-              The main factors influencing departure from areas of origin included shelling and attacks on civilians,
-              occupation of property, destruction or damage of housing, land or property due to conflict,
-              infrastructure damage/destruction and exposure to UXOs/landmines. The scarcity of affordable housing,
-              compounded by the increasing expenses related to rent and utilities, poses a significant obstacle
-              to the integration of IDPs.
+              Compared to the previous monitoring month, a higher proportion of IDP respondents indicated their intention to integrate into the local community <Txt bold sx={{color: t.palette.success.main}}>(+15%)</Txt>.
+              Conversely, a lower proportion of IDP respondents indicated their intention to return. However, the scarcity of affordable housing poses a significant obstacle to the
+              integration of IDPs.
             </SlideTxt>
 
             <SlidePanel>
@@ -75,6 +75,7 @@ export const SnapshotProtMonitoEchoDisplacement = () => {
             <SlidePanel BodyProps={{sx: {paddingBottom: t => t.spacing(.25) + ' !important'}}}>
               <SlidePanelTitle>{m.displacementAndReturn}</SlidePanelTitle>
               <KoboLineChartDate
+                sx={{ml: -5}}
                 colors={snapshotColors}
                 height={188}
                 data={data}

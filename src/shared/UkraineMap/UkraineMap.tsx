@@ -118,7 +118,7 @@ export const UkraineMap = ({
                   }
                 }}
               >
-                {map(OblastIndex.findByIso(iso as any), _ => (
+                {map(OblastIndex.byIso(iso as any).name, _ => (
                   <title>
                     {_}
                     {'\n'}

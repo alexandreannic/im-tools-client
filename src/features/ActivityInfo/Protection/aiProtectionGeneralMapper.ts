@@ -26,7 +26,7 @@ const disaggregatePersons = (persons: Person.Person[]) => {
 }
 
 export const getAiLocation = (d: Pick<Protection_groupSession, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>) => {
-  const oblast = OblastIndex.koboOblastIndex[d.ben_det_oblast!]
+  const oblast = OblastIndex.byKoboName(d.ben_det_oblast!).name
   // @ts-ignore
   const raion = AILocationHelper.findRaion(oblast, bn_ReOptions.ben_det_raion[d.ben_det_raion!])
   // @ts-ignore
@@ -47,7 +47,7 @@ export class ActivityInfoProtectionMapper {
       d.persons!.forEach(ind => {
         data.push({
           answer: d,
-          Oblast: AILocationHelper.findOblast(OblastIndex.oblastByISO[d.where_are_you_current_living_oblast])!,
+          Oblast: AILocationHelper.findOblast(OblastIndex.byIso(d.where_are_you_current_living_oblast).name)!,
           Raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)._5w as any,
           Hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada)._5w as any,
           ...disaggregatePersons([ind]),

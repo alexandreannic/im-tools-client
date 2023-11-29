@@ -8,6 +8,7 @@ import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelp
 import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+import {Txt} from 'mui-extension'
 
 
 export const SnapshotProtMonitoEchoNeeds = () => {
@@ -40,9 +41,11 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 }
               }}>
                 {_ =>
-                  <p dangerouslySetInnerHTML={{
-                    __html: m.snapshotProtMonito.echo.needs(_)
-                  }}/>
+                  <p>
+                    Risk of eviction is the top priority concern of IDP respondents (<b>34%</b>). The risk of closure of collective sites in the coming months <Txt color="hint">(Resolution
+                    #930)</Txt>, coupled
+                    with the rising cost of housing and utilities, are likely to increase precariousness and hardship among IDP communities at the onset of winter.
+                  </p>
                 }
               </Lazy>
             </SlideTxt>
@@ -81,12 +84,16 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 question="why_dont_they_have_status"
                 filterValue={['unable_unwilling_to_answer']}
                 overrideLabel={{
+                  inability_to_access_registration_safety_risks: 'Inability to access registration',
                   status_registration_not_requested: 'Disability status not applied for',
                   status_registration_rejected_not_meeting_the_criteria_as_per_ukrainian_procedure: 'Status registration rejected',
                 }}
                 mergeOptions={{
+                  inability_to_access_registration_costly_andor_lengthy_procedure: 'inability_to_access_registration_safety_risks',
+                  inability_to_access_registration_distance_andor_lack_of_transportation: 'inability_to_access_registration_safety_risks',
                   delays_in_registration_process: 'other_specify',
                   unaware_ofnot_familiar_with_the_procedure: 'other_specify',
+                  status_renewal_rejected: 'other_specify',
                 }}
               />
             </SlidePanel>

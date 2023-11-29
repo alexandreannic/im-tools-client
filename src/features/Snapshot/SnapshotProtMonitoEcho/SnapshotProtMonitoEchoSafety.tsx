@@ -14,11 +14,12 @@ import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEch
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {useTheme} from '@mui/material'
 
 export const SnapshotProtMonitoEchoSafety = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
   const {formatLargeNumber, m} = useI18n()
-
+  const t = useTheme()
   const groupedIndividualsType = useMemo(() => {
     const res = {
       type: seq() as Seq<Protection_Hhs2_1['what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence']>,
@@ -57,7 +58,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
       <PdfSlideBody>
         <Div>
           <Div column>
-            <SlideTxt>
+            <SlideTxt sx={{marginBottom: t.spacing() + ' !important'}}>
               <Lazy deps={[data]} fn={() => {
                 return {
                   senseOfSafety: ChartTools.percentage({
@@ -66,12 +67,12 @@ export const SnapshotProtMonitoEchoSafety = () => {
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
                   poorSafetyChernihiv: ChartTools.percentage({
-                    data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.findISOByName('Chernihivska')).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
+                    data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.byName('Chernihivska').iso).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
                   poorSafetySumy: ChartTools.percentage({
-                    data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.findISOByName('Sumska')).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
+                    data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.byName('Sumska').iso).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
@@ -108,11 +109,10 @@ export const SnapshotProtMonitoEchoSafety = () => {
                     //   })
                     // }}
                   >
-                    Perceptions of safety vary significantly depending on the surveyed area.
-                    Overall 25% of respondents indicated a poor sense of safety (feeling unsafe or very unsafe)
-                    mainly due to shelling or threats of shelling. This figure is particularly high in the areas of
-                    Kherson and Chernihiv at 58% and 42%. 1% of respondents reported protection incidents experienced
-                    by household members over the past 6 months.
+                    Perceptions of safety vary significantly depending on the surveyed area. Overall <b>37%</b> of respondents indicated a poor sense of safety mainly due to
+                    shelling presence or armed actors and UXOs contamination. This figure is particularly high in the areas of
+                    Kherson (<b>60%</b>), Sumy (<b>43%</b>) and Chernihiv (<b>38%</b>). <b>1%</b> of respondents reported protection incidents experienced by
+                    household members over the past 6 months.
                   </p>
                 }
               </Lazy>
@@ -124,7 +124,11 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   data: groupedIndividualsType.type,
                   filterValue: ['unable_unwilling_to_answer']
                 }))
-                  .map(ChartTools.setLabel(Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
+                  .map(ChartTools.setLabel({
+                    ...Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence,
+                    // TODO TO REMOVE
+                    other_specify: 'Psychological abuse',
+                  }))
                   .map(ChartTools.sortBy.value)
                   .get
               }>
@@ -133,11 +137,15 @@ export const SnapshotProtMonitoEchoSafety = () => {
                 )}
               </Lazy>
             </SlidePanel>
-            <SlidePanel title={m.protHHS2.freedomOfMovement}>
+            <SlidePanel>
+              <SlidePanelTitle>{m.protHHS2.freedomOfMovement}</SlidePanelTitle>
               <ProtHHS2BarChart
                 questionType="multiple"
                 data={data}
                 limit={5}
+                overrideLabel={{
+                  lack_of_transportationfinancial_resources_to_pay_transportation: 'Lack of transportation'
+                }}
                 question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
                 filterValue={['no', 'unable_unwilling_to_answer']}
               />

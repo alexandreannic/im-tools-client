@@ -1,5 +1,6 @@
 import {Box, SxProps, Theme, useTheme} from '@mui/material'
-import {Cell, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Tooltip} from 'recharts'
+// @ts-ignore
+import {Cell, Pie, PieChart, PieChartProps, PieLabelRenderProps, ResponsiveContainer, Tooltip} from 'recharts'
 import React, {ReactNode} from 'react'
 import {objToArray, toPercent} from '@/utils/utils'
 
@@ -58,8 +59,8 @@ export const AaPieChart = <T extends Record<string, number>>({
   hideLabel?: boolean
   valueInMiddle?: string
   children?: ReactNode,
-  sx?: SxProps<Theme>
-}) => {
+  sx?: SxProps<Theme>,
+} & PieChartProps) => {
   const theme = useTheme()
   height = height ?? width ?? 200
   width = width ?? height ?? 200
@@ -98,6 +99,7 @@ export const AaPieChart = <T extends Record<string, number>>({
             dataKey="value"
             fill={theme.palette.primary.main}
             label={hideLabel ? false : renderCustomizedLabel}
+            {...props}
             // label={renderCustomizedLabel(data)}
           >
             {colors && Object.keys(colors).map(k => <Cell key={k} fill={colors[k] ?? theme.palette.primary.main}/>)}

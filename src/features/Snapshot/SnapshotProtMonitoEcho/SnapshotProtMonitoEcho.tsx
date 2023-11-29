@@ -9,13 +9,13 @@ import {SnapshotProtMonitoEchoLivelihood} from '@/features/Snapshot/SnapshotProt
 import {SnapshotProtMonitoEchoSample} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoSample'
 import {SnapshotProtMonitoEchoDisplacement} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoDisplacement'
 import {SnapshotProtMonitoEchoRegistration} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoRegistration'
-import {Box, Theme} from '@mui/material'
+import {alpha, Box, Theme} from '@mui/material'
 import {Period} from '@/core/type'
 import {PeriodPickerMui} from '@/shared/PeriodPicker/PeriodPickerMui'
-import {endOfMonth, startOfMonth} from 'date-fns'
+import {endOfMonth, startOfMonth, subMonths} from 'date-fns'
 import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 
-export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
+export const snapshotAlternateColor = (t: Theme) => alpha(t.palette.primary.main, .26)//t.palette.grey[500]
 
 export const snapshotColors = (t: Theme) => [
   t.palette.primary.main,
@@ -37,8 +37,8 @@ export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dens
 
 export const SnapshotProtMonitoEcho = () => {
   const [period, setPeriod] = useState<Partial<Period>>({
-    start: startOfMonth(new Date()),
-    end: endOfMonth(new Date()),
+    start: startOfMonth(subMonths(new Date(), 1)),
+    end: endOfMonth(subMonths(new Date(), 1)),
   })
   const value: [Date | undefined, Date | undefined] = useMemo(() => [period.start, period.end], [period])
   return (

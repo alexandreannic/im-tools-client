@@ -3,33 +3,76 @@ import {Utils} from '@/utils/utils'
 import {ReverseMap} from '@/utils/utilsType'
 
 export interface Oblast {
-  name: string
+  name: OblastName
+  shortName?: string
   iso: OblastISO
 }
 
 export type OblastISO = keyof typeof OblastIndex['oblastByISO']
 export type OblastName = typeof OblastIndex['oblastByISO'][keyof typeof OblastIndex['oblastByISO']]
+export type OblastKoboName = keyof typeof OblastIndex['koboOblastIndexIso']
 
 export class OblastIndex {
 
-  /** @deprecated used by old hhs form */
-  static readonly findISOByKoboKey = (koboKey: string): OblastISO | undefined => {
-    // @ts-ignore
-    return protHH0oblastKey[koboKey]
+  static readonly byIso: {
+    (_: OblastISO): Oblast
+    (_: string): Oblast | undefined
+  } = (iso) => {
+    return {
+      iso,
+      // @ts-ignore
+      name: OblastIndex.oblastByISO[iso],
+      // @ts-ignore
+      shortName: OblastIndex.shortNamesIndex[iso],
+    } as any
   }
 
-  static readonly findByIso = (iso: OblastISO): OblastName | undefined => {
-    return OblastIndex.oblastByISO[iso]
+  static readonly byName: {
+    (_: OblastName): Oblast
+    (_: string): Oblast | undefined
+    (_: OblastName | undefined | string): Oblast | undefined
+  } = (name) => {
+    const iso = OblastIndex.oblastIsoByName[name as keyof typeof OblastIndex.oblastIsoByName]
+    return OblastIndex.byIso(iso)
   }
 
-  static readonly findISOByName = (name: OblastName): OblastISO => {
-    return Enum.entries(OblastIndex.oblastByISO)
-      .find(([k, v]) => v === name)?.[0]!
+  static readonly byKoboName: {
+    (_: OblastKoboName): Oblast
+    (_: string): Oblast | undefined
+    (_: OblastKoboName | undefined | string): Oblast | undefined
+  } = (name) => {
+    const iso = OblastIndex.koboOblastIndexIso[name as OblastKoboName]
+    return OblastIndex.byIso(iso) as any
   }
 
-  static readonly searchISOByName = (name: string): undefined | OblastISO => {
-    return Enum.entries(OblastIndex.oblastByISO)
-      .find(([k, v]) => v === name)?.[0]!
+  static readonly shortNamesIndex: Partial<Record<OblastISO, string>> = {
+    // 'UA01': `Autonomous Republic of Crimea`,
+    // 'UA71': `Cherkaska`,
+    'UA74': `Chernihiv`, // ok
+    // 'UA73': `Chernivetska`,
+    'UA12': `Dnipropetrovsk`, // ok
+    'UA14': `Donetsk`, // ok
+    'UA26': `Ivano-Frankivsk`, // ok
+    'UA63': `Kharkiv`, // ok
+    'UA65': `Kherson`, // ok
+    // 'UA68': `Khmelnytska`,
+    // 'UA35': `Kirovohradska`,
+    // 'UA80': `Kyiv`,
+    // 'UA32': `Kyivska`,
+    'UA44': `Luhanska`, // UA-09 in Real but UA-44 in Activity Info
+    'UA46': `Lviv`, // ok
+    'UA48': `Mykolaiv`, // ok
+    // 'UA51': `Odeska`,
+    // 'UA53': `Poltavska`,
+    // 'UA56': `Rivnenska`,
+    // 'UA85': `Sevastopol`,
+    'UA59': `Sumy`,
+    // 'UA61': `Ternopilska`,
+    // 'UA05': `Vinnytska`,
+    'UA07': `Volyn`, // ok
+    // 'UA21': `Zakarpatska`,
+    'UA23': `Zaporizhzhia`, // ok
+    // 'UA18': `Zhytomyrska`
   }
 
   static readonly names: OblastName[] = [
@@ -62,7 +105,7 @@ export class OblastIndex {
     `Zhytomyrska`
   ]
 
-  static readonly oblastByISO = Object.freeze({
+  private static readonly oblastByISO = Object.freeze({
     'UA01': `Autonomous Republic of Crimea`,
     'UA71': `Cherkaska`,
     'UA74': `Chernihivska`,
@@ -92,39 +135,11 @@ export class OblastIndex {
     'UA18': `Zhytomyrska`
   })
 
-  static readonly oblastIsoByName = Enum.transform(OblastIndex.oblastByISO, (k, v) => [v, k])
+  static readonly isos = Enum.keys(OblastIndex.oblastByISO)
 
-  static readonly koboOblastIndex: Record<string, OblastName> = {
-    aroc: 'Autonomous Republic of Crimea',//'UA43',
-    cherkaska: 'Cherkaska',
-    chernihivska: 'Chernihivska',
-    chernivetska: 'Chernivetska',// 'UA77',
-    dnipropetrovska: 'Dnipropetrovska',
-    donetska: 'Donetska',
-    'ivano-frankivska': 'Ivano-Frankivska',
-    kharkivska: 'Kharkivska',
-    khersonska: 'Khersonska',
-    khmelnytska: 'Khmelnytska',
-    kirovohradska: 'Kirovohradska',
-    citykyiv: 'Kyiv',//'UA80',
-    kyivska: 'Kyivska',
-    luhanska: 'Luhanska',//'UA09',
-    lvivska: 'Lvivska',
-    mykolaivska: 'Mykolaivska',
-    odeska: 'Odeska',
-    poltavska: 'Poltavska',
-    rivnenska: 'Rivnenska',
-    sevastopilska: 'Sevastopol',//'UA85',
-    sumska: 'Sumska',
-    ternopilska: 'Ternopilska',
-    vinnytska: 'Vinnytska',
-    volynska: 'Volynska',
-    zakarpatska: 'Zakarpatska',
-    zaporizka: 'Zaporizka',
-    zhytomyrska: 'Zhytomyrska',
-  }
+  private static readonly oblastIsoByName = Enum.transform(OblastIndex.oblastByISO, (k, v) => [v, k])
 
-  static readonly koboOblastIndexIso: Record<string, OblastISO> = {
+  static readonly koboOblastIndexIso = {
     aroc: 'UA01',//'UA43',
     cherkaska: 'UA71',
     chernihivska: 'UA74',
@@ -153,40 +168,33 @@ export class OblastIndex {
     zaporizka: 'UA23',
     zhytomyrska: 'UA18',
   }
-
-  static readonly isoToKoboOblastValue: ReverseMap<typeof OblastIndex.koboOblastIndexIso> = Object.fromEntries(
-    Object.entries(OblastIndex.koboOblastIndexIso).map(([key, value]) => [
-      value,
-      key,
-    ]),
-  ) as any
 }
 
-const protHH0oblastKey: Record<string, OblastISO> = {
-  vin: 'UA05',
-  vol: 'UA07',
-  dnip: 'UA12',
-  don: 'UA14',
-  zhy: 'UA18',
-  zak: 'UA21',
-  zap: 'UA23',
-  ivan: 'UA26',
-  kyi: 'UA32',
-  avt: 'UA01',
-  kir: 'UA35',
-  luh: 'UA44',
-  lvi: 'UA46',
-  myk: 'UA48',
-  ode: 'UA51',
-  pol: 'UA53',
-  riv: 'UA56',
-  sum: 'UA59',
-  ter: 'UA61',
-  kha: 'UA63',
-  khe: 'UA65',
-  khm: 'UA68',
-  che: 'UA71',
-  chern: 'UA73',
-  cherni: 'UA74',
-  sev: 'UA85',
-}
+// const protHH0oblastKey: Record<string, OblastISO> = {
+//   vin: 'UA05',
+//   vol: 'UA07',
+//   dnip: 'UA12',
+//   don: 'UA14',
+//   zhy: 'UA18',
+//   zak: 'UA21',
+//   zap: 'UA23',
+//   ivan: 'UA26',
+//   kyi: 'UA32',
+//   avt: 'UA01',
+//   kir: 'UA35',
+//   luh: 'UA44',
+//   lvi: 'UA46',
+//   myk: 'UA48',
+//   ode: 'UA51',
+//   pol: 'UA53',
+//   riv: 'UA56',
+//   sum: 'UA59',
+//   ter: 'UA61',
+//   kha: 'UA63',
+//   khe: 'UA65',
+//   khm: 'UA68',
+//   che: 'UA71',
+//   chern: 'UA73',
+//   cherni: 'UA74',
+//   sev: 'UA85',
+// }

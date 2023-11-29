@@ -45,7 +45,7 @@ export const SnapshotProtMonitoNN2 = () => {
         <PeriodPickerMui value={value} onChange={_ => setPeriod({start: _[0], end: _[1]})}/>
       </Box>
       <SnapshotProtMonitoringProvider
-        filters={{currentOblast: [OblastIndex.oblastIsoByName['Mykolaivska']]}}
+        filters={{currentOblast: [OblastIndex.byName('Mykolaivska').iso]}}
         period={period}
       >
         <_SnapshotProtMonitoring/>

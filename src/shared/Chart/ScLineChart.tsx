@@ -5,6 +5,7 @@ import {Box, Checkbox, SxProps, useTheme} from '@mui/material'
 import {styleUtils} from '../../core/theme'
 import {chartConfig} from './chartConfig'
 import {Enum} from '@alexandreannic/ts-utils'
+import {commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
 
 export interface ScLineChartPropsBase {
   /**
@@ -86,7 +87,7 @@ export const ScLineChart = memo(({
         <ResponsiveContainer width="100%" height="100%">
           <LineChart height={height - 60} data={mappedData}>
             <CartesianGrid strokeDasharray="3 3" strokeWidth={1}/>
-            <Legend wrapperStyle={{position: 'relative', marginTop: -16}}/>
+            <Legend {...commonLegendProps} wrapperStyle={{position: 'relative', marginTop: -16}}/>
             <XAxis tick={!hideXTicks} dataKey="name"/>
             <YAxis tick={!hideYTicks}/>
             <Tooltip wrapperStyle={{zIndex: 100, borderRadius: 4}}/>
@@ -142,7 +143,7 @@ export const ScBarChart = ({curves, height}: ScLineChartProps) => {
           <XAxis dataKey="date"/>
           <YAxis/>
           <Tooltip/>
-          <Legend wrapperStyle={{position: 'relative', marginTop: -16}}/>
+          <Legend {...commonLegendProps} wrapperStyle={{position: 'relative', marginTop: -16}}/>
           {curves.map((_, i) => (
             <Bar
               stackId="_"

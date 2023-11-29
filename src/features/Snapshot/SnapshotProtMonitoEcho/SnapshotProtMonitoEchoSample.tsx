@@ -1,12 +1,10 @@
 import React from 'react'
-import {Box, Icon, useTheme} from '@mui/material'
+import {Box, darken, useTheme} from '@mui/material'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
-import {Txt} from 'mui-extension'
-import {format} from 'date-fns'
-import {DRCLogo, EULogo} from '@/shared/logo/logo'
-import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
+import {DRCLogo, EULogo, UhfLogo, UsaidLogo} from '@/shared/logo/logo'
+import {AAStackedBarChart, commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
 import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
@@ -15,8 +13,9 @@ import {Legend} from 'recharts'
 import {AaPieChart} from '@/shared/Chart/AaPieChart'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {SnapshotPeriod} from '@/features/Snapshot/SnapshotPeriod'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
+import {Enum, seq} from '@alexandreannic/ts-utils'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export const SnapshotProtMonitoEchoSample = () => {
   const theme = useTheme()
@@ -27,7 +26,9 @@ export const SnapshotProtMonitoEchoSample = () => {
     <PdfSlide>
       <SnapshotHeader period={period} logo={
         <>
-          <EULogo/>
+          <UsaidLogo sx={{mr: 1.5}}/>
+          <UhfLogo sx={{mr: 1.5}}/>
+          <EULogo sx={{mr: 1.5}}/>
           <DRCLogo/>
         </>
       }/>
@@ -38,26 +39,26 @@ export const SnapshotProtMonitoEchoSample = () => {
               This snapshot summarizes the findings of <b>Protection Monitoring</b> (PM)
               implemented through household surveys in the following oblasts:
               <ul style={{columns: 2}}>
-                <li>Chernihiv</li>
-                <li>Dnipropetrovsk</li>
-                <li>Donetsk</li>
-                <li>Ivano-Frankivsk</li>
-                <li>Kharkiv</li>
-                <li>Lviv</li>
-                <li>Kherson</li>
-                <li>Mykolaiv</li>
-                <li>Volyn</li>
-                <li>Zaporizhzhia</li>
+                {seq(new Enum(computed.byCurrentOblast).entries())
+                  .filter(([k, v]) => v.value > 0)
+                  .map(([k]) => {
+                    const r = OblastIndex.byIso(k).shortName
+                    if (!r) throw new Error('')
+                    return r
+                  })
+                  .sortByString(_ => _)
+                  .map(oblast =>
+                    <li key={oblast}>{oblast}</li>
+                  )}
               </ul>
+            </SlideTxt>
+            <UkraineMap data={computed.byCurrentOblast} sx={{mx: 1}}/>
+            <SlideTxt>
               DRC protection monitoring targeted Internally Displaced Persons (IDPs) and people
               directly exposed to and affected by the current armed conflict in order to understand
               the protection needs facing affected populations; informing DRC and the protection
               communities' response.
             </SlideTxt>
-            <Box sx={{height: 316, borderRadius: t => t.shape.borderRadius}}>
-              <PanelTitle sx={{mt: 1}}>{m.snapshotProtMonito.monitoredHhByOblast}</PanelTitle>
-              <UkraineMap data={computed.byCurrentOblast}/>
-            </Box>
           </Div>
 
           <Div column sx={{flex: 6}}>
@@ -77,9 +78,9 @@ export const SnapshotProtMonitoEchoSample = () => {
               <Div column>
                 <SlidePanel>
                   <AaPieChart
-                    outerRadius={60}
-                    height={120}
-                    width={260}
+                    outerRadius={65}
+                    height={140}
+                    width={270}
                     m={{
                       male: m.male,
                       female: m.female,
@@ -91,13 +92,23 @@ export const SnapshotProtMonitoEchoSample = () => {
                     }}
                     colors={{
                       female: theme.palette.primary.main,
-                      male: snapshotAlternateColor(theme),
+                      malew: snapshotAlternateColor(theme),
                       // other: theme.palette.divider,
                     }}
                   >
-                    <Legend iconType="circle" layout="vertical" verticalAlign="middle" align="right"/>
+                    <Legend {...commonLegendProps} layout="vertical" verticalAlign="middle" align="right"/>
                   </AaPieChart>
                 </SlidePanel>
+                <SlidePanel>
+                  <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
+                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} sx={{mt: 2}} height={300} colors={t => [
+                    t.palette.primary.main,
+                    snapshotAlternateColor(t),
+                    darken(t.palette.primary.main, .5),
+                  ]}/>
+                </SlidePanel>
+              </Div>
+              <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.protHHS2.hhTypes}</SlidePanelTitle>
                   <ProtHHS2BarChart
@@ -105,15 +116,6 @@ export const SnapshotProtMonitoEchoSample = () => {
                     question="what_is_the_type_of_your_household"
                     questionType="single"
                   />
-                </SlidePanel>
-              </Div>
-              <Div column>
-                <SlidePanel>
-                  <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
-                    snapshotAlternateColor(t),
-                    t.palette.primary.main,
-                  ]}/>
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.displacementStatus}</SlidePanelTitle>

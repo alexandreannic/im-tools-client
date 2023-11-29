@@ -1,4 +1,4 @@
-import {Box, Icon, Tooltip, useTheme} from '@mui/material'
+import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
 import React, {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
 import {AaPieChart} from './Chart/AaPieChart'
@@ -23,6 +23,7 @@ export const Donut = ({
   const theme = useTheme()
   return (
     <AaPieChart
+      stroke="none"
       hideTooltip={true}
       outerRadius={size / 2}
       innerRadius={(size / 2) - 9}
@@ -35,7 +36,7 @@ export const Donut = ({
       }}
       colors={{
         value: theme.palette.primary.main,
-        rest: theme.palette.divider,
+        rest: alpha(theme.palette.primary.main, .16),
       }}
       m={{
         value: 'ukrainian',
@@ -92,7 +93,7 @@ export const PieChartIndicator = ({
         alignItems: 'center',
         ...sx,
       }}>
-        <Donut percent={value / base} size={dense ? 44 : 55}/>
+        <Donut percent={value / base} size={dense ? 45 : 50}/>
         <Box sx={{ml: dense ? 1 : 1.5}}>
           <SlidePanelTitle icon={titleIcon} noWrap={noWrap} sx={{mb: 0}}>
             {title}

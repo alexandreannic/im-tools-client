@@ -44,7 +44,7 @@ export class AILocationHelper {
       'Cnernivetskyi': 'Chernivetskyi',
       'Volodymyr-Volynskyi': 'Volodymyrskyi',
     }[raionName] ?? raionName
-    const oblastIso = OblastIndex.searchISOByName(oblastName)
+    const oblastIso = OblastIndex.byName(oblastName)?.iso
     const list = Enum.values(raions).filter(_ => _.parent === oblastIso)
     return list.find(_ => _.en.toLowerCase() === fixedRaion.toLowerCase())
   }
