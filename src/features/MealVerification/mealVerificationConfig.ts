@@ -49,7 +49,7 @@ export const mealVerificationActivities = seq([
     },
     joinColumn: 'pay_det_tax_id_num',
     columns: [
-      'back_donor',
+      // 'back_donor',
       'back_consent',
       // 'back_consent_no_note',
       'ben_det_surname',
@@ -86,9 +86,9 @@ export const mealVerificationActivities = seq([
     },
     joinColumn: 'pay_det_tax_id_num',
     columns: [
-      'back_enum',
-      'back_donor',
-      'back_prog_type',
+      // 'back_enum',
+      // 'back_donor',
+      // 'back_prog_type',
       'back_consent',
       'back_consen_no_reas',
       'pay_det_tax_id_num',

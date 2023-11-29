@@ -98,7 +98,10 @@ export const DatabaseTable = ({
   return (
     <>
       {(_formSchema.loading || _answers.loading) && (
-        <SheetSkeleton/>
+        <>
+          <Skeleton sx={{mx: 1, height: 54}}/>
+          <SheetSkeleton/>
+        </>
       )}
       {_formSchema.entity && (
         <KoboSchemaProvider schema={_formSchema.entity!}>

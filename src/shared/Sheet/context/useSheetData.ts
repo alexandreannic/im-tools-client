@@ -28,12 +28,16 @@ export const useSheetData = <T extends SheetRow>({
   columnsIndex: Record<KeyOf<T>, SheetInnerColumnProps<T>>
 }) => {
   const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilterValue>>({} as any)
-  const [search, setSearch] = usePersistentState<SheetSearch<any>>({
+  const [search, setSearch] = useState<SheetSearch<any>>({
     limit: defaultLimit,
     offset: 0,
-  }, {
-    storageKey: `datatable-paginate-${id}`,
   })
+  // const [search, setSearch] = usePersistentState<SheetSearch<any>>({
+  //   limit: defaultLimit,
+  //   offset: 0,
+  // }, {
+  //   storageKey: `datatable-paginate-${id}`,
+  // })
 
   const resetSearch = () => setSearch({limit: defaultLimit, offset: 0,})
 

@@ -14,6 +14,7 @@ export enum MealVerificationAnswersStatus {
 }
 
 export interface MealVerificationAnsers {
+  id: UUID
   koboAnswerId: KoboAnswerId
   status?: MealVerificationAnswersStatus
 }

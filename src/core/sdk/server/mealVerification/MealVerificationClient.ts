@@ -1,5 +1,5 @@
 import {ApiClient} from '@/core/sdk/server/ApiClient'
-import {MealVerification, MealVerificationAnsers, MealVerificationHelper} from '@/core/sdk/server/mealVerification/MealVerification'
+import {MealVerification, MealVerificationAnsers, MealVerificationAnswersStatus, MealVerificationHelper} from '@/core/sdk/server/mealVerification/MealVerification'
 import {UUID} from '@/core/type'
 
 export class MealVerificationClient {
@@ -24,5 +24,9 @@ export class MealVerificationClient {
 
   readonly remove = (mealVerificationId: UUID) => {
     return this.client.delete<MealVerificationAnsers[]>(`/meal-verification/${mealVerificationId}`)
+  }
+
+  readonly updateAnswers = (answerId: UUID, status?: MealVerificationAnswersStatus) => {
+    return this.client.post<MealVerificationAnsers[]>(`/meal-verification/answer/${answerId}`, {body: {status}})
   }
 }

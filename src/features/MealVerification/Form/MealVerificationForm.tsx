@@ -209,7 +209,7 @@ export const MealVerificationForm = () => {
                   <Box dangerouslySetInnerHTML={{__html: m._mealVerif.selectedData(form.watch().answerIds?.length)}}/>
                   <Box sx={{mt: .5}}>
                     <Icon color="disabled" sx={{verticalAlign: 'top', mr: 1}}>subdirectory_arrow_right</Icon>
-                    {m._mealVerif.sampleSize(mealVerificationConf.sampleSizeRatio * 100)}
+                    {m._mealVerif.sampleSizeN(mealVerificationConf.sampleSizeRatio * 100)}
                     <Icon color="disabled" sx={{verticalAlign: 'top', mx: 1}}>east</Icon>
                     <Txt sx={{borderRadius: 1000, border: '1px solid ' + t.palette.success.light, py: .5, px: 1, color: t.palette.success.main}}
                          dangerouslySetInnerHTML={{

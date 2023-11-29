@@ -127,7 +127,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   .map(ChartTools.setLabel({
                     ...Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence,
                     // TODO TO REMOVE
-                    other_specify: 'Psychological abuse',
+                    // other_specify: 'Psychological abuse',
                   }))
                   .map(ChartTools.sortBy.value)
                   .get
