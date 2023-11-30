@@ -19,6 +19,7 @@ import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const DatabaseKoboTableContent = ({
   onFiltersChange,
@@ -71,8 +72,8 @@ export const DatabaseKoboTableContent = ({
       width: 0,
       type: 'select_one',
       tooltip: null,
-      renderValue: (row: KoboAnswer) => row.tags?._validation,
-      renderOption: (row: KoboAnswer) => m[row.tags?._validation!],
+      renderValue: (row: KoboAnswer) => row.tags?._validation ?? SheetUtils.blank,
+      renderOption: (row: KoboAnswer) => row.tags?._validation ? m[row.tags?._validation!] : SheetUtils.blank,
       render: (row: KoboAnswer) => (
         <>
           <AaSelectSingle
