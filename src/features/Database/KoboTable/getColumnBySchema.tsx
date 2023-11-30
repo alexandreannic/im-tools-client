@@ -23,31 +23,36 @@ const ignoredColType: KoboApiColType[] = [
   // 'note',
 ]
 
-export const getColumnBySchema = ({
+interface GetColumnBySchemaProps<T extends Record<string, any> = any> {
+  data?: T[]
+  choicesIndex: ReturnType<typeof useKoboSchema>['choicesIndex']
+  m: I18nContextProps['m']
+  translateChoice: KoboTranslateChoice
+  translateQuestion: KoboTranslateQuestion
+  groupSchemas: Record<string, KoboQuestionSchema[]>
+  onOpenGroupModal?: (_: {columnId: string, group: KoboAnswer[], event: any}) => void,
+  groupIndex?: number
+  groupName?: string
+  repeatGroupsAsColumn?: boolean
+}
+
+export const getColumnByQuestionSchema = <T extends Record<string, any | undefined>>({
   data,
   m,
-  schema,
+  q,
   groupSchemas,
   translateQuestion,
   translateChoice,
   onOpenGroupModal,
   choicesIndex,
   groupIndex,
+  getRow = _ => _ as unknown as KoboMappedAnswer,
   groupName,
   repeatGroupsAsColumn,
-}: {
-  data: any[]
-  choicesIndex: ReturnType<typeof useKoboSchema>['choicesIndex']
-  m: I18nContextProps['m']
-  translateChoice: KoboTranslateChoice
-  translateQuestion: KoboTranslateQuestion
-  schema: KoboQuestionSchema[],
-  groupSchemas: Record<string, KoboQuestionSchema[]>
-  onOpenGroupModal?: (_: {columnId: string, group: KoboAnswer[], event: any}) => void,
-  groupIndex?: number
-  groupName?: string
-  repeatGroupsAsColumn?: boolean
-}): SheetColumnProps<KoboMappedAnswer>[] => {
+}: GetColumnBySchemaProps<T> & {
+  q: KoboQuestionSchema,
+  getRow?: (_: T) => KoboMappedAnswer
+}): SheetColumnProps<T>[] => {
   const {
     getId,
     getHead,
@@ -57,21 +62,21 @@ export const getColumnBySchema = ({
       return {
         getId: (q: KoboQuestionSchema) => `${groupIndex}_${q.name}`,
         getHead: (name: string) => `[${groupIndex}] ${name}`,
-        getVal: (row: KoboMappedAnswer, name: string) => (row as any)[groupName]?.[groupIndex]?.[name]
+        getVal: (row: T, name: string) => (getRow(row) as any)[groupName]?.[groupIndex]?.[name]
       }
     return {
       getId: (q: KoboQuestionSchema) => q.name,
       getHead: (name: string) => name,
-      getVal: (row: KoboMappedAnswer, name: string) => row[name],
+      getVal: (row: T, name: string) => getRow(row)[name],
     }
   })()
 
-  return schema.filter(_ => !ignoredColType.includes(_.type)).flatMap(q => {
-    const common = {
-      id: getId(q),
-      head: Utils.removeHtml(getHead(translateQuestion(q.name))),
-      renderValue: (row: KoboMappedAnswer) => getVal(row, q.name),
-    }
+  const common = {
+    id: getId(q),
+    head: Utils.removeHtml(getHead(translateQuestion(q.name))),
+    renderValue: (row: T) => getVal(row, q.name),
+  }
+  const res: SheetColumnProps<T>[] | SheetColumnProps<T> = (() => {
     switch (q.type) {
       case 'image': {
         return {
@@ -89,7 +94,7 @@ export const getColumnBySchema = ({
           typeIcon: <SheetHeadTypeIcon children="functions" tooltip="calculate"/>,
           head: Utils.removeHtml(getHead(translateQuestion(q.name))),
           render: row => <span title={getVal(row, q.name) as string}>{getVal(row, q.name) as string}</span>,
-          options: () => seq(data).map(_ => _[q.name] ?? SheetUtils.blank).distinct(_ => _).map(_ => ({label: _, value: _})),
+          options: () => seq(data).map(_ => getRow(_)[q.name] ?? SheetUtils.blank).distinct(_ => _).map(_ => ({label: _, value: _})),
         }
       }
       case 'select_one_from_file': {
@@ -143,7 +148,7 @@ export const getColumnBySchema = ({
       case 'begin_repeat': {
         if (repeatGroupsAsColumn) {
           return mapFor(17, i => getColumnBySchema({
-            data: data?.map(_ => _[q.name]),
+            data: data?.map(_ => getRow(_)[q.name]) as any,
             groupSchemas,
             schema: groupSchemas[q.name],
             translateQuestion,
@@ -230,5 +235,19 @@ export const getColumnBySchema = ({
         }
       }
     }
-  })
+  })()
+  return [res].flat()
+}
+
+
+export const getColumnBySchema = <T extends Record<string, any>>({
+  schema,
+  ...props
+}: GetColumnBySchemaProps<T> & {
+  schema: KoboQuestionSchema[]
+}) => {
+  return schema.filter(_ => !ignoredColType.includes(_.type)).flatMap(q => getColumnByQuestionSchema({
+    q,
+    ...props,
+  }))
 }

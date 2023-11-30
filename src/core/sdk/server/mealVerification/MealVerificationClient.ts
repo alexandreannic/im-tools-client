@@ -7,7 +7,7 @@ export class MealVerificationClient {
   }
 
   readonly create = (body: Omit<MealVerification, 'id' | 'createdAt' | 'createdBy'> & {
-    answers: MealVerificationAnsers[]
+    answers: Omit<MealVerificationAnsers, 'id'>[]
   }) => {
     return this.client.put<MealVerification>(`/meal-verification`, {body})
       .then(MealVerificationHelper.mapEntity)

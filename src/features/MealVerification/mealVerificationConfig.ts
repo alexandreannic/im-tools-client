@@ -24,8 +24,9 @@ export type MealVerificationActivity<
     fetch: TCheck
     koboFormId: KoboId,
   },
-  columns: (KeyOf<Awaited<ReturnType<KoboTypedAnswerSdk[TCheck]>>['data'][0]> & KeyOf<Awaited<ReturnType<KoboTypedAnswerSdk[TData]>>['data'][0]>)[]
+  verifiedColumns: (KeyOf<Awaited<ReturnType<KoboTypedAnswerSdk[TCheck]>>['data'][0]> & KeyOf<Awaited<ReturnType<KoboTypedAnswerSdk[TData]>>['data'][0]>)[]
   joinColumn: (KeyOf<Awaited<ReturnType<KoboTypedAnswerSdk[TCheck]>>['data'][0]> & KeyOf<Awaited<ReturnType<KoboTypedAnswerSdk[TData]>>['data'][0]>)
+  dataColumns?: KeyOf<Awaited<ReturnType<KoboTypedAnswerSdk[TData]>>['data'][0]>[]
 }
 
 const registerActivity = <
@@ -48,7 +49,7 @@ export const mealVerificationActivities = seq([
       fetch: 'searchMeal_verificationEcrec',
     },
     joinColumn: 'pay_det_tax_id_num',
-    columns: [
+    verifiedColumns: [
       // 'back_donor',
       'back_consent',
       // 'back_consent_no_note',
@@ -71,6 +72,9 @@ export const mealVerificationActivities = seq([
       'many_cow',
       'many_pig',
       'many_poultry',
+    ],
+    dataColumns: [
+      'back_donor',
     ]
   }),
   registerActivity({
@@ -85,10 +89,12 @@ export const mealVerificationActivities = seq([
       fetch: 'searchMeal_verificationWinterization',
     },
     joinColumn: 'pay_det_tax_id_num',
-    columns: [
-      // 'back_enum',
-      // 'back_donor',
-      // 'back_prog_type',
+    dataColumns: [
+      'back_enum',
+      'back_donor',
+      'back_prog_type',
+    ],
+    verifiedColumns: [
       'back_consent',
       'back_consen_no_reas',
       'pay_det_tax_id_num',

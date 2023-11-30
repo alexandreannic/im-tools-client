@@ -97,7 +97,7 @@ export const MealVerificationForm = () => {
   const submit = async ({answerIds, ...form}: MealVerificationForm) => {
     try {
       const numElementsToSelect = Math.floor((mealVerificationConf.sampleSizeRatio) * answerIds.length)
-      const answers: MealVerificationAnsers[] = answerIds
+      const answers: Omit<MealVerificationAnsers, 'id'>[] = answerIds
         .sort(() => Math.random() - 0.5)
         .map((a, i) => ({
           koboAnswerId: a,

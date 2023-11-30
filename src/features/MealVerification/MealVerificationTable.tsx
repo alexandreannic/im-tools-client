@@ -14,7 +14,7 @@ import {kobo} from '@/koboDrcUaFormId'
 import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
-import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {Kobo, KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {useParams} from 'react-router'
@@ -26,6 +26,7 @@ import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {ApiPaginate} from '@/core/type'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useAsync} from '@/alexlib-labo/useAsync'
+import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
 
 interface MergedData {
   dataCheck?: KoboAnswer<any>
@@ -151,7 +152,7 @@ const MealVerificationEcrec = <
         }
         return {
           ...dataMerge,
-          ok: seq(activity.columns).sum(c => areEquals(c, dataMerge) ? 1 : 0),
+          ok: seq(activity.verifiedColumns).sum(c => areEquals(c, dataMerge) ? 1 : 0),
         } as MergedData
       }).compact().sortByNumber(_ => _.dataCheck ? 1 : 0)
     })
@@ -166,7 +167,7 @@ const MealVerificationEcrec = <
     const verified = mergedData.filter(_ => _.dataCheck)
     return {
       indicatorsOk: mergedData.sum(_ => _.ok ?? 0),
-      indicatorsVerified: verified.length * activity.columns.length,
+      indicatorsVerified: verified.length * activity.verifiedColumns.length,
       verifiedRows: verified.length,
     }
   }, [mergedData])
@@ -296,7 +297,21 @@ const MealVerificationEcrec = <
                 : <><TableIcon color="warning">schedule</TableIcon> {m._mealVerif.notVerified}</>,
               render: _ => _.dataCheck ? <TableIcon color="success">check_circle</TableIcon> : <TableIcon color="warning">schedule</TableIcon>,
             },
-            ...activity.columns.map(c => {
+            ...activity.dataColumns?.flatMap(c => {
+              const q = ctx.schemaHelper.questionIndex[c]
+              const w = getColumnByQuestionSchema({
+                data: mergedData,
+                q,
+                groupSchemas: ctx.schemaHelper.groupSchemas,
+                translateChoice: ctx.translate.choice,
+                translateQuestion: ctx.translate.question,
+                m,
+                getRow: _ => _.data,
+                choicesIndex: ctx.schemaHelper.choicesIndex,
+              })
+              return w as any
+            }) ?? [],
+            ...activity.verifiedColumns.map(c => {
               return {
                 id: c,
                 type: 'select_one',
@@ -351,7 +366,7 @@ const MealVerificationEcrec = <
               align: 'right',
               style: _ => ({fontWeight: t.typography.fontWeightBold}),
               render: _ => (
-                _.dataCheck ? toPercent(_.ok / activity.columns.length) : ''
+                _.dataCheck ? toPercent(_.ok / activity.verifiedColumns.length) : ''
               )
             }
           ]}/>
