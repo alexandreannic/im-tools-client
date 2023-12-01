@@ -7,15 +7,18 @@ import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 export const SidebarSection = ({
   title,
   children,
+  dense,
 }: {
+  dense?: boolean
   title: ReactNode
   children: ReactNode
 }) => {
   const [open, setOpen] = usePersistentState(true, {storageKey: 'sidebar-section-' + title})
+  const margin = 1 / (dense ? 4 : 2)
   return (
     <Box sx={{
-      mt: .5,
-      pb: .5,
+      mt: margin,
+      pb: margin,
       '&:not(:last-of-type)': {
         borderBottom: t => `1px solid ${t.palette.divider}`,
       }

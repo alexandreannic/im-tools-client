@@ -1,14 +1,14 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import React, {useMemo} from 'react'
-import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
+import {Sidebar, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import * as yup from 'yup'
 import {databaseModule} from '@/features/Database/databaseModule'
 import {HashRouter as Router, Navigate, NavLink, Outlet, Route, Routes} from 'react-router-dom'
 import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
-import {Skeleton, Tab, Tabs, Tooltip} from '@mui/material'
+import {Box, Icon, Skeleton, Tab, Tabs, Tooltip} from '@mui/material'
 import {useLocation, useParams} from 'react-router'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
@@ -43,7 +43,7 @@ export const DatabaseWithContext = () => {
   const ctx = useDatabaseContext()
 
   const parsedFormNames = useMemo(() => {
-    const grouped = seq(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.project ?? m.others)
+    const grouped = seq(ctx.formAccess)?.map(_ => ({..._, parsedName: KoboFormSdk.parseFormName(_.name)})).groupBy(_ => _.parsedName.program ?? m.others)
     return new Enum(grouped).transform((k, v) => [k, v.sort((a, b) => a.name.localeCompare(b.name))]).sort(([ak], [bk]) => ak.localeCompare(bk)).get()
   }, [ctx.formAccess])
 
@@ -52,11 +52,21 @@ export const DatabaseWithContext = () => {
       title={m._koboDatabase.title()}
       sidebar={
         <Sidebar headerId="app-header">
-          {ctx.isAdmin && (
-            <DatabaseNew onAdded={() => ctx._forms.fetch({force: true, clean: false})}>
-              <AaBtn icon="add" sx={{mx: 1, mb: 1}} variant="contained">{m._koboDatabase.registerNewForm}</AaBtn>
-            </DatabaseNew>
-          )}
+          <NavLink to={databaseModule.siteMap.index}>
+            {({isActive, isPending}) => (
+              <SidebarItem icon="home">
+                All forms
+                {ctx.isAdmin && (
+                  <DatabaseNew onAdded={() => ctx._forms.fetch({force: true, clean: false})}>
+                    <AaBtn size="small" sx={{ml: 'auto', my: '3px'}} variant="contained" tooltip={m._koboDatabase.registerNewForm}>
+                      <Icon>add</Icon>
+                    </AaBtn>
+                  </DatabaseNew>
+                )}
+              </SidebarItem>
+            )}
+          </NavLink>
+          <SidebarHr/>
           {ctx._forms.loading ? (
             <>
               <SidebarItem>
@@ -70,12 +80,19 @@ export const DatabaseWithContext = () => {
               </SidebarItem>
             </>
           ) : Enum.entries(parsedFormNames)?.map(([category, forms]) => (
-            <SidebarSection title={category} key={category}>
+            <SidebarSection dense title={category} key={category}>
               {forms.map(_ =>
                 <Tooltip key={_.id} title={_.parsedName.name} placement="right-end">
                   <NavLink to={databaseModule.siteMap.home(_.serverId, _.id)}>
                     {({isActive, isPending}) => (
-                      <SidebarItem dense onClick={() => undefined} key={_.id} active={isActive}>{_.parsedName.name}</SidebarItem>
+                      <SidebarItem
+                        size={forms.length > 30 ? 'tiny' : 'small'}
+                        sx={{height: 26}} onClick={() => undefined}
+                        key={_.id}
+                        active={isActive}
+                      >
+                        {_.parsedName.name}
+                      </SidebarItem>
                     )}
                   </NavLink>
                 </Tooltip>

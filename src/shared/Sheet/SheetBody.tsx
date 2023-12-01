@@ -2,7 +2,7 @@ import {Checkbox} from '@mui/material'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import React from 'react'
 import {SheetContext} from '@/shared/Sheet/context/SheetContext'
-import {SheetRow} from '@/shared/Sheet/util/sheetType'
+import {SheetRow, SheetTableProps} from '@/shared/Sheet/util/sheetType'
 
 export const SheetBody = (() => {
   const Component = <T extends SheetRow>({
@@ -11,7 +11,8 @@ export const SheetBody = (() => {
     columns,
     getRenderRowKey,
     selected,
-  }: Pick<SheetContext<T>,
+    onClickRows,
+  }: Pick<SheetTableProps<any>, 'onClickRows'> & Pick<SheetContext<T>,
     'selected' |
     'select' |
     'columns' |
@@ -23,9 +24,9 @@ export const SheetBody = (() => {
       <>
         {data.map((item, rowI) => (
           <tr
-            className="tr"
+            className={'tr' + (onClickRows ? ' tr-clickable' : '')}
             key={getRenderRowKey ? getRenderRowKey(item, rowI) : rowI}
-            // onClick={e => onClickRows?.(item, e)}
+            onClick={e => onClickRows?.(item, e)}
           >
             {select && (
               <td className="td td-center td-sticky-start">
@@ -42,7 +43,6 @@ export const SheetBody = (() => {
                   onClick={_.onClick ? () => _.onClick?.(item) : undefined}
                   className={[
                     'td',
-                    'td-clickable',
                     _.stickyEnd ? 'td-sticky-end' : '',
                     _.type === 'number' ? 'td-right' : '',
                     fnSwitch(_.align!, {

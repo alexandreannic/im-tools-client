@@ -420,6 +420,9 @@ const tableTheme = (t: Theme, colorOverOpaque: string) => ({
     border: 'none',
     borderRadius: 0,
   },
+  '.table .tr-clickable': {
+    cursor: 'pointer',
+  },
   '.table tr': {
     whiteSpace: 'nowrap',
   },

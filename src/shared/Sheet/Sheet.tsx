@@ -82,8 +82,9 @@ const _Sheet = <T extends SheetRow>({
   hidePagination,
   rowsPerPageOptions,
   title,
+  onClickRows,
   ...props
-}: Pick<SheetTableProps<T>, 'hidePagination' | 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
+}: Pick<SheetTableProps<T>, 'onClickRows' | 'hidePagination' | 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
   const ctx = useSheetContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   useEffect(() => ctx.select?.onSelect(ctx.selected.toArray), [ctx.selected.get])
@@ -204,6 +205,7 @@ const _Sheet = <T extends SheetRow>({
             {map(ctx.data.filteredSortedAndPaginatedData, data => {
               return data.data.length > 0 ? (
                 <SheetBody
+                  onClickRows={onClickRows}
                   data={data.data}
                   select={ctx.select}
                   columns={filteredColumns}

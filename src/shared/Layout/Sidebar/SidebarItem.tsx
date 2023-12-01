@@ -3,6 +3,7 @@ import {ReactNode} from 'react'
 import {Box, ButtonBase, ButtonBaseProps, Icon, Theme, useTheme} from '@mui/material'
 import {alpha} from '@mui/material/styles'
 import {makeSx} from 'mui-extension'
+import {fnSwitch} from '@alexandreannic/ts-utils'
 
 const css = makeSx({
   i: {
@@ -24,14 +25,14 @@ export interface SidebarItemProps extends ButtonBaseProps {
   href?: string
   target?: string
   active?: boolean
-  dense?: boolean
+  size?: 'normal' | 'small' | 'tiny'
   to?: string
 }
 
 export const SidebarItem = ({
   children,
   icon,
-  dense,
+  size,
   iconEnd,
   className,
   active,
@@ -49,7 +50,11 @@ export const SidebarItem = ({
         display: 'flex',
         alignItems: 'center',
         textDecoration: 'inherit',
-        minHeight: dense ? 30 : 36,
+        minHeight: fnSwitch(size!, {
+          normal: 36,
+          small: 30,
+          tiny: 28
+        }, () => 36),
         overflow: 'hidden',
         minWidth: 0,
         whiteSpace: 'nowrap',
@@ -58,7 +63,11 @@ export const SidebarItem = ({
         color: t => t.palette.text.secondary,
         pr: 1,
         pl: 1.5,
-        my: 1 / 2,
+        my: 1 / (fnSwitch(size!, {
+          normal: 2,
+          small: 4,
+          tiny: 8
+        }, () => 36)),
         borderTopRightRadius: 42,
         borderBottomRightRadius: 42,
         ...props.disabled && {
@@ -81,6 +90,7 @@ export const SidebarItem = ({
       {icon && (typeof icon === 'string' ? <Icon sx={css.i}>{icon}</Icon> : <Box sx={css.i}>{icon}</Box>)}
       <Box
         sx={{
+          width: '100%',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',

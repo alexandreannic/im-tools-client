@@ -10,7 +10,7 @@ export interface KoboFormCreate {
 
 interface KoboParsedFormName {
   name: string
-  project?: string
+  program?: string
   donors?: string[]
 }
 
@@ -24,7 +24,7 @@ export class KoboFormSdk {
     if (match) {
       const [, sector, donors, formName] = match
       return {
-        project: sector,
+        program: sector,
         name: formName,
         donors: donors?.split(','),
       }

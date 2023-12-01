@@ -14,8 +14,8 @@ import {useRouter} from 'next/router'
 import {seq} from '@alexandreannic/ts-utils'
 
 export const AdminUsers = () => {
-  const {api} = useAppSettings()
-  const {setSession} = useSession()
+  const {api, conf} = useAppSettings()
+  const {session, setSession} = useSession()
   const _connectAs = useFetcher(api.session.connectAs)
   const _users = useFetcher(api.user.search)
   const {m, formatDate, formatDateTime} = useI18n()
@@ -105,6 +105,7 @@ export const AdminUsers = () => {
               align: 'right',
               render: _ => (
                 <AAIconBtn
+                  disabled={_.email === conf.contact || _.email === session.email}
                   children="visibility"
                   loading={_connectAs.loading}
                   onClick={() => connectAs(_.email)}

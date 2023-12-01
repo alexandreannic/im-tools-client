@@ -8,6 +8,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {KoboForm, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {seq} from '@alexandreannic/ts-utils'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 
 export interface DatabaseContext {
   _forms: UseFetcher<ApiSdk['kobo']['form']['getAll']>
@@ -28,7 +29,7 @@ export const DatabaseProvider = ({
 }) => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
-  const _forms = useFetcher(api.kobo.form.getAll)
+  const _forms = useFetcher(() => api.kobo.form.getAll().then(_ => seq(_).sortByString(_ => KoboFormSdk.parseFormName(_.name).program ?? '') as KoboForm[]))
   const {toastHttpError} = useAaToast()
 
   const getForm = useMemo(() => {

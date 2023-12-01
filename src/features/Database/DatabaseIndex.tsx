@@ -1,9 +1,14 @@
-import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {KoboForm} from '@/core/sdk/server/kobo/Kobo'
 import {useI18n} from '@/core/i18n'
 import {useNavigate} from 'react-router'
-import {databaseModule} from '@/features/Database/databaseModule'
 import {Page, PageTitle} from '@/shared/Page'
+import {Panel} from '@/shared/Panel'
+import {Sheet} from '@/shared/Sheet/Sheet'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
+import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
+import React from 'react'
+import {Txt} from 'mui-extension'
+import {databaseModule} from '@/features/Database/databaseModule'
 
 export const DatabaseIndex = ({
   forms,
@@ -13,24 +18,30 @@ export const DatabaseIndex = ({
   const {formatDate, m} = useI18n()
   const navigate = useNavigate()
   return (
-    <Page width="xs">
+    <Page width="md">
       {forms && forms.length > 0 && (
-        <PageTitle>{m.selectADatabase}</PageTitle>
+        <>
+          <PageTitle>{m.selectADatabase}</PageTitle>
+          <Panel>
+            <Sheet defaultLimit={200} id="kobo-index" onClickRows={_ => navigate(databaseModule.siteMap.database.absolute(_.serverId, _.id))} data={forms} columns={[
+              {id: 'name', type: 'string', head: m.name, render: _ => <Txt bold>{KoboFormSdk.parseFormName(_.name)?.name}</Txt>},
+              {id: 'program', type: 'select_one', head: m.program, render: _ => KoboFormSdk.parseFormName(_.name)?.program},
+              {
+                id: 'donors',
+                head: m.donor,
+                render: _ => KoboFormSdk.parseFormName(_.name)?.donors?.join(',')
+              },
+              {id: 'createdAt', type: 'date', head: m.createdAt, render: _ => <Txt color="hint">{formatDate(_.createdAt)}</Txt>},
+              {id: 'updatedAt', type: 'date', head: m.updatedAt, render: _ => <Txt color="hint">{formatDate(_.updatedAt)}</Txt>},
+              {
+                id: 'actions', width: 0, align: 'right', head: '', render: _ => <>
+                  <TableIconBtn color="primary">chevron_right</TableIconBtn>
+                </>
+              },
+            ]}/>
+          </Panel>
+        </>
       )}
-      <ScRadioGroup>
-        {forms?.map(form =>
-          <ScRadioGroupItem
-            value={form.id}
-            hideRadio={true}
-            key={form.id}
-            onClick={() => navigate(databaseModule.siteMap.database.absolute(form.serverId, form.id))}
-            title={form.name}
-            // description={
-            //   <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-            //     <Box>{form.deployment__submission_count}</Box>
-          />
-        )}
-      </ScRadioGroup>
     </Page>
   )
 }

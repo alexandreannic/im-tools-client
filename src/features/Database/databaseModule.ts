@@ -2,6 +2,7 @@ const base = (serverId = ':serverId', formId = ':formId') => `/form/${serverId}/
 export const databaseModule = {
   basePath: '/database',
   siteMap: {
+    index: '/',
     home: base,
     entry: {
       relative: `:id`,
