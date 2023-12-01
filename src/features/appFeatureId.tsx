@@ -5,6 +5,7 @@ import {Access} from '@/core/sdk/server/access/Access'
 import {kobo} from '@/koboDrcUaFormId'
 
 export enum AppFeatureId {
+  meal = 'meal',
   dashboards = 'dashboards',
   kobo_database = 'kobo_database',
   mpca = 'mpca',
@@ -67,6 +68,20 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'savings',
     color: 'green',
     path: '/mpca',
+    showIf: (u, accesses) => {
+      return u?.admin || accesses && !!accesses
+        .filter(Access.filterByFeature(AppFeatureId.kobo_database))
+        .find(_ => _.params?.koboFormId === kobo.drcUa.form.bn_re)
+      // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
+    }
+  },
+  meal: {
+    id: AppFeatureId.meal,
+    name: 'MEAL',
+    // materialIcons: 'display_settings',
+    materialIcons: 'troubleshoot',
+    color: '#1f9b97',
+    path: '/meal',
     showIf: (u, accesses) => {
       return u?.admin || accesses && !!accesses
         .filter(Access.filterByFeature(AppFeatureId.kobo_database))

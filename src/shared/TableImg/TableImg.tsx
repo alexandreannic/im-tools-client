@@ -1,6 +1,6 @@
 import React from 'react'
 import {makeStyles} from 'tss-react/mui'
-import {Tooltip} from '@mui/material'
+import {BoxProps, Tooltip} from '@mui/material'
 
 const useStyles = makeStyles<{url: string, size: number, tooltipSize?: number}>()((t, {url, size, tooltipSize}) => ({
   common: {
@@ -33,11 +33,11 @@ export const TableImg = ({
   size = 30,
   tooltipSize,
 }: {
-  tooltipSize?: number
+  tooltipSize?: number | null
   size?: number
   url: string
 }) => {
-  const {classes, cx} = useStyles({url, size, tooltipSize})
+  const {classes, cx} = useStyles({url, size, tooltipSize: tooltipSize ?? undefined})
   return url ? (
     <Tooltip enterDelay={340} title={tooltipSize && <div className={cx(classes.common, classes.tooltip)}/>}>
       <a href={url} target="_blank">

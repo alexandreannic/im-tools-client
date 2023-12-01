@@ -134,8 +134,8 @@ export const CfmModule = () => {
   const {api} = useAppSettings()
   const _schemas = useFetcher(async () => {
     const [external, internal] = await Promise.all([
-      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.meal_cfmExternal),
-      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.meal_cfmInternal),
+      api.koboApi.getForm({id: kobo.drcUa.form.meal_cfmExternal}),
+      api.koboApi.getForm({id: kobo.drcUa.form.meal_cfmInternal}),
     ])
     return {external, internal}
   })

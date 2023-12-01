@@ -9,6 +9,7 @@ const generalStyles = <GlobalStyles styles={{
     background: '#fff',
   }
 }}/>
+
 const SnapshotProtectionMonitoringPage = () => {
   return (
     <ThemeProvider theme={muiTheme({

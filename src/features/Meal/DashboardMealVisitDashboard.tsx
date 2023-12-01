@@ -1,40 +1,40 @@
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import React, {useEffect, useMemo, useState} from 'react'
-import {Enum, map, mapFor, Seq, seq} from '@alexandreannic/ts-utils'
+import React, {useMemo, useState} from 'react'
+import {Enum, map, mapFor, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
-import {DashboardLayout} from '../shared/DashboardLayout'
-import {DashboardFilterOptions} from '../shared/DashboardFilterOptions'
+import {DashboardLayout} from '../Dashboard/shared/DashboardLayout'
+import {DashboardFilterOptions} from '../Dashboard/shared/DashboardFilterOptions'
 import {Box, Icon} from '@mui/material'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
-import {makeKoboBarChartComponent} from '../shared/KoboBarChart'
+import {makeKoboBarChartComponent} from '../Dashboard/shared/KoboBarChart'
 import {DebouncedInput} from '@/shared/DebouncedInput'
-import {kobo} from '@/koboDrcUaFormId'
-import {useAppSettings} from '@/core/context/ConfigContext'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {Period} from '@/core/type'
 import {Lazy} from '@/shared/Lazy'
-import {KoboUkraineMap} from '../shared/KoboUkraineMap'
+import {KoboUkraineMap} from '../Dashboard/shared/KoboUkraineMap'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {CommentsPanel} from '@/features/Dashboard/DashboardMealMonitoring/CommentsPanel'
+import {CommentsPanel} from '@/features/Meal/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
-import {OblastIndex, OblastISO, OblastKoboName} from '@/shared/UkraineMap/oblastIndex'
+import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {useDashboardMealVisitContext} from '@/features/Meal/DashboardMealVisitContext'
+import {NavLink} from 'react-router-dom'
+import {mealModule} from '@/features/Meal/DashboardMealVisit'
 import {Meal_VisitMonitoringOptions} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
 import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
+import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 
 export interface DashboardPageProps {
-  filters: OptionFilters
+  filters: Filters
   data: Seq<KoboAnswer<Meal_VisitMonitoring>>
 }
 
-const mapOblast = (_: OblastKoboName) => OblastIndex.byKoboName(_).iso
+const mapOblast: Record<string, OblastISO> = OblastIndex.koboOblastIndexIso
 
-const filterShape = DashboardFilterHelper.makeShape<typeof Meal_VisitMonitoringOptions>()({
+export const filterShape = DashboardFilterHelper.makeShape<typeof Meal_VisitMonitoringOptions>()({
   oblast: {
     icon: 'location_on',
     options: 'mdro',
@@ -89,38 +89,21 @@ const filterShape = DashboardFilterHelper.makeShape<typeof Meal_VisitMonitoringO
   },
 })
 
-type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape>
-
 export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<Meal_VisitMonitoring, typeof Meal_VisitMonitoringOptions>({
   options: Meal_VisitMonitoringOptions
 })
 
-export const DashboardMealVisitMonitoring = () => {
-  const {api} = useAppSettings()
+export type Filters = DashboardFilterHelper.InferShape<typeof filterShape>
+
+export const DashboardMealVisitDashboard = () => {
+  const ctx = useDashboardMealVisitContext()
+  const schemaCtx = useKoboSchemaContext()
   const {m, formatDateTime, formatDate} = useI18n()
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.meal_visitMonitoring))
-  const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
-  const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
+  const [optionFilter, setOptionFilters] = useState<Filters>(seq(Enum.keys(filterShape)).reduceObject<Filters>(_ => [_, []]))
 
-  const request = (filter: Partial<Period>) => api.kobo.typedAnswers.searchMeal_VisitMonitoring({
-    filters: {
-      start: filter.start,
-      end: filter.end,
-    }
-  }).then(_ => _.data)
-
-  const _answers = useFetcher(request)
-
-  useEffect(() => {
-    _period.fetch()
-  }, [])
-  useEffect(() => {
-    map(_period.entity, setPeriodFilter)
-  }, [_period.entity])
-
-  useEffect(() => {
-    _answers.fetch({force: true, clean: false}, periodFilter)
-  }, [periodFilter])
+  const data = useMemo(() => {
+    return map(ctx.fetcherAnswers.entity, _ => seq(DashboardFilterHelper.filterData(_, filterShape, optionFilter)))
+  }, [ctx.fetcherAnswers.entity, optionFilter])
 
   const getChoices = <T extends keyof typeof Meal_VisitMonitoringOptions>(
     questionName: T, {
@@ -136,15 +119,11 @@ export const DashboardMealVisitMonitoring = () => {
       .filter(_ => !(skipKey as string[]).includes(_.value))
   }
 
-  const data = useMemo(() => {
-    return map(_answers.entity, _ => seq(DashboardFilterHelper.filterData(_, filterShape, optionFilter)))
-  }, [_answers.entity, optionFilter])
-
   return (
     <DashboardLayout
       hideEuLogo
       pageWidth={1360}
-      loading={_answers.loading}
+      loading={ctx.fetcherAnswers.loading}
       title={m.ukraine}
       subTitle={m.mealVisitMonitoringDashboard}
       action={
@@ -169,15 +148,15 @@ export const DashboardMealVisitMonitoring = () => {
         }}>
           <DebouncedInput<[Date | undefined, Date | undefined]>
             debounce={400}
-            value={[periodFilter.start, periodFilter.end]}
-            onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
+            value={[ctx.periodFilter.start, ctx.periodFilter.end]}
+            onChange={([start, end]) => ctx.setPeriodFilter(prev => ({...prev, start, end}))}
           >
             {(value, onChange) => <PeriodPicker
               sx={{marginTop: '-6px'}}
               defaultValue={value ?? [undefined, undefined]}
               onChange={onChange}
-              min={_period.entity?.start}
-              max={_period.entity?.end}
+              min={ctx.fetcherPeriod.entity?.start}
+              max={ctx.fetcherPeriod.entity?.end}
             />}
           </DebouncedInput>
           {Enum.entries(filterShape).map(([k, shape]) =>
@@ -202,7 +181,7 @@ export const DashboardMealVisitMonitoring = () => {
                   <KoboUkraineMap
                     fillBaseOn="value"
                     data={data}
-                    getOblast={_ => mapOblast(_.md_det_oblast!)}
+                    getOblast={_ => mapOblast[_.md_det_oblast!]}
                     value={_ => true}
                     base={_ => _.md_det_oblast !== undefined}
                   />
@@ -265,29 +244,39 @@ export const DashboardMealVisitMonitoring = () => {
                 <SlidePanel title={`${m.comments} (${data.length})`} BodyProps={{sx: {pr: 0}}}>
                   <Lazy deps={[data]} fn={() => data.map(row => ({
                     id: row.id,
-                    title: (Meal_VisitMonitoringOptions.mdp as any)[row.mdp!],
+                    title: <>
+                      {schemaCtx.translate.choice('mdp', row.mdp)}
+                      {/*<AAIconBtn>chevron_right</AAIconBtn>*/}
+                    </>,
                     date: row.mdd ?? row.end,
                     desc: row.fcpc,
                     children: (
-                      <>
-                        {row.fcpl && (
-                          <Box component="a" target="_blank" href={row.fcpl} sx={{
-                            height: 90,
-                            width: 90,
-                            display: 'flex',
-                            alignItems: 'center',
-                            borderRadius: '6px',
-                            justifyContent: 'center',
-                            color: t => t.palette.primary.main,
-                            border: t => `1px solid ${t.palette.divider}`
-                          }}>
-                            <Icon>open_in_new</Icon>
-                          </Box>
-                        )}
-                        {mapFor(10, i =>
-                          <KoboAttachedImg key={i} attachments={row.attachments} size={90} fileName={(row as any)['fcp' + (i + 1)]}/>
-                        )}
-                      </>
+                      <Box>
+                        <Box sx={{display: 'flex', flexWrap: 'wrap', '& > *': {mb: 1, mr: 1}}}>
+                          {row.fcpl && (
+                            <Box component="a" target="_blank" href={row.fcpl} sx={{
+                              height: 90,
+                              width: 90,
+                              display: 'flex',
+                              alignItems: 'center',
+                              borderRadius: '6px',
+                              justifyContent: 'center',
+                              color: t => t.palette.primary.main,
+                              border: t => `1px solid ${t.palette.divider}`
+                            }}>
+                              <Icon>open_in_new</Icon>
+                            </Box>
+                          )}
+                          {mapFor(10, i =>
+                            <KoboAttachedImg key={i} attachments={row.attachments} size={90} fileName={(row as any)['fcp' + (i + 1)]}/>
+                          )}
+                        </Box>
+                        <Box sx={{textAlign: 'right'}}>
+                          <NavLink to={mealModule.siteMap.details(row.id)}>
+                            <AaBtn iconAfter="chevron_right">View details</AaBtn>
+                          </NavLink>
+                        </Box>
+                      </Box>
                     )
                   }))}>
                     {_ => <CommentsPanel data={_}/>}

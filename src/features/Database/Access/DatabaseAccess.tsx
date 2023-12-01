@@ -19,12 +19,12 @@ import {AccessTable} from '@/features/Access/AccessTable'
 
 export const DatabaseAccessRoute = () => {
   const {api} = useAppSettings()
-  const _formSchemas = useFetchers(api.koboApi.getForm, {requestKey: ([server, form]) => form})
+  const _formSchemas = useFetchers(api.koboApi.getForm, {requestKey: ([p]) => p.id})
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
   const form = _formSchemas.get(formId)
 
   useEffect(() => {
-    _formSchemas.fetch({force: true}, serverId, formId)
+    _formSchemas.fetch({force: true}, {serverId, id: formId})
   }, [serverId, formId])
 
   return (

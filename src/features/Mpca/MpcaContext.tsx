@@ -50,7 +50,7 @@ export const MpcaProvider = ({
 }) => {
   const {api} = useAppSettings()
 
-  const _form = useFetcher(() => api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.bn_re))
+  const _form = useFetcher(() => api.koboApi.getForm({id: kobo.drcUa.form.bn_re}))
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)//
 

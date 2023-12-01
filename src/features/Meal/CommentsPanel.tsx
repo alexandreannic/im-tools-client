@@ -10,7 +10,7 @@ export interface CommentsPanelProps {
   pageSize?: number
   data: Seq<{
     id: number | string
-    title: string
+    title: ReactNode
     date?: Date
     desc?: string
     children?: ReactNode
@@ -43,9 +43,7 @@ export const CommentsPanel = memo(({
               <ViewMoreText limit={210} children={row.desc}/>
             </Txt>
           )}
-          <Box sx={{display: 'flex', flexWrap: 'wrap', '& > *': {mb: 1, mr: 1}}}>
-            {row.children}
-          </Box>
+          {row.children}
         </Box>
       ))}
       <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

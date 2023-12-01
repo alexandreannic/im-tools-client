@@ -23,6 +23,7 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LicenseInfo} from '@mui/x-license-pro'
 import {useRouter} from 'next/router'
 import {initSentry} from '@/plugins/Sentry'
+import OpenAI from 'openai'
 
 LicenseInfo.setLicenseKey(appConfig.muiProLicenseKey ?? '')
 
