@@ -88,8 +88,8 @@ export class KoboApiSdk {
       )
   }
 
-  readonly getForm = (serverId: UUID, formId: KoboId): Promise<KoboApiForm> => {
-    return this.client.get(`/kobo-api/${serverId}/${formId}`)
+  readonly getForm = ({serverId = kobo.drcUa.server.prod, id}: {serverId?: UUID, id: KoboId}): Promise<KoboApiForm> => {
+    return this.client.get(`/kobo-api/${serverId}/${id}`)
   }
 
   readonly getEditUrl = ({serverId = kobo.drcUa.server.prod, formId, answerId}: {

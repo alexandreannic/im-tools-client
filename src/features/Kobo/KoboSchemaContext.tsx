@@ -1,7 +1,6 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState} from 'react'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {MealVerificationAnsers} from '@/core/sdk/server/mealVerification/MealVerification'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
@@ -35,14 +34,13 @@ export const KoboSchemaProvider = ({
   const [langIndex, setLangIndex] = useState<number>(defaultLangIndex)
 
   const schemaHelper = useKoboSchema({schema: schema})
-  const {translateQuestion, translateChoice} = useMemo(() => getKoboTranslations({
-    schema,
-    langIndex,
-    questionIndex: schemaHelper.questionIndex,
-  }), [schema, langIndex])
-
-  return (
-    <Context.Provider value={{
+  const res = useMemo(() => {
+    const {translateQuestion, translateChoice} = getKoboTranslations({
+      schema,
+      langIndex,
+      questionIndex: schemaHelper.questionIndex,
+    })
+    return {
       schemaUnsanitized: schema,
       langIndex,
       schemaHelper,
@@ -51,7 +49,11 @@ export const KoboSchemaProvider = ({
         choice: translateChoice,
         question: translateQuestion,
       }
-    }}>
+    }
+  }, [schema, langIndex])
+
+  return (
+    <Context.Provider value={res}>
       {children}
     </Context.Provider>
   )

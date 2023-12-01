@@ -73,7 +73,7 @@ export const DatabaseTable = ({
   const {accesses, session} = useSession()
   const {toastHttpError, toastLoading} = useAaToast()
 
-  const _formSchema = useFetcher(() => schema ? Promise.resolve(schema) : api.koboApi.getForm(serverId, formId))
+  const _formSchema = useFetcher(() => schema ? Promise.resolve(schema) : api.koboApi.getForm({serverId, id: formId}))
   const _form = useFetcher(() => form ? Promise.resolve(form) : api.kobo.form.get(formId))
   const _answers = useFetcher(() => api.kobo.answer.searchByAccess({formId}))
 

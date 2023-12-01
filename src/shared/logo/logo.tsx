@@ -90,3 +90,21 @@ export const UsaidLogo = ({
     />
   )
 }
+
+export const DRCLogoLarge = ({
+  height = 24,
+  ...props
+}: {
+  height?: number
+} & BoxProps) => {
+  return (
+    <Box
+      component="img"
+      src="/static/drc-logo-large.png"
+      height={height}
+      alt="DRC Logo"
+      {...props}
+    />
+
+  )
+}

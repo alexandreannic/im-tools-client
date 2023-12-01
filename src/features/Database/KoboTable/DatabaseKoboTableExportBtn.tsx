@@ -2,7 +2,7 @@ import {useAsync} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray, GenerateXlsFromArrayParams} from '@/shared/Sheet/util/generateXLSFile'
 import {Utils} from '@/utils/utils'
 import {Enum, map, mapFor, seq} from '@alexandreannic/ts-utils'
-import {getKoboPath, getUnsecureKoboImgUrl} from '@/shared/TableImg/KoboAttachedImg'
+import {koboImgHelper} from '@/shared/TableImg/KoboAttachedImg'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
@@ -52,7 +52,7 @@ const renderExportSchema = <T extends KoboMappedAnswer>({
         return {
           head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
           render: (row: T) => {
-            return map(getKoboPath(row.attachments, getVal(row, q.name) as string), getUnsecureKoboImgUrl)
+            return koboImgHelper({attachments: row.attachments, fileName: getVal(row, q.name)}).fullUrl
           },
         }
       case 'select_one': {

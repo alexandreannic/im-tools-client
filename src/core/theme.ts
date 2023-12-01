@@ -184,6 +184,10 @@ export const muiTheme = ({
           '.recharts-surface': {
             overflow: 'visible',
           },
+          '@page': {
+            // marginTop: '80px',
+            paddingTop: '80px',
+          },
           b: {
             fontWeight: 'bold',
           },
