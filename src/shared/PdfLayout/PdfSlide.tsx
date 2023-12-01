@@ -8,19 +8,28 @@ import {DRCLogo, EULogo} from '../logo/logo'
 import {uppercaseHandlingAcronyms} from '@/utils/utils'
 import {PanelBodyProps} from '../Panel/PanelBody'
 
-export const PdfSlide = (props: BoxProps) => {
+export const PdfSlide = ({
+  format = 'horizontal',
+  allowOverflow,
+  ...props
+}: {allowOverflow?: boolean, format?: 'horizontal' | 'vertical'} & BoxProps) => {
+  const x = '29.7cm'
+  const y = '21.0cm'
+  const width = format === 'horizontal' ? x : y
+  const height = format === 'horizontal' ? y : x
   return (
     <Box
       {...props}
       sx={{
         background: t => t.palette.background.default,
         p: 0,
-        overflow: 'hidden',
-        width: '29.7cm',
-        height: '21.0cm',
+        // overflow: 'hidden',
+        width,
+        height: allowOverflow ? undefined : height,
         '@media screen': {
           // aspectRatio: (297 / 210) + '',
-          height: '21.0cm',
+          height: allowOverflow ? undefined : height,
+          width,
           mb: 16,
           borderRadius: '6px',
           boxShadow: t => t.shadows[1],

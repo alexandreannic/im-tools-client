@@ -12,7 +12,7 @@ import {Box} from '@mui/material'
 export const DatabaseSources = () => {
   const {api} = useAppSettings()
   const _allKoboForm = useFetcher(() => api.koboApi.getForms(kobo.drcUa.server.prod))
-  const _sources = useFetchers((formId: UUID) => api.koboApi.getForm(kobo.drcUa.server.prod, formId), {
+  const _sources = useFetchers((formId: UUID) => api.koboApi.getForm({id: formId}), {
     requestKey: ([_]) => _
   })
   const [mainSource, setMainSource] = useState<UUID | undefined>()

@@ -12,7 +12,6 @@ import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {kobo} from '@/koboDrcUaFormId'
 import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
@@ -65,7 +64,7 @@ export const MealVerificationTable = () => {
   const {api} = useAppSettings()
   const ctx = useMealVerificationContext()
   const entity = useMemo(() => ctx.fetcherVerifications.entity?.find(_ => _.id === id), [id])
-  const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm(kobo.drcUa.server.prod, formId))
+  const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm({id: formId}))
   const fetcherToVerifyAnswers = useFetcher(api.mealVerification.getAnswers)
 
   useEffect(() => {

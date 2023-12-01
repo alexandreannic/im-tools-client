@@ -95,8 +95,8 @@ export const ShelterWithAccess = () => {
   const fetcherSchema = useFetcher(async () => {
     if (!access) return
     const [ta, nta] = await Promise.all([
-      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
-      api.koboApi.getForm(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta),
+      api.koboApi.getForm({id: kobo.drcUa.form.shelter_ta}),
+      api.koboApi.getForm({id: kobo.drcUa.form.shelter_nta}),
     ])
     return {ta, nta}
   })

@@ -12,6 +12,7 @@ enum Env {
   NEXT_PUBLIC_MS_AUTHORITY = 'NEXT_PUBLIC_MS_AUTHORITY',
   NEXT_PUBLIC_APP_OFF = 'NEXT_PUBLIC_APP_OFF',
   NEXT_PUBLIC_MUI_PRO_LICENSE_KEY = 'NEXT_PUBLIC_MUI_PRO_LICENSE_KEY',
+  NEXT_PUBLIC_CHATGPT_APIKEY = 'NEXT_PUBLIC_CHATGPT_APIKEY',
 }
 
 const persistedTempEnvVariablesForFront: { [key in Env]: string | undefined } = {
@@ -25,6 +26,7 @@ const persistedTempEnvVariablesForFront: { [key in Env]: string | undefined } = 
   NEXT_PUBLIC_MS_AUTHORITY: process.env.NEXT_PUBLIC_MS_AUTHORITY,
   NEXT_PUBLIC_APP_OFF: process.env.NEXT_PUBLIC_APP_OFF,
   NEXT_PUBLIC_MUI_PRO_LICENSE_KEY: process.env.NEXT_PUBLIC_MUI_PRO_LICENSE_KEY,
+  NEXT_PUBLIC_CHATGPT_APIKEY: process.env.NEXT_PUBLIC_CHATGPT_APIKEY,
 }
 
 const _ = env(persistedTempEnvVariablesForFront)
@@ -53,6 +55,7 @@ export const appConfig = {
     clientId: _(required)(Env.NEXT_PUBLIC_MS_CLIENT_ID),
     authority: _(required)(Env.NEXT_PUBLIC_MS_AUTHORITY),
   },
+  chatGptApiKey: _()(Env.NEXT_PUBLIC_CHATGPT_APIKEY),
   appOff: _(bool, defaultValue(false))(Env.NEXT_PUBLIC_APP_OFF),
   externalLink: {
     mealReferralMatrix: 'https://drcngo.sharepoint.com/:x:/r/sites/UKRPortal/_layouts/15/Doc.aspx?sourcedoc=%7B401B9D94-94AF-4D88-A85D-BBCCAC7196FE%7D&file=DRC%20Ukraine%20CFM%20Referral%20Matrix_updated.xlsx&action=default&mobileredirect=true'
