@@ -89,14 +89,6 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },
-  meal_verification: {
-    id: AppFeatureId.meal_verification,
-    name: 'MEAL Verifications',
-    materialIcons: 'troubleshoot',
-    color: '#afd0d6',
-    path: '/meal-verification',
-    showIf: _ => _ && _?.admin
-  },
   activity_info: {
     materialIcons: 'group_work',
     id: AppFeatureId.activity_info,
