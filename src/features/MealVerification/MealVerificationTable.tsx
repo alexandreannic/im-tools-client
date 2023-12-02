@@ -26,6 +26,7 @@ import {ApiPaginate} from '@/core/type'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
+import {useSession} from '@/core/Session/SessionContext'
 
 interface MergedData {
   dataCheck?: KoboAnswer<any>
@@ -39,7 +40,7 @@ export const MealVerificationTable = () => {
   const {id} = paramSchema.validateSync(useParams())
   const {api} = useAppSettings()
   const ctx = useMealVerificationContext()
-  const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm(kobo.drcUa.server.prod, formId))
+  const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm({id: formId}))
   const fetcherVerificationAnswers = useFetcher(api.mealVerification.getAnswers)
   const {dateFromNow} = useI18n()
 
@@ -62,8 +63,6 @@ export const MealVerificationTable = () => {
     }
   }, [mealVerification, activity])
 
-  console.log(fetcherSchema.entity && fetcherVerificationAnswers.entity && activity && mealVerification && true)
-  console.log([fetcherSchema.entity, fetcherVerificationAnswers.entity, activity, mealVerification])
   return (
     <Page width="full">
       {fetcherSchema.entity && fetcherVerificationAnswers.entity && activity && mealVerification ? (
@@ -102,6 +101,7 @@ const MealVerificationEcrec = <
   verificationAnswersRefresh: () => Promise<any>
 }) => {
   const {api} = useAppSettings()
+  const {session} = useSession()
   const {m} = useI18n()
   const t = useTheme()
   const ctx = useKoboSchemaContext()
@@ -255,25 +255,29 @@ const MealVerificationEcrec = <
                   <>
                     <TableIconBtn tooltip={m._mealVerif.viewData} children="text_snippet" onClick={() => setOpenModalAnswer(_.data)}/>
                     <TableIconBtn tooltip={m._mealVerif.viewDataCheck} disabled={!_.dataCheck} children="fact_check" onClick={() => setOpenModalAnswer(_.dataCheck)}/>
-                    <TableIconBtn
-                      children="delete"
-                      loading={asyncUpdateAnswer.loading.get(status.id)}
-                      disabled={status.status !== MealVerificationAnswersStatus.Selected}
-                      onClick={() => asyncUpdateAnswer.call(
-                        status.id,
-                      ).then(verificationAnswersRefresh)}
-                    />
-                    <TableIconBtn
-                      children="casino"
-                      loading={asyncUpdateAnswer.loading.get(status.id)}
-                      disabled={unselectedAnswers.length === 0 || asyncUpdateAnswer.isLoading || status.status !== MealVerificationAnswersStatus.Selected || _.ok === 1}
-                      onClick={() => {
-                        Promise.all([
-                          asyncUpdateAnswer.call(status.id,),
-                          asyncUpdateAnswer.call(unselectedAnswers.pop()?.id!, MealVerificationAnswersStatus.Selected,)
-                        ]).then(verificationAnswersRefresh)
-                      }}
-                    />
+                    {session.admin && (
+                      <>
+                        <TableIconBtn
+                          children="delete"
+                          loading={asyncUpdateAnswer.loading.get(status.id)}
+                          disabled={status.status !== MealVerificationAnswersStatus.Selected}
+                          onClick={() => asyncUpdateAnswer.call(
+                            status.id,
+                          ).then(verificationAnswersRefresh)}
+                        />
+                        <TableIconBtn
+                          children="casino"
+                          loading={asyncUpdateAnswer.loading.get(status.id)}
+                          disabled={unselectedAnswers.length === 0 || asyncUpdateAnswer.isLoading || status.status !== MealVerificationAnswersStatus.Selected || _.ok === 1}
+                          onClick={() => {
+                            Promise.all([
+                              asyncUpdateAnswer.call(status.id,),
+                              asyncUpdateAnswer.call(unselectedAnswers.pop()?.id!, MealVerificationAnswersStatus.Selected,)
+                            ]).then(verificationAnswersRefresh)
+                          }}
+                        />
+                      </>
+                    )}
                   </>
                 )
               },
