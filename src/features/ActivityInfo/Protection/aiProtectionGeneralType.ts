@@ -1,7 +1,7 @@
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {DrcDonor, DrcProject} from '@/core/drcUa'
-import {AiTypeProtectionRmm} from '@/features/ActivityInfo/HHS_2_1/AiTypeProtectionRmm'
+import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 
 export namespace AiProtectionGeneralType {

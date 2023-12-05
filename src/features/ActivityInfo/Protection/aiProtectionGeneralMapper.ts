@@ -8,12 +8,13 @@ import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {DrcProject} from '@/core/drcUa'
 import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import Gender = Person.Gender
+import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 
 const disaggregatePersons = (persons: Person.Person[]) => {
   const personsDefined = seq(persons)
   const children = personsDefined.filter(_ => _.age && _.age < 18)
   const adults = personsDefined.filter(_ => !_.age || _.age >= 18 && !Person.isElderly(_.age))
-  const elderly = personsDefined.filter(_ => _.age &&  Person.isElderly(_.age))
+  const elderly = personsDefined.filter(_ => _.age && Person.isElderly(_.age))
   return {
     'Adult Men': adults.count(_ => _.gender === 'Male'),
     'Adult Women': adults.count(_ => _.gender !== 'Male'),
@@ -27,10 +28,8 @@ const disaggregatePersons = (persons: Person.Person[]) => {
 
 export const getAiLocation = (d: Pick<Protection_groupSession, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>) => {
   const oblast = OblastIndex.byKoboName(d.ben_det_oblast!).name
-  // @ts-ignore
-  const raion = AILocationHelper.findRaion(oblast, bn_ReOptions.ben_det_raion[d.ben_det_raion!])
-  // @ts-ignore
-  const hromada = AILocationHelper.findHromada(oblast, raion?.en, bn_ReOptions.ben_det_hromada[d.ben_det_hromada!])
+  const raion = AILocationHelper.findRaion(oblast, Bn_ReOptions.ben_det_raion[d.ben_det_raion as keyof typeof Bn_ReOptions.ben_det_raion])!
+  const hromada = AILocationHelper.findHromada(oblast, raion?.en, Bn_ReOptions.ben_det_hromada[d.ben_det_hromada as keyof typeof Bn_ReOptions.ben_det_hromada])
   return {
     Oblast: AILocationHelper.findOblast(oblast)!,
     Raion: raion?._5w as any,

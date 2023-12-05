@@ -5,7 +5,7 @@ import {Page} from '@/shared/Page'
 import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
 import {Box, Icon} from '@mui/material'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
-import {mapWashRMM, WashRMM} from './ActivitInfoNFIType'
+import {mapWashRMM, WashRMM} from './aiNFIType'
 import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
@@ -169,7 +169,7 @@ const toFormData = ({
   return activities
 }
 
-export const ActivityInfoNFI = () => {
+export const AiNfi = () => {
   const {api} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
 
@@ -240,15 +240,16 @@ const _ActivityInfo = ({
   })
   return (
     <>
-      <Box sx={{display: 'flex', mb: 3, alignItems: 'center', justifyContent: 'space-between'}}>
-        <AaBtn icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
-          _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
-        }}>
-          {m.submitAll} {seq(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
-        </AaBtn>
-      </Box>
       <Panel>
-        <Sheet<Row> id="ai-nfi" data={data} columns={[
+        <Sheet<Row>
+          header={
+            <AaBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+              _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
+            }}>
+              {m.submitAll} {seq(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
+            </AaBtn>
+          }
+          id="ai-nfi" data={data} columns={[
           {
             id: 'actions', head: '', width: 200, render: _ =>
               <>
