@@ -82,12 +82,12 @@ export const ShelterWithAccess = () => {
   const {toastHttpError} = useAaToast()
 
   const {access, allowedOffices} = useMemo(() => {
-    const cfmAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))
-    const allowedOffices = cfmAccesses.flatMap(_ => {
+    const dbAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))
+    const allowedOffices = dbAccesses.flatMap(_ => {
       return _.params?.filters?.back_office as Shelter_NTA['back_office'][] | undefined
     }).compact()
     return {
-      access: Access.toSum(cfmAccesses, session.admin),
+      access: Access.toSum(dbAccesses, session.admin),
       allowedOffices,
     }
   }, [session, accesses])
@@ -113,6 +113,7 @@ export const ShelterWithAccess = () => {
   return (
     <Router>
       <Layout
+        loading={fetcherSchema.loading}
         title={appFeaturesIndex.shelter.name}
         sidebar={<ShelterSidebar/>}
         header={<AppHeader id="app-header"/>}

@@ -81,7 +81,7 @@ export const Page = ({
   const width = typeof props.width === 'string' ? ({
     xs: 780,
     md: 1000,
-    lg: 1200,
+    lg: 1240,
     full: 3000,
   })[props.width] : props.width
 

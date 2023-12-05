@@ -8,7 +8,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
-import {kobo, koboFormTranslation} from '@/koboDrcUaFormId'
+import {kobo, koboFormTranslation, KoboIndex} from '@/koboDrcUaFormId'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
@@ -124,7 +124,7 @@ export const MpcaData = () => {
               head: m.form,
               type: 'select_one',
               // options: () => SheetUtils.buildOptions(Enum.keys(MpcaRowSource)),
-              render: _ => KoboFormSdk.parseFormName(koboFormTranslation[_.source]).name,
+              render: _ => KoboIndex.byName(_.source).parsed.name,
             },
             {
               id: 'date',

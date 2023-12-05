@@ -25,7 +25,6 @@ export class KoboAnswerSdk {
   constructor(private client: ApiClient) {
   }
 
-
   readonly updateTag = ({formId, answerIds, tags}: {formId: KoboId, answerIds: KoboAnswerId[], tags: Record<string, any>}) => {
     // return Promise.reject()
     return this.client.post(`/kobo/answer/${formId}/tag`, {body: {tags, answerIds: answerIds}})

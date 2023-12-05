@@ -17,7 +17,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Box, Tooltip} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
-import {kobo, koboFormTranslation} from '@/koboDrcUaFormId'
+import {kobo, koboFormTranslation, KoboIndex} from '@/koboDrcUaFormId'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 
@@ -60,7 +60,6 @@ const MpcaSidebar = () => {
             <Txt color="hint" block uppercase sx={{fontSize: '0.75rem'}}>{m.data}</Txt>
             <Txt color="default">{formatLargeNumber(ctx.data?.length)}</Txt>
           </Box>
-
         </SidebarItem>
         <SidebarHr/>
         <NavLink to={path(mpcaModule.siteMap.dashboard)}>
@@ -76,7 +75,7 @@ const MpcaSidebar = () => {
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
           {relatedKoboForms.map(_ => {
-            const name = KoboFormSdk.parseFormName(koboFormTranslation[_]).name
+            const name = KoboIndex.byName(_).parsed.name
             return (
               <Tooltip key={_} title={name} placement="right">
                 <NavLink to={path(mpcaModule.siteMap.form(_))}>

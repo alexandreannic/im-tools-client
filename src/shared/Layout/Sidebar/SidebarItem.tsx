@@ -67,7 +67,7 @@ export const SidebarItem = ({
           normal: 2,
           small: 4,
           tiny: 8
-        }, () => 36)),
+        }, () => 2)),
         borderTopRightRadius: 42,
         borderBottomRightRadius: 42,
         ...props.disabled && {

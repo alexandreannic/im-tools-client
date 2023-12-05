@@ -188,10 +188,9 @@ export const SlideWidget = ({
         sx: {
           pb: t => t.spacing(1) + ' !important',
         }
-      }
-      }
+      }}
       sx={{
-        minHeight: 79,
+        minHeight: 82.52,
         width: '100%',
         textAlign: 'center',
         '&:last-child': {

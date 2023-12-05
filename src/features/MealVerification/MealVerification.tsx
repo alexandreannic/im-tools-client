@@ -1,5 +1,5 @@
 import {Layout} from '@/shared/Layout'
-import React from 'react'
+import React, {useMemo} from 'react'
 import {MealVerificationList} from '@/features/MealVerification/MealVerificationList'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {MealVerificationForm} from '@/features/MealVerification/Form/MealVerificationForm'
@@ -7,6 +7,11 @@ import {MealVerificationTable} from '@/features/MealVerification/MealVerificatio
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import {MealVerificationProvider, useMealVerificationContext} from '@/features/MealVerification/MealVerificationContext'
+import {seq} from '@alexandreannic/ts-utils'
+import {Access} from '@/core/sdk/server/access/Access'
+import {AppFeatureId, appFeaturesIndex} from '@/features/appFeatureId'
+import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
+import {useSession} from '@/core/Session/SessionContext'
 
 export const mealVerificationModule = {
   basePath: '/meal-verification',
@@ -20,7 +25,8 @@ export const mealVerificationModule = {
 const MealVerificationSidebar = () => {
   const path = (page: string) => '' + page
   const {m, formatLargeNumber} = useI18n()
-  const ctx = useMealVerificationContext()
+  const {session, accesses} = useSession()
+
   return (
     <Sidebar>
       <SidebarBody>

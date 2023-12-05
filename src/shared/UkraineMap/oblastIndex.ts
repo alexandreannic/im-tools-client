@@ -140,10 +140,10 @@ export class OblastIndex {
   private static readonly oblastIsoByName = Enum.transform(OblastIndex.oblastByISO, (k, v) => [v, k])
 
   static readonly koboOblastIndexIso = {
-    aroc: 'UA01' as OblastISO,
+    aroc: 'UA01' as OblastISO, //'UA43'
     cherkaska: 'UA71' as OblastISO,
     chernihivska: 'UA74' as OblastISO,
-    chernivetska: 'UA73' as OblastISO,
+    chernivetska: 'UA73' as OblastISO,// 'UA77'
     dnipropetrovska: 'UA12' as OblastISO,
     donetska: 'UA14' as OblastISO,
     'ivano-frankivska': 'UA26' as OblastISO,
@@ -151,15 +151,15 @@ export class OblastIndex {
     khersonska: 'UA65' as OblastISO,
     khmelnytska: 'UA68' as OblastISO,
     kirovohradska: 'UA35' as OblastISO,
-    citykyiv: 'UA80' as OblastISO,
+    citykyiv: 'UA80' as OblastISO,//'UA80' as OblastISO,
     kyivska: 'UA32' as OblastISO,
-    luhanska: 'UA44' as OblastISO,
+    luhanska: 'UA44' as OblastISO,//'UA09' as OblastISO,
     lvivska: 'UA46' as OblastISO,
     mykolaivska: 'UA48' as OblastISO,
     odeska: 'UA51' as OblastISO,
     poltavska: 'UA53' as OblastISO,
     rivnenska: 'UA56' as OblastISO,
-    sevastopilska: 'UA85' as OblastISO,
+    sevastopilska: 'UA85' as OblastISO,//'UA85' as OblastISO,
     sumska: 'UA59' as OblastISO,
     ternopilska: 'UA61' as OblastISO,
     vinnytska: 'UA05' as OblastISO,

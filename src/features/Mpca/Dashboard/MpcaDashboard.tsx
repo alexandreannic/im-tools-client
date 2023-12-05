@@ -5,7 +5,7 @@ import {useMpcaContext} from '../MpcaContext'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
-import {chain, toPercent, tryy, Utils} from '@/utils/utils'
+import {chain, toPercent, tryy} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
@@ -23,20 +23,19 @@ import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {MpcaHelper, MpcaProgram, MpcaRowSource, mpcaRowSources, MpcaEntity} from '@/core/sdk/server/mpca/MpcaEntity'
+import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/server/mpca/MpcaEntity'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
-import {donorByProject, DrcOffice} from '@/core/drcUa'
+import {donorByProject, drcMaterialIcons, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Panel} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-import ageGroup = Person.ageGroup
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
-import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
-import {koboFormTranslation} from '@/koboDrcUaFormId'
+import {koboFormTranslation, KoboIndex} from '@/koboDrcUaFormId'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
-import { groupBy } from '@/utils/groupBy'
+import {groupBy} from '@/utils/groupBy'
+import ageGroup = Person.ageGroup
 
 export const today = new Date()
 
@@ -84,12 +83,12 @@ export const MpcaDashboard = () => {
       options: SheetOptions[]
     }[] = [{
       icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
-      options: Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboFormSdk.parseFormName(koboFormTranslation[_]).name))
+      options: Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboIndex.byName(_).parsed.name))
     }, {
-      icon: 'handshake', label: 'Donor', property: 'finalDonor',
+      icon: drcMaterialIcons.donor, label: 'Donor', property: 'finalDonor',
       options: SheetUtils.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
     }, {
-      icon: 'inventory_2', label: 'Project', property: 'finalProject',
+      icon: drcMaterialIcons.project, label: 'Project', property: 'finalProject',
       options: SheetUtils.buildOptions(d.map(_ => _.finalProject!).distinct(_ => _).sort())
     }, {
       icon: 'groups', label: 'Prog', property: 'prog', multiple: true,
