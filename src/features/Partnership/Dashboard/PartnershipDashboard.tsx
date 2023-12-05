@@ -193,14 +193,14 @@ export const _PartnershipDashboard = ({}: {}) => {
               label={shape.label(m)}
               options={getChoices(shape.options)}
               onChange={_ => setOptionFilters(prev => ({...prev, [k]: _}))}
-              sx={{mr: 1}}
+              sx={{mr: .5}}
             />
           )}
         </Box>
         <Box>
           {Enum.entries(filterSgaShape).map(([k, shape]) =>
             <DashboardFilterOptions
-              sx={{mr: 1}}
+              sx={{mr: .5}}
               key={k}
               icon={shape.icon}
               value={optionFilter[k]}
