@@ -33,7 +33,6 @@ export const PanelFeatures = ({
         bottom: 0,
       } : {},
       position: 'relative',
-      background: 'white',
       '&:hover .panel-features': {
         display: 'block',
       },
@@ -43,8 +42,8 @@ export const PanelFeatures = ({
         p: .5,
         position: 'absolute',
         display: 'none',
-        background: 'white',
-        top: -1,
+        background: t => t.palette.background.paper,
+        top: -30,
         right: 0,
       }}>
         {expendable && (

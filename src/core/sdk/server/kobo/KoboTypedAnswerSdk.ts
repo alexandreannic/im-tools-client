@@ -29,6 +29,7 @@ import {mapMeal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Mea
 import {KoboAnswerFilter, KoboAnswerSdk} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import {mapMeal_VerificationWinterization} from '@/core/koboModel/Meal_VerificationWinterization/Meal_VerificationWinterizationMapping'
 import {mapMeal_VerificationEcrec} from '@/core/koboModel/Meal_VerificationEcrec/Meal_VerificationEcrecMapping'
+import {mapPartnership_partnersDatabase} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseMapping'
 
 export class KoboTypedAnswerSdk {
 
@@ -81,6 +82,14 @@ export class KoboTypedAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.meal_visitMonitoring,
       fnMap: mapMeal_VisitMonitoring,
+      ...filters,
+    })
+  }
+
+  readonly searchPartnersDatabase = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: kobo.drcUa.form.partnership_partnersDatabase,
+      fnMap: mapPartnership_partnersDatabase,
       ...filters,
     })
   }

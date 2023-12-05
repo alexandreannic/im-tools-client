@@ -1,9 +1,9 @@
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
-import {mapObject, mapObjectValue, sortObject} from '../utils/utils'
+import {mapObject, mapObjectValue, sortObject} from '@/utils/utils'
 import {ReactNode} from 'react'
+import {NonNullableKey} from '@/utils/utilsType'
 
-export interface ChartDataValPercent extends ChartDataVal {
-  base: number
+export interface ChartDataValPercent extends NonNullableKey<ChartDataVal, 'base'> {
   percent: number
 }
 
@@ -78,6 +78,28 @@ export namespace ChartTools {
     })
     return ChartTools.sortBy.value(res)
   }
+
+  // export const singleBy = <A>({
+  //   data,
+  //   percent,
+  //   filterValue,
+  //   filterBase,
+  // }: {
+  //   data: Seq<A>,
+  //   getValue: (_: A) => string,
+  //   filterValue: (_: A) => boolean,
+  //   filterBase?: (_: A) => boolean,
+  //   percent?: boolean
+  // }) => {
+  //   const base = filterBase ? data.filter(filterBase) : data
+  //   const value = base.filter(filterValue)
+  //
+  //   const res = {} as ChartData<A>
+  //   Enum.keys(obj).forEach(k => {
+  //     res[k] = {value: obj[k] / (percent ? data.length : 1)}
+  //   })
+  //   return ChartTools.sortBy.value(res)
+  // }
 
   export const multiple = <A extends string>({
     data,

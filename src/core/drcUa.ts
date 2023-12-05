@@ -89,6 +89,13 @@ export enum DrcProject {
   'UKR-000340 Augustinus Fonden' = 'UKR-000340 Augustinus Fonden',
 }
 
+export const DrcProjectBudget: Partial<Record<DrcProject, number>> = {
+  [DrcProject['UKR-000322 ECHO2']]: 10243523,//.13, // 9423057.51 EURO from PIP
+  [DrcProject['UKR-000284 BHA']]: 57000000,
+  [DrcProject['UKR-000269 ECHO1']]: 3000000,
+  [DrcProject['UKR-000345 BHA2']]: 10080572.00,
+}
+
 export const drcProjects = Enum.keys(DrcProject)
 
 export const drcDonorProjectCode: Record<DrcDonor, DrcProject[]> = {
@@ -381,4 +388,9 @@ export enum DrcJob {
   'Victim Assistance Specialist' = 'Victim Assistance Specialist',
   'Warehouse Assistant' = 'Warehouse Assistant',
   'Protection(PSS) Team Leader' = 'Protection(PSS) Team Leader',
+}
+
+export const drcMaterialIcons = {
+  project: 'inventory_2',
+  donor: 'handshake',
 }

@@ -1,4 +1,5 @@
 import {Enum, seq} from '@alexandreannic/ts-utils'
+import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 
 /** @deprecated*/
 export const kobo = {
@@ -33,7 +34,10 @@ export const kobo = {
       protection_communityMonitoring: 'aQHBhYgevdzw8TR2Vq2ZdR',
       protection_groupSession: 'a8Tn94arrSaH2FQBhUa9Zo',
       protection_pss: 'a52hN5iiCW73mxqqfmEAfp',
-      protection_hhs1: 'aFU8x6tHksveU2c3hK7RUG',
+      protection_hhs1: 'aFU8x6tHksveU2c3hK7RUG' as const,
+      partnership_partnersDatabase: 'aLs32U5Qc9HfQ5mxQtsEML',
+      partnership_initialQuestionnaire: 'a6u7CBysEz746Hdx6pVLzp',
+      partnership_assessment: 'aLD2Xc9cKSY22c5cAP5utT',
       //
       // mealCfmInternal: 'aN3Y8JeH2fU3GthrWAs9FG',
       // mealCfmExternal: 'aJaGLvGEdpYWk5ift8k87y',
@@ -90,6 +94,9 @@ export const koboFormTranslation: Record<KoboFormName, string> = {
   protection_groupSession: 'protection_groupSession',
   protection_pss: 'protection_pss',
   protection_hhs1: 'protection_hhs1',
+  partnership_assessment: '[Partnership] CBP CSO Assessment',
+  partnership_initialQuestionnaire: '[Partnership] CBP CSO Initial Questionnaire',
+  partnership_partnersDatabase: '[Partnership] DRC Partners Database',
 //
 }
 
@@ -102,6 +109,7 @@ export class KoboIndex {
       name,
       id,
       translation,
+      parsed: KoboFormSdk.parseFormName(translation)
     }
   }
 

@@ -22,11 +22,11 @@ export namespace DashboardFilterHelper {
     shape: Partial<Record<K, Shape<O>>>,
     filters: Record<K, string[]>
   ): T[] => {
-    return multipleFilters(d, Enum.entries(filters).map(([k, filterValue]) => {
+    return multipleFilters(d, Enum.entries(filters).filter(([k]) => shape[k] !== undefined).map(([k, filterValue]) => {
       if (filterValue.length <= 0) return
       const property = shape[k]!.propertyIfDifferentThanOption ?? shape[k]!.options
       if (shape[k]?.multiple)
-        return _ => !!filterValue.find(f => f.includes((_ as any)[property] as any))
+        return _ => !!filterValue.find(f => (_ as any)[property]?.includes(f))
       return _ => filterValue.includes((_ as any)[property] as any)
     }))
   }

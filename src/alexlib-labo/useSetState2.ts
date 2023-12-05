@@ -10,6 +10,7 @@ export interface UseSetState<T> {
   toArray: T[]
   size: number
   has: (t: T) => boolean
+  set: (t: T, _: boolean) => void
   reset: (values?: T[]) => void
   get: Set<T>,
 }
@@ -51,11 +52,16 @@ export const useSetState2 = <T>(initialValue: T[] = []): UseSetState<T> => {
 
     const toArray = Array.from(set.values())
 
+    const _set = (t: T, v: boolean) => {
+      v ? add(t) : remove(t)
+    }
+
     const values = set.values()
     return {
       has,
       size: set.size,
       get: set,
+      set: _set,
       toArray,
       values,
       add,

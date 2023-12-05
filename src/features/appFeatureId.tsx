@@ -11,6 +11,7 @@ export enum AppFeatureId {
   mpca = 'mpca',
   shelter = 'shelter',
   meal_verification = 'meal_verification',
+  partnership = 'partnership',
   wfp_deduplication = 'wfp_deduplication',
   activity_info = 'activity_info',
   cfm = 'cfm',
@@ -127,6 +128,15 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     materialIcons: 'support_agent',
     color: '#1c2c73',
     path: '/cfm',
+    showIf: (u, accesses) => true
+    // showIf: (u, accesses) => u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.cfm)
+  },
+  [AppFeatureId.partnership]: {
+    id: AppFeatureId.partnership,
+    name: 'Partnership',
+    materialIcons: 'handshake',
+    color: '#8ab4f8',
+    path: '/partnership',
     showIf: (u, accesses) => true
     // showIf: (u, accesses) => u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.cfm)
   },

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {ReactElement, ReactNode} from 'react'
 import {LayoutProvider, useLayoutContext} from './LayoutContext'
-import {Box} from '@mui/material'
+import {Box, LinearProgress} from '@mui/material'
 import {layoutConfig} from './index'
 import {defaultSpacing} from '../../core/theme'
 import {AppHeader} from './Header/AppHeader'
@@ -11,6 +11,7 @@ export interface LayoutProps {
   header?: ReactElement<any>
   title?: string
   children?: ReactNode
+  loading?: boolean
   mobileBreakpoint?: number
   // loading?: boolean
 }
@@ -18,6 +19,7 @@ export interface LayoutProps {
 export const Layout = ({
   // loading,
   sidebar,
+  loading,
   header = <AppHeader id="app-header"/>,
   title,
   mobileBreakpoint,
@@ -26,6 +28,7 @@ export const Layout = ({
   return (
     <LayoutProvider title={title} mobileBreakpoint={mobileBreakpoint} showSidebarButton={!!sidebar}>
       <LayoutUsingContext sidebar={sidebar} header={header}>
+        {loading && <LinearProgress/>}
         {children}
       </LayoutUsingContext>
     </LayoutProvider>
