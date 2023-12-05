@@ -8,6 +8,7 @@ export interface UseAsync<F extends Func<Promise<any>>, K extends number | symbo
   loading: UseMap2<K, boolean>,
   errors: UseMap2<K, E>
   call: F,
+  calledIndex: number
 }
 
 export interface UseAsyncFn {
@@ -42,6 +43,7 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
     requestKey?: (_: Parameters<F>) => K,
   } = {} as any
 ) => {
+  const [calledIndex, setCalledIndex] = useState(0)
   const loading = useMap2<K, boolean>()
   const errors = useMap2<K, E>()
   const [lastError, setLastError] = useState<E | undefined>()
@@ -51,10 +53,12 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
     loading.set(requestKey(args), true)
     return caller(...args)
       .then(_ => {
+        setCalledIndex(_ => _ + 1)
         loading.delete(requestKey(args))
         return _
       })
       .catch((e: E) => {
+        setCalledIndex(_ => _ + 1)
         setLastError(e)
         loading.delete(requestKey(args))
         errors.set(requestKey(args), mapError(e))
@@ -65,6 +69,7 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
   const isLoading = loading.keys.length > 0
 
   return {
+    calledIndex,
     lastError,
     isLoading,
     loading,

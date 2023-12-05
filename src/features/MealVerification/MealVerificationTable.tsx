@@ -124,6 +124,11 @@ const MealVerificationEcrec = <
     if (!_.dataCheck) return true
     if (_.dataCheck[c] === undefined && _.data?.[c] === undefined) return true
     switch (ctx.schemaHelper.questionIndex[c].type) {
+      case 'select_multiple':
+        const checkArr = [_.dataCheck[c]].flat() as string[]
+        const dataArr = [_.data?.[c]].flat() as string[]
+        if (_.dataCheck[c] === undefined || _.data?.[c] === undefined) return _.dataCheck[c] === _.data?.[c]
+        return checkArr.every(c => (dataArr.find(d => c === d))), checkArr, dataArr
       case 'decimal':
       case 'integer':
         return Math.abs(_.dataCheck[c] - _.data?.[c]) <= _.data?.[c] * mealVerificationConf.numericToleranceMargin
@@ -261,9 +266,7 @@ const MealVerificationEcrec = <
                           children="delete"
                           loading={asyncUpdateAnswer.loading.get(status.id)}
                           disabled={status.status !== MealVerificationAnswersStatus.Selected}
-                          onClick={() => asyncUpdateAnswer.call(
-                            status.id,
-                          ).then(verificationAnswersRefresh)}
+                          onClick={() => asyncUpdateAnswer.call(status.id,).then(verificationAnswersRefresh)}
                         />
                         <TableIconBtn
                           children="casino"

@@ -32,6 +32,8 @@ export const LayoutProvider = ({title: _title, showSidebarButton, mobileBreakpoi
 
   useEffect(() => {
     window.addEventListener('resize', () => setPageWidth(getWidth()))
+    // TODO looks needed when duplicate tab, must be verified
+    setPageWidth(getWidth())
   }, [])
 
   return (

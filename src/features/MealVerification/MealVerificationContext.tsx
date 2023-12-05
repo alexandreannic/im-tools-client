@@ -1,10 +1,15 @@
-import React, {ReactNode, useContext} from 'react'
+import React, {ReactNode, useContext, useEffect} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
+import {AccessSum} from '@/core/sdk/server/access/Access'
+import {useSession} from '@/core/Session/SessionContext'
+import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 
 export interface MealVerificationContext {
   fetcherVerifications: UseFetcher<ApiSdk['mealVerification']['getAll']>
+  access: AccessSum,
+  asyncUpdate: UseAsync<ApiSdk['mealVerification']['update']>
 }
 
 const Context = React.createContext({} as MealVerificationContext)
@@ -17,10 +22,24 @@ export const MealVerificationProvider = ({
   children: ReactNode
 }) => {
   const {api} = useAppSettings()
+  const {session} = useSession()
   const fetcherGetAll = useFetcher(api.mealVerification.getAll)
+  const asyncUpdate = useAsync(api.mealVerification.update, {requestKey: _ => _[0]})
+
+  useEffect(() => {
+    fetcherGetAll.fetch()
+  }, [asyncUpdate.calledIndex])
+
+  const access: AccessSum = {
+    write: true,
+    read: true,
+    admin: !!session.admin,
+  }
 
   return (
     <Context.Provider value={{
+      access,
+      asyncUpdate,
       fetcherVerifications: fetcherGetAll,
     }}>
       {children}
