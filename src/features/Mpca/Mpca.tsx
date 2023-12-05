@@ -81,7 +81,7 @@ const MpcaSidebar = () => {
               <Tooltip key={_} title={name} placement="right">
                 <NavLink to={path(mpcaModule.siteMap.form(_))}>
                   {({isActive, isPending}) => (
-                    <SidebarItem dense active={isActive} icon="calendar_view_month">{name}</SidebarItem>
+                    <SidebarItem size="small" active={isActive} icon="calendar_view_month">{name}</SidebarItem>
                   )}
                 </NavLink>
               </Tooltip>

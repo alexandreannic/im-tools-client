@@ -379,5 +379,6 @@ export enum DrcJob {
   'VA Specialist' = 'VA Specialist',
   'Victim Assistance Facilitator' = 'Victim Assistance Facilitator',
   'Victim Assistance Specialist' = 'Victim Assistance Specialist',
-  'Warehouse Assistant' = 'Warehouse Assistant'
+  'Warehouse Assistant' = 'Warehouse Assistant',
+  'Protection(PSS) Team Leader' = 'Protection(PSS) Team Leader',
 }

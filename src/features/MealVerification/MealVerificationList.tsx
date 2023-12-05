@@ -18,7 +18,10 @@ import {kobo, KoboIndex} from '@/koboDrcUaFormId'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {databaseModule} from '@/features/Database/databaseModule'
 import Link from 'next/link'
-import {KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboId, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 
 const LinkToForm = ({
   koboFormId,
@@ -63,6 +66,31 @@ export const MealVerificationList = () => {
           data={ctx.fetcherVerifications.entity}
           loading={ctx.fetcherVerifications.loading}
           columns={[
+            {
+              id: 'validation',
+              head: m.validation,
+              width: 0,
+              type: 'select_one',
+              tooltip: null,
+              renderValue: (row) => row.status ?? SheetUtils.blank,
+              renderOption: (row) => row.status ? m[row.status!] : SheetUtils.blank,
+              render: row => (
+                <>
+                  <AaSelectSingle
+                    disabled={!ctx.access.admin}
+                    value={row.status}
+                    options={[
+                      {children: <Icon sx={{color: t.palette.success.main}} title={m.Approved}>check_circle</Icon>, value: MealVerificationStatus.Approved},
+                      {children: <Icon sx={{color: t.palette.error.main}} title={m.Rejected}>error</Icon>, value: MealVerificationStatus.Rejected},
+                      {children: <Icon sx={{color: t.palette.warning.main}} title={m.Pending}>schedule</Icon>, value: MealVerificationStatus.Pending},
+                    ]}
+                    onChange={(e) => {
+                      ctx.asyncUpdate.call(row.id, e ?? undefined)
+                    }}
+                  />
+                </>
+              )
+            },
             {
               type: 'string',
               id: 'name',

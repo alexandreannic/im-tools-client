@@ -89,6 +89,20 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },
+  meal_verification: {
+    id: AppFeatureId.meal_verification,
+    name: 'Meal Verification',
+    materialIcons: 'troubleshoot',
+    color: '#afd0d6',
+    path: '/meal-verification',
+    showIf: (_, accesses) => _ && _?.admin || accesses && !!accesses
+      .filter(Access.filterByFeature(AppFeatureId.kobo_database))
+      .find(_ => {
+        return _.params?.koboFormId === kobo.drcUa.form.bn_re ||
+          _.params?.koboFormId === kobo.drcUa.form.ecrec_cashRegistration ||
+          _.params?.koboFormId === kobo.drcUa.form.meal_visitMonitoring
+      })
+  },
   activity_info: {
     materialIcons: 'group_work',
     id: AppFeatureId.activity_info,
@@ -123,20 +137,6 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: 'silver',
     path: '/snapshot',
     showIf: _ => _ && _?.admin
-  },
-  meal_verification: {
-    id: AppFeatureId.meal_verification,
-    name: 'Meal Verification',
-    materialIcons: 'troubleshoot',
-    color: '#afd0d6',
-    path: '/meal-verification',
-    showIf: (_, accesses) => _ && _?.admin || accesses && !!accesses
-      .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-      .find(_ => {
-        return _.params?.koboFormId === kobo.drcUa.form.bn_re ||
-          _.params?.koboFormId === kobo.drcUa.form.ecrec_cashRegistration ||
-          _.params?.koboFormId === kobo.drcUa.form.meal_visitMonitoring
-      })
   },
   admin: {
     id: AppFeatureId.admin,

@@ -32,7 +32,7 @@ export interface DashboardPageProps {
   data: Seq<KoboAnswer<Meal_VisitMonitoring>>
 }
 
-const mapOblast: Record<string, OblastISO> = OblastIndex.koboOblastIndexIso
+const mapOblast = OblastIndex.koboOblastIndexIso
 
 export const filterShape = DashboardFilterHelper.makeShape<typeof Meal_VisitMonitoringOptions>()({
   oblast: {

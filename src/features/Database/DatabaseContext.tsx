@@ -29,7 +29,7 @@ export const DatabaseProvider = ({
 }) => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
-  const _forms = useFetcher(() => api.kobo.form.getAll().then(_ => seq(_).sortByString(_ => KoboFormSdk.parseFormName(_.name).program ?? '') as KoboForm[]))
+  const _forms = useFetcher(() => api.kobo.form.getAll().then(_ => seq(_).sortByString(_ => KoboFormSdk.parseFormName(_.name).program ?? '')) as Promise<KoboForm[]>)
   const {toastHttpError} = useAaToast()
 
   const getForm = useMemo(() => {

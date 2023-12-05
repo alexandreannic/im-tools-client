@@ -9,6 +9,12 @@ export class MealVerificationHelper {
   }
 }
 
+export enum MealVerificationStatus {
+  Approved = 'Approved',
+  Rejected = 'Rejected',
+  Pending = 'Pending',
+}
+
 export enum MealVerificationAnswersStatus {
   Selected = 'Selected'
 }
@@ -19,6 +25,7 @@ export interface MealVerificationAnsers {
   status?: MealVerificationAnswersStatus
 }
 
+
 export interface MealVerification {
   id: UUID
   activity: KoboId
@@ -27,4 +34,5 @@ export interface MealVerification {
   createdAt: Date
   createdBy: string
   filters: any
+  status: MealVerificationStatus
 }
