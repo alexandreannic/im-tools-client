@@ -13,7 +13,7 @@ import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
-import {Kobo, KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {useParams} from 'react-router'
@@ -27,6 +27,7 @@ import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useSession} from '@/core/Session/SessionContext'
+import {AaBtn} from '@/shared/Btn/AaBtn'
 
 interface MergedData {
   dataCheck?: KoboAnswer<any>
@@ -101,10 +102,10 @@ const MealVerificationEcrec = <
   verificationAnswersRefresh: () => Promise<any>
 }) => {
   const {api} = useAppSettings()
-  const {session} = useSession()
   const {m} = useI18n()
   const t = useTheme()
-  const ctx = useKoboSchemaContext()
+  const ctxSchema = useKoboSchemaContext()
+  const ctx = useMealVerificationContext()
 
   const idToVerifyIndex = useMemo(() => seq(verificationAnswers).groupByFirst(_ => _.koboAnswerId), [verificationAnswers])
 
@@ -123,7 +124,7 @@ const MealVerificationEcrec = <
   const areEquals = (c: string, _: Pick<MergedData, 'data' | 'dataCheck'>) => {
     if (!_.dataCheck) return true
     if (_.dataCheck[c] === undefined && _.data?.[c] === undefined) return true
-    switch (ctx.schemaHelper.questionIndex[c].type) {
+    switch (ctxSchema.schemaHelper.questionIndex[c].type) {
       case 'select_multiple':
         const checkArr = [_.dataCheck[c]].flat() as string[]
         const dataArr = [_.data?.[c]].flat() as string[]
@@ -185,7 +186,7 @@ const MealVerificationEcrec = <
         <Div sx={{mb: 2, alignItems: 'stretch'}}>
           <SlidePanel sx={{flex: 1}}>
             <PieChartIndicator
-              dense value={Math.floor(verificationAnswers.length * mealVerificationConf.sampleSizeRatio)} base={verificationAnswers.length}
+              dense value={mergedData?.length ?? 0} base={verificationAnswers.length}
               title={m._mealVerif.sampleSize}
               showBase showValue
             />
@@ -221,11 +222,11 @@ const MealVerificationEcrec = <
               <AaSelectSingle<number>
                 hideNullOption
                 sx={{maxWidth: 128, mr: 1}}
-                value={ctx.langIndex}
-                onChange={ctx.setLangIndex}
+                value={ctxSchema.langIndex}
+                onChange={ctxSchema.setLangIndex}
                 options={[
                   {children: 'XML', value: -1},
-                  ...ctx.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
+                  ...ctxSchema.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
                 ]}
               />
               <ScRadioGroup inline dense value={display} onChange={setDisplay} sx={{mr: 1}}>
@@ -245,6 +246,13 @@ const MealVerificationEcrec = <
                   </Tooltip>
                 }/>
               </ScRadioGroup>
+              {ctx.access.write && (
+                <AaBtn icon="add" variant="contained" color="primary" sx={{marginLeft: 'auto', mr: 1}} onClick={() => {
+                  asyncUpdateAnswer.call(unselectedAnswers.pop()?.id!, MealVerificationAnswersStatus.Selected,).then(verificationAnswersRefresh)
+                }}>
+                  {m.add}
+                </AaBtn>
+              )}
             </>
           }
           columns={[
@@ -260,7 +268,7 @@ const MealVerificationEcrec = <
                   <>
                     <TableIconBtn tooltip={m._mealVerif.viewData} children="text_snippet" onClick={() => setOpenModalAnswer(_.data)}/>
                     <TableIconBtn tooltip={m._mealVerif.viewDataCheck} disabled={!_.dataCheck} children="fact_check" onClick={() => setOpenModalAnswer(_.dataCheck)}/>
-                    {session.admin && (
+                    {ctx.access.write && (
                       <>
                         <TableIconBtn
                           children="delete"
@@ -304,16 +312,16 @@ const MealVerificationEcrec = <
               render: _ => _.dataCheck ? <TableIcon color="success">check_circle</TableIcon> : <TableIcon color="warning">schedule</TableIcon>,
             },
             ...activity.dataColumns?.flatMap(c => {
-              const q = ctx.schemaHelper.questionIndex[c]
+              const q = ctxSchema.schemaHelper.questionIndex[c]
               const w = getColumnByQuestionSchema({
                 data: mergedData,
                 q,
-                groupSchemas: ctx.schemaHelper.groupSchemas,
-                translateChoice: ctx.translate.choice,
-                translateQuestion: ctx.translate.question,
+                groupSchemas: ctxSchema.schemaHelper.groupSchemas,
+                translateChoice: ctxSchema.translate.choice,
+                translateQuestion: ctxSchema.translate.question,
                 m,
                 getRow: _ => _.data,
-                choicesIndex: ctx.schemaHelper.choicesIndex,
+                choicesIndex: ctxSchema.schemaHelper.choicesIndex,
               })
               return w as any
             }) ?? [],
@@ -321,7 +329,7 @@ const MealVerificationEcrec = <
               return {
                 id: c,
                 type: 'select_one',
-                head: ctx.translate.question(c),
+                head: ctxSchema.translate.question(c),
                 style: (_: MergedData) => {
                   if (areEquals(c, _)) {
                     return {}
@@ -332,9 +340,9 @@ const MealVerificationEcrec = <
                     }
                 },
                 renderExport: (_: MergedData) => {
-                  const isOption = ctx.schemaHelper.questionIndex[c].type === 'select_one' || ctx.schemaHelper.questionIndex[c].type === 'select_multiple'
-                  const dataCheck = _.dataCheck && isOption ? ctx.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
-                  const data = isOption ? ctx.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
+                  const isOption = ctxSchema.schemaHelper.questionIndex[c].type === 'select_one' || ctxSchema.schemaHelper.questionIndex[c].type === 'select_multiple'
+                  const dataCheck = _.dataCheck && isOption ? ctxSchema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
+                  const data = isOption ? ctxSchema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
                   switch (display) {
                     case 'data':
                       return data
@@ -351,9 +359,9 @@ const MealVerificationEcrec = <
                   ? areEquals(c, _) ? '1' : '0'
                   : '',
                 render: (_: MergedData) => {
-                  const isOption = ctx.schemaHelper.questionIndex[c].type === 'select_one' || ctx.schemaHelper.questionIndex[c].type === 'select_multiple'
-                  const dataCheck = _.dataCheck && isOption ? ctx.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
-                  const data = isOption ? ctx.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
+                  const isOption = ctxSchema.schemaHelper.questionIndex[c].type === 'select_one' || ctxSchema.schemaHelper.questionIndex[c].type === 'select_multiple'
+                  const dataCheck = _.dataCheck && isOption ? ctxSchema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
+                  const data = isOption ? ctxSchema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
                   switch (display) {
                     case 'data':
                       return data

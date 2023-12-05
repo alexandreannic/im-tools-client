@@ -1,8 +1,8 @@
-import React, {ReactNode, useContext, useEffect} from 'react'
+import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {AccessSum} from '@/core/sdk/server/access/Access'
+import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {useSession} from '@/core/Session/SessionContext'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 
@@ -22,19 +22,21 @@ export const MealVerificationProvider = ({
   children: ReactNode
 }) => {
   const {api} = useAppSettings()
-  const {session} = useSession()
+  const {session, accesses} = useSession()
   const fetcherGetAll = useFetcher(api.mealVerification.getAll)
   const asyncUpdate = useAsync(api.mealVerification.update, {requestKey: _ => _[0]})
 
   useEffect(() => {
-    fetcherGetAll.fetch()
+    fetcherGetAll.fetch({force: true, clean: false})
   }, [asyncUpdate.calledIndex])
 
-  const access: AccessSum = {
-    write: true,
-    read: true,
-    admin: !!session.admin,
-  }
+  const access: AccessSum = useMemo(() => {
+    return {
+      read: true,
+      write: session.admin || Access.getAccessToKobo(accesses, 'meal_verificationEcrec').write,
+      admin: !!session.admin,
+    }
+  }, [])
 
   return (
     <Context.Provider value={{
