@@ -58,9 +58,11 @@ export const MealVerificationList = () => {
       <Panel>
         <Sheet
           header={
-            <NavLink to={mealVerificationModule.siteMap.form}>
-              <AaBtn variant="contained" icon="add">{m._mealVerif.newRequest}</AaBtn>
-            </NavLink>
+            <>
+              <NavLink to={mealVerificationModule.siteMap.form}>
+                <AaBtn variant="contained" icon="add">{m._mealVerif.newRequest}</AaBtn>
+              </NavLink>
+            </>
           }
           id="meal-verification-request"
           data={ctx.fetcherVerifications.entity}

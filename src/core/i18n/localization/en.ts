@@ -259,6 +259,7 @@ export const en = Object.freeze({
     location: 'Location',
     submissionTime: 'Submission',
     submittedBy: 'By',
+    add: 'Add',
     mealVisitMonitoringDashboard: 'MEAL Visit Monitoring Dashboard',
     protectionMonitoringDashboard: 'Protection monitoring dashboard',
     undefined: 'Unknown',

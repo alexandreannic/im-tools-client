@@ -2,6 +2,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {DrcJob, DrcOffice} from '@/core/drcUa'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {KoboFormName, KoboIndex} from '@/koboDrcUaFormId'
 
 export enum AccessLevel {
   Read = 'Read',
@@ -74,6 +75,13 @@ export class Access {
       write: admin || !!accesses.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin),
       read: admin || !!accesses.find(_ => _.level === AccessLevel.Write || _.level === AccessLevel.Admin || _.level === AccessLevel.Read),
     }
+  }
+
+  static readonly getAccessToKobo = (accesses: Access<any>[], koboName: KoboFormName) => {
+    const koboId = KoboIndex.byName(koboName)?.id
+    if (!koboId) throw new Error(`No kobo found with name ${koboName}`)
+    const koboAccesses = accesses.filter(this.filterByFeature(AppFeatureId.kobo_database)).filter(_ => _.params?.koboFormId === koboId)
+    return this.toSum(koboAccesses)
   }
 
   // @ts-ignore
