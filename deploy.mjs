@@ -56,4 +56,4 @@ const isOnMainBranch = () => new RegExp(`${config.mainBranch}\s*\n*`).test(execS
   }
 })()
 
-// toggle deploy 10
+// toggle deploy 10 fuck microsoft
