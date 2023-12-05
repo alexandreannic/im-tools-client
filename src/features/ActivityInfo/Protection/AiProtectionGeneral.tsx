@@ -15,7 +15,7 @@ import {useAaToast} from '@/core/useToast'
 import {ActivityInfoProtectionMapper} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {Utils} from '@/utils/utils'
 import {Enum, seq} from '@alexandreannic/ts-utils'
-import {AiTypeProtectionRmm} from '@/features/ActivityInfo/HHS_2_1/AiTypeProtectionRmm'
+import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 

@@ -31,7 +31,6 @@ const persistedTempEnvVariablesForFront: { [key in Env]: string | undefined } = 
 
 const _ = env(persistedTempEnvVariablesForFront)
 
-
 export const appConfig = {
   uahToUsd: .027,
   muiProLicenseKey: _()(Env.NEXT_PUBLIC_MUI_PRO_LICENSE_KEY),

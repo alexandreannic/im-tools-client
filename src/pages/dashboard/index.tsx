@@ -18,11 +18,6 @@ const Index = () => {
             </Link>
           </ListItem>
           <ListItem>
-            <Link href={path('meal-visit-monitoring')}>
-              <ListItemText primary="MEAL Visit Monitoring" />
-            </Link>
-          </ListItem>
-          <ListItem>
             <Link href={path('safety-incidents-tracker')}>
               <ListItemText primary="Safety Incidents Tracker" />
             </Link>

@@ -2,7 +2,7 @@ import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {AiTypeProtectionRmm} from '@/features/ActivityInfo/HHS_2_1/AiTypeProtectionRmm'
+import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
 import {Page} from '@/shared/Page'
 import {Txt} from 'mui-extension'
 import {Panel} from '@/shared/Panel'
@@ -21,7 +21,7 @@ import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoAc
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
 import {PeriodHelper, Person} from '@/core/type'
 
-export const ActivityInfoProtectionGeneral = () => {
+export const AiProtectionGeneral = () => {
   const {api} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const [selectedOblast, setSelectedOblast] = useState<string | undefined>()

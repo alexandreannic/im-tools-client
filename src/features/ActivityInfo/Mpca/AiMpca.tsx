@@ -20,7 +20,7 @@ import {useAaToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
 
-export const ActivityInfoMpca = () => {
+export const AiMpca = () => {
   const {api, conf} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
