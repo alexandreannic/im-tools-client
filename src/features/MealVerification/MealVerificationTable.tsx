@@ -1,6 +1,6 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {map, Seq, seq} from '@alexandreannic/ts-utils'
+import {fnSwitch, map, Seq, seq} from '@alexandreannic/ts-utils'
 import React, {useEffect, useMemo, useState} from 'react'
 import {Page, PageTitle} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
@@ -19,20 +19,25 @@ import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
 import {useMealVerificationContext} from '@/features/MealVerification/MealVerificationContext'
-import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
+import {MealVerificationAnsers, MealVerificationAnswersStatus, MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {mealVerificationActivities, MealVerificationActivity, mealVerificationConf} from '@/features/MealVerification/mealVerificationConfig'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {ApiPaginate} from '@/core/type'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
-import {useSession} from '@/core/Session/SessionContext'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 
+export enum MergedDataStatus {
+  Selected = 'Selected',
+  Completed = 'Completed',
+  NotSelected = 'NotSelected'
+}
+
 interface MergedData {
+  status: MergedDataStatus
   dataCheck?: KoboAnswer<any>
   data: KoboAnswer<any>
-  ok: number
+  score: number
 }
 
 const paramSchema = yup.object({id: yup.string().required()})
@@ -75,7 +80,7 @@ export const MealVerificationTable = () => {
             </Box>
           }>{mealVerification.name}</PageTitle>
           <KoboSchemaProvider schema={fetcherSchema.entity}>
-            <MealVerificationEcrec
+            <MealVerificationTableContent
               activity={activity}
               verificationAnswers={fetcherVerificationAnswers.entity}
               verificationAnswersRefresh={() => fetcherVerificationAnswers.fetch({force: true, clean: false}, mealVerification.id)}
@@ -89,12 +94,12 @@ export const MealVerificationTable = () => {
   )
 }
 
-const MealVerificationEcrec = <
+const MealVerificationTableContent = <
   TData extends keyof ApiSdk['kobo']['typedAnswers'] = any,
   TCheck extends keyof ApiSdk['kobo']['typedAnswers'] = any,
 >({
-  verificationAnswers,
   activity,
+  verificationAnswers,
   verificationAnswersRefresh,
 }: {
   activity: MealVerificationActivity<TData, TCheck>
@@ -107,18 +112,18 @@ const MealVerificationEcrec = <
   const ctxSchema = useKoboSchemaContext()
   const ctx = useMealVerificationContext()
 
-  const idToVerifyIndex = useMemo(() => seq(verificationAnswers).groupByFirst(_ => _.koboAnswerId), [verificationAnswers])
+  const indexVerification = useMemo(() => seq(verificationAnswers).groupByFirst(_ => _.koboAnswerId), [verificationAnswers])
 
-  const fetcherData = useFetcher(() => api.kobo.typedAnswers[activity.activity.fetch]().then(_ => _.data) as Promise<KoboAnswer<any, any>[]>)
-  const fetcherVerif = useFetcher(() => api.kobo.typedAnswers[activity.verification.fetch]() as Promise<ApiPaginate<any>>)
+  const fetcherDataOrigin = useFetcher(() => api.kobo.typedAnswers[activity.activity.fetch]().then(_ => _.data) as Promise<KoboAnswer<any, any>[]>)
+  const fetcherDataVerified = useFetcher(() => api.kobo.typedAnswers[activity.verification.fetch]().then(_ => _.data) as Promise<KoboAnswer<any, any>[]>)
   const asyncUpdateAnswer = useAsync(api.mealVerification.updateAnswers, {requestKey: _ => _[0]})
 
   const [openModalAnswer, setOpenModalAnswer] = useState<KoboAnswer<any> | undefined>()
   const [display, setDisplay] = useState<'data' | 'dataCheck' | 'all'>('all')
 
   useEffect(() => {
-    fetcherVerif.fetch()
-    fetcherData.fetch()
+    fetcherDataVerified.fetch()
+    fetcherDataOrigin.fetch()
   }, [])
 
   const areEquals = (c: string, _: Pick<MergedData, 'data' | 'dataCheck'>) => {
@@ -129,7 +134,7 @@ const MealVerificationEcrec = <
         const checkArr = [_.dataCheck[c]].flat() as string[]
         const dataArr = [_.data?.[c]].flat() as string[]
         if (_.dataCheck[c] === undefined || _.data?.[c] === undefined) return _.dataCheck[c] === _.data?.[c]
-        return checkArr.every(c => (dataArr.find(d => c === d))), checkArr, dataArr
+        return checkArr.every(c => (dataArr.find(d => c === d)))
       case 'decimal':
       case 'integer':
         return Math.abs(_.dataCheck[c] - _.data?.[c]) <= _.data?.[c] * mealVerificationConf.numericToleranceMargin
@@ -141,44 +146,53 @@ const MealVerificationEcrec = <
   }
 
   const mergedData: Seq<MergedData> | undefined = useMemo(() => {
-    return map(fetcherVerif.entity?.data, fetcherData.entity, (verif, data) => {
-      const indexedVerif = seq(verif).groupBy(_ => _[activity.joinColumn] ?? '')
-      return seq(data.filter(_ => idToVerifyIndex[_.id]?.status === MealVerificationAnswersStatus.Selected)).map(_ => {
-        const refArr = indexedVerif[_[activity.joinColumn]!]
-        if (!refArr) return {
+    return map(fetcherDataOrigin.entity, fetcherDataVerified.entity, (origin, verified) => {
+      const indexDataVerified = seq(verified).groupBy(_ => _[activity.joinColumn] ?? '')
+      return seq(origin).filter(_ => indexVerification[_.id]).map(_ => {
+        const dataVerified = indexDataVerified[_[activity.joinColumn]]
+        if (dataVerified && dataVerified.length > 1) throw new Error(_[activity.joinColumn] + ' exist ' + dataVerified?.length)
+        const mergedData: Omit<MergedData, 'score'> = {
           data: _,
-          ok: 0,
+          dataCheck: dataVerified,
+          status: (() => {
+            if (!!dataVerified) return MergedDataStatus.Completed
+            if (indexVerification[_.id]?.status === MealVerificationAnswersStatus.Selected) return MergedDataStatus.Selected
+            return MergedDataStatus.NotSelected
+          })(),
         }
-        if (refArr.length > 1) throw new Error(_[activity.joinColumn] + ' exist ' + refArr?.length)
-        const ref = refArr[0]
-        const dataMerge = {
-          dataCheck: ref,
-          data: _,
+        const res: MergedData = {
+          ...mergedData,
+          score: seq(activity.verifiedColumns).sum(c => areEquals(c, mergedData) ? 1 : 0),
         }
-        return {
-          ...dataMerge,
-          ok: seq(activity.verifiedColumns).sum(c => areEquals(c, dataMerge) ? 1 : 0),
-        } as MergedData
-      }).compact().sortByNumber(_ => _.dataCheck ? 1 : 0)
+        return res
+      }).sortByNumber(_ => fnSwitch(_.status, {
+        [MergedDataStatus.Completed]: 1,
+        [MergedDataStatus.NotSelected]: 2,
+        [MergedDataStatus.Selected]: 0,
+      }))
     })
   }, [
-    fetcherVerif.entity,
-    fetcherData.entity,
-    idToVerifyIndex,
+    fetcherDataVerified.entity,
+    fetcherDataOrigin.entity,
+    indexVerification,
   ])
 
   const stats = useMemo(() => {
     if (!mergedData) return
-    const verified = mergedData.filter(_ => _.dataCheck)
+    const verifiedRows = mergedData.filter(_ => _.status === MergedDataStatus.Completed)
+    const selectedRows = mergedData?.filter(_ => _.status !== MergedDataStatus.NotSelected)
     return {
-      indicatorsOk: mergedData.sum(_ => _.ok ?? 0),
-      indicatorsVerified: verified.length * activity.verifiedColumns.length,
-      verifiedRows: verified.length,
+      selectedRows,
+      verifiedRows,
+      globalScore: verifiedRows.sum(_ => _.score ?? 0),
+      indicatorsCount: selectedRows.length * activity.verifiedColumns.length,
     }
   }, [mergedData])
 
-  const unselectedAnswers = useMemo(() => verificationAnswers.filter(_ => _.status !== MealVerificationAnswersStatus.Selected).sort(() => Math.random() - .5),
-    [verificationAnswers])
+  const unselectedAnswers = useMemo(
+    () => verificationAnswers.filter(_ => _.status !== MealVerificationAnswersStatus.Selected).sort(() => Math.random() - .5),
+    [verificationAnswers]
+  )
 
   return (
     <>
@@ -186,26 +200,18 @@ const MealVerificationEcrec = <
         <Div sx={{mb: 2, alignItems: 'stretch'}}>
           <SlidePanel sx={{flex: 1}}>
             <PieChartIndicator
-              dense value={mergedData?.length ?? 0} base={verificationAnswers.length}
+              value={stats.selectedRows.length ?? 0}
+              base={verificationAnswers.length}
               title={m._mealVerif.sampleSize}
-              showBase showValue
+              dense showBase showValue
             />
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <PieChartIndicator dense value={stats?.verifiedRows ?? 0} base={mergedData?.length ?? 1} title={m._mealVerif.verified}/>
+            <PieChartIndicator dense showValue value={stats?.verifiedRows.length ?? 0} base={stats.selectedRows?.length ?? 1} title={m._mealVerif.verified}/>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <PieChartIndicator dense value={stats?.indicatorsOk ?? 0} base={stats?.indicatorsVerified ?? 1} title={m._mealVerif.valid}/>
+            <PieChartIndicator dense showValue showBase value={stats?.globalScore ?? 0} base={stats?.indicatorsCount ?? 1} title={m._mealVerif.valid}/>
           </SlidePanel>
-          <SlideWidget title={m._mealVerif.allIndicators} sx={{flex: 1}} icon="view_module">
-            {stats.indicatorsVerified}
-          </SlideWidget>
-          <SlideWidget title={m._mealVerif.allValidIndicators} sx={{flex: 1}} icon="check_circle">
-            {stats.indicatorsOk}
-          </SlideWidget>
-          <SlideWidget title={m._mealVerif.allErrorIndicators} sx={{flex: 1}} icon="error">
-            {stats.indicatorsVerified - stats.indicatorsOk}
-          </SlideWidget>
           <SlideWidget title={m._mealVerif.numericToleranceMargin} sx={{flex: 1}} icon="expand">
             {toPercent(mealVerificationConf.numericToleranceMargin)}
           </SlideWidget>
@@ -215,7 +221,7 @@ const MealVerificationEcrec = <
         <Sheet
           showExportBtn
           id="meal-verif-ecrec"
-          loading={fetcherVerif.loading || fetcherData.loading}
+          loading={fetcherDataVerified.loading || fetcherDataOrigin.loading}
           data={mergedData}
           header={
             <>
@@ -246,49 +252,53 @@ const MealVerificationEcrec = <
                   </Tooltip>
                 }/>
               </ScRadioGroup>
-              {ctx.access.write && (
-                <AaBtn icon="add" variant="contained" color="primary" sx={{marginLeft: 'auto', mr: 1}} onClick={() => {
-                  asyncUpdateAnswer.call(unselectedAnswers.pop()?.id!, MealVerificationAnswersStatus.Selected,).then(verificationAnswersRefresh)
-                }}>
-                  {m.add}
-                </AaBtn>
-              )}
             </>
           }
           columns={[
             {
               id: 'actions',
-              width: 140,
+              width: 124,
               renderExport: false,
               head: '',
               style: _ => ({fontWeight: t.typography.fontWeightBold}),
               render: _ => {
-                const status = idToVerifyIndex[_.data.id]
+                const verif = indexVerification[_.data.id]
                 return (
                   <>
                     <TableIconBtn tooltip={m._mealVerif.viewData} children="text_snippet" onClick={() => setOpenModalAnswer(_.data)}/>
                     <TableIconBtn tooltip={m._mealVerif.viewDataCheck} disabled={!_.dataCheck} children="fact_check" onClick={() => setOpenModalAnswer(_.dataCheck)}/>
-                    {ctx.access.write && (
-                      <>
-                        <TableIconBtn
-                          children="delete"
-                          loading={asyncUpdateAnswer.loading.get(status.id)}
-                          disabled={status.status !== MealVerificationAnswersStatus.Selected}
-                          onClick={() => asyncUpdateAnswer.call(status.id,).then(verificationAnswersRefresh)}
-                        />
-                        <TableIconBtn
-                          children="casino"
-                          loading={asyncUpdateAnswer.loading.get(status.id)}
-                          disabled={unselectedAnswers.length === 0 || asyncUpdateAnswer.isLoading || status.status !== MealVerificationAnswersStatus.Selected || _.ok === 1}
-                          onClick={() => {
-                            Promise.all([
-                              asyncUpdateAnswer.call(status.id,),
-                              asyncUpdateAnswer.call(unselectedAnswers.pop()?.id!, MealVerificationAnswersStatus.Selected,)
-                            ]).then(verificationAnswersRefresh)
-                          }}
-                        />
-                      </>
-                    )}
+                    {ctx.access.write && fnSwitch(_.status, {
+                      NotSelected: (
+                        <>
+                          <TableIconBtn
+                            color="primary"
+                            loading={asyncUpdateAnswer.loading.get(verif.id)}
+                            children="add"
+                            onClick={() => asyncUpdateAnswer.call(verif.id, MealVerificationAnswersStatus.Selected).then(verificationAnswersRefresh)}
+                          />
+                        </>
+                      ),
+                      Selected: (
+                        <>
+                          <TableIconBtn
+                            children="delete"
+                            loading={asyncUpdateAnswer.loading.get(verif.id)}
+                            onClick={() => asyncUpdateAnswer.call(verif.id,).then(verificationAnswersRefresh)}
+                          />
+                          <TableIconBtn
+                            children="casino"
+                            loading={asyncUpdateAnswer.loading.get(verif.id)}
+                            disabled={unselectedAnswers.length === 0 || asyncUpdateAnswer.isLoading}
+                            onClick={() => {
+                              Promise.all([
+                                asyncUpdateAnswer.call(verif.id,),
+                                asyncUpdateAnswer.call(unselectedAnswers.pop()?.id!, MealVerificationAnswersStatus.Selected,)
+                              ]).then(verificationAnswersRefresh)
+                            }}
+                          />
+                        </>
+                      )
+                    }, () => undefined)}
                   </>
                 )
               },
@@ -309,7 +319,11 @@ const MealVerificationEcrec = <
               renderOption: _ => _.dataCheck
                 ? <><TableIcon color="success">check_circle</TableIcon> {m._mealVerif.verified}</>
                 : <><TableIcon color="warning">schedule</TableIcon> {m._mealVerif.notVerified}</>,
-              render: _ => _.dataCheck ? <TableIcon color="success">check_circle</TableIcon> : <TableIcon color="warning">schedule</TableIcon>,
+              render: _ => fnSwitch(_.status, {
+                NotSelected: <TableIcon color="disabled">do_disturb_on</TableIcon>,
+                Completed: <TableIcon color="success">check_circle</TableIcon>,
+                Selected: <TableIcon color="warning">schedule</TableIcon>,
+              })
             },
             ...activity.dataColumns?.flatMap(c => {
               const q = ctxSchema.schemaHelper.questionIndex[c]
@@ -336,7 +350,7 @@ const MealVerificationEcrec = <
                   } else
                     return {
                       color: t.palette.error.dark,
-                      background: alpha(t.palette.error.main, .2)
+                      background: alpha(t.palette.error.main, .08)
                     }
                 },
                 renderExport: (_: MergedData) => {
@@ -380,7 +394,7 @@ const MealVerificationEcrec = <
               align: 'right',
               style: _ => ({fontWeight: t.typography.fontWeightBold}),
               render: _ => (
-                _.dataCheck ? toPercent(_.ok / activity.verifiedColumns.length) : ''
+                _.dataCheck ? toPercent(_.score / activity.verifiedColumns.length) : ''
               )
             }
           ]}/>
