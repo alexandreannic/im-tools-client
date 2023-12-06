@@ -28,6 +28,7 @@ import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilte
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
 import {themeLightScrollbar} from '@/core/theme'
+import {useFetcherIp} from '@/alexlib-labo/UseFetcher'
 
 const filterShape = DashboardFilterHelper.makeShape<typeof Protection_Hhs2_1Options>()({
   drcOffice: {
@@ -88,11 +89,11 @@ export interface DashboardPageProps {
 export const DashboardProtHHS2 = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.protection_hhs2_1))
+  const _period = useFetcherIp(() => api.kobo.answer.getPeriod(kobo.drcUa.form.protection_hhs2_1))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
-  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
+  const _answers = useFetcherIp((filter?: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
     filters: {
       start: filter?.start,
       end: filter?.end,
@@ -109,7 +110,7 @@ export const DashboardProtHHS2 = () => {
   }, [_period.entity])
 
   useEffect(() => {
-    if (_answers.entity)
+    if (periodFilter.start?.getTime() !== _period.entity?.start.getTime() || periodFilter.end?.getTime() !== _period.entity?.end.getTime())
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
@@ -249,9 +250,9 @@ export const DashboardProtHHS2 = () => {
       }
       beforeSection={
         <>
-          <Alert type="info" deletable persistentDelete sx={{mb: '-20px'}}>
-            <Txt size="big" bold block>{m.protHHS2.descTitle}</Txt>
-            <Txt block sx={{mb: 1}}>{m.protHHS2.desc}</Txt>
+          <Alert type="info" deletable persistentDelete sx={{mb: '-20px', borderRadius: t => t.shape.borderRadius + 'px'}}>
+            <Txt size="big" bold block sx={{lineHeight: 1, mb: .5}}>{m.protHHS2.descTitle}</Txt>
+            <Txt block sx={{mb: .5}}>{m.protHHS2.desc}</Txt>
             {m.protHHS2.disclaimer}
           </Alert>
         </>

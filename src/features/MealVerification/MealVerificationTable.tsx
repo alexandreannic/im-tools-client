@@ -153,7 +153,7 @@ const MealVerificationTableContent = <
         if (dataVerified && dataVerified.length > 1) throw new Error(_[activity.joinColumn] + ' exist ' + dataVerified?.length)
         const mergedData: Omit<MergedData, 'score'> = {
           data: _,
-          dataCheck: dataVerified,
+          dataCheck: dataVerified?.[0],
           status: (() => {
             if (!!dataVerified) return MergedDataStatus.Completed
             if (indexVerification[_.id]?.status === MealVerificationAnswersStatus.Selected) return MergedDataStatus.Selected

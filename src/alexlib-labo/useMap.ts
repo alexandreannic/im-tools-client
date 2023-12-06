@@ -21,10 +21,10 @@ export const useMap2 = <K, V>(initialValue: Map<K, V> = new Map()): UseMap2<K, V
       const index: [K, V][] = arr.map(_ => [getKey(_), _])
       setMap(new Map(index))
     },
-    set: (k: K, v: V): void => {
+    set: (k: K, v: V) => {
       const newMap = map.set(k, v)
       setMap(new Map(newMap))
-      return map as any
+      return map
     },
     has: (k: K) => map.has(k),
     values: Array.from(map.values()),
