@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
@@ -17,12 +17,12 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {KoboShelterTa, shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
-import {formatDateTime} from '@/core/i18n/localization/en'
 import {ShelterSelectAccepted, ShelterSelectContractor, ShelterSelectStatus} from '@/features/Shelter/Data/ShelterTableInputs'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
+import {Datepicker} from '@/shared/Datepicker/Datepicker'
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -514,8 +514,18 @@ export const ShelterTable = () => {
         id: 'workDoneAt',
         head: m._shelter.workDoneAt,
         type: 'date',
+        width: 134,
         renderValue: _ => _.ta?.tags?.workDoneAt,
-        render: (row: ShelterEntity) => map(row.ta, ta => formatDateTime(row.ta?.tags?.workDoneAt))
+        render: (row: ShelterEntity) => row.ta?.tags?.progress === ShelterProgress.RepairWorksCompleted && map(row.ta, ta => (
+          <Datepicker
+            value={row.ta?.tags?.workDoneAt}
+            onChange={_ => ctx.ta.asyncUpdate.call({
+              answerId: ta.id,
+              key: 'workDoneAt',
+              value: _,
+            })}
+          />
+        ))
       },
     ])
   }, [ctx.data.mappedData])

@@ -34,8 +34,7 @@ export const SheetHead = (() => {
               indeterminate={selected.size !== data?.length && selected.size !== 0}
               onChange={() => {
                 if (!data) return
-                // @ts-ignore
-                if (selected.size === 0 && data) selected.add(data.map(getId))
+                if (selected.size === 0) selected.add(data.map(getId))
                 else selected.clear()
               }}
             />

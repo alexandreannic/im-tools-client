@@ -116,6 +116,16 @@ export interface ShelterTaTags extends KoboBaseTags {
   workDoneAt?: Date
 }
 
+export class ShelterTaTagsHelper {
+
+  static readonly mapTags = (_: any): ShelterTaTags => {
+    return {
+      ..._,
+      workDoneAt: _?.workDoneAt ? new Date(_.workDoneAt) : undefined
+    }
+  }
+}
+
 export const shelterDrcProject = [
   // HRK
   DrcProject['UKR-000308 UNHCR'],

@@ -414,6 +414,7 @@ const tableTheme = (t: Theme, colorOverOpaque: string) => ({
     padding: '6px',
   },
   '.table .MuiInputBase-root, .table .MuiFormControl-root': {
+    margin: 0,
     height: '100%',
   },
   '.table .MuiInputBase-input': {

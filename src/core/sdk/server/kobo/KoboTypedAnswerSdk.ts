@@ -7,7 +7,7 @@ import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
 import {mapBn_Re} from '@/core/koboModel/Bn_Re/Bn_ReMapping'
 import {mapShelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TAMapping'
 import {mapShelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTAMapping'
-import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {ShelterNtaTags, ShelterTaTags, ShelterTaTagsHelper} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ProtectionCommunityMonitoringTags, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {mapMeal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExternalMapping'
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
@@ -98,7 +98,7 @@ export class KoboTypedAnswerSdk {
     return this.search({
       formId: kobo.drcUa.form.shelter_ta,
       fnMap: mapShelter_TA,
-      fnMapTags: _ => ({..._, workDoneAt: _?.workDoneAt ? new Date(_.workDoneAt) : undefined}) as ShelterTaTags,
+      fnMapTags: ShelterTaTagsHelper.mapTags,
       ...filters,
     })
   }

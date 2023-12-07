@@ -1239,7 +1239,7 @@ export const en = Object.freeze({
       assessmentLocations: 'Assessments locations',
       repairCost: 'Total repairs cost',
       repairCostByHh: 'Repairs cost by HH',
-      workDoneAt: 'Work done',
+      workDoneAt: 'Work done at',
       scoreLevel: 'Price level',
       priceLevel: 'Price level',
       roofSum: 'Σ Roof',
