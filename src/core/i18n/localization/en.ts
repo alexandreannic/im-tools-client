@@ -160,6 +160,7 @@ export const en = Object.freeze({
       south: 'South',
       west: 'West'
     },
+    paid: 'Paid',
     start: 'Start',
     end: 'End',
     filters: 'Filters',
@@ -371,7 +372,7 @@ export const en = Object.freeze({
       allValidIndicators: 'Valid indicators',
       allErrorIndicators: 'Invalid indicators',
       valid: 'Validity',
-      viewData: 'View Data',
+      viewRegistrationData: 'View Registration Data',
       viewDataCheck: 'View Verification Data',
     },
     protHHS2: {

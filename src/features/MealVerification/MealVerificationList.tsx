@@ -4,7 +4,7 @@ import {useMealVerificationContext} from '@/features/MealVerification/MealVerifi
 import {Panel} from '@/shared/Panel'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
-import {Avatar, Box, Icon, useTheme} from '@mui/material'
+import {Avatar, Box, BoxProps, Icon, useTheme} from '@mui/material'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {mealVerificationModule} from '@/features/MealVerification/MealVerification'
 import {NavLink} from 'react-router-dom'
@@ -18,23 +18,24 @@ import {kobo, KoboIndex} from '@/koboDrcUaFormId'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {databaseModule} from '@/features/Database/databaseModule'
 import Link from 'next/link'
-import {KoboAnswer, KoboId, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
+import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 
-const LinkToForm = ({
+export const MealVerificationLinkToForm = ({
   koboFormId,
+  sx,
 }: {
   koboFormId: KoboId
-}) => {
+} & Pick<BoxProps, 'sx'>) => {
   const {conf} = useAppSettings()
   return (
     <Link target="_blank" href={conf.linkToFeature(
       AppFeatureId.kobo_database,
       databaseModule.siteMap.database.absolute(kobo.drcUa.server.prod, koboFormId)
     )}>
-      <Txt link sx={{verticalAlign: 'middle',}}>
+      <Txt link sx={{display: 'flex', alignItems: 'center', ...sx}}>
         <Icon fontSize="inherit" sx={{mr: .5}}>open_in_new</Icon>
         {KoboIndex.searchById(koboFormId)?.translation}
       </Txt>
@@ -133,9 +134,9 @@ export const MealVerificationList = () => {
               type: 'select_one',
               id: 'activity',
               head: m._mealVerif.activityForm,
-              renderOption: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].activity.koboFormId)?.translation,
-              renderValue: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].activity.koboFormId)?.translation,
-              render: _ => <LinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].activity.koboFormId}/>
+              renderOption: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].registration.koboFormId)?.translation,
+              renderValue: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].registration.koboFormId)?.translation,
+              render: _ => <MealVerificationLinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].registration.koboFormId}/>
             },
             {
               type: 'select_one',
@@ -143,7 +144,7 @@ export const MealVerificationList = () => {
               head: m._mealVerif.verificationForm,
               renderOption: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].verification.koboFormId)?.translation,
               renderValue: _ => KoboIndex.searchById(mealVerificationActivitiesIndex[_.activity].verification.koboFormId)?.translation,
-              render: _ => <LinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].verification.koboFormId}/>
+              render: _ => <MealVerificationLinkToForm koboFormId={mealVerificationActivitiesIndex[_.activity].verification.koboFormId}/>
             },
             {
               id: 'actions',

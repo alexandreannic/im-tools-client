@@ -133,7 +133,7 @@ export const MealVerificationForm = () => {
                         <ScRadioGroupItem
                           key={activity.name}
                           value={activity.name}
-                          title={KoboIndex.searchById(mealVerificationActivitiesIndex[activity.name].activity.koboFormId)?.translation}
+                          title={KoboIndex.searchById(mealVerificationActivitiesIndex[activity.name].registration.koboFormId)?.translation}
                         />
                       )}
                     </ScRadioGroup>
@@ -196,7 +196,7 @@ export const MealVerificationForm = () => {
                     <Txt bold block size="big">{activity.name}</Txt>
                     <Txt block>
                       {m._mealVerif.koboForm}:&nbsp;
-                      <Box component="span" sx={{fontFamily: 'monospace'}}>{KoboIndex.searchById(activity.activity.koboFormId)?.translation}</Box>
+                      <Box component="span" sx={{fontFamily: 'monospace'}}>{KoboIndex.searchById(activity.registration.koboFormId)?.translation}</Box>
                     </Txt>
                   </RenderRow>
                 )}

@@ -1,7 +1,7 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {fnSwitch, map, Seq, seq} from '@alexandreannic/ts-utils'
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {Page, PageTitle} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
@@ -25,7 +25,7 @@ import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {MealVerificationLinkToForm} from '@/features/MealVerification/MealVerificationList'
 
 export enum MergedDataStatus {
   Selected = 'Selected',
@@ -42,9 +42,15 @@ interface MergedData {
 
 const paramSchema = yup.object({id: yup.string().required()})
 
+function Link(props: {href: string, target: string, children: ReactNode}) {
+  return null
+}
+
 export const MealVerificationTable = () => {
+  const {m} = useI18n()
+  const t = useTheme()
   const {id} = paramSchema.validateSync(useParams())
-  const {api} = useAppSettings()
+  const {api, conf} = useAppSettings()
   const ctx = useMealVerificationContext()
   const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm({id: formId}))
   const fetcherVerificationAnswers = useFetcher(api.mealVerification.getAnswers)
@@ -64,7 +70,7 @@ export const MealVerificationTable = () => {
 
   useEffect(() => {
     if (mealVerification && activity) {
-      fetcherSchema.fetch({force: false, clean: false}, activity.activity.koboFormId)
+      fetcherSchema.fetch({force: false, clean: false}, activity.registration.koboFormId)
       fetcherVerificationAnswers.fetch({force: false, clean: false}, mealVerification.id)
     }
   }, [mealVerification, activity])
@@ -73,12 +79,51 @@ export const MealVerificationTable = () => {
     <Page width="full">
       {fetcherSchema.entity && fetcherVerificationAnswers.entity && activity && mealVerification ? (
         <>
-          <PageTitle subTitle={
-            <Box>
-              {capitalize(dateFromNow(mealVerification.createdAt))} by <b>{mealVerification.createdBy}</b>
-              <Box>{mealVerification.desc}</Box>
-            </Box>
-          }>{mealVerification.name}</PageTitle>
+          <PageTitle
+            action={
+              <>
+                <AaSelectSingle
+                  label={m.status}
+                  sx={{minWidth: 140}}
+                  disabled={!ctx.access.admin}
+                  value={mealVerification.status}
+                  options={[
+                    {
+                      children: <>
+                        <Icon sx={{verticalAlign: 'middle', mr: .5, color: t.palette.success.main}} title={m.Approved}>check_circle</Icon>
+                        {m.Approved}
+                      </>, value: MealVerificationStatus.Approved
+                    },
+                    {
+                      children: <>
+                        <Icon sx={{verticalAlign: 'middle', mr: .5, color: t.palette.error.main}} title={m.Rejected}>error</Icon>
+                        {m.Rejected}
+                      </>, value: MealVerificationStatus.Rejected
+                    },
+                    {
+                      children: <>
+                        <Icon sx={{verticalAlign: 'middle', mr: .5, color: t.palette.warning.main}} title={m.Pending}>schedule</Icon>
+                        {m.Pending}
+                      </>, value: MealVerificationStatus.Pending
+                    },
+                  ]}
+                  onChange={(e) => {
+                    ctx.asyncUpdate.call(mealVerification.id, e ?? undefined)
+                  }}
+                />
+              </>
+            }
+            subTitle={
+              <Box>
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                  <MealVerificationLinkToForm koboFormId={activity.registration.koboFormId} sx={{mr: 2}}/>
+                  <MealVerificationLinkToForm koboFormId={activity.verification.koboFormId}/>
+                </Box>
+
+                {capitalize(dateFromNow(mealVerification.createdAt))} by <b>{mealVerification.createdBy}</b>
+                <Box>{mealVerification.desc}</Box>
+              </Box>
+            }>{mealVerification.name}</PageTitle>
           <KoboSchemaProvider schema={fetcherSchema.entity}>
             <MealVerificationTableContent
               activity={activity}
@@ -114,7 +159,7 @@ const MealVerificationTableContent = <
 
   const indexVerification = useMemo(() => seq(verificationAnswers).groupByFirst(_ => _.koboAnswerId), [verificationAnswers])
 
-  const fetcherDataOrigin = useFetcher(() => api.kobo.typedAnswers[activity.activity.fetch]().then(_ => _.data) as Promise<KoboAnswer<any, any>[]>)
+  const fetcherDataOrigin = useFetcher(() => api.kobo.typedAnswers[activity.registration.fetch]().then(_ => _.data) as Promise<KoboAnswer<any, any>[]>)
   const fetcherDataVerified = useFetcher(() => api.kobo.typedAnswers[activity.verification.fetch]().then(_ => _.data) as Promise<KoboAnswer<any, any>[]>)
   const asyncUpdateAnswer = useAsync(api.mealVerification.updateAnswers, {requestKey: _ => _[0]})
 
@@ -265,7 +310,7 @@ const MealVerificationTableContent = <
                 const verif = indexVerification[_.data.id]
                 return (
                   <>
-                    <TableIconBtn tooltip={m._mealVerif.viewData} children="text_snippet" onClick={() => setOpenModalAnswer(_.data)}/>
+                    <TableIconBtn tooltip={m._mealVerif.viewRegistrationData} children="text_snippet" onClick={() => setOpenModalAnswer(_.data)}/>
                     <TableIconBtn tooltip={m._mealVerif.viewDataCheck} disabled={!_.dataCheck} children="fact_check" onClick={() => setOpenModalAnswer(_.dataCheck)}/>
                     {ctx.access.write && fnSwitch(_.status, {
                       NotSelected: (

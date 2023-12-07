@@ -15,7 +15,7 @@ export type MealVerificationActivity<
   TCheck extends keyof ApiSdk['kobo']['typedAnswers'] = any,
 > = {
   name: string
-  activity: {
+  registration: {
     koboFormId: KoboId,
     fetch: TData
     filters: (_: Awaited<ReturnType<KoboTypedAnswerSdk[TData]>>['data'][0]) => boolean
@@ -39,7 +39,7 @@ const registerActivity = <
 export const mealVerificationActivities = seq([
   registerActivity({
     name: 'ECREC Cash Registration',
-    activity: {
+    registration: {
       koboFormId: KoboIndex.byName('ecrec_cashRegistration').id,
       fetch: 'searchEcrec_cashRegistration',
       filters: _ => true,
@@ -79,7 +79,7 @@ export const mealVerificationActivities = seq([
   }),
   registerActivity({
     name: 'Cash for Fuel & Cash for Utilities',
-    activity: {
+    registration: {
       koboFormId: KoboIndex.byName('bn_re').id,
       fetch: 'searchBn_Re',
       filters: _ => !!(_.back_prog_type && [_.back_prog_type].flat().find(_ => /^c(sf|fu)/.test(_))),
@@ -97,7 +97,6 @@ export const mealVerificationActivities = seq([
     verifiedColumns: [
       'back_consent',
       'back_consen_no_reas',
-      'pay_det_tax_id_num',
       'ben_det_surname',
       'ben_det_first_name',
       'ben_det_pat_name',
