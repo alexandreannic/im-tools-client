@@ -1,9 +1,17 @@
 import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {aiRaions} from '@/core/uaLocation/aiRaions'
 import {aiHromadas} from '@/core/uaLocation/aiHromadas'
-import {AiShelterData} from '@/features/ActivityInfo/Shelter/aiShelterData'
+import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 
-export namespace AiTypeSnfiRmm {
+
+
+export namespace AiSnfiInterface {
+  export enum PlanCode {
+    'DRC-SN-00014' = 'DRC-SN-00014',
+    'DRC-SN-00013' = 'DRC-SN-00013',
+    'DRC-SN-00015' = 'DRC-SN-00015',
+  }
+
   export type Opt<T extends keyof typeof options> = keyof (typeof options)[T]
 
   export interface Type {
@@ -75,9 +83,9 @@ export namespace AiTypeSnfiRmm {
       'No': 'cslpqb5ldtzhdsl39'
     },
     'Plan Code': {
-      [AiShelterData.PlanCode['DRC-SN-00013']]: 'cvwwdp5losjpowe2',
-      [AiShelterData.PlanCode['DRC-SN-00014']]: 'cs1j3twlosqnuj33',
-      [AiShelterData.PlanCode['DRC-SN-00015']]: 'cp9vejmlosqpryz4',
+      [PlanCode['DRC-SN-00013']]: 'cvwwdp5losjpowe2',
+      [PlanCode['DRC-SN-00014']]: 'cs1j3twlosqnuj33',
+      [PlanCode['DRC-SN-00015']]: 'cp9vejmlosqpryz4',
     },
     'Implementing Partner': {
       'Danish Refugee Council': 'cv9umq8lehiq43f103'

@@ -5,7 +5,7 @@ import {AiNfi} from '@/features/ActivityInfo/NFI/AiNfi'
 import {AiMpca} from '@/features/ActivityInfo/Mpca/AiMpca'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Enum} from '@alexandreannic/ts-utils'
-import {AiShelter} from '@/features/ActivityInfo/Shelter/AiShelter'
+import {AiSnfi} from '@/features/ActivityInfo/Snfi/AiSnfi'
 import {AiProtectionGeneral} from '@/features/ActivityInfo/Protection/AiProtectionGeneral'
 
 interface Activity {
@@ -38,7 +38,7 @@ const activities = {
     // id: 'shelter',
     name: 'SNFI',
     path: '/shelter',
-    componnent: <AiShelter/>,
+    componnent: <AiSnfi/>,
   },
 }
 
