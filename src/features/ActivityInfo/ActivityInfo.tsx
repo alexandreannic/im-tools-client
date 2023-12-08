@@ -5,8 +5,13 @@ import {AiNfi} from '@/features/ActivityInfo/NFI/AiNfi'
 import {AiMpca} from '@/features/ActivityInfo/Mpca/AiMpca'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Enum} from '@alexandreannic/ts-utils'
-import {AiShelter} from '@/features/ActivityInfo/Shelter/AiShelter'
+import {AiSnfi} from '@/features/ActivityInfo/Snfi/AiSnfi'
 import {AiProtectionGeneral} from '@/features/ActivityInfo/Protection/AiProtectionGeneral'
+import {AiFslc} from '@/features/ActivityInfo/Fslc/AiFslc'
+
+export const activityInfoFormIds = {
+  fslc: 'csgkp3xlg0yezpb8'
+}
 
 interface Activity {
   // id: string
@@ -25,7 +30,7 @@ const activities = {
   'nfi': {
     // id: 'nfi',
     name: 'WASH (NFI)',
-    path: '/nfi',
+    path: '/wash_nfi',
     componnent: <AiNfi/>,
   },
   'mpca': {
@@ -37,8 +42,14 @@ const activities = {
   'shelter': {
     // id: 'shelter',
     name: 'SNFI',
-    path: '/shelter',
-    componnent: <AiShelter/>,
+    path: '/snfi',
+    componnent: <AiSnfi/>,
+  },
+  'ecrec': {
+    // id: 'shelter',
+    name: 'FSLC',
+    path: '/fslc',
+    componnent: <AiFslc/>,
   },
 }
 

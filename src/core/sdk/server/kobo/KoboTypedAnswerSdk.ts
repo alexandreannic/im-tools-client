@@ -94,15 +94,6 @@ export class KoboTypedAnswerSdk {
     })
   }
 
-  readonly searchEcrec = (filters: KoboAnswerFilter = {}) => {
-    return this.search({
-      formId: KoboIndex.byName('shelter_ta').id,
-      fnMap: mapShelter_TA,
-      fnMapTags: ShelterTaTagsHelper.mapTags,
-      ...filters,
-    })
-  }
-
   readonly searchShelterTa = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('shelter_ta').id,

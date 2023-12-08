@@ -95,7 +95,7 @@ export interface Bn_Re {
   // [note] This is a child headed household (high risk protection case), please refer immediately to a DRC Protection colleague and complete internal referral form.
   hh_char_chh: string,
   // [begin_repeat] 3.1.7 HH Members
-  hh_char_hh_det: {hh_char_hh_det_gender: undefined | Opt<'hh_char_hh_det_gender'> | undefined,hh_char_hh_det_age: number | undefined | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_baby_age: string | undefined,calc_preg: string | undefined}[] | undefined,
+  hh_char_hh_det: {hh_char_hh_det_gender: Opt<'hh_char_hh_det_gender'> | undefined,hh_char_hh_det_age: number | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_baby_age: string | undefined,calc_preg: string | undefined}[] | undefined,
   calc_tot_chi: string,
   calc_tot_ed_age: string,
   calc_tot_eld: string,
