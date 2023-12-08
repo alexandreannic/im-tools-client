@@ -27,7 +27,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   defaultLimit,
   showColumnsToggle,
   showColumnsToggleBtnTooltip,
-  rowsPerPageOptions = [20, 100, 500, 1000],
+  rowsPerPageOptions = [20, 50, 100, 500],
   select,
   onFiltersChange,
   onDataChange,

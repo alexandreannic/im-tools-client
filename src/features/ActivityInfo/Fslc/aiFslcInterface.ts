@@ -1,5 +1,10 @@
+import {DrcProject} from '@/core/drcUa'
+import {aiOblasts} from '@/core/uaLocation/aiOblasts'
+import {aiRaions} from '@/core/uaLocation/aiRaions'
+import {aiHromadas} from '@/core/uaLocation/aiHromadas'
+
 export namespace AiTypeFslc {
-  type Opt<T extends keyof typeof options> = keyof (typeof options)[T]
+  export type Opt<T extends keyof typeof options> = keyof (typeof options)[T]
 
   export interface Type {
     'Partner Organization': Opt<'Partner Organization'>,
@@ -33,7 +38,7 @@ export namespace AiTypeFslc {
     'Elderly Women': number,
     'Elderly Men': number,
     'People with Disability'?: number,
-    'Non-Individual': number,
+    // 'Non-Individual': number,
     'Comments'?: string,
   }
 
@@ -42,9 +47,15 @@ export namespace AiTypeFslc {
     'c1hl9qdlgao5ayp4': a['Donor'] === undefined ? undefined : 'cacmfplleguhh3k2' + ':' + options['Donor'][a['Donor']!],
     'c2vfxebldx0r9o81v': a['Report to a planned project?'] === undefined ? undefined : options['Report to a planned project?'][a['Report to a planned project?']!],
     'ck2o0khldbolhev5': a['Project (FSLC-Updated)'] === undefined ? undefined : 'cwthx6rldboa6hq2' + ':' + options['Project (FSLC-Updated)'][a['Project (FSLC-Updated)']!],
-    'ct3cvkildbgub3b7': a['Oblast'] === undefined ? undefined : a['Oblast'],
-    'c48optvldbguv498': a['Raion'] === undefined ? undefined : a['Raion'],
-    'cfml2chldbgvdfb9': a['Hromada'] === undefined ? undefined : a['Hromada'],
+    // 'ct3cvkildbgub3b7': a['Oblast'] === undefined ? undefined : a['Oblast'],
+    // 'c48optvldbguv498': a['Raion'] === undefined ? undefined : a['Raion'],
+    // 'cfml2chldbgvdfb9': a['Hromada'] === undefined ? undefined : a['Hromada'],
+    // @ts-ignore
+    'camsdoble7prey5o': 'cg7v61llbunvy9t9:' + aiOblasts[a['Oblast']],
+    // @ts-ignore
+    'c74nt9ale7prs2hp': 'cjy8nbnlbunzcnh1h:' + aiRaions[a['Raion']],
+    // @ts-ignore
+    'cs63bxkle7ps0xuq': 'c700rjplbuo1fjq5m:' + aiHromadas[a['Hromada']],
     'c4n35tdldbgvsxja': a['Settlement'] === undefined ? undefined : a['Settlement'],
     'c90oollldbgwf09c': a['Collective Sites'] === undefined ? undefined : a['Collective Sites'],
     'ct7r8hmldx1yr4g2j': a['Response Theme'] === undefined ? undefined : options['Response Theme'][a['Response Theme']!],
@@ -85,8 +96,8 @@ export namespace AiTypeFslc {
       'No': 'ca1wo2zldx0u4g61x'
     },
     'Project (FSLC-Updated)': {
-      'c2eil8zlpv60tm82': 'c2eil8zlpv60tm82',
-      'c89u324lpwcumwi5': 'c89u324lpwcumwi5'
+      [DrcProject['UKR-000352 UHF7']]: 'c2eil8zlpv60tm82',
+      [DrcProject['UKR-000336 UHF6']]: 'c89u324lpwcumwi5'
     },
     'Response Theme': {
       'Newly retaken areas': 'c7khfilldx1yr4g2i',
@@ -102,7 +113,9 @@ export namespace AiTypeFslc {
       'Non-Displaced': 'cl76cbild4hcq8i5',
       'Returnees': 'cxbkri3ld4hcx9z6'
     },
-    'FSLC Indicators': {},
+    'FSLC Indicators': {
+      'Agriculture and livestock inputs (cash)': 'ce6blj2lg0yeodzk',
+    },
     'Activity status': {
       'Completed': 'cjouicvlgaod9vbk',
       'Ongoing': 'c2e4naylgaocv8oi'
@@ -174,11 +187,11 @@ const ex1 = {
         'cm96uc7lgaocv8oj': 'cjouicvlgaod9vbk', // Activity status
         'cp1kiaqlgaq5rwv2': '2023-10-01',
         'cj4390tlgaq6r3r3': '2023-10-01',
-        'cmknpwjlgaq9y44a': 'cmkdx6algaqafv2b',
-        'ch96ikblgaqflfc9': 'cnxjryqlgaqfxhfa',
+        'cmknpwjlgaq9y44a': 'cmkdx6algaqafv2b', // Assistance Modality
+        'ch96ikblgaqflfc9': 'cnxjryqlgaqfxhfa', // Cash Delivery Mechanism
         'caxf48lgdeplu44': 7500,
-        'cm8t708lgaqnhct13': 'cfgswu4lgaqnnf514',
-        'cbq93y6lgaqoeix1b': 'c745buflgaqp5l01f',
+        'cm8t708lgaqnhct13': 'cfgswu4lgaqnnf514', // Currency
+        'cbq93y6lgaqoeix1b': 'c745buflgaqp5l01f', // Frequency
         'cl6k2uhldx1jlxl20': 27,
         'cor4avglg0yjm8dt': 1,
         'c6hlkmuld46ym4x4': 2,

@@ -14,11 +14,12 @@ import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
+import {AiFslcData} from '@/features/ActivityInfo/Fslc/aiFslcData'
 
 export const AiFslc = () => {
   const {api} = useAppSettings()
   const {toastHttpError} = useAaToast()
-  const fetcher = useFetcher(AiShelterData.reqRepairs(api))
+  const fetcher = useFetcher(AiFslcData.req(api))
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {m} = useI18n()
 
@@ -29,7 +30,7 @@ export const AiFslc = () => {
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
   })
-  
+
   return (
     <Page width="full">
       <Panel>
@@ -67,23 +68,30 @@ export const AiFslc = () => {
               </>
             )
           },
-          {type: 'select_one', id: 'Report to a planned project', head: 'Report to a planned project', render: row => row.activity['Report to a planned project']},
-          {type: 'select_one', id: 'Plan Code', head: 'Plan Code', render: row => row.activity['Plan Code']},
-          {type: 'select_one', id: 'SNFI indictors', head: 'SNFI indictors', render: row => row.activity['SNFI indictors']},
+          {type: 'select_one', id: 'Project (FSLC-Updated)', head: 'Project (FSLC-Updated)', render: row => row.activity['Project (FSLC-Updated)']},
           {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},
           {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row.activity['Raion']},
           {type: 'select_one', id: 'Hromada', head: 'Hromada', render: row => row.activity['Hromada']},
-          {type: 'select_one', id: 'Implementation status', head: 'Implementation status', render: row => row.activity['Implementation status']},
+          {type: 'select_one', id: 'Response Theme', head: 'Response Theme', render: row => row.activity['Response Theme']},
+          {type: 'select_one', id: 'Response Plan', head: 'Response Plan', render: row => row.activity['Response Plan']},
+          {type: 'select_one', id: 'Reporting Month', head: 'Reporting Month', render: row => row.activity['Reporting Month']},
           {type: 'select_one', id: 'Population Group', head: 'Population Group', render: row => row.activity['Population Group']},
-          {type: 'number', id: 'Indicator Value (HHs reached, buildings, etc.)', head: 'Indicator Value (HHs reached, buildings, etc.)', render: row => row.activity['Indicator Value (HHs reached, buildings, etc.)']},
-          {type: 'number', id: '# Individuals Reached', head: '# Individuals Reached', render: row => row.activity['# Individuals Reached']},
-          {type: 'number', id: 'Girls (0-17)', head: 'Girls (0-17)', render: row => row.activity['Girls (0-17)']},
-          {type: 'number', id: 'Boys (0-17)', head: 'Boys (0-17)', render: row => row.activity['Boys (0-17)']},
-          {type: 'number', id: 'Women (18-59)', head: 'Women (18-59)', render: row => row.activity['Women (18-59)']},
-          {type: 'number', id: 'Men (18-59)', head: 'Men (18-59)', render: row => row.activity['Men (18-59)']},
-          {type: 'number', id: 'Elderly Women (60+)', head: 'Elderly Women (60+)', render: row => row.activity['Elderly Women (60+)']},
-          {type: 'number', id: 'Elderly Men (60+)', head: 'Elderly Men (60+)', render: row => row.activity['Elderly Men (60+)']},
-          {type: 'number', id: 'People with disability', head: 'People with disability', render: row => row.activity['People with disability']},
+          {type: 'select_one', id: 'FSLC Indicators', head: 'FSLC Indicators', render: row => row.activity['FSLC Indicators']},
+          {type: 'select_one', id: 'Activity status', head: 'Activity status', render: row => row.activity['Activity status']},
+          {type: 'select_one', id: 'Assistance Modality', head: 'Assistance Modality', render: row => row.activity['Assistance Modality']},
+          {type: 'select_one', id: 'Cash Delivery Mechanism', head: 'Cash Delivery Mechanism', render: row => row.activity['Cash Delivery Mechanism']},
+          {type: 'number', id: 'Value per unit', head: 'Value per unit', render: row => row.activity['Value per unit']},
+          {type: 'select_one', id: 'Currency', head: 'Currency', render: row => row.activity['Currency']},
+          {type: 'select_one', id: 'Frequency', head: 'Frequency', render: row => row.activity['Frequency']},
+          {type: 'number', id: 'Total Individuals Reached', head: 'Total Individuals Reached', render: row => row.activity['Total Individuals Reached']},
+          {type: 'number', id: 'New unique Individuals Reached', head: 'New unique Individuals Reached', render: row => row.activity['New unique Individuals Reached']},
+          {type: 'number', id: 'Girls', head: 'Girls', render: row => row.activity['Girls']},
+          {type: 'number', id: 'Boys', head: 'Boys', render: row => row.activity['Boys']},
+          {type: 'number', id: 'Adult Women', head: 'Adult Women', render: row => row.activity['Adult Women']},
+          {type: 'number', id: 'Adult Men', head: 'Adult Men', render: row => row.activity['Adult Men']},
+          {type: 'number', id: 'Elderly Women', head: 'Elderly Women', render: row => row.activity['Elderly Women']},
+          {type: 'number', id: 'Elderly Men', head: 'Elderly Men', render: row => row.activity['Elderly Men']},
+          {type: 'number', id: 'People with Disability', head: 'People with Disability', render: row => row.activity['People with Disability']},
         ]}/>
       </Panel>
     </Page>
