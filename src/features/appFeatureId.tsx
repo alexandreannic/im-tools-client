@@ -110,7 +110,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     name: 'Activity Info',
     color: '#00e6b8',
     path: '/activity-info',
-    showIf: _ => _ && _?.admin,
+    showIf: _ => true,
   },
   wfp_deduplication: {
     id: AppFeatureId.wfp_deduplication,
