@@ -57,13 +57,14 @@ export class AILocationHelper {
     return raions[iso]
   }
 
-  static readonly findHromada = (oblastName: string, raionName: string, hromadaName: string) => {
+  static readonly findHromada = (oblastName: string, raionName: string, hromadaName?: string) => {
+    if (!hromadaName) return
     if (hromadaName === 'Cnernivetskyi') {
       hromadaName = 'Chernivetskyi'
     }
     const raionIso = AILocationHelper.findRaion(oblastName, raionName)?.iso
     const list = Enum.values(hromadas).filter(_ => _.parent === raionIso)
-    return list.find(_ => _.en.toLowerCase() === hromadaName.toLowerCase())
+    return list.find(_ => _.en.toLowerCase() === hromadaName?.toLowerCase())
   }
 
   static readonly findSettlement = (oblastName: string, raionName: string, hromadaName: string, settlementName: string) => {

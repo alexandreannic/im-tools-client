@@ -360,10 +360,12 @@ const MealVerificationTableContent = <
               align: 'center',
               head: m.status,
               type: 'select_one',
-              renderValue: _ => '' + !!_.dataCheck,
-              renderOption: _ => _.dataCheck
-                ? <><TableIcon color="success">check_circle</TableIcon> {m._mealVerif.verified}</>
-                : <><TableIcon color="warning">schedule</TableIcon> {m._mealVerif.notVerified}</>,
+              renderValue: _ => _.status,
+              renderOption: _ => fnSwitch(_.status, {
+                NotSelected: <TableIcon color="disabled">do_disturb_on</TableIcon>,
+                Completed: <TableIcon color="success">check_circle</TableIcon>,
+                Selected: <TableIcon color="warning">schedule</TableIcon>,
+              }),
               render: _ => fnSwitch(_.status, {
                 NotSelected: <TableIcon color="disabled">do_disturb_on</TableIcon>,
                 Completed: <TableIcon color="success">check_circle</TableIcon>,
