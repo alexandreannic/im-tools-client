@@ -10,7 +10,7 @@ import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {CfmTable} from '@/features/Cfm/Data/CfmTable'
 import {CfmProvider, useCfmContext} from '@/features/Cfm/CfmContext'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
@@ -134,8 +134,8 @@ export const CfmModule = () => {
   const {api} = useAppSettings()
   const _schemas = useFetcher(async () => {
     const [external, internal] = await Promise.all([
-      api.koboApi.getForm({id: kobo.drcUa.form.meal_cfmExternal}),
-      api.koboApi.getForm({id: kobo.drcUa.form.meal_cfmInternal}),
+      api.koboApi.getForm({id: KoboIndex.byName('meal_cfmExternal').id}),
+      api.koboApi.getForm({id: KoboIndex.byName('meal_cfmInternal').id}),
     ])
     return {external, internal}
   })

@@ -9,7 +9,7 @@ import {Sidebar, SidebarBody, SidebarHr, SidebarItem} from '@/shared/Layout/Side
 import {PartnershipProvider} from '@/features/Partnership/PartnershipContext'
 import {PartnershipDashboard} from '@/features/Partnership/Dashboard/PartnershipDashboard'
 import {PartnershipDatabase} from '@/features/Partnership/Database/PartnershipDatabase'
-import {kobo, KoboIndex} from '@/koboDrcUaFormId'
+import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAaToast} from '@/core/useToast'
@@ -18,7 +18,7 @@ import {Tooltip} from '@mui/material'
 import {mpcaModule} from '@/features/Mpca/Mpca'
 import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
 
-const relatedKoboForms: (keyof typeof kobo.drcUa.form)[] = [
+const relatedKoboForms: KoboFormName[] = [
   'partnership_partnersDatabase',
   'partnership_assessment',
   'partnership_initialQuestionnaire',

@@ -10,7 +10,7 @@ import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {ShelterTable} from '@/features/Shelter/Data/ShelterTable'
 import {ShelterProvider} from '@/features/Shelter/ShelterContext'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import Link from 'next/link'
@@ -51,7 +51,7 @@ const ShelterSidebar = () => {
             <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
           )}
         </NavLink>
-        <Link href={conf.linkToFeature(AppFeatureId.kobo_database, databaseModule.siteMap.access.absolute(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta))}>
+        <Link href={conf.linkToFeature(AppFeatureId.kobo_database, databaseModule.siteMap.access.absolute(kobo.drcUa.server.prod, KoboIndex.byName('shelter_nta').id))}>
           <SidebarItem icon="person_add" iconEnd="open_in_new">{m.accesses}</SidebarItem>
         </Link>
         <SidebarHr/>
@@ -95,8 +95,8 @@ export const ShelterWithAccess = () => {
   const fetcherSchema = useFetcher(async () => {
     if (!access) return
     const [ta, nta] = await Promise.all([
-      api.koboApi.getForm({id: kobo.drcUa.form.shelter_ta}),
-      api.koboApi.getForm({id: kobo.drcUa.form.shelter_nta}),
+      api.koboApi.getForm({id: KoboIndex.byName('shelter_ta').id}),
+      api.koboApi.getForm({id: KoboIndex.byName('shelter_nta').id}),
     ])
     return {ta, nta}
   })
@@ -132,8 +132,8 @@ export const ShelterWithAccess = () => {
               <Route index element={<Navigate to={shelterModule.siteMap.data}/>}/>
               <Route path={shelterModule.siteMap.dashboard} element={<ShelterDashboard/>}/>
               <Route path={shelterModule.siteMap.data} element={<ShelterTable/>}/>
-              <Route path={shelterModule.siteMap.nta} element={<DatabaseTable formId={kobo.drcUa.form.shelter_nta} schema={fetcherSchema.entity.nta}/>}/>
-              <Route path={shelterModule.siteMap.ta} element={<DatabaseTable formId={kobo.drcUa.form.shelter_ta} schema={fetcherSchema.entity.ta}/>}/>
+              <Route path={shelterModule.siteMap.nta} element={<DatabaseTable formId={KoboIndex.byName('shelter_nta').id} schema={fetcherSchema.entity.nta}/>}/>
+              <Route path={shelterModule.siteMap.ta} element={<DatabaseTable formId={KoboIndex.byName('shelter_ta').id} schema={fetcherSchema.entity.ta}/>}/>
             </Routes>
           </ShelterProvider>
         )}

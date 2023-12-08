@@ -5,14 +5,14 @@ import {KoboAnswerId, KoboAttachment, KoboBaseTags, KoboId} from '@/core/sdk/ser
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Person} from '@/core/type'
 import {DeepPartial, Enum} from '@alexandreannic/ts-utils'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboFormName} from '@/KoboIndex'
 
 export interface MpcaTypeTag extends KoboBaseTags {
   projects?: DrcProject[]
   committed?: Date
 }
 
-const buildEnumFromObject = <T extends keyof typeof kobo.drcUa.form>(t: T[]): { [K in T]: K } => {
+const buildEnumFromObject = <T extends KoboFormName>(t: T[]): { [K in T]: K } => {
   return t.reduce((acc, curr) => ({...acc, [curr]: curr}), {} as any)
 }
 

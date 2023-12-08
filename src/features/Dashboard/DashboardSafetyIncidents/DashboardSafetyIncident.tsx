@@ -8,7 +8,7 @@ import {Box} from '@mui/material'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {makeKoboBarChartComponent} from '../shared/KoboBarChart'
 import {DebouncedInput} from '@/shared/DebouncedInput'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
@@ -51,7 +51,7 @@ export const DashboardSafetyIncident = () => {
   const {api} = useAppSettings()
   const {m, formatLargeNumber, formatDateTime, formatDate} = useI18n()
 
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.safety_incident))
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('safety_incident').id))
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const _answers = useFetcher((filter: Partial<Period>) => api.kobo.typedAnswers.searchSafetyIncident({

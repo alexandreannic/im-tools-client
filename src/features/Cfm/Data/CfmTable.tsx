@@ -18,7 +18,7 @@ import {cfmModule} from '@/features/Cfm/CfmModule'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {Autocomplete} from '@mui/material'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
@@ -55,21 +55,21 @@ export const CfmTable = ({}: any) => {
 
   const _refresh = useAsync(async () => {
     await Promise.all([
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.meal_cfmInternal),
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.meal_cfmExternal),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, KoboIndex.byName('meal_cfmInternal').id),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, KoboIndex.byName('meal_cfmExternal').id),
     ])
     await ctx.data.fetch({force: true, clean: false})
   })
   // const {toastHttpError, toastLoading} = useAaToast()
   //
   // const _editExternal = useFetchers(async (answerId: KoboAnswerId) => {
-  //   return api.koboApi.getEditUrl(kobo.drcUa.server.prod, kobo.drcUa.form.cfmExternal, answerId).then(_ => {
+  //   return api.koboApi.getEditUrl(kobo.drcUa.server.prod, KoboIndex.byName('cfmExternal').id, answerId).then(_ => {
   //     if (_.url) window.open(_.url, '_blank')
   //   }).catch(toastHttpError)
   // }, {requestKey: _ => _[0]})
   //
   // const _editInternal = useFetchers(async (answerId: KoboAnswerId) => {
-  //   return api.koboApi.getEditUrl(kobo.drcUa.server.prod, kobo.drcUa.form.cfmInternal, answerId).then(_ => {
+  //   return api.koboApi.getEditUrl(kobo.drcUa.server.prod, KoboIndex.byName('cfmInternal').id, answerId).then(_ => {
   //     if (_.url) window.open(_.url, '_blank')
   //   }).catch(toastHttpError)
   // }, {requestKey: _ => _[0]})

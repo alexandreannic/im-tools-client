@@ -1,6 +1,6 @@
 import React, {ReactNode, useContext, useState} from 'react'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {UseShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
@@ -59,14 +59,14 @@ export const ShelterProvider = ({
 
   const ntaActions = useShelterActions<ShelterNtaTags>({
     form: 'nta',
-    formId: kobo.drcUa.form.shelter_nta,
+    formId: KoboIndex.byName('shelter_nta').id,
     setEntity: data.fetcher.setEntity,
     schema: schemaNta,
     langIndex,
   })
   const taActions = useShelterActions<ShelterTaTags>({
     form: 'ta',
-    formId: kobo.drcUa.form.shelter_ta,
+    formId: KoboIndex.byName('shelter_ta').id,
     setEntity: data.fetcher.setEntity,
     schema: schemaTa,
     langIndex,

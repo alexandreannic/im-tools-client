@@ -8,7 +8,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
-import {kobo, koboFormTranslation, KoboIndex} from '@/koboDrcUaFormId'
+import {kobo, koboFormTranslation, KoboIndex} from '@/KoboIndex'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
@@ -158,7 +158,7 @@ export const MpcaData = () => {
               render: _ => (
                 <SelectDrcProject label={null} options={MpcaHelper.projects} value={_.tags?.projects?.[0]} onChange={p => {
                   ctx.asyncUpdates.call({
-                    formId: kobo.drcUa.form[_.source],
+                    formId: KoboIndex.byName(_.source).id,
                     answerIds: [_.id],
                     key: 'projects',
                     value: p ? [p] : null,
@@ -315,7 +315,7 @@ export const MpcaData = () => {
               render: row => (
                 <>
                   <Switch size="small" checked={!!row.tags?.committed} onChange={(e, checked) => ctx.asyncUpdates.call({
-                    formId: kobo.drcUa.form[row.source],
+                    formId: KoboIndex.byName(row.source).id,
                     answerIds: [row.id],
                     key: 'committed',
                     value: checked ? new Date() : null,

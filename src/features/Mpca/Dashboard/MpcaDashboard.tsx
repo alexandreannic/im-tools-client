@@ -32,7 +32,7 @@ import {Panel} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
-import {koboFormTranslation, KoboIndex} from '@/koboDrcUaFormId'
+import {koboFormTranslation, KoboIndex} from '@/KoboIndex'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {groupBy} from '@/utils/groupBy'
 import ageGroup = Person.ageGroup

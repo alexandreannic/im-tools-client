@@ -2,7 +2,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {appConfig} from '@/conf/AppConfig'
 import {Access} from '@/core/sdk/server/access/Access'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 
 export enum AppFeatureId {
   meal = 'meal',
@@ -60,7 +60,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
       // return u?.email === appConfig.contact
       return u?.admin || accesses && !!accesses
         .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-        .find(_ => _.params?.koboFormId === kobo.drcUa.form.shelter_nta)
+        .find(_ => _.params?.koboFormId === KoboIndex.byName('shelter_nta').id)
     }
   },
   mpca: {
@@ -72,7 +72,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     showIf: (u, accesses) => {
       return u?.admin || accesses && !!accesses
         .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-        .find(_ => _.params?.koboFormId === kobo.drcUa.form.bn_re)
+        .find(_ => _.params?.koboFormId === KoboIndex.byName('bn_re').id)
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },
@@ -86,7 +86,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     showIf: (u, accesses) => {
       return u?.admin || accesses && !!accesses
         .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-        .find(_ => _.params?.koboFormId === kobo.drcUa.form.bn_re)
+        .find(_ => _.params?.koboFormId === KoboIndex.byName('bn_re').id)
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },
@@ -99,9 +99,9 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     showIf: (_, accesses) => _ && _?.admin || accesses && !!accesses
       .filter(Access.filterByFeature(AppFeatureId.kobo_database))
       .find(_ => {
-        return _.params?.koboFormId === kobo.drcUa.form.bn_re ||
-          _.params?.koboFormId === kobo.drcUa.form.ecrec_cashRegistration ||
-          _.params?.koboFormId === kobo.drcUa.form.meal_visitMonitoring
+        return _.params?.koboFormId === KoboIndex.byName('bn_re').id ||
+          _.params?.koboFormId === KoboIndex.byName('ecrec_cashRegistration').id ||
+          _.params?.koboFormId === KoboIndex.byName('meal_visitMonitoring').id
       })
   },
   activity_info: {

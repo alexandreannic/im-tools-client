@@ -19,7 +19,7 @@ import {DashboardProtHHS2Safety} from './DashboardProtHHS2Safety'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
 import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Disability'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Period, Person} from '@/core/type'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
@@ -89,7 +89,7 @@ export interface DashboardPageProps {
 export const DashboardProtHHS2 = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const _period = useFetcherIp(() => api.kobo.answer.getPeriod(kobo.drcUa.form.protection_hhs2_1))
+  const _period = useFetcherIp(() => api.kobo.answer.getPeriod(KoboIndex.byName('protection_hhs2_1').id))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
@@ -128,7 +128,7 @@ export const DashboardProtHHS2 = () => {
 
   const database = useMemo(() => {
     if (!_answers.entity) return
-    const loki = new LokiDb(kobo.drcUa.form.protection_hhs2_1, {
+    const loki = new LokiDb(KoboIndex.byName('protection_hhs2_1').id, {
       persistenceMethod: 'memory',
     })
     const table = loki.addCollection('data', {

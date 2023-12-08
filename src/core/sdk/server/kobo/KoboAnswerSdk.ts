@@ -1,7 +1,7 @@
 import {ApiClient} from '../ApiClient'
 import {ApiPaginate, ApiPagination, Period, UUID} from '@/core/type'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboBaseTags, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
@@ -37,11 +37,11 @@ export class KoboAnswerSdk {
 
   readonly getPeriod = (formId: KoboId): Promise<Period> => {
     switch (formId) {
-      case kobo.drcUa.form.protection_hhs2_1:
+      case KoboIndex.byName('protection_hhs2_1').id:
         return Promise.resolve({start: new Date(2023, 3, 1), end: startOfDay(new Date())})
-      case kobo.drcUa.form.meal_visitMonitoring:
+      case KoboIndex.byName('meal_visitMonitoring').id:
         return Promise.resolve({start: new Date(2023, 5, 15), end: startOfDay(new Date())})
-      case kobo.drcUa.form.safety_incident:
+      case KoboIndex.byName('safety_incident').id:
         return Promise.resolve({start: new Date(2023, 8, 19), end: startOfDay(new Date())})
       default:
         throw new Error('To implement')

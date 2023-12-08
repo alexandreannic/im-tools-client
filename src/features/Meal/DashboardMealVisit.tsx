@@ -5,7 +5,7 @@ import {DashboardMealVisitDashboard} from '@/features/Meal/DashboardMealVisitDas
 import {DashboardMealVisitPdf} from '@/features/Meal/DashboardMealVisitPdf'
 import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 
 export const mealModule = {
@@ -18,7 +18,7 @@ export const mealModule = {
 
 export const DashboardMealVisit = () => {
   const {api} = useAppSettings()
-  const fetcherSchema = useFetcher(() => api.koboApi.getForm({id: kobo.drcUa.form.meal_visitMonitoring}))
+  const fetcherSchema = useFetcher(() => api.koboApi.getForm({id: KoboIndex.byName('meal_visitMonitoring').id}))
   useEffect(() => {
     fetcherSchema.fetch()
   }, [])

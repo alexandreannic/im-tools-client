@@ -1,6 +1,6 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {Period} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -34,7 +34,7 @@ export const DashboardMealVisitProvider = ({
     }
   }).then(_ => _.data)
 
-  const fetcherPeriod = useFetcher(() => api.kobo.answer.getPeriod(kobo.drcUa.form.meal_visitMonitoring))
+  const fetcherPeriod = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('meal_visitMonitoring').id))
   const fetcherAnswers = useFetcher(request)
   const answersIndex = useMemo(() => {
     return seq(fetcherAnswers.entity).groupByFirst(_ => _.id)

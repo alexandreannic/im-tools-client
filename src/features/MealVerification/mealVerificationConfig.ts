@@ -1,5 +1,5 @@
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {kobo, KoboIndex} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {KoboTypedAnswerSdk} from '@/core/sdk/server/kobo/KoboTypedAnswerSdk'
 import {KeyOf} from '@/utils/utils'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'

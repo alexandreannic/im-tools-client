@@ -5,19 +5,19 @@ import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {currentProtectionProjects} from '@/core/sdk/server/kobo/custom/KoboProtection'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 
 export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, ReactNode> = {
-      // [kobo.drcUa.form.ecrec_cashRegistration]: {
+      // [KoboIndex.byName('ecrec_cashRegistration').id]: {
       //   return (
       //
       //   )
       // },
-      [kobo.drcUa.form.protection_communityMonitoring]: (
+      [KoboIndex.byName('protection_communityMonitoring').id]: (
         <AaSelectSingle
           hideNullOption
           sx={{maxWidth: 200}}
@@ -26,7 +26,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
           options={currentProtectionProjects.map(k => ({value: k, children: k}))}
         />
       ),
-      [kobo.drcUa.form.protection_hhs2_1]: (
+      [KoboIndex.byName('protection_hhs2_1').id]: (
         <AaSelectMultiple
           sx={{maxWidth: 200}}
           defaultValue={[]}

@@ -1,7 +1,7 @@
 import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClient'
 import {UseAsync, useAsync, useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
@@ -50,7 +50,7 @@ export const MpcaProvider = ({
 }) => {
   const {api} = useAppSettings()
 
-  const _form = useFetcher(() => api.koboApi.getForm({id: kobo.drcUa.form.bn_re}))
+  const _form = useFetcher(() => api.koboApi.getForm({id: KoboIndex.byName('bn_re').id}))
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)//
 
@@ -99,7 +99,7 @@ export const MpcaProvider = ({
       const gb = seq(data).groupBy(_ => _.source)
       await Promise.all(Enum.entries(gb).map(([formName, answers]) => {
         return updateByFormId({
-          formId: kobo.drcUa.form[formName],
+          formId: KoboIndex.byName(formName).id,
           answerIds: answers.map(_ => _.id),
           key,
           value,

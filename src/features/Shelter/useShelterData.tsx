@@ -3,7 +3,7 @@ import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {seq} from '@alexandreannic/ts-utils'
 
 export type UseShelterData = ReturnType<typeof useShelterData>
@@ -36,8 +36,8 @@ export const useShelterData = () => {
 
   const asyncSyncAnswers = useAsync(async () => {
     await Promise.all([
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_ta),
-      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, kobo.drcUa.form.shelter_nta),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, KoboIndex.byName('shelter_ta').id),
+      api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, KoboIndex.byName('shelter_nta').id),
     ])
     await fetchAll()
   })

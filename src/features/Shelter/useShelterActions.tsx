@@ -1,7 +1,7 @@
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {Dispatch, SetStateAction, useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'

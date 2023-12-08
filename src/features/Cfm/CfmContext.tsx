@@ -5,7 +5,7 @@ import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo} from '@/koboDrcUaFormId'
+import {KoboIndex} from '@/KoboIndex'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {Meal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExternal'
@@ -21,8 +21,8 @@ import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmIntern
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 
 const formIdMapping: Record<string, CfmDataSource> = {
-  [kobo.drcUa.form.meal_cfmExternal]: CfmDataSource.External,
-  [kobo.drcUa.form.meal_cfmInternal]: CfmDataSource.Internal,
+  [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,
+  [KoboIndex.byName('meal_cfmInternal').id]: CfmDataSource.Internal,
 }
 
 export type CfmData = {
@@ -162,7 +162,7 @@ export const CfmProvider = ({
       res.push({
         category,
         priority: KoboMealCfmHelper.feedbackType2priority(category),
-        formId: kobo.drcUa.form.meal_cfmExternal,
+        formId: KoboIndex.byName('meal_cfmExternal').id,
         external_feedback_type: _.feedback_type,
         external_consent: _.consent,
         external_prot_support: _.prot_support,
@@ -179,7 +179,7 @@ export const CfmProvider = ({
         project: !_.project_code || _.project_code === 'Other' ? _.project_code_specify : _.project_code,
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         category,
-        formId: kobo.drcUa.form.meal_cfmInternal,
+        formId: KoboIndex.byName('meal_cfmInternal').id,
         form: CfmDataSource.Internal,
         internal_existing_beneficiary: _.existing_beneficiary,
         internal_project_code: _.project_code,

@@ -2,12 +2,12 @@ import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {currentProtectionProjects, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, map} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/drcUa'
 import {useI18n} from '@/core/i18n'
 import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
-import {kobo} from '@/koboDrcUaFormId'
+import {kobo, KoboIndex} from '@/KoboIndex'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
@@ -16,7 +16,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, SheetColumnProps<KoboMappedAnswer>[]> = {
-      [kobo.drcUa.form.protection_communityMonitoring]: [
+      [KoboIndex.byName('protection_communityMonitoring').id]: [
         {
           id: 'tags_project',
           head: m.project,
@@ -38,7 +38,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           )
         }
       ],
-      [kobo.drcUa.form.shelter_north]: [
+      [KoboIndex.byName('shelter_north').id]: [
         {
           id: 'tags_project',
           head: m.project,
@@ -60,7 +60,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           )
         }
       ],
-      [kobo.drcUa.form.protection_hhs2_1]: [
+      [KoboIndex.byName('protection_hhs2_1').id]: [
         {
           id: 'tags_project',
           head: m.project,
@@ -68,7 +68,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           width: 200,
           options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
           tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects,
-          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects ?? SheetUtils.blank,
+          renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => map(row.tags?.projects, p => p.length === 0 ? undefined : p) ?? [SheetUtils.blank],
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
             <AaSelectMultiple
