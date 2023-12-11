@@ -2,7 +2,7 @@ import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {aiRaions} from '@/core/uaLocation/aiRaions'
 import {aiHromadas} from '@/core/uaLocation/aiHromadas'
 import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
-
+import {DrcProject} from '@/core/drcUa'
 
 
 export namespace AiSnfiInterface {
@@ -17,9 +17,9 @@ export namespace AiSnfiInterface {
   export interface Type {
     'Reporting Partner': Opt<'Reporting Partner'>,
     'Report to a planned project': Opt<'Report to a planned project'>,
-    'Plan Code'?: any,
+    'Plan Code'?: Opt<'Plan Code'>,
     'Implementing Partner': Opt<'Implementing Partner'>,
-    'SNFI indictors': any,
+    'SNFI indictors': Opt<'SNFI indictors'>,
     'Distribution through IOM NFI Common Pipeline'?: Opt<'Distribution through IOM NFI Common Pipeline'>,
     'Oblast': string,
     'Raion': string,
@@ -43,9 +43,9 @@ export namespace AiSnfiInterface {
   export const map = (a: Type) => ({
     'cq6zwqjlf82vdwm3': a['Reporting Partner'] === undefined ? undefined : 'cr4xx3dlbs86w9y2' + ':' + options['Reporting Partner'][a['Reporting Partner']!],
     'csmijzwldtzh3bl38': a['Report to a planned project'] === undefined ? undefined : options['Report to a planned project'][a['Report to a planned project']!],
-    // 'c75dtq4les7cpc82d': a['Plan Code'] === undefined ? undefined : 'cdesthtldec3hei2' + ':' + options['Plan Code'][a['Plan Code']!],
+    'c75dtq4les7cpc82d': a['Plan Code'] === undefined ? undefined : 'cdesthtldec3hei2' + ':' + options['Plan Code'][a['Plan Code']!],
     'cn10ozsldtxbraj1l': a['Implementing Partner'] === undefined ? undefined : 'cr4xx3dlbs86w9y2' + ':' + options['Implementing Partner'][a['Implementing Partner']!],
-    // 'cv9pg04ldu2u9h93j': a['SNFI indictors'] === undefined ? undefined : 'cyi4zqdldu27njw36' + ':' + options['SNFI indictors'][a['SNFI indictors']!],
+    'cv9pg04ldu2u9h93j': a['SNFI indictors'] === undefined ? undefined : 'cyi4zqdldu27njw36' + ':' + options['SNFI indictors'][a['SNFI indictors']!],
     'ct345swleh7rbj47': a['Distribution through IOM NFI Common Pipeline'] === undefined ? undefined : options['Distribution through IOM NFI Common Pipeline'][a['Distribution through IOM NFI Common Pipeline']!],
     // 'camsdoble7prey5o': a['Oblast'] === undefined ? undefined : a['Oblast'],
     // 'c74nt9ale7prs2hp': a['Raion'] === undefined ? undefined : a['Raion'],
@@ -83,14 +83,15 @@ export namespace AiSnfiInterface {
       'No': 'cslpqb5ldtzhdsl39'
     },
     'Plan Code': {
-      [PlanCode['DRC-SN-00013']]: 'cvwwdp5losjpowe2',
-      [PlanCode['DRC-SN-00014']]: 'cs1j3twlosqnuj33',
-      [PlanCode['DRC-SN-00015']]: 'cp9vejmlosqpryz4',
+      [DrcProject['UKR-000314 UHF4']]: 'cs1j3twlosqnuj33',
+      [DrcProject['UKR-000322 ECHO2']]: 'cvwwdp5losjpowe2',
+      [DrcProject['UKR-000308 UNHCR']]: 'cp9vejmlosqpryz4',
     },
     'Implementing Partner': {
       'Danish Refugee Council': 'cv9umq8lehiq43f103'
     },
     'SNFI indictors': {
+      // 'Emergency Shelter Support': 'cfki5tlleso4fy3c',
       'emergency': 'cfki5tlleso4fy3c',
       // 'light_repair': 'cp9vejmlosqpryz4',
       'light_repair': 'cthbls4leso4fy310',
@@ -115,4 +116,36 @@ export namespace AiSnfiInterface {
       'Returnees': 'cxbkri3ld4hcx9z6'
     }
   }
+}
+
+const eskExample = {
+  'changes': [{
+    'formId': 'ckrgu2uldtxbgbg1h',
+    'recordId': 'cq3pkp6lpwq07pd4',
+    'parentRecordId': null,
+    'fields': {
+      'cq6zwqjlf82vdwm3': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',
+      'csmijzwldtzh3bl38': 'cvlcuxtldtzh3bl37',
+      'c75dtq4les7cpc82d': 'cdesthtldec3hei2:cp9vejmlosqpryz4',
+      'cn10ozsldtxbraj1l': 'cr4xx3dlbs86w9y2:cv9umq8lehiq43f103',
+      'cv9pg04ldu2u9h93j': 'cyi4zqdldu27njw36:cfki5tlleso4fy3c',
+      'camsdoble7prey5o': 'cg7v61llbunvy9t9:c4s5fm0lebrkckc9',
+      'c74nt9ale7prs2hp': 'cjy8nbnlbunzcnh1h:cxylhcclecp1fu236',
+      'cs63bxkle7ps0xuq': 'c700rjplbuo1fjq5m:ckx035qlebsucnn13y',
+      'cobl961lfk2oa3g3': 'cqvi6fqlbuo3hyc63:c21rblslfk31pl57',
+      'cvq23zolfk3jvle9': 'cl69o0lldbf4rtk2:csomp5ilfqiu8ty2',
+      'c8fnjxzles7i9yi2k': 'c7x3nhyles7iq962l',
+      'csfoqprleh6qg1k3': '2023-11-01',
+      'c16s0poldtxdh4i2k': 'cqjd0o4ld4hbyo12:co8y3rvld4hchx14',
+      'cqi4oh3ldx7oxbk2b': 22,
+      'cizsb4rldtxdh4i2r': 21,
+      'cfoottlldtxdh4i2s': 1,
+      'cxxg0f1ldtxdh4i2t': 2,
+      'c7s25dpldtxdh4i2u': 3,
+      'cszje7jldtxdh4i2v': 4,
+      'c75mnm0ldtxdh4i2w': 5,
+      'cpwm9hildtxdh4i2x': 6,
+      'cy9uo60ldtxdh4i2y': 0
+    }
+  }]
 }

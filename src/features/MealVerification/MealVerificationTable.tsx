@@ -333,7 +333,7 @@ const MealVerificationTableContent = <
                           <TableIconBtn
                             children="casino"
                             loading={asyncUpdateAnswer.loading.get(verif.id)}
-                            disabled={unselectedAnswers.length === 0 || asyncUpdateAnswer.isLoading}
+                            disabled={unselectedAnswers.length === 0 || asyncUpdateAnswer.anyLoading}
                             onClick={() => {
                               Promise.all([
                                 asyncUpdateAnswer.call(verif.id,),

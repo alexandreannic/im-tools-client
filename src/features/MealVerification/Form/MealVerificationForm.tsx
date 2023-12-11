@@ -221,7 +221,7 @@ export const MealVerificationForm = () => {
                 </RenderRow>
 
                 <Box sx={{mb: 1}}>
-                  <NextBtn label={m.submit} loading={asyncCreate.isLoading} disabled={!form.formState.isValid} onClick={form.handleSubmit(submit)}/>
+                  <NextBtn label={m.submit} loading={asyncCreate.anyLoading} disabled={!form.formState.isValid} onClick={form.handleSubmit(submit)}/>
                   <BackBtn/>
                 </Box>
               </StepContent>

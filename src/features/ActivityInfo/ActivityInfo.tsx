@@ -1,7 +1,7 @@
 import {Layout} from '@/shared/Layout'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import React, {ReactNode} from 'react'
-import {AiNfi} from '@/features/ActivityInfo/NFI/AiNfi'
+import {AiWash} from '@/features/ActivityInfo/NFI/AiWash'
 import {AiMpca} from '@/features/ActivityInfo/Mpca/AiMpca'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Enum} from '@alexandreannic/ts-utils'
@@ -31,7 +31,7 @@ const activities = {
     // id: 'nfi',
     name: 'WASH (NFI)',
     path: '/wash_nfi',
-    componnent: <AiNfi/>,
+    componnent: <AiWash/>,
   },
   'mpca': {
     // id: 'mpca',

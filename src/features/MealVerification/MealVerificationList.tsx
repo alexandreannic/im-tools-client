@@ -160,7 +160,7 @@ export const MealVerificationList = () => {
                         close()
                         ctx.fetcherVerifications.fetch({force: true, clean: false})
                       })}
-                      loading={asyncRemove.isLoading}
+                      loading={asyncRemove.anyLoading}
                     >
                       <TableIconBtn>delete</TableIconBtn>
                     </Modal>

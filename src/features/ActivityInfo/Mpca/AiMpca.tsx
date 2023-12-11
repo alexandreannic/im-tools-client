@@ -2,11 +2,10 @@ import {Page} from '@/shared/Page'
 import React, {useEffect, useState} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {endOfDay, endOfMonth, format, startOfMonth, subMonths} from 'date-fns'
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Utils} from '@/utils/utils'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {AiTypeMpcaRmm} from '@/features/ActivityInfo/Mpca/AiTypeMpcaRmm'
+import {AiTypeMpcaRmm} from '@/features/ActivityInfo/Mpca/AiMpcaInterface'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -19,6 +18,8 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
+import {useAsync} from '@/alexlib-labo/useAsync'
+import {useFetcher} from '@alexandreannic/react-hooks-lib'
 
 export const AiMpca = () => {
   const {api, conf} = useAppSettings()
@@ -50,7 +51,7 @@ export const AiMpca = () => {
           {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
           {
             by: _ => fnSwitch(_.benefStatus!, {
-              idp:'IDPs',
+              idp: 'IDPs',
               long_res: 'Non-Displaced',
               ret: 'Returnees',
               ref_asy: 'Returnees',
@@ -59,7 +60,6 @@ export const AiMpca = () => {
         ],
         finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
           const res = Person.groupByGenderAndGroup(Person.ageGroup.Quick)(group.flatMap(_ => _.persons).compact())
-          console.log(res)
           mapped.push({
             oblast: oblast === '' ? undefined : oblast,
             raion,
@@ -74,14 +74,14 @@ export const AiMpca = () => {
             'Elderly Men': res['50+']?.Male,
             'Partner Organization': 'Danish Refugee Council',
             'Reporting Month': period,
-            'Total # of people assisted with multi-purpose cash assistance': group.sum(_ => Utils.add(
+            'Total # of people assisted with multi-purpose cash assistance': Utils.add(
               res['0 - 17']?.Female,
               res['0 - 17']?.Male,
               res['18 - 49']?.Female,
               res['18 - 49']?.Male,
               res['50+']?.Female,
               res['50+']?.Male,
-            )),
+            ),
             Durations: 'Three months',
             'People with disability': 0,
           })
@@ -92,6 +92,7 @@ export const AiMpca = () => {
         req: ActivityInfoSdk.makeRecordRequest({
           activityIdPrefix: 'drcmpca',
           activity: AiTypeMpcaRmm.map(_),
+          activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
           activityIndex: i,
           formId: ActivityInfoSdk.formId.mpca,
         })
@@ -114,14 +115,9 @@ export const AiMpca = () => {
               <Txt color="hint" sx={{ml: 1}}>
                 USD to UAH: <b>{conf.uahToUsd}</b>
               </Txt>
-              <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
+              <AaBtn icon="send" variant="contained" loading={_submit.anyLoading} sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
-                _submit.call(-1, fetcher.entity.filter(_ => !!_.Hromada).map((_, i) => ActivityInfoSdk.makeRecordRequest({
-                  activityIdPrefix: 'drcmpca',
-                  activity: AiTypeMpcaRmm.map(_),
-                  activityIndex: i,
-                  formId: ActivityInfoSdk.formId.mpca,
-                }))).catch(toastHttpError)
+                _submit.call(-1, fetcher.entity.filter(_ => !!_.Hromada).map((_, i) => _.req)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </AaBtn>

@@ -37,7 +37,7 @@ export const DashboardProtHHS2Document = ({
   const filterPerson = (_: Seq<ProtHHS2Person>) => _.filter(_ => gender.length === 0 || gender.includes(_.gender!))
     .filter(_ => {
       if (ageGroup.length === 0) return true
-      return !!ageGroup.find(g => Person.filterByAgegroup(Person.ageGroup.Quick)(g)(_))
+      return !!ageGroup.find(g => Person.filterByAgegroup(Person.ageGroup.Quick, g)(_))
     })
 
   const filteredPersons = useMemo(() => {

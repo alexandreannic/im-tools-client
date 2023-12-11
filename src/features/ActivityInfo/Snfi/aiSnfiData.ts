@@ -9,8 +9,69 @@ import {ShelterProgress, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custo
 import {format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
+import {AiFslcDataParser} from '@/features/ActivityInfo/Fslc/aiFslcData'
 
 export class AiShelterData {
+
+  static readonly reqEsk = (api: ApiSdk) => (period: Period) => {
+    return api.kobo.typedAnswers.searchBn_Re({filters: period})
+      .then(_ => _.data.filter(_ => _.back_prog_type?.find(p => p.includes('esk'))).map(_ => ({..._, ...getAiLocation(_)})))
+      .then(data => {
+        const formatted: AiFslcDataParser[] = []
+        let index = 0
+        Utils.groupBy({
+          data,
+          groups: [
+            {
+              by: (_): DrcProject => {
+                if (_.donor_esk?.includes('uhf_')) return DrcProject['UKR-000314 UHF4']
+                return undefined as any
+                // if (!_.donor_esk) return
+                // if (_.donor_esk.includes('uhf_')) return AiShelterData.planCode['UKR-000314 UHF4']
+              }
+            },
+            {by: _ => _.Oblast!},
+            {by: _ => _.Raion!},
+            {by: _ => _.Hromada!},
+            {
+              by: _ => fnSwitch(_.ben_det_res_stat!, {
+                idp: 'IDPs',
+                long_res: 'Non-Displaced',
+                ret: 'Returnees',
+                ref_asy: 'Non-Displaced',
+              }, () => 'Non-Displaced')
+            }
+
+          ],
+          finalTransform: (grouped, [project, oblast, raion, hromada, status]) => {
+            const persons = grouped.flatMap(_ => _.hh_char_hh_det ?? []).compactBy('hh_char_hh_det_age').compactBy('hh_char_hh_det_gender')
+            const activity: AiSnfiInterface.Type = {
+              'SNFI indictors': 'emergency',
+              'Implementing Partner': 'Danish Refugee Council',
+              'Report to a planned project': DrcProject ? 'Yes' : 'No',
+              ...(DrcProject ? {'Plan Code': project} : {}) as any,
+              // 'Plan Code': AiShelterData.planCode[project],
+              'Reporting Partner': 'Danish Refugee Council',
+              'Oblast': oblast,
+              'Raion': raion,
+              'Hromada': hromada,
+              'Implementation status': 'Complete',
+              'Reporting Date (YYYY-MM-DD)': format(period.end, 'yyyy-MM-dd'),
+              // 'Population Group': status,
+              'Indicator Value (HHs reached, buildings, etc.)': grouped.length,
+              // '# Individuals Reached': persons.length,
+              'Girls (0-17)': persons.count(_ => _.hh_char_hh_det_age! < 18 && _.hh_char_hh_det_gender === 'female'),
+              'Boys (0-17)': persons.count(_ => _.hh_char_hh_det_age! < 18 && _.hh_char_hh_det_gender === 'male'),
+              'Women (18-59)': persons.count(_ => _.hh_char_hh_det_age! >= 18 && _.hh_char_hh_det_age! < 60 && _.hh_char_hh_det_gender === 'female'),
+              'Men (18-59)': persons.count(_ => _.hh_char_hh_det_age! >= 18 && _.hh_char_hh_det_age! < 60 && _.hh_char_hh_det_gender === 'male'),
+              'Elderly Women (60+)': persons.count(_ => _.hh_char_hh_det_age! >= 60 && _.hh_char_hh_det_gender === 'female'),
+              'Elderly Men (60+)': persons.count(_ => _.hh_char_hh_det_age! >= 60 && _.hh_char_hh_det_gender === 'male'),
+              'People with disability': 0,
+            }
+          }
+        })
+      })
+  }
 
   static readonly reqRepairs = (api: ApiSdk) => (period: Period) => api.shelter.search(period).then(_ => seq(_.data).compactBy('nta').compactBy('ta').map(x => ({
     ...x, ...getAiLocation(x.nta)
@@ -57,27 +118,15 @@ export class AiShelterData {
         }
       ],
       finalTransform: (grouped, [project, oblast, raion, hromada, damageLevel, complete, status]) => {
-        // TODO NOT EVERYTHING IN AGE GROUP
-        // const persons = grouped.flatMap(_ => _.nta?.hh_char_hh_det?.map(_ => Person.create({
-        //   age: _.hh_char_hh_det_age,
-        //   gender: fnSwitch(_.hh_char_hh_det_gender!, {
-        //     male: Gender.Male,
-        //     female: Gender.Female,
-        //   }, () => Gender.Other)
-        // }))).compact().compactBy('age')
-        const indicator = grouped.sum(_ => _.nta?.ben_det_hh_size ?? 0)
-        const planCode = AiShelterData.planCode[project]
-        const validPlanCode = !!AiSnfiInterface.options['Plan Code'][planCode]
         const activity: AiSnfiInterface.Type = {
           'SNFI indictors': fnSwitch(damageLevel, {
             [ShelterTaPriceLevel.Light]: 'light_repair',
             [ShelterTaPriceLevel.Medium]: 'medium_repair',
             [ShelterTaPriceLevel.Heavy]: 'medium_repair',
-          }, () => undefined),
+          }, () => 'medium_repair'),
           'Implementing Partner': 'Danish Refugee Council',
-          'Report to a planned project': validPlanCode ? 'Yes' : 'No',
-          ...(validPlanCode ? {'Plan Code': planCode} : {}),
-          // 'Plan Code': AiShelterData.planCode[project],
+          'Report to a planned project': project ? 'Yes' : 'No',
+          'Plan Code': project as any,
           'Reporting Partner': 'Danish Refugee Council',
           'Oblast': oblast,
           'Raion': raion,
@@ -85,15 +134,7 @@ export class AiShelterData {
           'Implementation status': complete,
           'Reporting Date (YYYY-MM-DD)': format(period.end, 'yyyy-MM-dd'),
           // 'Population Group': status,
-          'Indicator Value (HHs reached, buildings, etc.)': indicator,
-          // '# Individuals Reached': persons.length,
-          // 'Girls (0-17)': persons.count(_ => _.age < 18 && _.gender === Gender.Female),
-          // 'Boys (0-17)': persons.count(_ => _.age < 18 && _.gender === Gender.Male),
-          // 'Women (18-59)': persons.count(_ => _.age >= 18 && _.age < 60 && _.gender === Gender.Female),
-          // 'Men (18-59)': persons.count(_ => _.age >= 18 && _.age < 60 && _.gender === Gender.Male),
-          // 'Elderly Women (60+)': persons.count(_ => _.age >= 60 && _.gender === Gender.Female),
-          // 'Elderly Men (60+)': persons.count(_ => _.age >= 60 && _.gender === Gender.Male),
-          // 'People with disability': 0,
+          'Indicator Value (HHs reached, buildings, etc.)': grouped.sum(_ => _.nta?.ben_det_hh_size ?? 0),
         }
         formatted.push({
           all: grouped.map(_ => _.nta),
@@ -101,6 +142,7 @@ export class AiShelterData {
           request: ActivityInfoSdk.makeRecordRequest({
             activity: AiSnfiInterface.map(activity),
             formId: 'ckrgu2uldtxbgbg1h',
+            activityYYYYMM: format(period.start, 'yyyyMM'),
             activityIdPrefix: 'drcsta',
             activityIndex: index++,
           })
@@ -109,12 +151,12 @@ export class AiShelterData {
     })
     return formatted
   })
-  
-  static readonly planCode: Record<DrcProject, AiSnfiInterface.PlanCode> = {
-    [DrcProject['UKR-000314 UHF4']]: AiSnfiInterface.PlanCode['DRC-SN-00014'],
-    [DrcProject['UKR-000322 ECHO2']]: AiSnfiInterface.PlanCode['DRC-SN-00013'],
-    [DrcProject['UKR-000308 UNHCR']]: AiSnfiInterface.PlanCode['DRC-SN-00015'],
-  } as any
+
+  // static readonly planCode: Record<DrcProject, AiSnfiInterface.PlanCode> = {
+  //   [DrcProject['UKR-000314 UHF4']]: AiSnfiInterface.PlanCode['DRC-SN-00014'],
+  //   [DrcProject['UKR-000322 ECHO2']]: AiSnfiInterface.PlanCode['DRC-SN-00013'],
+  //   [DrcProject['UKR-000308 UNHCR']]: AiSnfiInterface.PlanCode['DRC-SN-00015'],
+  // } as any
 }
 
 //

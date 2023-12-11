@@ -5,7 +5,7 @@ import {Page} from '@/shared/Page'
 import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
 import {Box, Icon} from '@mui/material'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
-import {mapWashRMM, WashRMM} from './aiNFIType'
+import {mapWashRMM, WashRMM} from './aiWashInterface'
 import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
 import {ActivityInfoActions} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
@@ -110,7 +110,8 @@ const toFormData = ({
       request: ActivityInfoSdk.makeRecordRequest({
         activity: mapWashRMM(activity),
         formId,
-        activityIdPrefix: 'drcnfi' + period.replace('-', '') + 'i',
+        activityYYYYMM: period.replace('-', ''),
+        activityIdPrefix: 'drcnfi' + 'i',
         activityIndex: index
       })
     })
@@ -169,7 +170,7 @@ const toFormData = ({
   return activities
 }
 
-export const AiNfi = () => {
+export const AiWash = () => {
   const {api} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
 

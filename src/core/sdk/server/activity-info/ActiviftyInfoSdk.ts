@@ -14,17 +14,19 @@ export class ActivityInfoSdk {
     activityIdPrefix,
     activity,
     activityIndex,
+    activityYYYYMM = '',
     formId,
   }: {
     activityIdPrefix: string
     activity: any
+    activityYYYYMM: string
     activityIndex: number
     formId: string
   }): ActiviftyInfoRecords => {
     return {
       'changes': [{
         'formId': formId,
-        'recordId': activityIdPrefix + ('' + activityIndex).padStart(3, '0'),
+        'recordId': activityIdPrefix + activityYYYYMM + ('' + activityIndex).padStart(3, '0'),
         'parentRecordId': null,
         'fields': activity
       }]
