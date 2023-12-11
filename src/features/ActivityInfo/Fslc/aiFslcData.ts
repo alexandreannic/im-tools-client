@@ -1,10 +1,10 @@
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {Period} from '@/core/type'
+import {Period, Person} from '@/core/type'
 import {AiTypeFslc} from '@/features/ActivityInfo/Fslc/aiFslcInterface'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 import {Utils} from '@/utils/utils'
-import {fnSwitch} from '@alexandreannic/ts-utils'
+import {fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {DrcProject} from '@/core/drcUa'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
@@ -13,6 +13,9 @@ import {Ecrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ec
 import {addDays, format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
+import {group} from 'd3-array'
+import groupByGenderAndGroup = Person.groupByGenderAndGroup
+import Gender = Person.Gender
 
 export interface AiFslcDataParser {
   all: KoboAnswer<Ecrec_CashRegistration>[],
@@ -56,7 +59,19 @@ export class AiFslcData {
             }
           ],
           finalTransform: (grouped, [project, oblast, raion, hromada, responseTheme, populationGroup]) => {
-            const persons = grouped.flatMap(_ => _.hh_char_hh_det ?? []).compactBy('hh_char_hh_det_age').compactBy('hh_char_hh_det_gender')
+            const persons = seq([
+              ...grouped.flatMap(_ => ({hh_char_hh_det_age: _.hh_char_hhh_age, hh_char_hh_det_gender: _.hh_char_hhh_gender})),
+              ...grouped.flatMap(_ => _.hh_char_hh_det ?? [])
+            ]).compactBy('hh_char_hh_det_age').compactBy('hh_char_hh_det_gender').map(_ => {
+              return {
+                gender: fnSwitch(_.hh_char_hh_det_gender!, {
+                  female: Gender.Female,
+                  male: Gender.Male,
+                }, () => undefined),
+                age: _.hh_char_hh_det_age
+              }
+            })
+            const desagreg = groupByGenderAndGroup(Person.ageGroup.Quick)(persons)
             const activity: AiTypeFslc.Type = {
               'Partner Organization': 'Danish Refugee Council',
               // 'Donor'?: '',
@@ -82,12 +97,12 @@ export class AiFslcData {
               'Frequency': 'One-off',
               'Total Individuals Reached': grouped.sum(_ => _.ben_det_hh_size ?? 0),
               'New unique Individuals Reached': grouped.sum(_ => _.ben_det_hh_size ?? 0),
-              'Girls': persons.filter(_ => _.hh_char_hh_det_gender === 'female' && _.hh_char_hh_det_age! < 18).length,
-              'Boys': persons.filter(_ => _.hh_char_hh_det_gender === 'male' && _.hh_char_hh_det_age! < 18).length,
-              'Adult Women': persons.filter(_ => _.hh_char_hh_det_gender === 'female' && _.hh_char_hh_det_age! >= 18 && _.hh_char_hh_det_age! < 60).length,
-              'Adult Men': persons.filter(_ => _.hh_char_hh_det_gender === 'male' && _.hh_char_hh_det_age! >= 18 && _.hh_char_hh_det_age! < 60).length,
-              'Elderly Women': persons.filter(_ => _.hh_char_hh_det_gender === 'female' && _.hh_char_hh_det_age! > 60).length,
-              'Elderly Men': persons.filter(_ => _.hh_char_hh_det_gender === 'male' && _.hh_char_hh_det_age! > 60).length,
+              'Girls': desagreg['0 - 17']?.Female,
+              'Boys': desagreg['0 - 17']?.Male,
+              'Adult Women': desagreg['18 - 49']?.Female,
+              'Adult Men': desagreg['18 - 49']?.Male,
+              'Elderly Women': desagreg['50+']?.Female,
+              'Elderly Men': desagreg['50+']?.Male,
               'People with Disability': grouped.sum(_ => _.hh_char_dis_select && _.hh_char_dis_select.includes('diff_none') ? 1 : 0),
               'Comments': ('Kobo IDs: ' + grouped.map(_ => _.id).join(',')).slice(0, 1000),
             }
@@ -98,6 +113,7 @@ export class AiFslcData {
                 activity: AiTypeFslc.map(activity),
                 formId: activityInfoFormIds.fslc,
                 activityIdPrefix: 'drcecrec',
+                activityYYYYMM: format(period.start, 'yyyyMM'),
                 activityIndex: index++,
               })
 

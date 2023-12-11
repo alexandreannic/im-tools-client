@@ -641,7 +641,7 @@ export const ShelterTable = () => {
           header={
             <>
               <AAIconBtn
-                loading={ctx.data.asyncSyncAnswers.isLoading}
+                loading={ctx.data.asyncSyncAnswers.anyLoading}
                 children="cloud_sync"
                 tooltip={m._koboDatabase.pullData}
                 onClick={ctx.data.asyncSyncAnswers.call}

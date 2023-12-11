@@ -1,6 +1,6 @@
-import {aiOblasts} from '../../../core/uaLocation/aiOblasts'
-import {aiRaions} from '../../../core/uaLocation/aiRaions'
-import {aiHromadas} from '../../../core/uaLocation/aiHromadas'
+import {aiOblasts} from '@/core/uaLocation/aiOblasts'
+import {aiRaions} from '@/core/uaLocation/aiRaions'
+import {aiHromadas} from '@/core/uaLocation/aiHromadas'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 
 export namespace AiTypeProtectionRmm {
@@ -275,9 +275,6 @@ export namespace AiTypeProtectionRmm {
         return {[input.id]: value}
     }
     const monthNumber = period.split('-')[1].padStart(2, '0')
-    // if(!mapMonthToId[monthNumber]) {
-    //   throw new Error(`Wrong monthNumber ${monthNumber}`)
-    // }
     const recordId = 'drcprot' + monthNumber + 'i' + ('' + index).padStart(3, '0')
     return {
       'changes': [

@@ -3,7 +3,7 @@ import {UseMap2, useMap2} from '@/alexlib-labo/useMap'
 import {useState} from 'react'
 
 export interface UseAsync<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> {
-  isLoading: boolean
+  anyLoading: boolean
   lastError?: E
   loading: UseMap2<K, boolean>,
   errors: UseMap2<K, E>

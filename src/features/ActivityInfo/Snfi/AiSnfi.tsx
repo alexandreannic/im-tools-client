@@ -49,7 +49,7 @@ export const AiSnfi = () => {
             <>
               <AaInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
               <AaBtn
-                loading={_submit.isLoading}
+                loading={_submit.anyLoading}
                 icon="send"
                 variant="contained"
                 sx={{ml: 'auto'}}
