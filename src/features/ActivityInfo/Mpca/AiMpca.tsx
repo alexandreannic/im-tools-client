@@ -50,7 +50,7 @@ export const AiMpca = () => {
           {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
           {
             by: _ => fnSwitch(_.benefStatus!, {
-              idp:'IDPs',
+              idp: 'IDPs',
               long_res: 'Non-Displaced',
               ret: 'Returnees',
               ref_asy: 'Returnees',
@@ -59,7 +59,6 @@ export const AiMpca = () => {
         ],
         finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
           const res = Person.groupByGenderAndGroup(Person.ageGroup.Quick)(group.flatMap(_ => _.persons).compact())
-          console.log(res)
           mapped.push({
             oblast: oblast === '' ? undefined : oblast,
             raion,
@@ -74,14 +73,14 @@ export const AiMpca = () => {
             'Elderly Men': res['50+']?.Male,
             'Partner Organization': 'Danish Refugee Council',
             'Reporting Month': period,
-            'Total # of people assisted with multi-purpose cash assistance': group.sum(_ => Utils.add(
+            'Total # of people assisted with multi-purpose cash assistance': Utils.add(
               res['0 - 17']?.Female,
               res['0 - 17']?.Male,
               res['18 - 49']?.Female,
               res['18 - 49']?.Male,
               res['50+']?.Female,
               res['50+']?.Male,
-            )),
+            ),
             Durations: 'Three months',
             'People with disability': 0,
           })

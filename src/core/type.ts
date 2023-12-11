@@ -118,7 +118,7 @@ export namespace Person {
     return ageToAgeGroup(getAge(p), ag)
   }
 
-  export const filterByAgegroup = <AG extends AgeGroup>(ag: AG) => (key: keyof AG) => (p: Person) => {
+  export const filterByAgegroup = <AG extends AgeGroup>(ag: AG, key: keyof AG) => (p: Person) => {
     const [min, max] = ag[key]
     return p.age && p.age >= min && p.age <= max
   }
@@ -128,16 +128,13 @@ export namespace Person {
   ) => (
     data: Person[]
   ) => {
-    return Utils.groupBy({
-      data,
-      groups: [
-        {
-          by: _ => Person.ageToAgeGroup(_.age, ag) ?? '-',
-          sort: (a, b) => Object.keys(ag).indexOf(a) - Object.keys(ag).indexOf(b),
-        },
-        {by: _ => _.gender ?? Person.Gender.Other},
-      ],
-      finalTransform: _ => _.length
-    })
+    const male = data.filter(_ => _.gender === Gender.Male)
+    const female = data.filter(_ => _.gender === Gender.Female)
+    return new Enum(ag).transform(k => {
+      return [k as any, {
+        [Gender.Female]: female.filter(filterByAgegroup(ag, k)).length,
+        [Gender.Male]: male.filter(filterByAgegroup(ag, k)).length,
+      }]
+    }).get()
   }
 }
