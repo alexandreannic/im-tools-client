@@ -6,7 +6,7 @@ import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOption
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
 import {Panel} from '@/shared/Panel'
-import {Box, Icon, IconButton, useTheme} from '@mui/material'
+import {Box, useTheme} from '@mui/material'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Utils} from '@/utils/utils'
@@ -24,6 +24,7 @@ import {SelectDrcProject} from '@/shared/SelectDrcProject'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Datepicker} from '@/shared/Datepicker/Datepicker'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {TableInput} from '@/shared/TableInput'
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -128,26 +129,36 @@ export const ShelterTable = () => {
         head: m.name,
         render: (row: ShelterEntity) => (
           map(row.nta, nta => (
-            <DebouncedInput<string>
-              debounce={1250}
+            <TableInput
+              originalValue={nta.interviewee_name}
               value={nta.tags?.interviewee_name ?? nta.interviewee_name}
               onChange={_ => ctx.nta.asyncUpdate.call({
                 answerId: nta.id,
                 key: 'interviewee_name',
-                value: _ === '' || _ === nta.interviewee_name ? undefined : _
+                value: _
               })}
-            >
-              {(value, onChange) => (
-                <AaInput
-                  helperText={null}
-                  value={value}
-                  onChange={e => onChange(e.target.value)}
-                  endAdornment={
-                    <AAIconBtn size="small" sx={{mr: -.5, mt: .25}} onClick={() => onChange(nta.interviewee_name ?? '')}>clear</AAIconBtn>
-                  }
-                />
-              )}
-            </DebouncedInput>
+            />
+          ))
+        )
+      },
+      {
+        type: 'select_one',
+        id: 'taxId',
+        width: 160,
+        head: m.taxID,
+        renderOption: _ => _.nta?.tags?.pay_det_tax_id_num ?? _.nta?.pay_det_tax_id_num,
+        renderValue: _ => _.nta?.tags?.pay_det_tax_id_num ?? _.nta?.pay_det_tax_id_num,
+        render: (row: ShelterEntity) => (
+          map(row.nta, nta => (
+            <TableInput
+              originalValue={nta.pay_det_tax_id_num}
+              value={nta.tags?.pay_det_tax_id_num ?? nta.pay_det_tax_id_num}
+              onChange={_ => ctx.nta.asyncUpdate.call({
+                answerId: nta.id,
+                key: 'pay_det_tax_id_num',
+                value: _
+              })}
+            />
           ))
         )
       },
@@ -338,19 +349,10 @@ export const ShelterTable = () => {
         type: 'string',
         renderValue: _ => _.ta?.tags?.agreement,
         render: row => map(row.ta, ta => (
-          <DebouncedInput<string>
-            debounce={1250}
+          <TableInput
             value={row.ta?.tags?.agreement}
             onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'agreement', value: _})}
-          >
-            {(value, onChange) => (
-              <AaInput
-                helperText={null}
-                defaultValue={value}
-                onChange={e => onChange(e.target.value)}
-              />
-            )}
-          </DebouncedInput>
+          />
         ))
       },
       {

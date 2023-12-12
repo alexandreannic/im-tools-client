@@ -98,7 +98,7 @@ export enum ShelterTagValidation {
 export interface ShelterNtaTags extends KoboBaseTags {
   validation?: ShelterTagValidation
   interviewee_name?: string
-  overriddenTaxId?: string
+  pay_det_tax_id_num?: string
 }
 
 export enum ShelterTaPriceLevel {
