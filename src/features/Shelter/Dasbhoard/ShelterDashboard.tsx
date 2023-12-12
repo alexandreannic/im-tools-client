@@ -150,8 +150,8 @@ export const _ShelterDashboard = ({
           </SlideWidget>
         </Div>
         <Lazy deps={[data, tableType]} fn={() => {
-          const gb = Person.groupByGenderAndGroup(Person.ageGroup[tableType])(computed.persons)
-          return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
+          const gb = Person.groupByGenderAndGroup(Person.getAgeGroup(tableType))(computed.persons)
+          return Enum.entries(gb).map(([k, v]) => ({ageGroup: k, ...v}))
         }}>
           {_ =>
             <Panel title={m.ageGroup}>

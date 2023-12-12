@@ -1,16 +1,15 @@
 import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClient'
-import {UseAsync, useAsync, useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo, KoboIndex} from '@/KoboIndex'
+import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
 import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import {MpcaHelper, MpcaEntity, MpcaTypeTag} from '@/core/sdk/server/mpca/MpcaEntity'
+import {MpcaEntity, MpcaTypeTag} from '@/core/sdk/server/mpca/MpcaEntity'
 import {Enum, map, Seq, seq} from '@alexandreannic/ts-utils'
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {Utils} from '@/utils/utils'
-import {donorByProject} from '@/core/drcUa'
 import {NonNullableKey} from '@/utils/utilsType'
+import {DrcProjectHelper} from '@/core/drcUa'
 
 // [DONORS according to Alix]
 
@@ -75,7 +74,7 @@ export const MpcaProvider = ({
   const mappedData = useMemo(() => {
     return fetcherData.entity?.map(_ => {
       _.finalProject = _.tags?.projects?.[0] ?? _.project
-      _.finalDonor = map(_.tags?.projects?.[0], p => donorByProject[p]) ?? _.donor
+      _.finalDonor = map(_.tags?.projects?.[0], p => DrcProjectHelper.donorByProject[p]) ?? _.donor
       _.amountUahCommitted = !!_.tags?.committed ? _.amountUahFinal : 0
       return _
     })

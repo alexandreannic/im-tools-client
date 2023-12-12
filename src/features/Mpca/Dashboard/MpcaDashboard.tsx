@@ -287,8 +287,8 @@ export const _MPCADashboard = ({
             {/*</SlidePanel>*/}
             <SlidePanel title={m.disaggregation}>
               <Lazy deps={[computed.persons, tableAgeGroup]} fn={() => {
-                const gb = Person.groupByGenderAndGroup(ageGroup[tableAgeGroup])(computed.persons)
-                return new Enum(gb).entries().map(([k, v]) => ({ageGroup: k, ...v}))
+                const gb = Person.groupByGenderAndGroup(Person.getAgeGroup(tableAgeGroup))(computed.persons)
+                return Enum.entries(gb).map(([k, v]) => ({ageGroup: k, ...v}))
               }}>
                 {_ =>
                   <Sheet

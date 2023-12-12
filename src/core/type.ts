@@ -49,7 +49,7 @@ export type NumberKeys<T> = {
 
 export namespace Person {
 
-  export type AgeGroup = Record<string, number[]>
+  export type AgeGroup = Record<string, [number, number]>
 
   export interface Person {
     age?: number
@@ -70,35 +70,39 @@ export namespace Person {
 
   export const ageGroup = Object.freeze({
     Quick: {
-      '0 - 17': [0, 17],
-      '18 - 49': [18, 49],
-      '50+': [50, Infinity],
+      '0 - 17': [0, 17] as [number, number],
+      '18 - 49': [18, 49] as [number, number],
+      '50+': [50, Infinity] as [number, number],
     },
     DRC: {
-      '0 - 4': [0, 4],
-      '5 - 11': [5, 11],
-      '12 - 17': [12, 17],
-      '18 - 24': [18, 24],
-      '25 - 49': [25, 49],
-      '50 - 59': [50, 59],
-      '60+': [elderlyLimitIncluded, Infinity],
+      '0 - 4': [0, 4] as [number, number],
+      '5 - 11': [5, 11] as [number, number],
+      '12 - 17': [12, 17] as [number, number],
+      '18 - 24': [18, 24] as [number, number],
+      '25 - 49': [25, 49] as [number, number],
+      '50 - 59': [50, 59] as [number, number],
+      '60+': [elderlyLimitIncluded, Infinity] as [number, number],
     },
     ECHO: {
-      '0 - 4': [0, 4],
-      '5 - 17': [5, 17],
-      '18 - 49': [18, 49],
-      '50+': [50, Infinity],
+      '0 - 4': [0, 4] as [number, number],
+      '5 - 17': [5, 17] as [number, number],
+      '18 - 49': [18, 49] as [number, number],
+      '50+': [50, Infinity] as [number, number],
     },
     BHA: {
-      '0 - 4': [0, 4],
-      '5 - 9': [5, 9],
-      '10 - 14': [10, 14],
-      '15 - 18': [15, 18],
-      '19 - 29': [19, 29],
-      '30 - 59': [30, 59],
-      '60+': [elderlyLimitIncluded, Infinity],
+      '0 - 4': [0, 4] as [number, number],
+      '5 - 9': [5, 9] as [number, number],
+      '10 - 14': [10, 14] as [number, number],
+      '15 - 18': [15, 18] as [number, number],
+      '19 - 29': [19, 29] as [number, number],
+      '30 - 59': [30, 59] as [number, number],
+      '60+': [elderlyLimitIncluded, Infinity] as [number, number],
     }
   })
+
+  export const getAgeGroup = (str: keyof typeof ageGroup): AgeGroup => {
+    return ageGroup[str] as unknown as AgeGroup
+  }
 
   export const ageGroups = Enum.keys(ageGroup)
 
