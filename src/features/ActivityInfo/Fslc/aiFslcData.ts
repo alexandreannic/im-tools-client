@@ -1,8 +1,6 @@
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {Period, Person} from '@/core/type'
 import {AiTypeFslc} from '@/features/ActivityInfo/Fslc/aiFslcInterface'
-import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
-import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 import {Utils} from '@/utils/utils'
 import {fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
@@ -13,7 +11,7 @@ import {Ecrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ec
 import {addDays, format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
-import {group} from 'd3-array'
+import {EcrecCashRegistrationPaymentStatus} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
 import groupByGenderAndGroup = Person.groupByGenderAndGroup
 import Gender = Person.Gender
 
@@ -25,10 +23,16 @@ export interface AiFslcDataParser {
 
 export class AiFslcData {
 
-  static readonly req = (api: ApiSdk) => (period: Period): Promise<AiFslcDataParser[]> => {
-    return api.kobo.typedAnswers.searchEcrec_cashRegistration({filters: period})
-      .then(_ => _.data.map(_ => ({..._, ...getAiLocation(_)})))
+  static readonly reqEcrecCashRegistration = (api: ApiSdk) => (period: Period): Promise<AiFslcDataParser[]> => {
+    return api.kobo.typedAnswers.searchEcrec_cashRegistration({filters: undefined})
+      .then(_ => {
+        console.log('before', _.data.length)
+        return _.data
+          .filter(_ => _.tags?.status === EcrecCashRegistrationPaymentStatus.Paid)
+          .map(_ => ({..._, ...getAiLocation(_)}))
+      })
       .then(data => {
+        console.log('after,', data.length)
         const formatted: AiFslcDataParser[] = []
         let index = 0
         Utils.groupBy({
@@ -56,9 +60,15 @@ export class AiFslcData {
                 ret: 'Returnees',
                 ref_asy: 'Non-Displaced',
               }, () => 'Non-Displaced')
-            }
+            },
+            {
+              by: _ => fnSwitch(_.tags?.program!, {
+                CashforAnimalFeed: 450,
+                CashforAnimalShelter: 400,
+              }, () => 7500)
+            },
           ],
-          finalTransform: (grouped, [project, oblast, raion, hromada, responseTheme, populationGroup]) => {
+          finalTransform: (grouped, [project, oblast, raion, hromada, responseTheme, populationGroup, amount]) => {
             const persons = seq([
               ...grouped.flatMap(_ => ({hh_char_hh_det_age: _.hh_char_hhh_age, hh_char_hh_det_gender: _.hh_char_hhh_gender})),
               ...grouped.flatMap(_ => _.hh_char_hh_det ?? [])
@@ -75,6 +85,8 @@ export class AiFslcData {
             const activity: AiTypeFslc.Type = {
               'Partner Organization': 'Danish Refugee Council',
               // 'Donor'?: '',
+              // @ts-ignore
+              length: grouped.length,
               'Report to a planned project?': 'Yes',
               'Project (FSLC-Updated)': project,
               'Oblast': oblast,
@@ -87,12 +99,12 @@ export class AiFslcData {
               'Reporting Month': format(addDays(period.start, 1), 'yyyy-MM'),
               'Population Group': populationGroup,
               'FSLC Indicators': 'Agriculture and livestock inputs (cash)',
-              'Activity status': 'Completed',
+              'Activity status': 'Ongoing',
               // 'Activity Start Date'?: '',
               // 'Activity End Date'?: '',
               'Assistance Modality': 'Cash or Voucher',
               'Cash Delivery Mechanism': 'Bank Transfer',
-              'Value per unit': 7500,
+              'Value per unit': amount,
               'Currency': 'UAH',
               'Frequency': 'One-off',
               'Total Individuals Reached': grouped.sum(_ => _.ben_det_hh_size ?? 0),
@@ -113,7 +125,7 @@ export class AiFslcData {
                 activity: AiTypeFslc.map(activity),
                 formId: activityInfoFormIds.fslc,
                 activityIdPrefix: 'drcecrec',
-                activityYYYYMM: format(period.start, 'yyyyMM'),
+                activityYYYYMM: format(period.start, 'yyMM'),
                 activityIndex: index++,
               })
 

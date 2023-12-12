@@ -97,6 +97,8 @@ export enum ShelterTagValidation {
 
 export interface ShelterNtaTags extends KoboBaseTags {
   validation?: ShelterTagValidation
+  interviewee_name?: string
+  overriddenTaxId?: string
 }
 
 export enum ShelterTaPriceLevel {
@@ -114,6 +116,8 @@ export interface ShelterTaTags extends KoboBaseTags {
   // donor?: string
   project?: DrcProject
   workDoneAt?: Date
+  price?: number
+  damageLevel: ShelterTaPriceLevel
 }
 
 export class ShelterTaTagsHelper {

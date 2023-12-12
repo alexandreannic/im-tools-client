@@ -19,7 +19,7 @@ import {AiFslcData} from '@/features/ActivityInfo/Fslc/aiFslcData'
 export const AiFslc = () => {
   const {api} = useAppSettings()
   const {toastHttpError} = useAaToast()
-  const fetcher = useFetcher(AiFslcData.req(api))
+  const fetcher = useFetcher(AiFslcData.reqEcrecCashRegistration(api))
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {m} = useI18n()
 
@@ -35,6 +35,7 @@ export const AiFslc = () => {
     <Page width="full">
       <Panel>
         <Sheet
+          showExportBtn
           header={
             <>
               <AaInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
@@ -54,7 +55,7 @@ export const AiFslc = () => {
           }
           defaultLimit={100} id="ai-shelter" data={fetcher.entity} loading={fetcher.loading} columns={[
           {
-            id: 'actions', width: 160, head: '', render: _ => (
+            id: 'actions', renderExport: false, width: 160, head: '', render: _ => (
               <>
                 <AAIconBtn
                   disabled={!_.activity.Hromada} color="primary"
@@ -68,6 +69,8 @@ export const AiFslc = () => {
               </>
             )
           },
+          {type: 'number', id: 'lgth', head: 'LENGTH', render: row => (row.activity as any).length},
+          {type: 'select_one', id: 'ai-id', head: 'Record ID', render: row => row.request.changes[0].recordId},
           {type: 'select_one', id: 'Project (FSLC-Updated)', head: 'Project (FSLC-Updated)', render: row => row.activity['Project (FSLC-Updated)']},
           {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},
           {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row.activity['Raion']},

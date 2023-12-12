@@ -30,6 +30,7 @@ import {KoboAnswerFilter, KoboAnswerSdk} from '@/core/sdk/server/kobo/KoboAnswer
 import {mapMeal_VerificationWinterization} from '@/core/koboModel/Meal_VerificationWinterization/Meal_VerificationWinterizationMapping'
 import {mapMeal_VerificationEcrec} from '@/core/koboModel/Meal_VerificationEcrec/Meal_VerificationEcrecMapping'
 import {mapPartnership_partnersDatabase} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseMapping'
+import {EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
 
 export class KoboTypedAnswerSdk {
 
@@ -192,6 +193,7 @@ export class KoboTypedAnswerSdk {
     return this.search({
       formId: KoboIndex.byName('ecrec_cashRegistration').id,
       fnMap: mapEcrec_CashRegistration,
+      fnMapTags: _ => _ as EcrecCashRegistrationTags,
       ...filters,
     })
   }

@@ -18,7 +18,7 @@ export const AAIconBtn = ({
 }: AAIconBtnProps) => {
   const content = (
     <IconBtn {...props} size={size}>
-      <Icon fontSize={size === 'small' ? 'medium' : size}>{children}</Icon>
+      <Icon fontSize={size/* === 'small' ? 'small' : size*/}>{children}</Icon>
     </IconBtn>
   )
   return tooltip ? (

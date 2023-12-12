@@ -6,7 +6,7 @@ import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOption
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
 import {Panel} from '@/shared/Panel'
-import {Box, useTheme} from '@mui/material'
+import {Box, Icon, IconButton, useTheme} from '@mui/material'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Utils} from '@/utils/utils'
@@ -23,6 +23,7 @@ import {SelectDrcProject} from '@/shared/SelectDrcProject'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Datepicker} from '@/shared/Datepicker/Datepicker'
+import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -123,14 +124,46 @@ export const ShelterTable = () => {
       {
         type: 'string',
         id: 'name',
+        width: 160,
         head: m.name,
-        render: (row: ShelterEntity) => row.nta?.interviewee_name,
+        render: (row: ShelterEntity) => (
+          map(row.nta, nta => (
+            <DebouncedInput<string>
+              debounce={1250}
+              value={nta.tags?.interviewee_name ?? nta.interviewee_name}
+              onChange={_ => ctx.nta.asyncUpdate.call({
+                answerId: nta.id,
+                key: 'interviewee_name',
+                value: _ === '' || _ === nta.interviewee_name ? undefined : _
+              })}
+            >
+              {(value, onChange) => (
+                <AaInput
+                  helperText={null}
+                  value={value}
+                  onChange={e => onChange(e.target.value)}
+                  endAdornment={
+                    <AAIconBtn size="small" sx={{mr: -.5, mt: .25}} onClick={() => onChange(nta.interviewee_name ?? '')}>clear</AAIconBtn>
+                  }
+                />
+              )}
+            </DebouncedInput>
+          ))
+        )
       },
       {
         type: 'string',
         id: 'taxId',
         head: m.taxID,
         render: (row: ShelterEntity) => row.nta?.pay_det_tax_id_num,
+      },
+      {
+        type: 'select_one',
+        id: 'displacement',
+        head: m.displacement,
+        renderOption: _ => ctx.nta.helper.translateChoice('ben_det_res_stat', _.nta?.ben_det_res_stat),
+        render: _ => ctx.nta.helper.translateChoice('ben_det_res_stat', _.nta?.ben_det_res_stat),
+        renderValue: (row: ShelterEntity) => row.nta?.ben_det_res_stat,
       },
       {
         id: 'owner_tenant_type',
@@ -323,7 +356,8 @@ export const ShelterTable = () => {
       {
         id: 'workOrder',
         head: m._shelter.workOrder,
-        type: 'string',
+        type: 'select_one',
+        renderOption: _ => _.ta?.tags?.workOrder,
         renderValue: _ => _.ta?.tags?.workOrder,
         typeIcon: null,
         render: row => map(row.ta, ta => (
@@ -449,12 +483,62 @@ export const ShelterTable = () => {
           </>
         )),
       },
+      {
+        id: 'damageLevel',
+        width: 148,
+        head: m._shelter.scoreDamage,
+        type: 'select_one',
+        options: () => Enum.keys(ShelterTaPriceLevel).map(_ => ({value: _, label: _})),
+        typeIcon: null,
+        renderValue: row => row.ta?.tags?.damageLevel,
+        renderOption: row => row.ta?.tags?.damageLevel,
+        render: row => map(row.ta, ta => {
+          return (
+            <>
+              <AaSelectSingle<ShelterTaPriceLevel>
+                value={ta.tags?.damageLevel}
+                onChange={(tagChange) => {
+                  ctx.ta.asyncUpdate.call({
+                    answerId: ta.id,
+                    key: 'damageLevel',
+                    value: tagChange,
+                  })
+                }}
+                options={Enum.keys(ShelterTaPriceLevel)}
+              />
+            </>
+          )
+        }),
+      },
       // column.progress,
+      {
+        id: 'price',
+        head: m.price,
+        type: 'number',
+        renderValue: _ => _.ta?.tags?.price,
+        typeIcon: null,
+        render: row => map(row.ta, ta => (
+          <DebouncedInput<number | undefined>
+            debounce={1250}
+            value={row.ta?.tags?.price}
+            onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'price', value: _})}
+          >
+            {(value, onChange) => (
+              <AaInput
+                type="number"
+                helperText={null}
+                defaultValue={value}
+                onChange={e => onChange(e.target.value === '' ? undefined : Utils.safeNumber(e.target.value))}
+              />
+            )}
+          </DebouncedInput>
+        ))
+      },
       {
         type: 'number',
         width: 0,
-        id: 'price',
-        head: m.price,
+        id: 'price_deprecated',
+        head: 'Auto ' + m.price + ' (deprecated)',
         renderValue: row => row.ta?._price ?? undefined,
         render: (row: ShelterEntity) => map(row.ta?._price, _ => _ === null ? '⚠️ Missing price' : formatLargeNumber(_)),
       },
