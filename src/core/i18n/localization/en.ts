@@ -1138,6 +1138,7 @@ export const en = Object.freeze({
       elderlyLedOrganization: `Focused on elders or PwD`,
     },
     mpca: {
+      duplicationCheck: 'Deduplication check',
       pullLastDataDesc: 'Get last Kobo submissions and rebuild the database.',
       committed: 'Committed',
       commit: 'Commit',

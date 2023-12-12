@@ -35,7 +35,8 @@ import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboar
 import {koboFormTranslation, KoboIndex} from '@/KoboIndex'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {groupBy} from '@/utils/groupBy'
-import ageGroup = Person.ageGroup
+import {MpcaDuplicatedCheck, MpcaDuplicatedCheckPanel} from '@/features/Mpca/Dashboard/MpcaDuplicatedCheck'
+import {useSession} from '@/core/Session/SessionContext'
 
 export const today = new Date()
 
@@ -209,6 +210,7 @@ export const _MPCADashboard = ({
   computed: NonNullable<UseBNREComputed>
 }) => {
   const ctx = useMpcaContext()
+  const {session} = useSession()
   const {m, formatDate, formatLargeNumber} = useI18n()
   const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', {storageKey: 'mpca-dashboard-ageGroup'})
 
@@ -355,6 +357,9 @@ export const _MPCADashboard = ({
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
+            {session.admin && (
+              <MpcaDuplicatedCheckPanel data={data}/>
+            )}
           </Div>
         </Div>
         <Div>

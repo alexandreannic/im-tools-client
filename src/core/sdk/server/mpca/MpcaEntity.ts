@@ -38,6 +38,8 @@ export type MpcaRowSource = keyof typeof mpcaRowSources
 // }
 
 export enum MpcaProgram {
+  CashForFuel = 'CashForFuel',
+  CashForUtilities = 'CashForUtilities',
   CashForRent = 'CashForRent',
   CashForEducation = 'CashForEducation',
   MPCA = 'MPCA',
