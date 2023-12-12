@@ -199,7 +199,7 @@ export const KoboBarChartMultiple = <
   data: Seq<D>,
   mergeOptions?: Partial<Record<keyof O[NonNullable<K>], keyof O[NonNullable<K>]>>
   label: O
-  filterValue?: (keyof O[NonNullable<K>])[]
+  // filterValue?: (keyof O[NonNullable<K>])[]
   getValue: (_: D) => K[],
   checked?: Record<NonNullable<K>, boolean>
   onToggle?: (_: K) => void

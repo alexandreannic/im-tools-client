@@ -350,6 +350,7 @@ export const ShelterTable = () => {
         renderValue: _ => _.ta?.tags?.agreement,
         render: row => map(row.ta, ta => (
           <TableInput
+            originalValue={null}
             value={row.ta?.tags?.agreement}
             onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'agreement', value: _})}
           />
@@ -363,19 +364,11 @@ export const ShelterTable = () => {
         renderValue: _ => _.ta?.tags?.workOrder,
         typeIcon: null,
         render: row => map(row.ta, ta => (
-          <DebouncedInput<string>
-            debounce={1250}
+          <TableInput
+            originalValue={null}
             value={row.ta?.tags?.workOrder}
             onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'workOrder', value: _})}
-          >
-            {(value, onChange) => (
-              <AaInput
-                helperText={null}
-                defaultValue={value}
-                onChange={e => onChange(e.target.value)}
-              />
-            )}
-          </DebouncedInput>
+          />
         ))
       },
       {

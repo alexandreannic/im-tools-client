@@ -1,6 +1,6 @@
 import {Page} from '@/shared/Page'
 import {UseShelterComputedData, useShelterComputedData} from '@/features/Shelter/Dasbhoard/useShelterComputedData'
-import {Div, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
+import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Lazy} from '@/shared/Lazy'
 import {Period, Person} from '@/core/type'
 import React, {useMemo, useState} from 'react'
@@ -30,6 +30,9 @@ import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
+import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
+import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
+import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 
 const today = new Date()
 
@@ -181,28 +184,14 @@ export const _ShelterDashboard = ({
             </Panel>
           }
         </Lazy>
-        <Lazy deps={[data]} fn={() => {
-          const contractors = data.map(_ => seq([_.ta?.tags?.contractor1 ?? undefined, _.ta?.tags?.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
-          return {
-            count: contractors.length,
-            contractors: ChartTools.multiple({
-              data: contractors,
-              base: 'percentOfTotalChoices',
-              filterValue: [undefined as any]
-            })
-          }
-        }}>
-          {_ => (
-            <>
-              <Panel>
-                <PanelBody>
-                  <PieChartIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
-                  <HorizontalBarChartGoogle data={_.contractors}/>
-                </PanelBody>
-              </Panel>
-            </>
-          )}
-        </Lazy>
+        <SlidePanel title={m.vulnerabilities}>
+          {/*<KoboPieChartIndicator question={} filter={} data={}*/}
+          <KoboBarChartMultiple
+            data={data.filter(_ => !!_.nta?.hh_char_dis_select)}
+            getValue={_ => _.nta?.hh_char_dis_select ?? []}
+            label={Shelter_NTAOptions.hh_char_dis_select}
+          />
+        </SlidePanel>
       </Div>
       <Div column>
         <Div>
@@ -235,6 +224,28 @@ export const _ShelterDashboard = ({
             </Lazy>
           </PanelBody>
         </Panel>
+        <Lazy deps={[data]} fn={() => {
+          const contractors = data.map(_ => seq([_.ta?.tags?.contractor1 ?? undefined, _.ta?.tags?.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
+          return {
+            count: contractors.length,
+            contractors: ChartTools.multiple({
+              data: contractors,
+              base: 'percentOfTotalChoices',
+              filterValue: [undefined as any]
+            })
+          }
+        }}>
+          {_ => (
+            <>
+              <Panel>
+                <PanelBody>
+                  <PieChartIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
+                  <HorizontalBarChartGoogle data={_.contractors}/>
+                </PanelBody>
+              </Panel>
+            </>
+          )}
+        </Lazy>
       </Div>
     </Div>
   )
