@@ -26,6 +26,7 @@ import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {SelectDrcProject, SelectDrcProjects} from '@/shared/SelectDrcProject'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -229,8 +230,21 @@ export const CfmTable = ({}: any) => {
               type: 'select_one',
               head: m.project,
               id: 'project',
-              render: _ => _.project,
+              width: 180,
+              // options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.translateInternal.translateChoice('feedback_type', k)})),
+              renderValue: _ => _.project,
+              renderOption: _ => _.project,
+              render: row => row.form === CfmDataSource.Internal
+                ? row.project
+                : <SelectDrcProject
+                  label={null}
+                  value={row.project}
+                  onChange={newValue => {
+                    ctx.updateTag.call({formId: row.formId, answerId: row.id, key: 'project', value: newValue})
+                  }}
+                />
             },
+
             column.office,
             column.program,
             {

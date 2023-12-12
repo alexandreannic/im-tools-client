@@ -14,7 +14,7 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import {PartnershipCard} from '@/features/Partnership/Dashboard/PartnershipCard'
 import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
 import {Utils} from '@/utils/utils'
-import {drcMaterialIcons, DrcProject, DrcProjectBudget} from '@/core/drcUa'
+import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/drcUa'
 import {Txt} from 'mui-extension'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Partnership_partnersDatabaseOptions} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
@@ -266,7 +266,7 @@ export const _PartnershipDashboard = ({}: {}) => {
                 project,
                 makeChartData({
                   value: v.sum(_ => Utils.add(_.Amount_USD)),
-                  base: DrcProjectBudget[project] ?? 1
+                  base: DrcProjectHelper.budgetByProject[project] ?? 1
                 })
               ]
             }).get()

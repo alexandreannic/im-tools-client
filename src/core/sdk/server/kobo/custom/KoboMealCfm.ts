@@ -1,4 +1,4 @@
-import {DrcOffice} from '@/core/drcUa'
+import {DrcOffice, DrcProject} from '@/core/drcUa'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
 import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
@@ -46,6 +46,7 @@ export interface KoboMealCfmTag extends KoboBaseTags {
   focalPointEmail?: string
   status?: KoboMealCfmStatus
   feedbackTypeOverride?: Meal_CfmInternal['feedback_type']
+  project?: DrcProject
 }
 
 export class KoboMealCfmHelper {

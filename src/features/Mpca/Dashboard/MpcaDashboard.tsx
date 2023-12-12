@@ -25,7 +25,7 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/server/mpca/MpcaEntity'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
-import {donorByProject, drcMaterialIcons, DrcOffice} from '@/core/drcUa'
+import {drcMaterialIcons, DrcOffice, DrcProjectHelper} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Panel} from '@/shared/Panel'
@@ -370,7 +370,7 @@ export const _MPCADashboard = ({
                   finalTransform: _ => _,
                 })
                 return [...MpcaHelper.projects, SheetUtils.blank].flatMap(project => {
-                  const donor = project === SheetUtils.blank ? SheetUtils.blank : donorByProject[project]
+                  const donor = project === SheetUtils.blank ? SheetUtils.blank : DrcProjectHelper.donorByProject[project]
                   const resOffices = seq([...Enum.values(DrcOffice), SheetUtils.blank,]).map(office => {
                     const d = gb[project]?.[office] ?? seq()
                     return {

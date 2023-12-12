@@ -12,7 +12,7 @@ import {Meal_CfmExternal} from '@/core/koboModel/Meal_CfmExternal/Meal_CfmExtern
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
-import {DrcOffice} from '@/core/drcUa'
+import {DrcOffice, DrcProject, DrcProjectHelper} from '@/core/drcUa'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useAaToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
@@ -33,13 +33,13 @@ export type CfmData = {
   comments?: string
   feedback?: string
   additionalInformation?: string
-  project?: string
+  project?: DrcProject
   oblast: OblastName
   oblastIso: OblastISO
   category?: Meal_CfmInternal['feedback_type']
   external_prot_support?: Meal_CfmExternal['prot_support']
   internal_existing_beneficiary?: Meal_CfmInternal['existing_beneficiary']
-  internal_project_code?: Meal_CfmInternal['project_code']
+  // internal_project_code?: Meal_CfmInternal['project_code']
   // external_thanks_feedback?: MealCfmExternal['thanks_feedback']
   // external_complaint?: MealCfmExternal['complaint']
   external_consent?: Meal_CfmExternal['consent']
@@ -161,6 +161,7 @@ export const CfmProvider = ({
       const category = _.tags?.feedbackTypeOverride
       res.push({
         category,
+        project: _.tags?.project,
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         formId: KoboIndex.byName('meal_cfmExternal').id,
         external_feedback_type: _.feedback_type,
@@ -176,13 +177,13 @@ export const CfmProvider = ({
     data?.entity?.[CfmDataSource.Internal].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride ?? _.feedback_type
       res.push({
-        project: !_.project_code || _.project_code === 'Other' ? _.project_code_specify : _.project_code,
+        project: DrcProjectHelper.searchByCode(_.project_code === 'Other' ? _.project_code_specify : _.project_code),
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         category,
         formId: KoboIndex.byName('meal_cfmInternal').id,
         form: CfmDataSource.Internal,
         internal_existing_beneficiary: _.existing_beneficiary,
-        internal_project_code: _.project_code,
+        // internal_project_code: _.project_code,
         oblast: OblastIndex.byKoboName(_.ben_det_oblast!).name,
         oblastIso: OblastIndex.byKoboName(_.ben_det_oblast!).iso,
         ..._,

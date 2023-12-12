@@ -1,4 +1,4 @@
-import {Enum, seq} from '@alexandreannic/ts-utils'
+import {Enum} from '@alexandreannic/ts-utils'
 
 export enum DrcOffice {
   Kyiv = 'Kyiv',
@@ -90,103 +90,56 @@ export enum DrcProject {
   'UKR-000340 Augustinus Fonden' = 'UKR-000340 Augustinus Fonden',
 }
 
-export const DrcProjectBudget: Partial<Record<DrcProject, number>> = {
-  [DrcProject['UKR-000322 ECHO2']]: 10243523,//.13, // 9423057.51 EURO from PIP
-  [DrcProject['UKR-000284 BHA']]: 57000000,
-  [DrcProject['UKR-000269 ECHO1']]: 3000000,
-  [DrcProject['UKR-000345 BHA2']]: 10080572.00,
+export class DrcProjectHelper {
+  static readonly list = Enum.keys(DrcProject)
+
+  static readonly projectByDonor: Record<DrcDonor, DrcProject[]> = {
+    [DrcDonor.BHA]: [DrcProject['UKR-000284 BHA'], DrcProject['UKR-000345 BHA2']],
+    [DrcDonor.ECHO]: [DrcProject['UKR-000269 ECHO1'], DrcProject['UKR-000322 ECHO2']],
+    [DrcDonor.SDC]: [DrcProject['UKR-000226 SDC'], DrcProject['UKR-000330 SDC2']],
+    [DrcDonor.FCDO]: [DrcProject['UKR-000247 FCDO'],],
+    [DrcDonor.OKF]: [DrcProject['UKR-000309 OKF'],],
+    [DrcDonor.PSPU]: [DrcProject['UKR-000304 PSPU'],],
+    [DrcDonor.PoolFunds]: [DrcProject['UKR-000270 Pooled Funds'], DrcProject['UKR-000342 Pooled Funds']],
+    [DrcDonor.FINM]: [DrcProject['UKR-000249 Finnish MFA'],],
+    [DrcDonor.FREM]: [DrcProject['UKR-000293 French MFA'],],
+    [DrcDonor.EUIC]: [DrcProject['UKR-000255 EU IcSP'],],
+    [DrcDonor.PMRA]: [DrcProject['UKR-000230 PM WRA'],],
+    [DrcDonor.PMKA]: [DrcProject['UKR-000231 PM WKA'],],
+    [DrcDonor.SIDA]: [DrcProject['SIDA 518-570A'],],
+    [DrcDonor.UHF]: [DrcProject['UKR-000276 UHF3'], DrcProject['UKR-000314 UHF4'], DrcProject['UKR-000336 UHF6'], DrcProject['UKR-000352 UHF7']],
+    [DrcDonor.UNHC]: [DrcProject['UKR-000308 UNHCR'],],
+    [DrcDonor.DANI]: [DrcProject['UKR-000267 DANIDA'], DrcProject['UKR-000xxx DANIDA']],
+    [DrcDonor.DUT]: [DrcProject['UKR-000294 Dutch I'], DrcProject['UKR-000306 Dutch II']],
+    [DrcDonor.NovoNordisk]: [DrcProject['UKR-000274 Novo-Nordisk'], DrcProject['UKR-000298 Novo-Nordisk'],],
+    [DrcDonor.SDCS]: [DrcProject['UKR-000290 SDC Shelter'],],
+    [DrcDonor.MOFA]: [DrcProject['UKR-000301 DANISH MoFA']],
+    [DrcDonor.AugustinusFonden]: [DrcProject['UKR-000340 Augustinus Fonden']],
+    [DrcDonor.HoffmansAndHusmans]: [DrcProject['UKR-000341 Hoffmans & Husmans']],
+  }
+
+  static readonly donorByProject: Record<DrcProject, DrcDonor> = Enum.entries(DrcProjectHelper.projectByDonor)
+    .reduce((acc, [donor, projects]) => {
+      projects.forEach(project => {
+        acc[project] = donor
+      })
+      return acc
+    }, {} as Record<DrcProject, DrcDonor>)
+
+  static readonly searchByCode = (code?: string): DrcProject | undefined => {
+    if (code) return Enum.values(DrcProject).find(_ => _.includes(code))
+  }
+
+  static readonly budgetByProject: Partial<Record<DrcProject, number>> = {
+    [DrcProject['UKR-000322 ECHO2']]: 10243523,//.13, // 9423057.51 EURO from PIP
+    [DrcProject['UKR-000284 BHA']]: 57000000,
+    [DrcProject['UKR-000269 ECHO1']]: 3000000,
+    [DrcProject['UKR-000345 BHA2']]: 10080572.00,
+  }
 }
 
-export const drcProjects = Enum.keys(DrcProject)
-
-export const drcDonorProjectCode: Record<DrcDonor, DrcProject[]> = {
-  [DrcDonor.BHA]: [DrcProject['UKR-000284 BHA'], DrcProject['UKR-000345 BHA2']],
-  [DrcDonor.ECHO]: [DrcProject['UKR-000269 ECHO1'], DrcProject['UKR-000322 ECHO2']],
-  [DrcDonor.SDC]: [DrcProject['UKR-000226 SDC'], DrcProject['UKR-000330 SDC2']],
-  [DrcDonor.FCDO]: [DrcProject['UKR-000247 FCDO'],],
-  [DrcDonor.OKF]: [DrcProject['UKR-000309 OKF'],],
-  [DrcDonor.PSPU]: [DrcProject['UKR-000304 PSPU'],],
-  [DrcDonor.PoolFunds]: [DrcProject['UKR-000270 Pooled Funds'], DrcProject['UKR-000342 Pooled Funds']],
-  [DrcDonor.FINM]: [DrcProject['UKR-000249 Finnish MFA'],],
-  [DrcDonor.FREM]: [DrcProject['UKR-000293 French MFA'],],
-  [DrcDonor.EUIC]: [DrcProject['UKR-000255 EU IcSP'],],
-  [DrcDonor.PMRA]: [DrcProject['UKR-000230 PM WRA'],],
-  [DrcDonor.PMKA]: [DrcProject['UKR-000231 PM WKA'],],
-  [DrcDonor.SIDA]: [DrcProject['SIDA 518-570A'],],
-  [DrcDonor.UHF]: [DrcProject['UKR-000276 UHF3'], DrcProject['UKR-000314 UHF4'], DrcProject['UKR-000336 UHF6'], DrcProject['UKR-000352 UHF7']],
-  [DrcDonor.UNHC]: [DrcProject['UKR-000308 UNHCR'],],
-  [DrcDonor.DANI]: [DrcProject['UKR-000267 DANIDA'], DrcProject['UKR-000xxx DANIDA']],
-  [DrcDonor.DUT]: [DrcProject['UKR-000294 Dutch I'], DrcProject['UKR-000306 Dutch II']],
-  [DrcDonor.NovoNordisk]: [DrcProject['UKR-000274 Novo-Nordisk'], DrcProject['UKR-000298 Novo-Nordisk'],],
-  [DrcDonor.SDCS]: [DrcProject['UKR-000290 SDC Shelter'],],
-  [DrcDonor.MOFA]: [DrcProject['UKR-000301 DANISH MoFA']],
-  [DrcDonor.AugustinusFonden]: [DrcProject['UKR-000340 Augustinus Fonden']],
-  [DrcDonor.HoffmansAndHusmans]: [DrcProject['UKR-000341 Hoffmans & Husmans']],
-}
-
-export const donorByProject: Record<DrcProject, DrcDonor> = Enum.entries(drcDonorProjectCode)
-  .reduce((acc, [donor, projects]) => {
-    projects.forEach(project => {
-      acc[project] = donor
-    })
-    return acc
-  }, {} as Record<DrcProject, DrcDonor>)
 
 export enum DrcJob {
-  // 'Protection Coordinator' = 'Protection Coordinator',
-  // 'Protection Manager' = 'Protection Manager',
-  // 'Protection Team Leader' = 'Protection Team Leader',
-  // 'Protection TL' = 'Protection TL',
-  // 'Protection Officer' = 'Protection Officer',
-  // 'Protection Assistant' = 'Protection Assistant',
-  // 'PSS Coordinator' = 'PSS Coordinator',
-  // 'PSS Manager' = 'PSS Manager',
-  // 'PSS Team Leader' = 'PSS Team Leader',
-  // 'PSS Officer' = 'PSS Officer',
-  // 'PSS Assistant' = 'PSS Assistant',
-  // 'MEAL Coordinator' = 'MEAL Coordinator',
-  // 'MEAL Manager' = 'MEAL Manager',
-  // 'MEAL Team Leader' = 'MEAL Team Leader',
-  // 'MEAL Officer' = 'MEAL Officer',
-  // 'MEAL Assistant' = 'MEAL Assistant',
-  // 'Monitoring, Evaluation, Accountability and Learning Officer' = 'Monitoring, Evaluation, Accountability and Learning Officer',
-  // 'Monitoring, Evaluation, Accountability and Learning Specialist' = 'Monitoring, Evaluation, Accountability and Learning Specialist',
-  // 'MPCA/NFI Coordinator' = 'MPCA/NFI Coordinator',
-  // 'MPCA/NFI Manager' = 'MPCA/NFI Manager',
-  // 'MPCA/NFI Team Leader' = 'MPCA/NFI Team Leader',
-  // 'MPCA/NFI Officer' = 'MPCA/NFI Officer',
-  // 'MPCA/NFI Assistant' = 'MPCA/NFI Assistant',
-  // 'MPCA / NFI Assistant' = 'MPCA / NFI Assistant',
-  // 'MPCA Assistant' = 'MPCA Assistant',
-  // 'Cash And Voucher Assistance Officer' = 'Cash And Voucher Assistance Officer',
-  // 'Distribution TL' = 'Distribution TL',
-  // 'NFI Assistant' = 'NFI Assistant',
-  // 'GBV Coordinator' = 'GBV Coordinator',
-  // 'GBV Manager' = 'GBV Manager',
-  // 'GBV Team Leader' = 'GBV Team Leader',
-  // 'GBV Officer' = 'GBV Officer',
-  // 'GBV Assistant' = 'GBV Assistant',
-  // 'Shelter and Settlement Manager' = 'Shelter and Settlement Manager',
-  // 'Shelter Assistant' = 'Shelter Assistant',
-  // 'Shelter and Settlement specialist' = 'Shelter and Settlement specialist',
-  // 'Area Manager' = 'Area Manager',
-  // 'Base Manager' = 'Base Manager',
-  // 'Partnership Manager' = 'Partnership Manager',
-  // 'Capacity Building Programme Manager' = 'Capacity Building Programme Manager',
-  // 'Global Roving Advisor' = 'Global Roving Advisor',
-  // 'Gender Based Violence Specialist' = 'Gender Based Violence Specialist',
-  // 'Shelter Officer' = 'Shelter Officer',
-  // 'Shelter and Settlement Team Leader' = 'Shelter and Settlement Team Leader',
-  // 'Shelter and Settlement Coordinator' = 'Shelter and Settlement Coordinator',
-  // 'Cash and Voucher Assistance Manager' = 'Cash and Voucher Assistance Manager',
-  // 'Economic Recovery Officer' = 'Economic Recovery Officer',
-  // 'Accountant' = 'Accountant',
-  // 'Programme Officer' = 'Programme Officer',
-  // 'Head of Humanitarian Disarmament and Peacebuilding' = 'Head of Humanitarian Disarmament and Peacebuilding',
-  // 'Cash and Voucher Assistance Assistant' = 'Cash and Voucher Assistance Assistant',
-  // 'Protection Specialist' = 'Protection Specialist',
-  // 'Shelter and Settlement Assistant' = 'Shelter and Settlement Assistant',
-
   'Deminer' = 'Deminer',
   'Livelihoods Assistant' = 'Livelihoods Assistant',
   'Livelihoods Officer' = 'Livelihoods Officer',
