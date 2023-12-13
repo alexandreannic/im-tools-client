@@ -103,50 +103,29 @@ export const KoboBarChartSingle = <
   checked,
   onToggle,
   label,
-  filterValue,
-  // questionType = 'single',
-  base,
+  filterData,
   mergeOptions,
   debug
 }: {
   debug?: boolean
   onClickData?: (_: K) => void
   limit?: number
-  // questionType?: 'multiple' | 'single'
   sortBy?: typeof ChartTools.sortBy.value
   data: Seq<D>,
   mergeOptions?: Partial<Record<keyof O[K], keyof O[K]>>
   label?: O
-  filterValue?: (keyof O[K])[]
-  getValue: (_: D) => K,
+  getValue: (_: D) => K | undefined,
+  filterData?: (_: D) => boolean,
   checked?: Record<K, boolean>
   onToggle?: (_: K) => void
-  base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
 }) => {
-  const {m} = useI18n()
   const res = useMemo(() => {
-    const source = seq(data).map(d => {
+    const source = seq(data).filter(filterData ?? (_ => _)).map(d => {
       if (getValue(d) === undefined) return
-      if (mergeOptions) {
-        // if (questionType === 'multiple') {
-        //   return seq(getValue(d) as string[]).map(_ => (mergeOptions as any)[_] ?? _).distinct(_ => _)
-        // }
-        return (mergeOptions as any)[getValue(d)] ?? getValue(d)
-      }
+      if (mergeOptions) return (mergeOptions as any)[getValue(d)] ?? getValue(d)
       return getValue(d)
     }).compact()
-    const chart =
-      // questionType === 'multiple'
-      // ? ChartTools.multiple({
-      //   data: source,
-      //   filterValue: filterValue as string[],
-      //   base,
-      // })
-      // :
-      ChartTools.single({
-        data: source,
-        filterValue,
-      })
+    const chart = ChartTools.single({data: source})
     return chain(chart).map(label ? ChartTools.setLabel(label) : _ => _)
       .map(sortBy ?? ChartTools.sortBy.value)
       .map(limit ? ChartTools.take(limit) : _ => _)

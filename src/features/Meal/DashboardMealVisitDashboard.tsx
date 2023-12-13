@@ -26,98 +26,98 @@ import {mealModule} from '@/features/Meal/DashboardMealVisit'
 import {Meal_VisitMonitoringOptions} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
 import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
 export interface DashboardPageProps {
-  filters: Filters
+  filters: Record<string, string[]>
   data: Seq<KoboAnswer<Meal_VisitMonitoring>>
 }
 
 const mapOblast = OblastIndex.koboOblastIndexIso
 
-export const filterShape = DashboardFilterHelper.makeShape<typeof Meal_VisitMonitoringOptions>()({
-  oblast: {
-    icon: 'location_on',
-    options: 'mdro',
-    label: m => m.office,
-  },
-  focalPoint: {
-    icon: 'person',
-    options: 'mdp',
-    label: m => m.focalPoint,
-  },
-  donor: {
-    icon: 'handshake',
-    options: 'mdd_001',
-    multiple: true,
-    label: m => m.donor,
-  },
-  activity: {
-    icon: 'edit_calendar',
-    options: 'mdt',
-    label: m => m.project,
-  },
-  nfi: {
-    multiple: true,
-    // icon: 'edit_calendar',
-    options: 'pan',
-    label: m => m.mealMonitoringVisit.nfiDistribution,
-  },
-  ecrec: {
-    // icon: 'edit_calendar',
-    options: 'pae',
-    label: m => m.mealMonitoringVisit.ecrec,
-  },
-  shelter: {
-    // icon: 'edit_calendar',
-    options: 'pas',
-    label: m => m.mealMonitoringVisit.shelter,
-  },
-  lau: {
-    // icon: 'edit_calendar',
-    options: 'pal',
-    label: m => m.mealMonitoringVisit.lau,
-  },
-  protection: {
-    // icon: 'edit_calendar',
-    options: 'pap',
-    label: m => m.mealMonitoringVisit.protection,
-  },
-  eore: {
-    // icon: 'edit_calendar',
-    options: 'pao',
-    label: m => m.mealMonitoringVisit.eore,
-  },
-})
-
 export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<Meal_VisitMonitoring, typeof Meal_VisitMonitoringOptions>({
   options: Meal_VisitMonitoringOptions
 })
 
-export type Filters = DashboardFilterHelper.InferShape<typeof filterShape>
+// export type Filters = DashboardFilterHelper.InferShape<typeof fiterShape>
 
 export const DashboardMealVisitDashboard = () => {
   const ctx = useDashboardMealVisitContext()
   const schemaCtx = useKoboSchemaContext()
   const {m, formatDateTime, formatDate} = useI18n()
-  const [optionFilter, setOptionFilters] = useState<Filters>(seq(Enum.keys(filterShape)).reduceObject<Filters>(_ => [_, []]))
+  const [optionFilter, setOptionFilters] = useState<Record<string, string[]>>({})
+
+  const filterShape = useMemo(() => {
+    return DashboardFilterHelper.makeShape<KoboAnswer<Meal_VisitMonitoring>>({
+      oblast: {
+        icon: 'location_on',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdro').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.office,
+        getValue: _ => _.mdro,
+      },
+      focalPoint: {
+        icon: 'person',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdp').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.focalPoint,
+        getValue: _ => _.mdp,
+      },
+      donor: {
+        icon: 'handshake',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdd_001').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.donor,
+        getValue: _ => _.mdd_001,
+        multiple: true,
+      },
+      activity: {
+        multiple: true,
+        icon: 'edit_calendar',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdt').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.project,
+        getValue: _ => _.mdt,
+      },
+      nfi: {
+        // icon: 'edit_calendar',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pan').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.mealMonitoringVisit.nfiDistribution,
+        getValue: _ => _.pan,
+        multiple: true,
+      },
+      ecrec: {
+        // icon: 'edit_calendar',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pae').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.mealMonitoringVisit.ecrec,
+        getValue: _ => _.pae,
+      },
+      shelter: {
+        // icon: 'edit_calendar',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pas').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.mealMonitoringVisit.shelter,
+        getValue: _ => _.pas,
+      },
+      lau: {
+        // icon: 'edit_calendar',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pal').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.mealMonitoringVisit.lau,
+        getValue: _ => _.pal,
+      },
+      protection: {
+        // icon: 'edit_calendar',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pap').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.mealMonitoringVisit.protection,
+        getValue: _ => _.pap,
+      },
+      eore: {
+        // icon: 'edit_calendar',
+        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pao').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        label: m.mealMonitoringVisit.eore,
+        getValue: _ => _.pao,
+      },
+    })
+  }, [])
 
   const data = useMemo(() => {
     return map(ctx.fetcherAnswers.entity, _ => seq(DashboardFilterHelper.filterData(_, filterShape, optionFilter)))
   }, [ctx.fetcherAnswers.entity, optionFilter])
-
-  const getChoices = <T extends keyof typeof Meal_VisitMonitoringOptions>(
-    questionName: T, {
-      skipKey = [],
-      // renameOptions
-    }: {
-      skipKey?: (keyof typeof Meal_VisitMonitoringOptions[T])[]
-      // renameOptions?: Record<keyof typeof ProtHHS_2_1Options[T], string>
-    } = {}
-  ) => {
-    return Enum.entries(Meal_VisitMonitoringOptions[questionName] ?? {})
-      .map(([value, label]) => ({value, label: label}))
-      .filter(_ => !(skipKey as string[]).includes(_.value))
-  }
 
   return (
     <DashboardLayout
@@ -137,39 +137,35 @@ export const DashboardMealVisitDashboard = () => {
         </>
       }
       header={
-        <Box sx={{
-          pt: 1,
-          pb: 1,
-          display: 'flex',
-          overflowX: 'auto',
-          whiteSpace: 'nowrap',
-          alignItems: 'center',
-          '& > :not(:last-child)': {mr: 1}
-        }}>
-          <DebouncedInput<[Date | undefined, Date | undefined]>
-            debounce={400}
-            value={[ctx.periodFilter.start, ctx.periodFilter.end]}
-            onChange={([start, end]) => ctx.setPeriodFilter(prev => ({...prev, start, end}))}
-          >
-            {(value, onChange) => <PeriodPicker
-              sx={{marginTop: '-6px'}}
-              defaultValue={value ?? [undefined, undefined]}
-              onChange={onChange}
-              min={ctx.fetcherPeriod.entity?.start}
-              max={ctx.fetcherPeriod.entity?.end}
-            />}
-          </DebouncedInput>
-          {Enum.entries(filterShape).map(([k, shape]) =>
-            <DashboardFilterOptions
-              key={k}
-              icon={shape.icon}
-              value={optionFilter[k]}
-              label={shape.label(m)}
-              options={getChoices(shape.options)}
-              onChange={_ => setOptionFilters(prev => ({...prev, [k]: _}))}
-            />
-          )}
-        </Box>
+        <FilterLayout
+          shape={filterShape}
+          filters={optionFilter}
+          setFilters={setOptionFilters}
+          before={
+            <DebouncedInput<[Date | undefined, Date | undefined]>
+              debounce={400}
+              value={[ctx.periodFilter.start, ctx.periodFilter.end]}
+              onChange={([start, end]) => ctx.setPeriodFilter(prev => ({...prev, start, end}))}
+            >
+              {(value, onChange) => <PeriodPicker
+                sx={{marginTop: '-6px'}}
+                defaultValue={value ?? [undefined, undefined]}
+                onChange={onChange}
+                min={ctx.fetcherPeriod.entity?.start}
+                max={ctx.fetcherPeriod.entity?.end}
+              />}
+            </DebouncedInput>
+          }
+          //   sx={{
+          //   pt: 1,
+          //   pb: 1,
+          //   display: 'flex',
+          //   overflowX: 'auto',
+          //   whiteSpace: 'nowrap',
+          //   alignItems: 'center',
+          //   '& > :not(:last-child)': {mr: 1}
+          // }}
+        />
       }
       // visualisation of the project, visit, overall rating, and then someone can click to expand comments and details
       beforeSection={

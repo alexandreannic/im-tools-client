@@ -347,4 +347,6 @@ export enum DrcJob {
 export const drcMaterialIcons = {
   project: 'inventory_2',
   donor: 'handshake',
+  disability: 'assist_walker',
+  displacementStatus: 'directions_run',
 }

@@ -18,19 +18,21 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Panel, PanelBody} from '@/shared/Panel'
-import {SheetOptions} from '@/shared/Sheet/util/sheetType'
-import {DrcOffice} from '@/core/drcUa'
+import {drcMaterialIcons, DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
-import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
-import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
+import {KoboBarChartMultiple, KoboBarChartSingle} from '@/features/Dashboard/shared/KoboBarChart'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {ChartPieIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
+import {shelterDrcProject, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
+import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
 const today = new Date()
 
@@ -55,65 +57,88 @@ export const ShelterDashboard = () => {
         label: 'Office',
         getValue: _ => _.office,
         getOptions: [...Object.keys(DrcOffice), ''].sort().map(_ => ({value: _, label: _}))
-      }
+      },
+      project: {
+        icon: drcMaterialIcons.project,
+        label: m.project,
+        getValue: _ => _.office,
+        getOptions: [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
+      },
+      contractor: {
+        icon: 'gavel',
+        label: m._shelter.contractor,
+        customFilter: (filters, _) => filters.includes(_.ta?.tags?.contractor1!) || filters.includes(_.ta?.tags?.contractor2!),
+        getOptions: DashboardFilterHelper.buildOptions(Enum.keys(ShelterContractor)),
+      },
+      vulnerabilities: {
+        icon: drcMaterialIcons.disability,
+        multiple: true,
+        label: m.vulnerabilities,
+        getValue: _ => _.nta?.hh_char_dis_select,
+        getOptions: ctx.nta.helper.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
+      },
+      validationStatus: {
+        icon: 'check',
+        label: m._shelter.validationStatus,
+        getValue: _ => _.nta?.tags?.validation,
+        getOptions: DashboardFilterHelper.buildOptions(Enum.keys(ShelterTagValidation)),
+      },
+      displacementStatus: {
+        icon: drcMaterialIcons.displacementStatus,
+        label: m.displacement,
+        getValue: _ => _.nta?.ben_det_res_stat,
+        getOptions: ctx.nta.helper.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
+      },
+      damageLevel: {
+        icon: 'construction',
+        label: m.levelOfPropertyDamaged,
+        getValue: _ => _.ta?.tags?.damageLevel,
+        getOptions: DashboardFilterHelper.buildOptions(Enum.keys(ShelterTaPriceLevel)),
+      },
     })
   }, [ctx.data.mappedData])
 
-  const [filters, setFilters] = usePersistentState<Partial<Record<keyof typeof filterShape, string[]>>>({}, {storageKey: 'shelter-dashboard'})
+  const [filters, setFilters] = usePersistentState<Record<keyof typeof filterShape, string[] | undefined>>({}, {storageKey: 'shelter-dashboard'})
 
   const filteredData = useMemo(() => {
     if (!ctx.data.mappedData) return
-    return seq(ctx.data.mappedData).filter(d => {
+    const filteredByDate = seq(ctx.data.mappedData).filter(d => {
       if (!d.nta) return false
       if (periodFilter?.start && periodFilter.start.getTime() >= d.nta.submissionTime.getTime()) return false
       if (periodFilter?.end && periodFilter.end.getTime() <= d.nta.submissionTime.getTime()) return false
-      if (filters.oblast.length > 0 && !filters.oblast?.includes(d.oblast!)) return false
-      if (filters.office.length > 0 && !filters.office?.includes(d.office!)) return false
       return true
     })
+    return DashboardFilterHelper.filterData(filteredByDate, filterShape, filters)
   }, [ctx.data, filters, periodFilter])
 
   const computed = useShelterComputedData({data: filteredData})
 
   return (
     <Page loading={ctx.data.loading} width="lg">
-      <Box sx={{display: 'flex', alignItems: 'center', ...themeLightScrollbar, whiteSpace: 'nowrap'}}>
-        <PeriodPicker
-          defaultValue={[periodFilter.start, periodFilter.end]}
-          onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
-          sx={{mb: 2}}
-          label={[m.start, m.endIncluded]}
-          max={today}
-        />
-        <DashboardFilterLabel sx={{mb: 1.5, ml: 1}} icon="attach_money" active={true} label={currency}>
-          <Box sx={{p: 1}}>
-            <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
-              <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
-              <ScRadioGroupItem value={Currency.UAH} title="UAH" sx={{width: '100%'}}/>
-            </ScRadioGroup>
-          </Box>
-        </DashboardFilterLabel>
-
-        {filterShape.map(shape =>
-          <DebouncedInput<string[]>
-            key={shape.property}
-            debounce={50}
-            value={filters[shape.property]}
-            onChange={_ => setFilters((prev: any) => ({...prev, [shape.property]: _}))}
-          >
-            {(value, onChange) =>
-              <DashboardFilterOptions
-                icon={shape.icon}
-                value={value ?? []}
-                label={shape.label}
-                options={shape.options}
-                onChange={onChange}
-                sx={{mb: 1.5, ml: 1}}
-              />
-            }
-          </DebouncedInput>
-        )}
-      </Box>
+      <FilterLayout
+        filters={filters}
+        setFilters={setFilters}
+        shape={filterShape}
+        before={
+          <>
+            <PeriodPicker
+              defaultValue={[periodFilter.start, periodFilter.end]}
+              onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
+              sx={{mb: 2}}
+              label={[m.start, m.endIncluded]}
+              max={today}
+            />
+            <DashboardFilterLabel sx={{mb: 1.5, ml: 1}} icon="attach_money" active={true} label={currency}>
+              <Box sx={{p: 1}}>
+                <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
+                  <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
+                  <ScRadioGroupItem value={Currency.UAH} title="UAH" sx={{width: '100%'}}/>
+                </ScRadioGroup>
+              </Box>
+            </DashboardFilterLabel>
+          </>
+        }
+      />
 
       {filteredData && computed && (
         <_ShelterDashboard
@@ -185,12 +210,24 @@ export const _ShelterDashboard = ({
             </Panel>
           }
         </Lazy>
-        <SlidePanel title={m.vulnerabilities}>
-          {/*<KoboPieChartIndicator question={} filter={} data={}*/}
+        <SlidePanel>
+          <ChartPieIndicator
+            title={m.vulnerabilities}
+            filter={_ => !_.nta?.hh_char_dis_select?.includes('diff_none')}
+            filterBase={_ => !!_.nta?.hh_char_dis_select!}
+            data={data}
+          />
           <KoboBarChartMultiple
             data={data.filter(_ => !!_.nta?.hh_char_dis_select)}
             getValue={_ => _.nta?.hh_char_dis_select ?? []}
             label={Shelter_NTAOptions.hh_char_dis_select}
+          />
+        </SlidePanel>
+        <SlidePanel title={m.status}>
+          <KoboBarChartSingle
+            data={data.filter(_ => !!_.nta?.ben_det_res_stat)}
+            getValue={_ => _.nta?.ben_det_res_stat}
+            label={Shelter_NTAOptions.ben_det_res_stat}
           />
         </SlidePanel>
       </Div>
@@ -237,16 +274,22 @@ export const _ShelterDashboard = ({
           }
         }}>
           {_ => (
-            <>
-              <Panel>
-                <PanelBody>
-                  <PieChartIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
-                  <HorizontalBarChartGoogle data={_.contractors}/>
-                </PanelBody>
-              </Panel>
-            </>
+            <Panel>
+              <PanelBody>
+                <PieChartIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
+                <HorizontalBarChartGoogle data={_.contractors}/>
+              </PanelBody>
+            </Panel>
           )}
         </Lazy>
+        <SlidePanel title={m.status}>
+          <KoboBarChartSingle
+            data={data}
+            filterData={_ => !!_.ta?.tags?.damageLevel}
+            getValue={_ => _.ta?.tags?.damageLevel}
+            label={ShelterTaPriceLevel}
+          />
+        </SlidePanel>
       </Div>
     </Div>
   )

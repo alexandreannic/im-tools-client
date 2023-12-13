@@ -93,12 +93,18 @@ export const buildKoboSchemaHelper = ({
     customSchema.submittedBy,
   ]).reduceObject<Record<string, KoboQuestionSchema>>(_ => [_.name, _])
 
+  const getOptionsByQuestionName = (qName: string) => {
+    const listName = questionIndex[qName].select_from_list_name
+    return choicesIndex[listName!]
+  }
+
   return {
     groupsCount: Object.keys(groupSchemas).length,
     groupSchemas,
     sanitizedSchema: sanitizedForm,
     choicesIndex,
     questionIndex,
+    getOptionsByQuestionName,
   }
 }
 
