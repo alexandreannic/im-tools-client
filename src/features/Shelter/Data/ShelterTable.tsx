@@ -151,6 +151,7 @@ export const ShelterTable = () => {
         render: (row: ShelterEntity) => (
           map(row.nta, nta => (
             <TableInput
+              type="number"
               originalValue={nta.pay_det_tax_id_num}
               value={nta.tags?.pay_det_tax_id_num ?? nta.pay_det_tax_id_num}
               onChange={_ => ctx.nta.asyncUpdate.call({

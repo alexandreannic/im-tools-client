@@ -2,8 +2,8 @@ import React, {useMemo} from 'react'
 import {BoxProps, Checkbox, FormControlLabel, FormGroup} from '@mui/material'
 import {makeSx, Txt} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'
-import {useI18n} from '../../../core/i18n'
-import {combineSx} from '../../../core/theme'
+import {useI18n} from '@/core/i18n'
+import {combineSx} from '@/core/theme'
 import {SheetOptions} from '@/shared/Sheet/util/sheetType'
 
 const css = makeSx({
@@ -25,7 +25,7 @@ const css = makeSx({
 export const DashboardFilterOptions = ({
   value = [],
   label,
-  options,
+  options = [],
   icon,
   onChange,
   ...props
@@ -33,7 +33,7 @@ export const DashboardFilterOptions = ({
   icon?: string
   value: string[]
   label: string
-  options: SheetOptions[]// {value: string, label?: string}[]
+  options: undefined | SheetOptions[]// {value: string, label?: string}[]
   onChange?: (_: string[]) => void
 } & Pick<BoxProps, 'sx'>) => {
   const {m} = useI18n()

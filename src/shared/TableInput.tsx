@@ -1,4 +1,4 @@
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {AaInput, AaInputProps} from '@/shared/ItInput/AaInput'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import React from 'react'
@@ -8,12 +8,13 @@ export const TableInput = ({
   value,
   originalValue,
   onChange,
+  ...props
 }: {
   onChange: (_: string | undefined) => void
   originalValue?: string | null
   value?: string
   debounce?: number
-}) => {
+} & Omit<AaInputProps, 'onChange' | 'value'>) => {
   return (
     <DebouncedInput<string>
       debounce={debounce}
@@ -34,6 +35,7 @@ export const TableInput = ({
               clear
             </AAIconBtn>
           }
+          {...props}
         />
       )}
     </DebouncedInput>

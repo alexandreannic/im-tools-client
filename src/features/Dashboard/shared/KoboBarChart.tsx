@@ -185,7 +185,7 @@ export const KoboBarChartMultiple = <
   checked,
   onToggle,
   label,
-  filterValue,
+  // filterValue,
   // questionType = 'single',
   base,
   mergeOptions,
@@ -216,7 +216,7 @@ export const KoboBarChartMultiple = <
     }).compact()
     const chart = ChartTools.multiple({
       data: source,
-      filterValue: filterValue as string[],
+      // filterValue: filterValue as string[],
       base,
     })
     return chain(chart).map(ChartTools.setLabel(label))

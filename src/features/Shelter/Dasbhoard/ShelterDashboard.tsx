@@ -18,7 +18,6 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Panel, PanelBody} from '@/shared/Panel'
-import {MpcaEntity} from '@/core/sdk/server/mpca/MpcaEntity'
 import {SheetOptions} from '@/shared/Sheet/util/sheetType'
 import {DrcOffice} from '@/core/drcUa'
 import {themeLightScrollbar} from '@/core/theme'
@@ -27,12 +26,11 @@ import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
-
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
 import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
-import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
+import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
 
 const today = new Date()
 
@@ -43,22 +41,25 @@ export const ShelterDashboard = () => {
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const {m} = useI18n()
 
-  const {defaultFilter, filterShape} = useMemo(() => {
+  const filterShape = useMemo(() => {
     const d = ctx.data.mappedData ?? seq([])
-    const filterShape: {icon?: string, label: string, property: keyof MpcaEntity, multiple?: boolean, options: SheetOptions[]}[] = [{
-      icon: 'location_on', label: 'Oblast', property: 'oblast',
-      options: SheetUtils.buildOptions(d.map(_ => _.oblast!).compact().distinct(_ => _).sort())
-    }, {
-      icon: 'business', label: 'Office', property: 'office',
-      options: SheetUtils.buildOptions([...Object.keys(DrcOffice), ''].sort())
-    }]
-    return {
-      filterShape,
-      defaultFilter: seq(filterShape).reduceObject<any>(_ => [_.property, []]),
-    }
+    return DashboardFilterHelper.makeShape<ShelterEntity>({
+      oblast: {
+        icon: 'location_on',
+        label: 'Oblast',
+        getValue: _ => _.oblast,
+        getOptions: d.map(_ => _.oblast!).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
+      },
+      office: {
+        icon: 'business',
+        label: 'Office',
+        getValue: _ => _.office,
+        getOptions: [...Object.keys(DrcOffice), ''].sort().map(_ => ({value: _, label: _}))
+      }
+    })
   }, [ctx.data.mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof MpcaEntity, string[]>>(defaultFilter, {storageKey: 'shelter-dashboard'})
+  const [filters, setFilters] = usePersistentState<Partial<Record<keyof typeof filterShape, string[]>>>({}, {storageKey: 'shelter-dashboard'})
 
   const filteredData = useMemo(() => {
     if (!ctx.data.mappedData) return

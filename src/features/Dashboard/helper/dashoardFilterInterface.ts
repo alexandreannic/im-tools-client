@@ -1,46 +1,56 @@
-import {Messages} from '@/core/i18n/localization/en'
 import {multipleFilters} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
 
 export namespace DashboardFilterHelper {
 
-  export interface Shape<T> {
+  interface ShapeBase<TOption> {
     icon?: string
-    options: keyof T
-    propertyIfDifferentThanOption?: string
-    multiple?: boolean
-    label: (_: Messages) => string
+    // name: string
+    getOptions: undefined | ({value: TOption, label: string})[]
+    label: string
     skipOption?: string[]
   }
 
-  export const makeShape = <T>() => <K extends string>(filters: Record<K, Shape<T>>) => filters
+  export interface ShapeMultiple<TData, TOption> extends ShapeBase<TOption> {
+    multiple: true
+    getValue: (_: TData) => TOption[]
+  }
+
+  export interface ShapeSingle<TData, TOption> extends ShapeBase<TOption> {
+    multiple?: false
+    getValue: (_: TData) => TOption
+  }
+
+  export type Shape<TData, TOption = any> = ShapeMultiple<TData, TOption> | ShapeSingle<TData, TOption>
+
+  export const makeShape = <TData extends Record<string, any>>(filters: Record<string, Shape<TData>>) => filters
 
   export type InferShape<F extends Record<string, Shape<any>>> = Record<keyof F, string[]>
 
-  export const filterData = <T, O, K extends string>(
-    d: T[],
-    shape: Partial<Record<K, Shape<O>>>,
-    filters: Record<K, string[]>
-  ): T[] => {
-    return multipleFilters(d, Enum.entries(filters).filter(([k]) => shape[k] !== undefined).map(([k, filterValue]) => {
+  export const filterData = <TData, TValue, TName extends string>(
+    d: TData[],
+    shapes: Partial<Record<TName, Shape<TData, TValue>>>,
+    filters: Record<TName, string[]>
+  ): TData[] => {
+    return multipleFilters(d, Enum.entries(filters).filter(([k]) => shapes[k] !== undefined).map(([filterName, filterValue]) => {
       if (filterValue.length <= 0) return
-      const property = shape[k]!.propertyIfDifferentThanOption ?? shape[k]!.options
-      if (shape[k]?.multiple)
-        return _ => !!filterValue.find(f => (_ as any)[property]?.includes(f))
-      return _ => filterValue.includes((_ as any)[property] as any)
+      const shape = shapes[filterName]!
+      if (shape.multiple)
+        return _ => !!filterValue.find(f => shape.getValue(_)?.includes(f as any))
+      return _ => filterValue.includes(shape.getValue(_) as any)
     }))
   }
 
-  export const filterDataFromLokiJs = <T extends object, O, K extends string>(
-    d: Collection<T>,
-    shape: Partial<Record<K, Shape<O>>>,
-    filters: Record<K, string[]>
-  ): T[] => {
+  export const filterDataFromLokiJs = <TData extends object, TValue, TName extends string>(
+    d: Collection<TData>,
+    shapes: Partial<Record<TName, Shape<TData, TValue>>>,
+    filters: Record<TName, string[]>
+  ): TData[] => {
     const lokiFilters: any = {}
-    Enum.entries(filters).forEach(([k, filterValue]) => {
+    Enum.entries(filters).forEach(([filterName, filterValue]) => {
       if (filterValue.length <= 0) return
-      const property = shape[k]!.propertyIfDifferentThanOption ?? shape[k]!.options
-      lokiFilters[property] = {$in: filterValue}
+      const shape = shapes[filterName]!
+      lokiFilters[filterName] = {$in: filterValue}
     })
     return d.find(lokiFilters)
   }
