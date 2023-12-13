@@ -15,18 +15,13 @@ import {Lazy} from '@/shared/Lazy'
 import {ChartTools, makeChartData} from '@/core/chartTools'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
-import {DebouncedInput} from '@/shared/DebouncedInput'
-import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
-import {SheetOptions} from '@/shared/Sheet/util/sheetType'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {AAIconBtn} from '@/shared/IconBtn'
 import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/server/mpca/MpcaEntity'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {drcMaterialIcons, DrcOffice, DrcProjectHelper} from '@/core/drcUa'
-import {themeLightScrollbar} from '@/core/theme'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Panel} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
@@ -35,8 +30,10 @@ import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboar
 import {koboFormTranslation, KoboIndex} from '@/KoboIndex'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {groupBy} from '@/utils/groupBy'
-import {MpcaDuplicatedCheck, MpcaDuplicatedCheckPanel} from '@/features/Mpca/Dashboard/MpcaDuplicatedCheck'
+import {MpcaDuplicatedCheckPanel} from '@/features/Mpca/Dashboard/MpcaDuplicatedCheck'
 import {useSession} from '@/core/Session/SessionContext'
+import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
 export const today = new Date()
 
@@ -74,54 +71,60 @@ export const MpcaDashboard = () => {
   //     ctx.fetcherData.fetch({force: true}, {filters: periodFilter})
   // }, [periodFilter])
 
-  const {defaultFilter, filterShape} = useMemo(() => {
+  const filterShape = useMemo(() => {
     const d = mappedData ?? seq([])
-    const filterShape: {
-      icon?: string,
-      label: string,
-      property: keyof MpcaEntity,
-      multiple?: boolean,
-      options: SheetOptions[]
-    }[] = [{
-      icon: 'assignment_turned_in', label: 'Kobo Form', property: 'source',
-      options: Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboIndex.byName(_).parsed.name))
-    }, {
-      icon: drcMaterialIcons.donor, label: 'Donor', property: 'finalDonor',
-      options: SheetUtils.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
-    }, {
-      icon: drcMaterialIcons.project, label: 'Project', property: 'finalProject',
-      options: SheetUtils.buildOptions(d.map(_ => _.finalProject!).distinct(_ => _).sort())
-    }, {
-      icon: 'groups', label: 'Prog', property: 'prog', multiple: true,
-      options: SheetUtils.buildOptions([...Object.keys(MpcaProgram), ''].sort())
-    }, {
-      icon: 'location_on', label: 'Oblast', property: 'oblast',
-      options: SheetUtils.buildOptions(d.map(_ => _.oblast!).distinct(_ => _).sort())
-    }, {
-      icon: 'business', label: 'Office', property: 'office',
-      options: SheetUtils.buildOptions([...Object.keys(DrcOffice), ''].sort())
-    }]
-    return {
-      filterShape,
-      defaultFilter: seq(filterShape).reduceObject<any>(_ => [_.property, []]),
-    }
+    return DataFilter.makeShape<MpcaEntity>({
+      source: {
+        icon: 'assignment_turned_in',
+        label: 'Kobo Form',
+        getValue: _ => _.source,
+        getOptions: () => Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboIndex.byName(_).parsed.name))
+      },
+      finalDonor: {
+        icon: drcMaterialIcons.donor,
+        label: 'Donor',
+        getValue: _ => _.finalDonor,
+        getOptions: () => SheetUtils.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
+      },
+      finalProject: {
+        icon: drcMaterialIcons.project,
+        label: 'Project',
+        getValue: _ => _.finalProject,
+        getOptions: () => SheetUtils.buildOptions(d.map(_ => _.finalProject!).distinct(_ => _).sort()),
+      },
+      prog: {
+        icon: 'groups',
+        label: 'Prog',
+        getValue: _ => _.prog,
+        getOptions: () => SheetUtils.buildOptions([...Object.keys(MpcaProgram), ''].sort()),
+        multiple: true,
+      },
+      oblast: {
+        icon: 'location_on',
+        label: 'Oblast',
+        getValue: _ => _.oblast,
+        getOptions: () => SheetUtils.buildOptions(d.map(_ => _.oblast!).distinct(_ => _).sort())
+      },
+      office: {
+        icon: 'business',
+        label: 'Office',
+        getValue: _ => _.office,
+        getOptions: () => SheetUtils.buildOptions([...Object.keys(DrcOffice), ''].sort())
+      }
+    })
   }, [mappedData])
 
-  const [filters, setFilters] = usePersistentState<Record<keyof MpcaEntity, string[]>>(defaultFilter, {storageKey: 'mpca-dashboard-filters'})
+  const [filters, setFilters] = usePersistentState<DataFilter.InferShape<typeof filterShape>>({}, {storageKey: 'mpca-dashboard-filters'})
 
   const filteredData = useMemo(() => {
-    return mappedData?.filter(d => {
+    if (!mappedData) return
+    const filteredBy_date = mappedData.filter(d => {
       if (periodFilter?.start && periodFilter.start.getTime() >= d.date.getTime()) return false
       if (periodFilter?.end && periodFilter.end.getTime() <= d.date.getTime()) return false
-      return filterShape.every(shape => {
-        const value = d[shape.property] as any
-        if (filters[shape.property].length <= 0) return true
-        if (shape.multiple)
-          return seq(filters[shape.property]).intersect(value).length > 0
-        return filters[shape.property].includes(value)
-      })
+      return true
     })
-  }, [mappedData, filters, periodFilter])
+    return DataFilter.filterData(filteredBy_date, filterShape, filters)
+  }, [mappedData, filters, periodFilter, filterShape])
 
   const computed = useBNREComputed({data: filteredData})
 
@@ -137,52 +140,41 @@ export const MpcaDashboard = () => {
 
   return (
     <Page width="lg" loading={ctx.fetcherData.loading}>
-      <Box sx={{display: 'flex', alignItems: 'center', ...themeLightScrollbar, whiteSpace: 'nowrap'}}>
-        <PeriodPicker
-          defaultValue={[periodFilter.start, periodFilter.end]}
-          onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
-          sx={{mb: 2}}
-          label={[m.start, m.endIncluded]}
-          max={today}
-        />
-        <DashboardFilterLabel sx={{mb: 1.5, ml: 1}} icon="attach_money" active={true} label={currency}>
-          <Box sx={{p: 1}}>
-            <ScRadioGroup value={amountType} onChange={setAmountType} dense sx={{mb: 2}}>
-              <ScRadioGroupItem value={AmountType.amountUahSupposed} title="Estimated" description="Estimated when filling the form"/>
-              <ScRadioGroupItem value={AmountType.amountUahDedup} title="Deduplicated" description="Amount given after WFP deduplication"/>
-              <ScRadioGroupItem value={AmountType.amountUahFinal} title="Reel" description="Deduplicated amount or Estimated if none"/>
-              <ScRadioGroupItem value={AmountType.amountUahCommitted} title="Committed" description="Real amount if committed"/>
-            </ScRadioGroup>
-            <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
-              <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
-              <ScRadioGroupItem value={Currency.UAH} title="UAH" sx={{width: '100%'}}/>
-            </ScRadioGroup>
-          </Box>
-        </DashboardFilterLabel>
-        {filterShape.map(shape =>
-          <DebouncedInput<string[]>
-            key={shape.property}
-            debounce={50}
-            value={filters[shape.property]}
-            onChange={_ => setFilters((prev: any) => ({...prev, [shape.property]: _}))}
-          >
-            {(value, onChange) =>
-              <DashboardFilterOptions
-                icon={shape.icon}
-                value={value ?? []}
-                label={shape.label}
-                options={shape.options}
-                onChange={onChange}
-                sx={{mb: 1.5, ml: 1}}
-              />
-            }
-          </DebouncedInput>
-        )}
-        <AAIconBtn sx={{ml: 1, mb: 1.5}} children="clear" tooltip={m.clearFilter} onClick={() => {
-          setFilters(defaultFilter)
+      <FilterLayout
+        filters={filters}
+        shape={filterShape}
+        setFilters={setFilters}
+        onClear={() => {
+          setFilters({})
           setPeriodFilter({})
-        }}/>
-      </Box>
+        }}
+        before={
+          <>
+            <PeriodPicker
+              defaultValue={[periodFilter.start, periodFilter.end]}
+              onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
+              label={[m.start, m.endIncluded]}
+              max={today}
+            />
+            <DashboardFilterLabel icon="attach_money" active={true} label={currency}>
+              {() => (
+                <Box sx={{p: 1}}>
+                  <ScRadioGroup value={amountType} onChange={setAmountType} dense sx={{mb: 1}}>
+                    <ScRadioGroupItem value={AmountType.amountUahSupposed} title="Estimated" description="Estimated when filling the form"/>
+                    <ScRadioGroupItem value={AmountType.amountUahDedup} title="Deduplicated" description="Amount given after WFP deduplication"/>
+                    <ScRadioGroupItem value={AmountType.amountUahFinal} title="Reel" description="Deduplicated amount or Estimated if none"/>
+                    <ScRadioGroupItem value={AmountType.amountUahCommitted} title="Committed" description="Real amount if committed"/>
+                  </ScRadioGroup>
+                  <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
+                    <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
+                    <ScRadioGroupItem value={Currency.UAH} title="UAH" sx={{width: '100%'}}/>
+                  </ScRadioGroup>
+                </Box>
+              )}
+            </DashboardFilterLabel>
+          </>
+        }
+      />
       {computed && filteredData && (
         <_MPCADashboard
           currency={currency}

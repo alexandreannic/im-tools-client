@@ -1,11 +1,11 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useFetcher, useMap} from '@alexandreannic/react-hooks-lib'
+import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useMemo} from 'react'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcSector} from '@/core/drcUa'
-import {Partnership_partnersDatabase} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabase'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 
 export type UsePartnershipData = ReturnType<typeof usePartnershipData>
 
@@ -20,7 +20,7 @@ export const usePartnershipData = () => {
 
   const mappedData = useMemo(() => {
     if (!fetcherPartnersDb.entity) return
-    const res: Seq<PartnershipData> = seq([])
+    const res: Seq<KoboAnswer<PartnershipData>> = seq([])
     fetcherPartnersDb.entity.data.forEach(d => {
       const oblast: OblastName[] | undefined = d.Which_oblasts_does_t_t_and_has_experience?.map(_ => fnSwitch(_, {
         cherkasy_oblast: 'Cherkaska',

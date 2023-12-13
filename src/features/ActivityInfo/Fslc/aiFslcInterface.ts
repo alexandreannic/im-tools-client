@@ -51,11 +51,11 @@ export namespace AiTypeFslc {
     // 'c48optvldbguv498': a['Raion'] === undefined ? undefined : a['Raion'],
     // 'cfml2chldbgvdfb9': a['Hromada'] === undefined ? undefined : a['Hromada'],
     // @ts-ignore
-    'camsdoble7prey5o': 'cg7v61llbunvy9t9:' + aiOblasts[a['Oblast']],
+    'ct3cvkildbgub3b7': 'cg7v61llbunvy9t9:' + aiOblasts[a['Oblast']],
     // @ts-ignore
-    'c74nt9ale7prs2hp': 'cjy8nbnlbunzcnh1h:' + aiRaions[a['Raion']],
+    'c48optvldbguv498': 'cjy8nbnlbunzcnh1h:' + aiRaions[a['Raion']],
     // @ts-ignore
-    'cs63bxkle7ps0xuq': 'c700rjplbuo1fjq5m:' + aiHromadas[a['Hromada']],
+    'cfml2chldbgvdfb9': 'c700rjplbuo1fjq5m:' + aiHromadas[a['Hromada']],
     'c4n35tdldbgvsxja': a['Settlement'] === undefined ? undefined : a['Settlement'],
     'c90oollldbgwf09c': a['Collective Sites'] === undefined ? undefined : a['Collective Sites'],
     'ct7r8hmldx1yr4g2j': a['Response Theme'] === undefined ? undefined : options['Response Theme'][a['Response Theme']!],

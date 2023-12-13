@@ -18,7 +18,6 @@ export const PartnershipProvider = ({
   children: ReactNode
 }) => {
   const {api} = useAppSettings()
-  const [langIndex, setLangIndex] = useState<number>(0)
   const {session, accesses} = useSession()
 
   const data = usePartnershipData()

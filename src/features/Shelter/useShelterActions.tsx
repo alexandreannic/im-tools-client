@@ -83,6 +83,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
     key: K,
     value: T[K] | null
   }) => {
+    console.log('async', {[key]: value})
     return api.kobo.answer.updateTag({
       formId,
       answerIds: [answerId],

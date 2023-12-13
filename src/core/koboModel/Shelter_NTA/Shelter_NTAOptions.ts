@@ -18,12 +18,12 @@ hh_char_hh_det_gender: {
 	'female': `B = Female`
 },
 hh_char_dis_select: {
-	'diff_see': `A = Have difficulty seeing, even if wearing glasses`,
-	'diff_hear': `B = Have difficulty hearing, even if using a hearing aid`,
-	'diff_walk': `C = Have difficulty walking or climbing steps`,
-	'diff_medical': `D = Have a critical medical condition`,
-	'diff_mental': `E = Have a mental/ chronic illness`,
-	'diff_none': `G = None of the above apply`
+	'diff_see': `Have difficulty seeing, even if wearing glasses`,
+	'diff_hear': `Have difficulty hearing, even if using a hearing aid`,
+	'diff_walk': `Have difficulty walking or climbing steps`,
+	'diff_medical': `Have a critical medical condition`,
+	'diff_mental': `Have a mental/ chronic illness`,
+	'diff_none': `None of the above apply`
 },
 undefined: {
 	'zero': `A = No, no difficulty`,

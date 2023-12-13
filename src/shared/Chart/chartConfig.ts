@@ -1,9 +1,9 @@
-import {Theme} from '@mui/material'
+import {alpha, Theme} from '@mui/material'
 
 export const chartConfig = {
   defaultColors: (t: Theme) => [
     t.palette.primary.main,
-    t.palette.secondary.main,
+    alpha(t.palette.primary.light, .3),
     '#008a09',
     'red',
     'orange'
