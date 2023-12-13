@@ -178,22 +178,6 @@ export const DashboardProtHHS2 = () => {
     })
   }, [database, optionFilter])
 
-  // const choices = useMemo(() => {
-  //   const res = {} as Record<keyof OptionFilters, {name: any, label: string}[]>
-  //   Enum.entries(filterShape).forEach(([key, shape]) => {
-  //     res[key] = data
-  //       ? [...new Set(data.map(_ => _[shape.property]))].map(name => {
-  //         return ({
-  //           name,
-  //           // @ts-ignore
-  //           label: ProtHHS_2_1Options[shape.property][name]
-  //         })
-  //       })
-  //       : []
-  //   })
-  //   return res
-  // }, [data, optionFilter])
-
   const computed = useProtHhs2Data({data: data})
 
   return (
@@ -203,6 +187,10 @@ export const DashboardProtHHS2 = () => {
       subTitle={m.protectionMonitoringDashboard}
       header={
         <FilterLayout
+          onClear={() => {
+            setPeriodFilter({})
+            setOptionFilters({})
+          }}
           shape={filterShape}
           filters={optionFilter}
           setFilters={setOptionFilters}

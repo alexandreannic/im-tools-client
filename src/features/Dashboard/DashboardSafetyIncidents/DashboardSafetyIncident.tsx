@@ -40,13 +40,13 @@ export const DashboardSafetyIncident = () => {
     oblast: {
       icon: 'location_on',
       getValue: _ => _.oblast,
-      getOptions: DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.oblast),
+      getOptions: () => DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.oblast),
       label: m.oblast,
     },
     attackType: {
       icon: 'rocket_launch',
       getValue: _ => _.attack_type,
-      getOptions: DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.attack_type),
+      getOptions: () => DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.attack_type),
       label: m._dashboardSafetyIncident.attackTypes,
       multiple: true,
     }

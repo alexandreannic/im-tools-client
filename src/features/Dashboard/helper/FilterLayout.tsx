@@ -17,7 +17,7 @@ export const FilterLayout = ({
   onClear,
   sx,
 }: {
-  onClear: () => void
+  onClear?: () => void
   filters: Record<string, string[] | undefined>
   setFilters: Dispatch<SetStateAction<Record<string, undefined | string[]>>>
   before?: ReactNode
@@ -27,6 +27,7 @@ export const FilterLayout = ({
   const {m} = useI18n()
   return (
     <Box sx={{
+      maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
     }}>
