@@ -5,6 +5,7 @@ import {DashboardFilterLabel} from './DashboardFilterLabel'
 import {useI18n} from '@/core/i18n'
 import {combineSx} from '@/core/theme'
 import {SheetOptions} from '@/shared/Sheet/util/sheetType'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 const css = makeSx({
   optionSelectAll: {
@@ -25,10 +26,12 @@ const css = makeSx({
 export const DashboardFilterOptions = ({
   value = [],
   label,
+  addBlankOption,
   icon,
   onChange,
   ...props
 }: {
+  addBlankOption?: boolean
   icon?: string
   value: string[]
   label: string
@@ -82,6 +85,13 @@ export const DashboardFilterOptions = ({
               onChange(value.filter(_ => _ !== e.target.name))
             }
           }}>
+            {addBlankOption && (
+              <FormControlLabel
+                control={<Checkbox name={SheetUtils.blank} checked={value.includes(SheetUtils.blank)}/>}
+                label={SheetUtils.blankLabel}
+                sx={css.option}
+              />
+            )}
             {(options() ?? []).map(o =>
               <FormControlLabel
                 key={o.value}

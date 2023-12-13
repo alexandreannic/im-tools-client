@@ -50,7 +50,7 @@ export const DashboardProtHHS2 = () => {
       start: filter?.start,
       end: filter?.end,
     }
-  }).then(_ => _.data.map(enrichProtHHS_2_1)) as Promise<ProtHHS2Enrich[]>)
+  }).then(_ => seq(_.data).map(enrichProtHHS_2_1)) as Promise<Seq<ProtHHS2Enrich>>)
 
   useEffect(() => {
     _period.fetch()
@@ -66,80 +66,63 @@ export const DashboardProtHHS2 = () => {
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
+  const getOption = (p: keyof ProtHHS2Enrich, option: keyof typeof Protection_Hhs2_1Options = p as any) => () => {
+    return _answers.entity
+      ?.map(_ => _[p])
+      .distinct(_ => _)
+      .compact()
+      .sortByString(_ => _ as string, 'a-z')
+      .map((_: any) => ({value: _, label: (Protection_Hhs2_1Options[option] as any)[_]}))
+  }
+
   const filterShape = useMemo(() => {
-    const data = seq(_answers.entity)
     return DataFilter.makeShape<ProtHHS2Enrich>({
       staff_to_insert_their_DRC_office: {
         getValue: _ => _.staff_to_insert_their_DRC_office,
         icon: 'business',
         label: m.drcOffice,
-        getOptions: () => data
-          ?.map(_ => _.staff_to_insert_their_DRC_office)
-          .distinct(_ => _)
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.staff_to_insert_their_DRC_office[_]})),
+        getOptions: getOption('staff_to_insert_their_DRC_office'),
       },
       where_are_you_current_living_oblast: {
         getValue: _ => _.where_are_you_current_living_oblast,
-        getOptions: () => data
-          ?.map(_ => _.where_are_you_current_living_oblast)
-          .distinct(_ => _)
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.what_is_your_area_of_origin_oblast[_]})),
+        getOptions: getOption('where_are_you_current_living_oblast', 'what_is_your_area_of_origin_oblast'),
         icon: 'location_on',
         label: m.currentOblast
       },
       what_is_your_area_of_origin_oblast: {
         getValue: _ => _.what_is_your_area_of_origin_oblast,
-        getOptions: () => data
-          ?.map(_ => _.what_is_your_area_of_origin_oblast)
-          .distinct(_ => _)
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.what_is_your_area_of_origin_oblast[_]})),
+        getOptions: getOption('what_is_your_area_of_origin_oblast'),
         icon: 'explore',
         label: m.originOblast,
       },
       type_of_site: {
         getValue: _ => _.type_of_site,
-        getOptions: () => data
-          ?.map(_ => _.type_of_site)
-          .distinct(_ => _)
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.type_of_site[_]})),
+        getOptions: getOption('type_of_site'),
         icon: 'location_city',
         label: m.typeOfSite
       },
       hh_sex_1: {
         getValue: _ => _.hh_sex_1,
-        getOptions: () => data
-          ?.map(_ => _.hh_sex_1)
-          .distinct(_ => _)
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.hh_sex_1[_]})),
+        getOptions: getOption('hh_sex_1'),
         icon: 'female',
         label: m.respondent
       },
       do_you_identify_as_any_of_the_following: {
         getValue: _ => _.do_you_identify_as_any_of_the_following,
-        getOptions: () => data
-          ?.map(_ => _.do_you_identify_as_any_of_the_following)
-          .distinct(_ => _)
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following[_]})),
+        getOptions: getOption('do_you_identify_as_any_of_the_following'),
         icon: 'directions_run',
         label: m.poc
       },
       what_is_the_type_of_your_household: {
         getValue: _ => _.what_is_the_type_of_your_household,
-        getOptions: () => data
-          ?.map(_ => _.what_is_the_type_of_your_household)
-          .distinct(_ => _)
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.what_is_the_type_of_your_household[_]})),
+        getOptions: getOption('what_is_the_type_of_your_household'),
         icon: 'people',
         label: m.hhType,
       },
       do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household: {
         multiple: true,
         getValue: _ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household,
-        getOptions: () => data
-          ?.map(_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household)
-          .distinct(_ => _)
-          .flat()
-          .map(_ => ({value: _, label: Protection_Hhs2_1Options.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household[_]})),
+        getOptions: getOption('do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household'),
         icon: 'support',
         label: m.protHHS2.specificNeedsToHHS,
         skipOption: ['unable_unwilling_to_answer', 'other_specify']

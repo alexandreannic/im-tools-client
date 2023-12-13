@@ -47,6 +47,7 @@ export const FilterLayout = ({
               icon={shape.icon}
               value={value ?? []}
               label={shape.label}
+              addBlankOption={shape.addBlankOption}
               options={shape.getOptions}
               onChange={onChange}
             />

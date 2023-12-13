@@ -15,6 +15,7 @@ export namespace DataFilter {
   interface ShapeBase<TData, TOption extends string> {
     icon?: string
     // name: string
+    addBlankOption?: boolean
     getOptions: () => undefined | ShapeOption<TOption>[]
     label: string
     customFilter?: (filterValue: string[], _: TData) => boolean
