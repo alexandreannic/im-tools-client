@@ -202,9 +202,7 @@ export const _PartnershipDashboard = ({}: {}) => {
         {/*/>*/}
       </Box>
       <Div>
-        <Div column
-             sx={{maxWidth: 320}}
-        >
+        <Div column sx={{maxWidth: 320}}>
           <Panel sx={{display: 'flex'}}>
             <SlideWidget sx={{flex: 1}} title={m._partner.partners} icon="diversity_3">
               {formatLargeNumber(filteredData.length)}

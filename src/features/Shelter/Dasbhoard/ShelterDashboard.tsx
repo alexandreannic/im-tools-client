@@ -116,6 +116,7 @@ export const ShelterDashboard = () => {
   return (
     <Page loading={ctx.data.loading} width="lg">
       <FilterLayout
+        sx={{mb: 1}}
         filters={filters}
         setFilters={setFilters}
         shape={filterShape}
@@ -124,17 +125,18 @@ export const ShelterDashboard = () => {
             <PeriodPicker
               defaultValue={[periodFilter.start, periodFilter.end]}
               onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
-              sx={{mb: 2}}
               label={[m.start, m.endIncluded]}
               max={today}
             />
-            <DashboardFilterLabel sx={{mb: 1.5, ml: 1}} icon="attach_money" active={true} label={currency}>
-              <Box sx={{p: 1}}>
-                <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
-                  <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
-                  <ScRadioGroupItem value={Currency.UAH} title="UAH" sx={{width: '100%'}}/>
-                </ScRadioGroup>
-              </Box>
+            <DashboardFilterLabel icon="attach_money" active={true} label={currency}>
+              {() => (
+                <Box sx={{p: 1}}>
+                  <ScRadioGroup value={currency} onChange={setCurrency} inline dense>
+                    <ScRadioGroupItem value={Currency.USD} title="USD" sx={{width: '100%'}}/>
+                    <ScRadioGroupItem value={Currency.UAH} title="UAH" sx={{width: '100%'}}/>
+                  </ScRadioGroup>
+                </Box>
+              )}
             </DashboardFilterLabel>
           </>
         }
