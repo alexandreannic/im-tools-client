@@ -10,7 +10,7 @@ import {DebouncedInput} from '@/shared/DebouncedInput'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Lazy} from '@/shared/Lazy'
 import {KoboUkraineMap} from '../Dashboard/shared/KoboUkraineMap'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
@@ -45,25 +45,25 @@ export const DashboardMealVisitDashboard = () => {
   const ctx = useDashboardMealVisitContext()
   const schemaCtx = useKoboSchemaContext()
   const {m, formatDateTime, formatDate} = useI18n()
-  const [optionFilter, setOptionFilters] = useState<Record<string, string[]>>({})
+  const [optionFilter, setOptionFilters] = useState<Record<string, string[] | undefined>>({})
 
   const filterShape = useMemo(() => {
-    return DashboardFilterHelper.makeShape<KoboAnswer<Meal_VisitMonitoring>>({
+    return DataFilter.makeShape<KoboAnswer<Meal_VisitMonitoring>>({
       oblast: {
         icon: 'location_on',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdro').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdro').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.office,
         getValue: _ => _.mdro,
       },
       focalPoint: {
         icon: 'person',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdp').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdp').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.focalPoint,
         getValue: _ => _.mdp,
       },
       donor: {
         icon: 'handshake',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdd_001').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdd_001').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.donor,
         getValue: _ => _.mdd_001,
         multiple: true,
@@ -71,44 +71,44 @@ export const DashboardMealVisitDashboard = () => {
       activity: {
         multiple: true,
         icon: 'edit_calendar',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('mdt').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdt').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.project,
         getValue: _ => _.mdt,
       },
       nfi: {
         // icon: 'edit_calendar',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pan').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pan').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.mealMonitoringVisit.nfiDistribution,
         getValue: _ => _.pan,
         multiple: true,
       },
       ecrec: {
         // icon: 'edit_calendar',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pae').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pae').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.mealMonitoringVisit.ecrec,
         getValue: _ => _.pae,
       },
       shelter: {
         // icon: 'edit_calendar',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pas').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pas').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.mealMonitoringVisit.shelter,
         getValue: _ => _.pas,
       },
       lau: {
         // icon: 'edit_calendar',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pal').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pal').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.mealMonitoringVisit.lau,
         getValue: _ => _.pal,
       },
       protection: {
         // icon: 'edit_calendar',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pap').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pap').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.mealMonitoringVisit.protection,
         getValue: _ => _.pap,
       },
       eore: {
         // icon: 'edit_calendar',
-        getOptions: schemaCtx.schemaHelper.getOptionsByQuestionName('pao').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pao').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
         label: m.mealMonitoringVisit.eore,
         getValue: _ => _.pao,
       },
@@ -116,7 +116,7 @@ export const DashboardMealVisitDashboard = () => {
   }, [])
 
   const data = useMemo(() => {
-    return map(ctx.fetcherAnswers.entity, _ => seq(DashboardFilterHelper.filterData(_, filterShape, optionFilter)))
+    return map(ctx.fetcherAnswers.entity, _ => seq(DataFilter.filterData(_, filterShape, optionFilter)))
   }, [ctx.fetcherAnswers.entity, optionFilter])
 
   return (
@@ -156,15 +156,6 @@ export const DashboardMealVisitDashboard = () => {
               />}
             </DebouncedInput>
           }
-          //   sx={{
-          //   pt: 1,
-          //   pb: 1,
-          //   display: 'flex',
-          //   overflowX: 'auto',
-          //   whiteSpace: 'nowrap',
-          //   alignItems: 'center',
-          //   '& > :not(:last-child)': {mr: 1}
-          // }}
         />
       }
       // visualisation of the project, visit, overall rating, and then someone can click to expand comments and details

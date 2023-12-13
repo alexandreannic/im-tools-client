@@ -1,6 +1,6 @@
 import {Page} from '@/shared/Page'
 import {usePartnershipContext} from '@/features/Partnership/PartnershipContext'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {usePartnershipDashboard} from '@/features/Partnership/Dashboard/usePartnershipDashboard'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
@@ -16,7 +16,7 @@ import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
 import {Utils} from '@/utils/utils'
 import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/drcUa'
 import {Txt} from 'mui-extension'
-import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Partnership_partnersDatabaseOptions} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
@@ -26,99 +26,32 @@ import {useSetState2} from '@/alexlib-labo/useSetState2'
 import {Box, Checkbox} from '@mui/material'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {KoboIndex} from '@/KoboIndex'
+import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
 export const PartnershipDashboard = () => {
   const ctx = usePartnershipContext()
+  const {api} = useAppSettings()
+  const fetcherSchema = useFetcher(() => api.koboApi.getForm({id: KoboIndex.byName('partnership_partnersDatabase').id}))
+
+  useEffect(() => {
+    fetcherSchema.fetch()
+  }, [])
+
   return (
     <Page width="lg" loading={ctx.data.fetcherPartnersDb.loading}>
-      {ctx.data.fetcherPartnersDb.entity && (
-        <_PartnershipDashboard/>
+      {ctx.data.fetcherPartnersDb.entity && fetcherSchema.entity && (
+        <KoboSchemaProvider schema={fetcherSchema.entity}>
+          <_PartnershipDashboard/>
+        </KoboSchemaProvider>
       )}
     </Page>
   )
 }
-
-const filterShape = DashboardFilterHelper.makeShape<typeof Partnership_partnersDatabaseOptions>()({
-  oblast: {
-    propertyIfDifferentThanOption: 'Which_oblasts_does_t_t_and_has_experience',
-    icon: 'location_on',
-    options: 'Oblast_001',
-    label: m => m.oblast,
-    multiple: true
-  },
-  activities: {
-    icon: 'local_activity',
-    options: 'The_organization_is_g_type_of_activities',
-    propertyIfDifferentThanOption: 'The_organization_is_g_type_of_activities',
-    label: m => m.activity,
-    multiple: true
-  },
-  sector: {
-    icon: 'support',
-    options: 'Sectors_funded',
-    propertyIfDifferentThanOption: 'Which_sectors_does_the_organiz',
-    label: m => m.sector,
-    multiple: true
-  },
-  relation: {
-    icon: 'share',
-    options: 'Is_there_an_ongoing_relationsh',
-    label: m => m._partner.relationship,
-  },
-  rapidMobilization: {
-    icon: 'bolt',
-    options: 'Is_rapid_volunteer_mobilization_possible',
-    label: m => m._partner.rapidMobilization,
-  },
-  heardToReach: {
-    icon: 'rocket_launch',
-    options: 'Is_access_possible_by_the_orga',
-    label: m => m._partner.rapidMobilization,
-  },
-  cars: {
-    icon: 'local_shipping',
-    options: 'Own_vehicles',
-    label: m => m.vehicule,
-  },
-  warehouse: {
-    icon: 'warehouse',
-    options: 'Own_warehouse_belonging_to_th',
-    label: m => m.warehouse,
-  },
-  vetting: {
-    icon: 'check_circle',
-    options: 'Has_vetting_been_conducted',
-    label: m => m._partner.vetting,
-  },
-  risk: {
-    icon: 'flag',
-    options: 'Overall_Residual_Risk',
-    label: m => m._partner.residualRisk,
-  },
-})
-
-const filterSgaShape = DashboardFilterHelper.makeShape<any>()({
-  year: {
-    icon: 'today',
-    options: 'year',
-    label: m => m.year,
-    multiple: false
-  },
-  donor: {
-    icon: drcMaterialIcons.donor,
-    options: 'Donor',
-    label: m => m.donor,
-    multiple: false
-  },
-  project: {
-    icon: drcMaterialIcons.project,
-    options: 'project',
-    label: m => m.project,
-    multiple: false
-  },
-})
-
-type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape> & DashboardFilterHelper.InferShape<typeof filterSgaShape>
 
 const mapSga = (data: Seq<PartnershipData>) => {
   return data.flatMap(_ => _.group_vi2hh32?.map(g => ({...g, ..._})))
@@ -128,25 +61,116 @@ const mapSga = (data: Seq<PartnershipData>) => {
       project: Enum.values(DrcProject).find(_ => _.includes('' + sga.Project_code)),
       year: (sga.SGA_start_date as unknown as string)?.split('-')[0]
     }))
-    .filter(_ => {
-      return true
-    })
 }
 
+type SgaEntity = ReturnType<typeof mapSga>[0]
+
 export const _PartnershipDashboard = ({}: {}) => {
+  const {m, formatLargeNumber} = useI18n()
   const selecteIds = useSetState2<string>()
   const ctx = usePartnershipContext()
-  // const data = seq(ctx.data.fetcherPartnersDb.entity!.data)
+  const ctxSchema = useKoboSchemaContext()
   const mappedData = ctx.data.mappedData!
-  const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
 
-  const {m, formatLargeNumber} = useI18n()
+  const filterShape = useMemo(() => DataFilter.makeShape<KoboAnswer<PartnershipData>>({
+    oblast: {
+      getValue: _ => _.Which_oblasts_does_t_t_and_has_experience,
+      icon: 'location_on',
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Oblast_001').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m.oblast,
+      multiple: true
+    },
+    activities: {
+      icon: 'local_activity',
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('The_organization_is_g_type_of_activities').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getValue: _ => _.The_organization_is_g_type_of_activities,
+      label: m.activity,
+      multiple: true
+    },
+    sector: {
+      icon: 'support',
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Sectors_funded').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getValue: _ => _.Which_sectors_does_the_organiz,
+      label: m.sector,
+      multiple: true
+    },
+    relation: {
+      icon: 'share',
+      getValue: _ => _.Is_there_an_ongoing_relationsh,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Is_there_an_ongoing_relationsh').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m._partner.relationship,
+    },
+    rapidMobilization: {
+      icon: 'bolt',
+      getValue: _ => _.Is_rapid_volunteer_mobilization_possible,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Is_rapid_volunteer_mobilization_possible').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m._partner.rapidMobilization,
+    },
+    heardToReach: {
+      icon: 'rocket_launch',
+      getValue: _ => _.Is_access_possible_by_the_orga,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Is_access_possible_by_the_orga').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m._partner.rapidMobilization,
+    },
+    cars: {
+      icon: 'local_shipping',
+      getValue: _ => _.Own_vehicles,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Own_vehicles').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m.vehicule,
+      multiple: true,
+    },
+    warehouse: {
+      icon: 'warehouse',
+      getValue: _ => _.Own_warehouse_belonging_to_th,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Own_warehouse_belonging_to_th').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m.warehouse,
+    },
+    vetting: {
+      icon: 'check_circle',
+      getValue: _ => _.Has_vetting_been_conducted,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Has_vetting_been_conducted').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m._partner.vetting,
+    },
+    risk: {
+      icon: 'flag',
+      getValue: _ => _.Overall_Residual_Risk,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Overall_Residual_Risk').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m._partner.residualRisk,
+    },
+  }), [mappedData])
+
+  const filterSgaShape = useMemo(() => DataFilter.makeShape<SgaEntity>({
+    year: {
+      icon: 'today',
+      getValue: _ => _.year,
+      getOptions: () => DataFilter.buildOptions(sgas?.map(_ => _.year).compact().distinct(_ => _)),
+      label: m.year,
+      multiple: false
+    },
+    donor: {
+      icon: drcMaterialIcons.donor,
+      getValue: _ => _.Donor,
+      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Donor').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      label: m.donor,
+      multiple: false
+    },
+    project: {
+      icon: drcMaterialIcons.project,
+      getValue: _ => _.project,
+      getOptions: () => DataFilter.buildOptions(sgas?.map(_ => _.project).compact().distinct(_ => _)),
+      label: m.project,
+      multiple: false
+    },
+  }), [mappedData])
+
+  const [optionFilter, setOptionFilters] = useState<DataFilter.InferShape<typeof filterShape> & DataFilter.InferShape<typeof filterSgaShape>>({})
+
 
   const sgas = useMemo(() => mapSga(mappedData), [mappedData])
 
   /** @deprecated Probably use filteredAndPickedData */
   const filteredData = useMemo(() => {
-    return seq(DashboardFilterHelper.filterData(mappedData, filterShape, optionFilter))
+    return seq(DataFilter.filterData(mappedData, filterShape, optionFilter))
   }, [mappedData, optionFilter, selecteIds])
 
   const filteredAndPickedData = useMemo(() => {
@@ -154,62 +178,20 @@ export const _PartnershipDashboard = ({}: {}) => {
   }, [filteredData])
 
   const filteredAndPickedSgas = useMemo(() => {
-    return seq(DashboardFilterHelper.filterData(mapSga(filteredAndPickedData), filterSgaShape, optionFilter))
+    const w = mapSga(filteredAndPickedData)
+    return seq(DataFilter.filterData(w, filterSgaShape, optionFilter))
   }, [filteredAndPickedData, optionFilter])
 
   const computed = usePartnershipDashboard({data: filteredAndPickedData})
 
-  const getChoices = <T extends keyof typeof Partnership_partnersDatabaseOptions>(questionName: T, {
-    skipKey = [],
-  }: {
-    skipKey?: (keyof typeof Partnership_partnersDatabaseOptions[T])[]
-  } = {}) => {
-    return Enum.entries(Partnership_partnersDatabaseOptions[questionName] ?? {})
-      .map(([value, label]) => ({value, label: label}))
-      .filter(_ => !(skipKey as string[]).includes(_.value))
-  }
-
-  const getSgaChoices = useCallback((questionName: keyof (typeof sgas[0])) => {
-    return sgas.map(_ => _[questionName]).distinct(_ => _).compact().map(_ => SheetUtils.buildOption(_ as any))
-  }, [sgas])
-
-  // const allYears = useMemo(() => mappedData
-  //     .flatMap(_ => seq(_.group_vi2hh32 ?? [])
-  //       .map(_ => (_.SGA_start_date as unknown as string)?.split('-')[0])
-  //       .compact()
-  //       .sortByString(_ => _)
-  //     ).distinct(_ => _),
-  //   [filteredData])
-
   return (
     <Div column>
       <Box>
-        <Box sx={{overflowX: 'auto', whiteSpace: 'nowrap', pb: 1}}>
-          {Enum.entries(filterShape).map(([k, shape]) =>
-            <DashboardFilterOptions
-              key={k}
-              icon={shape.icon}
-              value={optionFilter[k]}
-              label={shape.label(m)}
-              options={getChoices(shape.options)}
-              onChange={_ => setOptionFilters(prev => ({...prev, [k]: _}))}
-              sx={{mr: .5}}
-            />
-          )}
-        </Box>
-        <Box>
-          {Enum.entries(filterSgaShape).map(([k, shape]) =>
-            <DashboardFilterOptions
-              sx={{mr: .5}}
-              key={k}
-              icon={shape.icon}
-              value={optionFilter[k]}
-              label={shape.label(m)}
-              options={getSgaChoices(shape.options as any)}
-              onChange={_ => setOptionFilters(prev => ({...prev, [k]: _}))}
-            />
-          )}
-        </Box>
+        <FilterLayout
+          shape={{...filterShape, ...filterSgaShape}}
+          filters={optionFilter}
+          setFilters={setOptionFilters}
+        />
 
         {/*<DashboardFilterOptions*/}
         {/*  icon="today"*/}

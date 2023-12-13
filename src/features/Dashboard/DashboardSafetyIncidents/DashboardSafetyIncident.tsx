@@ -1,17 +1,15 @@
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useMemo, useState} from 'react'
-import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
+import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {DashboardLayout} from '../shared/DashboardLayout'
-import {DashboardFilterOptions} from '../shared/DashboardFilterOptions'
-import {Box} from '@mui/material'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {makeKoboBarChartComponent} from '../shared/KoboBarChart'
 import {DebouncedInput} from '@/shared/DebouncedInput'
-import {kobo, KoboIndex} from '@/KoboIndex'
+import {KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Period} from '@/core/type'
 import Link from 'next/link'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -20,9 +18,10 @@ import {SafetyIncidentTrackerOptions} from '@/core/koboModel/SafetyIncidentTrack
 import {DashboardSafetyIncidentBody} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncidentBody'
 import {useDashboardSafetyIncident} from '@/features/Dashboard/DashboardSafetyIncidents/useDashboardSafetyIncident'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
+import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
 export interface DashboardSafetyIncidentsPageProps {
-  filters: OptionFilters
+  filters: DataFilter.Filter
   data: Seq<KoboAnswer<KoboSafetyIncidentHelper.Type>>
   computed: NonNullable<ReturnType<typeof useDashboardSafetyIncident>>
 }
@@ -31,28 +30,29 @@ export const SafetyIncidentsTrackerBarChart = makeKoboBarChartComponent<SafetyIn
   options: SafetyIncidentTrackerOptions
 })
 
-const filterShape = DashboardFilterHelper.makeShape<typeof SafetyIncidentTrackerOptions>()({
-  oblast: {
-    icon: 'location_on',
-    options: 'oblast',
-    label: m => m.oblast,
-  },
-  attackType: {
-    icon: 'rocket_launch',
-    options: 'attack_type',
-    label: m => m._dashboardSafetyIncident.attackTypes,
-    multiple: true,
-  }
-})
-
-type OptionFilters = DashboardFilterHelper.InferShape<typeof filterShape>
 
 export const DashboardSafetyIncident = () => {
   const {api} = useAppSettings()
   const {m, formatLargeNumber, formatDateTime, formatDate} = useI18n()
-
   const _period = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('safety_incident').id))
-  const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
+
+  const filterShape = DataFilter.makeShape<KoboAnswer<SafetyIncidentTracker>>({
+    oblast: {
+      icon: 'location_on',
+      getValue: _ => _.oblast,
+      getOptions: DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.oblast),
+      label: m.oblast,
+    },
+    attackType: {
+      icon: 'rocket_launch',
+      getValue: _ => _.attack_type,
+      getOptions: DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.attack_type),
+      label: m._dashboardSafetyIncident.attackTypes,
+      multiple: true,
+    }
+  })
+
+  const [optionFilter, setOptionFilters] = useState<DataFilter.InferShape<typeof filterShape>>({})
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
   const _answers = useFetcher((filter: Partial<Period>) => api.kobo.typedAnswers.searchSafetyIncident({
     filters: {
@@ -73,22 +73,8 @@ export const DashboardSafetyIncident = () => {
     _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
-  const getChoices = <T extends keyof typeof SafetyIncidentTrackerOptions>(
-    questionName: T, {
-      skipKey = [],
-      // renameOptions
-    }: {
-      skipKey?: (keyof typeof SafetyIncidentTrackerOptions[T])[]
-      // renameOptions?: Record<keyof typeof ProtHHS_2_1Options[T], string>
-    } = {}
-  ) => {
-    return Enum.entries(SafetyIncidentTrackerOptions[questionName] ?? {})
-      .map(([value, label]) => ({value, label: label}))
-      .filter(_ => !(skipKey as string[]).includes(_.value))
-  }
-
   const data: DashboardSafetyIncidentsPageProps['data'] | undefined = useMemo(() => {
-    return map(_answers.entity, _ => seq(DashboardFilterHelper.filterData(_.get(), filterShape, optionFilter)))
+    return map(_answers.entity, _ => seq(DataFilter.filterData(_, filterShape, optionFilter)))
   }, [_answers.entity, optionFilter])
 
   const computed = useDashboardSafetyIncident({data: _answers.entity, period: periodFilter})
@@ -108,39 +94,25 @@ export const DashboardSafetyIncident = () => {
         </>
       }
       header={
-        <Box sx={{
-          pt: 1,
-          pb: 1,
-          display: 'flex',
-          overflowX: 'auto',
-          whiteSpace: 'nowrap',
-          alignItems: 'center',
-          '& > :not(:last-child)': {mr: 1}
-        }}>
-          <DebouncedInput<[Date | undefined, Date | undefined]>
-            debounce={400}
-            value={[periodFilter.start, periodFilter.end]}
-            onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
-          >
-            {(value, onChange) => <PeriodPicker
-              sx={{marginTop: '-6px'}}
-              defaultValue={value ?? [undefined, undefined]}
-              onChange={onChange}
-              min={_period.entity?.start}
-              max={_period.entity?.end}
-            />}
-          </DebouncedInput>
-          {Enum.entries(filterShape).map(([k, shape]) =>
-            <DashboardFilterOptions
-              key={k}
-              icon={shape.icon}
-              value={optionFilter[k]}
-              label={shape.label(m)}
-              options={getChoices(shape.options)}
-              onChange={_ => setOptionFilters(prev => ({...prev, [k]: _}))}
-            />
-          )}
-        </Box>
+        <FilterLayout
+          shape={filterShape}
+          filters={optionFilter}
+          setFilters={setOptionFilters}
+          before={
+            <DebouncedInput<[Date | undefined, Date | undefined]>
+              debounce={400}
+              value={[periodFilter.start, periodFilter.end]}
+              onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
+            >
+              {(value, onChange) => <PeriodPicker
+                sx={{marginTop: '-6px'}}
+                defaultValue={value ?? [undefined, undefined]}
+                onChange={onChange}
+                min={_period.entity?.start}
+                max={_period.entity?.end}
+              />}
+            </DebouncedInput>
+          }/>
       }
       beforeSection={
         data && computed && (

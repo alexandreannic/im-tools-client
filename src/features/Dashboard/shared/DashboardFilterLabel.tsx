@@ -38,11 +38,10 @@ export const DashboardFilterLabel = ({
 }: {
   active?: boolean
   icon?: string
-  children: ReactNode
+  children: (open: boolean) => any
   label: ReactNode
-} & BoxProps) => {
+} & Omit<BoxProps, 'children'>) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
-  // const [open, setOpen] = useState(false)
 
   const open = (!!anchorEl)
 
@@ -78,7 +77,7 @@ export const DashboardFilterLabel = ({
           overflowY: 'auto',
           maxHeight: '50vh',
         }}>
-          {children}
+          {children(open)}
         </Box>
       </Popover>
     </Box>

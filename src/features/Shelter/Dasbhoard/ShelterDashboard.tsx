@@ -28,7 +28,7 @@ import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
 import {KoboBarChartMultiple, KoboBarChartSingle} from '@/features/Dashboard/shared/KoboBarChart'
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
-import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {ChartPieIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {shelterDrcProject, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
@@ -45,55 +45,55 @@ export const ShelterDashboard = () => {
 
   const filterShape = useMemo(() => {
     const d = ctx.data.mappedData ?? seq([])
-    return DashboardFilterHelper.makeShape<ShelterEntity>({
+    return DataFilter.makeShape<ShelterEntity>({
       oblast: {
         icon: 'location_on',
         label: 'Oblast',
         getValue: _ => _.oblast,
-        getOptions: d.map(_ => _.oblast!).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
+        getOptions: () => d.map(_ => _.oblast!).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
       },
       office: {
         icon: 'business',
         label: 'Office',
         getValue: _ => _.office,
-        getOptions: [...Object.keys(DrcOffice), ''].sort().map(_ => ({value: _, label: _}))
+        getOptions: () => DataFilter.buildOptionsFromObject(DrcOffice),
       },
       project: {
         icon: drcMaterialIcons.project,
         label: m.project,
         getValue: _ => _.office,
-        getOptions: [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
+        getOptions: () => [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
       },
       contractor: {
         icon: 'gavel',
         label: m._shelter.contractor,
         customFilter: (filters, _) => filters.includes(_.ta?.tags?.contractor1!) || filters.includes(_.ta?.tags?.contractor2!),
-        getOptions: DashboardFilterHelper.buildOptions(Enum.keys(ShelterContractor)),
+        getOptions: () => DataFilter.buildOptionsFromObject(ShelterContractor),
       },
       vulnerabilities: {
         icon: drcMaterialIcons.disability,
         multiple: true,
         label: m.vulnerabilities,
         getValue: _ => _.nta?.hh_char_dis_select,
-        getOptions: ctx.nta.helper.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
+        getOptions: () => ctx.nta.helper.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
       },
       validationStatus: {
         icon: 'check',
         label: m._shelter.validationStatus,
         getValue: _ => _.nta?.tags?.validation,
-        getOptions: DashboardFilterHelper.buildOptions(Enum.keys(ShelterTagValidation)),
+        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTagValidation),
       },
       displacementStatus: {
         icon: drcMaterialIcons.displacementStatus,
         label: m.displacement,
         getValue: _ => _.nta?.ben_det_res_stat,
-        getOptions: ctx.nta.helper.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
+        getOptions: () => ctx.nta.helper.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
       },
       damageLevel: {
         icon: 'construction',
         label: m.levelOfPropertyDamaged,
         getValue: _ => _.ta?.tags?.damageLevel,
-        getOptions: DashboardFilterHelper.buildOptions(Enum.keys(ShelterTaPriceLevel)),
+        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTaPriceLevel),
       },
     })
   }, [ctx.data.mappedData])
@@ -108,7 +108,7 @@ export const ShelterDashboard = () => {
       if (periodFilter?.end && periodFilter.end.getTime() <= d.nta.submissionTime.getTime()) return false
       return true
     })
-    return DashboardFilterHelper.filterData(filteredByDate, filterShape, filters)
+    return DataFilter.filterData(filteredByDate, filterShape, filters)
   }, [ctx.data, filters, periodFilter])
 
   const computed = useShelterComputedData({data: filteredData})

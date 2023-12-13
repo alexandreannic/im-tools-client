@@ -3,7 +3,9 @@ import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {ReactNode} from 'react'
 
-export namespace DashboardFilterHelper {
+export namespace DataFilter {
+
+  export type Filter = Record<string, string[] | undefined>
 
   interface ShapeOption<TOption extends string = string> {
     value: TOption,
@@ -13,7 +15,7 @@ export namespace DashboardFilterHelper {
   interface ShapeBase<TData, TOption extends string> {
     icon?: string
     // name: string
-    getOptions: undefined | ShapeOption<TOption>[]
+    getOptions: () => undefined | ShapeOption<TOption>[]
     label: string
     customFilter?: (filterValue: string[], _: TData) => boolean
     skipOption?: string[]
@@ -29,22 +31,29 @@ export namespace DashboardFilterHelper {
     getValue?: (_: TData) => TOption | undefined
   }
 
-  export const buildOptions = (opt: string[], addBlank?: boolean): ShapeOption[] => {
+  export const buildOptionsFromObject = (opt: Record<string, string>, addBlank?: boolean): ShapeOption[] => {
     return [
       ...(addBlank ? [SheetUtils.blankOption] : []),
-      ...opt.map(buildOption),
+      ...Object.entries(opt).map(([k, v]) => buildOption(k, v))
     ]
   }
 
-  export const buildOption = (_: string): ShapeOption => {
-    return {value: _, label: _}
+  export const buildOptions = (opt: string[], addBlank?: boolean): ShapeOption[] => {
+    return [
+      ...(addBlank ? [SheetUtils.blankOption] : []),
+      ...opt.map(_ => buildOption(_)),
+    ]
+  }
+
+  export const buildOption = (value: string, label?: string): ShapeOption => {
+    return {value: value, label: label ?? value}
   }
 
   export type Shape<TData, TOption extends string = string> = ShapeMultiple<TData, TOption> | ShapeSingle<TData, TOption>
 
   export const makeShape = <TData extends Record<string, any>>(filters: Record<string, Shape<TData>>) => filters
 
-  export type InferShape<F extends Record<string, Shape<any>>> = Record<keyof F, string[]>
+  export type InferShape<F extends Record<string, Shape<any>>> = Record<keyof F, string[] | undefined>
 
   export const filterData = <TData, TValue extends string, TName extends string>(
     d: Seq<TData>,
@@ -62,6 +71,7 @@ export namespace DashboardFilterHelper {
     })) as Seq<TData>
   }
 
+  /** @deprecated not working properly */
   export const filterDataFromLokiJs = <TData extends object, TValue extends string, TName extends string>(
     d: Collection<TData>,
     shapes: Partial<Record<TName, Shape<TData, TValue>>>,
@@ -69,8 +79,7 @@ export namespace DashboardFilterHelper {
   ): TData[] => {
     const lokiFilters: any = {}
     Enum.entries(filters).forEach(([filterName, filterValue]) => {
-      if (filterValue.length <= 0) return
-      const shape = shapes[filterName]!
+      if (!filterValue || filterValue.length <= 0) return
       lokiFilters[filterName] = {$in: filterValue}
     })
     return d.find(lokiFilters)

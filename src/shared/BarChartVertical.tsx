@@ -2,6 +2,7 @@ import React from 'react'
 import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 import {Box, BoxProps, Theme, useTheme} from '@mui/material'
 import {chartConfig} from '@/shared/Chart/chartConfig'
+import {commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
 
 export interface BarChartVerticalProps extends BoxProps {
   colors?: (t: Theme) => string[]
@@ -40,7 +41,7 @@ export const BarChartVertical = ({
           <XAxis dataKey="name"/>
           <YAxis/>
           <Tooltip/>
-          <Legend/>
+          <Legend {...commonLegendProps}/>
           {bars.map((_, i) =>
             <Bar key={_} dataKey={_} fill={colors(theme)[i]}/>
           )}

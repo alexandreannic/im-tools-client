@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useProtHhs2Data} from './useProtHhs2Data'
@@ -7,7 +7,6 @@ import {DashboardLayout} from '../shared/DashboardLayout'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {DashboardProtHHS2Document} from './DashboardProtHHS2Document'
 import {DashboardProtHHS2Livelihood} from './DashboardProtHHS2Livelihood'
-import {Box} from '@mui/material'
 import {Alert, Txt} from 'mui-extension'
 import {DashboardProtHHS2Housing} from './DashboardProtHHS2Housing'
 import {DashboardProtHHS2Displacement} from './DashboardProtHHS2Displacement'
@@ -21,21 +20,21 @@ import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/Da
 import {KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Period, Person} from '@/core/type'
-import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
-import {themeLightScrollbar} from '@/core/theme'
 import {useFetcherIp} from '@/alexlib-labo/UseFetcher'
+import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
-type OptionFilters = DashboardFilterHelper.InferShape<any> & {
+type CustomFilterOptionFilters = {
   hhComposition?: (keyof Messages['protHHS2']['_hhComposition'])[]
 }
 
 export interface DashboardPageProps {
   periodFilter: Partial<Period>
-  optionFilter: OptionFilters
+  optionFilter: CustomFilterOptionFilters & DataFilter.Filter
   data: Seq<ProtHHS2Enrich>
   computed: NonNullable<ReturnType<typeof useProtHhs2Data>>
 }
@@ -68,74 +67,75 @@ export const DashboardProtHHS2 = () => {
   }, [periodFilter])
 
   const filterShape = useMemo(() => {
-    return DashboardFilterHelper.makeShape<ProtHHS2Enrich>({
-      drcOffice: {
+    const data = seq(_answers.entity)
+    return DataFilter.makeShape<ProtHHS2Enrich>({
+      staff_to_insert_their_DRC_office: {
+        getValue: _ => _.staff_to_insert_their_DRC_office,
         icon: 'business',
         label: m.drcOffice,
-        getValue: _ => _.staff_to_insert_their_DRC_office,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.staff_to_insert_their_DRC_office)
           .distinct(_ => _)
           .map(_ => ({value: _, label: Protection_Hhs2_1Options.staff_to_insert_their_DRC_office[_]})),
       },
-      currentOblast: {
+      where_are_you_current_living_oblast: {
         getValue: _ => _.where_are_you_current_living_oblast,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.where_are_you_current_living_oblast)
           .distinct(_ => _)
           .map(_ => ({value: _, label: Protection_Hhs2_1Options.what_is_your_area_of_origin_oblast[_]})),
         icon: 'location_on',
         label: m.currentOblast
       },
-      originOblast: {
+      what_is_your_area_of_origin_oblast: {
         getValue: _ => _.what_is_your_area_of_origin_oblast,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.what_is_your_area_of_origin_oblast)
           .distinct(_ => _)
           .map(_ => ({value: _, label: Protection_Hhs2_1Options.what_is_your_area_of_origin_oblast[_]})),
         icon: 'explore',
         label: m.originOblast,
       },
-      typeOfSite: {
+      type_of_site: {
         getValue: _ => _.type_of_site,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.type_of_site)
           .distinct(_ => _)
           .map(_ => ({value: _, label: Protection_Hhs2_1Options.type_of_site[_]})),
         icon: 'location_city',
         label: m.typeOfSite
       },
-      gender: {
+      hh_sex_1: {
         getValue: _ => _.hh_sex_1,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.hh_sex_1)
           .distinct(_ => _)
           .map(_ => ({value: _, label: Protection_Hhs2_1Options.hh_sex_1[_]})),
         icon: 'female',
         label: m.respondent
       },
-      poc: {
+      do_you_identify_as_any_of_the_following: {
         getValue: _ => _.do_you_identify_as_any_of_the_following,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.do_you_identify_as_any_of_the_following)
           .distinct(_ => _)
           .map(_ => ({value: _, label: Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following[_]})),
         icon: 'directions_run',
         label: m.poc
       },
-      hhType: {
+      what_is_the_type_of_your_household: {
         getValue: _ => _.what_is_the_type_of_your_household,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.what_is_the_type_of_your_household)
           .distinct(_ => _)
           .map(_ => ({value: _, label: Protection_Hhs2_1Options.what_is_the_type_of_your_household[_]})),
         icon: 'people',
         label: m.hhType,
       },
-      specificNeeds: {
+      do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household: {
         multiple: true,
         getValue: _ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household,
-        getOptions: data
+        getOptions: () => data
           ?.map(_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household)
           .distinct(_ => _)
           .flat()
@@ -145,9 +145,9 @@ export const DashboardProtHHS2 = () => {
         skipOption: ['unable_unwilling_to_answer', 'other_specify']
       }
     })
-  }, [])
+  }, [_answers.entity])
 
-  const [optionFilter, setOptionFilters] = useState<OptionFilters>(seq(Enum.keys(filterShape)).reduceObject<OptionFilters>(_ => [_, []]))
+  const [optionFilter, setOptionFilters] = useState<DataFilter.InferShape<typeof filterShape> & CustomFilterOptionFilters>({})
 
   const database = useMemo(() => {
     if (!_answers.entity) return
@@ -175,7 +175,7 @@ export const DashboardProtHHS2 = () => {
   const data: Seq<ProtHHS2Enrich> | undefined = useMemo(() => {
     return map(database, _ => {
       const {hhComposition, ...basicFilters} = optionFilter
-      const filtered = seq(DashboardFilterHelper.filterDataFromLokiJs(_ as any, filterShape, basicFilters)) as Seq<ProtHHS2Enrich>
+      const filtered = seq(DataFilter.filterDataFromLokiJs(_ as any, filterShape, basicFilters as any)) as Seq<ProtHHS2Enrich>
       if (hhComposition && hhComposition.length > 0)
         return filtered.filter(d => !!d.persons.find(p => {
           if (!p.age) return false
@@ -219,66 +219,46 @@ export const DashboardProtHHS2 = () => {
       title={m.ukraine}
       subTitle={m.protectionMonitoringDashboard}
       header={
-        <Box sx={{
-          pt: 1,
-          pb: 1,
-          display: 'flex',
-          whiteSpace: 'nowrap',
-          alignItems: 'center',
-          ...themeLightScrollbar,
-          '& > :not(:last-child)': {mr: 1}
-        }}>
-          <DebouncedInput<[Date | undefined, Date | undefined]>
-            debounce={800}
-            value={[periodFilter.start, periodFilter.end]}
-            onChange={([start, end]) => {
-              setPeriodFilter(prev => ({...prev, start: start ?? undefined, end: end ?? undefined}))
-            }
-            }
-          >
-            {(value, onChange) => <PeriodPicker
-              sx={{marginTop: '-6px'}}
-              value={value}
-              onChange={onChange}
-              label={[m.start, m.endIncluded]}
-              min={_period.entity?.start}
-              max={_period.entity?.end}
-            />}
-          </DebouncedInput>
-          {Enum.entries(filterShape).map(([k, shape]) =>
-            <DebouncedInput<string[]>
-              key={k}
+        <FilterLayout
+          shape={filterShape}
+          filters={optionFilter}
+          setFilters={setOptionFilters}
+          before={
+            <DebouncedInput<[Date | undefined, Date | undefined]>
+              debounce={800}
+              value={[periodFilter.start, periodFilter.end]}
+              onChange={([start, end]) => {
+                setPeriodFilter(prev => ({...prev, start: start ?? undefined, end: end ?? undefined}))
+              }}
+            >
+              {(value, onChange) => <PeriodPicker
+                sx={{marginTop: '-6px'}}
+                value={value}
+                onChange={onChange}
+                label={[m.start, m.endIncluded]}
+                min={_period.entity?.start}
+                max={_period.entity?.end}
+              />}
+            </DebouncedInput>
+          }
+          after={
+            <DebouncedInput
               debounce={50}
-              value={optionFilter[k]}
-              onChange={_ => setOptionFilters(prev => ({...prev, [k]: _}))}
+              value={optionFilter.hhComposition}
+              onChange={_ => setOptionFilters(prev => ({...prev, hhComposition: _}))}
             >
               {(value, onChange) =>
                 <DashboardFilterOptions
-                  icon={shape.icon}
+                  icon="wc"
                   value={value ?? []}
-                  label={shape.label}
-                  options={shape.getOptions()}
-                  onChange={onChange}
+                  label={m.protHHS2.hhComposition}
+                  options={() => Enum.entries(m.protHHS2._hhComposition).map(([k, v]) => ({value: k, label: v}))}
+                  onChange={onChange as any}
                 />
               }
             </DebouncedInput>
-          )}
-          <DebouncedInput
-            debounce={50}
-            value={optionFilter.hhComposition}
-            onChange={_ => setOptionFilters(prev => ({...prev, hhComposition: _}))}
-          >
-            {(value, onChange) =>
-              <DashboardFilterOptions
-                icon="wc"
-                value={value ?? []}
-                label={m.protHHS2.hhComposition}
-                options={Enum.entries(m.protHHS2._hhComposition).map(([k, v]) => ({value: k, label: v}))}
-                onChange={onChange as any}
-              />
-            }
-          </DebouncedInput>
-        </Box>
+          }
+        />
       }
       beforeSection={
         <>

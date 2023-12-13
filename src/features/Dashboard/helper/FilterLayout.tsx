@@ -1,7 +1,7 @@
 import {themeLightScrollbar} from '@/core/theme'
 import React, {Dispatch, ReactNode, SetStateAction} from 'react'
 import {Box, BoxProps} from '@mui/material'
-import {DashboardFilterHelper} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Enum} from '@alexandreannic/ts-utils'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
@@ -18,14 +18,20 @@ export const FilterLayout = ({
   setFilters: Dispatch<SetStateAction<Record<string, undefined | string[]>>>
   before?: ReactNode
   after?: ReactNode
-  shape: Record<string, DashboardFilterHelper.Shape<any>>
+  shape: Record<string, DataFilter.Shape<any>>
 } & Pick<BoxProps, 'sx'>) => {
   return (
     <Box sx={{
+      mt: -1,
+      pt: 1,
+      pb: 1,
       display: 'flex',
       alignItems: 'center',
       ...themeLightScrollbar,
       whiteSpace: 'nowrap',
+      '& > *': {
+        mr: .5,
+      },
       ...sx as any,
     }}>
       {before}
@@ -43,7 +49,6 @@ export const FilterLayout = ({
               label={shape.label}
               options={shape.getOptions}
               onChange={onChange}
-              sx={{mb: 1, ml: 1}}
             />
           }
         </DebouncedInput>
