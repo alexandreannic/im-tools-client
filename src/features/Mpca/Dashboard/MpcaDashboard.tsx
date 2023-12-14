@@ -358,11 +358,15 @@ export const _MPCADashboard = ({
                 {_ => <HorizontalBarChartGoogle data={_}/>}
               </Lazy>
             </SlidePanel>
-            {session.admin && (
-              <MpcaDuplicatedCheckPanel data={data}/>
-            )}
           </Div>
         </Div>
+        {session.admin && (
+          <Div>
+            <Div column>
+              <MpcaDuplicatedCheckPanel data={data}/>
+            </Div>
+          </Div>
+        )}
         <Div>
           <Div column>
             <Panel title="Budget Tracker (UAH)">

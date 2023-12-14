@@ -39,6 +39,7 @@ export const PeriodPickerMui = ({
     <DateRangePicker
       minDate={min}
       maxDate={max}
+      localeText={{start: label?.[0], end: label?.[1]}}
       sx={{...sx, mb: -.25, mt: -.5}}
       defaultValue={defaultValue}
       value={(value && (value[0] || value[1])) ? value : undefined}

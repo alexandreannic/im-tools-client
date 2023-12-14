@@ -39,7 +39,7 @@ export const TableImg = ({
 }) => {
   const {classes, cx} = useStyles({url, size, tooltipSize: tooltipSize ?? undefined})
   return url ? (
-    <Tooltip enterDelay={340} title={tooltipSize && <div className={cx(classes.common, classes.tooltip)}/>}>
+    <Tooltip enterDelay={340} placement="bottom" title={tooltipSize && <div className={cx(classes.common, classes.tooltip)}/>}>
       <a href={url} target="_blank">
         <div className={cx(classes.root, classes.common)}/>
       </a>

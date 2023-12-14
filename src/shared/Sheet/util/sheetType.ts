@@ -72,14 +72,14 @@ interface SheetColumnPropsText<T extends SheetRow> {
 }
 
 type SheetColumnPropsSelectOne<T extends SheetRow> = {
-  type?: 'select_one'
+  type: 'select_one'
   renderValue?: (_: T) => string | undefined
   options?: () => SheetOptions[]
   renderOption?: (_: T) => ReactNode
 }
 
 type SheetColumnPropsSelectMultiple<T extends SheetRow> = {
-  type?: 'select_multiple'
+  type: 'select_multiple'
   renderValue?: (_: T) => string[] | undefined
   options?: () => SheetOptions[]
   renderOption?: (_: T) => ReactNode

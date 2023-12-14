@@ -15,6 +15,16 @@ export interface Period {
 }
 
 export class PeriodHelper {
+
+  static readonly isDateIn = (period: Partial<Period>, date?: Date) => {
+    if (date) {
+      if (period?.start && period.start.getTime() >= date.getTime()) return false
+      if (period?.end && period.end.getTime() <= date.getTime()) return false
+      return true
+    }
+    return !period.start && !period.end
+  }
+
   static readonly fromyyyMM = (yyyyMM: string): Period => {
     const [year, month] = yyyyMM.split('-')
     return {
@@ -97,6 +107,11 @@ export namespace Person {
       '19 - 29': [19, 29] as [number, number],
       '30 - 59': [30, 59] as [number, number],
       '60+': [elderlyLimitIncluded, Infinity] as [number, number],
+    },
+    UNHCR: {
+      '0 - 17': [0, 17] as [number, number],
+      '18 - 59': [18, 59] as [number, number],
+      '60+': [60, Infinity] as [number, number],
     }
   })
 

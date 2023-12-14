@@ -2,7 +2,7 @@ import {Page} from '@/shared/Page'
 import {UseShelterComputedData, useShelterComputedData} from '@/features/Shelter/Dasbhoard/useShelterComputedData'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Lazy} from '@/shared/Lazy'
-import {Period, Person} from '@/core/type'
+import {Period, PeriodHelper, Person} from '@/core/type'
 import React, {useMemo, useState} from 'react'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
@@ -27,7 +27,7 @@ import {KoboBarChartMultiple, KoboBarChartSingle} from '@/features/Dashboard/sha
 import {Shelter_NTAOptions} from '@/core/koboModel/Shelter_NTA/Shelter_NTAOptions'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {ChartPieIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {shelterDrcProject, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
@@ -38,28 +38,53 @@ export const ShelterDashboard = () => {
   const ctx = useShelterContext()
   const [currency, setCurrency] = usePersistentState<Currency>(Currency.USD, {storageKey: 'mpca-dashboard-currency'})
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
+  const [workDonePeriodFilter, setWorkDonePeriodFilter] = useState<Partial<Period>>({})
   const {m} = useI18n()
 
   const filterShape = useMemo(() => {
     const d = ctx.data.mappedData ?? seq([])
     return DataFilter.makeShape<ShelterEntity>({
-      oblast: {
-        icon: 'location_on',
-        label: 'Oblast',
-        getValue: _ => _.oblast,
-        getOptions: () => d.map(_ => _.oblast!).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
-      },
       office: {
         icon: 'business',
         label: 'Office',
         getValue: _ => _.office,
         getOptions: () => DataFilter.buildOptionsFromObject(DrcOffice),
       },
+      oblast: {
+        icon: 'location_on',
+        label: 'Oblast',
+        getValue: _ => _.oblast,
+        getOptions: () => d.map(_ => _.oblast).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
+      },
+      settlement: {
+        icon: 'location_on',
+        label: m.settlement,
+        getValue: _ => _.nta?.settlement,
+        getOptions: () => d.map(_ =>  _.nta?.settlement).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
+      },
       project: {
         icon: drcMaterialIcons.project,
         label: m.project,
         getValue: _ => _.office,
         getOptions: () => [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
+      },
+      validationStatus: {
+        icon: 'check',
+        label: m._shelter.validationStatus,
+        getValue: _ => _.nta?.tags?.validation,
+        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTagValidation),
+      },
+      status: {
+        icon: 'engineering',
+        label: m._shelter.progressStatus,
+        getValue: _ => _.ta?.tags?.progress,
+        getOptions: () => DataFilter.buildOptionsFromObject(ShelterProgress),
+      },
+      damageLevel: {
+        icon: 'construction',
+        label: m.levelOfPropertyDamaged,
+        getValue: _ => _.ta?.tags?.damageLevel,
+        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTaPriceLevel),
       },
       contractor: {
         icon: 'gavel',
@@ -69,28 +94,16 @@ export const ShelterDashboard = () => {
       },
       vulnerabilities: {
         icon: drcMaterialIcons.disability,
-        multiple: true,
         label: m.vulnerabilities,
         getValue: _ => _.nta?.hh_char_dis_select,
-        getOptions: () => ctx.nta.helper.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
-      },
-      validationStatus: {
-        icon: 'check',
-        label: m._shelter.validationStatus,
-        getValue: _ => _.nta?.tags?.validation,
-        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTagValidation),
+        getOptions: () => ctx.nta.helper.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]})),
+        multiple: true,
       },
       displacementStatus: {
         icon: drcMaterialIcons.displacementStatus,
         label: m.displacement,
         getValue: _ => _.nta?.ben_det_res_stat,
         getOptions: () => ctx.nta.helper.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
-      },
-      damageLevel: {
-        icon: 'construction',
-        label: m.levelOfPropertyDamaged,
-        getValue: _ => _.ta?.tags?.damageLevel,
-        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTaPriceLevel),
       },
     })
   }, [ctx.data.mappedData])
@@ -100,13 +113,10 @@ export const ShelterDashboard = () => {
   const filteredData = useMemo(() => {
     if (!ctx.data.mappedData) return
     const filteredByDate = seq(ctx.data.mappedData).filter(d => {
-      if (!d.nta) return false
-      if (periodFilter?.start && periodFilter.start.getTime() >= d.nta.submissionTime.getTime()) return false
-      if (periodFilter?.end && periodFilter.end.getTime() <= d.nta.submissionTime.getTime()) return false
-      return true
+      return PeriodHelper.isDateIn(periodFilter, d.nta?.submissionTime) && PeriodHelper.isDateIn(workDonePeriodFilter, d.ta?.tags?.workDoneAt)
     })
     return DataFilter.filterData(filteredByDate, filterShape, filters)
-  }, [ctx.data, filters, periodFilter, filterShape])
+  }, [ctx.data, filters, periodFilter, filterShape, workDonePeriodFilter])
 
   const computed = useShelterComputedData({data: filteredData})
 
@@ -126,7 +136,13 @@ export const ShelterDashboard = () => {
             <PeriodPicker
               defaultValue={[periodFilter.start, periodFilter.end]}
               onChange={([start, end]) => setPeriodFilter(prev => ({...prev, start, end}))}
-              label={[m.start, m.endIncluded]}
+              label={[m.submissionStart, m.endIncluded]}
+              max={today}
+            />
+            <PeriodPicker
+              defaultValue={[workDonePeriodFilter.start, workDonePeriodFilter.end]}
+              onChange={([start, end]) => setWorkDonePeriodFilter(prev => ({...prev, start, end}))}
+              label={[m._shelter.workDoneStart, m.endIncluded]}
               max={today}
             />
             <DashboardFilterLabel icon="attach_money" active={true} label={currency}>

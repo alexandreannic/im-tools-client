@@ -6,6 +6,7 @@ import {useI18n} from '@/core/i18n'
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Tooltip} from '@mui/material'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 enum Type {
   'phone' = 'phone',
@@ -61,9 +62,9 @@ export const MpcaDuplicatedCheck = ({
     return seq(Enum.entries(gb)).map(([k, v]) => ({
       key: k,
       count: v.length,
-      list: v.map(_ => _.date)
+      list: v,
     }))
-      .filter(_ => _.count > 2 && _.key !== 'undefined')
+      .filter(_ => _.count > 1 && _.key !== 'undefined')
       // .sortByNumber(_ => _.count, '9-0')
       .sort((a, b) => {
         return b.count - a.count
@@ -79,13 +80,31 @@ export const MpcaDuplicatedCheck = ({
         {type: 'select_one', id: property, head: property, render: _ => _.key, width: 80,},
         {type: 'number', id: 'count', head: m.count, render: _ => _.count, width: 10,},
         {
-          id: 'list',
+          id: 'oblast',
+          type: 'select_multiple',
+          head: m.oblast,
+          options: () => SheetUtils.buildOptions(res.flatMap(_ => _.list.map(_ => _.oblast)).distinct(_ => _).compact()),
+          renderValue: _ => _.list?.map(x => x.oblast) as string[],
+          render: _ => {
+            const offices = _.list?.map(_ => _.oblast).distinct(_ => _) ?? []
+            return (
+              <Tooltip title={<>{offices.map(_ => <>{_}<br/></>)}</>}>
+                <div>{offices.join(', ')}</div>
+              </Tooltip>
+            )
+          },
+        },
+        {
+          id: 'date',
           head: m.date,
-          render: _ => (
-            <Tooltip title={<>{_.list.map(formatDate).map(_ => <>{_}<br/></>)}</>}>
-              <div>{_.list.map(formatDate).join(', ')}</div>
-            </Tooltip>
-          ),
+          render: _ => {
+            const dates = _.list.map(_ => formatDate(_.date))
+            return (
+              <Tooltip title={<>{dates.map(_ => <>{_}<br/></>)}</>}>
+                <div>{dates.join(', ')}</div>
+              </Tooltip>
+            )
+          },
         },
       ]}
     />

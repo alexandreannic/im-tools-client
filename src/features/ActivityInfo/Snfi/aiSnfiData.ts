@@ -1,7 +1,7 @@
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 import {DrcProject} from '@/core/drcUa'
 import {Period} from '@/core/type'
-import {fnSwitch, map, seq} from '@alexandreannic/ts-utils'
+import {fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Utils} from '@/utils/utils'
@@ -57,7 +57,7 @@ export class AiShelterData {
               'Hromada': hromada,
               'Implementation status': 'Complete',
               'Reporting Date (YYYY-MM-DD)': format(period.end, 'yyyy-MM-dd'),
-              // 'Population Group': status,
+              'Population Group': status,
               'Indicator Value (HHs reached, buildings, etc.)': grouped.length,
               // '# Individuals Reached': persons.length,
               'Girls (0-17)': persons.count(_ => _.hh_char_hh_det_age! < 18 && _.hh_char_hh_det_gender === 'female'),
@@ -89,17 +89,21 @@ export class AiShelterData {
         {by: _ => _.Oblast!},
         {by: _ => _.Raion!},
         {by: _ => _.Hromada!},
-        // {by: _ => _.}
         {
           by: row => {
-            if (row.ta?._priceLevel)
-              return fnSwitch(row.ta?._priceLevel, {
-                [ShelterTaPriceLevel.Heavy]: ShelterTaPriceLevel.Medium,
-              }, _ => _)
-            return map(row.nta?.total_apt_damage ?? row.nta?.total_damage, _ => {
-              if (+_ < 6) return ShelterTaPriceLevel.Light
-              return ShelterTaPriceLevel.Medium
-            })!
+            return fnSwitch(row.ta?.tags?.damageLevel!, {
+              [ShelterTaPriceLevel.Heavy]: ShelterTaPriceLevel.Medium,
+              [ShelterTaPriceLevel.Medium]: ShelterTaPriceLevel.Medium,
+              [ShelterTaPriceLevel.Light]: ShelterTaPriceLevel.Light,
+            }, _ => _)
+            // if (row.ta?._priceLevel)
+            //   return fnSwitch(row.ta?._priceLevel, {
+            //     [ShelterTaPriceLevel.Heavy]: ShelterTaPriceLevel.Medium,
+            //   }, _ => _)
+            // return map(row.nta?.total_apt_damage ?? row.nta?.total_damage, _ => {
+            //   if (+_ < 6) return ShelterTaPriceLevel.Light
+            //   return ShelterTaPriceLevel.Medium
+            // })!
           },
         },
         {
@@ -126,14 +130,14 @@ export class AiShelterData {
           }, () => 'medium_repair'),
           'Implementing Partner': 'Danish Refugee Council',
           'Report to a planned project': project ? 'Yes' : 'No',
-          'Plan Code': project as any,
+          'Plan Code': project,
           'Reporting Partner': 'Danish Refugee Council',
           'Oblast': oblast,
           'Raion': raion,
           'Hromada': hromada,
           'Implementation status': complete,
           'Reporting Date (YYYY-MM-DD)': format(period.end, 'yyyy-MM-dd'),
-          // 'Population Group': status,
+          'Population Group': status,
           'Indicator Value (HHs reached, buildings, etc.)': grouped.sum(_ => _.nta?.ben_det_hh_size ?? 0),
         }
         formatted.push({
@@ -151,12 +155,6 @@ export class AiShelterData {
     })
     return formatted
   })
-
-  // static readonly planCode: Record<DrcProject, AiSnfiInterface.PlanCode> = {
-  //   [DrcProject['UKR-000314 UHF4']]: AiSnfiInterface.PlanCode['DRC-SN-00014'],
-  //   [DrcProject['UKR-000322 ECHO2']]: AiSnfiInterface.PlanCode['DRC-SN-00013'],
-  //   [DrcProject['UKR-000308 UNHCR']]: AiSnfiInterface.PlanCode['DRC-SN-00015'],
-  // } as any
 }
 
 //

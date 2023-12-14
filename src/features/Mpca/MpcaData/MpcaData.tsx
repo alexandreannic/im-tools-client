@@ -273,7 +273,7 @@ export const MpcaData = () => {
               head: m.taxID,
               renderExport: false,
               render: _ => map(_.taxIdFileURL, url =>
-                <TableImg url={getKoboImagePath(url.download_small_url)}/>
+                <TableImg tooltipSize={650} url={getKoboImagePath(url.download_small_url)}/>
               )
             },
             {
@@ -290,7 +290,7 @@ export const MpcaData = () => {
             },
             {
               id: 'idFileImg', head: m.id, align: 'center', render: _ => map(_.idFileURL, url =>
-                <TableImg url={getKoboImagePath(url.download_small_url)}/>
+                <TableImg tooltipSize={650} url={getKoboImagePath(url.download_small_url)}/>
               )
             },
             {type: 'string', id: 'lastName', head: m.lastName, render: _ => _.lastName},

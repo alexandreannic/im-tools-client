@@ -86,7 +86,7 @@ export namespace AiSnfiInterface {
       [DrcProject['UKR-000314 UHF4']]: 'cs1j3twlosqnuj33',
       [DrcProject['UKR-000322 ECHO2']]: 'cvwwdp5losjpowe2',
       [DrcProject['UKR-000308 UNHCR']]: 'cp9vejmlosqpryz4',
-    },
+    } as Record<DrcProject, string>,
     'Implementing Partner': {
       'Danish Refugee Council': 'cv9umq8lehiq43f103'
     },
