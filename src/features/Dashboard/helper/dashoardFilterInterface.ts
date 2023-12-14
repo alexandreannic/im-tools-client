@@ -46,7 +46,7 @@ export namespace DataFilter {
     ]
   }
 
-  export const buildOption = (value: string, label?: string): ShapeOption => {
+  export const buildOption = (value: string, label?: ReactNode): ShapeOption => {
     return {value: value, label: label ?? value}
   }
 

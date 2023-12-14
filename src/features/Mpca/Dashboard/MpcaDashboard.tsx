@@ -34,6 +34,9 @@ import {MpcaDuplicatedCheckPanel} from '@/features/Mpca/Dashboard/MpcaDuplicated
 import {useSession} from '@/core/Session/SessionContext'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {appFeaturesIndex} from '@/features/appFeatureId'
+import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 
 export const today = new Date()
 
@@ -84,32 +87,38 @@ export const MpcaDashboard = () => {
         icon: drcMaterialIcons.donor,
         label: 'Donor',
         getValue: _ => _.finalDonor,
-        getOptions: () => SheetUtils.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
+        getOptions: () => DataFilter.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
       },
       finalProject: {
         icon: drcMaterialIcons.project,
         label: 'Project',
         getValue: _ => _.finalProject,
-        getOptions: () => SheetUtils.buildOptions(d.map(_ => _.finalProject!).distinct(_ => _).sort()),
+        getOptions: () => DataFilter.buildOptions(d.map(_ => _.finalProject!).distinct(_ => _).sort()),
       },
       prog: {
         icon: 'groups',
         label: 'Prog',
         getValue: _ => _.prog,
-        getOptions: () => SheetUtils.buildOptions([...Object.keys(MpcaProgram), ''].sort()),
+        getOptions: () => DataFilter.buildOptionsFromObject(MpcaProgram, true),
         multiple: true,
       },
       oblast: {
         icon: 'location_on',
         label: 'Oblast',
         getValue: _ => _.oblast,
-        getOptions: () => SheetUtils.buildOptions(d.map(_ => _.oblast!).distinct(_ => _).sort())
+        getOptions: () => DataFilter.buildOptions(d.map(_ => _.oblast!).distinct(_ => _).sort())
       },
       office: {
         icon: 'business',
         label: 'Office',
         getValue: _ => _.office,
-        getOptions: () => SheetUtils.buildOptions([...Object.keys(DrcOffice), ''].sort())
+        getOptions: () => DataFilter.buildOptionsFromObject(DrcOffice, true),
+      },
+      deduplication: {
+        icon: appFeaturesIndex.wfp_deduplication.materialIcons,
+        label: m.duplication,
+        getValue: _ => _.deduplication?.status,
+        getOptions: () => Enum.values(WfpDeduplicationStatus).map(_ => DataFilter.buildOption(_, <><DeduplicationStatusIcon status={_}/>&nbsp;{_}</>)),
       }
     })
   }, [mappedData])

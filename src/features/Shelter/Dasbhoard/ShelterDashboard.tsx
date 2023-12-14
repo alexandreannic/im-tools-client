@@ -117,6 +117,10 @@ export const ShelterDashboard = () => {
         filters={filters}
         setFilters={setFilters}
         shape={filterShape}
+        onClear={() => {
+          setFilters({})
+          setPeriodFilter({})
+        }}
         before={
           <>
             <PeriodPicker

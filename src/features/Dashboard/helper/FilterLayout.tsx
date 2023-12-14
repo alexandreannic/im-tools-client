@@ -7,24 +7,29 @@ import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useI18n} from '@/core/i18n'
+import {FilterLayoutPopup} from '@/features/Dashboard/helper/FilterLayoutPopup'
 
-export const FilterLayout = ({
-  before,
-  after,
-  shape,
-  filters,
-  setFilters,
-  onClear,
-  sx,
-}: {
+export interface FilterLayoutProps extends Pick<BoxProps, 'sx'> {
   onClear?: () => void
   filters: Record<string, string[] | undefined>
   setFilters: Dispatch<SetStateAction<Record<string, undefined | string[]>>>
   before?: ReactNode
   after?: ReactNode
   shape: Record<string, DataFilter.Shape<any>>
-} & Pick<BoxProps, 'sx'>) => {
+}
+
+export const FilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & {
+  hidePopup?: boolean
+}) => {
   const {m} = useI18n()
+  const {
+    before,
+    after,
+    shape,
+    filters,
+    setFilters,
+    onClear,
+  } = props
   return (
     <Box sx={{
       maxWidth: '100%',
@@ -34,8 +39,9 @@ export const FilterLayout = ({
       <Box sx={{
         flex: 1,
         mt: -1,
-        pt: 1,
-        pb: 1,
+        mb: 1,
+        pt: 2,
+        pb: .5,
         display: 'flex',
         alignItems: 'center',
         ...themeLightScrollbar,
@@ -67,9 +73,19 @@ export const FilterLayout = ({
         )}
         {after}
       </Box>
-      {onClear && (
-        <AAIconBtn sx={{ml: 1, mb: 1.5}} children="clear" tooltip={m.clearFilter} onClick={onClear}/>
-      )}
+      <Box sx={{
+        alignSelf: 'flex-start',
+        display: 'flex',
+        alignItems: 'center',
+        mt: 1.25,
+      }}>
+        {!hidePopup && (
+          <FilterLayoutPopup {...props} onConfirm={setFilters} filters={filters} onClear={onClear}/>
+        )}
+        {onClear && (
+          <AAIconBtn children="clear" tooltip={m.clearFilter} onClick={onClear}/>
+        )}
+      </Box>
     </Box>
   )
 }

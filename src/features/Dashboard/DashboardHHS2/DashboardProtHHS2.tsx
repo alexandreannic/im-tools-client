@@ -68,10 +68,10 @@ export const DashboardProtHHS2 = () => {
 
   const getOption = (p: keyof ProtHHS2Enrich, option: keyof typeof Protection_Hhs2_1Options = p as any) => () => {
     return _answers.entity
-      ?.map(_ => _[p])
+      ?.flatMap(_ => _[p] as any)
       .distinct(_ => _)
       .compact()
-      .sortByString(_ => _ as string, 'a-z')
+      .sortByString(_ => _, 'a-z')
       .map((_: any) => ({value: _, label: (Protection_Hhs2_1Options[option] as any)[_]}))
   }
 
@@ -187,6 +187,8 @@ export const DashboardProtHHS2 = () => {
       subTitle={m.protectionMonitoringDashboard}
       header={
         <FilterLayout
+          hidePopup
+          sx={{mb: 0}}
           onClear={() => {
             setPeriodFilter({})
             setOptionFilters({})
