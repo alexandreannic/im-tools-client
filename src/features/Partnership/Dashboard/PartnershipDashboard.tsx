@@ -1,6 +1,6 @@
 import {Page} from '@/shared/Page'
 import {usePartnershipContext} from '@/features/Partnership/PartnershipContext'
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {usePartnershipDashboard} from '@/features/Partnership/Dashboard/usePartnershipDashboard'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
@@ -18,8 +18,6 @@ import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/drcUa'
 import {Txt} from 'mui-extension'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Partnership_partnersDatabaseOptions} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
-import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
-import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {PanershipPanelDonor} from '@/features/Partnership/Dashboard/PanershipPanelDonor'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {useSetState2} from '@/alexlib-labo/useSetState2'
@@ -27,7 +25,7 @@ import {Box, Checkbox} from '@mui/material'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboIndex} from '@/KoboIndex'
@@ -168,14 +166,14 @@ export const _PartnershipDashboard = ({}: {}) => {
 
   const sgas = useMemo(() => mapSga(mappedData), [mappedData])
 
-  /** @deprecated Probably use filteredAndPickedData */
+  /** @deprecated Probably you need to use filteredAndPickedData instead */
   const filteredData = useMemo(() => {
     return seq(DataFilter.filterData(mappedData, filterShape, optionFilter))
   }, [mappedData, optionFilter, selecteIds])
 
   const filteredAndPickedData = useMemo(() => {
     return selecteIds.size === 0 ? filteredData : filteredData.filter(_ => selecteIds.has(_.id))
-  }, [filteredData])
+  }, [filteredData, selecteIds])
 
   const filteredAndPickedSgas = useMemo(() => {
     const w = mapSga(filteredAndPickedData)
@@ -191,6 +189,9 @@ export const _PartnershipDashboard = ({}: {}) => {
           shape={{...filterShape, ...filterSgaShape}}
           filters={optionFilter}
           setFilters={setOptionFilters}
+          onClear={() => {
+            setOptionFilters({})
+          }}
         />
 
         {/*<DashboardFilterOptions*/}
@@ -205,7 +206,7 @@ export const _PartnershipDashboard = ({}: {}) => {
         <Div column sx={{maxWidth: 320}}>
           <Panel sx={{display: 'flex'}}>
             <SlideWidget sx={{flex: 1}} title={m._partner.partners} icon="diversity_3">
-              {formatLargeNumber(filteredData.length)}
+              {formatLargeNumber(filteredAndPickedData.length)}
             </SlideWidget>
             <SlideWidget sx={{flex: 1}} title={m._partner.sgas} icon="handshake">
               {formatLargeNumber(filteredAndPickedSgas.length)}

@@ -48,11 +48,11 @@ const PartnershipSidebar = () => {
             <SidebarItem icon="insights" active={isActive}>{m.dashboard}</SidebarItem>
           )}
         </NavLink>
-        <NavLink to={path(partnershipModule.siteMap.data)}>
-          {({isActive, isPending}) => (
-            <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
-          )}
-        </NavLink>
+        {/*<NavLink to={path(partnershipModule.siteMap.data)}>*/}
+        {/*  {({isActive, isPending}) => (*/}
+        {/*    <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>*/}
+        {/*  )}*/}
+        {/*</NavLink>*/}
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
           {relatedKoboForms.map(_ => {
@@ -113,7 +113,7 @@ export const Partnership = () => {
               <Routes>
                 <Route index element={<Navigate to={partnershipModule.siteMap.dashboard}/>}/>
                 <Route path={partnershipModule.siteMap.dashboard} element={<PartnershipDashboard/>}/>
-                <Route path={partnershipModule.siteMap.data} element={<PartnershipDatabase/>}/>
+                {/*<Route path={partnershipModule.siteMap.data} element={<PartnershipDatabase/>}/>*/}
                 <Route path={partnershipModule.siteMap.koboPartnersDatabase}
                        element={<DatabaseTable formId={KoboIndex.byName('partnership_partnersDatabase').id} schema={_schemas.entity.partnersDatabase}/>}/>
                 {/*<Route path={partnershipModule.siteMap.koboAssessment}*/}
