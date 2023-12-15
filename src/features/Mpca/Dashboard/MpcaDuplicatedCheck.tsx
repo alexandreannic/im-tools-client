@@ -89,7 +89,20 @@ export const MpcaDuplicatedCheck = ({
             const offices = _.list?.map(_ => _.oblast).distinct(_ => _) ?? []
             return (
               <Tooltip title={<>{offices.map(_ => <>{_}<br/></>)}</>}>
-                <div>{offices.join(', ')}</div>
+                <div>{offices.map(_ => [null, undefined, 'null', 'undefined', ''].includes(_) ? '""' : _).join(', ')}</div>
+              </Tooltip>
+            )
+          },
+        },
+        {
+          id: 'enumerator',
+          type: 'string',
+          head: m.enumerator,
+          render: _ => {
+            const enumerators = _.list?.map(_ => _.enumerator).distinct(_ => _) ?? []
+            return (
+              <Tooltip title={<>{enumerators.map(_ => <>{_}<br/></>)}</>}>
+                <div>{enumerators.map(_ => [null, undefined, 'null', 'undefined', ''].includes(_) ? '""' : _).join(', ')}</div>
               </Tooltip>
             )
           },

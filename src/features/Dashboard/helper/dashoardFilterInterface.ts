@@ -22,6 +22,8 @@ export namespace DataFilter {
     skipOption?: string[]
   }
 
+  export const blankOption = SheetUtils.blankOption
+
   export interface ShapeMultiple<TData, TOption extends string = string> extends ShapeBase<TData, TOption> {
     multiple: true
     getValue?: (_: TData) => TOption[] | undefined
@@ -34,14 +36,14 @@ export namespace DataFilter {
 
   export const buildOptionsFromObject = (opt: Record<string, string>, addBlank?: boolean): ShapeOption[] => {
     return [
-      ...(addBlank ? [SheetUtils.blankOption] : []),
+      ...(addBlank ? [blankOption] : []),
       ...Object.entries(opt).map(([k, v]) => buildOption(k, v))
     ]
   }
 
   export const buildOptions = (opt: string[], addBlank?: boolean): ShapeOption[] => {
     return [
-      ...(addBlank ? [SheetUtils.blankOption] : []),
+      ...(addBlank ? [blankOption] : []),
       ...opt.map(_ => buildOption(_)),
     ]
   }

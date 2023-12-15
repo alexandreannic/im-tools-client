@@ -196,6 +196,13 @@ export const MpcaData = () => {
               render: _ => _.office ?? SheetUtils.blank,
             },
             {
+              id: 'enumerator',
+              head: m.enumerator,
+              type: 'string',
+              // options: () => SheetUtils.buildOptions(Enum.values(DrcOffice), true),
+              render: _ => _.enumerator ?? SheetUtils.blank,
+            },
+            {
               id: 'hhSize',
               head: m.hhSize,
               type: 'number',

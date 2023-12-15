@@ -117,8 +117,8 @@ export const MpcaDashboard = () => {
       deduplication: {
         icon: appFeaturesIndex.wfp_deduplication.materialIcons,
         label: m.duplication,
-        getValue: _ => _.deduplication?.status,
-        getOptions: () => Enum.values(WfpDeduplicationStatus).map(_ => DataFilter.buildOption(_, <><DeduplicationStatusIcon status={_}/>&nbsp;{_}</>)),
+        getValue: _ => _.deduplication?.status ?? SheetUtils.blank,
+        getOptions: () => [DataFilter.blankOption, ...Enum.values(WfpDeduplicationStatus).map(_ => DataFilter.buildOption(_, <><DeduplicationStatusIcon status={_}/>&nbsp;{_}</>))],
       }
     })
   }, [mappedData])

@@ -48,6 +48,7 @@ export enum MpcaProgram {
 export interface MpcaEntity {
   id: KoboAnswerId
   source: MpcaRowSource
+  enumerator?: string
   oblast?: OblastName
   office?: DrcOffice
   oblastIso?: OblastISO

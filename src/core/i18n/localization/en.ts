@@ -93,6 +93,7 @@ export const en = Object.freeze({
     no: 'No',
     contactAdmin: 'Contact:',
     office: 'Office',
+    enumerator: 'Enumerator',
     disaggregation: 'Disaggregation',
     drcOffice: 'DRC office',
     question: 'Question',

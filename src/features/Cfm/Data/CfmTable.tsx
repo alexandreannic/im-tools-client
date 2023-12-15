@@ -244,7 +244,6 @@ export const CfmTable = ({}: any) => {
                   }}
                 />
             },
-
             column.office,
             column.program,
             {
