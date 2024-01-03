@@ -13,7 +13,9 @@ import {AccessSdk} from '@/core/sdk/server/access/AccessSdk'
 import {UserSdk} from '@/core/sdk/server/user/UserSdk'
 import {ProxySdk} from '@/core/sdk/server/proxy/ProxySdk'
 import {MpcaSdk} from '@/core/sdk/server/mpca/MpcaSdk'
+import {GroupSdk} from '@/core/sdk/server/group/GroupSdk'
 import {ShelterSdk} from '@/core/sdk/server/shelter/ShelterSdk'
+import {AccessGroupSdk} from '@/core/sdk/server/access/AccessGroupSdk'
 import {MealVerificationClient} from '@/core/sdk/server/mealVerification/MealVerificationClient'
 import {KoboTypedAnswerSdk} from '@/core/sdk/server/kobo/KoboTypedAnswerSdk'
 
@@ -48,6 +50,7 @@ export class ApiSdk {
   readonly mpcaPayment = new MpcaPaymentSdk(this.client)
   readonly wfpDeduplication = new WfpDeduplicationSdk(this.client)
   readonly access = new AccessSdk(this.client)
+  readonly group = new GroupSdk(this.client)
   readonly user = new UserSdk(this.client)
   readonly proxy = new ProxySdk(this.client)
   readonly shelter = new ShelterSdk(this.client)

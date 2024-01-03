@@ -1,4 +1,4 @@
-import {alpha, Box, BoxProps, Checkbox, Radio} from '@mui/material'
+import {alpha, Box, BoxProps, Checkbox, Icon, Radio} from '@mui/material'
 import React, {ReactNode} from 'react'
 
 const defaultMuiRadioPadding = 9
@@ -8,6 +8,7 @@ export interface ScRadioGroupItemProps<T> extends Omit<BoxProps, 'title'> {
   description?: string | ReactNode
   value: T
   disabled?: boolean
+  icon?: string
   selected?: boolean
   children?: ReactNode
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
@@ -22,6 +23,7 @@ export const ScRadioGroupItem = <T, >({
   title,
   description,
   error,
+  icon,
   dense,
   inline,
   disabled,
@@ -126,6 +128,7 @@ export const ScRadioGroupItem = <T, >({
           />
         )
       )}
+      {icon && <Icon sx={{color: t => t.palette.text.secondary, mr: .5, alignSelf: 'center'}}>{icon}</Icon>}
       <Box
         sx={{
           alignSelf: 'center',

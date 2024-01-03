@@ -35,7 +35,7 @@ export const CfmAccessForm = ({
   const {api} = useAppSettings()
   const ctx = useCfmContext()
 
-  const _addAccess = useAsync(api.access.add)
+  const _addAccess = useAsync(api.access.create)
   const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
   const _access = useFetchers(requestInConstToFixTsInference)

@@ -29,7 +29,7 @@ export class AccessSdk {
   constructor(private client: ApiClient) {
   }
 
-  readonly add: AccessCreate = (body) => {
+  readonly create: AccessCreate = (body) => {
     return this.client.put<Access>(`/access`, {body})
   }
 

@@ -10,6 +10,12 @@ export enum AccessLevel {
   Admin = 'Admin',
 }
 
+export const accessLevelIcon: Record<AccessLevel, string> = {
+  Read: 'visibility',
+  Write: 'edit',
+  Admin: 'gavel',
+}
+
 export interface Access<T = any> {
   id: string
   featureId?: AppFeatureId
