@@ -20,6 +20,7 @@ import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
 
 export const DatabaseKoboTableContent = ({
   onFiltersChange,
@@ -149,13 +150,11 @@ export const DatabaseKoboTableContent = ({
               repeatGroupsAsColumns={repeatGroupsAsColumns}
               tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.downloadAsXLS}}/>}
             />
-            <AaBtn
-              variant="outlined"
+            <DatabaseKoboSyncBtn
               loading={ctx.asyncRefresh.loading.size > 0}
-              icon="cloud_sync"
               tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.pullDataAt(ctx.form.updatedAt)}}/>}
               onClick={ctx.asyncRefresh.call}
-            >{m.sync}</AaBtn>
+            />
           </>
         }
       />

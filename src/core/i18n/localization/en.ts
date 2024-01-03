@@ -137,6 +137,7 @@ export const en = Object.freeze({
     youDontHaveAccess: `You don't have access. Contact alexandre.annic@drc.ngo`,
     share: 'Share',
     refresh: 'Refresh',
+    refreshTable: 'Refresh table data',
     grantAccess: 'Grant access',
     title: 'Information Management Portal',
     noDataAtm: 'No data at the moment',

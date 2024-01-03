@@ -26,8 +26,7 @@ export class KoboAnswerSdk {
   }
 
   readonly updateTag = ({formId, answerIds, tags}: {formId: KoboId, answerIds: KoboAnswerId[], tags: Record<string, any>}) => {
-    // return Promise.reject()
-    for (let k in tags) if (!tags[k]) tags[k] = null
+    for (let k in tags) if (tags[k] === undefined) tags[k] = null
     return this.client.post(`/kobo/answer/${formId}/tag`, {body: {tags, answerIds: answerIds}})
   }
 

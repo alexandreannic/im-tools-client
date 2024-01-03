@@ -1,18 +1,22 @@
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {kobo, KoboIndex} from '@/KoboIndex'
 import {seq} from '@alexandreannic/ts-utils'
+import {useAaToast} from '@/core/useToast'
 
 export type UseShelterData = ReturnType<typeof useShelterData>
 
 export const useShelterData = () => {
   const {api} = useAppSettings()
+  const {toastHttpError} = useAaToast()
 
   const req = () => api.shelter.search().then(_ => _.data)
   const fetcher = useFetcher(req)
+  useEffectFn(fetcher.error, toastHttpError)
+
   const index: undefined | Record<KoboAnswerId, number> = useMemo(() => {
     if (!fetcher.entity) return
     return fetcher.entity.reduce((acc, _, i) => {

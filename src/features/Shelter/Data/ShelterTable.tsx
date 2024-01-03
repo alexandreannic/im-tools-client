@@ -25,6 +25,7 @@ import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Datepicker} from '@/shared/Datepicker/Datepicker'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {TableInput} from '@/shared/TableInput'
+import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -721,9 +722,14 @@ export const ShelterTable = () => {
           header={
             <>
               <AAIconBtn
+                children="refresh"
+                loading={ctx.data.fetcher.entity && ctx.data.loading}
+                onClick={() => ctx.data.fetchAll({force: true, clean: true})}
+                tooltip={m.refreshTable}
+              />
+              <DatabaseKoboSyncBtn
+                sx={{marginLeft: 'auto'}}
                 loading={ctx.data.asyncSyncAnswers.anyLoading}
-                children="cloud_sync"
-                tooltip={m._koboDatabase.pullData}
                 onClick={ctx.data.asyncSyncAnswers.call}
               />
             </>

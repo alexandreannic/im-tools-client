@@ -287,6 +287,7 @@ export enum DrcJob {
   'Programme Officer' = 'Programme Officer',
   'Programme Specialist - HMA' = 'Programme Specialist - HMA',
   'Programme Team Leader' = 'Programme Team Leader',
+  'Programme Manager' = 'Programme Manager',
   'Project Officer' = 'Project Officer',
   'Project Officer - HMA' = 'Project Officer - HMA',
   'Protection Assistant' = 'Protection Assistant',
