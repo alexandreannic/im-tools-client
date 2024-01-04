@@ -32,8 +32,8 @@ export const CfmAccess = () => {
     <Page width="lg">
       <Panel>
         <AccessTable
-          _remove={_remove}
-          _data={_get}
+          asyncRemove={_remove}
+          fetcherData={_get}
           isAdmin={ctx.authorizations.sum.admin}
           // renderParams={(_: WfpDeduplicationAccessParams) => JSON.stringify(_.filters)}
           onRemoved={refresh}

@@ -4,7 +4,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import React, {ReactElement} from 'react'
 import {Modal} from 'mui-extension'
 import {Box} from '@mui/material'
-import {Controller, useForm} from 'react-hook-form'
+import {Controller, useForm, UseFormReturn} from 'react-hook-form'
 import {Enum} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
@@ -13,8 +13,8 @@ import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcUa'
-import {AaSelect} from '@/shared/Select/Select'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
+import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 
 interface Form extends IAccessForm {
   office: DrcOffice[]
@@ -64,23 +64,22 @@ export const ShelterAccessForm = ({
       })()}
       content={
         <Box sx={{width: 400}}>
-          <AccessForm form={accessForm}/>
+          <AccessForm form={accessForm as UseFormReturn<any, any, any>}/>
           <AccessFormSection icon="filter_alt" label={m.filter}>
-          <Controller
-            name="office"
-            control={accessForm.control}
-            render={({field: {onChange, ...field}}) => (
-              <AaSelect<DrcOffice>
-                {...field}
-                defaultValue={[]}
-                multiple={true}
-                label={m.drcOffice}
-                onChange={_ => onChange(_)}
-                options={Enum.keys(DrcOffice)}
-                sx={{mb: 2.5}}
-              />
-            )}
-          />
+            <Controller
+              name="office"
+              control={accessForm.control}
+              render={({field: {onChange, ...field}}) => (
+                <AaSelectMultiple<DrcOffice>
+                  {...field}
+                  defaultValue={[]}
+                  label={m.drcOffice}
+                  onChange={_ => onChange(_)}
+                  options={Enum.keys(DrcOffice)}
+                  sx={{mb: 2.5}}
+                />
+              )}
+            />
           </AccessFormSection>`
         </Box>
       }

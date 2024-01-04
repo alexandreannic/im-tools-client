@@ -43,10 +43,7 @@ export const WfpDeduplicationAccessForm = ({
 
   const submit = (f: Form) => {
     _addAccess.call({
-      level: f.level,
-      drcJob: f.drcJob,
-      drcOffice: f.drcOffice,
-      email: f.email,
+      ...f,
       featureId: AppFeatureId.wfp_deduplication,
       params: {filters: {office: f.drcOfficesDataFilter}},
     }).then(onAdded)
