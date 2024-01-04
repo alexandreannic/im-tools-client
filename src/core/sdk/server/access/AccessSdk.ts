@@ -12,6 +12,7 @@ interface SearchByFeature {
 
 type FeatureCreateBase = Omit<Access, 'drcJob' | 'id' | 'createdAt' | 'updatedAt' | 'featureId' | 'params'> & {
   drcJob?: DrcJob[]
+  groupId?: UUID
 }
 
 interface AccessUpdate extends Pick<Access, 'drcJob' | 'drcOffice' | 'level'> {

@@ -3,6 +3,7 @@ import {DrcJob, DrcOffice} from '@/core/drcUa'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {KoboFormName, KoboIndex} from '@/KoboIndex'
+import {UUID} from '@/core/type'
 
 export enum AccessLevel {
   Read = 'Read',
@@ -23,6 +24,8 @@ export interface Access<T = any> {
   level: AccessLevel
   email?: string
   drcJob?: DrcJob
+  groupId?: UUID
+  groupName?: string
   drcOffice?: DrcOffice
   createdAt: Date
   updatedAt?: Date

@@ -12,8 +12,9 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {useForm} from 'react-hook-form'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
+import {IAccessForm} from '@/features/Access/AccessForm'
 import {accessLevelIcon} from '@/core/sdk/server/access/Access'
+import {AdminGroupAccessForm} from '@/features/Admin/AdminGroupAccessForm'
 
 interface GoupForm {
   name: string
@@ -75,16 +76,19 @@ export const AdminGroups = () => {
             {id: 'drcJob', width: 150, head: m.name, render: _ => _.name},
             {id: 'email', width: 120, head: m.desc, render: _ => _.desc},
             {
-              id: 'items', style: {whiteSpace: 'normal'}, head: m.accesses, render: _ => (
+              id: 'items', style: () => ({whiteSpace: 'normal'}), head: m.accesses, render: _ => (
                 <>
                   {_.items.map(item =>
                     <Chip
                       onDelete={e => asyncDeleteItem.call(item.id)}
                       sx={{mr: .5, my: .25}}
-                      icon={accessLevelIcon[item.level]}
+                      icon={<Icon>{accessLevelIcon[item.level]}</Icon>}
                       size="small"
                       key={item.id}
-                      label={item.drcJob}
+                      label={<>
+                        {item.drcJob ?? item.email}
+                        {item.drcOffice ? ` (${item.drcOffice})` : ''}
+                      </>}
                     />
                   )}
                   <Modal
@@ -96,7 +100,7 @@ export const AdminGroups = () => {
                     })()}
                     content={
                       <Box sx={{width: 400}}>
-                        <AccessForm hideOffice form={accessForm}/>
+                        <AdminGroupAccessForm form={accessForm}/>
                       </Box>
                     }>
                     <Chip

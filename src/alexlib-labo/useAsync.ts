@@ -44,7 +44,6 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends num
     requestKey?: (_: Parameters<F>) => K,
   } = {} as any
 ) => {
-  const [calledIndex, setCalledIndex] = useState(0)
   const loading = useMap2<K, boolean>()
   const errors = useMap2<K, E>()
   const [calledIndex, setCalledIndex] = useState(0)

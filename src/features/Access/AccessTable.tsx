@@ -8,7 +8,7 @@ import {useAsync, UseAsync} from '@/alexlib-labo/useAsync'
 import {UseFetchersSimple} from '@/alexlib-labo/useFetchersFn'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {AaSelect} from '@/shared/Select/Select'
+import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 
 export const AccessTable = ({
   isAdmin,
@@ -64,13 +64,21 @@ export const AccessTable = ({
           render: _ => _.email,
         },
         {
+          id: 'group',
+          type: 'select_one',
+          head: m.group,
+          render: _ => _.groupName,
+        },
+        {
           width: 90,
           id: 'level',
           head: m.accessLevel,
           type: 'select_one',
           options: () => Enum.keys(AccessLevel).map(_ => ({value: _, label: _})),
           render: row => isAdmin ? (
-            <AaSelect
+            <AaSelectSingle
+              hideNullOption
+              disabled={!!row.groupName}
               defaultValue={row.level}
               onChange={_ => _update.call(row.id, {level: _ as AccessLevel})}
               options={Enum.keys(AccessLevel).map(_ => ({value: _, children: _}))}

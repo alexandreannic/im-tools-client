@@ -128,7 +128,7 @@ export const ScRadioGroupItem = <T, >({
           />
         )
       )}
-      {icon && <Icon sx={{color: t => t.palette.text.secondary, mr: .5, alignSelf: 'center'}}>{icon}</Icon>}
+      {icon && <Icon sx={{color: t => t.palette.text.disabled, mr: .5, alignSelf: 'center'}}>{icon}</Icon>}
       <Box
         sx={{
           alignSelf: 'center',

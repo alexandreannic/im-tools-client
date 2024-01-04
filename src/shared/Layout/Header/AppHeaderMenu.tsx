@@ -1,11 +1,29 @@
 import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {useSession} from '@/core/Session/SessionContext'
-import {Box, Popover} from '@mui/material'
+import {Box, Icon, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {alpha} from '@mui/material/styles'
+
+const Row = ({
+  icon,
+  children,
+}: {
+  icon: string
+  children: ReactNode
+}) => {
+  return (
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
+    }}>
+      <Icon sx={{mr: 1, color: t => t.palette.text.secondary}} fontSize="small">{icon}</Icon>
+      <Txt block color="hint">{children}</Txt>
+    </Box>
+  )
+}
 
 export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
   const session = useSession()
@@ -39,12 +57,16 @@ export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
         onClose={() => setAnchorEl(null)}
         open={open}
       >
-        <Box sx={{textAlign: 'center'}}>
+        <Box>
           <Box sx={{p: 2}}>
-            <Txt block size="big">{session.session.name}</Txt>
-            <Txt block color="hint">{session.session.email}</Txt>
+            <Txt bold block size="big">{session.session.name}</Txt>
+            <Row icon="email">{session.session.email}</Row>
+            <Row icon="badge">{session.session.drcJob}</Row>
+            <Row icon="location_on">{session.session.drcOffice}</Row>
           </Box>
-          <AaBtn icon="logout" variant="outlined" onClick={session.logout} sx={{mb: 2}}>{m.logout}</AaBtn>
+          <Box sx={{px: 2}}>
+            <AaBtn icon="logout" variant="outlined" onClick={session.logout} sx={{mb: 2}}>{m.logout}</AaBtn>
+          </Box>
         </Box>
       </Popover>
     </>

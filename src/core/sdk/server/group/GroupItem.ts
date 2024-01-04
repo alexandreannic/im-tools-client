@@ -15,4 +15,5 @@ export interface GroupItem {
   level: AccessLevel
   email?: string
   drcJob?: DrcJob
+  drcOffice?: string
 }

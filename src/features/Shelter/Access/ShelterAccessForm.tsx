@@ -11,9 +11,10 @@ import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
-import {AccessForm, AccessFormSection, IAccessForm} from '@/features/Access/AccessForm'
+import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcUa'
 import {AaSelect} from '@/shared/Select/Select'
+import {AccessFormSection} from '@/features/Access/AccessFormSection'
 
 interface Form extends IAccessForm {
   office: DrcOffice[]
@@ -64,7 +65,7 @@ export const ShelterAccessForm = ({
       content={
         <Box sx={{width: 400}}>
           <AccessForm form={accessForm}/>
-          <AccessFormSection>{m.filter}</AccessFormSection>
+          <AccessFormSection icon="filter_alt" label={m.filter}>
           <Controller
             name="office"
             control={accessForm.control}
@@ -80,6 +81,7 @@ export const ShelterAccessForm = ({
               />
             )}
           />
+          </AccessFormSection>`
         </Box>
       }
     >
