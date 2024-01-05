@@ -15,7 +15,6 @@ import {ProxySdk} from '@/core/sdk/server/proxy/ProxySdk'
 import {MpcaSdk} from '@/core/sdk/server/mpca/MpcaSdk'
 import {GroupSdk} from '@/core/sdk/server/group/GroupSdk'
 import {ShelterSdk} from '@/core/sdk/server/shelter/ShelterSdk'
-import {AccessGroupSdk} from '@/core/sdk/server/access/AccessGroupSdk'
 import {MealVerificationClient} from '@/core/sdk/server/mealVerification/MealVerificationClient'
 import {KoboTypedAnswerSdk} from '@/core/sdk/server/kobo/KoboTypedAnswerSdk'
 

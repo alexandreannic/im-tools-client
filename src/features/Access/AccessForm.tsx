@@ -13,13 +13,14 @@ import {UUID} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {DrcJobInputMultiple} from '@/shared/input/DrcJobInput'
 
 export interface IAccessForm {
-  selectBy?: 'email' | 'job' | 'group'
-  email?: string
-  groupId?: UUID
-  drcOffice?: DrcOffice
-  drcJob?: DrcJob[]
+  selectBy?: 'email' | 'job' | 'group' | null
+  email?: string | null
+  groupId?: UUID | null
+  drcOffice?: DrcOffice | null
+  drcJob?: DrcJob[] | null
   level: AccessLevel
 }
 
@@ -30,11 +31,20 @@ export const AccessForm = ({
 }) => {
   const {m} = useI18n()
   const watchSelectBy = form.watch('selectBy')
+  const watch = form.watch()
 
   useEffect(() => {
     if (form.watch('selectBy') !== 'group')
       form.setValue('groupId', undefined)
   }, [watchSelectBy])
+
+  useEffect(() => {
+    const values = form.getValues()
+    if (values.selectBy) return
+    if (values.drcJob) form.setValue('selectBy', 'job')
+    else if (values.email) form.setValue('selectBy', 'email')
+    else if (values.groupId) form.setValue('selectBy', 'group')
+  }, [watch])
 
   return (
     <>
@@ -50,9 +60,10 @@ export const AccessForm = ({
               error={!!form.formState.errors.selectBy}
               {...field}
               onChange={e => {
-                form.setValue('drcJob', undefined)
-                form.setValue('drcOffice', undefined)
-                form.setValue('email', undefined)
+                form.setValue('drcJob', null)
+                form.setValue('drcOffice', null)
+                form.setValue('email', null)
+                form.trigger()
                 field.onChange(e)
               }}
             >
@@ -167,24 +178,11 @@ export const AccessFormInputDrcJob = ({
       name="drcJob"
       rules={{required: {value: true, message: m.required}}}
       render={({field: {onChange, ...field}}) => (
-        <Autocomplete
+        <DrcJobInputMultiple
           {...field}
-          multiple
-          renderTags={(value: string[], getTagProps) =>
-            value.map((option: string, index: number) => (
-              <Chip
-                size="small"
-                variant="outlined"
-                label={option}
-                {...getTagProps({index})}
-              />
-            ))
-          }
+          value={field.value ?? []}
           onChange={(e: any, _) => _ && onChange(_)}
           sx={{mb: 2.5}}
-          options={Enum.values(DrcJob) ?? []}
-          // renderOption={(props, _) => <Txt truncate>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
-          renderInput={({InputProps, ...props}) => <AaInput helperText={null} label={m.drcJob} {...InputProps} {...props}/>}
         />
       )}
     />
@@ -255,7 +253,7 @@ export const AccessFormInputGroup = ({
             sx={{border: t => `1px solid ${t.palette.divider}`, overflow: 'hidden', borderRadius: t => t.shape.borderRadius + 'px'}}
             id="access"
             defaultLimit={5}
-            data={groupIndex[groupId]?.items}
+            data={groupIndex[groupId!]?.items}
             columns={[
               {type: 'string', id: 'email', head: m.email, render: _ => _.email},
               {type: 'select_one', id: 'drcJob', head: m.drcJob, render: _ => _.drcJob},

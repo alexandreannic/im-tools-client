@@ -1,16 +1,26 @@
 import {ApiClient} from '../ApiClient'
-import {Access} from '@/core/sdk/server/access/Access'
+import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
 import {UUID} from '@/core/type'
 import {Group} from '@/core/sdk/server/group/GroupItem'
-import {DrcJob} from '@/core/drcUa'
+import {DrcJob, DrcOffice} from '@/core/drcUa'
 
 type GroupCreate = Pick<Group, 'name' | 'desc'>
 
-type GroupItemCreate = Pick<Access, 'email' | 'level'> & {
-  drcJob?: DrcJob[]
+type GroupUpdate = GroupCreate
+
+type GroupItemCreate = {
+  email?: string | null
+  level: AccessLevel
+  drcOffice?: DrcOffice | null
+  drcJob?: DrcJob[] | null
 }
 
-type GroupItemUpdate = GroupItemCreate
+export type GroupItemUpdate = {
+  email?: string | null
+  level: AccessLevel
+  drcOffice?: DrcOffice | null
+  drcJob?: DrcJob | null
+}
 
 export class GroupSdk {
 
@@ -21,7 +31,7 @@ export class GroupSdk {
     return this.client.put<Group>(`/group`, {body})
   }
 
-  readonly update = (id: UUID, body: GroupItemUpdate) => {
+  readonly update = (id: UUID, body: GroupUpdate) => {
     return this.client.post<Group>(`/group/${id}`, {body})
   }
 
@@ -37,8 +47,8 @@ export class GroupSdk {
   //   return this.client.get('/group/item')
   // }
 
-  readonly updateItem = (itemId: UUID) => {
-    return this.client.post(`/group/item/${itemId}`)
+  readonly updateItem = (itemId: UUID, body: GroupItemUpdate) => {
+    return this.client.post(`/group/item/${itemId}`, {body})
   }
 
   readonly deleteItem = (itemId: UUID) => {

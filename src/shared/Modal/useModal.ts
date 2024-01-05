@@ -39,7 +39,7 @@ const isFunctionalComponent = (Component: Function) => {
 export const useModal = <T extends Record<any, any> = any>(
   component: ModalType<T>,
   inputs: DependencyList = []
-): [ShowModal<T>, HideModal] => {
+): [ShowModal<T>, HideModal, boolean] => {
   if (!isFunctionalComponent(component)) {
     throw new Error(
       'Only stateless components can be used as an argument to useModal. You have probably passed a class component where a function was expected.'
@@ -64,5 +64,5 @@ export const useModal = <T extends Record<any, any> = any>(
     return () => context.hideModal(key)
   }, [modal, isShown])
 
-  return [showModal, hideModal]
+  return [showModal, hideModal, !!isShown]
 }

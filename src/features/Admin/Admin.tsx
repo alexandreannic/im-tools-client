@@ -28,14 +28,14 @@ const AdminSidebar = () => {
             <SidebarItem icon="group" active={isActive}>{m.users}</SidebarItem>
           }
         </NavLink>
-        <NavLink to={path(adminModule.siteMap.proxy)}>
-          {({isActive}) =>
-            <SidebarItem icon="settings_input_antenna" active={isActive}>{m.proxy}</SidebarItem>
-          }
-        </NavLink>
         <NavLink to={path(adminModule.siteMap.group)}>
           {({isActive}) =>
             <SidebarItem icon="groups" active={isActive}>{m.group}</SidebarItem>
+          }
+        </NavLink>
+        <NavLink to={path(adminModule.siteMap.proxy)}>
+          {({isActive}) =>
+            <SidebarItem icon="settings_input_antenna" active={isActive}>{m.proxy}</SidebarItem>
           }
         </NavLink>
       </SidebarBody>
@@ -53,8 +53,8 @@ export const Admin = () => {
         <Routes>
           <Route index element={<Navigate to={adminModule.siteMap.users}/>}/>
           <Route path={adminModule.siteMap.users} element={<AdminUsers/>}/>
-          <Route path={adminModule.siteMap.group} element={<AdminGroups/>}/>
           <Route path={adminModule.siteMap.proxy} element={<AdminProxy/>}/>
+          <Route path={adminModule.siteMap.group} element={<AdminGroups/>}/>
         </Routes>
       </Layout>
     </Router>

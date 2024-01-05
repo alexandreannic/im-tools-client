@@ -13,11 +13,21 @@ export const AdminGroupAccessForm = ({
 }) => {
   const {m} = useI18n()
   const watchSelectBy = form.watch('selectBy')
+  const watch = form.watch()
 
-  useEffect(() => {
-    if (form.watch('selectBy') !== 'group')
-      form.setValue('groupId', undefined)
-  }, [watchSelectBy])
+  // useEffect(() => {
+  //   if (form.watch('selectBy') !== 'group')
+  //     form.setValue('groupId', undefined)
+  // }, [watchSelectBy])
+
+  const setSelectByAccordingToValue = () => {
+    const values = form.getValues()
+    if (values.selectBy) return
+    if (values.drcJob) form.setValue('selectBy', 'job')
+    else if (values.email) form.setValue('selectBy', 'email')
+    else if (values.groupId) form.setValue('selectBy', 'group')
+  }
+  useEffect(setSelectByAccordingToValue, [watch])
 
   return (
     <>
@@ -33,9 +43,12 @@ export const AdminGroupAccessForm = ({
               error={!!form.formState.errors.selectBy}
               {...field}
               onChange={e => {
-                form.setValue('drcJob', undefined)
-                form.setValue('drcOffice', undefined)
-                form.setValue('email', undefined)
+                console.log('reset motherfucker')
+                setTimeout(() => {
+                  form.setValue('drcJob', null)
+                  form.setValue('drcOffice', null)
+                  form.setValue('email', null)
+                })
                 field.onChange(e)
               }}
             >

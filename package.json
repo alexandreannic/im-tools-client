@@ -42,7 +42,7 @@
     "qs": "^6.11.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.45.1",
+    "react-hook-form": "^7.49.2",
     "react-persistent-state": "^1.1.13",
     "react-portal": "^4.2.2",
     "react-router": "^6.8.2",

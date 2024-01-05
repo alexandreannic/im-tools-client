@@ -1,6 +1,6 @@
 import {UUID} from '@/core/type'
 import {AccessLevel} from '@/core/sdk/server/access/Access'
-import {DrcJob} from '@/core/drcUa'
+import {DrcJob, DrcOffice} from '@/core/drcUa'
 
 export interface Group {
   id: UUID
@@ -15,5 +15,5 @@ export interface GroupItem {
   level: AccessLevel
   email?: string
   drcJob?: DrcJob
-  drcOffice?: string
+  drcOffice?: DrcOffice
 }

@@ -1,6 +1,6 @@
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useEffect} from 'react'
 import {useI18n} from '@/core/i18n'
 import {UUID} from '@/core/type'
 import {useAsync, UseAsync} from '@/alexlib-labo/useAsync'
@@ -26,15 +26,19 @@ export const AccessTable = ({
   // data: Access[] | undefined
   header?: ReactNode
 }) => {
-  const {m, formatDate} = useI18n()
+  const {m, formatDate, formatDateTime} = useI18n()
   const {api} = useAppSettings()
   const _update = useAsync(api.access.update, {requestKey: ([id]) => id})
 
-  console.log(fetcherData.get())
+  useEffect(() => {
+    fetcherData.fetch({force: true, clean: false})
+  }, [_update.callIndex])
+
   return (
     <Sheet<Access>
       defaultLimit={100}
       id="access"
+      getRenderRowKey={_ => _.id}
       loading={fetcherData.loading}
       header={header}
       data={fetcherData.get()}
@@ -52,6 +56,7 @@ export const AccessTable = ({
           id: 'date',
           type: 'date',
           render: _ => formatDate(_.createdAt),
+          tooltip: _ => formatDateTime(_.createdAt),
           renderValue: _ => _.createdAt,
         },
         {
@@ -78,15 +83,19 @@ export const AccessTable = ({
           head: m.accessLevel,
           type: 'select_one',
           options: () => Enum.keys(AccessLevel).map(_ => ({value: _, label: _})),
-          render: row => isAdmin ? (
-            <AaSelectSingle
-              hideNullOption
-              disabled={!!row.groupName}
-              defaultValue={row.level}
-              onChange={_ => _update.call(row.id, {level: _ as AccessLevel})}
-              options={Enum.keys(AccessLevel).map(_ => ({value: _, children: _}))}
-            />
-          ) : row.level,
+          render: row => {
+            if (!!row.groupName) return
+            if (isAdmin) return (
+              <AaSelectSingle
+                hideNullOption
+                disabled={!!row.groupName}
+                value={row.level}
+                onChange={_ => _update.call(row.id, {level: _ as AccessLevel})}
+                options={Enum.keys(AccessLevel).map(_ => ({value: _, children: _}))}
+              />
+            )
+            return row.level
+          },
         },
         {
           id: 'params',

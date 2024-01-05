@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AaBtn} from '@/shared/Btn/AaBtn'
@@ -15,6 +15,9 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {IAccessForm} from '@/features/Access/AccessForm'
 import {accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {AdminGroupAccessForm} from '@/features/Admin/AdminGroupAccessForm'
+import {BasicDialog} from '@/shared/BasicDialog'
+import {UUID} from '@/core/type'
+import {Utils} from '@/utils/utils'
 
 interface GoupForm {
   name: string
@@ -32,7 +35,10 @@ export const AdminGroups = () => {
   const asyncCreate = useAsync(api.group.create)
   const asyncRemove = useAsync(api.group.remove, {requestKey: _ => _[0]})
   const asyncCreateItem = useAsync(api.group.createItem)
+  const asyncUpdateItem = useAsync(api.group.updateItem)
   const asyncDeleteItem = useAsync(api.group.deleteItem, {requestKey: _ => _[0]})
+
+  const [selectedGroupId, setSelectedGroupId] = useState<{groupId: UUID, accessId?: UUID} | undefined>()
 
   useEffect(() => {
     fetcher.fetch()
@@ -41,10 +47,11 @@ export const AdminGroups = () => {
   useEffect(() => {
     fetcher.fetch({force: true, clean: false})
   }, [
-    asyncCreate.calledIndex,
-    asyncRemove.calledIndex,
-    asyncDeleteItem.calledIndex,
-    asyncCreateItem.calledIndex,
+    asyncCreate.callIndex,
+    asyncRemove.callIndex,
+    asyncDeleteItem.callIndex,
+    asyncUpdateItem.callIndex,
+    asyncCreateItem.callIndex,
   ])
 
   return (
@@ -80,6 +87,13 @@ export const AdminGroups = () => {
                 <>
                   {_.items.map(item =>
                     <Chip
+                      onClick={() => {
+                        accessForm.reset({
+                          ...item,
+                          drcJob: item.drcJob ? [item.drcJob] : undefined
+                        })
+                        setSelectedGroupId({groupId: _.id, accessId: item.id})
+                      }}
                       onDelete={e => asyncDeleteItem.call(item.id)}
                       sx={{mr: .5, my: .25}}
                       icon={<Icon>{accessLevelIcon[item.level]}</Icon>}
@@ -91,29 +105,17 @@ export const AdminGroups = () => {
                       </>}
                     />
                   )}
-                  <Modal
-                    loading={asyncCreateItem.loading.size > 0}
-                    confirmDisabled={!accessForm.formState.isValid}
-                    onConfirm={(e, close) => accessForm.handleSubmit(f => {
-                      asyncCreateItem.call(_.id, f)
-                      close()
-                    })()}
-                    content={
-                      <Box sx={{width: 400}}>
-                        <AdminGroupAccessForm form={accessForm}/>
-                      </Box>
-                    }>
-                    <Chip
-                      icon={<Icon>add</Icon>}
-                      size="small"
-                      variant="outlined"
-                      clickable
-                      sx={{
-                        borderStyle: 'dotted',
-                        // borderWidth: 2
-                      }}
-                    />
-                  </Modal>
+                  <Chip
+                    icon={<Icon>add</Icon>}
+                    size="small"
+                    variant="outlined"
+                    clickable
+                    onClick={() => setSelectedGroupId({groupId: _.id})}
+                    sx={{
+                      borderStyle: 'dotted',
+                      // borderWidth: 2
+                    }}
+                  />
                 </>
               )
             },
@@ -124,6 +126,26 @@ export const AdminGroups = () => {
             },
           ]}
         />
+        <BasicDialog
+          open={!!selectedGroupId}
+          loading={asyncCreateItem.loading.size > 0}
+          onClose={() => setSelectedGroupId(undefined)}
+          confirmDisabled={!accessForm.formState.isValid}
+          onConfirm={(e) => accessForm.handleSubmit(f => {
+            if (selectedGroupId?.accessId) {
+              asyncUpdateItem.call(selectedGroupId.accessId, {
+                ...f,
+                drcJob: f.drcJob?.[0] ?? null
+              })
+            } else
+              asyncCreateItem.call(selectedGroupId?.groupId!, Utils.nullValuesToUndefined(f))
+            setSelectedGroupId(undefined)
+          })()}
+        >
+          <Box sx={{width: 400}}>
+            <AdminGroupAccessForm form={accessForm}/>
+          </Box>
+        </BasicDialog>
       </Panel>
     </Page>
   )
