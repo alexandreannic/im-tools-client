@@ -4,7 +4,7 @@ import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {Controller, UseFormReturn} from 'react-hook-form'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {fnSwitch} from '@alexandreannic/ts-utils'
-import {AccessFormInputAccessLevel, AccessFormInputDrcJob, AccessFormInputDrcOffice, AccessFormInputEmail, AccessFormInputGroup, IAccessForm} from '@/features/Access/AccessForm'
+import {AccessFormInputAccessLevel, AccessFormInputDrcJob, AccessFormInputDrcOffice, AccessFormInputEmail, IAccessForm} from '@/features/Access/AccessForm'
 
 export const AdminGroupAccessForm = ({
   form,
@@ -14,11 +14,6 @@ export const AdminGroupAccessForm = ({
   const {m} = useI18n()
   const watchSelectBy = form.watch('selectBy')
   const watch = form.watch()
-
-  // useEffect(() => {
-  //   if (form.watch('selectBy') !== 'group')
-  //     form.setValue('groupId', undefined)
-  // }, [watchSelectBy])
 
   const setSelectByAccordingToValue = () => {
     const values = form.getValues()
@@ -43,7 +38,6 @@ export const AdminGroupAccessForm = ({
               error={!!form.formState.errors.selectBy}
               {...field}
               onChange={e => {
-                console.log('reset motherfucker')
                 setTimeout(() => {
                   form.setValue('drcJob', null)
                   form.setValue('drcOffice', null)
@@ -60,7 +54,7 @@ export const AdminGroupAccessForm = ({
         {fnSwitch(watchSelectBy!, {
           'job': (
             <>
-              <AccessFormInputDrcJob form={form}/>
+              <AccessFormInputDrcJob form={form} sx={{mb: 2}}/>
               <AccessFormInputDrcOffice form={form}/>
             </>
           ),

@@ -98,7 +98,6 @@ export const DatabaseAccessForm = ({
       loading={_addAccess.loading.size > 1}
       confirmDisabled={!accessForm.formState.isValid}
       onConfirm={(_, close) => accessForm.handleSubmit(_ => {
-        console.log(_)
         submit(_)
         close()
       })()}

@@ -9,6 +9,7 @@ import {Enum, seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const AccessTable = ({
   isAdmin,
@@ -44,13 +45,6 @@ export const AccessTable = ({
       data={fetcherData.get()}
       columns={[
         {
-          id: 'drcJob',
-          head: m.drcJob,
-          render: _ => _.drcJob,
-          type: 'select_one',
-          options: () => seq(fetcherData.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
-        },
-        {
           width: 80,
           head: m.createdAt,
           id: 'date',
@@ -58,6 +52,13 @@ export const AccessTable = ({
           render: _ => formatDate(_.createdAt),
           tooltip: _ => formatDateTime(_.createdAt),
           renderValue: _ => _.createdAt,
+        },
+        {
+          id: 'drcJob',
+          head: m.drcJob,
+          render: _ => _.drcJob,
+          type: 'select_one',
+          options: () => seq(fetcherData.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
           id: 'drcOffice',
@@ -75,7 +76,7 @@ export const AccessTable = ({
           id: 'group',
           type: 'select_one',
           head: m.group,
-          render: _ => _.groupName,
+          render: _ => _.groupName ?? SheetUtils.blank,
         },
         {
           width: 90,

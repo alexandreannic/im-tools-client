@@ -297,7 +297,6 @@ export const _PartnershipDashboard = ({}: {}) => {
                       'women_s_rights') ? 1 : 0) / distincted.length * 100,
                   }
                 })
-                console.log(res)
                 return res
               }}>
                 {_ => (

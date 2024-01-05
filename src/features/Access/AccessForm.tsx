@@ -2,7 +2,7 @@ import {Controller, UseFormReturn} from 'react-hook-form'
 import {DrcJob, DrcOffice} from '@/core/drcUa'
 import {AccessLevel, accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {Autocomplete, autocompleteClasses, Box, Chip} from '@mui/material'
+import {Autocomplete, autocompleteClasses, Box, BoxProps, Chip, SxProps, Theme} from '@mui/material'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import React, {useEffect, useMemo} from 'react'
@@ -55,7 +55,7 @@ export const AccessForm = ({
           control={form.control}
           render={({field}) => (
             <ScRadioGroup
-              sx={{mb: 2.5}}
+              sx={{mb: 2}}
               dense
               error={!!form.formState.errors.selectBy}
               {...field}
@@ -81,7 +81,7 @@ export const AccessForm = ({
           ),
           'job': (
             <>
-              <AccessFormInputDrcJob form={form}/>
+              <AccessFormInputDrcJob form={form} sx={{mb: 2}}/>
               <AccessFormInputDrcOffice form={form}/>
             </>
           ),
@@ -105,13 +105,17 @@ export const AccessFormInputEmail = ({
   form: UseFormReturn<IAccessForm>
 }) => {
   const {m} = useI18n()
+  const required = form.watch('selectBy') === 'email'
   return (
     <AaInput
-      sx={{mb: 2.5}}
       label={m.drcEmail}
       error={!!form.formState.errors.email}
       helperText={form.formState.errors.email?.message as string}
-      {...form.register('email', {required: false, pattern: {value: /(@drc.ngo$|\s)/, message: m.invalidEmail}})}
+      required={required}
+      {...form.register('email', {
+        required: {value: required, message: m.required},
+        pattern: {value: /(@drc.ngo$|\s)/, message: m.invalidEmail}
+      })}
     />
   )
 }
@@ -132,7 +136,6 @@ export const AccessFormInputDrcOffice = ({
           label={m.drcOffice}
           onChange={_ => onChange(_)}
           options={Enum.values(DrcOffice)}
-          sx={{mb: 2.5}}
         />
       )}
     />
@@ -151,7 +154,6 @@ export const AccessFormInputAccessLevel = ({
       control={form.control}
       render={({field}) => (
         <ScRadioGroup<AccessLevel>
-          sx={{mb: 2.5}}
           error={!!form.formState.errors.level}
           dense
           {...field}
@@ -168,21 +170,24 @@ export const AccessFormInputAccessLevel = ({
 
 export const AccessFormInputDrcJob = ({
   form,
+  sx
 }: {
   form: UseFormReturn<IAccessForm>
+  sx?: SxProps<Theme>
 }) => {
   const {m} = useI18n()
+  const required = form.watch('selectBy') === 'job'
   return (
     <Controller
       control={form.control}
       name="drcJob"
-      rules={{required: {value: true, message: m.required}}}
+      rules={{required: {value: required, message: m.required}}}
       render={({field: {onChange, ...field}}) => (
         <DrcJobInputMultiple
           {...field}
+          sx={sx}
           value={field.value ?? []}
           onChange={(e: any, _) => _ && onChange(_)}
-          sx={{mb: 2.5}}
         />
       )}
     />
@@ -217,7 +222,6 @@ export const AccessFormInputGroup = ({
             value={groupIndex[field.value!]}
             onChange={(e: any, _) => _ && onChange(_.id ?? undefined)}
             loading={fetcherGroups.loading}
-            sx={{mb: 2.5}}
             getOptionLabel={_ => _.name}
             // renderTags={_ => }
             options={fetcherGroups.entity ?? []}
@@ -250,7 +254,7 @@ export const AccessFormInputGroup = ({
       {map(form.watch('groupId'), groupId => (
         <>
           <Sheet
-            sx={{border: t => `1px solid ${t.palette.divider}`, overflow: 'hidden', borderRadius: t => t.shape.borderRadius + 'px'}}
+            sx={{mt: 2, border: t => `1px solid ${t.palette.divider}`, overflow: 'hidden', borderRadius: t => t.shape.borderRadius + 'px'}}
             id="access"
             defaultLimit={5}
             data={groupIndex[groupId!]?.items}

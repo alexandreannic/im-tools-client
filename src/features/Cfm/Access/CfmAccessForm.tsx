@@ -11,11 +11,13 @@ import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
-import {AccessForm, AccessFormSection, IAccessForm} from '@/features/Access/AccessForm'
+import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcUa'
 import {AaSelect} from '@/shared/Select/Select'
 import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {useCfmContext} from '@/features/Cfm/CfmContext'
+import {AccessFormSection} from '@/features/Access/AccessFormSection'
+import {Utils} from '@/utils/utils'
 
 interface Form extends IAccessForm {
   office: DrcOffice[]
@@ -45,18 +47,11 @@ export const CfmAccessForm = ({
 
   const accessForm = useForm<Form>()
 
-  const submit = (f: Form) => {
+  const submit = ({selectBy, office, program, ...f}: Form) => {
     _addAccess.call({
-      level: f.level,
-      drcJob: f.drcJob,
-      drcOffice: f.drcOffice,
-      email: f.email,
+      ...Utils.nullValuesToUndefined(f),
       featureId: AppFeatureId.cfm,
-      params: {
-        office: f.office,
-        program: f.program,
-        // seeHisOwn: f.seeHisOwn,
-      }
+      params: {office, program},
     }).then(onAdded)
   }
 
@@ -70,54 +65,44 @@ export const CfmAccessForm = ({
       })()}
       content={
         <Box sx={{width: 400}}>
-          <AccessForm form={accessForm}/>
-          <AccessFormSection>{m.filter}</AccessFormSection>
-          <Controller
-            name="office"
-            control={accessForm.control}
-            rules={{
-              required: !!ctx.authorizations.accessibleOffices
-            }}
-            render={({field: {onChange, ...field}}) => (
-              <AaSelect<DrcOffice>
-                {...field}
-                defaultValue={[]}
-                multiple={true}
-                label={m.drcOffice}
-                onChange={_ => onChange(_)}
-                options={ctx.authorizations.accessibleOffices ?? Enum.keys(DrcOffice)}
-                sx={{mb: 2.5}}
-              />
-            )}
-          />
-          <Controller
-            rules={{
-              required: !!ctx.authorizations.accessiblePrograms
-            }}
-            name="program"
-            control={accessForm.control}
-            render={({field: {onChange, ...field}}) => (
-              <AaSelect<CfmDataProgram>
-                {...field}
-                defaultValue={[]}
-                multiple={true}
-                label={m.program}
-                onChange={_ => onChange(_)}
-                options={ctx.authorizations.accessiblePrograms ?? Enum.keys(CfmDataProgram)}
-                sx={{mb: 2.5}}
-              />
-            )}
-          />
-          {/*<Controller*/}
-          {/*  name="seeHisOwn"*/}
-          {/*  control={accessForm.control}*/}
-          {/*  render={({field: {onChange, ...field}}) => (*/}
-          {/*    <Switch*/}
-          {/*      {...field}*/}
-          {/*      onChange={_ => onChange(_.target.checked)}*/}
-          {/*    />*/}
-          {/*  )}*/}
-          {/*/>*/}
+          <AccessForm form={accessForm as any}/>
+          <AccessFormSection icon="filter_alt" label={m.filter}>
+            <Controller
+              name="office"
+              control={accessForm.control}
+              rules={{
+                required: !!ctx.authorizations.accessibleOffices
+              }}
+              render={({field: {onChange, ...field}}) => (
+                <AaSelect<DrcOffice>
+                  {...field}
+                  defaultValue={[]}
+                  multiple={true}
+                  label={m.drcOffice}
+                  onChange={_ => onChange(_)}
+                  options={ctx.authorizations.accessibleOffices ?? Enum.keys(DrcOffice)}
+                  sx={{mb: 2.5}}
+                />
+              )}
+            />
+            <Controller
+              rules={{
+                required: !!ctx.authorizations.accessiblePrograms
+              }}
+              name="program"
+              control={accessForm.control}
+              render={({field: {onChange, ...field}}) => (
+                <AaSelect<CfmDataProgram>
+                  {...field}
+                  defaultValue={[]}
+                  multiple={true}
+                  label={m.program}
+                  onChange={_ => onChange(_)}
+                  options={ctx.authorizations.accessiblePrograms ?? Enum.keys(CfmDataProgram)}
+                />
+              )}
+            />
+          </AccessFormSection>
         </Box>
       }
     >

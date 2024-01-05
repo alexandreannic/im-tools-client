@@ -35,7 +35,7 @@ export const AccessFormSection = ({
         borderLeft: `1px solid ${t.palette.divider}`,
         ml: '11px',
         pl: 2,
-        pb: 1,
+        pb: 2,
         mb: 1,
       }}>{children}</Box>
     </Box>
