@@ -9,7 +9,10 @@ import {ShelterProgress, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custo
 import {format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {AiFslcDataParser} from '@/features/ActivityInfo/Fslc/aiFslcData'
+import {AiFslcBundle} from '@/features/ActivityInfo/Fslc/aiFslcData'
+import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+
+export type AiSnfiBundle = AiBundle
 
 export class AiShelterData {
 
@@ -17,8 +20,6 @@ export class AiShelterData {
     return api.kobo.typedAnswers.searchBn_Re({filters: period})
       .then(_ => _.data.filter(_ => _.back_prog_type?.find(p => p.includes('esk'))).map(_ => ({..._, ...getAiLocation(_)})))
       .then(data => {
-        const formatted: AiFslcDataParser[] = []
-        let index = 0
         Utils.groupBy({
           data,
           groups: [

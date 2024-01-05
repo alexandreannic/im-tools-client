@@ -1,6 +1,6 @@
 import {Enum} from '@alexandreannic/ts-utils'
 import {KeyOf, Utils} from '@/utils/utils'
-import {subDays} from 'date-fns'
+import {endOfDay, endOfMonth, startOfMonth, subDays} from 'date-fns'
 
 export type UUID = string
 
@@ -25,11 +25,13 @@ export class PeriodHelper {
     return !period.start && !period.end
   }
 
-  static readonly fromyyyMM = (yyyyMM: string): Period => {
+  static readonly fromYYYYMM = (yyyyMM: string): Period => {
     const [year, month] = yyyyMM.split('-')
     return {
-      start: new Date(parseInt(year), parseInt(month) - 1),
-      end: subDays(new Date(parseInt(year), parseInt(month)), 1),
+      start: startOfMonth(new Date(+year, +month - 1, 1)),
+      end: endOfDay(endOfMonth(new Date(+year, +month - 1, 1))),
+      // start: new Date(parseInt(year), parseInt(month) - 1),
+      // end: subDays(new Date(parseInt(year), parseInt(month)), 1),
     }
   }
 }

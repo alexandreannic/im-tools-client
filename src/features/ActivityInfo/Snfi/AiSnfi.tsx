@@ -5,7 +5,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {format, subMonths} from 'date-fns'
-import {PeriodHelper} from '@/core/type'
+import {Period, PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -18,12 +18,17 @@ import {useAsync} from '@/alexlib-labo/useAsync'
 export const AiSnfi = () => {
   const {api} = useAppSettings()
   const {toastHttpError} = useAaToast()
-  const fetcher = useFetcher(AiShelterData.reqRepairs(api))
+  const fetcher = useFetcher((p: Period) => {
+    return Promise.all([
+      AiShelterData.reqRepairs(api)(p),
+      AiShelterData.reqEsk(api)(p),
+    ]).then(_ => _.reduce((acc, r) => [...acc, r]), [])
+  })
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {m} = useI18n()
 
   useEffect(() => {
-    fetcher.fetch({}, PeriodHelper.fromyyyMM(period))
+    fetcher.fetch({}, PeriodHelper.fromYYYYMM(period))
   }, [period])
 
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {

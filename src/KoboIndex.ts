@@ -35,6 +35,7 @@ export const kobo = {
       protection_communityMonitoring: 'aQHBhYgevdzw8TR2Vq2ZdR',
       protection_groupSession: 'a8Tn94arrSaH2FQBhUa9Zo',
       protection_pss: 'a52hN5iiCW73mxqqfmEAfp',
+      protection_gbv: 'a5Noq6Wf9a8aE2cmi74FyS',
       protection_hhs1: 'aFU8x6tHksveU2c3hK7RUG' as const,
       partnership_partnersDatabase: 'aLs32U5Qc9HfQ5mxQtsEML',
       partnership_initialQuestionnaire: 'a6u7CBysEz746Hdx6pVLzp',

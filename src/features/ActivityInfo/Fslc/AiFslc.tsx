@@ -10,7 +10,6 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
-import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
@@ -24,7 +23,7 @@ export const AiFslc = () => {
   const {m} = useI18n()
 
   useEffect(() => {
-    fetcher.fetch({}, PeriodHelper.fromyyyMM(period))
+    fetcher.fetch({}, PeriodHelper.fromYYYYMM(period))
   }, [period])
 
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
@@ -46,7 +45,7 @@ export const AiFslc = () => {
                 sx={{ml: 'auto'}}
                 onClick={() => {
                   if (!fetcher.entity) return
-                  _submit.call('all', fetcher.entity.map(_ => _.request)).catch(toastHttpError)
+                  _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
                 }}
               >
                 {m.submitAll}

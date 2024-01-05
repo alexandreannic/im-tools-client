@@ -267,7 +267,7 @@ const _ActivityInfo = ({
                   <Icon>send</Icon>
                 </AaBtn>
                 <ActivityInfoActions
-                  answers={_.rows}
+                  data={_.rows}
                   activity={_.activity}
                   requestBody={_.request}
                 />

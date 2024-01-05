@@ -14,16 +14,14 @@ import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
 import {EcrecCashRegistrationPaymentStatus} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
 import groupByGenderAndGroup = Person.groupByGenderAndGroup
 import Gender = Person.Gender
+import {AiSnfiBundle} from '@/features/ActivityInfo/Snfi/aiSnfiData'
+import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 
-export interface AiFslcDataParser {
-  all: KoboAnswer<Ecrec_CashRegistration>[],
-  activity: AiTypeFslc.Type,
-  request: ActiviftyInfoRecords,
-}
+export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_CashRegistration>
 
 export class AiFslcData {
 
-  static readonly reqEcrecCashRegistration = (api: ApiSdk) => (period: Period): Promise<AiFslcDataParser[]> => {
+  static readonly reqEcrecCashRegistration = (api: ApiSdk) => (period: Period): Promise<AiFslcBundle[]> => {
     return api.kobo.typedAnswers.searchEcrec_cashRegistration({filters: undefined})
       .then(_ => {
         return _.data
@@ -32,7 +30,7 @@ export class AiFslcData {
       })
       .then(data => {
         console.log('after,', data.length)
-        const formatted: AiFslcDataParser[] = []
+        const formatted: AiFslcBundle[] = []
         let index = 0
         Utils.groupBy({
           data,
@@ -118,9 +116,9 @@ export class AiFslcData {
               'Comments': ('Kobo IDs: ' + grouped.map(_ => _.id).join(',')).slice(0, 1000),
             }
             formatted.push({
-              all: grouped,
+              data: grouped,
               activity,
-              request: ActivityInfoSdk.makeRecordRequest({
+              requestBody: ActivityInfoSdk.makeRecordRequest({
                 activity: AiTypeFslc.map(activity),
                 formId: activityInfoFormIds.fslc,
                 activityIdPrefix: 'drcecrec',

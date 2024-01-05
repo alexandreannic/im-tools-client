@@ -2,22 +2,19 @@ import React from 'react'
 import {Icon, Tooltip} from '@mui/material'
 import {AnswerTable} from './AnswerTable'
 import {Modal} from 'mui-extension/lib/Modal'
-import {useI18n} from '../../../core/i18n'
+import {useI18n} from '@/core/i18n'
 import {IconBtn} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
+import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 
-export const ActivityInfoActions = <T extends Record<string, any>, >({
-  answers,
+export const ActivityInfoActions = ({
+  data,
   activity,
   requestBody,
-}: {
-  activity: any
-  requestBody: any,
-  answers: T[]
-}) => {
+}: AiBundle) => {
   return (
     <>
-      <AIViewAnswers answers={answers}/>
+      <AIViewAnswers answers={data}/>
       {activity && <AIPreviewActivity activity={activity}/>}
       {requestBody && <AIPreviewRequest request={requestBody}/>}
     </>
