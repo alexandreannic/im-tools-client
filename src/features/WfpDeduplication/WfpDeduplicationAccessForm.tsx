@@ -11,12 +11,14 @@ import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAaToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
-import {AccessForm, AccessFormSection, IAccessForm} from '@/features/Access/AccessForm'
+import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcUa'
-import {AaSelect} from '@/shared/Select/Select'
+import {AccessFormSection} from '@/features/Access/AccessFormSection'
+import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {Utils} from '@/utils/utils'
 
 interface Form extends IAccessForm {
-  drcOfficesDataFilter: DrcOffice[]
+  drcOfficesDataFilter?: DrcOffice[]
 }
 
 export const WfpDeduplicationAccessForm = ({
@@ -30,7 +32,7 @@ export const WfpDeduplicationAccessForm = ({
   const {toastHttpError} = useAaToast()
   const {api} = useAppSettings()
 
-  const _addAccess = useAsync(api.access.add)
+  const _addAccess = useAsync(api.access.create)
   const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
   const _access = useFetchers(requestInConstToFixTsInference)
@@ -42,10 +44,7 @@ export const WfpDeduplicationAccessForm = ({
 
   const submit = (f: Form) => {
     _addAccess.call({
-      level: f.level,
-      drcJob: f.drcJob,
-      drcOffice: f.drcOffice,
-      email: f.email,
+      ...Utils.nullValuesToUndefined(f),
       featureId: AppFeatureId.wfp_deduplication,
       params: {filters: {office: f.drcOfficesDataFilter}},
     }).then(onAdded)
@@ -62,23 +61,23 @@ export const WfpDeduplicationAccessForm = ({
       content={
         <Box sx={{width: 400}}>
           <AccessForm form={accessForm}/>
-          <AccessFormSection>{m.filter}</AccessFormSection>
-          <Controller
-            name="drcOfficesDataFilter"
-            rules={{required: {value: true, message: m.required}}}
-            control={accessForm.control}
-            render={({field: {onChange, ...field}}) => (
-              <AaSelect<DrcOffice>
-                {...field}
-                defaultValue={[]}
-                multiple={true}
-                label={m.drcOffice}
-                onChange={_ => onChange(_)}
-                options={Enum.values(DrcOffice)}
-                sx={{mb: 2.5}}
-              />
-            )}
-          />
+          <AccessFormSection icon="filter_alt" label={m.filter}>
+            <Controller
+              name="drcOfficesDataFilter"
+              rules={{required: {value: true, message: m.required}}}
+              control={accessForm.control}
+              render={({field: {onChange, ...field}}) => (
+                <AaSelectMultiple<DrcOffice>
+                  {...field}
+                  defaultValue={[]}
+                  label={m.drcOffice}
+                  onChange={_ => onChange(_)}
+                  options={Enum.values(DrcOffice)}
+                  sx={{mb: 2.5}}
+                />
+              )}
+            />
+          </AccessFormSection>
         </Box>
       }
     >

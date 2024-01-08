@@ -28,7 +28,7 @@ export const MealVerificationProvider = ({
 
   useEffect(() => {
     fetcherGetAll.fetch({force: true, clean: false})
-  }, [asyncUpdate.calledIndex])
+  }, [asyncUpdate.callIndex])
 
   const access: AccessSum = useMemo(() => {
     return {

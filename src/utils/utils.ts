@@ -1,6 +1,7 @@
 import {Enum, mapFor, seq} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
 import {groupBy as _groupBy} from '@/utils/groupBy'
+import {NonNullableKeys} from '@/utils/utilsType'
 
 export type KeyOf<T> = Extract<keyof T, string>
 
@@ -332,6 +333,10 @@ export class Utils {
     if (!condition) {
       throw new Error(msg)
     }
+  }
+
+  static readonly nullValuesToUndefined = <T extends Record<string | number, null | undefined | any>>(obj: T): NonNullableKeys<T> => {
+    return new Enum(obj).transform((k, v) => [k as any, v === null ? undefined : v]).get() as any
   }
 
   static readonly slugify: {

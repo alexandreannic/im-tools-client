@@ -32,10 +32,11 @@ export const WfpDeduplicationAccess = () => {
     <Page>
       <Panel>
         <AccessTable
-          _remove={_remove}
-          _data={_get}
+          asyncRemove={_remove}
+          fetcherData={_get}
           renderParams={(_: WfpDeduplicationAccessParams) => JSON.stringify(_.filters)}
           onRemoved={refresh}
+          isAdmin={session.admin}
           header={
             session.admin && (
               <WfpDeduplicationAccessForm onAdded={refresh}>

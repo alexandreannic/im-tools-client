@@ -72,8 +72,8 @@ export const DatabaseAccess = ({
       <Panel>
         <AccessTable
           isAdmin={accessSum.admin}
-          _remove={_remove}
-          _data={_get}
+          asyncRemove={_remove}
+          fetcherData={_get}
           renderParams={(_: KoboDatabaseAccessParams) => JSON.stringify(_.filters)}
           onRemoved={refresh}
           header={

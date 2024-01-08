@@ -6,12 +6,14 @@ import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {useI18n} from '@/core/i18n'
 import {Layout} from '@/shared/Layout'
 import {AdminProxy} from '@/features/Admin/AdminProxy'
+import {AdminGroups} from '@/features/Admin/AdminGroups'
 
 export const adminModule = {
   basePath: '/admin',
   siteMap: {
     users: '/users',
     proxy: '/proxy',
+    group: '/group',
   }
 }
 
@@ -24,6 +26,11 @@ const AdminSidebar = () => {
         <NavLink to={path(adminModule.siteMap.users)}>
           {({isActive}) =>
             <SidebarItem icon="group" active={isActive}>{m.users}</SidebarItem>
+          }
+        </NavLink>
+        <NavLink to={path(adminModule.siteMap.group)}>
+          {({isActive}) =>
+            <SidebarItem icon="groups" active={isActive}>{m.group}</SidebarItem>
           }
         </NavLink>
         <NavLink to={path(adminModule.siteMap.proxy)}>
@@ -47,6 +54,7 @@ export const Admin = () => {
           <Route index element={<Navigate to={adminModule.siteMap.users}/>}/>
           <Route path={adminModule.siteMap.users} element={<AdminUsers/>}/>
           <Route path={adminModule.siteMap.proxy} element={<AdminProxy/>}/>
+          <Route path={adminModule.siteMap.group} element={<AdminGroups/>}/>
         </Routes>
       </Layout>
     </Router>

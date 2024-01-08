@@ -1,62 +1,71 @@
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
-import {AAIconBtn} from '@/shared/IconBtn'
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useEffect} from 'react'
 import {useI18n} from '@/core/i18n'
 import {UUID} from '@/core/type'
 import {useAsync, UseAsync} from '@/alexlib-labo/useAsync'
 import {UseFetchersSimple} from '@/alexlib-labo/useFetchersFn'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {AaSelect} from '@/shared/Select/Select'
+import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
+import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
 export const AccessTable = ({
   isAdmin,
   header,
   onRemoved,
   renderParams = _ => JSON.stringify(_),
-  _data,
-  _remove,
+  fetcherData,
+  asyncRemove,
 }: {
   isAdmin?: boolean
-  _data: UseFetchersSimple<() => Promise<Access[]>>
-  _remove: UseAsync<(_: UUID) => Promise<any>>
+  fetcherData: UseFetchersSimple<() => Promise<Access[]>>
+  asyncRemove: UseAsync<(_: UUID) => Promise<any>>
   renderParams?: (_: any) => ReactNode
   onRemoved?: (_: UUID) => void
   // data: Access[] | undefined
   header?: ReactNode
 }) => {
-  const {m, formatDate} = useI18n()
+  const {m, formatDate, formatDateTime} = useI18n()
   const {api} = useAppSettings()
   const _update = useAsync(api.access.update, {requestKey: ([id]) => id})
 
+  useEffect(() => {
+    fetcherData.fetch({force: true, clean: false})
+  }, [_update.callIndex])
+
   return (
     <Sheet<Access>
+      defaultLimit={100}
       id="access"
-      loading={_data.loading}
+      getRenderRowKey={_ => _.id}
+      loading={fetcherData.loading}
       header={header}
-      data={_data.get()}
+      data={fetcherData.get()}
       columns={[
-        {
-          id: 'drcJob',
-          head: m.drcJob,
-          render: _ => _.drcJob,
-          type: 'select_one',
-          options: () => seq(_data.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
-        },
         {
           width: 80,
           head: m.createdAt,
           id: 'date',
           type: 'date',
           render: _ => formatDate(_.createdAt),
+          tooltip: _ => formatDateTime(_.createdAt),
+          renderValue: _ => _.createdAt,
+        },
+        {
+          id: 'drcJob',
+          head: m.drcJob,
+          render: _ => _.drcJob,
+          type: 'select_one',
+          options: () => seq(fetcherData.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
           id: 'drcOffice',
           head: m.drcOffice,
           render: _ => _.drcOffice,
           type: 'select_one',
-          options: () => seq(_data.get()?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+          options: () => seq(fetcherData.get()?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
           id: 'email',
@@ -64,18 +73,30 @@ export const AccessTable = ({
           render: _ => _.email,
         },
         {
+          id: 'group',
+          type: 'select_one',
+          head: m.group,
+          render: _ => _.groupName ?? SheetUtils.blank,
+        },
+        {
           width: 90,
           id: 'level',
           head: m.accessLevel,
           type: 'select_one',
           options: () => Enum.keys(AccessLevel).map(_ => ({value: _, label: _})),
-          render: row => isAdmin ? (
-            <AaSelect
-              defaultValue={row.level}
-              onChange={_ => _update.call(row.id, {level: _ as AccessLevel})}
-              options={Enum.keys(AccessLevel).map(_ => ({value: _, children: _}))}
-            />
-          ) : row.level,
+          render: row => {
+            if (!!row.groupName) return
+            if (isAdmin) return (
+              <AaSelectSingle
+                hideNullOption
+                disabled={!!row.groupName}
+                value={row.level}
+                onChange={_ => _update.call(row.id, {level: _ as AccessLevel})}
+                options={Enum.keys(AccessLevel).map(_ => ({value: _, children: _}))}
+              />
+            )
+            return row.level
+          },
         },
         {
           id: 'params',
@@ -89,7 +110,7 @@ export const AccessTable = ({
           head: '',
           align: 'right',
           render: (_: Access) => (
-            <AAIconBtn loading={_remove.loading.get(_.id)} onClick={() => _remove.call(_.id).then(() => onRemoved?.(_.id))} children="delete"/>
+            <TableIconBtn loading={asyncRemove.loading.get(_.id)} onClick={() => asyncRemove.call(_.id).then(() => onRemoved?.(_.id))} children="delete"/>
           ),
         } as const] : [],
       ]}

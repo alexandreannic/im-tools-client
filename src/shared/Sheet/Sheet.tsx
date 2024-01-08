@@ -125,66 +125,68 @@ const _Sheet = <T extends SheetRow>({
 
   return (
     <Box {...props}>
-      <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center', width: '100%'}}>
-        <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => {
-          ctx.data.setFilters({})
-          ctx.data.resetSearch()
-        }}>
-          <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
-        </Badge>
-        <DatatableColumnToggle
-          sx={{mr: 1}}
-          columns={ctx.columns}
-          hiddenColumns={hiddenColumns}
-          onChange={_ => setHiddenColumns(_)}
-          title={m.toggleDatatableColumns}
-        />
-        {typeof header === 'function' ? header({
-          data: ctx.data.data as T[],
-          filteredData: ctx.data.filteredData as T[],
-          filteredAndSortedData: ctx.data.filteredAndSortedData as T[],
-        }) : header}
-        {showExportBtn && (
-          <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
-        )}
-        {ctx.selected.size > 0 && (
-          <Box sx={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-            borderRadius: t => t.shape.borderRadius + 'px',
-            background: t => t.palette.background.paper,
+      {header !== null && (
+        <Box sx={{position: 'relative', p: 1, display: 'flex', alignItems: 'center', width: '100%'}}>
+          <Badge badgeContent={filterCount} color="primary" overlap="circular" onClick={() => {
+            ctx.data.setFilters({})
+            ctx.data.resetSearch()
           }}>
+            <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
+          </Badge>
+          <DatatableColumnToggle
+            sx={{mr: 1}}
+            columns={ctx.columns}
+            hiddenColumns={hiddenColumns}
+            onChange={_ => setHiddenColumns(_)}
+            title={m.toggleDatatableColumns}
+          />
+          {typeof header === 'function' ? header({
+            data: ctx.data.data as T[],
+            filteredData: ctx.data.filteredData as T[],
+            filteredAndSortedData: ctx.data.filteredAndSortedData as T[],
+          }) : header}
+          {showExportBtn && (
+            <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
+          )}
+          {ctx.selected.size > 0 && (
             <Box sx={{
               position: 'absolute',
               top: 0,
               right: 0,
               left: 0,
               bottom: 0,
-              display: 'flex',
-              alignItems: 'center',
-              fontWeight: t => t.typography.fontWeightBold,
-              background: t => t.palette.action.focus,
-              pl: 1,
-              pr: 2,
-              border: t => `2px solid ${t.palette.primary.main}`,
-              borderTopLeftRadius: t => t.shape.borderRadius + 'px',
-              borderTopRightRadius: t => t.shape.borderRadius + 'px',
-              // margin: .75,
-              // color: t => t.palette.primary.main,
-              // borderRadius: t => t.shape.borderRadius + 'px',
+              borderRadius: t => t.shape.borderRadius + 'px',
+              background: t => t.palette.background.paper,
             }}>
-              <AAIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
-              <Box sx={{mr: 1, whiteSpace: 'nowrap'}}>
-                <b>{ctx.selected.size}</b> {m.selected}
+              <Box sx={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                fontWeight: t => t.typography.fontWeightBold,
+                background: t => t.palette.action.focus,
+                pl: 1,
+                pr: 2,
+                border: t => `2px solid ${t.palette.primary.main}`,
+                borderTopLeftRadius: t => t.shape.borderRadius + 'px',
+                borderTopRightRadius: t => t.shape.borderRadius + 'px',
+                // margin: .75,
+                // color: t => t.palette.primary.main,
+                // borderRadius: t => t.shape.borderRadius + 'px',
+              }}>
+                <AAIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
+                <Box sx={{mr: 1, whiteSpace: 'nowrap'}}>
+                  <b>{ctx.selected.size}</b> {m.selected}
+                </Box>
+                {ctx.select?.selectActions}
               </Box>
-              {ctx.select?.selectActions}
             </Box>
-          </Box>
-        )}
-      </Box>
+          )}
+        </Box>
+      )}
       <Box sx={{overflowX: 'auto'}}>
         <Box sx={{
           // width: 'max-coontent'

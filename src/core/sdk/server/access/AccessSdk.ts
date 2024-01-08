@@ -12,6 +12,7 @@ interface SearchByFeature {
 
 type FeatureCreateBase = Omit<Access, 'drcJob' | 'id' | 'createdAt' | 'updatedAt' | 'featureId' | 'params'> & {
   drcJob?: DrcJob[]
+  groupId?: UUID
 }
 
 interface AccessUpdate extends Pick<Access, 'drcJob' | 'drcOffice' | 'level'> {
@@ -29,7 +30,7 @@ export class AccessSdk {
   constructor(private client: ApiClient) {
   }
 
-  readonly add: AccessCreate = (body) => {
+  readonly create: AccessCreate = (body) => {
     return this.client.put<Access>(`/access`, {body})
   }
 

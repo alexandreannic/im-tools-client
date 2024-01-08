@@ -12,6 +12,18 @@ export enum DrcOffice {
   Chernivtsi = 'Chernivtsi',
 }
 
+export const drcOfficeShort: Record<DrcOffice, string> = {
+  [DrcOffice.Kyiv]: 'KYV',
+  [DrcOffice.Sumy]: 'UMY',
+  [DrcOffice.Mykolaiv]: 'NLV',
+  [DrcOffice.Lviv]: 'LWO',
+  [DrcOffice.Chernihiv]: 'CEJ',
+  [DrcOffice.Kharkiv]: 'HRK',
+  [DrcOffice.Dnipro]: 'DNK',
+  [DrcOffice.Poltava]: 'Poltava',
+  [DrcOffice.Chernivtsi]: 'Chernivtsi',
+}
+
 export enum DrcSector {
   NFI = 'NFI',
   WaSH = 'WaSH',

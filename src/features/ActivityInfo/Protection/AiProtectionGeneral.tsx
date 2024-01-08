@@ -158,6 +158,7 @@ export const AiProtectionGeneral = () => {
     <Page width="full">
       <Panel>
         <Sheet
+          showExportBtn
           id="ai-prot"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
@@ -176,6 +177,7 @@ export const AiProtectionGeneral = () => {
             {
               width: 150,
               id: 'actions',
+              renderExport: false,
               render: _ => {
                 return (
                   <>
@@ -195,7 +197,7 @@ export const AiProtectionGeneral = () => {
             {
               id: 'id',
               type: 'string',
-              head: 'ID',
+              head: 'ActivityInfo ID',
               render: _ => _.id,
             },
             {head: 'Oblast', id: 'Oblast', type: 'string', render: _ => _.Oblast},

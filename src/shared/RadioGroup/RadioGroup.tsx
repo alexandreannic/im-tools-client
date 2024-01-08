@@ -29,7 +29,7 @@ interface MultipleProps<T> extends BaseProps<T> {
   multiple: true
 }
 
-type Props<T> = SingleProps<T> | MultipleProps<T>
+export type ScRadioGroupProps<T> = SingleProps<T> | MultipleProps<T>
 
 const isMultiple = <T, >(multiple: boolean | undefined, t: T | T[]): t is T[] => {
   return !!multiple
@@ -48,7 +48,7 @@ const _ScRadioGroup = <T, >({
   defaultValue,
   sx,
   ...props
-}: Props<T>, ref: any) => {
+}: ScRadioGroupProps<T>, ref: any) => {
   const [innerValue, setInnerValue] = useState<T | T[]>()
 
   useEffect(() => {
@@ -110,6 +110,6 @@ const _ScRadioGroup = <T, >({
  * Workaround because forwardRef break the generic type of ScSelect.
  */
 export const ScRadioGroup = React.forwardRef(_ScRadioGroup as any) as <T>(
-  props: Props<T> & {ref?: React.ForwardedRef<any>},
+  props: ScRadioGroupProps<T> & {ref?: React.ForwardedRef<any>},
 ) => ReturnType<typeof _ScRadioGroup>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {makeStyles} from 'tss-react/mui'
-import {BoxProps, Tooltip} from '@mui/material'
+import {Tooltip} from '@mui/material'
 
 const useStyles = makeStyles<{url: string, size: number, tooltipSize?: number}>()((t, {url, size, tooltipSize}) => ({
   common: {

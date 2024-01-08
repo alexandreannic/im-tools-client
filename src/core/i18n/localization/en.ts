@@ -1241,6 +1241,9 @@ export const en = Object.freeze({
         Processing: 'Processing',
       }
     },
+    _admin: {
+      createGroup: 'Create group',
+    },
     _shelter: {
       cannotUpdateTag: (rowsCount: number, key: string, value: string) => `Update failed for ${key}=${value} on ${rowsCount} rows. Table not edited.`,
       assignedContractor: 'Assigned contractors',
@@ -1296,6 +1299,7 @@ export const en = Object.freeze({
     projectCode: 'Project Code',
     form: 'Form',
     koboId: 'Kobo _id',
+    desc: 'Desc',
     viewNMore: (n: number) => `View ${n} more`,
     viewNLess: (n: number) => `View ${n} less`,
     viewMore: 'More',

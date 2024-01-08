@@ -14,7 +14,7 @@ export type AaSelectSingleProps<T extends string | number = string> = {
   options: Option<T>[] | string[]
   sx?: SxProps<Theme>
   defaultValue?: T
-  value?: T
+  value?: T | null
   multiple?: false
   hideNullOption?: boolean
 } & Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> & ({
@@ -65,7 +65,7 @@ export const AaSelectSingle = <T extends string | number>({
         margin="dense"
         placeholder={placeholder}
         id={id}
-        value={value ?? IGNORED_VALUE_EMPTY}
+        value={value ?? defaultValue ?? IGNORED_VALUE_EMPTY}
         defaultValue={defaultValue}
         multiple={false}
         onChange={e => {
