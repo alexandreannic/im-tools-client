@@ -26,17 +26,18 @@ interface GoupForm {
 
 export const AdminGroups = () => {
   const {api} = useAppSettings()
-  const {m} = useI18n()
+  const {m, formatDate, formatDateTime} = useI18n()
 
   const groupForm = useForm<GoupForm>()
   const accessForm = useForm<IAccessForm>()
 
   const fetcher = useFetcher(api.group.getAllWithItems)
   const asyncCreate = useAsync(api.group.create)
+  const asyncUpdate = useAsync(api.group.update)
   const asyncRemove = useAsync(api.group.remove, {requestKey: _ => _[0]})
-  const asyncCreateItem = useAsync(api.group.createItem)
-  const asyncUpdateItem = useAsync(api.group.updateItem)
-  const asyncDeleteItem = useAsync(api.group.deleteItem, {requestKey: _ => _[0]})
+  const asyncItemCreate = useAsync(api.group.createItem)
+  const asyncItemItem = useAsync(api.group.updateItem)
+  const asyncItemDelete = useAsync(api.group.deleteItem, {requestKey: _ => _[0]})
 
   const [selectedGroupId, setSelectedGroupId] = useState<{groupId: UUID, accessId?: UUID} | undefined>()
 
@@ -48,10 +49,11 @@ export const AdminGroups = () => {
     fetcher.fetch({force: true, clean: false})
   }, [
     asyncCreate.callIndex,
+    asyncUpdate.callIndex,
     asyncRemove.callIndex,
-    asyncDeleteItem.callIndex,
-    asyncUpdateItem.callIndex,
-    asyncCreateItem.callIndex,
+    asyncItemDelete.callIndex,
+    asyncItemItem.callIndex,
+    asyncItemCreate.callIndex,
   ])
 
   return (
@@ -64,6 +66,7 @@ export const AdminGroups = () => {
           header={
             <>
               <Modal
+                onOpen={groupForm.reset}
                 onConfirm={(e, close) => groupForm.handleSubmit(form => {
                   asyncCreate.call(form).then(close)
                 })()}
@@ -82,6 +85,7 @@ export const AdminGroups = () => {
           columns={[
             {id: 'drcJob', width: 150, head: m.name, render: _ => _.name},
             {id: 'email', width: 120, head: m.desc, render: _ => _.desc},
+            {type: 'date', id: 'createdAt', width: 120, head: m.createdAt, tooltip: _ => formatDateTime(_.createdAt), render: _ => formatDate(_.createdAt), renderValue: _ => _.createdAt},
             {
               id: 'items', style: () => ({whiteSpace: 'normal'}), head: m.accesses, render: _ => (
                 <>
@@ -94,7 +98,7 @@ export const AdminGroups = () => {
                         })
                         setSelectedGroupId({groupId: _.id, accessId: item.id})
                       }}
-                      onDelete={e => asyncDeleteItem.call(item.id)}
+                      onDelete={e => asyncItemDelete.call(item.id)}
                       sx={{mr: .5, my: .25}}
                       icon={<Icon>{accessLevelIcon[item.level]}</Icon>}
                       size="small"
@@ -120,7 +124,23 @@ export const AdminGroups = () => {
               )
             },
             {
-              id: 'actions', width: 1, align: 'right', render: _ => <>
+              id: 'actions', width: 75, align: 'right', render: _ => <>
+                <Modal
+                  onOpen={groupForm.reset}
+                  onConfirm={(e, close) => groupForm.handleSubmit(form => {
+                    asyncUpdate.call(_.id, form).then(close)
+                  })()}
+                  title={m._admin.createGroup}
+                  confirmLabel={m.edit}
+                  content={
+                    <>
+                      <AaInput sx={{mt: 2}} label={m.name} defaultValue={_.name} autoFocus {...groupForm.register('name')}/>
+                      <AaInput multiline minRows={3} maxRows={6} defaultValue={_.desc} label={m.desc} {...groupForm.register('desc')}/>
+                    </>
+                  }
+                >
+                  <AAIconBtn>edit</AAIconBtn>
+                </Modal>
                 <AAIconBtn onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading.has(_.id)}>delete</AAIconBtn>
               </>
             },
@@ -128,17 +148,17 @@ export const AdminGroups = () => {
         />
         <BasicDialog
           open={!!selectedGroupId}
-          loading={asyncCreateItem.loading.size > 0}
+          loading={asyncItemCreate.loading.size > 0}
           onClose={() => setSelectedGroupId(undefined)}
           confirmDisabled={!accessForm.formState.isValid}
           onConfirm={(e) => accessForm.handleSubmit(f => {
             if (selectedGroupId?.accessId) {
-              asyncUpdateItem.call(selectedGroupId.accessId, {
+              asyncItemItem.call(selectedGroupId.accessId, {
                 ...f,
                 drcJob: f.drcJob?.[0] ?? null
               })
             } else
-              asyncCreateItem.call(selectedGroupId?.groupId!, Utils.nullValuesToUndefined(f))
+              asyncItemCreate.call(selectedGroupId?.groupId!, Utils.nullValuesToUndefined(f))
             setSelectedGroupId(undefined)
           })()}
         >

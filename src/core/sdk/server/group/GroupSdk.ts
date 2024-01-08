@@ -1,7 +1,7 @@
 import {ApiClient} from '../ApiClient'
 import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
 import {UUID} from '@/core/type'
-import {Group} from '@/core/sdk/server/group/GroupItem'
+import {Group, GroupHelper} from '@/core/sdk/server/group/GroupItem'
 import {DrcJob, DrcOffice} from '@/core/drcUa'
 
 type GroupCreate = Pick<Group, 'name' | 'desc'>
@@ -40,7 +40,7 @@ export class GroupSdk {
   }
 
   readonly getAllWithItems = () => {
-    return this.client.get<Group[]>(`/group`)
+    return this.client.get(`/group`).then(_ => _.map(GroupHelper.map))
   }
 
   // readonly getItems = () => {
