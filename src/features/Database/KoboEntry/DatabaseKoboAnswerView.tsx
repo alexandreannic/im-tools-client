@@ -1,15 +1,16 @@
 import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} from '@mui/material'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useI18n} from '@/core/i18n'
-import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswer, KoboAttachment, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import React, {useMemo, useState} from 'react'
-import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
+import {KoboAttachedImg, proxyKoboImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Txt} from 'mui-extension'
 import {useModal} from '@/shared/Modal/useModal'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {TableImg} from '@/shared/TableImg/TableImg'
 
 export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboApiForm) => {
   const [open, close] = useModal((answer: T) => (

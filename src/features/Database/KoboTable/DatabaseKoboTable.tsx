@@ -85,7 +85,6 @@ export const DatabaseTable = ({
     return {admin, write, read}
   }, [accesses])
 
-
   useEffect(() => {
     _formSchema.fetch({})
     _answers.fetch({})

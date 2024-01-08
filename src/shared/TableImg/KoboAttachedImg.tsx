@@ -5,6 +5,22 @@ import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {useMemo} from 'react'
 import {SxProps, Theme} from '@mui/material'
 
+export const proxyKoboImg = ({
+  url,
+  serverId = kobo.drcUa.server.prod,
+  conf = appConfig,
+}: {
+  url?: string
+  serverId?: string
+  conf?: AppConfig
+}) => {
+  const path = url?.split('api')[1]
+  if (path) return {
+    path,
+    fullUrl: conf.apiURL + `/kobo-api/${serverId}/attachment?path=${path}`
+  }
+}
+
 export const koboImgHelper = ({
   fileName,
   serverId = kobo.drcUa.server.prod,
@@ -16,11 +32,12 @@ export const koboImgHelper = ({
   attachments: KoboAttachment[]
   conf?: AppConfig
 }) => {
-  const path = fileName ? attachments.find(_ => _.filename.includes(fileName))?.download_small_url.split('api')[1] : undefined
-  return {
-    path,
-    fullUrl: path ? conf.apiURL + `/kobo-api/${serverId}/attachment?path=${path}` : undefined,
-  }
+  const url = fileName ? attachments.find(_ => _.filename.includes(fileName))?.download_small_url : undefined
+  return proxyKoboImg({
+    url,
+    serverId,
+    conf,
+  })
 }
 
 export const KoboAttachedImg = ({
@@ -36,8 +53,18 @@ export const KoboAttachedImg = ({
   serverId?: string
   attachments: KoboAttachment[]
 }) => {
-  const fileUrl = useMemo(() => koboImgHelper({attachments, fileName}), [attachments, fileName])
+  const file = useMemo(() => koboImgHelper({attachments, fileName}), [attachments, fileName])
   return (
-    <TableImg size={size} tooltipSize={tooltipSize} url={fileUrl.fullUrl ?? ''}/>
+    <TableImg size={size} tooltipSize={tooltipSize} url={file?.fullUrl ?? ''}/>
+  )
+}
+
+export const AllAttachements = ({
+  attachments,
+}: {
+  attachments: KoboAttachment[]
+}) => {
+  return attachments?.map((a: KoboAttachment, i: number) =>
+    <TableImg key={i} size={100} tooltipSize={100} url={proxyKoboImg({url: a.download_url})?.fullUrl ?? ''}/>
   )
 }
