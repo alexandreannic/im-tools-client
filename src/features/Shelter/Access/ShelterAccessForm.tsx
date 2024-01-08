@@ -42,14 +42,9 @@ export const ShelterAccessForm = ({
 
   const accessForm = useForm<Form>()
 
-  const submit = (f: Form) => {
+  const submit = ({selectBy, ...f}: Form) => {
     _addAccess.call({
       ...Utils.nullValuesToUndefined(f),
-      // level: f.level,
-      // drcJob: f.drcJob ?? undefined,
-      // drcOffice: f.drcOffice ?? undefined,
-      // groupId: f.groupId ?? undefined,
-      // email: f.email ?? undefined,
       featureId: AppFeatureId.shelter,
       params: {
         office: f.office,

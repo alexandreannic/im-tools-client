@@ -15,9 +15,9 @@ export const proxyKoboImg = ({
   conf?: AppConfig
 }) => {
   const path = url?.split('api')[1]
-  if (path) return {
+  return {
     path,
-    fullUrl: conf.apiURL + `/kobo-api/${serverId}/attachment?path=${path}`
+    fullUrl: path ? conf.apiURL + `/kobo-api/${serverId}/attachment?path=${path}` : undefined
   }
 }
 
@@ -55,7 +55,7 @@ export const KoboAttachedImg = ({
 }) => {
   const file = useMemo(() => koboImgHelper({attachments, fileName}), [attachments, fileName])
   return (
-    <TableImg size={size} tooltipSize={tooltipSize} url={file?.fullUrl ?? ''}/>
+    <TableImg size={size} tooltipSize={tooltipSize} url={file.fullUrl ?? ''}/>
   )
 }
 
@@ -65,6 +65,6 @@ export const AllAttachements = ({
   attachments: KoboAttachment[]
 }) => {
   return attachments?.map((a: KoboAttachment, i: number) =>
-    <TableImg key={i} size={100} tooltipSize={100} url={proxyKoboImg({url: a.download_url})?.fullUrl ?? ''}/>
+    <TableImg key={i} size={100} tooltipSize={100} url={proxyKoboImg({url: a.download_url}).fullUrl ?? ''}/>
   )
 }

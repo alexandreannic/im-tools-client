@@ -83,9 +83,9 @@ export const AdminGroups = () => {
             </>
           }
           columns={[
-            {id: 'drcJob', width: 150, head: m.name, render: _ => _.name},
-            {id: 'email', width: 120, head: m.desc, render: _ => _.desc},
-            {type: 'date', id: 'createdAt', width: 120, head: m.createdAt, tooltip: _ => formatDateTime(_.createdAt), render: _ => formatDate(_.createdAt), renderValue: _ => _.createdAt},
+            {type: 'select_one', id: 'drcJob', width: 150, head: m.name, render: _ => _.name},
+            {type: 'string', id: 'desc', width: 120, head: m.desc, render: _ => _.desc},
+            {type: 'date', id: 'createdAt', width: 80, head: m.createdAt, tooltip: _ => formatDateTime(_.createdAt), render: _ => formatDate(_.createdAt), renderValue: _ => _.createdAt},
             {
               id: 'items', style: () => ({whiteSpace: 'normal'}), head: m.accesses, render: _ => (
                 <>
@@ -124,7 +124,7 @@ export const AdminGroups = () => {
               )
             },
             {
-              id: 'actions', width: 75, align: 'right', render: _ => <>
+              id: 'actions', width: 24, align: 'right', render: _ => <>
                 <Modal
                   onOpen={groupForm.reset}
                   onConfirm={(e, close) => groupForm.handleSubmit(form => {
@@ -139,9 +139,9 @@ export const AdminGroups = () => {
                     </>
                   }
                 >
-                  <AAIconBtn>edit</AAIconBtn>
+                  <AAIconBtn size="small">edit</AAIconBtn>
                 </Modal>
-                <AAIconBtn onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading.has(_.id)}>delete</AAIconBtn>
+                <AAIconBtn size="small" onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading.has(_.id)}>delete</AAIconBtn>
               </>
             },
           ]}

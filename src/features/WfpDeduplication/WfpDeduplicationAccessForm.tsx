@@ -42,11 +42,11 @@ export const WfpDeduplicationAccessForm = ({
 
   const accessForm = useForm<Form>()
 
-  const submit = (f: Form) => {
+  const submit = ({selectBy, drcOfficesDataFilter, ...f}: Form) => {
     _addAccess.call({
       ...Utils.nullValuesToUndefined(f),
       featureId: AppFeatureId.wfp_deduplication,
-      params: {filters: {office: f.drcOfficesDataFilter}},
+      params: {filters: {office: drcOfficesDataFilter}},
     }).then(onAdded)
   }
 

@@ -79,18 +79,13 @@ export const DatabaseAccessForm = ({
     stringify: (optionName: string) => getKoboLabel(index[optionName][0], langIndex)
   }), [form])
 
-  const submit = (f: Form) => {
+  const submit = ({selectBy, question, questionAnswer, ...f}: Form) => {
     _addAccess.call({
       ...Utils.nullValuesToUndefined(f),
-      // level: f.level,
-      // drcJob: f.drcJob ?? undefined,
-      // drcOffice: f.drcOffice ?? undefined,
-      // email: f.email ?? undefined,
-      // groupId: f.groupId ?? undefined,
       featureId: AppFeatureId.kobo_database,
       params: KoboDatabaseAccessParams.create({
         koboFormId: formId,
-        filters: f.question && f.questionAnswer ? {[f.question]: f.questionAnswer} : undefined
+        filters: question && questionAnswer ? {[question]: questionAnswer} : undefined
       })
     }).then(onAdded)
   }
