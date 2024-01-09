@@ -96,7 +96,7 @@ export const DatabaseTable = ({
 
   return (
     <>
-      {(_formSchema.loading || _answers.loading) && (
+      {(_formSchema.loading || _answers.loading) && !_answers.entity && (
         <>
           <Skeleton sx={{mx: 1, height: 54}}/>
           <SheetSkeleton/>

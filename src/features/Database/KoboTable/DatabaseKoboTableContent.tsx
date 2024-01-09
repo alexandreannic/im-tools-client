@@ -141,7 +141,7 @@ export const DatabaseKoboTableContent = ({
             <AAIconBtn
               href={ctxSchema.schemaUnsanitized.deployment__links.url}
               target="_blank"
-              children="open_in_new"
+              children="file_open"
               tooltip={m._koboDatabase.openKoboForm}
               sx={{marginLeft: 'auto'}}
             />

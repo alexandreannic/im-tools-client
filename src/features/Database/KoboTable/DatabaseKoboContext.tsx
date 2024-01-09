@@ -50,7 +50,7 @@ export const DatabaseKoboTableProvider = (props: {
   } = props
   const {api} = useAppSettings()
   const {toastError} = useAaToast()
-  const hasBeenCalled = useRef(false)
+  const refreshRequestedFlag = useRef(false)
 
   const mapData = (data: KoboAnswer[]) => {
     const mapped = data.map(_ => Kobo.mapAnswerBySchema(ctxSchema.schemaHelper.questionIndex, _))
@@ -58,6 +58,7 @@ export const DatabaseKoboTableProvider = (props: {
   }
 
   const asyncRefresh = useAsync(async () => {
+    refreshRequestedFlag.current = true
     await api.koboApi.synchronizeAnswers(serverId, form.id)
     await fetcherAnswers.fetch({force: true, clean: false})
   })
@@ -67,9 +68,9 @@ export const DatabaseKoboTableProvider = (props: {
   const [mappedData, setMappedData] = useState<KoboMappedAnswer[]>(mapData(data))
 
   useEffect(() => {
-    if (!hasBeenCalled.current) {
+    if (refreshRequestedFlag.current) {
       setMappedData(mapData(data))
-      hasBeenCalled.current = true
+      refreshRequestedFlag.current = false
     }
   }, [data])
 
