@@ -24,6 +24,9 @@
 // }
 
 import {DrcProject} from '@/core/drcUa'
+import {aiOblasts} from '@/core/uaLocation/aiOblasts'
+import {aiRaions} from '@/core/uaLocation/aiRaions'
+import {aiHromadas} from '@/core/uaLocation/aiHromadas'
 
 export namespace AiGbvInterface {
   type Opt<T extends keyof typeof options> = keyof (typeof options)[T]
@@ -65,9 +68,17 @@ export namespace AiGbvInterface {
     'cmlymv8ldsuaebzb': a['Implementing Partner 1'] === undefined ? undefined : a['Implementing Partner 1'],
     'c4iibgxldsubqwqc': a['Implementing Partner 2'] === undefined ? undefined : a['Implementing Partner 2'],
     'cyq7n1zleo9wajf8': a['Plan Code'] === undefined ? undefined : 'c6haa99le4g0c634' + ':' + options['Plan Code'][a['Plan Code']!],
-    'ckkwefble7p7iph8': a['Oblast'] === undefined ? undefined : a['Oblast'],
-    'ckqsibble7p7umj9': a['Raion'] === undefined ? undefined : a['Raion'],
-    'cjmhva4le7p82b9a': a['Hromada'] === undefined ? undefined : a['Hromada'],
+    // 'ckkwefble7p7iph8': a['Oblast'] === undefined ? undefined : a['Oblast'],
+    // 'ckqsibble7p7umj9': a['Raion'] === undefined ? undefined : a['Raion'],
+    // 'cjmhva4le7p82b9a': a['Hromada'] === undefined ? undefined : a['Hromada'],
+
+    // @ts-ignore
+    'ckkwefble7p7iph8': 'cg7v61llbunvy9t9:' + aiOblasts[a['Oblast']],
+    // @ts-ignore
+    'ckqsibble7p7umj9': 'cjy8nbnlbunzcnh1h:' + aiRaions[a['Raion']],
+    // @ts-ignore
+    'cjmhva4le7p82b9a': 'c700rjplbuo1fjq5m:' + aiHromadas[a['Hromada']],
+
     'citz8g7le7p8aisb': a['Settlement'] === undefined ? undefined : a['Settlement'],
     'c6mrow2le7p8jswc': a['Collective Centre'] === undefined ? undefined : a['Collective Centre'],
     'cfzh1whldu8r0u84k': a['Response Theme'] === undefined ? undefined : options['Response Theme'][a['Response Theme']!],

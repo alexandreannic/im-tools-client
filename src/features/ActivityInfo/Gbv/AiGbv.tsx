@@ -3,7 +3,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {useAaToast} from '@/core/useToast'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {groupByGenderAndGroup, Period, PeriodHelper, Person} from '@/core/type'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import {Utils} from '@/utils/utils'
@@ -18,6 +18,7 @@ import {AaInput} from '@/shared/ItInput/AaInput'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AaBtn} from '@/shared/Btn/AaBtn'
 
 type AiGbvBundle = AiBundle<AiGbvInterface.Type>
 
@@ -26,6 +27,10 @@ export const AiGbv = () => {
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
   const {toastHttpError} = useAaToast()
+
+  const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
+    requestKey: ([i]) => i
+  })
 
   const req = (periodStr: string) => {
     const period = PeriodHelper.fromYYYYMM(periodStr)
@@ -57,13 +62,17 @@ export const AiGbv = () => {
               {by: _ => _.activity!},
             ],
             finalTransform: (byActivity, [status, activity]) => {
-              const persons: Seq<Person.Person> = byActivity.map(_ => ({
-                age: _.hh_char_hh_det_age,
-                gender: fnSwitch(_.hh_char_hh_det_gender!, {
-                  male: Person.Gender.Male,
-                  female: Person.Gender.Female,
-                }, () => Person.Gender.Other)
-              }))
+              const persons: Seq<Person.Person> = byActivity
+                .filter(_ => _.hh_char_hh_det_gender && _.hh_char_hh_det_age)
+                .map(_ => ({
+                  age: _.hh_char_hh_det_age,
+                  gender: fnSwitch(_.hh_char_hh_det_gender!, {
+                    male: Person.Gender.Male,
+                    female: Person.Gender.Female,
+                  }, () => {
+                    throw new Error('Should be filtered.')
+                  })
+                }))
               const disaggregation = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(persons)
               subActivities.push({
                   'Protection Indicators': fnSwitch(activity, {
@@ -83,7 +92,7 @@ export const AiGbv = () => {
                     'returnee': 'Returnees',
                   }, () => 'Non-Displaced'),
                   'Reporting Month': periodStr,
-                  'Total Individuals Reached': 0,
+                  'Total Individuals Reached': persons.length,
                   'Elderly Women': disaggregation['60+'].Female,
                   'Elderly Men': disaggregation['60+'].Male,
                   'Adult Women': disaggregation['18 - 59'].Female,
@@ -110,12 +119,12 @@ export const AiGbv = () => {
             activity,
             requestBody: ActivityInfoSdk.makeRecordRequests({
               activityIdPrefix: 'drcgbv',
-              activity,
+              activity: AiGbvInterface.map(activity),
               activityIndex: index++,
               activityYYYYMM: periodStr.replace('-', ''),
               formId: 'cdabzugldwuqqzo2',
               subformId: 'czyzhrldwuqqzp3',
-              subActivities: activity['Sub Activities']
+              subActivities: activity['Sub Activities'].map(AiGbvInterface.mapSubActivities)
             })
           })
         }
@@ -128,7 +137,7 @@ export const AiGbv = () => {
 
   useEffect(() => {
     fetcher.fetch({}, period)
-  }, [])
+  }, [period])
 
   const flatData = useMemo(() => {
     return fetcher.entity?.flatMap(d => {
@@ -164,6 +173,12 @@ export const AiGbv = () => {
           header={
             <>
               <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
+              <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
+                if (!fetcher.entity) return
+                _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
+              }}>
+                {m.submitAll}
+              </AaBtn>
             </>
           }
           columns={[
@@ -197,7 +212,8 @@ export const AiGbv = () => {
             {head: 'Hromada', id: 'Hromada', type: 'select_one', render: _ => _.Hromada},
             {head: 'Plan Code', id: 'Plan Code', type: 'select_one', render: _ => _.planCode},
             {width: 0, head: 'Reponse theme', id: 'responseTheme', type: 'select_one', render: _ => _.responseTheme},
-            {head: 'Population Group', id: 'Population Group', type: 'string', render: _ => _['Population Group']},
+            {head: 'Population Group', id: 'Population Group', type: 'select_one', render: _ => _['Population Group']},
+            {head: 'Protection Indicators', id: 'Protection Indicators', type: 'select_one', render: _ => _['Protection Indicators']},
             {width: 0, head: 'Adult Men', id: 'Adult Men', type: 'number', render: _ => formatLargeNumber(_['Adult Men'])},
             {width: 0, head: 'Adult Women', id: 'Adult Women', type: 'number', render: _ => formatLargeNumber(_['Adult Women'])},
             {width: 0, head: 'Elderly Men', id: 'Elderly Men', type: 'number', render: _ => formatLargeNumber(_['Elderly Men'])},

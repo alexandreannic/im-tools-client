@@ -26,18 +26,36 @@ export class ActivityInfoSdk {
     }
   }
 
-  static readonly makeRecordRequests = ({subformId, subActivities, ...parent}: ActivityInfoRequest & {
+  static readonly makeRecordRequests = ({
+    activityIdPrefix,
+    activity,
+    activityYYYYMM,
+    activityIndex,
+    formId,
+    parentRecordId,
+    subformId,
+    subActivities,
+  }: ActivityInfoRequest & {
     subformId: string,
     subActivities: any[]
   }) => {
-    const parentRequest = ActivityInfoSdk.makeRecordRequestContent(parent)
+    const parentRequest = ActivityInfoSdk.makeRecordRequestContent({
+      activityIdPrefix,
+      activity,
+      activityYYYYMM,
+      activityIndex,
+      formId,
+      parentRecordId,
+    })
     return {
       'changes': [
         parentRequest,
         ...subActivities.map((_, i) =>
           ActivityInfoSdk.makeRecordRequestContent({
-            ...parent,
-            activityIdPrefix: parent.activityIdPrefix + 'i' + ('' + i).padStart(3, '0'),
+            activity: _,
+            activityIndex: i,
+            activityYYYYMM,
+            activityIdPrefix: activityIdPrefix + 'i' + ('' + i).padStart(3, '0'),
             formId: subformId,
             parentRecordId: parentRequest.recordId,
           }))
