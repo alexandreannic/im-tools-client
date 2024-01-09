@@ -39,89 +39,88 @@ export const AiMpca = () => {
   })
 
   const fetcher = useFetcher(async (period: string) => {
-      const [year, month] = period.split('-')
-      const filters = {
-        start: startOfMonth(new Date(+year, +month - 1, 1)),
-        end: endOfDay(endOfMonth(new Date(+year, +month - 1, 1))),
-      }
-
-      return api.mpca.search({filters}).then(res => {
-        const mapped: AiMpcaBundle[] = []
-        let i = 0
-        // const mapped: (AiTypeMpcaRmm.Type & {
-        //   oblast?: string,
-        //   raion?: string
-        // })[] = []
-        Utils.groupBy({
-          data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
-          groups: [
-            {by: (_) => _.oblast ?? ''},
-            {by: (_, [oblast,]) => _.raion && AILocationHelper.findRaion(oblast, _.raion)?.en || ''},
-            {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
-            {
-              by: _ => fnSwitch(_.benefStatus!, {
-                idp: 'IDPs',
-                long_res: 'Non-Displaced',
-                ret: 'Returnees',
-                ref_asy: 'Returnees',
-              }, () => 'Unknown')
-            },
-          ],
-          finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
-            const disag = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(group.flatMap(_ => _.persons).compact())
-            const activity = {
-              Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
-              'Population Group': populationGroup,
-              'Amount of cash in USD distributed through multi-purpose cash assistance': Math.round(group.sum(_ => _.amountUahFinal ?? 0) * conf.uahToUsd),
-              Girls: disag['0 - 17']?.Female,
-              Boys: disag['0 - 17']?.Male,
-              'Adult Women': disag['18 - 59']?.Female,
-              'Adult Men': disag['18 - 59']?.Male,
-              'Elderly Women': disag['60+']?.Female,
-              'Elderly Men': disag['60+']?.Male,
-              'Partner Organization': 'Danish Refugee Council',
-              'Reporting Month': period,
-              'Total # of people assisted with multi-purpose cash assistance': Utils.add(
-                disag['0 - 17']?.Female,
-                disag['0 - 17']?.Male,
-                disag['18 - 59']?.Female,
-                disag['18 - 59']?.Male,
-                disag['60+']?.Female,
-                disag['60+']?.Male,
-              ),
-              Durations: 'Three months',
-              'People with disability': 0,
-            } as const
-            mapped.push({
-              data: group,
-              oblast: oblast === '' ? undefined : oblast,
-              raion,
-              activity,
-              requestBody: ActivityInfoSdk.makeRecordRequest({
-                activityIdPrefix: 'drcmpca',
-                activity: AiTypeMpcaRmm.map(activity),
-                activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
-                activityIndex: i++,
-                formId: ActivityInfoSdk.formId.mpca,
-              })
-            })
-          },
-        })
-        return mapped
-        // return mapped.map((_, i) => ({
-        //   ..._,
-        //   req: ActivityInfoSdk.makeRecordRequest({
-        //     activityIdPrefix: 'drcmpca',
-        //     activity: AiTypeMpcaRmm.map(_),
-        //     activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
-        //     activityIndex: i,
-        //     formId: ActivityInfoSdk.formId.mpca,
-        //   })
-        // })
-        // )
-      })
+    const [year, month] = period.split('-')
+    const filters = {
+      start: startOfMonth(new Date(+year, +month - 1, 1)),
+      end: endOfDay(endOfMonth(new Date(+year, +month - 1, 1))),
     }
-  )
+
+    return api.mpca.search({filters}).then(res => {
+      const mapped: AiMpcaBundle[] = []
+      let i = 0
+      // const mapped: (AiTypeMpcaRmm.Type & {
+      //   oblast?: string,
+      //   raion?: string
+      // })[] = []
+      Utils.groupBy({
+        data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
+        groups: [
+          {by: (_) => _.oblast ?? ''},
+          {by: (_, [oblast,]) => _.raion && AILocationHelper.findRaion(oblast, _.raion)?.en || ''},
+          {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
+          {
+            by: _ => fnSwitch(_.benefStatus!, {
+              idp: 'IDPs',
+              long_res: 'Non-Displaced',
+              ret: 'Returnees',
+              ref_asy: 'Returnees',
+            }, () => 'Unknown')
+          },
+        ],
+        finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
+          const disag = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(group.flatMap(_ => _.persons).compact())
+          const activity = {
+            Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
+            'Population Group': populationGroup,
+            'Amount of cash in USD distributed through multi-purpose cash assistance': Math.round(group.sum(_ => _.amountUahFinal ?? 0) * conf.uahToUsd),
+            Girls: disag['0 - 17']?.Female,
+            Boys: disag['0 - 17']?.Male,
+            'Adult Women': disag['18 - 59']?.Female,
+            'Adult Men': disag['18 - 59']?.Male,
+            'Elderly Women': disag['60+']?.Female,
+            'Elderly Men': disag['60+']?.Male,
+            'Partner Organization': 'Danish Refugee Council',
+            'Reporting Month': period,
+            'Total # of people assisted with multi-purpose cash assistance': Utils.add(
+              disag['0 - 17']?.Female,
+              disag['0 - 17']?.Male,
+              disag['18 - 59']?.Female,
+              disag['18 - 59']?.Male,
+              disag['60+']?.Female,
+              disag['60+']?.Male,
+            ),
+            Durations: 'Three months',
+            'People with disability': 0,
+          } as const
+          mapped.push({
+            data: group,
+            oblast: oblast === '' ? undefined : oblast,
+            raion,
+            activity,
+            requestBody: ActivityInfoSdk.makeRecordRequest({
+              activityIdPrefix: 'drcmpca',
+              activity: AiTypeMpcaRmm.map(activity),
+              activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
+              activityIndex: i++,
+              formId: ActivityInfoSdk.formId.mpca,
+            })
+          })
+        },
+      })
+      return mapped
+      // return mapped.map((_, i) => ({
+      //   ..._,
+      //   req: ActivityInfoSdk.makeRecordRequest({
+      //     activityIdPrefix: 'drcmpca',
+      //     activity: AiTypeMpcaRmm.map(_),
+      //     activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
+      //     activityIndex: i,
+      //     formId: ActivityInfoSdk.formId.mpca,
+      //   })
+      // })
+      // )
+    })
+  })
 
   useEffect(() => {
     fetcher.fetch({}, period)
