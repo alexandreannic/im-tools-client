@@ -7,7 +7,7 @@ import {Box, Icon} from '@mui/material'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './aiWashInterface'
 import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
-import {ActivityInfoActions} from '../shared/ActivityInfoActions'
+import {ActivityInfoActions, AiSendBtn} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
@@ -21,6 +21,7 @@ import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {Person} from '@/core/type'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
+import {AAIconBtn} from '@/shared/IconBtn'
 
 interface Person {
   age: number
@@ -252,20 +253,14 @@ const _ActivityInfo = ({
           }
           id="ai-nfi" data={data} columns={[
           {
-            id: 'actions', head: '', width: 200, render: _ =>
+            id: 'actions', head: '', width: 120, render: _ =>
               <>
-                <AaBtn
-                  tooltip="Submit 🚀"
+                <AiSendBtn
                   loading={_submit.getLoading(-1)}
-                  variant="contained"
-                  size="small"
-                  sx={{minWidth: 50, mr: .5}}
                   onClick={() => {
                     _submit.call(-1, [_.request]).catch(toastHttpError)
                   }}
-                >
-                  <Icon>send</Icon>
-                </AaBtn>
+                />
                 <ActivityInfoActions
                   data={_.rows}
                   activity={_.activity}

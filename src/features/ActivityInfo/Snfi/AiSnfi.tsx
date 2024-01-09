@@ -9,7 +9,7 @@ import {Period, PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AIPreviewActivity, AIPreviewRequest, AiSendBtn, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
@@ -74,17 +74,17 @@ export const AiSnfi = () => {
           loading={fetcher.loading}
           columns={[
             {
-              id: 'actions', width: 160, head: '', render: _ => (
+              id: 'actions', width: 120, head: '', render: _ => (
                 <>
-                  <AAIconBtn
+                  <AiSendBtn
                     disabled={!_.activity.Hromada} color="primary"
                     onClick={() => {
                       // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
                     }}
-                  >send</AAIconBtn>
-                  <AIViewAnswers answers={_.all}/>
+                  />
+                  <AIViewAnswers answers={_.data}/>
                   <AIPreviewActivity activity={_.activity}/>
-                  <AIPreviewRequest request={_.request}/>
+                  <AIPreviewRequest request={_.requestBody}/>
                 </>
               )
             },

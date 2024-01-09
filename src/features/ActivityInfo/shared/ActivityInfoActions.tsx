@@ -6,6 +6,8 @@ import {useI18n} from '@/core/i18n'
 import {IconBtn} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+import exp from 'constants'
+import {AaBtnProps} from '@/shared/Btn/AaBtn'
 
 export const ActivityInfoActions = ({
   data,
@@ -35,7 +37,7 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
       cancelLabel={m.close}
       content={<AnswerTable answers={answers}/>}
     >
-      <AAIconBtn tooltip="View related Kobo data" children="table_view" color="primary"/>
+      <AAIconBtn size="small" tooltip="View related Kobo data" children="table_view" color="primary"/>
     </Modal>
   )
 }
@@ -83,11 +85,19 @@ const AIPreviewJSON = ({
     <Modal title={title} content={
       <pre>{JSON.stringify(request, null, 2)}</pre>
     }>
-      <Tooltip title={title}>
-        <IconBtn color="primary">
-          <Icon>{icon}</Icon>
-        </IconBtn>
-      </Tooltip>
+      <AAIconBtn tooltip={title} size="small" color="primary" children={icon}/>
     </Modal>
+  )
+}
+
+export const AiSendBtn = (props: AaBtnProps) => {
+  return (
+    <AAIconBtn
+      tooltip="Submit 🚀"
+      size="small"
+      sx={{mr: .5}}
+      color="primary"
+      {...props}
+    >send</AAIconBtn>
   )
 }

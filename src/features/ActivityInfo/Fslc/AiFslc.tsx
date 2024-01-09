@@ -9,7 +9,7 @@ import {PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AIPreviewActivity, AIPreviewRequest, AiSendBtn, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
@@ -54,14 +54,14 @@ export const AiFslc = () => {
           }
           defaultLimit={100} id="ai-shelter" data={fetcher.entity} loading={fetcher.loading} columns={[
           {
-            id: 'actions', renderExport: false, width: 160, head: '', render: _ => (
+            id: 'actions', renderExport: false, width: 120, head: '', render: _ => (
               <>
-                <AAIconBtn
-                  disabled={!_.activity.Hromada} color="primary"
+                <AiSendBtn
+                  disabled={!_.activity.Hromada}
                   onClick={() => {
                     // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
                   }}
-                >send</AAIconBtn>
+                />
                 <AIViewAnswers answers={_.data}/>
                 <AIPreviewActivity activity={_.activity}/>
                 <AIPreviewRequest request={_.requestBody}/>

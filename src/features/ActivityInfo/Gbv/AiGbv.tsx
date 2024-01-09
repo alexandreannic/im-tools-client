@@ -4,20 +4,20 @@ import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {useAaToast} from '@/core/useToast'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {groupByGenderAndGroup, Period, PeriodHelper, Person} from '@/core/type'
+import {PeriodHelper, Person} from '@/core/type'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import {Utils} from '@/utils/utils'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {Panel} from '@/shared/Panel'
 import {Page} from '@/shared/Page'
-import {AiGbvInterface, SubActivity} from '@/features/ActivityInfo/Gbv/aiGbvInterface'
+import {AiGbvInterface} from '@/features/ActivityInfo/Gbv/aiGbvInterface'
 import {DrcProject} from '@/core/drcUa'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AIPreviewActivity, AIPreviewRequest, AiSendBtn, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 
 type AiGbvBundle = AiBundle<AiGbvInterface.Type>
@@ -183,17 +183,17 @@ export const AiGbv = () => {
           }
           columns={[
             {
-              width: 150,
+              width: 120,
               id: 'actions',
               render: _ => {
                 return (
                   <>
-                    <AAIconBtn
-                      disabled={!_.Hromada} color="primary"
+                    <AiSendBtn
+                      disabled={!_.Hromada}
                       onClick={() => {
                         _submit.call(_.id, [indexActivity[_.id]!.requestBody]).catch(toastHttpError)
                       }}
-                    >send</AAIconBtn>
+                    />
                     <AIViewAnswers answers={indexActivity[_.id]!.data}/>
                     <AIPreviewActivity activity={indexActivity[_.id]!.activity}/>
                     <AIPreviewRequest request={indexActivity[_.id]!.requestBody}/>

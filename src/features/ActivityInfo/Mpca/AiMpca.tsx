@@ -9,7 +9,7 @@ import {AiTypeMpcaRmm} from '@/features/ActivityInfo/Mpca/AiMpcaInterface'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AIPreviewActivity, AIPreviewRequest, AiSendBtn, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {Box} from '@mui/material'
@@ -149,12 +149,12 @@ export const AiMpca = () => {
           data={fetcher.entity}
           columns={[
             {
-              width: 120,
+              width: 130,
               id: 'actions',
               render: _ => {
                 return (
                   <>
-                    <AAIconBtn disabled={!_.activity.Hromada} color="primary">send</AAIconBtn>
+                    <AiSendBtn disabled={!_.activity.Hromada}/>
                     <AIViewAnswers answers={_.data}/>
                     <AIPreviewActivity activity={_.activity}/>
                     <AIPreviewRequest request={_.requestBody}/>

@@ -7,7 +7,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AIPreviewActivity, AIPreviewRequest, AiSendBtn, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {Box} from '@mui/material'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {AaBtn} from '@/shared/Btn/AaBtn'
@@ -171,18 +171,18 @@ export const AiProtectionGeneral = () => {
           data={flatData}
           columns={[
             {
-              width: 150,
+              width: 120,
               id: 'actions',
               renderExport: false,
               render: _ => {
                 return (
                   <>
-                    <AAIconBtn
-                      disabled={!_.Hromada} color="primary"
+                    <AiSendBtn
+                      disabled={!_.Hromada}
                       onClick={() => {
                         _submit.call(_.id, [indexActivity[_.id]!.requestBody]).catch(toastHttpError)
                       }}
-                    >send</AAIconBtn>
+                    />
                     <AIViewAnswers answers={indexActivity[_.id]!.data}/>
                     <AIPreviewActivity activity={indexActivity[_.id]!.activity}/>
                     <AIPreviewRequest request={indexActivity[_.id]!.requestBody}/>
