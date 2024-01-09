@@ -2,29 +2,28 @@ import React from 'react'
 import {Icon, Tooltip} from '@mui/material'
 import {AnswerTable} from './AnswerTable'
 import {Modal} from 'mui-extension/lib/Modal'
-import {useI18n} from '../../../core/i18n'
+import {useI18n} from '@/core/i18n'
 import {IconBtn} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
+import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+import exp from 'constants'
+import {AaBtnProps} from '@/shared/Btn/AaBtn'
 
-export const ActivityInfoActions = <T extends Record<string, any>, >({
-  answers,
+export const ActivityInfoActions = ({
+  data,
   activity,
   requestBody,
-}: {
-  activity: any
-  requestBody: any,
-  answers: T[]
-}) => {
+}: AiBundle) => {
   return (
     <>
-      <AIViewAnswers answers={answers}/>
-      {activity && <AIPreviewActivity activity={activity}/>}
-      {requestBody && <AIPreviewRequest request={requestBody}/>}
+      <AiViewAnswers answers={data}/>
+      {activity && <AiPreviewActivity activity={activity}/>}
+      {requestBody && <AiPreviewRequest request={requestBody}/>}
     </>
   )
 }
 
-export const AIViewAnswers = <T extends Record<string, any>, >({
+export const AiViewAnswers = <T extends Record<string, any>, >({
   answers
 }: {
   answers: T[]
@@ -38,12 +37,12 @@ export const AIViewAnswers = <T extends Record<string, any>, >({
       cancelLabel={m.close}
       content={<AnswerTable answers={answers}/>}
     >
-      <AAIconBtn tooltip="View related Kobo data" children="table_view" color="primary"/>
+      <AAIconBtn size="small" tooltip="View related Kobo data" children="table_view" color="primary"/>
     </Modal>
   )
 }
 
-export const AIPreviewActivity = ({
+export const AiPreviewActivity = ({
   activity
 }: {
   activity: any
@@ -58,7 +57,7 @@ export const AIPreviewActivity = ({
   )
 }
 
-export const AIPreviewRequest = ({
+export const AiPreviewRequest = ({
   request
 }: {
   request: any
@@ -86,11 +85,19 @@ const AIPreviewJSON = ({
     <Modal title={title} content={
       <pre>{JSON.stringify(request, null, 2)}</pre>
     }>
-      <Tooltip title={title}>
-        <IconBtn color="primary">
-          <Icon>{icon}</Icon>
-        </IconBtn>
-      </Tooltip>
+      <AAIconBtn tooltip={title} size="small" color="primary" children={icon}/>
     </Modal>
+  )
+}
+
+export const AiSendBtn = (props: AaBtnProps) => {
+  return (
+    <AAIconBtn
+      tooltip="Submit 🚀"
+      size="small"
+      sx={{mr: .5}}
+      color="primary"
+      {...props}
+    >send</AAIconBtn>
   )
 }

@@ -31,6 +31,7 @@ import {mapMeal_VerificationWinterization} from '@/core/koboModel/Meal_Verificat
 import {mapMeal_VerificationEcrec} from '@/core/koboModel/Meal_VerificationEcrec/Meal_VerificationEcrecMapping'
 import {mapPartnership_partnersDatabase} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseMapping'
 import {EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
+import {mapProtection_gbv} from '@/core/koboModel/Protection_gbv/Protection_gbvMapping'
 
 export class KoboTypedAnswerSdk {
 
@@ -161,6 +162,14 @@ export class KoboTypedAnswerSdk {
     return this.search({
       formId: KoboIndex.byName('protection_groupSession').id,
       fnMap: mapProtection_groupSession,
+      ...filters,
+    })
+  }
+
+  readonly searchProtection_gbv = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: KoboIndex.byName('protection_gbv').id,
+      fnMap: mapProtection_gbv,
       ...filters,
     })
   }

@@ -7,7 +7,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {Box} from '@mui/material'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {AaBtn} from '@/shared/Btn/AaBtn'
@@ -16,8 +16,11 @@ import {ActivityInfoProtectionMapper} from '@/features/ActivityInfo/Protection/a
 import {Utils} from '@/utils/utils'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
-import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+import {PeriodHelper} from '@/core/type'
+
+type AiProtectionGeneralBundle = AiBundle<AiTypeProtectionRmm.FormParams>
 
 export const AiProtectionGeneral = () => {
   const {api, conf} = useAppSettings()
@@ -31,10 +34,7 @@ export const AiProtectionGeneral = () => {
 
   const fetcher = useFetcher(async (period: string) => {
     const [year, month] = period.split('-')
-    const filters = {
-      start: startOfMonth(new Date(+year, +month - 1, 1)),
-      end: endOfDay(endOfMonth(new Date(+year, +month - 1, 1))),
-    }
+    const filters = PeriodHelper.fromYYYYMM(period)
     const mappedData = await Promise.all([
       // searchProtection_pss
       api.kobo.typedAnswers.searchProtection_groupSession({filters}).then(ActivityInfoProtectionMapper.mapGroupSession(period)),
@@ -54,11 +54,7 @@ export const AiProtectionGeneral = () => {
     // const form: (AiProtectionGeneralType.Data & {
     //   answer: any[]
     // })[] = []
-    const form: {
-      params: AiTypeProtectionRmm.FormParams
-      answers: any[]
-      request: ActiviftyInfoRecords
-    }[] = []
+    const form: AiProtectionGeneralBundle[] = []
     let i = 0
     Utils.groupBy({
       data: mappedData,
@@ -111,9 +107,9 @@ export const AiProtectionGeneral = () => {
           })
         }
         form.push({
-          params: activity,
-          request: AiTypeProtectionRmm.makeForm(activity, period, i++),
-          answers: grouped.map(_ => _.answer),
+          activity: activity,
+          requestBody: AiTypeProtectionRmm.makeForm(activity, period, i++),
+          data: grouped.map(_ => _.answer),
         })
       },
     })
@@ -134,20 +130,20 @@ export const AiProtectionGeneral = () => {
   }, [period])
 
   const flatData = useMemo(() => fetcher.entity?.flatMap(d => {
-    return d.params.subActivities.map(a => {
+    return d.activity.subActivities.map(a => {
       return {
-        id: d.request.changes[0].recordId,
-        Oblast: d.params.Oblast,
-        Raion: d.params.Raion,
-        Hromada: d.params.Hromada,
-        'Plan Code': d.params['Plan Code'],
+        id: d.requestBody.changes[0].recordId,
+        Oblast: d.activity.Oblast,
+        Raion: d.activity.Raion,
+        Hromada: d.activity.Hromada,
+        'Plan Code': d.activity['Plan Code'],
         ...a,
       }
     })
   }), [fetcher.entity])
 
   const indexActivity = useMemo(() => {
-    const gb = seq(fetcher.entity)?.groupBy(_ => _.request.changes[0].recordId)
+    const gb = seq(fetcher.entity)?.groupBy(_ => _.requestBody.changes[0].recordId)
     return new Enum(gb).transform((k, v) => {
       if (v.length !== 1) throw new Error('Should contains 1 request by ID.')
       return [k, v[0]]
@@ -165,7 +161,7 @@ export const AiProtectionGeneral = () => {
               <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
-                _submit.call('all', fetcher.entity.map(_ => _.request)).catch(toastHttpError)
+                _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </AaBtn>
@@ -175,21 +171,21 @@ export const AiProtectionGeneral = () => {
           data={flatData}
           columns={[
             {
-              width: 150,
+              width: 120,
               id: 'actions',
               renderExport: false,
               render: _ => {
                 return (
                   <>
-                    <AAIconBtn
-                      disabled={!_.Hromada} color="primary"
+                    <AiSendBtn
+                      disabled={!_.Hromada}
                       onClick={() => {
-                        _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
+                        _submit.call(_.id, [indexActivity[_.id]!.requestBody]).catch(toastHttpError)
                       }}
-                    >send</AAIconBtn>
-                    <AIViewAnswers answers={indexActivity[_.id]!.answers}/>
-                    <AIPreviewActivity activity={indexActivity[_.id]!.params}/>
-                    <AIPreviewRequest request={indexActivity[_.id]!.request}/>
+                    />
+                    <AiViewAnswers answers={indexActivity[_.id]!.data}/>
+                    <AiPreviewActivity activity={indexActivity[_.id]!.activity}/>
+                    <AiPreviewRequest request={indexActivity[_.id]!.requestBody}/>
                   </>
                 )
               }
@@ -200,9 +196,9 @@ export const AiProtectionGeneral = () => {
               head: 'ActivityInfo ID',
               render: _ => _.id,
             },
-            {head: 'Oblast', id: 'Oblast', type: 'string', render: _ => _.Oblast},
-            {head: 'Raion', id: 'Raion', type: 'string', render: _ => _.Raion},
-            {head: 'Hromada', id: 'Hromada', type: 'string', render: _ => _.Hromada},
+            {head: 'Oblast', id: 'Oblast', type: 'select_one', render: _ => _.Oblast},
+            {head: 'Raion', id: 'Raion', type: 'select_one', render: _ => _.Raion},
+            {head: 'Hromada', id: 'Hromada', type: 'select_one', render: _ => _.Hromada},
             {head: 'Plan Code', id: 'Plan Code', type: 'string', render: _ => _['Plan Code']},
             {head: 'Population Group', id: 'Population Group', type: 'string', render: _ => _['Population Group']},
             {

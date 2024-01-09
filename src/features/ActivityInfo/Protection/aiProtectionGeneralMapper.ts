@@ -11,17 +11,15 @@ import Gender = Person.Gender
 import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 
 const disaggregatePersons = (persons: Person.Person[]) => {
-  const personsDefined = seq(persons)
-  const children = personsDefined.filter(_ => _.age && _.age < 18)
-  const adults = personsDefined.filter(_ => !_.age || _.age >= 18 && !Person.isElderly(_.age))
-  const elderly = personsDefined.filter(_ => _.age && Person.isElderly(_.age))
+  const personsDefined = persons.filter(_ => !!_.gender && !!_.age)
+  const disaggregation = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(personsDefined)
   return {
-    'Adult Men': adults.count(_ => _.gender === 'Male'),
-    'Adult Women': adults.count(_ => _.gender !== 'Male'),
-    'Boys': children.count(_ => _.gender === 'Male'),
-    'Girls': children.count(_ => _.gender !== 'Male'),
-    'Elderly Men': elderly.count(_ => _.gender === 'Male'),
-    'Elderly Women': elderly.count(_ => _.gender !== 'Male'),
+    'Adult Men': disaggregation['18 - 59'].Male,
+    'Adult Women': disaggregation['18 - 59'].Female,
+    'Boys': disaggregation['0 - 17'].Male,
+    'Girls': disaggregation['0 - 17'].Female,
+    'Elderly Men': disaggregation['60+'].Male,
+    'Elderly Women': disaggregation['60+'].Female,
     'Total Individuals Reached': personsDefined.length,
   }
 }

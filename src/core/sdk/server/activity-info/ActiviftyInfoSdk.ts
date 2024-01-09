@@ -1,6 +1,16 @@
 import {ApiClient} from '../ApiClient'
 import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
+import {sub} from 'date-fns'
+
+interface ActivityInfoRequest {
+  activityIdPrefix: string
+  activity: any
+  activityYYYYMM: string
+  activityIndex: number
+  formId: string
+  parentRecordId?: string
+}
 
 export class ActivityInfoSdk {
   constructor(private client: ApiClient) {
@@ -10,26 +20,62 @@ export class ActivityInfoSdk {
     mpca: 'cxeirf9ldwx90rs6'
   }
 
-  static readonly makeRecordRequest = ({
+  static readonly makeRecordRequest = (params: ActivityInfoRequest): ActiviftyInfoRecords => {
+    return {
+      'changes': [ActivityInfoSdk.makeRecordRequestContent(params)]
+    }
+  }
+
+  static readonly makeRecordRequests = ({
+    activityIdPrefix,
+    activity,
+    activityYYYYMM,
+    activityIndex,
+    formId,
+    parentRecordId,
+    subformId,
+    subActivities,
+  }: ActivityInfoRequest & {
+    subformId: string,
+    subActivities: any[]
+  }) => {
+    const parentRequest = ActivityInfoSdk.makeRecordRequestContent({
+      activityIdPrefix,
+      activity,
+      activityYYYYMM,
+      activityIndex,
+      formId,
+      parentRecordId,
+    })
+    return {
+      'changes': [
+        parentRequest,
+        ...subActivities.map((_, i) =>
+          ActivityInfoSdk.makeRecordRequestContent({
+            activity: _,
+            activityIndex: i,
+            activityYYYYMM,
+            activityIdPrefix: activityIdPrefix + 'i' + ('' + i).padStart(3, '0'),
+            formId: subformId,
+            parentRecordId: parentRequest.recordId,
+          }))
+      ]
+    }
+  }
+
+  private static readonly makeRecordRequestContent = ({
     activityIdPrefix,
     activity,
     activityIndex,
     activityYYYYMM = '',
     formId,
-  }: {
-    activityIdPrefix: string
-    activity: any
-    activityYYYYMM: string
-    activityIndex: number
-    formId: string
-  }): ActiviftyInfoRecords => {
+    parentRecordId,
+  }: ActivityInfoRequest) => {
     return {
-      'changes': [{
-        'formId': formId,
-        'recordId': activityIdPrefix + activityYYYYMM + ('' + activityIndex).padStart(3, '0'),
-        'parentRecordId': null,
-        'fields': activity
-      }]
+      'formId': formId,
+      'recordId': activityIdPrefix + activityYYYYMM + ('' + activityIndex).padStart(3, '0'),
+      'parentRecordId': parentRecordId ?? null,
+      'fields': activity
     }
   }
 

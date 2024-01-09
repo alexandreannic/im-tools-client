@@ -27,7 +27,7 @@ export const AiProtectionGeneral = () => {
   const [selectedOblast, setSelectedOblast] = useState<string | undefined>()
 
   const request = (period: string) => {
-    const filters = period === '2023-04' ? undefined : PeriodHelper.fromyyyMM(period)
+    const filters = period === '2023-04' ? undefined : PeriodHelper.fromYYYYMM(period)
     return api.kobo.typedAnswers.searchProtection_Hhs2({filters}).then(_ => seq(_.data.map(enrichProtHHS_2_1))).then(res => {
       return res
         .filter(_ => {
@@ -209,7 +209,7 @@ const _ActivityInfo = ({
                         <Icon>send</Icon>
                       </AaBtn>
                       <ActivityInfoActions
-                        answers={a.rows}
+                        data={a.rows}
                         activity={a.activity}
                         requestBody={a.request}
                       />

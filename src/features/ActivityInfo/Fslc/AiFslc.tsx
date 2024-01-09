@@ -9,8 +9,7 @@ import {PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest, AIViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
-import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
+import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
@@ -24,7 +23,7 @@ export const AiFslc = () => {
   const {m} = useI18n()
 
   useEffect(() => {
-    fetcher.fetch({}, PeriodHelper.fromyyyMM(period))
+    fetcher.fetch({}, PeriodHelper.fromYYYYMM(period))
   }, [period])
 
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
@@ -46,7 +45,7 @@ export const AiFslc = () => {
                 sx={{ml: 'auto'}}
                 onClick={() => {
                   if (!fetcher.entity) return
-                  _submit.call('all', fetcher.entity.map(_ => _.request)).catch(toastHttpError)
+                  _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
                 }}
               >
                 {m.submitAll}
@@ -55,22 +54,22 @@ export const AiFslc = () => {
           }
           defaultLimit={100} id="ai-shelter" data={fetcher.entity} loading={fetcher.loading} columns={[
           {
-            id: 'actions', renderExport: false, width: 160, head: '', render: _ => (
+            id: 'actions', renderExport: false, width: 120, head: '', render: _ => (
               <>
-                <AAIconBtn
-                  disabled={!_.activity.Hromada} color="primary"
+                <AiSendBtn
+                  disabled={!_.activity.Hromada}
                   onClick={() => {
                     // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
                   }}
-                >send</AAIconBtn>
-                <AIViewAnswers answers={_.all}/>
-                <AIPreviewActivity activity={_.activity}/>
-                <AIPreviewRequest request={_.request}/>
+                />
+                <AiViewAnswers answers={_.data}/>
+                <AiPreviewActivity activity={_.activity}/>
+                <AiPreviewRequest request={_.requestBody}/>
               </>
             )
           },
           {type: 'number', id: 'lgth', head: 'LENGTH', render: row => (row.activity as any).length},
-          {type: 'select_one', id: 'ai-id', head: 'Record ID', render: row => row.request.changes[0].recordId},
+          {type: 'select_one', id: 'ai-id', head: 'Record ID', render: row => row.requestBody.changes[0].recordId},
           {type: 'select_one', id: 'Project (FSLC-Updated)', head: 'Project (FSLC-Updated)', render: row => row.activity['Project (FSLC-Updated)']},
           {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},
           {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row.activity['Raion']},

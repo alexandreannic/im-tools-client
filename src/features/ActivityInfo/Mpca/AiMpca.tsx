@@ -9,7 +9,7 @@ import {AiTypeMpcaRmm} from '@/features/ActivityInfo/Mpca/AiMpcaInterface'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AIPreviewActivity, AIPreviewRequest} from '@/features/ActivityInfo/shared/ActivityInfoActions'
+import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {Box} from '@mui/material'
@@ -20,6 +20,13 @@ import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
+import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+
+type AiMpcaBundle = AiBundle<AiTypeMpcaRmm.Type> & {
+  // Properties not asked in the AI form
+  oblast?: string
+  raion?: string
+}
 
 export const AiMpca = () => {
   const {api, conf} = useAppSettings()
@@ -39,10 +46,12 @@ export const AiMpca = () => {
     }
 
     return api.mpca.search({filters}).then(res => {
-      const mapped: (AiTypeMpcaRmm.Type & {
-        oblast?: string,
-        raion?: string
-      })[] = []
+      const mapped: AiMpcaBundle[] = []
+      let i = 0
+      // const mapped: (AiTypeMpcaRmm.Type & {
+      //   oblast?: string,
+      //   raion?: string
+      // })[] = []
       Utils.groupBy({
         data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
         groups: [
@@ -59,44 +68,57 @@ export const AiMpca = () => {
           },
         ],
         finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
-          const res = Person.groupByGenderAndGroup(Person.ageGroup.Quick)(group.flatMap(_ => _.persons).compact())
-          mapped.push({
-            oblast: oblast === '' ? undefined : oblast,
-            raion,
+          const disag = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(group.flatMap(_ => _.persons).compact())
+          const activity = {
             Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
             'Population Group': populationGroup,
             'Amount of cash in USD distributed through multi-purpose cash assistance': Math.round(group.sum(_ => _.amountUahFinal ?? 0) * conf.uahToUsd),
-            Girls: res['0 - 17']?.Female,
-            Boys: res['0 - 17']?.Male,
-            'Adult Women': res['18 - 49']?.Female,
-            'Adult Men': res['18 - 49']?.Male,
-            'Elderly Women': res['50+']?.Female,
-            'Elderly Men': res['50+']?.Male,
+            Girls: disag['0 - 17']?.Female,
+            Boys: disag['0 - 17']?.Male,
+            'Adult Women': disag['18 - 59']?.Female,
+            'Adult Men': disag['18 - 59']?.Male,
+            'Elderly Women': disag['60+']?.Female,
+            'Elderly Men': disag['60+']?.Male,
             'Partner Organization': 'Danish Refugee Council',
             'Reporting Month': period,
             'Total # of people assisted with multi-purpose cash assistance': Utils.add(
-              res['0 - 17']?.Female,
-              res['0 - 17']?.Male,
-              res['18 - 49']?.Female,
-              res['18 - 49']?.Male,
-              res['50+']?.Female,
-              res['50+']?.Male,
+              disag['0 - 17']?.Female,
+              disag['0 - 17']?.Male,
+              disag['18 - 59']?.Female,
+              disag['18 - 59']?.Male,
+              disag['60+']?.Female,
+              disag['60+']?.Male,
             ),
             Durations: 'Three months',
             'People with disability': 0,
+          } as const
+          mapped.push({
+            data: group,
+            oblast: oblast === '' ? undefined : oblast,
+            raion,
+            activity,
+            requestBody: ActivityInfoSdk.makeRecordRequest({
+              activityIdPrefix: 'drcmpca',
+              activity: AiTypeMpcaRmm.map(activity),
+              activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
+              activityIndex: i++,
+              formId: ActivityInfoSdk.formId.mpca,
+            })
           })
         },
       })
-      return mapped.map((_, i) => ({
-        ..._,
-        req: ActivityInfoSdk.makeRecordRequest({
-          activityIdPrefix: 'drcmpca',
-          activity: AiTypeMpcaRmm.map(_),
-          activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
-          activityIndex: i,
-          formId: ActivityInfoSdk.formId.mpca,
-        })
-      }))
+      return mapped
+      // return mapped.map((_, i) => ({
+      //   ..._,
+      //   req: ActivityInfoSdk.makeRecordRequest({
+      //     activityIdPrefix: 'drcmpca',
+      //     activity: AiTypeMpcaRmm.map(_),
+      //     activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
+      //     activityIndex: i,
+      //     formId: ActivityInfoSdk.formId.mpca,
+      //   })
+      // })
+      // )
     })
   })
 
@@ -117,7 +139,7 @@ export const AiMpca = () => {
               </Txt>
               <AaBtn icon="send" variant="contained" loading={_submit.anyLoading} sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
-                _submit.call(-1, fetcher.entity.filter(_ => !!_.Hromada).map((_, i) => _.req)).catch(toastHttpError)
+                _submit.call(-1, fetcher.entity.filter(_ => !!_.activity.Hromada).map((_, i) => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </AaBtn>
@@ -126,17 +148,16 @@ export const AiMpca = () => {
           loading={fetcher.loading}
           data={fetcher.entity}
           columns={[
-            // {id: 'oblast', type: 'string', render: _ => _.oblast},
-            // {id: 'raion', type: 'string', render: _ => _.raion},
             {
-              width: 120,
+              width: 130,
               id: 'actions',
               render: _ => {
                 return (
                   <>
-                    <AAIconBtn disabled={!_.Hromada} color="primary">send</AAIconBtn>
-                    <AIPreviewActivity activity={_}/>
-                    <AIPreviewRequest request={_.req}/>
+                    <AiSendBtn disabled={!_.activity.Hromada}/>
+                    <AiViewAnswers answers={_.data}/>
+                    <AiPreviewActivity activity={_.activity}/>
+                    <AiPreviewRequest request={_.requestBody}/>
                   </>
                 )
               }
@@ -145,29 +166,29 @@ export const AiMpca = () => {
               id: 'id',
               type: 'string',
               head: 'Record ID',
-              render: _ => _.req.changes[0].recordId,
+              render: _ => _.requestBody.changes[0].recordId,
             },
             {head: 'oblast', id: 'oblast', type: 'string', render: _ => _.oblast},
             {head: 'raion', id: 'raion', type: 'string', render: _ => _.raion},
-            {head: 'Hromada', id: 'Hromada', type: 'string', render: _ => _.Hromada},
-            {head: 'Partner Organization', id: 'Partner Organization', type: 'string', render: _ => _['Partner Organization']},
-            {head: 'Population Group', id: 'Population Group', type: 'string', render: _ => _['Population Group']},
+            {head: 'Hromada', id: 'Hromada', type: 'string', render: _ => _.activity.Hromada},
+            {head: 'Partner Organization', id: 'Partner Organization', type: 'string', render: _ => _.activity['Partner Organization']},
+            {head: 'Population Group', id: 'Population Group', type: 'string', render: _ => _.activity['Population Group']},
             {
               head: 'Amount (USD)',
               id: 'Amount USD',
               type: 'number',
-              renderValue: _ => _['Amount of cash in USD distributed through multi-purpose cash assistance'],
-              render: _ => formatLargeNumber(_['Amount of cash in USD distributed through multi-purpose cash assistance'], {maximumFractionDigits: 0})
+              renderValue: _ => _.activity['Amount of cash in USD distributed through multi-purpose cash assistance'],
+              render: _ => formatLargeNumber(_.activity['Amount of cash in USD distributed through multi-purpose cash assistance'], {maximumFractionDigits: 0})
             },
-            {width: 0, head: 'Durations', id: 'Durations', type: 'number', render: _ => _['Durations']},
-            {width: 0, head: 'Total', id: 'Total', type: 'number', render: _ => formatLargeNumber(_['Total # of people assisted with multi-purpose cash assistance'])},
-            {width: 0, head: 'Adult Men', id: 'Adult Men', type: 'number', render: _ => formatLargeNumber(_['Adult Men'])},
-            {width: 0, head: 'Adult Women', id: 'Adult Women', type: 'number', render: _ => formatLargeNumber(_['Adult Women'])},
-            {width: 0, head: 'Elderly Men', id: 'Elderly Men', type: 'number', render: _ => formatLargeNumber(_['Elderly Men'])},
-            {width: 0, head: 'Elderly Women', id: 'Elderly Women', type: 'number', render: _ => formatLargeNumber(_['Elderly Women'])},
-            {width: 0, head: 'Boys', id: 'Boys', type: 'number', render: _ => formatLargeNumber(_['Boys'])},
-            {width: 0, head: 'Girls', id: 'Girls', type: 'number', render: _ => formatLargeNumber(_['Girls'])},
-            {width: 0, head: 'People with disability', id: 'People with disability', type: 'number', render: _ => formatLargeNumber(_['People with disability'])},
+            {width: 0, head: 'Durations', id: 'Durations', type: 'number', render: _ => _.activity['Durations']},
+            {width: 0, head: 'Total', id: 'Total', type: 'number', render: _ => formatLargeNumber(_.activity['Total # of people assisted with multi-purpose cash assistance'])},
+            {width: 0, head: 'Adult Men', id: 'Adult Men', type: 'number', render: _ => formatLargeNumber(_.activity['Adult Men'])},
+            {width: 0, head: 'Adult Women', id: 'Adult Women', type: 'number', render: _ => formatLargeNumber(_.activity['Adult Women'])},
+            {width: 0, head: 'Elderly Men', id: 'Elderly Men', type: 'number', render: _ => formatLargeNumber(_.activity['Elderly Men'])},
+            {width: 0, head: 'Elderly Women', id: 'Elderly Women', type: 'number', render: _ => formatLargeNumber(_.activity['Elderly Women'])},
+            {width: 0, head: 'Boys', id: 'Boys', type: 'number', render: _ => formatLargeNumber(_.activity['Boys'])},
+            {width: 0, head: 'Girls', id: 'Girls', type: 'number', render: _ => formatLargeNumber(_.activity['Girls'])},
+            {width: 0, head: 'People with disability', id: 'People with disability', type: 'number', render: _ => formatLargeNumber(_.activity['People with disability'])},
           ]}
         />
       </Panel>
