@@ -85,7 +85,7 @@ export const AiGbv = () => {
                     'gcva': `GBV survivors and those at risk supported with cash/voucher assistance.`,
                     'glac': `GBV survivors and those at risk supported with legal assistance and counselling.`,
                     'other': `Other`
-                  }, () => 'TODO'),
+                  }, () => 'TODO') as any,
                   'Population Group': fnSwitch(status!, {
                     idp: 'IDPs',
                     'non-displaced': 'Non-Displaced',
