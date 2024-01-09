@@ -19,10 +19,11 @@ export const AiSnfi = () => {
   const {api} = useAppSettings()
   const {toastHttpError} = useAaToast()
   const fetcher = useFetcher((p: Period) => {
-    return Promise.all([
+    const res = Promise.all([
       AiShelterData.reqRepairs(api)(p),
       AiShelterData.reqEsk(api)(p),
-    ]).then(_ => _.reduce((acc, r) => [...acc, r]), [])
+    ]).then(_ => _.reduce((acc, r) => [...acc, ...r], []))
+    return res
   })
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {m} = useI18n()
@@ -60,47 +61,52 @@ export const AiSnfi = () => {
                 sx={{ml: 'auto'}}
                 onClick={() => {
                   if (!fetcher.entity) return
-                  _submit.call('all', fetcher.entity.map(_ => _.request)).catch(toastHttpError)
+                  _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
                 }}
               >
                 {m.submitAll}
               </AaBtn>
             </>
           }
-          defaultLimit={100} id="ai-shelter" data={fetcher.entity} loading={fetcher.loading} columns={[
-          {
-            id: 'actions', width: 160, head: '', render: _ => (
-              <>
-                <AAIconBtn
-                  disabled={!_.activity.Hromada} color="primary"
-                  onClick={() => {
-                    // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
-                  }}
-                >send</AAIconBtn>
-                <AIViewAnswers answers={_.all}/>
-                <AIPreviewActivity activity={_.activity}/>
-                <AIPreviewRequest request={_.request}/>
-              </>
-            )
-          },
-          {type: 'select_one', id: 'Report to a planned project', head: 'Report to a planned project', render: row => row.activity['Report to a planned project']},
-          {type: 'select_one', id: 'Plan Code', head: 'Plan Code', render: row => row.activity['Plan Code']},
-          {type: 'select_one', id: 'SNFI indictors', head: 'SNFI indictors', render: row => row.activity['SNFI indictors']},
-          {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},
-          {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row.activity['Raion']},
-          {type: 'select_one', id: 'Hromada', head: 'Hromada', render: row => row.activity['Hromada']},
-          {type: 'select_one', id: 'Implementation status', head: 'Implementation status', render: row => row.activity['Implementation status']},
-          {type: 'select_one', id: 'Population Group', head: 'Population Group', render: row => row.activity['Population Group']},
-          {type: 'number', id: 'Indicator Value (HHs reached, buildings, etc.)', head: 'Indicator Value (HHs reached, buildings, etc.)', render: row => row.activity['Indicator Value (HHs reached, buildings, etc.)']},
-          {type: 'number', id: '# Individuals Reached', head: '# Individuals Reached', render: row => row.activity['# Individuals Reached']},
-          {type: 'number', id: 'Girls (0-17)', head: 'Girls (0-17)', render: row => row.activity['Girls (0-17)']},
-          {type: 'number', id: 'Boys (0-17)', head: 'Boys (0-17)', render: row => row.activity['Boys (0-17)']},
-          {type: 'number', id: 'Women (18-59)', head: 'Women (18-59)', render: row => row.activity['Women (18-59)']},
-          {type: 'number', id: 'Men (18-59)', head: 'Men (18-59)', render: row => row.activity['Men (18-59)']},
-          {type: 'number', id: 'Elderly Women (60+)', head: 'Elderly Women (60+)', render: row => row.activity['Elderly Women (60+)']},
-          {type: 'number', id: 'Elderly Men (60+)', head: 'Elderly Men (60+)', render: row => row.activity['Elderly Men (60+)']},
-          {type: 'number', id: 'People with disability', head: 'People with disability', render: row => row.activity['People with disability']},
-        ]}/>
+          defaultLimit={100}
+          id="ai-shelter"
+          data={fetcher.entity}
+          loading={fetcher.loading}
+          columns={[
+            {
+              id: 'actions', width: 160, head: '', render: _ => (
+                <>
+                  <AAIconBtn
+                    disabled={!_.activity.Hromada} color="primary"
+                    onClick={() => {
+                      // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
+                    }}
+                  >send</AAIconBtn>
+                  <AIViewAnswers answers={_.all}/>
+                  <AIPreviewActivity activity={_.activity}/>
+                  <AIPreviewRequest request={_.request}/>
+                </>
+              )
+            },
+            {type: 'select_one', id: 'Report to a planned project', head: 'Report to a planned project', render: row => row.activity['Report to a planned project']},
+            {type: 'select_one', id: 'Plan Code', head: 'Plan Code', render: row => row.activity['Plan Code']},
+            {type: 'select_one', id: 'SNFI indictors', head: 'SNFI indictors', render: row => row.activity['SNFI indictors']},
+            {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},
+            {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row.activity['Raion']},
+            {type: 'select_one', id: 'Hromada', head: 'Hromada', render: row => row.activity['Hromada']},
+            {type: 'select_one', id: 'Implementation status', head: 'Implementation status', render: row => row.activity['Implementation status']},
+            {type: 'select_one', id: 'Population Group', head: 'Population Group', render: row => row.activity['Population Group']},
+            {type: 'number', id: 'Indicator Value (HHs reached, buildings, etc.)', head: 'Indicator Value (HHs reached, buildings, etc.)', render: row => row.activity['Indicator Value (HHs reached, buildings, etc.)']},
+            {type: 'number', id: '# Individuals Reached', head: '# Individuals Reached', render: row => row.activity['# Individuals Reached']},
+            {type: 'number', id: 'Girls (0-17)', head: 'Girls (0-17)', render: row => row.activity['Girls (0-17)']},
+            {type: 'number', id: 'Boys (0-17)', head: 'Boys (0-17)', render: row => row.activity['Boys (0-17)']},
+            {type: 'number', id: 'Women (18-59)', head: 'Women (18-59)', render: row => row.activity['Women (18-59)']},
+            {type: 'number', id: 'Men (18-59)', head: 'Men (18-59)', render: row => row.activity['Men (18-59)']},
+            {type: 'number', id: 'Elderly Women (60+)', head: 'Elderly Women (60+)', render: row => row.activity['Elderly Women (60+)']},
+            {type: 'number', id: 'Elderly Men (60+)', head: 'Elderly Men (60+)', render: row => row.activity['Elderly Men (60+)']},
+            {type: 'number', id: 'People with disability', head: 'People with disability', render: row => row.activity['People with disability']},
+          ]}
+        />
       </Panel>
     </Page>
   )

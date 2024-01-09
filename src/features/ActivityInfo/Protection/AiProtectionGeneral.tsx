@@ -196,9 +196,9 @@ export const AiProtectionGeneral = () => {
               head: 'ActivityInfo ID',
               render: _ => _.id,
             },
-            {head: 'Oblast', id: 'Oblast', type: 'string', render: _ => _.Oblast},
-            {head: 'Raion', id: 'Raion', type: 'string', render: _ => _.Raion},
-            {head: 'Hromada', id: 'Hromada', type: 'string', render: _ => _.Hromada},
+            {head: 'Oblast', id: 'Oblast', type: 'select_one', render: _ => _.Oblast},
+            {head: 'Raion', id: 'Raion', type: 'select_one', render: _ => _.Raion},
+            {head: 'Hromada', id: 'Hromada', type: 'select_one', render: _ => _.Hromada},
             {head: 'Plan Code', id: 'Plan Code', type: 'string', render: _ => _['Plan Code']},
             {head: 'Population Group', id: 'Population Group', type: 'string', render: _ => _['Population Group']},
             {

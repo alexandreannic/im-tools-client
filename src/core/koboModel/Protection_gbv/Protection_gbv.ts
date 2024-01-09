@@ -29,7 +29,7 @@ export interface Protection_gbv {
   // [text] If "Other", please specify
   location_other: string | undefined,
   // [select_multiple] Which activity have you conducted?
-  activity: undefined | Opt<'activity'>[],
+  activity: undefined | Opt<'activity'>,
   // [text] If "Other", please specify
   activity_other: string | undefined,
   // [select_one] Are there new beneficiaries in the group activity?

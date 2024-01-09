@@ -1,25 +1,26 @@
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 import {DrcProject} from '@/core/drcUa'
-import {Period} from '@/core/type'
+import {Period, Person} from '@/core/type'
 import {fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
-import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Utils} from '@/utils/utils'
 import {ShelterProgress, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {AiFslcBundle} from '@/features/ActivityInfo/Fslc/aiFslcData'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+import Gender = Person.Gender
 
 export type AiSnfiBundle = AiBundle
 
 export class AiShelterData {
 
-  static readonly reqEsk = (api: ApiSdk) => (period: Period) => {
+  static readonly reqEsk = (api: ApiSdk) => (period: Period): Promise<AiSnfiBundle[]> => {
     return api.kobo.typedAnswers.searchBn_Re({filters: period})
       .then(_ => _.data.filter(_ => _.back_prog_type?.find(p => p.includes('esk'))).map(_ => ({..._, ...getAiLocation(_)})))
       .then(data => {
+        const formatted: AiSnfiBundle[] = []
+        let index = 0
         Utils.groupBy({
           data,
           groups: [
@@ -45,7 +46,18 @@ export class AiShelterData {
 
           ],
           finalTransform: (grouped, [project, oblast, raion, hromada, status]) => {
-            const persons = grouped.flatMap(_ => _.hh_char_hh_det ?? []).compactBy('hh_char_hh_det_age').compactBy('hh_char_hh_det_gender')
+            const persons: Person.Person[] = grouped
+              .flatMap(_ => _.hh_char_hh_det ?? [])
+              .compactBy('hh_char_hh_det_age')
+              .compactBy('hh_char_hh_det_gender')
+              .map(_ => ({
+                age: _.hh_char_hh_det_age,
+                gender: fnSwitch(_.hh_char_hh_det_gender!, {
+                  female: Gender.Female,
+                  male: Gender.Male
+                })
+              }))
+            const disaggregation = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(persons)
             const activity: AiSnfiInterface.Type = {
               'SNFI indictors': 'emergency',
               'Implementing Partner': 'Danish Refugee Council',
@@ -61,27 +73,24 @@ export class AiShelterData {
               'Population Group': status,
               'Indicator Value (HHs reached, buildings, etc.)': grouped.length,
               // '# Individuals Reached': persons.length,
-              'Girls (0-17)': persons.count(_ => _.hh_char_hh_det_age! < 18 && _.hh_char_hh_det_gender === 'female'),
-              'Boys (0-17)': persons.count(_ => _.hh_char_hh_det_age! < 18 && _.hh_char_hh_det_gender === 'male'),
-              'Women (18-59)': persons.count(_ => _.hh_char_hh_det_age! >= 18 && _.hh_char_hh_det_age! < 60 && _.hh_char_hh_det_gender === 'female'),
-              'Men (18-59)': persons.count(_ => _.hh_char_hh_det_age! >= 18 && _.hh_char_hh_det_age! < 60 && _.hh_char_hh_det_gender === 'male'),
-              'Elderly Women (60+)': persons.count(_ => _.hh_char_hh_det_age! >= 60 && _.hh_char_hh_det_gender === 'female'),
-              'Elderly Men (60+)': persons.count(_ => _.hh_char_hh_det_age! >= 60 && _.hh_char_hh_det_gender === 'male'),
+              'Girls (0-17)': disaggregation['0 - 17'].Female,
+              'Boys (0-17)': disaggregation['0 - 17'].Male,
+              'Women (18-59)': disaggregation['18 - 59'].Female,
+              'Men (18-59)': disaggregation['18 - 59'].Male,
+              'Elderly Women (60+)': disaggregation['60+'].Female,
+              'Elderly Men (60+)': disaggregation['60+'].Male,
               'People with disability': 0,
             }
           }
         })
+        return formatted
       })
   }
 
   static readonly reqRepairs = (api: ApiSdk) => (period: Period) => api.shelter.search(period).then(_ => seq(_.data).compactBy('nta').compactBy('ta').map(x => ({
     ...x, ...getAiLocation(x.nta)
   }))).then(res => {
-    const formatted: {
-      all: ShelterEntity[],
-      activity: AiSnfiInterface.Type,
-      request: any,
-    }[] = []
+    const formatted: AiSnfiBundle[] = []
     let index = 0
     Utils.groupBy({
       data: res,
@@ -142,9 +151,9 @@ export class AiShelterData {
           'Indicator Value (HHs reached, buildings, etc.)': grouped.sum(_ => _.nta?.ben_det_hh_size ?? 0),
         }
         formatted.push({
-          all: grouped.map(_ => _.nta),
+          data: grouped.map(_ => _.nta),
           activity,
-          request: ActivityInfoSdk.makeRecordRequest({
+          requestBody: ActivityInfoSdk.makeRecordRequest({
             activity: AiSnfiInterface.map(activity),
             formId: 'ckrgu2uldtxbgbg1h',
             activityYYYYMM: format(period.start, 'yyyyMM'),

@@ -8,6 +8,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {AiSnfi} from '@/features/ActivityInfo/Snfi/AiSnfi'
 import {AiProtectionGeneral} from '@/features/ActivityInfo/Protection/AiProtectionGeneral'
 import {AiFslc} from '@/features/ActivityInfo/Fslc/AiFslc'
+import {AiGbv} from '@/features/ActivityInfo/Gbv/AiGbv'
 
 export const activityInfoFormIds = {
   fslc: 'csgkp3xlg0yezpb8'
@@ -26,6 +27,12 @@ const activities = {
     name: 'Protection',
     path: '/protection_general',
     componnent: <AiProtectionGeneral/>,
+  },
+  'gbv': {
+    // id: 'nfi',
+    name: 'GBV',
+    path: '/gbc',
+    componnent: <AiGbv/>,
   },
   'nfi': {
     // id: 'nfi',

@@ -130,7 +130,7 @@ export class MpcaHelper {
       [DrcOffice.Dnipro]: 29808000,
       [DrcOffice.Kharkiv]: 29808000,
     },
-    [DrcProject['UKR-000xxx DANIDA']]: {
+    [DrcProject['UKR-000347 DANIDA']]: {
       [DrcOffice.Sumy]: 3240000,
       [DrcOffice.Dnipro]: 6480000,
       [DrcOffice.Kharkiv]: 6480000,
@@ -147,7 +147,7 @@ export class MpcaHelper {
     [DrcProject['UKR-000322 ECHO2']]: true,
     [DrcProject['UKR-000340 Augustinus Fonden']]: true,
     [DrcProject['UKR-000284 BHA']]: true,
-    [DrcProject['UKR-000xxx DANIDA']]: true,
+    [DrcProject['UKR-000347 DANIDA']]: true,
     [DrcProject['UKR-000341 Hoffmans & Husmans']]: true,
     [DrcProject['UKR-000298 Novo-Nordisk']]: true,
     [DrcProject['UKR-000309 OKF']]: true,

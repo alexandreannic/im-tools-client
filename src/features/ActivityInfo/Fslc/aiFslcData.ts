@@ -78,7 +78,7 @@ export class AiFslcData {
                 age: _.hh_char_hh_det_age
               }
             })
-            const desagreg = groupByGenderAndGroup(Person.ageGroup.Quick)(persons)
+            const desagreg = groupByGenderAndGroup(Person.ageGroup.UNHCR)(persons)
             const activity: AiTypeFslc.Type = {
               'Partner Organization': 'Danish Refugee Council',
               // 'Donor'?: '',
@@ -108,10 +108,10 @@ export class AiFslcData {
               'New unique Individuals Reached': grouped.sum(_ => _.ben_det_hh_size ?? 0),
               'Girls': desagreg['0 - 17']?.Female,
               'Boys': desagreg['0 - 17']?.Male,
-              'Adult Women': desagreg['18 - 49']?.Female,
-              'Adult Men': desagreg['18 - 49']?.Male,
-              'Elderly Women': desagreg['50+']?.Female,
-              'Elderly Men': desagreg['50+']?.Male,
+              'Adult Women': desagreg['18 - 59']?.Female,
+              'Adult Men': desagreg['18 - 59']?.Male,
+              'Elderly Women': desagreg['60+']?.Female,
+              'Elderly Men': desagreg['60+']?.Male,
               'People with Disability': grouped.sum(_ => _.hh_char_dis_select && _.hh_char_dis_select.includes('diff_none') ? 1 : 0),
               'Comments': ('Kobo IDs: ' + grouped.map(_ => _.id).join(',')).slice(0, 1000),
             }
