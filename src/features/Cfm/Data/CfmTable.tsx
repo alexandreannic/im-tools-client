@@ -368,6 +368,12 @@ export const CfmTable = ({}: any) => {
               render: _ => ctx.translateExternal.translateChoice('ben_det_hromada', _.ben_det_hromada),
             },
             {
+              type: 'string',
+              head: m.note,
+              id: 'note',
+              render: _ => _.tags?.notes
+            },
+            {
               id: 'actions',
               width: 95,
               align: 'center',

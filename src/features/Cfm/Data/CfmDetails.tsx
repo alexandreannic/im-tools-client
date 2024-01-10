@@ -43,12 +43,12 @@ export const CfmEntryRoute = () => {
   }
   return (
     <Page>
-      <CfmEntry entry={entry}/>
+      <CfmDetails entry={entry}/>
     </Page>
   )
 }
 
-export const CfmEntry = ({entry}: {
+export const CfmDetails = ({entry}: {
   entry: CfmData
 }) => {
   const {m, formatDateTime} = useI18n()

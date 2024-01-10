@@ -57,7 +57,7 @@ export class KoboMealCfmHelper {
       apprec_com: CfmDataPriority.Low,
       request_info: CfmDataPriority.Medium,
       request_assistance: CfmDataPriority.Medium,
-      non_s_feedback: CfmDataPriority.Low,
+      non_s_feedback: CfmDataPriority.Medium,
       sen_feedback: CfmDataPriority.High,
       coc: CfmDataPriority.High,
       violation_other: CfmDataPriority.High,

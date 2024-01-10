@@ -14,7 +14,7 @@ import {kobo, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {CfmEntryRoute} from '@/features/Cfm/Data/CfmEntry'
+import {CfmEntryRoute} from '@/features/Cfm/Data/CfmDetails'
 import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Box} from '@mui/material'
@@ -111,7 +111,7 @@ const FcmSidebar = () => {
             showValue
             title={m._cfm.openTicketsHigh}
             value={_stats.coc}
-            base={_stats.total ?? 1}
+            base={_stats.open ?? 1}
           />
         </Box>
         <KoboUkraineMap
