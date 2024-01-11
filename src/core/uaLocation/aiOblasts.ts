@@ -1,3 +1,5 @@
+export type AiOblast = keyof typeof aiOblasts
+
 export const aiOblasts = {
   'Autonomous Republic of Crimea_Автономна Республіка Крим': 'ciua21glebrkckb2',
   'Cherkaska_Черкаська': 'chvmygrlebrkckc3',

@@ -1,3 +1,5 @@
+export type AiHromadas = keyof typeof aiHromadas
+
 export const aiHromadas = {
   'Aromatnenska_UA0102003_Ароматненська': 'chagq9rlebstwse2',
   'Bakhchysaraiska_UA0102005_Бахчисарайська': 'cd64pz7lebstwsj3',

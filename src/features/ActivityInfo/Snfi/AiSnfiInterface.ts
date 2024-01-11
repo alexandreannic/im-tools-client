@@ -1,7 +1,6 @@
 import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {aiRaions} from '@/core/uaLocation/aiRaions'
 import {aiHromadas} from '@/core/uaLocation/aiHromadas'
-import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {DrcProject} from '@/core/drcUa'
 
 

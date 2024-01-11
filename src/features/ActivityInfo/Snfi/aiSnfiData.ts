@@ -1,36 +1,53 @@
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 import {DrcProject} from '@/core/drcUa'
-import {Period, Person} from '@/core/type'
-import {fnSwitch, seq} from '@alexandreannic/ts-utils'
-import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
+import {Period, PeriodHelper, Person} from '@/core/type'
+import {fnSwitch, RequiredProperty, Seq, seq} from '@alexandreannic/ts-utils'
+import {AiLocation, getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {Utils} from '@/utils/utils'
 import {ShelterProgress, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
+import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
+import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
 import Gender = Person.Gender
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
+import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 
-export type AiSnfiBundle = AiBundle
+export type AiSnfiBundle = Omit<AiBundle, 'data'> & {
+  nta?: KoboAnswer<Shelter_NTA>[]
+  ta?: KoboAnswer<Shelter_TA>[]
+  esk?: KoboAnswer<Bn_Re>[]
+}
 
 export class AiShelterData {
+
+  static readonly mapBnreDonor = (_?: keyof typeof Bn_ReOptions.back_donor) => {
+    if (!_) return
+    if (_.includes('uhf_')) return DrcProject['UKR-000314 UHF4']
+    if (_.includes('bha_')) return DrcProject['UKR-000345 BHA2']
+    if (_.includes('echo_')) return DrcProject['UKR-000322 ECHO2']
+    if (_.includes('okf_')) return DrcProject['UKR-000309 OKF']
+    if (_.includes('pool_')) return DrcProject['UKR-000342 Pooled Funds']
+    if (_.includes('sdc_')) return DrcProject['UKR-000330 SDC2']
+    if (_.includes('_danida')) return DrcProject['UKR-000347 DANIDA']
+    if (_.includes('uhf7_')) return DrcProject['UKR-000352 UHF7']
+  }
 
   static readonly reqEsk = (api: ApiSdk) => (period: Period): Promise<AiSnfiBundle[]> => {
     return api.kobo.typedAnswers.searchBn_Re({filters: period})
       .then(_ => _.data.filter(_ => _.back_prog_type?.find(p => p.includes('esk'))).map(_ => ({..._, ...getAiLocation(_)})))
       .then(data => {
-        const formatted: AiSnfiBundle[] = []
+        const bundle: AiSnfiBundle[] = []
         let index = 0
         Utils.groupBy({
           data,
           groups: [
             {
-              by: (_): DrcProject => {
-                if (_.donor_esk?.includes('uhf_')) return DrcProject['UKR-000314 UHF4']
-                return undefined as any
-                // if (!_.donor_esk) return
-                // if (_.donor_esk.includes('uhf_')) return AiShelterData.planCode['UKR-000314 UHF4']
-              }
+              by: (_): DrcProject => AiShelterData.mapBnreDonor(_.donor_esk ?? _.back_donor?.[0])!,
             },
             {by: _ => _.Oblast!},
             {by: _ => _.Raion!},
@@ -81,19 +98,38 @@ export class AiShelterData {
               'Elderly Men (60+)': disaggregation['60+'].Male,
               'People with disability': 0,
             }
+            bundle.push({
+              activity,
+              esk: grouped,
+              requestBody: ActivityInfoSdk.makeRecordRequest({
+                activity: AiSnfiInterface.map(activity),
+                formId: 'ckrgu2uldtxbgbg1h',
+                activityYYYYMM: format(period.start, 'yyyyMM'),
+                activityIdPrefix: 'drcesk',
+                activityIndex: index++,
+              })
+            })
+
           }
         })
-        return formatted
+        return bundle
       })
   }
 
-  static readonly reqRepairs = (api: ApiSdk) => (period: Period) => api.shelter.search(period).then(_ => seq(_.data).compactBy('nta').compactBy('ta').map(x => ({
+  static readonly reqRepairs = (api: ApiSdk) => (period: Period) => api.shelter.search().then(_ => seq(_.data).compactBy('nta').compactBy('ta').map(x => ({
     ...x, ...getAiLocation(x.nta)
   }))).then(res => {
+    return [
+      ...AiShelterData.mapRepair(period, 'Ongoing')(res.filter(_ => PeriodHelper.isDateIn(period, _.ta.submissionTime))),
+      ...AiShelterData.mapRepair(period, 'Complete')(res.filter(_ => PeriodHelper.isDateIn(period, _.ta.tags?.workDoneAt))),
+    ]
+  })
+
+  static readonly mapRepair = (period: Period, status: 'Complete' | 'Ongoing') => (data: Seq<AiLocation & RequiredProperty<ShelterEntity, 'ta' | 'nta'>>): AiSnfiBundle[] => {
     const formatted: AiSnfiBundle[] = []
     let index = 0
     Utils.groupBy({
-      data: res,
+      data: data,
       groups: [
         {by: _ => _.ta?.tags?.project!},
         {by: _ => _.Oblast!},
@@ -151,7 +187,8 @@ export class AiShelterData {
           'Indicator Value (HHs reached, buildings, etc.)': grouped.sum(_ => _.nta?.ben_det_hh_size ?? 0),
         }
         formatted.push({
-          data: grouped.map(_ => _.nta),
+          nta: grouped.map(_ => _.nta),
+          ta: grouped.map(_ => _.ta),
           activity,
           requestBody: ActivityInfoSdk.makeRecordRequest({
             activity: AiSnfiInterface.map(activity),
@@ -164,8 +201,9 @@ export class AiShelterData {
       },
     })
     return formatted
-  })
+  }
 }
+
 
 //
 // export const mapBnre = (api: ApiSdk) => {

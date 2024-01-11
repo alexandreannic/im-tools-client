@@ -14,6 +14,7 @@ import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
+import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 
 export const AiSnfi = () => {
   const {api} = useAppSettings()
@@ -74,7 +75,7 @@ export const AiSnfi = () => {
           loading={fetcher.loading}
           columns={[
             {
-              id: 'actions', width: 120, head: '', render: _ => (
+              id: 'actions', width: 150, head: '', render: _ => (
                 <>
                   <AiSendBtn
                     disabled={!_.activity.Hromada} color="primary"
@@ -82,14 +83,17 @@ export const AiSnfi = () => {
                       // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
                     }}
                   />
-                  <AiViewAnswers answers={_.data}/>
+                  {_.esk && <AiViewAnswers tooltip="esk" answers={_.esk}/>}
+                  {_.nta && <AiViewAnswers tooltip="nta" answers={_.nta}/>}
+                  {_.ta && <AiViewAnswers tooltip="ta" answers={_.ta}/>}
                   <AiPreviewActivity activity={_.activity}/>
                   <AiPreviewRequest request={_.requestBody}/>
                 </>
               )
             },
             {type: 'select_one', id: 'Report to a planned project', head: 'Report to a planned project', render: row => row.activity['Report to a planned project']},
-            {type: 'select_one', id: 'Plan Code', head: 'Plan Code', render: row => row.activity['Plan Code']},
+            {type: 'select_one', id: 'Project', head: 'Project', render: row => row.activity['Plan Code']},
+            {type: 'select_one', id: 'Plan Code', head: 'Plan Code ID', render: row => (AiSnfiInterface.options['Plan Code'] as any)[row.activity['Plan Code']]},
             {type: 'select_one', id: 'SNFI indictors', head: 'SNFI indictors', render: row => row.activity['SNFI indictors']},
             {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},
             {type: 'select_one', id: 'Raion', head: 'Raion', render: row => row.activity['Raion']},

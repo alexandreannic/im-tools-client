@@ -1,5 +1,5 @@
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
-import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {Oblast, OblastIndex, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {fnSwitch, PromiseReturn, seq} from '@alexandreannic/ts-utils'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {Person} from '@/core/type'
@@ -9,6 +9,9 @@ import {DrcProject} from '@/core/drcUa'
 import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import Gender = Person.Gender
 import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
+import {AiOblast} from '@/core/uaLocation/aiOblasts'
+import {AiRaions} from '@/core/uaLocation/aiRaions'
+import {AiHromadas} from '@/core/uaLocation/aiHromadas'
 
 const disaggregatePersons = (persons: Person.Person[]) => {
   const personsDefined = persons.filter(_ => !!_.gender && !!_.age)
@@ -24,7 +27,13 @@ const disaggregatePersons = (persons: Person.Person[]) => {
   }
 }
 
-export const getAiLocation = (d: Pick<Protection_groupSession, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>) => {
+export interface AiLocation {
+  Oblast: AiOblast
+  Raion: AiRaions
+  Hromada: AiHromadas
+}
+
+export const getAiLocation = (d: Pick<Protection_groupSession, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>): AiLocation => {
   const oblast = OblastIndex.byKoboName(d.ben_det_oblast!).name
   const raion = AILocationHelper.findRaion(oblast, Bn_ReOptions.ben_det_raion[d.ben_det_raion as keyof typeof Bn_ReOptions.ben_det_raion] ?? d.ben_det_raion)!
   const hromada = AILocationHelper.findHromada(oblast, raion?.en, Bn_ReOptions.ben_det_hromada[d.ben_det_hromada as keyof typeof Bn_ReOptions.ben_det_hromada] ?? d.ben_det_hromada)

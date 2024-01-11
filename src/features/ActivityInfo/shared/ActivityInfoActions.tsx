@@ -24,8 +24,10 @@ export const ActivityInfoActions = ({
 }
 
 export const AiViewAnswers = <T extends Record<string, any>, >({
-  answers
+  answers,
+  tooltip,
 }: {
+  tooltip?: string
   answers: T[]
 }) => {
   const {m} = useI18n()
@@ -37,7 +39,7 @@ export const AiViewAnswers = <T extends Record<string, any>, >({
       cancelLabel={m.close}
       content={<AnswerTable answers={answers}/>}
     >
-      <AAIconBtn size="small" tooltip="View related Kobo data" children="table_view" color="primary"/>
+      <AAIconBtn size="small" tooltip={tooltip ?? "View related Kobo data"} children="table_view" color="primary"/>
     </Modal>
   )
 }

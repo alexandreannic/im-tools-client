@@ -1,3 +1,5 @@
+export type AiRaions = keyof typeof aiRaions
+
 export const aiRaions = {
   'Bakhchysaraiskyi_Бахчисарайський': 'clrmtnqlecp1fu03',
   'Bilohirskyi_Білогірський': 'cdwykrplecp1fu04',

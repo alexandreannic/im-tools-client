@@ -1,6 +1,6 @@
 import {Enum} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
-import {aiOblasts} from './aiOblasts'
+import {AiOblast, aiOblasts} from './aiOblasts'
 import {hromadas} from './hromadas'
 import {AILocation, raions} from './raions'
 // @ts-ignore
@@ -37,7 +37,7 @@ export class AILocationHelper {
     return isos.map(_ => settlements[_])
   }
 
-  static readonly findOblast = (name: string) => AILocationHelper.findLocation(aiOblasts, name, 'Oblast')
+  static readonly findOblast = (name: string): AiOblast | undefined => AILocationHelper.findLocation(aiOblasts, name, 'Oblast')
 
   static readonly findRaion = (oblastName: string, raionName: string): undefined | AILocation => {
     const fixedRaion = {
