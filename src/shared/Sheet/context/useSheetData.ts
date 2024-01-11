@@ -12,7 +12,6 @@ import {
   SheetSearch
 } from '@/shared/Sheet/util/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
-import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 
 export type UseSheetData<T extends SheetRow> = ReturnType<typeof useSheetData<T>>
 
@@ -168,7 +167,7 @@ const filterBy = <T extends SheetRow>({
             console.warn('Value of ${String(k)} is', v)
             throw new Error(`Value of ${String(k)} is ${v} but expected string.`)
           }
-          return ('' + v).includes(typedFilter.value)
+          return ('' + v).toLowerCase().includes(typedFilter.value.toLowerCase())
         }
       }
     }

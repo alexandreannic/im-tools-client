@@ -11,8 +11,8 @@ import {SnapshotProtMonitoNN2Displacement} from '@/features/Snapshot/SnapshotPro
 import {Box, Theme} from '@mui/material'
 import {Period} from '@/core/type'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {PeriodPickerMui} from '@/shared/PeriodPicker/PeriodPickerMui'
 import {endOfMonth, startOfMonth} from 'date-fns'
+import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 
 export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 
@@ -42,7 +42,7 @@ export const SnapshotProtMonitoNN2 = () => {
   return (
     <>
       <Box sx={{'@media print': {display: 'none'}}}>
-        <PeriodPickerMui value={value} onChange={_ => setPeriod({start: _[0], end: _[1]})}/>
+        <PeriodPicker value={value} onChange={_ => setPeriod({start: _[0], end: _[1]})}/>
       </Box>
       <SnapshotProtMonitoringProvider
         filters={{currentOblast: [OblastIndex.byName('Mykolaivska').iso]}}

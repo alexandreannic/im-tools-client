@@ -24,7 +24,13 @@ export const DatabaseIndex = ({
           <PageTitle>{m.selectADatabase}</PageTitle>
           <Panel>
             <Sheet defaultLimit={200} id="kobo-index" onClickRows={_ => navigate(databaseModule.siteMap.database.absolute(_.serverId, _.id))} data={forms} columns={[
-              {id: 'name', type: 'string', head: m.name, render: _ => <Txt bold>{KoboFormSdk.parseFormName(_.name)?.name}</Txt>},
+              {
+                id: 'name',
+                type: 'string',
+                head: m.name,
+                renderValue: _ => KoboFormSdk.parseFormName(_.name)?.name,
+                render: _ => <Txt bold>{KoboFormSdk.parseFormName(_.name)?.name}</Txt>,
+              },
               {id: 'program', type: 'select_one', head: m.program, render: _ => KoboFormSdk.parseFormName(_.name)?.program},
               {
                 id: 'donors',

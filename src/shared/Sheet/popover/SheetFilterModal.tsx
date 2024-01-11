@@ -14,6 +14,7 @@ import {SheetFilterValueDate, SheetFilterValueNumber, SheetFilterValueSelect, Sh
 import {type} from 'os'
 import {seq} from '@alexandreannic/ts-utils'
 import {useSheetContext} from '@/shared/Sheet/context/SheetContext'
+import {endOfDay} from 'date-fns'
 
 export type SheetFilterDialogProps = Pick<PopoverProps, 'anchorEl'> & {
   orderBy?: OrderBy
@@ -102,7 +103,10 @@ export const SheetFilterModal = ({
         {type && (() => {
           switch (type) {
             case 'date':
-              return <PeriodPicker value={innerValue} onChange={setInnerValue}/>
+              return <PeriodPicker value={innerValue} onChange={_ => {
+                if (_[1]) _[1] = endOfDay(_[1])
+                setInnerValue(_)
+              }}/>
             case 'select_one':
             case 'select_multiple':
               return (
@@ -146,7 +150,7 @@ export const SheetFilterDialogSelect = ({
   return (
     <MultipleChoices
       options={options
-        ?.filter(_ => filter === '' || ((typeof _.label ==='string' ? _.label : _.value).toLowerCase() ?? '').includes(filter.toLowerCase()))
+        ?.filter(_ => filter === '' || ((typeof _.label === 'string' ? _.label : _.value).toLowerCase() ?? '').includes(filter.toLowerCase()))
         .map((_, i) => ({
           key: i,
           value: _.value ?? '',

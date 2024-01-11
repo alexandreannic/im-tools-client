@@ -14,6 +14,7 @@ import {Period} from '@/core/type'
 import {PeriodPickerMui} from '@/shared/PeriodPicker/PeriodPickerMui'
 import {endOfMonth, startOfMonth, subMonths} from 'date-fns'
 import {useMemoFn} from '@alexandreannic/react-hooks-lib'
+import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 
 export const snapshotAlternateColor = (t: Theme) => alpha(t.palette.primary.main, .26)//t.palette.grey[500]
 
@@ -44,7 +45,7 @@ export const SnapshotProtMonitoEcho = () => {
   return (
     <>
       <Box sx={{'@media print': {display: 'none'}}}>
-        <PeriodPickerMui value={value} onChange={_ => setPeriod({start: _[0], end: _[1]})}/>
+        <PeriodPicker value={value} onChange={_ => setPeriod({start: _[0], end: _[1]})}/>
       </Box>
       <SnapshotProtMonitoringProvider period={period}>
         <_SnapshotProtMonitoring/>
