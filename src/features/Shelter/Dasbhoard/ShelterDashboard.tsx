@@ -60,7 +60,7 @@ export const ShelterDashboard = () => {
         icon: 'location_on',
         label: m.settlement,
         getValue: _ => _.nta?.settlement,
-        getOptions: () => d.map(_ =>  _.nta?.settlement).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
+        getOptions: () => d.map(_ => _.nta?.settlement).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
       },
       project: {
         icon: drcMaterialIcons.project,

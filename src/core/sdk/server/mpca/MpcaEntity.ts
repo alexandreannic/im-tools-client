@@ -21,6 +21,7 @@ export const mpcaRowSources = buildEnumFromObject([
   'shelter_cashForRepair',
   'shelter_cashForRepair',
   'bn_re',
+  'bn_1_mpcaNfi',
   'bn_0_mpcaReg',
   'bn_0_mpcaRegESign',
   'bn_0_mpcaRegNoSig',
