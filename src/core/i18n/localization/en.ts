@@ -440,7 +440,7 @@ export const en = Object.freeze({
       HHs: 'HHs',
       AvgHHSize: 'AvgHHSize',
     },
-    _dashboardSafetyIncident: {
+    safety: {
       minusRusLabel: {
         prisoners: 'Prisoners',
         killed: 'Killed',
@@ -456,7 +456,7 @@ export const en = Object.freeze({
       dataTakenFromMinusRus: 'Data extracted in real-time from <a class="link" target="_blank" href="https://www.minusrus.com/en">https://www.minusrus.com/en</a>.',
       aggravatingFactors: 'Aggravating factors',
       lastAttacks: 'Last attacks',
-      title: 'Safety Incidents Tracker',
+      incidentTrackerTitle: 'Incidents dashboard',
       incidents: 'Incidents',
       incident: 'Incident',
       attackOfOn: (oblast?: OblastISO,

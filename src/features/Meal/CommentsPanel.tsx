@@ -10,7 +10,7 @@ export interface CommentsPanelProps {
   pageSize?: number
   data: Seq<{
     id: number | string
-    title: ReactNode
+    title?: ReactNode
     date?: Date
     desc?: string
     children?: ReactNode

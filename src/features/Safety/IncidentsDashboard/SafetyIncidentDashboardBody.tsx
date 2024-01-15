@@ -2,18 +2,18 @@ import React, {useState} from 'react'
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {KoboUkraineMap} from '../shared/KoboUkraineMap'
+import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {CommentsPanel, CommentsPanelProps} from '@/features/Meal/CommentsPanel'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {DashboardSafetyIncidentsPageProps, SafetyIncidentsTrackerBarChart} from '@/features/Dashboard/DashboardSafetyIncidents/DashboardSafetyIncident'
-import {MinusRusChartPanel} from '@/features/Dashboard/DashboardSafetyIncidents/MinusRusChartPanel'
 import {useSession} from '@/core/Session/SessionContext'
+import {DashboardSafetyIncidentsPageProps, SafetyIncidentsTrackerBarChart} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
+import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
 
-export const DashboardSafetyIncidentBody = ({
+export const SafetyIncidentDashboardBody = ({
   data,
   computed,
 }: {
@@ -27,12 +27,12 @@ export const DashboardSafetyIncidentBody = ({
     <Div sx={{alignItems: 'flex-start'}}>
       <Div column>
         <Div sx={{alignItems: 'stretch'}}>
-          <SlideWidget sx={{flex: 1}} icon="report" title={m._dashboardSafetyIncident.incidents}>
+          <SlideWidget sx={{flex: 1}} icon="report" title={m.safety.incidents}>
             {formatLargeNumber(data.length)}
           </SlideWidget>
           <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <KoboPieChartIndicator
-              title={m._dashboardSafetyIncident.attacks}
+              title={m.safety.attacks}
               question="attack"
               filter={_ => _ === 'yes'}
               showValue
@@ -44,8 +44,8 @@ export const DashboardSafetyIncidentBody = ({
         </Div>
         <SlidePanel>
           <ScRadioGroup value={mapType} onChange={setMapType} dense inline sx={{mb: 2}}>
-            <ScRadioGroupItem dense hideRadio value="incident" title={m._dashboardSafetyIncident.incidents}/>
-            <ScRadioGroupItem dense hideRadio value="attack" title={m._dashboardSafetyIncident.attacks}/>
+            <ScRadioGroupItem dense hideRadio value="incident" title={m.safety.incidents}/>
+            <ScRadioGroupItem dense hideRadio value="attack" title={m.safety.attacks}/>
           </ScRadioGroup>
           {fnSwitch(mapType, {
             'incident': (
@@ -70,13 +70,13 @@ export const DashboardSafetyIncidentBody = ({
             )
           })}
         </SlidePanel>
-        <SlidePanel title={m._dashboardSafetyIncident.attackTypes}>
+        <SlidePanel title={m.safety.attackTypes}>
           <SafetyIncidentsTrackerBarChart data={data} question="attack_type" questionType="multiple"/>
         </SlidePanel>
-        <SlidePanel title={m._dashboardSafetyIncident.target}>
+        <SlidePanel title={m.safety.target}>
           <SafetyIncidentsTrackerBarChart data={data} question="what_destroyed" questionType="multiple"/>
         </SlidePanel>
-        <SlidePanel title={m._dashboardSafetyIncident.typeOfCasualties}>
+        <SlidePanel title={m.safety.typeOfCasualties}>
           <SafetyIncidentsTrackerBarChart data={data} question="type_casualties"/>
         </SlidePanel>
       </Div>
@@ -84,14 +84,14 @@ export const DashboardSafetyIncidentBody = ({
         <Div sx={{alignItems: 'stretch'}}>
           <Lazy deps={[data]} fn={() => data?.sum(_ => _.dead ?? 0)}>
             {_ => (
-              <SlideWidget sx={{flex: 1}} title={m._dashboardSafetyIncident.dead}>
+              <SlideWidget sx={{flex: 1}} title={m.safety.dead}>
                 {formatLargeNumber(_)}
               </SlideWidget>
             )}
           </Lazy>
           <Lazy deps={[data]} fn={() => data?.sum(_ => _.injured ?? 0)}>
             {_ => (
-              <SlideWidget sx={{flex: 1}} title={m._dashboardSafetyIncident.injured}>
+              <SlideWidget sx={{flex: 1}} title={m.safety.injured}>
                 {formatLargeNumber(_)}
               </SlideWidget>
             )}
@@ -113,9 +113,9 @@ export const DashboardSafetyIncidentBody = ({
           }}>
             {_ => (
               <ScLineChart2 height={280} data={_ as any} translation={{
-                total: m._dashboardSafetyIncident.incidents,
-                dead: m._dashboardSafetyIncident.dead,
-                injured: m._dashboardSafetyIncident.injured,
+                total: m.safety.incidents,
+                dead: m.safety.dead,
+                injured: m.safety.injured,
               } as any}/>
             )}
           </Lazy>
@@ -123,10 +123,10 @@ export const DashboardSafetyIncidentBody = ({
         {(session?.admin || session?.drcJob === 'Head of Safety') && (
           <MinusRusChartPanel/>
         )}
-        <SlidePanel title={m._dashboardSafetyIncident.lastAttacks}>
+        <SlidePanel title={m.safety.lastAttacks}>
           <Lazy deps={[data]} fn={() => data?.filter(_ => _.attack === 'yes').map(_ => ({
             id: _.id,
-            title: m._dashboardSafetyIncident.attackOfOn(_.oblastISO, _.attack_type),
+            title: m.safety.attackOfOn(_.oblastISO, _.attack_type),
             date: _.date_time,
             desc: _.Attack_details,
           }) as CommentsPanelProps['data'][0])}>

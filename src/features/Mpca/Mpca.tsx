@@ -19,6 +19,8 @@ import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {KoboFormName, KoboIndex} from '@/KoboIndex'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {Page} from '@/shared/Page'
+import {Panel} from '@/shared/Panel'
 
 const relatedKoboForms: (KoboFormName)[] = [
   'bn_re',
@@ -119,7 +121,13 @@ export const Mpca = () => {
             <Route path={mpcaModule.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
             <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
             {relatedKoboForms.map(_ =>
-              <Route key={_} path={mpcaModule.siteMap.form(_)} element={<DatabaseTable formId={KoboIndex.byName(_).id}/>}/>
+              <Route key={_} path={mpcaModule.siteMap.form(_)} element={
+                <Page width="full">
+                  <Panel>
+                    <DatabaseTable formId={KoboIndex.byName(_).id}/>
+                  </Panel>
+                </Page>
+              }/>
             )}
           </Routes>
         </Layout>

@@ -6,7 +6,7 @@ import {Layout} from '@/shared/Layout'
 import {List, ListItem, ListItemText} from '@mui/material'
 
 const Index = () => {
-  const { m } = useI18n()
+  const {m} = useI18n()
   const path = (route: string) => appFeaturesIndex.dashboards.path + '/' + route
   return (
     <Layout title={m.dashboard}>
@@ -14,12 +14,7 @@ const Index = () => {
         <List>
           <ListItem>
             <Link href={path('protection-monitoring')}>
-              <ListItemText primary="Protection Monitoring" />
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link href={path('safety-incidents-tracker')}>
-              <ListItemText primary="Safety Incidents Tracker" />
+              <ListItemText primary="Protection Monitoring"/>
             </Link>
           </ListItem>
         </List>

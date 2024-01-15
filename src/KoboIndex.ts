@@ -69,7 +69,7 @@ export const koboFormById: Record<string, KoboFormName> = seq(Enum.entries(kobo.
 
 /** @deprecated*/
 export const koboFormTranslation: Record<KoboFormName, string> = {
-  safety_incident: 'safety_incident',
+  safety_incident: '[Safety] Incident tracker',
   ecrec_cashRegistration: '[Ecrec] Sectoral Cash Registration',
   bn_rapidResponse: '[Basic Needs] Rapid Response Mechanism',
   bn_cashForRentApplication: 'bn_cashForRentApplication',

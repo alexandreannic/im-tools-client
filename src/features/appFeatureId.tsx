@@ -16,8 +16,11 @@ export enum AppFeatureId {
   activity_info = 'activity_info',
   cfm = 'cfm',
   admin = 'admin',
-  playground = 'playground',
+  sandbox = 'sandbox',
   snapshot = 'snapshot',
+  hdp = 'hdp',
+  safety = 'safety',
+  protection = 'protection',
 }
 
 export interface AppFeature {
@@ -67,6 +70,39 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
         .filter(Access.filterByFeature(AppFeatureId.kobo_database))
         .find(_ => _.params?.koboFormId === KoboIndex.byName('bn_re').id)
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
+    }
+  },
+  hdp: {
+    id: AppFeatureId.hdp,
+    name: 'HDP',
+    // materialIcons: 'display_settings',
+    materialIcons: 'rocket_launch',
+    color: '#027ca2',
+    path: '/hdp',
+    showIf: (u, accesses) => {
+      return u?.admin
+    }
+  },
+  safety: {
+    id: AppFeatureId.safety,
+    name: 'Safety',
+    // materialIcons: 'display_settings',
+    materialIcons: 'security',
+    color: '#dd2222',
+    path: '/safety',
+    showIf: (u, accesses) => {
+      return true
+    }
+  },
+  protection: {
+    id: AppFeatureId.protection,
+    name: 'Safety',
+    // materialIcons: 'display_settings',
+    materialIcons: 'support',
+    color: '#ca88d7',
+    path: '/protection',
+    showIf: (u, accesses) => {
+      return u?.admin
     }
   },
   meal: {
@@ -149,12 +185,12 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     path: '/admin',
     showIf: _ => _ && _?.admin
   },
-  playground: {
-    id: 'playground' as any,
+  sandbox: {
+    id: AppFeatureId.sandbox,
     color: 'black',
-    name: 'Playground',
-    path: '/playground',
-    materialIcons: 'admin',
+    materialIcons: 'api',
+    name: 'Sandbox',
+    path: '/sandbox',
     showIf: _ => _ && _?.email === appConfig.contact
   }
 }
