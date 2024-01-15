@@ -1,6 +1,6 @@
 import {aiHromadas} from '@/core/uaLocation/aiHromadas'
 
-export namespace AiTypeMpcaRmm {
+export namespace AiMpcaInterface {
   type Opt<T extends keyof typeof options> = keyof (typeof options)[T]
 
   export interface Type {

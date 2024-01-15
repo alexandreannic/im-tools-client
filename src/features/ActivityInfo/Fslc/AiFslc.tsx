@@ -8,7 +8,6 @@ import {format, subMonths} from 'date-fns'
 import {PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
-import {AAIconBtn} from '@/shared/IconBtn'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {useAaToast} from '@/core/useToast'
@@ -52,7 +51,7 @@ export const AiFslc = () => {
               </AaBtn>
             </>
           }
-          defaultLimit={100} id="ai-shelter" data={fetcher.entity} loading={fetcher.loading} columns={[
+          defaultLimit={100} id="ai-fslc" data={fetcher.entity} loading={fetcher.loading} columns={[
           {
             id: 'actions', renderExport: false, width: 120, head: '', render: _ => (
               <>

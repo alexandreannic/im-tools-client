@@ -5,10 +5,9 @@ import {endOfDay, endOfMonth, format, startOfMonth, subMonths} from 'date-fns'
 import {Utils} from '@/utils/utils'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {AiTypeMpcaRmm} from '@/features/ActivityInfo/Mpca/AiMpcaInterface'
+import {AiMpcaInterface} from '@/features/ActivityInfo/Mpca/AiMpcaInterface'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
-import {AAIconBtn} from '@/shared/IconBtn'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
@@ -22,7 +21,7 @@ import {useAsync} from '@/alexlib-labo/useAsync'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 
-type AiMpcaBundle = AiBundle<AiTypeMpcaRmm.Type> & {
+type AiMpcaBundle = AiBundle<AiMpcaInterface.Type> & {
   // Properties not asked in the AI form
   oblast?: string
   raion?: string
@@ -55,6 +54,7 @@ export const AiMpca = () => {
       Utils.groupBy({
         data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
         groups: [
+          {by: (_) => _.finalDonor ?? ''},
           {by: (_) => _.oblast ?? ''},
           {by: (_, [oblast,]) => _.raion && AILocationHelper.findRaion(oblast, _.raion)?.en || ''},
           {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
@@ -67,12 +67,26 @@ export const AiMpca = () => {
             }, () => 'Unknown')
           },
         ],
-        finalTransform: (group, [oblast, raion, Hromada, populationGroup]) => {
+        finalTransform: (group, [donor, oblast, raion, Hromada, populationGroup]) => {
           const disag = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(group.flatMap(_ => _.persons).compact())
-          const activity = {
+          const activity: AiMpcaInterface.Type = {
             Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
             'Population Group': populationGroup,
             'Amount of cash in USD distributed through multi-purpose cash assistance': Math.round(group.sum(_ => _.amountUahFinal ?? 0) * conf.uahToUsd),
+            'Donor': fnSwitch(donor!, {
+              UHF: 'Ukraine Humanitarian Fund (UHF)',
+              NovoNordisk: 'Novo Nordisk (NN)',
+              OKF: `Ole Kirk's Foundation (OKF)`,
+              SDCS: `Swiss Agency for Development and Cooperation (SDC)`,
+              BHA: `USAID's Bureau for Humanitarian Assistance (USAID/BHA)`,
+              FINM: 'Ministry of Foreign Affairs - Finland (MFA Finland)',
+              FCDO: 'Foreign, Commonwealth & Development Office (FCDO)',
+              AugustinusFonden: 'Augustinus Foundation (Augustinus)',
+              EUIC: `EU\'s Instrument contributing to Stability and Peace (IcSP)`,
+              DUT: 'Dutch Relief Alliance (DutchRelief)',
+              ECHO: 'European Commission Humanitarian Aid Department and Civil Protection (ECHO)',
+              DANI: `Danish International Development Agency - Ministry of Foreign Affairs - Denmark (DANIDA)`,
+            }, () => undefined) as any,
             Girls: disag['0 - 17']?.Female,
             Boys: disag['0 - 17']?.Male,
             'Adult Women': disag['18 - 59']?.Female,
@@ -99,7 +113,7 @@ export const AiMpca = () => {
             activity,
             requestBody: ActivityInfoSdk.makeRecordRequest({
               activityIdPrefix: 'drcmpca',
-              activity: AiTypeMpcaRmm.map(activity),
+              activity: AiMpcaInterface.map(activity),
               activityYYYYMM: period.replace('-', '').replace(/^\d\d/, ''),
               activityIndex: i++,
               formId: ActivityInfoSdk.formId.mpca,

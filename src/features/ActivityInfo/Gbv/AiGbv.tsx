@@ -76,15 +76,20 @@ export const AiGbv = () => {
               const disaggregation = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(persons)
               subActivities.push({
                   'Protection Indicators': fnSwitch(activity, {
-                    'pssac': `# of GBV survivors and people at risk provided with specialized GBV PSS assistance that meet minimum standards`,
-                    'wgss': `# of women and girls who received recreational and livelihood skills including vocational education sessions in women and girls safe spaces`,
-                    'ddk': `# of women and girls who received dignity kits`,
+                    'pssac': '# of GBV survivors and people at risk provided with specialized GBV PSS assistance that meet minimum standards',
+                    'wgss': '# of women and girls who received recreational and livelihood skills including vocational education sessions in women and girls safe spaces',
+                    'ddk': '# of women and girls who received dignity kits',
+                    'ngbv': '# of non-GBV humanitarian workers trained /sensitized on GBV risk prevention and mitigation',
+                    'gbva': '# of GBV workers from specialized services (national, regional, local or international) trained in GBViE minimum standards',
                     'gbvis': `# of persons received information on GBV services, referrals, preventive and risk mitigation action`,
-                    'ngbv': `Non-GBV actors trained on GBV`,
-                    'gbva': `GBV actors trained in GBV`,
-                    'gcva': `GBV survivors and those at risk supported with cash/voucher assistance.`,
-                    'glac': `GBV survivors and those at risk supported with legal assistance and counselling.`,
-                    'other': `Other`
+                    // 'pssac': `# of GBV survivors and people at risk provided with specialized GBV PSS assistance that meet minimum standards`,
+                    // 'wgss': `# of women and girls who received recreational and livelihood skills including vocational education sessions in women and girls safe spaces`,
+                    // 'ddk': `# of women and girls who received dignity kits`,
+                    // 'ngbv': `Non-GBV actors trained on GBV`,
+                    // 'gbva': `GBV actors trained in GBV`,
+                    // 'gcva': `GBV survivors and those at risk supported with cash/voucher assistance.`,
+                    // 'glac': `GBV survivors and those at risk supported with legal assistance and counselling.`,
+                    // 'other': `Other`
                   }, () => 'TODO') as any,
                   'Population Group': fnSwitch(status!, {
                     idp: 'IDPs',
