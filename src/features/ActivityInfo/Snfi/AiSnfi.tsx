@@ -8,7 +8,6 @@ import {format, subMonths} from 'date-fns'
 import {Period, PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
-import {AAIconBtn} from '@/shared/IconBtn'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {AaBtn} from '@/shared/Btn/AaBtn'
@@ -80,6 +79,7 @@ export const AiSnfi = () => {
                   <AiSendBtn
                     disabled={!_.activity.Hromada} color="primary"
                     onClick={() => {
+                      _submit.call(_.requestBody.changes[0].recordId, [_.requestBody])
                       // _submit.call(_.id, [indexActivity[_.id]!.request]).catch(toastHttpError)
                     }}
                   />

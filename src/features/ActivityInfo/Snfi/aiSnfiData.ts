@@ -16,6 +16,10 @@ import Gender = Person.Gender
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
 import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
+import {ShelterNorth202312} from '@/features/ActivityInfo/Snfi/shelterNorth202312'
+import {aiOblasts} from '@/core/uaLocation/aiOblasts'
+import {aiRaions} from '@/core/uaLocation/aiRaions'
+import {aiHromadas} from '@/core/uaLocation/aiHromadas'
 
 export type AiSnfiBundle = Omit<AiBundle, 'data'> & {
   nta?: KoboAnswer<Shelter_NTA>[]
@@ -35,6 +39,50 @@ export class AiShelterData {
     if (_.includes('sdc_')) return DrcProject['UKR-000330 SDC2']
     if (_.includes('_danida')) return DrcProject['UKR-000347 DANIDA']
     if (_.includes('uhf7_')) return DrcProject['UKR-000352 UHF7']
+  }
+
+  static getShelterNorth = () => {
+    const bundle: AiSnfiBundle[] = []
+    let index = 0
+    Utils.groupBy({
+      data: ShelterNorth202312,
+      groups: [
+        {by: _ => _.Project},
+        {by: _ => Object.keys(aiOblasts).find(o => o.includes(_.Oblast))!},
+        {by: _ => Object.keys(aiRaions).find(o => o.includes(_.Raion))!},
+        {by: _ => Object.keys(aiHromadas).find(o => o.includes(_.Hromada))!},
+        {by: _ => _.levelDamage},
+      ],
+      finalTransform: (grouped, [project, Oblast, Raion, Hromada, level]) => {
+        const activity: AiSnfiInterface.Type = {
+          Oblast, Raion, Hromada,
+          'Implementing Partner': 'Danish Refugee Council',
+          'Report to a planned project': project ? 'Yes' : 'No',
+          'Plan Code': fnSwitch(project, {
+            'UKR-000284 BHA': DrcProject['UKR-000284 BHA'],
+            'UKR-000308 UNHCR': DrcProject['UKR-000308 UNHCR'],
+            'UKR-000336 UHF-6': DrcProject['UKR-000336 UHF6'],
+            'UKR-000322 ECHO': DrcProject['UKR-000322 ECHO2'],
+          }),
+          'Reporting Partner': 'Danish Refugee Council',
+          'SNFI indictors': level,
+          'Implementation status': 'Complete',
+          'Reporting Date (YYYY-MM-DD)': '2023-12-01',
+          'Indicator Value (HHs reached, buildings, etc.)': grouped.length,
+        }
+        bundle.push({
+          activity,
+          requestBody: ActivityInfoSdk.makeRecordRequest({
+            activity: AiSnfiInterface.map(activity),
+            formId: 'ckrgu2uldtxbgbg1h',
+            activityYYYYMM: '202312',
+            activityIdPrefix: 'drcstan',
+            activityIndex: index++,
+          })
+        })
+      }
+    })
+    return bundle
   }
 
   static readonly reqEsk = (api: ApiSdk) => (period: Period): Promise<AiSnfiBundle[]> => {

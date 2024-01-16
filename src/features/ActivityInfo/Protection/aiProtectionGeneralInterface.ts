@@ -275,7 +275,7 @@ export namespace AiTypeProtectionRmm {
         return {[input.id]: value}
     }
     const monthNumber = period.split('-')[1].padStart(2, '0')
-    const recordId = 'drcprot' + monthNumber + 'i' + ('' + index).padStart(3, '0')
+    const recordId = 'drcprot' + period.replaceAll(/[^\d]/g, '') + 'i' + ('' + index).padStart(3, '0')
     return {
       'changes': [
         {

@@ -54,10 +54,10 @@ export const AiMpca = () => {
       Utils.groupBy({
         data: res.data.filter(_ => _.date.getTime() >= filters.start.getTime() && _.date.getTime() <= filters.end.getTime()),
         groups: [
-          {by: (_) => _.finalDonor ?? ''},
           {by: (_) => _.oblast ?? ''},
           {by: (_, [oblast,]) => _.raion && AILocationHelper.findRaion(oblast, _.raion)?.en || ''},
           {by: (_, [oblast, raion]) => _.hromada && AILocationHelper.findHromada(oblast, raion, _.hromada)?.en || ''},
+          {by: (_) => _.finalDonor ?? ''},
           {
             by: _ => fnSwitch(_.benefStatus!, {
               idp: 'IDPs',
@@ -67,7 +67,7 @@ export const AiMpca = () => {
             }, () => 'Unknown')
           },
         ],
-        finalTransform: (group, [donor, oblast, raion, Hromada, populationGroup]) => {
+        finalTransform: (group, [oblast, raion, Hromada, donor, populationGroup]) => {
           const disag = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(group.flatMap(_ => _.persons).compact())
           const activity: AiMpcaInterface.Type = {
             Hromada: AILocationHelper.findHromada(oblast, raion, Hromada)?._5w as any,
@@ -165,10 +165,12 @@ export const AiMpca = () => {
             {
               width: 130,
               id: 'actions',
-              render: _ => {
+              render: (_: AiMpcaBundle) => {
                 return (
                   <>
-                    <AiSendBtn disabled={!_.activity.Hromada}/>
+                    <AiSendBtn disabled={!_.activity.Hromada} onClick={() =>
+                      _submit.call(_.requestBody.changes[0].recordId as any, [_.requestBody])
+                    }/>
                     <AiViewAnswers answers={_.data}/>
                     <AiPreviewActivity activity={_.activity}/>
                     <AiPreviewRequest request={_.requestBody}/>

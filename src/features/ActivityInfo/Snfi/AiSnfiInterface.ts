@@ -82,6 +82,8 @@ export namespace AiSnfiInterface {
       'No': 'cslpqb5ldtzhdsl39'
     },
     'Plan Code': {
+      [DrcProject['UKR-000284 BHA']]: 'cudbg39lrgdou5o3',
+      [DrcProject['UKR-000336 UHF6']]: 'cf5s649lrgdmlpy2',
       [DrcProject['UKR-000314 UHF4']]: 'cs1j3twlosqnuj33',
       [DrcProject['UKR-000322 ECHO2']]: 'cvwwdp5losjpowe2',
       [DrcProject['UKR-000308 UNHCR']]: 'cp9vejmlosqpryz4',

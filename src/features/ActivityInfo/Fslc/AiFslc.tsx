@@ -67,7 +67,7 @@ export const AiFslc = () => {
               </>
             )
           },
-          {type: 'number', id: 'lgth', head: 'LENGTH', render: row => (row.activity as any).length},
+          {type: 'number', id: 'lgth', head: 'Count', width: 0, render: row => (row.activity as any).length},
           {type: 'select_one', id: 'ai-id', head: 'Record ID', render: row => row.requestBody.changes[0].recordId},
           {type: 'select_one', id: 'Project (FSLC-Updated)', head: 'Project (FSLC-Updated)', render: row => row.activity['Project (FSLC-Updated)']},
           {type: 'select_one', id: 'Oblast', head: 'Oblast', render: row => row.activity['Oblast']},

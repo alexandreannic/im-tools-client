@@ -22,10 +22,10 @@ export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_CashRegistration>
 export class AiFslcData {
 
   static readonly reqEcrecCashRegistration = (api: ApiSdk) => (period: Period): Promise<AiFslcBundle[]> => {
-    return api.kobo.typedAnswers.searchEcrec_cashRegistration({filters: undefined})
+    return api.kobo.typedAnswers.searchEcrec_cashRegistration({filters: period})
       .then(_ => {
         return _.data
-          .filter(_ => _.tags?.status === EcrecCashRegistrationPaymentStatus.Paid)
+          // .filter(_ => _.tags?.status === EcrecCashRegistrationPaymentStatus.Paid)
           .map(_ => ({..._, ...getAiLocation(_)}))
       })
       .then(data => {
