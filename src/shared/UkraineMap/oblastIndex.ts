@@ -1,6 +1,4 @@
 import {Enum} from '@alexandreannic/ts-utils'
-import {Utils} from '@/utils/utils'
-import {ReverseMap} from '@/utils/utilsType'
 
 export interface Oblast {
   name: OblastName
@@ -16,7 +14,7 @@ export class OblastIndex {
 
   static readonly byIso: {
     (_: OblastISO): Oblast
-    (_: string): Oblast | undefined
+    (_: string | undefined): Oblast | undefined
   } = (iso) => {
     return {
       iso,

@@ -7,7 +7,7 @@ import {List, ListItem, ListItemText} from '@mui/material'
 
 const Index = () => {
   const {m} = useI18n()
-  const path = (route: string) => appFeaturesIndex.dashboards.path + '/' + route
+  const path = (route: string) => appFeaturesIndex.protection.path + '/' + route
   return (
     <Layout title={m.dashboard}>
       <Page>

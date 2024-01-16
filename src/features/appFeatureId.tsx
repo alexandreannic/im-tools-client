@@ -6,7 +6,6 @@ import {kobo, KoboIndex} from '@/KoboIndex'
 
 export enum AppFeatureId {
   meal = 'meal',
-  dashboards = 'dashboards',
   kobo_database = 'kobo_database',
   mpca = 'mpca',
   shelter = 'shelter',
@@ -33,13 +32,6 @@ export interface AppFeature {
 }
 
 export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
-  dashboards: {
-    id: AppFeatureId.dashboards,
-    name: 'Dashboards',
-    materialIcons: 'insights',
-    color: 'red',
-    path: '/dashboard',
-  },
   kobo_database: {
     id: AppFeatureId.kobo_database,
     name: 'Kobo Databases',
@@ -72,6 +64,17 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },
+  protection: {
+    id: AppFeatureId.protection,
+    name: 'Protection',
+    // materialIcons: 'display_settings',
+    materialIcons: 'diversity_3',
+    color: '#418fde',
+    path: '/dashboard',
+    showIf: (u, accesses) => {
+      return true
+    }
+  },
   hdp: {
     id: AppFeatureId.hdp,
     name: 'HDP',
@@ -92,17 +95,6 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     path: '/safety',
     showIf: (u, accesses) => {
       return true
-    }
-  },
-  protection: {
-    id: AppFeatureId.protection,
-    name: 'Safety',
-    // materialIcons: 'display_settings',
-    materialIcons: 'support',
-    color: '#ca88d7',
-    path: '/protection',
-    showIf: (u, accesses) => {
-      return u?.admin
     }
   },
   meal: {

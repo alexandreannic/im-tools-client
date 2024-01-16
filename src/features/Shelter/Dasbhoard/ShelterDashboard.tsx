@@ -274,7 +274,7 @@ export const _ShelterDashboard = ({
         <Panel title={m._shelter.assessmentLocations}>
           <PanelBody>
             <Lazy deps={[data]} fn={() => {
-              const gb = seq(data).groupBy(_ => fnSwitch(_.nta?.ben_det_oblast!, OblastIndex.koboOblastIndexIso, () => undefined)!)
+              const gb = seq(data).groupBy(_ => OblastIndex.byKoboName(_.nta?.ben_det_oblast)?.iso!)
               return new Enum(gb).transform((k, v) => [k, makeChartData({value: v.length})]).get()
             }}>
               {_ => <UkraineMap data={_} sx={{mx: 1}} maximumFractionDigits={0} base={data.length}/>}

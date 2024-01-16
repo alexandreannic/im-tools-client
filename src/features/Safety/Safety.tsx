@@ -1,4 +1,4 @@
-import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
+import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
 import {Sidebar, SidebarBody, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
@@ -14,6 +14,7 @@ import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {Panel} from '@/shared/Panel'
 import {Page} from '@/shared/Page'
+import {shelterModule} from '@/features/Shelter/Shelter'
 
 const relatedKoboForms: (KoboFormName)[] = [
   'safety_incident',
@@ -79,7 +80,8 @@ export const Safety = () => {
         header={<AppHeader id="app-header"/>}
       >
         <Routes>
-          <Route path={safetyModule.siteMap.incidentDashboard} element={<SafetyIncidentDashboard/>}/>
+          <Route index element={<Navigate to={safetyModule.siteMap.incidentDashboard}/>}/>
+          <Route index path={safetyModule.siteMap.incidentDashboard} element={<SafetyIncidentDashboard/>}/>
           {relatedKoboForms.map(_ =>
             <Route key={_} path={safetyModule.siteMap.form(_)} element={
               <Page width="full">
