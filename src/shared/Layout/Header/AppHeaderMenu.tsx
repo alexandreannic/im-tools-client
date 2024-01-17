@@ -1,10 +1,10 @@
-import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
+import {IpIconBtn, IpIconBtnProps} from '@/shared/IconBtn'
 import React, {ReactNode} from 'react'
 import {useSession} from '@/core/Session/SessionContext'
 import {Box, Icon, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {alpha} from '@mui/material/styles'
 
 const Row = ({
@@ -25,7 +25,7 @@ const Row = ({
   )
 }
 
-export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
+export const AppHeaderMenu = ({sx, ...props}: Partial<IpIconBtnProps>) => {
   const session = useSession()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = (!!anchorEl)
@@ -35,7 +35,7 @@ export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
   }
   return (
     <>
-      <AAIconBtn
+      <IpIconBtn
         children="person"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         sx={{
@@ -65,7 +65,7 @@ export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
             <Row icon="location_on">{session.session.drcOffice}</Row>
           </Box>
           <Box sx={{px: 2}}>
-            <AaBtn icon="logout" variant="outlined" onClick={session.logout} sx={{mb: 2}}>{m.logout}</AaBtn>
+            <IpBtn icon="logout" variant="outlined" onClick={session.logout} sx={{mb: 2}}>{m.logout}</IpBtn>
           </Box>
         </Box>
       </Popover>

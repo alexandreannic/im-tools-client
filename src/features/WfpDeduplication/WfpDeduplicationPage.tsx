@@ -5,12 +5,12 @@ import {BtnUploader} from 'mui-extension'
 import React, {useMemo} from 'react'
 import {useAsync, useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {WfpDeduplicationAccess} from '@/features/WfpDeduplication/WfpDeduplicationAccess'
 
@@ -29,7 +29,7 @@ const WpfDeduplicationSidebar = () => {
   const _uploadTaxIdMapping = useAsync(api.wfpDeduplication.uploadTaxIdsMapping)
   const _refreshData = useAsync(api.wfpDeduplication.refresh)
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const path = (page: string) => '' + page
 
   useEffectFn(_uploadTaxIdMapping.getError(), toastHttpError)
@@ -55,9 +55,9 @@ const WpfDeduplicationSidebar = () => {
               />
             </SidebarItem>
             <SidebarItem>
-              <AaBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.getLoading()}>
+              <IpBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.getLoading()}>
                 {m.refresh}
-              </AaBtn>
+              </IpBtn>
             </SidebarItem>
             <SidebarHr sx={{my: 2}}/>
           </>

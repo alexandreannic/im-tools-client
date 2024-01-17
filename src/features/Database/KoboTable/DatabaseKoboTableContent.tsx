@@ -1,13 +1,13 @@
 import {KoboAnswer, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
 import {DatabaseKoboTableExportBtn} from '@/features/Database/KoboTable/DatabaseKoboTableExportBtn'
 import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {Icon, Switch, Theme, useTheme} from '@mui/material'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
@@ -17,7 +17,7 @@ import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'
 import {useCustomSelectedHeader} from '@/features/Database/KoboTable/useCustomSelectedHeader'
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
@@ -77,7 +77,7 @@ export const DatabaseKoboTableContent = ({
       renderOption: (row: KoboAnswer) => row.tags?._validation ? m[row.tags?._validation!] : SheetUtils.blank,
       render: (row: KoboAnswer) => (
         <>
-          <AaSelectSingle
+          <IpSelectSingle
             disabled={!ctx.canEdit || ctx.fetcherAnswers.loading}
             value={row.tags?._validation}
             options={[
@@ -127,7 +127,7 @@ export const DatabaseKoboTableContent = ({
               ]}
             />
             {ctxSchema.schemaHelper.groupsCount > 0 && (
-              <AaBtn
+              <IpBtn
                 icon="move_up"
                 variant="outlined"
                 iconSx={{color: (t: Theme) => t.palette.text.disabled, transform: 'rotate(90deg)'}}
@@ -135,10 +135,10 @@ export const DatabaseKoboTableContent = ({
                 tooltip={m._koboDatabase.repeatGroupsAsColumns}
               >
                 <Switch size="small" sx={{mr: -1}} checked={repeatGroupsAsColumns}/>
-              </AaBtn>
+              </IpBtn>
             )}
 
-            <AAIconBtn
+            <IpIconBtn
               href={ctxSchema.schemaUnsanitized.deployment__links.url}
               target="_blank"
               children="file_open"

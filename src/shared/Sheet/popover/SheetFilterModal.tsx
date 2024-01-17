@@ -1,11 +1,11 @@
 import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps, Slider, Switch} from '@mui/material'
-import {AaBtn} from '../../Btn/AaBtn'
+import {IpBtn} from '../../Btn'
 import {useI18n} from '../../../core/i18n'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {AaInput} from '../../ItInput/AaInput'
+import {IpInput} from '../../Input/Input'
 import {MultipleChoices} from '../../MultipleChoices'
 import {PeriodPicker} from '../../PeriodPicker/PeriodPicker'
-import {AAIconBtn} from '../../IconBtn'
+import {IpIconBtn} from '../../IconBtn'
 import {Txt} from 'mui-extension'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {PanelBody, PanelHead} from '@/shared/Panel'
@@ -75,7 +75,7 @@ export const SheetFilterModal = ({
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead action={
-        <AAIconBtn children="filter_alt_off" color={filterActive ? 'primary' : undefined} onClick={() => {
+        <IpIconBtn children="filter_alt_off" color={filterActive ? 'primary' : undefined} onClick={() => {
           onClear?.()
           setInnerValue(undefined)
         }}/>
@@ -125,12 +125,12 @@ export const SheetFilterModal = ({
         })()}
       </PanelBody>
       <PanelFoot alignEnd>
-        <AaBtn color="primary" onClick={onClose}>
+        <IpBtn color="primary" onClick={onClose}>
           {m.close}
-        </AaBtn>
-        <AaBtn color="primary" onClick={() => onChange && onChange(columnId, innerValue)}>
+        </IpBtn>
+        <IpBtn color="primary" onClick={() => onChange && onChange(columnId, innerValue)}>
           {m.filter}
-        </AaBtn>
+        </IpBtn>
       </PanelFoot>
     </Popover>
   )
@@ -167,7 +167,7 @@ export const SheetFilterDialogSelect = ({
             control={<Checkbox size="small" checked={allChecked} indeterminate={!allChecked && someChecked}/>}
             label={m.selectAll}
           />
-          <AaInput label={m.filterPlaceholder} helperText={null} sx={{mb: 1}} onChange={e => setFilter(e.target.value)}/>
+          <IpInput label={m.filterPlaceholder} helperText={null} sx={{mb: 1}} onChange={e => setFilter(e.target.value)}/>
           <Divider/>
           <Box sx={{maxHeight: 350, overflowY: 'auto'}}>
             {options.map(o =>
@@ -203,7 +203,7 @@ export const SheetFilterDialogText = ({
           <Switch checked={value?.filterBlank} onChange={e => onChange(prev => ({...prev, filterBlank: e.target.checked}))}/>
         }
       />
-      <AaInput value={value?.value} onChange={e => onChange(prev => ({...prev, value: e.target.value}))}/>
+      <IpInput value={value?.value} onChange={e => onChange(prev => ({...prev, value: e.target.value}))}/>
     </>
   )
 }
@@ -238,8 +238,8 @@ export const SheetFilterDialogNumber = ({
     <>
       <Slider min={min} max={max} value={mappedValue} onChange={(e, _) => onChange(_ as [number, number])}/>
       <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-        <AaInput type="number" sx={{minWidth: 60, mr: .5}} value={mappedValue[0]} onChange={e => onChange(prev => [+e.target.value, prev?.[1]])}/>
-        <AaInput type="number" sx={{minWidth: 60, ml: .5}} value={mappedValue[1]} onChange={e => onChange(prev => [prev?.[0], +e.target.value])}/>
+        <IpInput type="number" sx={{minWidth: 60, mr: .5}} value={mappedValue[0]} onChange={e => onChange(prev => [+e.target.value, prev?.[1]])}/>
+        <IpInput type="number" sx={{minWidth: 60, ml: .5}} value={mappedValue[1]} onChange={e => onChange(prev => [prev?.[0], +e.target.value])}/>
       </Box>
     </>
   )

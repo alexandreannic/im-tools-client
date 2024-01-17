@@ -12,7 +12,7 @@ import {CfmProvider, useCfmContext} from '@/features/Cfm/CfmContext'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmEntryRoute} from '@/features/Cfm/Data/CfmDetails'
 import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
@@ -125,7 +125,7 @@ const CfmSidebar = () => {
 
 export const Cfm = () => {
   const {session, accesses} = useSession()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const access = useMemo(() => !!appFeaturesIndex.cfm.showIf?.(session, accesses), [accesses])
   const {api} = useAppSettings()
   const _schemas = useFetcher(async () => {

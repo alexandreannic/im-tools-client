@@ -5,7 +5,7 @@ import React from 'react'
 import {useMsal} from '@azure/msal-react'
 import {useAsync, useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {mapPromise} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
@@ -18,7 +18,7 @@ export const SessionLoginForm = ({
 }) => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const {toastError} = useAaToast()
+  const {toastError} = useIpToast()
   const msal = useMsal()
 
   const _login = useAsync(() => msal.instance.loginPopup({

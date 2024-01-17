@@ -7,15 +7,15 @@ import {KoboIndex} from '@/KoboIndex'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Controller, useForm} from 'react-hook-form'
 import {MealVerificationFormData} from '@/features/Meal/Verification/Form/MealVerificationFormData'
-import {AaBtn, AaBtnProps} from '@/shared/Btn/AaBtn'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpBtn, IpBtnProps} from '@/shared/Btn'
+import {IpInput} from '@/shared/Input/Input'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
 import {Txt} from 'mui-extension'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useEffectFn, useMemoFn} from '@alexandreannic/react-hooks-lib'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useNavigate} from 'react-router'
 import {mealVerificationActivities, mealVerificationActivitiesIndex, mealVerificationConf} from '@/features/Meal/Verification/mealVerificationConfig'
@@ -50,7 +50,7 @@ const RenderRow = ({icon, label, children}: {
 export const MealVerificationForm = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const {toastHttpError, toastSuccess} = useAaToast()
+  const {toastHttpError, toastSuccess} = useIpToast()
   const [activeStep, setActiveStep] = React.useState(0)
   const t = useTheme()
   const navigate = useNavigate()
@@ -68,12 +68,12 @@ export const MealVerificationForm = () => {
   const form = useForm<MealVerificationForm>()
 
   const BackBtn = ({}: {}) => (
-    <AaBtn
+    <IpBtn
       onClick={prevStep}
       sx={{mt: 1, mr: 1}}
     >
       {m.back}
-    </AaBtn>
+    </IpBtn>
   )
 
   const NextBtn = ({
@@ -82,8 +82,8 @@ export const MealVerificationForm = () => {
     ...props
   }: {
     label?: string
-  } & AaBtnProps) => (
-    <AaBtn
+  } & IpBtnProps) => (
+    <IpBtn
       disabled={disabled}
       variant="contained"
       onClick={nextStep}
@@ -91,7 +91,7 @@ export const MealVerificationForm = () => {
       sx={{mt: 1, mr: 1}}
     >
       {label ?? m.continue}
-    </AaBtn>
+    </IpBtn>
   )
 
   const submit = async ({answerIds, ...form}: MealVerificationForm) => {
@@ -169,14 +169,14 @@ export const MealVerificationForm = () => {
                   rules={{required: {value: true, message: m.required}}}
                   control={form.control}
                   render={({field}) => (
-                    <AaInput {...field} label={m._mealVerif.giveANameToId}/>
+                    <IpInput {...field} label={m._mealVerif.giveANameToId}/>
                   )}
                 />
                 <Controller
                   name="desc"
                   control={form.control}
                   render={({field}) => (
-                    <AaInput multiline maxRows={8} minRows={3} {...field} label={m._mealVerif.giveDetails}/>
+                    <IpInput multiline maxRows={8} minRows={3} {...field} label={m._mealVerif.giveDetails}/>
                   )}
                 />
                 <Box sx={{mb: 1}}>

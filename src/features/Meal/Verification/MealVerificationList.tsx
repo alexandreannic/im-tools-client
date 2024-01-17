@@ -6,7 +6,7 @@ import {useI18n} from '@/core/i18n'
 import {Avatar, Box, BoxProps, Icon, useTheme} from '@mui/material'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {NavLink} from 'react-router-dom'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {Modal, Txt} from 'mui-extension'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -17,7 +17,7 @@ import {databaseIndex} from '@/features/Database/databaseIndex'
 import Link from 'next/link'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
@@ -62,7 +62,7 @@ export const MealVerificationList = () => {
           header={
             <>
               <NavLink to={mealIndex.siteMap.verification.form}>
-                <AaBtn variant="contained" icon="add">{m._mealVerif.newRequest}</AaBtn>
+                <IpBtn variant="contained" icon="add">{m._mealVerif.newRequest}</IpBtn>
               </NavLink>
             </>
           }
@@ -80,7 +80,7 @@ export const MealVerificationList = () => {
               renderOption: (row) => row.status ? m[row.status!] : SheetUtils.blank,
               render: row => (
                 <>
-                  <AaSelectSingle
+                  <IpSelectSingle
                     disabled={!ctx.access.admin}
                     value={row.status}
                     options={[

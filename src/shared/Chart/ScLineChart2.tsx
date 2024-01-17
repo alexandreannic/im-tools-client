@@ -6,7 +6,7 @@ import {map} from '@alexandreannic/ts-utils'
 import {styleUtils} from '@/core/theme'
 import {chartConfig} from '@/shared/Chart/chartConfig'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
+import {commonLegendProps} from '@/shared/Chart/StackedBarChart'
 
 export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
   colorsByKey?: (t: Theme) => Record<string, string>

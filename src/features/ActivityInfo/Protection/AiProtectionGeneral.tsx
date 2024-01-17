@@ -6,12 +6,12 @@ import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {Box} from '@mui/material'
-import {AaInput} from '@/shared/ItInput/AaInput'
-import {AaBtn} from '@/shared/Btn/AaBtn'
-import {useAaToast} from '@/core/useToast'
+import {IpInput} from '@/shared/Input/Input'
+import {IpBtn} from '@/shared/Btn'
+import {useIpToast} from '@/core/useToast'
 import {ActivityInfoProtectionMapper} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {Utils} from '@/utils/utils'
 import {Enum, seq} from '@alexandreannic/ts-utils'
@@ -26,7 +26,7 @@ export const AiProtectionGeneral = () => {
   const {api, conf} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
@@ -158,13 +158,13 @@ export const AiProtectionGeneral = () => {
           id="ai-prot"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
-              <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
-              <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
+              <IpInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
+              <IpBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
                 _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
-              </AaBtn>
+              </IpBtn>
             </Box>
           }
           loading={fetcher.loading}

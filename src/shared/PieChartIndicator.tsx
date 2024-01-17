@@ -1,7 +1,7 @@
 import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
 import React, {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
-import {AaPieChart} from './Chart/AaPieChart'
+import {IpPieChart} from './Chart/PieChart'
 import {SlidePanelTitle} from './PdfLayout/PdfSlide'
 import {PanelProps} from './Panel/Panel'
 import {useI18n} from '@/core/i18n'
@@ -22,7 +22,7 @@ export const Donut = ({
 }) => {
   const theme = useTheme()
   return (
-    <AaPieChart
+    <IpPieChart
       stroke="none"
       hideTooltip={true}
       outerRadius={size / 2}

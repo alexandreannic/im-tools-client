@@ -3,21 +3,21 @@ import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {format, subMonths} from 'date-fns'
 import {Period, PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
-import {AaBtn} from '@/shared/Btn/AaBtn'
-import {useAaToast} from '@/core/useToast'
+import {IpBtn} from '@/shared/Btn'
+import {useIpToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 
 export const AiSnfi = () => {
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const fetcher = useFetcher((p: Period) => {
     const res = Promise.all([
       AiShelterData.reqRepairs(api)(p),
@@ -53,8 +53,8 @@ export const AiSnfi = () => {
         <Sheet
           header={
             <>
-              <AaInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
-              <AaBtn
+              <IpInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
+              <IpBtn
                 loading={_submit.anyLoading}
                 icon="send"
                 variant="contained"
@@ -65,7 +65,7 @@ export const AiSnfi = () => {
                 }}
               >
                 {m.submitAll}
-              </AaBtn>
+              </IpBtn>
             </>
           }
           defaultLimit={100}

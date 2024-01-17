@@ -6,11 +6,11 @@ import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtecti
 import {Page} from '@/shared/Page'
 import {Txt} from 'mui-extension'
 import {Panel} from '@/shared/Panel'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {AaSelect} from '@/shared/Select/Select'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
@@ -60,7 +60,7 @@ export const AiProtectionGeneral = () => {
       {map(filteredData, _ => <_ActivityInfo
         action={
           <>
-            <AaInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+            <IpInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
             <AaSelect
               sx={{width: 200}}
               label="Oblast"
@@ -161,16 +161,16 @@ const _ActivityInfo = ({
   }, [data])
 
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   return (
     <div>
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center'}}>
-        <AaBtn sx={{marginRight: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+        <IpBtn sx={{marginRight: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
           _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastHttpError)
         }}>
           {m.submitAll} {data.length} {data.sum(_ => _.how_many_ind ?? 0)}
-        </AaBtn>
+        </IpBtn>
         {action}
       </Box>
       <Panel sx={{overflowX: 'auto'}}>
@@ -196,7 +196,7 @@ const _ActivityInfo = ({
                 {j === 0 && (
                   <>
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
-                      <AaBtn
+                      <IpBtn
                         tooltip="Submit 🚀"
                         loading={_submit.getLoading(i)}
                         variant="contained"
@@ -207,7 +207,7 @@ const _ActivityInfo = ({
                         }}
                       >
                         <Icon>send</Icon>
-                      </AaBtn>
+                      </IpBtn>
                       <ActivityInfoActions
                         data={a.rows}
                         activity={a.activity}

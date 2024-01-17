@@ -17,7 +17,7 @@ const useStyles = makeStyles()((t) => ({
   }
 }))
 
-export interface AaBtnProps extends ButtonProps {
+export interface IpBtnProps extends ButtonProps {
   tooltip?: ReactNode
   loading?: boolean
   icon?: string
@@ -26,7 +26,7 @@ export interface AaBtnProps extends ButtonProps {
   target?: '_blank'
 }
 
-export const AaBtn = forwardRef(({
+export const IpBtn = forwardRef(({
   tooltip,
   loading,
   children,
@@ -36,7 +36,7 @@ export const AaBtn = forwardRef(({
   color,
   iconSx,
   ...props
-}: AaBtnProps, ref: any) => {
+}: IpBtnProps, ref: any) => {
   const {classes, cx} = useStyles()
   const btn = (
     <Button

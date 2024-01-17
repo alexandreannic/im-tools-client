@@ -1,7 +1,7 @@
 import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
@@ -11,7 +11,7 @@ import {Messages} from '@/core/i18n/localization/en'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 
 interface MinusRusData {
   aircraft: number
@@ -79,7 +79,7 @@ const minusResKeys: Seq<keyof Messages['safety']['minusRusLabel']> = seq([
 
 export const MinusRusChartPanel = () => {
   const {api} = useAppSettings()
-  const {toastError} = useAaToast()
+  const {toastError} = useIpToast()
   const {m} = useI18n()
   const fetcherMinusRus = useFetcher(() => api.proxyRequest('GET', 'https://russialoses-dev.herokuapp.com')
     .then(parseMinusRus) as Promise<Seq<MinusRusData>>)
@@ -130,7 +130,7 @@ export const MinusRusChartPanel = () => {
           <ScRadioGroupItem hideRadio value="yyyy-MM-dd">{m.daily}</ScRadioGroupItem>
           <ScRadioGroupItem hideRadio value="yyyy-MM">{m.monthly}</ScRadioGroupItem>
         </ScRadioGroup>
-        <AaSelectMultiple
+        <IpSelectMultiple
           sx={{width: 200}}
           options={minusResKeys.map(_ => ({value: _, children: m.safety.minusRusLabel[_]}))}
           value={minusResKeys.filter(_ => minusRusCurves[_])}

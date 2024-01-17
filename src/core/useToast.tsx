@@ -1,7 +1,7 @@
 import {useToast} from 'mui-extension'
 import {appConfig} from '../conf/AppConfig'
 
-export const useAaToast = () => {
+export const useIpToast = () => {
   const toasts = useToast()
   return {
     ...toasts,

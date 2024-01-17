@@ -10,7 +10,7 @@ import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {Layout} from '@/shared/Layout'
 import {Icon, Skeleton, Tab, Tabs, Tooltip} from '@mui/material'
 import {useLocation, useParams} from 'react-router'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {DatabaseNew} from '@/features/Database/DatabaseNew/DatabaseNew'
 import {DatabaseProvider, useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {DatabaseAccessRoute} from '@/features/Database/Access/DatabaseAccess'
@@ -58,9 +58,9 @@ export const DatabaseWithContext = () => {
                 All forms
                 {ctx.isAdmin && (
                   <DatabaseNew onAdded={() => ctx._forms.fetch({force: true, clean: false})}>
-                    <AaBtn size="small" sx={{ml: 'auto', my: '3px'}} variant="contained" tooltip={m._koboDatabase.registerNewForm}>
+                    <IpBtn size="small" sx={{ml: 'auto', my: '3px'}} variant="contained" tooltip={m._koboDatabase.registerNewForm}>
                       <Icon>add</Icon>
-                    </AaBtn>
+                    </IpBtn>
                   </DatabaseNew>
                 )}
               </SidebarItem>

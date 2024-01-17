@@ -4,10 +4,10 @@ import {AnswerTable} from './AnswerTable'
 import {Modal} from 'mui-extension/lib/Modal'
 import {useI18n} from '@/core/i18n'
 import {IconBtn} from 'mui-extension'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import exp from 'constants'
-import {AaBtnProps} from '@/shared/Btn/AaBtn'
+import {IpBtnProps} from '@/shared/Btn'
 
 export const ActivityInfoActions = ({
   data,
@@ -39,7 +39,7 @@ export const AiViewAnswers = <T extends Record<string, any>, >({
       cancelLabel={m.close}
       content={<AnswerTable answers={answers}/>}
     >
-      <AAIconBtn size="small" tooltip={tooltip ?? "View related Kobo data"} children="table_view" color="primary"/>
+      <IpIconBtn size="small" tooltip={tooltip ?? "View related Kobo data"} children="table_view" color="primary"/>
     </Modal>
   )
 }
@@ -87,19 +87,19 @@ const AIPreviewJSON = ({
     <Modal title={title} content={
       <pre>{JSON.stringify(request, null, 2)}</pre>
     }>
-      <AAIconBtn tooltip={title} size="small" color="primary" children={icon}/>
+      <IpIconBtn tooltip={title} size="small" color="primary" children={icon}/>
     </Modal>
   )
 }
 
-export const AiSendBtn = (props: AaBtnProps) => {
+export const AiSendBtn = (props: IpBtnProps) => {
   return (
-    <AAIconBtn
+    <IpIconBtn
       tooltip="Submit 🚀"
       size="small"
       sx={{mr: .5}}
       color="primary"
       {...props}
-    >send</AAIconBtn>
+    >send</IpIconBtn>
   )
 }

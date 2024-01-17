@@ -7,7 +7,7 @@ import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
+import {IpIconBtn, IpIconBtnProps} from '@/shared/IconBtn'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {KoboTranslateChoice, KoboTranslateQuestion, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 
@@ -110,7 +110,7 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
 }: {
   repeatGroupsAsColumns?: boolean
   data: T[] | undefined
-} & Pick<AAIconBtnProps, 'sx' | 'tooltip'>) => {
+} & Pick<IpIconBtnProps, 'sx' | 'tooltip'>) => {
   const {m} = useI18n()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   const ctx = useDatabaseKoboTableContext()
@@ -154,6 +154,6 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
     }
   }
   return (
-    <AAIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download" {...props}/>
+    <IpIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download" {...props}/>
   )
 }

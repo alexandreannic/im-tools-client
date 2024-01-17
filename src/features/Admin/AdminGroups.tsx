@@ -4,14 +4,14 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {Panel} from '@/shared/Panel'
 import {Box, Chip, Icon} from '@mui/material'
 import {Modal} from 'mui-extension'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {useForm} from 'react-hook-form'
 import {useAsync} from '@/alexlib-labo/useAsync'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {IAccessForm} from '@/features/Access/AccessForm'
 import {accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {AdminGroupAccessForm} from '@/features/Admin/AdminGroupAccessForm'
@@ -73,12 +73,12 @@ export const AdminGroups = () => {
                 title={m._admin.createGroup}
                 content={
                   <>
-                    <AaInput sx={{mt: 2}} label={m.name} autoFocus {...groupForm.register('name')}/>
-                    <AaInput multiline minRows={3} maxRows={6} label={m.desc} {...groupForm.register('desc')}/>
+                    <IpInput sx={{mt: 2}} label={m.name} autoFocus {...groupForm.register('name')}/>
+                    <IpInput multiline minRows={3} maxRows={6} label={m.desc} {...groupForm.register('desc')}/>
                   </>
                 }
               >
-                <AaBtn icon="add" variant="outlined">{m.create}</AaBtn>
+                <IpBtn icon="add" variant="outlined">{m.create}</IpBtn>
               </Modal>
             </>
           }
@@ -134,14 +134,14 @@ export const AdminGroups = () => {
                   confirmLabel={m.edit}
                   content={
                     <>
-                      <AaInput sx={{mt: 2}} label={m.name} defaultValue={_.name} autoFocus {...groupForm.register('name')}/>
-                      <AaInput multiline minRows={3} maxRows={6} defaultValue={_.desc} label={m.desc} {...groupForm.register('desc')}/>
+                      <IpInput sx={{mt: 2}} label={m.name} defaultValue={_.name} autoFocus {...groupForm.register('name')}/>
+                      <IpInput multiline minRows={3} maxRows={6} defaultValue={_.desc} label={m.desc} {...groupForm.register('desc')}/>
                     </>
                   }
                 >
-                  <AAIconBtn size="small">edit</AAIconBtn>
+                  <IpIconBtn size="small">edit</IpIconBtn>
                 </Modal>
-                <AAIconBtn size="small" onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading.has(_.id)}>delete</AAIconBtn>
+                <IpIconBtn size="small" onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading.has(_.id)}>delete</IpIconBtn>
               </>
             },
           ]}

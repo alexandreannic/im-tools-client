@@ -5,7 +5,7 @@ import React from 'react'
 import {useLayoutContext} from '../LayoutContext'
 import {AppHeaderMenu} from '@/shared/Layout/Header/AppHeaderMenu'
 import {AppHeaderFeatures} from '@/shared/Layout/Header/AppHeaderFeatures'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import Link from 'next/link'
 import {AppHeaderContainer} from '@/shared/Layout/Header/AppHeaderContainer'
 
@@ -65,7 +65,7 @@ export const AppHeader = ({children, sx, id = 'aa-header-id', ...props}: Props) 
         {children}
       </div>
       <Link href="/">
-        <AAIconBtn children="home"/>
+        <IpIconBtn children="home"/>
       </Link>
       <AppHeaderFeatures sx={{mr: 1}}/>
       <AppHeaderMenu/>

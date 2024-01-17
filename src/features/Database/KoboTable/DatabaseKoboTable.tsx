@@ -7,7 +7,7 @@ import {map, mapFor} from '@alexandreannic/ts-utils'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {DatabaseKoboTableContent} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {useSession} from '@/core/Session/SessionContext'
 import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
@@ -71,7 +71,7 @@ export const DatabaseTable = ({
 }: DatabaseTableProps) => {
   const {api} = useAppSettings()
   const {accesses, session} = useSession()
-  const {toastHttpError, toastLoading} = useAaToast()
+  const {toastHttpError, toastLoading} = useIpToast()
 
   const _formSchema = useFetcher(() => schema ? Promise.resolve(schema) : api.koboApi.getForm({serverId, id: formId}))
   const _form = useFetcher(() => form ? Promise.resolve(form) : api.kobo.form.get(formId))

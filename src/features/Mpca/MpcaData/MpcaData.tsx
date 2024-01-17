@@ -9,7 +9,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAsync} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
 import {kobo, KoboIndex} from '@/KoboIndex'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
@@ -87,7 +87,7 @@ export const MpcaData = () => {
                 {/*  }}*/}
                 {/*/>*/}
                 <Box sx={{borderLeft: t => '1px solid ' + t.palette.divider, height: 30, ml: 1, mr: 2}}/>
-                <AaBtn
+                <IpBtn
                   disabled
                   sx={{mr: 1}}
                   color="primary"
@@ -95,8 +95,8 @@ export const MpcaData = () => {
                   variant="outlined"
                 >
                   {m.mpca.generateDeduplicationFile}
-                </AaBtn>
-                <AaBtn
+                </IpBtn>
+                <IpBtn
                   disabled
                   color="primary"
                   icon="create_new_folder"
@@ -107,7 +107,7 @@ export const MpcaData = () => {
                   }}
                 >
                   {m.mpca.makePaymentTool}
-                </AaBtn>
+                </IpBtn>
               </>
             )
           }}

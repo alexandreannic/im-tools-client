@@ -4,11 +4,11 @@ import {UserSession} from '@/core/sdk/server/session/Session'
 import {Txt} from 'mui-extension'
 import {useI18n} from '@/core/i18n'
 import {Box} from '@mui/material'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {useEffect, useState} from 'react'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Modal} from 'mui-extension/lib/Modal'
 import {DrcOffice} from '@/core/drcUa'
 
@@ -24,7 +24,7 @@ export const SessionInitForm = ({
   const {api, conf} = useAppSettings()
   const [drcOffice, setDrcOffice] = useState<DrcOffice | undefined>()
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _updateUser = useFetcher(api.user.update)
   useEffectFn(_updateUser.error, toastHttpError)
@@ -36,7 +36,7 @@ export const SessionInitForm = ({
   return (
     <Box sx={{p: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <Box sx={{width: '100%', maxWidth: 400}}>
-        <AaBtn icon="arrow_back" color="primary" onClick={onChangeAccount}>{m.changeAccount}</AaBtn>
+        <IpBtn icon="arrow_back" color="primary" onClick={onChangeAccount}>{m.changeAccount}</IpBtn>
       </Box>
       <Box sx={{
         mb: 4,
@@ -59,14 +59,14 @@ export const SessionInitForm = ({
           onConfirm={() => _updateUser.fetch({}, {drcOffice: drcOffice})}
           loading={_updateUser.loading}
         >
-          <AaBtn
+          <IpBtn
             icon="arrow_forward"
             disabled={!drcOffice}
             variant="contained"
             sx={{mt: 2}}
           >
             {m.select}
-          </AaBtn>
+          </IpBtn>
         </Modal>
       </Box>
     </Box>

@@ -10,10 +10,10 @@ import {ActivityInfoActions, AiSendBtn} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
-import {AaBtn} from '@/shared/Btn/AaBtn'
-import {useAaToast} from '@/core/useToast'
+import {IpBtn} from '@/shared/Btn'
+import {useIpToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
@@ -205,7 +205,7 @@ export const AiWash = () => {
 
   return (
     <Page width={1200} loading={_data.loading}>
-      <AaInput type="month" sx={{minWidth: 200, width: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+      <IpInput type="month" sx={{minWidth: 200, width: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
       {map(_data.entity, _ => (
         <_ActivityInfo data={_}/>
       ))}
@@ -220,7 +220,7 @@ const _ActivityInfo = ({
   data: Row[]
   // period: Date
 }) => {
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const {formatDate} = useI18n()
   const {api} = useAppSettings()
   const {m} = useI18n()
@@ -233,11 +233,11 @@ const _ActivityInfo = ({
         <Sheet<Row>
           getRenderRowKey={_ => _.request.changes[0].recordId}
           header={
-            <AaBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+            <IpBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
               _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
             }}>
               {m.submitAll} {seq(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
-            </AaBtn>
+            </IpBtn>
           }
           id="ai-nfi" data={data} columns={[
           {

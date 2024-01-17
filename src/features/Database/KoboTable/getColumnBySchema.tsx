@@ -6,7 +6,7 @@ import {SheetHeadTypeIcon} from '@/shared/Sheet/SheetHead'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {map, mapFor, seq} from '@alexandreannic/ts-utils'
 import {formatDate, formatDateTime} from '@/core/i18n/localization/en'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {Utils} from '@/utils/utils'
@@ -165,11 +165,11 @@ export const getColumnByQuestionSchema = <T extends Record<string, any | undefin
           type: 'number',
           typeIcon: <SheetHeadTypeIcon children="repeat" tooltip="begin_repeat"/>,
           render: row => map(row[q.name] as KoboAnswer[] | undefined, group =>
-            <AaBtn sx={{py: '4px'}} onClick={(event) => onOpenGroupModal?.({
+            <IpBtn sx={{py: '4px'}} onClick={(event) => onOpenGroupModal?.({
               columnId: q.name,
               group,
               event,
-            })}>{group.length}</AaBtn>
+            })}>{group.length}</IpBtn>
           ) ?? <></>
         }
       }

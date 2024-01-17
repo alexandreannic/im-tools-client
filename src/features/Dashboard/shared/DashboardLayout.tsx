@@ -3,7 +3,7 @@ import {Box, Collapse, LinearProgress, Typography} from '@mui/material'
 import {combineSx} from '@/core/theme'
 import {DashboardProvider} from '../DashboardContext'
 import {makeSx, Txt} from 'mui-extension'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {useSetState} from '@alexandreannic/react-hooks-lib'
 import {Layout} from '@/shared/Layout'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
@@ -128,7 +128,7 @@ export const DashboardLayout = ({
             <Box key={s.name}>
               <Typography id={s.name} variant="h2" sx={combineSx(style.sectionTitle, hiddenSections.has(s.name) && style.sectionShrinked)}>
                 {s.title}
-                <AAIconBtn
+                <IpIconBtn
                   children="expand_less"
                   sx={combineSx(style.iconExpand, hiddenSections.has(s.name) && style.iconExpendShrinked)}
                   onClick={() => hiddenSections.toggle(s.name)}

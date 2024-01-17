@@ -15,7 +15,7 @@ import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKobo
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
 import {MealVerificationAnsers, MealVerificationAnswersStatus, MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
@@ -82,7 +82,7 @@ export const MealVerificationTable = () => {
           <PageTitle
             action={
               <>
-                <AaSelectSingle
+                <IpSelectSingle
                   label={m.status}
                   sx={{minWidth: 140}}
                   disabled={!ctx.access.admin}
@@ -270,7 +270,7 @@ const MealVerificationTableContent = <
           data={mergedData}
           header={
             <>
-              <AaSelectSingle<number>
+              <IpSelectSingle<number>
                 hideNullOption
                 sx={{maxWidth: 128, mr: 1}}
                 value={ctxSchema.langIndex}

@@ -12,7 +12,7 @@ import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Lazy} from '@/shared/Lazy'
 import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {CommentsPanel} from '@/shared/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
@@ -241,7 +241,7 @@ export const MealVisitDashboard = () => {
                       </Box>
                       <Box sx={{textAlign: 'right'}}>
                         <NavLink to={mealIndex.siteMap.visit.details(row.id)}>
-                          <AaBtn iconAfter="chevron_right">View details</AaBtn>
+                          <IpBtn iconAfter="chevron_right">View details</IpBtn>
                         </NavLink>
                       </Box>
                     </Box>

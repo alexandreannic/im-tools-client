@@ -4,7 +4,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import React, {ReactElement, useCallback, useMemo} from 'react'
 import {Modal, Txt} from 'mui-extension'
 import {Autocomplete, Box, Chip, createFilterOptions} from '@mui/material'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {Controller, useForm} from 'react-hook-form'
 import {KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {map, seq} from '@alexandreannic/ts-utils'
@@ -12,7 +12,7 @@ import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {useAsync} from '@/alexlib-labo/useAsync'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
@@ -39,7 +39,7 @@ export const DatabaseAccessForm = ({
   const survey = form.content.survey
 
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const {api} = useAppSettings()
 
   const _addAccess = useAsync(api.access.create)
@@ -125,7 +125,7 @@ export const DatabaseAccessForm = ({
                   }}
                   loading={!questions}
                   options={questions?.map(_ => _.name) ?? []}
-                  renderInput={({InputProps, ...props}) => <AaInput
+                  renderInput={({InputProps, ...props}) => <IpInput
                     {...InputProps}
                     {...props}
                     label={m.question}
@@ -165,7 +165,7 @@ export const DatabaseAccessForm = ({
                       disableCloseOnSelect
                       options={options?.map(_ => _.name) ?? []}
                       // options={options?.map(_ => ({children: getKoboLabel(_, langIndex), value: _.name}))}
-                      renderInput={({InputProps, ...props}) => <AaInput
+                      renderInput={({InputProps, ...props}) => <IpInput
                         {...InputProps}
                         {...props}
                         label={m.answer}

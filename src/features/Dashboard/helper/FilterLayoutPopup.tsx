@@ -1,12 +1,12 @@
 import {Box, Icon, Popover} from '@mui/material'
 import React, {useEffect, useState} from 'react'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {Enum} from '@alexandreannic/ts-utils'
 import {FilterLayoutProps} from '@/features/Dashboard/helper/FilterLayout'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Txt} from 'mui-extension'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 
 export const FilterLayoutPopup = ({
@@ -45,7 +45,7 @@ export const FilterLayoutPopup = ({
 
   return (
     <Box sx={{position: 'relative', ...sx}}>
-      <AAIconBtn
+      <IpIconBtn
         children="tune"
         onClick={(e) => setAnchorEl(e.currentTarget)}
       />
@@ -77,7 +77,7 @@ export const FilterLayoutPopup = ({
               <Icon color="disabled">{shape.icon}</Icon>
               <Txt truncate sx={{mx: 1, width: 140, maxWidth: 140}}>{shape.label}</Txt>
               <Box sx={{flex: 1}}>
-                <AaSelectMultiple
+                <IpSelectMultiple
                   sx={{maxWidth: 250, width: 250}}
                   value={innerFilters[name] ?? []}
                   onChange={_ => setInnerFilters((prev: any) => ({...prev, [name]: _}))}
@@ -88,9 +88,9 @@ export const FilterLayoutPopup = ({
           )}
           <Box sx={{mt: 1}}>{after}</Box>
           <Box sx={{display: 'flex', mt: 1}}>
-            <AaBtn color="primary" onClick={() => setInnerFilters({})}>{m.reinitialize}</AaBtn>
-            <AaBtn color="primary" onClick={handleClose} sx={{marginLeft: 'auto', mr: 1}}>{m.close}</AaBtn>
-            <AaBtn color="primary" variant="contained" onClick={handleSubmit}>{m.confirm}</AaBtn>
+            <IpBtn color="primary" onClick={() => setInnerFilters({})}>{m.reinitialize}</IpBtn>
+            <IpBtn color="primary" onClick={handleClose} sx={{marginLeft: 'auto', mr: 1}}>{m.close}</IpBtn>
+            <IpBtn color="primary" variant="contained" onClick={handleSubmit}>{m.confirm}</IpBtn>
           </Box>
         </Box>
       </Popover>

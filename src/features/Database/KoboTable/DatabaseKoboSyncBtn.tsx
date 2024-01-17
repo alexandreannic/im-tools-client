@@ -1,15 +1,15 @@
-import {AaBtn, AaBtnProps} from '@/shared/Btn/AaBtn'
+import {IpBtn, IpBtnProps} from '@/shared/Btn'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 
-export const DatabaseKoboSyncBtn = (props: AaBtnProps) => {
+export const DatabaseKoboSyncBtn = (props: IpBtnProps) => {
   const {m} = useI18n()
   return (
-    <AaBtn
+    <IpBtn
       variant="outlined"
       icon="cloud_sync"
       tooltip={props.tooltip ?? m._koboDatabase.pullData}
       {...props}
-    >{m.sync}</AaBtn>
+    >{m.sync}</IpBtn>
   )
 }

@@ -2,7 +2,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useMemo, useState} from 'react'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {PeriodHelper, Person} from '@/core/type'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
@@ -14,11 +14,11 @@ import {Page} from '@/shared/Page'
 import {AiGbvInterface} from '@/features/ActivityInfo/Gbv/aiGbvInterface'
 import {DrcProject} from '@/core/drcUa'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 
 type AiGbvBundle = AiBundle<AiGbvInterface.Type>
 
@@ -26,7 +26,7 @@ export const AiGbv = () => {
   const {api, conf} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
@@ -177,13 +177,13 @@ export const AiGbv = () => {
           data={flatData}
           header={
             <>
-              <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
-              <AaBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
+              <IpInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
+              <IpBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
                 _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
-              </AaBtn>
+              </IpBtn>
             </>
           }
           columns={[

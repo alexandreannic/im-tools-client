@@ -12,8 +12,8 @@ import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
-import {AAIconBtn} from '@/shared/IconBtn'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpIconBtn} from '@/shared/IconBtn'
+import {IpInput} from '@/shared/Input/Input'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {KoboShelterTa, shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
@@ -23,7 +23,7 @@ import {SelectDrcProject} from '@/shared/SelectDrcProject'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Datepicker} from '@/shared/Datepicker/Datepicker'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {TableInput} from '@/shared/TableInput'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
 
@@ -492,7 +492,7 @@ export const ShelterTable = () => {
         render: row => map(row.ta, ta => {
           return (
             <>
-              <AaSelectSingle<ShelterTaPriceLevel>
+              <IpSelectSingle<ShelterTaPriceLevel>
                 value={ta.tags?.damageLevel}
                 onChange={(tagChange) => {
                   ctx.ta.asyncUpdate.call({
@@ -521,7 +521,7 @@ export const ShelterTable = () => {
             onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'price', value: _})}
           >
             {(value, onChange) => (
-              <AaInput
+              <IpInput
                 type="number"
                 helperText={null}
                 defaultValue={value}
@@ -721,7 +721,7 @@ export const ShelterTable = () => {
           // showExportBtn
           header={
             <>
-              <AAIconBtn
+              <IpIconBtn
                 children="refresh"
                 loading={ctx.data.fetcher.entity && ctx.data.loading}
                 onClick={() => ctx.data.fetchAll({force: true, clean: true})}

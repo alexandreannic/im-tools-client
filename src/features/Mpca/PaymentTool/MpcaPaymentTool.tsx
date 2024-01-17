@@ -14,7 +14,7 @@ import {MpcaPaymentToolForm} from './MpcaPaymentToolForm'
 import * as yup from 'yup'
 import {Grid} from '@mui/material'
 import {ListRow} from '@/shared/ListRow'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 
 const urlValidation = yup.object({
@@ -55,7 +55,7 @@ export const MpcaPaymentTool = () => {
       {tool && (
         <>
           <PageHeader sx={{mb: 0}} action={
-            <AaBtn variant="contained" icon="download">{m.downloadAsPdf}</AaBtn>
+            <IpBtn variant="contained" icon="download">{m.downloadAsPdf}</IpBtn>
           }>
             {m.mpca.paymentTool} #{tool.index}
           </PageHeader>

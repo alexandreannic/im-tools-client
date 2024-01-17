@@ -3,20 +3,20 @@ import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {format, subMonths} from 'date-fns'
 import {PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
-import {AaBtn} from '@/shared/Btn/AaBtn'
-import {useAaToast} from '@/core/useToast'
+import {IpBtn} from '@/shared/Btn'
+import {useIpToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AiFslcData} from '@/features/ActivityInfo/Fslc/aiFslcData'
 
 export const AiFslc = () => {
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const fetcher = useFetcher(AiFslcData.reqEcrecCashRegistration(api))
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {m} = useI18n()
@@ -36,8 +36,8 @@ export const AiFslc = () => {
           showExportBtn
           header={
             <>
-              <AaInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
-              <AaBtn
+              <IpInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
+              <IpBtn
                 loading={_submit.anyLoading}
                 icon="send"
                 variant="contained"
@@ -48,7 +48,7 @@ export const AiFslc = () => {
                 }}
               >
                 {m.submitAll}
-              </AaBtn>
+              </IpBtn>
             </>
           }
           defaultLimit={100} id="ai-fslc" data={fetcher.entity} loading={fetcher.loading} columns={[

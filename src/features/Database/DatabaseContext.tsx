@@ -2,7 +2,7 @@ import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Access} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
@@ -30,7 +30,7 @@ export const DatabaseProvider = ({
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
   const _forms = useFetcher(() => api.kobo.form.getAll().then(_ => seq(_).sortByString(_ => KoboFormSdk.parseFormName(_.name).program ?? '')) as Promise<KoboForm[]>)
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const getForm = useMemo(() => {
     const index = seq(_forms.entity).reduceObject<Record<KoboId, KoboForm>>(_ => [_.id, _])

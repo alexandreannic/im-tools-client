@@ -1,4 +1,4 @@
-import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
+import {IpIconBtn, IpIconBtnProps} from '@/shared/IconBtn'
 import React from 'react'
 import {useSession} from '@/core/Session/SessionContext'
 import {Box, Popover} from '@mui/material'
@@ -8,7 +8,7 @@ import {FeatureLogo} from '@/features/FeatureLogo'
 
 const iconSize = 92
 
-export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'children'>) => {
+export const AppHeaderFeatures = (props: Omit<IpIconBtnProps, 'children'>) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const {session, accesses} = useSession()
   const open = (!!anchorEl)
@@ -16,7 +16,7 @@ export const AppHeaderFeatures = (props: Omit<AAIconBtnProps, 'children'>) => {
   const features: AppFeature[] = appFeatures.filter(_ => !_.showIf || _.showIf(session, accesses))
   return (
     <>
-      <AAIconBtn
+      <IpIconBtn
         children="apps"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         {...props}

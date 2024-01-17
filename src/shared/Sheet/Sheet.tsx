@@ -4,7 +4,7 @@ import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
-import {AAIconBtn} from '../IconBtn'
+import {IpIconBtn} from '../IconBtn'
 import {useAsync, useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Sheet/util/generateXLSFile'
 import {SheetBody} from './SheetBody'
@@ -131,7 +131,7 @@ const _Sheet = <T extends SheetRow>({
             ctx.data.setFilters({})
             ctx.data.resetSearch()
           }}>
-            <AAIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
+            <IpIconBtn sx={{mr: 1}} children="filter_alt_off" tooltip={m.clearFilter} disabled={!filterCount}/>
           </Badge>
           <DatatableColumnToggle
             sx={{mr: 1}}
@@ -146,7 +146,7 @@ const _Sheet = <T extends SheetRow>({
             filteredAndSortedData: ctx.data.filteredAndSortedData as T[],
           }) : header}
           {showExportBtn && (
-            <AAIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
+            <IpIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
           )}
           {ctx.selected.size > 0 && (
             <Box sx={{
@@ -177,7 +177,7 @@ const _Sheet = <T extends SheetRow>({
                 // color: t => t.palette.primary.main,
                 // borderRadius: t => t.shape.borderRadius + 'px',
               }}>
-                <AAIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
+                <IpIconBtn color="primary" children="clear" onClick={ctx.selected.clear}/>
                 <Box sx={{mr: 1, whiteSpace: 'nowrap'}}>
                   <b>{ctx.selected.size}</b> {m.selected}
                 </Box>

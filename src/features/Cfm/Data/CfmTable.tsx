@@ -5,7 +5,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {Utils} from '@/utils/utils'
@@ -15,7 +15,7 @@ import {DrcOffice} from '@/core/drcUa'
 import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
 import {cfmIndex} from '@/features/Cfm/Cfm'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo, KoboIndex} from '@/KoboIndex'
@@ -166,7 +166,7 @@ export const CfmTable = ({}: any) => {
                   ...ctx.schemaExternal.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
                 ]}
               />
-              <AAIconBtn
+              <IpIconBtn
                 loading={_refresh.loading.size > 0}
                 children="cloud_sync"
                 tooltip={m._koboDatabase.pullData}
@@ -271,7 +271,7 @@ export const CfmTable = ({}: any) => {
                       onChange={(e, _) => onChange(_)}
                       options={ctx.users.entity?.map((option) => option.email) ?? []}
                       // renderInput={(params) => <TextField {...params} label="freeSolo" />}
-                      renderInput={({InputProps, ...props}) => <AaInput
+                      renderInput={({InputProps, ...props}) => <IpInput
                         {...InputProps}
                         {...props}
                         helperText={null}

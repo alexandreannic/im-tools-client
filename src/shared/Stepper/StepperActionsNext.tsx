@@ -1,13 +1,13 @@
-import {AaBtn, AaBtnProps} from '../Btn/AaBtn'
+import {IpBtn, IpBtnProps} from '../Btn'
 import {useI18n} from '@/core/i18n'
 
-interface Props extends AaBtnProps {
+interface Props extends IpBtnProps {
 }
 
 export const StepperActionsNext = ({children, icon, ...props}: Props) => {
   const {m} = useI18n()
   return (
-    <AaBtn
+    <IpBtn
       id="btn-submit"
       color="primary"
       variant="contained"
@@ -15,6 +15,6 @@ export const StepperActionsNext = ({children, icon, ...props}: Props) => {
       {...props}
     >
       {children ?? m.next}
-    </AaBtn>
+    </IpBtn>
   )
 }

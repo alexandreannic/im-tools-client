@@ -3,7 +3,7 @@ import {Dispatch, SetStateAction, useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {kobo} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {buildKoboSchemaHelper, getKoboTranslations} from '@/features/Database/KoboTable/useKoboSchema'
@@ -29,7 +29,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
 }) => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const {toastError, toastHttpError} = useAaToast()
+  const {toastError, toastHttpError} = useIpToast()
 
   const helper = useMemo(() => {
     const schemaHelper = buildKoboSchemaHelper({schema, m})

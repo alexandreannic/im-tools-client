@@ -4,7 +4,7 @@ import {AccessLevel, accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Autocomplete, autocompleteClasses, Box, BoxProps, Chip, SxProps, Theme} from '@mui/material'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -12,8 +12,8 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {UUID} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
-import {DrcJobInputMultiple} from '@/shared/input/DrcJobInput'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
+import {DrcJobInputMultiple} from '@/shared/customInputs/DrcJobInput'
 
 export interface IAccessForm {
   selectBy?: 'email' | 'job' | 'group' | null
@@ -107,7 +107,7 @@ export const AccessFormInputEmail = ({
   const {m} = useI18n()
   const required = form.watch('selectBy') === 'email'
   return (
-    <AaInput
+    <IpInput
       label={m.drcEmail}
       error={!!form.formState.errors.email}
       helperText={form.formState.errors.email?.message as string}
@@ -131,7 +131,7 @@ export const AccessFormInputDrcOffice = ({
       name="drcOffice"
       control={form.control}
       render={({field: {onChange, ...field}}) => (
-        <AaSelectSingle<DrcOffice>
+        <IpSelectSingle<DrcOffice>
           {...field}
           label={m.drcOffice}
           onChange={_ => onChange(_)}
@@ -241,7 +241,7 @@ export const AccessFormInputGroup = ({
               </Box>
             )}
             renderInput={({InputProps, ...props}) =>
-              <AaInput
+              <IpInput
                 helperText={null}
                 label={m.group}
                 {...InputProps}

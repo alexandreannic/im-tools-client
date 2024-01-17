@@ -1,5 +1,5 @@
 import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} from '@mui/material'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer, KoboAttachment, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
@@ -53,7 +53,7 @@ export const DatabaseKoboAnswerView = ({
         />
       </DialogContent>
       <DialogActions>
-        <AaBtn onClick={onClose}>{m.close}</AaBtn>
+        <IpBtn onClick={onClose}>{m.close}</IpBtn>
       </DialogActions>
     </Dialog>
   )

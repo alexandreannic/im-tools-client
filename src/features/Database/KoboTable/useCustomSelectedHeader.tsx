@@ -1,9 +1,9 @@
 import {ReactNode, useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {useI18n} from '@/core/i18n'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {currentProtectionProjects} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {kobo, KoboIndex} from '@/KoboIndex'
 
@@ -18,7 +18,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
       //   )
       // },
       [KoboIndex.byName('protection_communityMonitoring').id]: (
-        <AaSelectSingle
+        <IpSelectSingle
           hideNullOption
           sx={{maxWidth: 200}}
           label={m.project}
@@ -27,7 +27,7 @@ export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode 
         />
       ),
       [KoboIndex.byName('protection_hhs2_1').id]: (
-        <AaSelectMultiple
+        <IpSelectMultiple
           sx={{maxWidth: 200}}
           defaultValue={[]}
           label={m.project}

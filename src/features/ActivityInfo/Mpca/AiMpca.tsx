@@ -12,9 +12,9 @@ import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/f
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {Box} from '@mui/material'
-import {AaInput} from '@/shared/ItInput/AaInput'
-import {AaBtn} from '@/shared/Btn/AaBtn'
-import {useAaToast} from '@/core/useToast'
+import {IpInput} from '@/shared/Input/Input'
+import {IpBtn} from '@/shared/Btn'
+import {useIpToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
 import {useAsync} from '@/alexlib-labo/useAsync'
@@ -31,7 +31,7 @@ export const AiMpca = () => {
   const {api, conf} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _submit = useAsync((i: number, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i
@@ -147,16 +147,16 @@ export const AiMpca = () => {
           id="ai-mpca"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
-              <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
+              <IpInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <Txt color="hint" sx={{ml: 1}}>
                 USD to UAH: <b>{conf.uahToUsd}</b>
               </Txt>
-              <AaBtn icon="send" variant="contained" loading={_submit.anyLoading} sx={{ml: 'auto'}} onClick={() => {
+              <IpBtn icon="send" variant="contained" loading={_submit.anyLoading} sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
                 _submit.call(-1, fetcher.entity.filter(_ => !!_.activity.Hromada).map((_, i) => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
-              </AaBtn>
+              </IpBtn>
             </Box>
           }
           loading={fetcher.loading}

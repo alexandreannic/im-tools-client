@@ -4,13 +4,13 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {DRCLogo} from '@/shared/logo/logo'
-import {AAStackedBarChart, commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
+import {IpStackedBarChart, commonLegendProps} from '@/shared/Chart/StackedBarChart'
 import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
-import {AaPieChart} from '@/shared/Chart/AaPieChart'
+import {IpPieChart} from '@/shared/Chart/PieChart'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 
@@ -51,7 +51,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
             <Div>
               <Div column>
                 <SlidePanel>
-                  <AaPieChart
+                  <IpPieChart
                     outerRadius={60}
                     height={120}
                     width={260}
@@ -71,7 +71,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
                     }}
                   >
                     <Legend {...commonLegendProps} layout="vertical" verticalAlign="middle" align="right"/>
-                  </AaPieChart>
+                  </IpPieChart>
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.protHHS2.hhTypes}</SlidePanelTitle>
@@ -85,7 +85,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
               <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
+                  <IpStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} height={250} colors={t => [
                     snapshotAlternateColor(t),
                     t.palette.primary.main,
                   ]}/>

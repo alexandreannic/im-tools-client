@@ -5,13 +5,13 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {mapPromise} from '@alexandreannic/ts-utils'
 import {Box, CircularProgress} from '@mui/material'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Access} from '@/core/sdk/server/access/Access'
 import {SessionLoginForm} from '@/core/Session/SessionLoginForm'
 import {SessionInitForm} from '@/core/Session/SessionInitForm'
 import {CenteredContent} from '@/shared/CenteredContent'
 import {Fender} from 'mui-extension'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 
 export interface SessionContext {
   session: UserSession
@@ -32,7 +32,7 @@ export const SessionProvider = ({
   children: ReactNode
 }) => {
   const {m} = useI18n()
-  const {toastError} = useAaToast()
+  const {toastError} = useIpToast()
   const {api} = useAppSettings()
   const [session, setSession] = useState<UserSession | undefined>()
   const [isInitialLoading, setIsInitialLoading] = useState(true)
@@ -105,7 +105,7 @@ export const SessionProvider = ({
         {session.originalEmail && (
           <Box sx={{px: 2, py: .25, background: t => t.palette.background.paper}}>
             Connected as <b>{session.email}</b>. Go back as <b>{session.originalEmail}</b>
-            <AAIconBtn loading={_revertConnectAs.getLoading()} onClick={_revertConnectAs.call} color="primary">logout</AAIconBtn>
+            <IpIconBtn loading={_revertConnectAs.getLoading()} onClick={_revertConnectAs.call} color="primary">logout</IpIconBtn>
           </Box>
         )}
         {children}

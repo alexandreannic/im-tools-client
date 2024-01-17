@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/Input/Input'
 import {format, getDaysInMonth, parse, subMonths} from 'date-fns'
 import {mapFor} from '@alexandreannic/ts-utils'
 
@@ -41,7 +41,7 @@ const SafetyPage = () => {
       {+period.split('-')![1] - 1}
       --
       {dayInMonth}
-      <AaInput
+      <IpInput
         type="month"
         sx={{width: 200, mr: 1}}
         value={period}
