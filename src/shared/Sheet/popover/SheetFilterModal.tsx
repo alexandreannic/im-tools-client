@@ -5,7 +5,7 @@ import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState
 import {IpInput} from '../../ItInput/IpInput'
 import {MultipleChoices} from '../../MultipleChoices'
 import {PeriodPicker} from '../../PeriodPicker/PeriodPicker'
-import {AAIconBtn} from '../../IconBtn'
+import {IpIconBtn} from '../../IconBtn'
 import {Txt} from 'mui-extension'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {PanelBody, PanelHead} from '@/shared/Panel'
@@ -75,7 +75,7 @@ export const SheetFilterModal = ({
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead action={
-        <AAIconBtn children="filter_alt_off" color={filterActive ? 'primary' : undefined} onClick={() => {
+        <IpIconBtn children="filter_alt_off" color={filterActive ? 'primary' : undefined} onClick={() => {
           onClear?.()
           setInnerValue(undefined)
         }}/>

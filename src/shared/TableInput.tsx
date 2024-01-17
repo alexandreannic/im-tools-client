@@ -1,5 +1,5 @@
 import {IpInput, IpInputProps} from '@/shared/ItInput/IpInput'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import React from 'react'
 
@@ -27,13 +27,13 @@ export const TableInput = ({
           value={value}
           onChange={e => onChange(e.target.value)}
           endAdornment={value !== originalValue && originalValue !== null &&
-            <AAIconBtn
+            <IpIconBtn
               size="small"
               sx={{mr: -2, mt: .25}}
               onClick={() => onChange(originalValue ?? '')}
             >
               clear
-            </AAIconBtn>
+            </IpIconBtn>
           }
           {...props}
         />

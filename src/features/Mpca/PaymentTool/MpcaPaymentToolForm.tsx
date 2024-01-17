@@ -5,7 +5,7 @@ import React, {useEffect} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {ListRow} from '@/shared/ListRow'
 import {IpInput} from '@/shared/ItInput/IpInput'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 
 const budgetLines = [
   {value: '', children: ''},
@@ -47,15 +47,15 @@ export const MpcaPaymentToolForm = ({
   return (
     <>
       <ListRow icon="person" border label={m.mpca.headOfOperations}>
-        <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
+        <IpIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <IpInput defaultValue={tool.headOfOperation} {...register('headOfOperation')}/>
       </ListRow>
       <ListRow icon="" border label={m.mpca.financeAndAdministrationOfficer}>
-        <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
+        <IpIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <IpInput defaultValue={tool.financeAndAdministrationOfficer} {...register('financeAndAdministrationOfficer')}/>
       </ListRow>
       <ListRow icon="" label={m.mpca.cashAndVoucherAssistanceAssistant}>
-        <AAIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
+        <IpIconBtn sx={{ml: 1}} children="gesture" color="primary"/>
         <IpInput defaultValue={tool.cashAndVoucherAssistanceAssistant} {...register('cashAndVoucherAssistanceAssistant')}/>
       </ListRow>
       <ListRow icon="place" label={m.city}>

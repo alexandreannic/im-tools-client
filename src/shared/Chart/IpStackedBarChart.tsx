@@ -15,7 +15,7 @@ export const commonLegendProps = {
   iconType: 'circle'
 } as const
 
-export const AAStackedBarChart = ({
+export const IpStackedBarChart = ({
   data,
   height,
   width,

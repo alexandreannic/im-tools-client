@@ -5,7 +5,7 @@ import {Box, Checkbox, SxProps, useTheme} from '@mui/material'
 import {styleUtils} from '../../core/theme'
 import {chartConfig} from './chartConfig'
 import {Enum} from '@alexandreannic/ts-utils'
-import {commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
+import {commonLegendProps} from '@/shared/Chart/IpStackedBarChart'
 
 export interface ScLineChartPropsBase {
   /**

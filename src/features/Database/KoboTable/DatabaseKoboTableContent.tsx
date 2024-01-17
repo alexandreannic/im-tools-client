@@ -7,7 +7,7 @@ import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
 import {DatabaseKoboTableExportBtn} from '@/features/Database/KoboTable/DatabaseKoboTableExportBtn'
 import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/DatabaseKoboTableGroupModal'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {Icon, Switch, Theme, useTheme} from '@mui/material'
 import {usePersistentState} from '@/alexlib-labo/usePersistantState'
@@ -138,7 +138,7 @@ export const DatabaseKoboTableContent = ({
               </IpBtn>
             )}
 
-            <AAIconBtn
+            <IpIconBtn
               href={ctxSchema.schemaUnsanitized.deployment__links.url}
               target="_blank"
               children="file_open"

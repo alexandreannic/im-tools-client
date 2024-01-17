@@ -4,13 +4,13 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {DRCLogo, EULogo, UhfLogo, UsaidLogo} from '@/shared/logo/logo'
-import {AAStackedBarChart, commonLegendProps} from '@/shared/Chart/AaStackedBarChart'
+import {IpStackedBarChart, commonLegendProps} from '@/shared/Chart/IpStackedBarChart'
 import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
-import {AaPieChart} from '@/shared/Chart/AaPieChart'
+import {IpPieChart} from '@/shared/Chart/IpPieChart'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
@@ -77,7 +77,7 @@ export const SnapshotProtMonitoEchoSample = () => {
             <Div>
               <Div column>
                 <SlidePanel>
-                  <AaPieChart
+                  <IpPieChart
                     outerRadius={65}
                     height={140}
                     width={270}
@@ -97,11 +97,11 @@ export const SnapshotProtMonitoEchoSample = () => {
                     }}
                   >
                     <Legend {...commonLegendProps} layout="vertical" verticalAlign="middle" align="right"/>
-                  </AaPieChart>
+                  </IpPieChart>
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <AAStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} sx={{mt: 2}} height={300} colors={t => [
+                  <IpStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} sx={{mt: 2}} height={300} colors={t => [
                     t.palette.primary.main,
                     snapshotAlternateColor(t),
                     darken(t.palette.primary.main, .5),

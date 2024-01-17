@@ -5,7 +5,7 @@ import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Enum} from '@alexandreannic/ts-utils'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {useI18n} from '@/core/i18n'
 import {FilterLayoutPopup} from '@/features/Dashboard/helper/FilterLayoutPopup'
 
@@ -83,7 +83,7 @@ export const FilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & {
           <FilterLayoutPopup {...props} onConfirm={setFilters} filters={filters} onClear={onClear}/>
         )}
         {onClear && (
-          <AAIconBtn children="clear" tooltip={m.clearFilter} onClick={onClear}/>
+          <IpIconBtn children="clear" tooltip={m.clearFilter} onClick={onClear}/>
         )}
       </Box>
     </Box>

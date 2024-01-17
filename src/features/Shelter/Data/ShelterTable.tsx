@@ -12,7 +12,7 @@ import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {IpInput} from '@/shared/ItInput/IpInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
@@ -721,7 +721,7 @@ export const ShelterTable = () => {
           // showExportBtn
           header={
             <>
-              <AAIconBtn
+              <IpIconBtn
                 children="refresh"
                 loading={ctx.data.fetcher.entity && ctx.data.loading}
                 onClick={() => ctx.data.fetchAll({force: true, clean: true})}

@@ -9,7 +9,7 @@ import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Prote
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/core/chartTools'
 import {chain} from '@/utils/utils'
-import {AAStackedBarChart} from '@/shared/Chart/AaStackedBarChart'
+import {IpStackedBarChart} from '@/shared/Chart/IpStackedBarChart'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {Person} from '@/core/type'
@@ -123,7 +123,7 @@ export const DashboardProtHHS2Sample = ({
             </Box>
             <Lazy deps={[ag, data]} fn={() => computed.ageGroup(Person.ageGroup[ag])}>
               {_ => agDisplay === 'chart' ? (
-                <AAStackedBarChart data={_} height={250}/>
+                <IpStackedBarChart data={_} height={250}/>
               ) : (
                 <Sheet
                   id="prot-dash-population"

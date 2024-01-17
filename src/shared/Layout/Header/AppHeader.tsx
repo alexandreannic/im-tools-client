@@ -5,7 +5,7 @@ import React from 'react'
 import {useLayoutContext} from '../LayoutContext'
 import {AppHeaderMenu} from '@/shared/Layout/Header/AppHeaderMenu'
 import {AppHeaderFeatures} from '@/shared/Layout/Header/AppHeaderFeatures'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import Link from 'next/link'
 import {AppHeaderContainer} from '@/shared/Layout/Header/AppHeaderContainer'
 
@@ -45,7 +45,7 @@ export const AppHeader = ({children, sx, id = 'aa-header-id', ...props}: Props) 
         }}
       >
         {showSidebarButton && (
-          <IconBtn
+          <IpIconBtn
             size="small"
             sx={{
               mr: 1,
@@ -59,13 +59,13 @@ export const AppHeader = ({children, sx, id = 'aa-header-id', ...props}: Props) 
             onClick={() => setSidebarOpen(_ => !_)}
           >
             <Icon>menu</Icon>
-          </IconBtn>
+          </IpIconBtn>
         )}
         <Txt sx={{ml: 1}} size="title" bold dangerouslySetInnerHTML={{__html: title ?? ''}}/>
         {children}
       </div>
       <Link href="/">
-        <AAIconBtn children="home"/>
+        <IpIconBtn children="home"/>
       </Link>
       <AppHeaderFeatures sx={{mr: 1}}/>
       <AppHeaderMenu/>

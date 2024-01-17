@@ -5,7 +5,7 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {useSession} from '@/core/Session/SessionContext'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {Panel} from '@/shared/Panel'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {Txt} from 'mui-extension'
@@ -105,7 +105,7 @@ export const AdminUsers = () => {
               width: 10,
               align: 'right',
               render: _ => (
-                <AAIconBtn
+                <IpIconBtn
                   disabled={_.email === conf.contact || _.email === session.email}
                   children="visibility"
                   loading={_connectAs.loading}

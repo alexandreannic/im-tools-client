@@ -1,6 +1,6 @@
 import {Box, Icon, Popover} from '@mui/material'
 import React, {useEffect, useState} from 'react'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {Enum} from '@alexandreannic/ts-utils'
 import {FilterLayoutProps} from '@/features/Dashboard/helper/FilterLayout'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
@@ -45,7 +45,7 @@ export const FilterLayoutPopup = ({
 
   return (
     <Box sx={{position: 'relative', ...sx}}>
-      <AAIconBtn
+      <IpIconBtn
         children="tune"
         onClick={(e) => setAnchorEl(e.currentTarget)}
       />

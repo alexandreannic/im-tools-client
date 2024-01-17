@@ -1,6 +1,6 @@
 import {Icon, IconProps, Tooltip} from '@mui/material'
 import React from 'react'
-import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
+import {IpIconBtn, IpIconBtnProps} from '@/shared/IconBtn'
 
 export interface TableIconProps extends IconProps {
   tooltip?: string
@@ -23,9 +23,9 @@ export const TableIconBtn = ({
   color,
   size = 'small',
   ...props
-}: AAIconBtnProps) => {
+}: IpIconBtnProps) => {
   return (
-    <AAIconBtn
+    <IpIconBtn
       color={color}
       size={size}
       sx={{

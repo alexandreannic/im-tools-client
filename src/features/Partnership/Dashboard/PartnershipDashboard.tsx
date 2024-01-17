@@ -22,7 +22,7 @@ import {PanershipPanelDonor} from '@/features/Partnership/Dashboard/PanershipPan
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {useSetState2} from '@/alexlib-labo/useSetState2'
 import {Box, Checkbox} from '@mui/material'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -229,7 +229,7 @@ export const _PartnershipDashboard = ({}: {}) => {
                 else selecteIds.reset(filteredData.map(_ => _.id))
               }}/>
               {selecteIds.toArray.length} {m.selected}
-              <AAIconBtn sx={{marginLeft: 'auto'}} onClick={selecteIds.clear}>clear</AAIconBtn>
+              <IpIconBtn sx={{marginLeft: 'auto'}} onClick={selecteIds.clear}>clear</IpIconBtn>
             </Box>
             {filteredData.map(d => <PartnershipCard state={selecteIds} key={d.id} partner={d} sx={{mt: 1}}/>)}
           </Panel>

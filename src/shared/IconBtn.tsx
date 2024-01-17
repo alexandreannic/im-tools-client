@@ -3,19 +3,19 @@ import {IconBtnProps} from 'mui-extension/lib/IconBtn/IconBtn'
 import React, {ReactNode} from 'react'
 import {IconBtn} from 'mui-extension'
 
-export interface AAIconBtnProps extends Omit<IconBtnProps, 'tooltip' | 'children'> {
+export interface IpIconBtnProps extends Omit<IconBtnProps, 'tooltip' | 'children'> {
   tooltip?: ReactNode
   children: string
   href?: string
   target?: '_blank'
 }
 
-export const AAIconBtn = ({
+export const IpIconBtn = ({
   tooltip,
   children,
   size,
   ...props
-}: AAIconBtnProps) => {
+}: IpIconBtnProps) => {
   const content = (
     <IconBtn {...props} size={size}>
       <Icon fontSize={size/* === 'small' ? 'small' : size*/}>{children}</Icon>

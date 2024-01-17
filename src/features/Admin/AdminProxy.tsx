@@ -6,7 +6,7 @@ import {useCrudList} from '@alexandreannic/react-hooks-lib'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {Switch} from '@mui/material'
-import {AAIconBtn} from '@/shared/IconBtn'
+import {IpIconBtn} from '@/shared/IconBtn'
 import {useForm} from 'react-hook-form'
 import {IpInput} from '@/shared/ItInput/IpInput'
 import {Utils} from '@/utils/utils'
@@ -93,7 +93,7 @@ export const AdminProxy = () => {
                   </>
                 }
               >
-                <AAIconBtn>add</AAIconBtn>
+                <IpIconBtn>add</IpIconBtn>
               </Modal>
             </>
           }

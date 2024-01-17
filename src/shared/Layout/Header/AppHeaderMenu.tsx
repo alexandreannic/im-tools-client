@@ -1,4 +1,4 @@
-import {AAIconBtn, AAIconBtnProps} from '@/shared/IconBtn'
+import {IpIconBtn, IpIconBtnProps} from '@/shared/IconBtn'
 import React, {ReactNode} from 'react'
 import {useSession} from '@/core/Session/SessionContext'
 import {Box, Icon, Popover} from '@mui/material'
@@ -25,7 +25,7 @@ const Row = ({
   )
 }
 
-export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
+export const AppHeaderMenu = ({sx, ...props}: Partial<IpIconBtnProps>) => {
   const session = useSession()
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
   const open = (!!anchorEl)
@@ -35,7 +35,7 @@ export const AppHeaderMenu = ({sx, ...props}: Partial<AAIconBtnProps>) => {
   }
   return (
     <>
-      <AAIconBtn
+      <IpIconBtn
         children="person"
         onClick={(e) => setAnchorEl(e.currentTarget)}
         sx={{
