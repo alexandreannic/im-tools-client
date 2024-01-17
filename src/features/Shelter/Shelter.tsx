@@ -12,7 +12,7 @@ import {ShelterProvider} from '@/features/Shelter/ShelterContext'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import Link from 'next/link'
 import {databaseIndex} from '@/features/Database/databaseIndex'
 import {ShelterDashboard} from '@/features/Shelter/Dasbhoard/ShelterDashboard'
@@ -78,7 +78,7 @@ export const Shelter = () => {
 export const ShelterWithAccess = () => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const {access, allowedOffices} = useMemo(() => {
     const dbAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))

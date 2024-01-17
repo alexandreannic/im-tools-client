@@ -15,7 +15,7 @@ import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
 import {Txt} from 'mui-extension'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useEffectFn, useMemoFn} from '@alexandreannic/react-hooks-lib'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useNavigate} from 'react-router'
 import {mealVerificationActivities, mealVerificationActivitiesIndex, mealVerificationConf} from '@/features/Meal/Verification/mealVerificationConfig'
@@ -50,7 +50,7 @@ const RenderRow = ({icon, label, children}: {
 export const MealVerificationForm = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const {toastHttpError, toastSuccess} = useAaToast()
+  const {toastHttpError, toastSuccess} = useIpToast()
   const [activeStep, setActiveStep] = React.useState(0)
   const t = useTheme()
   const navigate = useNavigate()

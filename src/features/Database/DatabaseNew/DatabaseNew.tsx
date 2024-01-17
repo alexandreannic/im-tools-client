@@ -7,7 +7,7 @@ import {Box} from '@mui/material'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {KoboFormCreate} from '@/core/sdk/server/kobo/KoboFormSdk'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 
 
 export const DatabaseNew = ({
@@ -23,7 +23,7 @@ export const DatabaseNew = ({
   const _create = useAsync(api.kobo.form.create)
   const {m, formatDate} = useI18n()
   const [selectedForm, setSelectedForm] = useState<KoboFormCreate & {uid: string} | undefined>()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   useEffectFn(_server.error, toastHttpError)
   // useEffectFn(_form.error, toastHttpError)

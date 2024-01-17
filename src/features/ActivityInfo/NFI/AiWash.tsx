@@ -11,7 +11,7 @@ import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {IpBtn} from '@/shared/Btn/IpBtn'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
 import {IpInput} from '@/shared/ItInput/IpInput'
 import {Sheet} from '@/shared/Sheet/Sheet'
@@ -220,7 +220,7 @@ const _ActivityInfo = ({
   data: Row[]
   // period: Date
 }) => {
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const {formatDate} = useI18n()
   const {api} = useAppSettings()
   const {m} = useI18n()

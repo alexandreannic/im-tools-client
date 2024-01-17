@@ -12,7 +12,7 @@ import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {useAsync} from '@/alexlib-labo/useAsync'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
@@ -39,7 +39,7 @@ export const DatabaseAccessForm = ({
   const survey = form.content.survey
 
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const {api} = useAppSettings()
 
   const _addAccess = useAsync(api.access.create)

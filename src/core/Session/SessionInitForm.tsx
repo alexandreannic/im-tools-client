@@ -8,7 +8,7 @@ import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useEffect, useState} from 'react'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Modal} from 'mui-extension/lib/Modal'
 import {DrcOffice} from '@/core/drcUa'
 
@@ -24,7 +24,7 @@ export const SessionInitForm = ({
   const {api, conf} = useAppSettings()
   const [drcOffice, setDrcOffice] = useState<DrcOffice | undefined>()
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _updateUser = useFetcher(api.user.update)
   useEffectFn(_updateUser.error, toastHttpError)

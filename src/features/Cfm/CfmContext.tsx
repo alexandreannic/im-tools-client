@@ -14,7 +14,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {DrcOffice, DrcProject, DrcProjectHelper} from '@/core/drcUa'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
 import {Seq, seq} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
@@ -115,7 +115,7 @@ export const CfmProvider = ({
 }) => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const [langIndex, setLangIndex] = useState(0)
   const schemaInternal = useKoboSchema({schema: schemas.internal})
   const schemaExternal = useKoboSchema({schema: schemas.external})

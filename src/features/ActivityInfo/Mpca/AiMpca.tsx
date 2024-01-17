@@ -14,7 +14,7 @@ import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {Box} from '@mui/material'
 import {IpInput} from '@/shared/ItInput/IpInput'
 import {IpBtn} from '@/shared/Btn/IpBtn'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
 import {useAsync} from '@/alexlib-labo/useAsync'
@@ -31,7 +31,7 @@ export const AiMpca = () => {
   const {api, conf} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _submit = useAsync((i: number, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i

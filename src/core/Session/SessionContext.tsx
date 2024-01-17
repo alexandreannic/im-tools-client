@@ -5,7 +5,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {mapPromise} from '@alexandreannic/ts-utils'
 import {Box, CircularProgress} from '@mui/material'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Access} from '@/core/sdk/server/access/Access'
 import {SessionLoginForm} from '@/core/Session/SessionLoginForm'
 import {SessionInitForm} from '@/core/Session/SessionInitForm'
@@ -32,7 +32,7 @@ export const SessionProvider = ({
   children: ReactNode
 }) => {
   const {m} = useI18n()
-  const {toastError} = useAaToast()
+  const {toastError} = useIpToast()
   const {api} = useAppSettings()
   const [session, setSession] = useState<UserSession | undefined>()
   const [isInitialLoading, setIsInitialLoading] = useState(true)

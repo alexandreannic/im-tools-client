@@ -5,7 +5,7 @@ import {UUID} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UseFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {useI18n} from '@/core/i18n'
@@ -49,7 +49,7 @@ export const DatabaseKoboTableProvider = (props: {
     fetcherAnswers,
   } = props
   const {api} = useAppSettings()
-  const {toastError} = useAaToast()
+  const {toastError} = useIpToast()
   const refreshRequestedFlag = useRef(false)
 
   const mapData = (data: KoboAnswer[]) => {

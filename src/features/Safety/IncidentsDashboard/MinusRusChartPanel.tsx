@@ -11,7 +11,7 @@ import {Messages} from '@/core/i18n/localization/en'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 
 interface MinusRusData {
   aircraft: number
@@ -79,7 +79,7 @@ const minusResKeys: Seq<keyof Messages['safety']['minusRusLabel']> = seq([
 
 export const MinusRusChartPanel = () => {
   const {api} = useAppSettings()
-  const {toastError} = useAaToast()
+  const {toastError} = useIpToast()
   const {m} = useI18n()
   const fetcherMinusRus = useFetcher(() => api.proxyRequest('GET', 'https://russialoses-dev.herokuapp.com')
     .then(parseMinusRus) as Promise<Seq<MinusRusData>>)

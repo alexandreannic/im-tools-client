@@ -10,13 +10,13 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {IpBtn} from '@/shared/Btn/IpBtn'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AiFslcData} from '@/features/ActivityInfo/Fslc/aiFslcData'
 
 export const AiFslc = () => {
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const fetcher = useFetcher(AiFslcData.reqEcrecCashRegistration(api))
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {m} = useI18n()

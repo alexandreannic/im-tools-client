@@ -10,7 +10,7 @@ import {IpInput} from '@/shared/ItInput/IpInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
 import {IpBtn} from '@/shared/Btn/IpBtn'
 import {AaSelect} from '@/shared/Select/Select'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
@@ -161,7 +161,7 @@ const _ActivityInfo = ({
   }, [data])
 
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   return (
     <div>

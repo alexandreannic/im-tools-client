@@ -2,7 +2,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useMemo, useState} from 'react'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {PeriodHelper, Person} from '@/core/type'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
@@ -26,7 +26,7 @@ export const AiGbv = () => {
   const {api, conf} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i

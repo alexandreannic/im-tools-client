@@ -12,7 +12,7 @@ import {PartnershipDatabase} from '@/features/Partnership/Database/PartnershipDa
 import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {Tooltip} from '@mui/material'
 import {mpcaIndex} from '@/features/Mpca/Mpca'
@@ -75,7 +75,7 @@ const PartnershipSidebar = () => {
 
 export const Partnership = () => {
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _schemas = useFetcher(async () => {
     const [

@@ -9,7 +9,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {useAsync} from '@/alexlib-labo/useAsync'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcUa'
@@ -29,7 +29,7 @@ export const WfpDeduplicationAccessForm = ({
   children: ReactElement,
 }) => {
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const {api} = useAppSettings()
 
   const _addAccess = useAsync(api.access.create)

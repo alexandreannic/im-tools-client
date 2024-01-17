@@ -11,13 +11,13 @@ import {useI18n} from '@/core/i18n'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {IpBtn} from '@/shared/Btn/IpBtn'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 
 export const AiSnfi = () => {
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const fetcher = useFetcher((p: Period) => {
     const res = Promise.all([
       AiShelterData.reqRepairs(api)(p),

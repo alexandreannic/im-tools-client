@@ -5,7 +5,7 @@ import {BtnUploader} from 'mui-extension'
 import React, {useMemo} from 'react'
 import {useAsync, useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
@@ -29,7 +29,7 @@ const WpfDeduplicationSidebar = () => {
   const _uploadTaxIdMapping = useAsync(api.wfpDeduplication.uploadTaxIdsMapping)
   const _refreshData = useAsync(api.wfpDeduplication.refresh)
   const {m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
   const path = (page: string) => '' + page
 
   useEffectFn(_uploadTaxIdMapping.getError(), toastHttpError)

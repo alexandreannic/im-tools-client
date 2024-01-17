@@ -11,7 +11,7 @@ import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/f
 import {Box} from '@mui/material'
 import {IpInput} from '@/shared/ItInput/IpInput'
 import {IpBtn} from '@/shared/Btn/IpBtn'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 import {ActivityInfoProtectionMapper} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {Utils} from '@/utils/utils'
 import {Enum, seq} from '@alexandreannic/ts-utils'
@@ -26,7 +26,7 @@ export const AiProtectionGeneral = () => {
   const {api, conf} = useAppSettings()
   const [period, setPeriod] = useState(format(subMonths(new Date(), 1), 'yyyy-MM'))
   const {formatLargeNumber, m} = useI18n()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const _submit = useAsync((id: string, p: any) => api.activityInfo.submitActivity(p), {
     requestKey: ([i]) => i

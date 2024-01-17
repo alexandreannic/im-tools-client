@@ -5,13 +5,13 @@ import {useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {kobo, KoboIndex} from '@/KoboIndex'
 import {seq} from '@alexandreannic/ts-utils'
-import {useAaToast} from '@/core/useToast'
+import {useIpToast} from '@/core/useToast'
 
 export type UseShelterData = ReturnType<typeof useShelterData>
 
 export const useShelterData = () => {
   const {api} = useAppSettings()
-  const {toastHttpError} = useAaToast()
+  const {toastHttpError} = useIpToast()
 
   const req = () => api.shelter.search().then(_ => _.data)
   const fetcher = useFetcher(req)
