@@ -4,7 +4,7 @@ import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboIndex} from '@/KoboIndex'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
@@ -19,6 +19,7 @@ import {KeyOf} from '@/utils/utils'
 import {Seq, seq} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
+import {useI18n} from '@/core/i18n'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,
@@ -82,7 +83,7 @@ export interface CfmContext {
     answerId: KoboAnswerId,
     key: keyof KoboMealCfmTag,
     value: any
-  }) => Promise<Record<string, any>>>
+  }) => Promise<void>>
   asyncRemove: UseAsync<(_: {
     formId: KoboId,
     answerId: KoboAnswerId
@@ -113,9 +114,10 @@ export const CfmProvider = ({
   }
   children: ReactNode
 }) => {
+  const {m} = useI18n()
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
-  const {toastHttpError} = useIpToast()
+  const {toastHttpError, toastError} = useIpToast()
   const [langIndex, setLangIndex] = useState(0)
   const schemaInternal = useKoboSchema({schema: schemas.internal})
   const schemaExternal = useKoboSchema({schema: schemas.external})
@@ -212,22 +214,27 @@ export const CfmProvider = ({
     answerId: KoboAnswerId,
     key: keyof KoboMealCfmTag,
     value: any
-  }) => api.kobo.answer.updateTag({
-    formId: params.formId,
-    answerIds: [params.answerId],
-    tags: {[params.key]: params.value}
-  }).then(() => {
-    const formName = formIdMapping[params.formId]
-    data.setEntity(prev => prev ? ({
-      ...prev,
-      [formName]: prev[formName].map(_ => {
-        if (_.id === params.answerId) {
-          _.tags = {..._.tags, [params.key]: params.value}
-        }
-        return _
-      })
-    }) : undefined)
-  }), {
+  }) => {
+    return api.kobo.answer.updateTag({
+      formId: params.formId,
+      answerIds: [params.answerId],
+      tags: {[params.key]: params.value}
+    }).then(() => {
+      const formName = formIdMapping[params.formId]
+      data.setEntity(prev => prev ? ({
+        ...prev,
+        [formName]: prev[formName].map(_ => {
+          if (_.id === params.answerId) {
+            _.tags = {..._.tags, [params.key]: params.value}
+          }
+          return _
+        })
+      }) : undefined)
+    }).catch(e => {
+      toastError(m._shelter.cannotUpdateTag(1, params.key as string, params.value as string))
+      throw e
+    })
+  }, {
     requestKey: ([_]) => cfmMakeUpdateRequestKey(_.formId, _.answerId, _.key)
   })
 
