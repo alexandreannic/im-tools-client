@@ -2,7 +2,7 @@ import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, Popov
 import {IpBtn} from '../../Btn/IpBtn'
 import {useI18n} from '../../../core/i18n'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {AaInput} from '../../ItInput/AaInput'
+import {IpInput} from '../../ItInput/IpInput'
 import {MultipleChoices} from '../../MultipleChoices'
 import {PeriodPicker} from '../../PeriodPicker/PeriodPicker'
 import {AAIconBtn} from '../../IconBtn'
@@ -167,7 +167,7 @@ export const SheetFilterDialogSelect = ({
             control={<Checkbox size="small" checked={allChecked} indeterminate={!allChecked && someChecked}/>}
             label={m.selectAll}
           />
-          <AaInput label={m.filterPlaceholder} helperText={null} sx={{mb: 1}} onChange={e => setFilter(e.target.value)}/>
+          <IpInput label={m.filterPlaceholder} helperText={null} sx={{mb: 1}} onChange={e => setFilter(e.target.value)}/>
           <Divider/>
           <Box sx={{maxHeight: 350, overflowY: 'auto'}}>
             {options.map(o =>
@@ -203,7 +203,7 @@ export const SheetFilterDialogText = ({
           <Switch checked={value?.filterBlank} onChange={e => onChange(prev => ({...prev, filterBlank: e.target.checked}))}/>
         }
       />
-      <AaInput value={value?.value} onChange={e => onChange(prev => ({...prev, value: e.target.value}))}/>
+      <IpInput value={value?.value} onChange={e => onChange(prev => ({...prev, value: e.target.value}))}/>
     </>
   )
 }
@@ -238,8 +238,8 @@ export const SheetFilterDialogNumber = ({
     <>
       <Slider min={min} max={max} value={mappedValue} onChange={(e, _) => onChange(_ as [number, number])}/>
       <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-        <AaInput type="number" sx={{minWidth: 60, mr: .5}} value={mappedValue[0]} onChange={e => onChange(prev => [+e.target.value, prev?.[1]])}/>
-        <AaInput type="number" sx={{minWidth: 60, ml: .5}} value={mappedValue[1]} onChange={e => onChange(prev => [prev?.[0], +e.target.value])}/>
+        <IpInput type="number" sx={{minWidth: 60, mr: .5}} value={mappedValue[0]} onChange={e => onChange(prev => [+e.target.value, prev?.[1]])}/>
+        <IpInput type="number" sx={{minWidth: 60, ml: .5}} value={mappedValue[1]} onChange={e => onChange(prev => [prev?.[0], +e.target.value])}/>
       </Box>
     </>
   )

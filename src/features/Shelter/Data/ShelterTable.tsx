@@ -13,7 +13,7 @@ import {Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
 import {AAIconBtn} from '@/shared/IconBtn'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {KoboShelterTa, shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
@@ -521,7 +521,7 @@ export const ShelterTable = () => {
             onChange={_ => ctx.ta.asyncUpdate.call({answerId: ta.id, key: 'price', value: _})}
           >
             {(value, onChange) => (
-              <AaInput
+              <IpInput
                 type="number"
                 helperText={null}
                 defaultValue={value}

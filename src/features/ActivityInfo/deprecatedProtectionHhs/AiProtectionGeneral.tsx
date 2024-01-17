@@ -6,7 +6,7 @@ import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtecti
 import {Page} from '@/shared/Page'
 import {Txt} from 'mui-extension'
 import {Panel} from '@/shared/Panel'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
 import {IpBtn} from '@/shared/Btn/IpBtn'
 import {AaSelect} from '@/shared/Select/Select'
@@ -60,7 +60,7 @@ export const AiProtectionGeneral = () => {
       {map(filteredData, _ => <_ActivityInfo
         action={
           <>
-            <AaInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+            <IpInput type="month" sx={{width: 200, mr: 1}} value={period} onChange={_ => setPeriod(_.target.value)}/>
             <AaSelect
               sx={{width: 200}}
               label="Oblast"

@@ -5,7 +5,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {Utils} from '@/utils/utils'
@@ -271,7 +271,7 @@ export const CfmTable = ({}: any) => {
                       onChange={(e, _) => onChange(_)}
                       options={ctx.users.entity?.map((option) => option.email) ?? []}
                       // renderInput={(params) => <TextField {...params} label="freeSolo" />}
-                      renderInput={({InputProps, ...props}) => <AaInput
+                      renderInput={({InputProps, ...props}) => <IpInput
                         {...InputProps}
                         {...props}
                         helperText={null}

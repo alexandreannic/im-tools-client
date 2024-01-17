@@ -8,7 +8,7 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Controller, useForm} from 'react-hook-form'
 import {MealVerificationFormData} from '@/features/Meal/Verification/Form/MealVerificationFormData'
 import {IpBtn, IpBtnProps} from '@/shared/Btn/IpBtn'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
@@ -169,14 +169,14 @@ export const MealVerificationForm = () => {
                   rules={{required: {value: true, message: m.required}}}
                   control={form.control}
                   render={({field}) => (
-                    <AaInput {...field} label={m._mealVerif.giveANameToId}/>
+                    <IpInput {...field} label={m._mealVerif.giveANameToId}/>
                   )}
                 />
                 <Controller
                   name="desc"
                   control={form.control}
                   render={({field}) => (
-                    <AaInput multiline maxRows={8} minRows={3} {...field} label={m._mealVerif.giveDetails}/>
+                    <IpInput multiline maxRows={8} minRows={3} {...field} label={m._mealVerif.giveDetails}/>
                   )}
                 />
                 <Box sx={{mb: 1}}>

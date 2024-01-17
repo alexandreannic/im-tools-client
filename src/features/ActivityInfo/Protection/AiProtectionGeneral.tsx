@@ -9,7 +9,7 @@ import {useI18n} from '@/core/i18n'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {Box} from '@mui/material'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useAaToast} from '@/core/useToast'
 import {ActivityInfoProtectionMapper} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
@@ -158,7 +158,7 @@ export const AiProtectionGeneral = () => {
           id="ai-prot"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
-              <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
+              <IpInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <IpBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
                 _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)

@@ -1,4 +1,4 @@
-import {AaInput, AaInputProps} from '@/shared/ItInput/AaInput'
+import {IpInput, IpInputProps} from '@/shared/ItInput/IpInput'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import React from 'react'
@@ -14,7 +14,7 @@ export const TableInput = ({
   originalValue?: string | null
   value?: string
   debounce?: number
-} & Omit<AaInputProps, 'onChange' | 'value'>) => {
+} & Omit<IpInputProps, 'onChange' | 'value'>) => {
   return (
     <DebouncedInput<string>
       debounce={debounce}
@@ -22,7 +22,7 @@ export const TableInput = ({
       onChange={_ => onChange(_ === '' || _ === originalValue ? undefined : _)}
     >
       {(value, onChange) => (
-        <AaInput
+        <IpInput
           helperText={null}
           value={value}
           onChange={e => onChange(e.target.value)}

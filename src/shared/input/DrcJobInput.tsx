@@ -1,7 +1,7 @@
 import {Autocomplete, AutocompleteProps, Chip} from '@mui/material'
 import {Enum} from '@alexandreannic/ts-utils'
 import {DrcJob} from '@/core/drcUa'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 
@@ -22,7 +22,7 @@ export const DrcJobInputMultiple = (props: Omit<AutocompleteProps<DrcJob, any, a
       }
       options={Enum.values(DrcJob) ?? []}
       // renderOption={(props, _) => <Txt truncate>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
-      renderInput={({InputProps, ...props}) => <AaInput helperText={null} label={m.drcJob} {...InputProps} {...props}/>}
+      renderInput={({InputProps, ...props}) => <IpInput helperText={null} label={m.drcJob} {...InputProps} {...props}/>}
       {...props}
     />
   )
@@ -34,7 +34,7 @@ export const DrcJobInputSingle = (props: Omit<AutocompleteProps<DrcJob, any, any
     <Autocomplete
       options={Enum.values(DrcJob) ?? []}
       // renderOption={(props, _) => <Txt truncate>{_.label?.[0]?.replace(/<[^>]+>/g, '') ?? _.name}</Txt>}
-      renderInput={({InputProps, ...props}) => <AaInput helperText={null} label={m.drcJob} {...InputProps} {...props}/>}
+      renderInput={({InputProps, ...props}) => <IpInput helperText={null} label={m.drcJob} {...InputProps} {...props}/>}
       {...props}
     />
   )

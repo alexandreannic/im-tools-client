@@ -8,7 +8,7 @@ import {IpBtn} from '@/shared/Btn/IpBtn'
 import {Panel} from '@/shared/Panel'
 import {Box, Chip, Icon} from '@mui/material'
 import {Modal} from 'mui-extension'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {useForm} from 'react-hook-form'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AAIconBtn} from '@/shared/IconBtn'
@@ -73,8 +73,8 @@ export const AdminGroups = () => {
                 title={m._admin.createGroup}
                 content={
                   <>
-                    <AaInput sx={{mt: 2}} label={m.name} autoFocus {...groupForm.register('name')}/>
-                    <AaInput multiline minRows={3} maxRows={6} label={m.desc} {...groupForm.register('desc')}/>
+                    <IpInput sx={{mt: 2}} label={m.name} autoFocus {...groupForm.register('name')}/>
+                    <IpInput multiline minRows={3} maxRows={6} label={m.desc} {...groupForm.register('desc')}/>
                   </>
                 }
               >
@@ -134,8 +134,8 @@ export const AdminGroups = () => {
                   confirmLabel={m.edit}
                   content={
                     <>
-                      <AaInput sx={{mt: 2}} label={m.name} defaultValue={_.name} autoFocus {...groupForm.register('name')}/>
-                      <AaInput multiline minRows={3} maxRows={6} defaultValue={_.desc} label={m.desc} {...groupForm.register('desc')}/>
+                      <IpInput sx={{mt: 2}} label={m.name} defaultValue={_.name} autoFocus {...groupForm.register('name')}/>
+                      <IpInput multiline minRows={3} maxRows={6} defaultValue={_.desc} label={m.desc} {...groupForm.register('desc')}/>
                     </>
                   }
                 >

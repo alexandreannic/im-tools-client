@@ -13,7 +13,7 @@ import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useAaToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
@@ -205,7 +205,7 @@ export const AiWash = () => {
 
   return (
     <Page width={1200} loading={_data.loading}>
-      <AaInput type="month" sx={{minWidth: 200, width: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
+      <IpInput type="month" sx={{minWidth: 200, width: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
       {map(_data.entity, _ => (
         <_ActivityInfo data={_}/>
       ))}

@@ -8,7 +8,7 @@ import {useI18n} from '@/core/i18n'
 import {Switch} from '@mui/material'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useForm} from 'react-hook-form'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {Utils} from '@/utils/utils'
 import {Txt} from 'mui-extension'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
@@ -63,7 +63,7 @@ export const AdminProxy = () => {
                 })()}
                 content={
                   <>
-                    <AaInput
+                    <IpInput
                       {..._createForm.register('name', {
                         required: {value: true, message: m.required}
                       })}
@@ -72,7 +72,7 @@ export const AdminProxy = () => {
                       helperText={slugify(_createForm.watch('name'))}
                       sx={{mb: 2, mt: 1}}
                     />
-                    <AaInput
+                    <IpInput
                       sx={{mb: 2}}
                       label={m.url}
                       error={!!_createForm.formState.errors.url}
@@ -82,7 +82,7 @@ export const AdminProxy = () => {
                         pattern: {value: Utils.regexp.url, message: m.invalidUrl},
                       })}
                     />
-                    <AaInput
+                    <IpInput
                       InputLabelProps={{shrink: true}}
                       label={m.expireAt}
                       type="date"

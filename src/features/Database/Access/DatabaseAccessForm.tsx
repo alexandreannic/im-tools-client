@@ -4,7 +4,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import React, {ReactElement, useCallback, useMemo} from 'react'
 import {Modal, Txt} from 'mui-extension'
 import {Autocomplete, Box, Chip, createFilterOptions} from '@mui/material'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {Controller, useForm} from 'react-hook-form'
 import {KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {map, seq} from '@alexandreannic/ts-utils'
@@ -125,7 +125,7 @@ export const DatabaseAccessForm = ({
                   }}
                   loading={!questions}
                   options={questions?.map(_ => _.name) ?? []}
-                  renderInput={({InputProps, ...props}) => <AaInput
+                  renderInput={({InputProps, ...props}) => <IpInput
                     {...InputProps}
                     {...props}
                     label={m.question}
@@ -165,7 +165,7 @@ export const DatabaseAccessForm = ({
                       disableCloseOnSelect
                       options={options?.map(_ => _.name) ?? []}
                       // options={options?.map(_ => ({children: getKoboLabel(_, langIndex), value: _.name}))}
-                      renderInput={({InputProps, ...props}) => <AaInput
+                      renderInput={({InputProps, ...props}) => <IpInput
                         {...InputProps}
                         {...props}
                         label={m.answer}

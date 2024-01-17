@@ -12,7 +12,7 @@ import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/f
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {Box} from '@mui/material'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useAaToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
@@ -147,7 +147,7 @@ export const AiMpca = () => {
           id="ai-mpca"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
-              <AaInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
+              <IpInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <Txt color="hint" sx={{ml: 1}}>
                 USD to UAH: <b>{conf.uahToUsd}</b>
               </Txt>

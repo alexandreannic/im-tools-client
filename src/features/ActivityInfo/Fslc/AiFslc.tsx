@@ -3,7 +3,7 @@ import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {format, subMonths} from 'date-fns'
 import {PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
@@ -36,7 +36,7 @@ export const AiFslc = () => {
           showExportBtn
           header={
             <>
-              <AaInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
+              <IpInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
               <IpBtn
                 loading={_submit.anyLoading}
                 icon="send"

@@ -4,7 +4,7 @@ import {AccessLevel, accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Autocomplete, autocompleteClasses, Box, BoxProps, Chip, SxProps, Theme} from '@mui/material'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -107,7 +107,7 @@ export const AccessFormInputEmail = ({
   const {m} = useI18n()
   const required = form.watch('selectBy') === 'email'
   return (
-    <AaInput
+    <IpInput
       label={m.drcEmail}
       error={!!form.formState.errors.email}
       helperText={form.formState.errors.email?.message as string}
@@ -241,7 +241,7 @@ export const AccessFormInputGroup = ({
               </Box>
             )}
             renderInput={({InputProps, ...props}) =>
-              <AaInput
+              <IpInput
                 helperText={null}
                 label={m.group}
                 {...InputProps}

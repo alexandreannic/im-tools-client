@@ -13,7 +13,7 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboSelectTag} from '@/shared/KoboSelectTag'
 import {DrcOffice} from '@/core/drcUa'
 import {Utils} from '@/utils/utils'
-import {AaInput} from '@/shared/ItInput/AaInput'
+import {IpInput} from '@/shared/ItInput/IpInput'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {AaSelect} from '@/shared/Select/Select'
 import {Enum} from '@alexandreannic/ts-utils'
@@ -157,7 +157,7 @@ export const CfmDetails = ({entry}: {
                   }}
                 >
                   {(value, onChange) => (
-                    <AaInput
+                    <IpInput
                       helperText={null}
                       value={value}
                       onChange={e => onChange(e.target.value)}
@@ -206,7 +206,7 @@ export const CfmDetails = ({entry}: {
                 }}
               >
                 {(value, onChange) => (
-                  <AaInput
+                  <IpInput
                     multiline
                     rows={8}
                     value={value}
