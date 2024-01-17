@@ -67,7 +67,13 @@ export class AILocationHelper {
     return list.find(_ => _.en.toLowerCase() === hromadaName?.toLowerCase())
   }
 
-  static readonly findSettlement = (oblastName: string, raionName: string, hromadaName: string, settlementName: string) => {
+  static readonly findSettlement = (oblastName: string, raionName: string, hromadaName: string, settlementName?: string) => {
+    const hromada = AILocationHelper.findHromada(oblastName, raionName, hromadaName)
+    if (!hromada) return '⚠️ MISSING HROMADA'
+    const settlements = AILocationHelper.getSettlementsByHromadaIso(hromada.iso)
+    if (settlements.length === 1) return settlements[0]
+    if (!settlementName) return '⚠️ MISSING settlementName'
+
     const settlementFixes: Record<string, string> = {
       'Kamianets-Podilsk': 'Kamianets-Podilskyi',
       'Synelnykovo': 'Synelnykove',
@@ -75,10 +81,7 @@ export class AILocationHelper {
       'Budy village': 'Budy'
     }
     settlementName = settlementFixes[settlementName] ?? settlementName
-    const hromada = AILocationHelper.findHromada(oblastName, raionName, hromadaName)
-    if (!hromada) return
-    const settlements = AILocationHelper.getSettlementsByHromadaIso(hromada.iso)
-    const match = settlements.find(_ => _.en.toLowerCase() === settlementName.toLowerCase())
+    const match = settlements.find(_ => _.en.toLowerCase() === settlementName!.toLowerCase())
     if (match) return match
     // return {
     //   'Chernihivska': settlements.find(_ => _.en === 'Chernihiv')

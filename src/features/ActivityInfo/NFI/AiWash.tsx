@@ -3,8 +3,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Bn_OldMpcaNfi} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
-import {Box, Icon} from '@mui/material'
-import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
+import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './aiWashInterface'
 import {bn_OldMpcaNfiOptions} from '@/core/koboModel/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
 import {ActivityInfoActions, AiSendBtn} from '../shared/ActivityInfoActions'
@@ -21,12 +20,9 @@ import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {Person} from '@/core/type'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
-import {AAIconBtn} from '@/shared/IconBtn'
-
-interface Person {
-  age: number
-  gender: 'male' | 'female'
-}
+import {Utils} from '@/utils/utils'
+import {KoboBnReHelper} from '@/core/sdk/server/kobo/custom/KoboBnRe'
+import {NonNullableKeys} from '@/utils/utilsType'
 
 interface Answer {
   id: KoboAnswerId
@@ -41,8 +37,9 @@ interface Answer {
   BK2: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit']>
   BK3: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_001']>
   BK4: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_002']>
-  hh_char_hh_det?: Partial<Person>[]
+  persons: NonNullableKeys<Person.Person>[]
 }
+
 
 // export const getLocation = <K extends string>(loc: Record<K, string>, name: string, type: string, rows: any): K => {
 //   if (name === 'Cnernivetskyi') {
@@ -118,55 +115,51 @@ const toFormData = ({
     })
   }
 
-  Enum.entries(answers.groupBy(_ => _.oblast!)).forEach(([oblast, byOblast]) => {
-    const enOblast = Bn_ReOptions.ben_det_prev_oblast[oblast]!
-    Enum.entries(byOblast.groupBy(_ => _.raion!)).forEach(([raion, byRaion]) => {
-      const enRaion = Bn_ReOptions.ben_det_raion[raion]!
-      Enum.entries(byRaion.groupBy(_ => _.hromada!)).forEach(([hromada, byHromada]) => {
-        const enHromada = Bn_ReOptions.ben_det_hromada[hromada]!
-        Enum.entries(byHromada.groupBy(_ => _.settlement)).forEach(([settlement, bySettlement]) => {
-          const bySettlementWithPerson = bySettlement.map(_ => ({
-            ..._,
-            hh_char_hh_det: (_.hh_char_hh_det ?? []).filter(_ => _.age && _.gender)
-          })) as Seq<Omit<Answer, 'hh_char_hh_det'> & {hh_char_hh_det: Person[]}>
-          const planBK = bySettlementWithPerson.filter(_ => _.BK1 > 0 || _.BK2 > 0 || _.BK3 > 0 || _.BK4 > 0)
-          const planHK = bySettlementWithPerson.filter(_ => _.HKMV_ > 0 || _.HKF_ > 0)
-          const planBKPersons = planBK.flatMap(_ => _.hh_char_hh_det).filter(_ => _ && _.age && _.gender)
-            .filter(_ => _.age < 3)
-          const planHKPersons = planHK.flatMap(_ => _.hh_char_hh_det).filter(_ => _ && _.age && _.gender)
-          const location = {
-            Oblast: AILocationHelper.findOblast(enOblast) ?? '⚠️' + enOblast,
-            Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? '⚠️' + enRaion,
-            Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? '⚠️' + enHromada,
-            Settlement: AILocationHelper.findSettlement(enOblast, enRaion, enHromada, settlement)?._5w ?? '⚠️' + settlement,
-          }
-          pushActivity(planBK, {
-            ...location,
-            'WASH - APM': 'DRC-00003',
-            'Boys': planBKPersons.filter(_ => _.gender === 'male').length,
-            'Girls': planBKPersons.filter(_ => _.gender === 'female').length,
-            'Men': 0,
-            'Women': 0,
-            'Elderly Women': 0,
-            'Elderly Men': 0,
-            'People with disability': planBK.length,
-            'Total Reached (No Disaggregation)': planBKPersons.length,
-          })
-          pushActivity(planHK, {
-            ...location,
-            'WASH - APM': 'DRC-00001',
-            'Total Reached (No Disaggregation)': planHKPersons.length,
-            'Boys': planHKPersons.count(_ => _.age < 18 && _.gender === 'male'),
-            'Girls': planHKPersons.count(_ => _.age < 18 && _.gender === 'female'),
-            'Men': planHKPersons.count(_ => _.age >= 18 && _.age < Person.elderlyLimitIncluded && _.gender === 'male'),
-            'Women': planHKPersons.count(_ => _.age >= 18 && _.age < Person.elderlyLimitIncluded && _.gender === 'female'),
-            'Elderly Men': planHKPersons.count(_ => _.age >= Person.elderlyLimitIncluded && _.gender === 'male'),
-            'Elderly Women': planHKPersons.count(_ => _.age >= Person.elderlyLimitIncluded && _.gender === 'female'),
-            'People with disability': planHK.length,
-          })
-        })
+  Utils.groupBy({
+    data: answers,
+    groups: [
+      {by: _ => Bn_ReOptions.ben_det_prev_oblast[_.oblast!] ?? _.oblast},
+      {by: _ => Bn_ReOptions.ben_det_raion[_.raion!] ?? _.raion},
+      {by: _ => Bn_ReOptions.ben_det_hromada[_.hromada!] ?? _.hromada},
+      {by: _ => _.settlement},
+    ],
+    finalTransform: (grouped, [enOblast, enRaion, enHromada, settlement]) => {
+      const planBK = grouped.filter(_ => _.BK1 > 0 || _.BK2 > 0 || _.BK3 > 0 || _.BK4 > 0)
+      const planHK = grouped.filter(_ => _.HKMV_ > 0 || _.HKF_ > 0)
+      const planBKPersons = planBK.flatMap(_ => _.persons).filter(_ => _.age < 3)
+      const planHKPersons = planHK.flatMap(_ => _.persons)
+      const location = {
+        Oblast: AILocationHelper.findOblast(enOblast) ?? '⚠️' + enOblast,
+        Raion: AILocationHelper.findRaion(enOblast, enRaion)?._5w ?? '⚠️' + enRaion,
+        Hromada: AILocationHelper.findHromada(enOblast, enRaion, enHromada)?._5w ?? '⚠️' + enHromada,
+        Settlement: AILocationHelper.findSettlement(enOblast, enRaion, enHromada, settlement)?._5w ?? '⚠️' + settlement,
+      }
+      const planHkGrouped = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(planHKPersons)
+      pushActivity(planBK, {
+        ...location,
+        'WASH - APM': 'DRC-00003',
+        'Boys': planBKPersons.filter(_ => _.gender === 'Male').length,
+        'Girls': planBKPersons.filter(_ => _.gender === 'Female').length,
+        'Men': 0,
+        'Women': 0,
+        'Elderly Women': 0,
+        'Elderly Men': 0,
+        'People with disability': planBK.length,
+        'Total Reached (No Disaggregation)': planBKPersons.length,
       })
-    })
+      pushActivity(planHK, {
+        ...location,
+        'WASH - APM': 'DRC-00001',
+        'Total Reached (No Disaggregation)': planHKPersons.length,
+        'Boys': planHkGrouped['0 - 17'].Male,
+        'Girls': planHkGrouped['0 - 17'].Female,
+        'Men': planHkGrouped['18 - 59'].Male,
+        'Women': planHkGrouped['18 - 59'].Female,
+        'Elderly Men': planHkGrouped['60+'].Male,
+        'Elderly Women': planHkGrouped['60+'].Female,
+        'People with disability': planHK.length,
+      })
+    }
   })
   return activities
 }
@@ -183,7 +176,7 @@ export const AiWash = () => {
     }
     return api.kobo.typedAnswers.searchBn_Re({filters})
       .then(_ => {
-        return _.data.filter(_ => !!_.ben_det_settlement).map((_, i) => ({
+        return _.data.filter(_ => _.back_office === 'chj').map((_, i) => ({
           id: _.id,
           oblast: _.ben_det_oblast,
           raion: _.ben_det_raion,
@@ -196,13 +189,7 @@ export const AiWash = () => {
           BK2: _.nfi_dist_wkb2 ?? 0,
           BK3: _.nfi_dist_wkb3 ?? 0,
           BK4: _.nfi_dist_wkb4 ?? 0,
-          hh_char_hh_det: [
-            ...(_.hh_char_hhh_age || _.hh_char_res_gender) ? [{age: _.hh_char_hhh_age, gender: _.hh_char_res_gender}] : [],
-            ...(_.hh_char_hh_det ?? []).map(p => ({
-              age: p.hh_char_hh_det_age,
-              gender: p.hh_char_hh_det_gender,
-            }))
-          ],
+          persons: Person.filterDefined(KoboBnReHelper.getPersons(_)),
         }))
       })
       .then(_ => toFormData({
@@ -244,6 +231,7 @@ const _ActivityInfo = ({
     <>
       <Panel>
         <Sheet<Row>
+          getRenderRowKey={_ => _.request.changes[0].recordId}
           header={
             <AaBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
               _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
@@ -269,20 +257,68 @@ const _ActivityInfo = ({
               </>
           },
           {id: 'wash', head: 'WASH - APM', render: _ => <>{_.activity['WASH - APM']}</>},
-          {type: 'select_one', id: 'Oblast', head: 'Oblast', render: _ => <>{AILocationHelper.get5w(_.activity['Oblast'])}</>},
-          {type: 'select_one', id: 'Raion', head: 'Raion', render: _ => <>{AILocationHelper.get5w(_.activity['Raion'])}</>},
-          {type: 'select_one', id: 'Hromada', head: 'Hromada', render: _ => <>{AILocationHelper.get5w(_.activity['Hromada'])}</>},
-          {type: 'select_one', id: 'Settlement', head: 'Settlement', render: _ => <>{AILocationHelper.get5w(_.activity['Settlement'])}</>},
-          {type: 'select_one', id: 'location', head: 'Location Type', render: _ => <>{_.activity['Location Type']}</>},
-          {type: 'select_one', id: 'population', head: 'Population Group', render: _ => <>{_.activity['Population Group']}</>},
-          {type: 'number', id: 'boys', head: 'Boys', render: _ => <>{_.activity['Boys']}</>},
-          {type: 'number', id: 'girls', head: 'Girls', render: _ => <>{_.activity['Girls']}</>},
-          {type: 'number', id: 'women', head: 'Women', render: _ => <>{_.activity['Women']}</>},
-          {type: 'number', id: 'men', head: 'Men', render: _ => <>{_.activity['Men']}</>},
-          {type: 'number', id: 'elderly', head: 'Elderly Women', render: _ => <>{_.activity['Elderly Women']}</>},
-          {type: 'number', id: 'elderly', head: 'Elderly Men', render: _ => <>{_.activity['Elderly Men']}</>},
-          {type: 'number', id: 'people', head: 'People with disability', render: _ => <>{_.activity['People with disability']}</>},
-          {type: 'number', id: 'total', head: 'Total Reached (No Disaggregation)', render: _ => <>{_.activity['Total Reached (No Disaggregation)']}</>},
+          {
+            type: 'select_one', id: 'Oblast', head: 'Oblast',
+            render: _ => <>{AILocationHelper.get5w(_.activity['Oblast'])}</>,
+            renderValue: _ => AILocationHelper.get5w(_.activity['Oblast']),
+          },
+          {
+            type: 'select_one', id: 'Raion', head: 'Raion',
+            render: _ => <>{AILocationHelper.get5w(_.activity['Raion'])}</>,
+            renderValue: _ => AILocationHelper.get5w(_.activity['Raion']),
+          },
+          {
+            type: 'select_one', id: 'Hromada', head: 'Hromada',
+            render: _ => <>{AILocationHelper.get5w(_.activity['Hromada'])}</>,
+            renderValue: _ => AILocationHelper.get5w(_.activity['Hromada']),
+          },
+          {
+            type: 'select_one', id: 'Settlement', head: 'Settlement',
+            render: _ => <>{AILocationHelper.get5w(_.activity['Settlement'])}</>,
+            renderValue: _ => AILocationHelper.get5w(_.activity['Settlement']),
+          },
+          {
+            type: 'select_one', id: 'location', head: 'Location Type',
+            render: _ => <>{_.activity['Location Type']}</>,
+            renderValue: _ => _.activity['Location Type'],
+          },
+          {
+            type: 'select_one', id: 'population', head: 'Population Group',
+            render: _ => <>{_.activity['Population Group']}</>,
+            renderValue: _ => _.activity['Population Group'],
+          },
+          {
+            type: 'number', id: 'boys', head: 'Boys',
+            render: _ => _.activity['Boys']
+          },
+          {
+            type: 'number', id: 'girls', head: 'Girls',
+            render: _ => _.activity['Girls']
+          },
+          {
+            type: 'number', id: 'women', head: 'Women',
+            render: _ => _.activity['Women']
+          },
+          {
+            type: 'number', id: 'men', head: 'Men',
+            render: _ => _.activity['Men']
+          },
+          {
+            type: 'number', id: 'elderly w', head: 'Elderly Women',
+            render: _ => _.activity['Elderly Women']
+          },
+          {
+            type: 'number', id: 'elderly m', head: 'Elderly Men',
+            render: _ => _.activity['Elderly Men']
+          },
+          {
+            type: 'number', id: 'people', head: 'People with disability',
+            render: _ => _.activity['People with disability']
+          },
+          {
+            type: 'number', id: 'total', head: 'Total Reached (No Disaggregation)',
+            render: _ => _.activity['Total Reached (No Disaggregation)']
+          },
         ]}/>
       </Panel>
     </>

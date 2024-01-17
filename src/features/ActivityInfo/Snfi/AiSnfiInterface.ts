@@ -82,6 +82,8 @@ export namespace AiSnfiInterface {
       'No': 'cslpqb5ldtzhdsl39'
     },
     'Plan Code': {
+      [DrcProject['UKR-000309 OKF']]: 'c8rqqunlrgrhzxk4',
+      [DrcProject['UKR-000342 Pooled Funds']]: 'cnzw17blrgrnqir2',
       [DrcProject['UKR-000284 BHA']]: 'cudbg39lrgdou5o3',
       [DrcProject['UKR-000336 UHF6']]: 'cf5s649lrgdmlpy2',
       [DrcProject['UKR-000314 UHF4']]: 'cs1j3twlosqnuj33',
@@ -93,7 +95,7 @@ export namespace AiSnfiInterface {
     },
     'SNFI indictors': {
       // 'Emergency Shelter Support': 'cfki5tlleso4fy3c',
-      'emergency': 'cfki5tlleso4fy3c',
+      'esk': 'cfki5tlleso4fy3c',
       // 'light_repair': 'cp9vejmlosqpryz4',
       'light_repair': 'cthbls4leso4fy310',
       // 'light_repair': 'cp9vejmlosqpryz4',

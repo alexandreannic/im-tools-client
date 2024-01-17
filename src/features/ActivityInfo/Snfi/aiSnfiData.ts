@@ -20,6 +20,7 @@ import {ShelterNorth202312} from '@/features/ActivityInfo/Snfi/shelterNorth20231
 import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {aiRaions} from '@/core/uaLocation/aiRaions'
 import {aiHromadas} from '@/core/uaLocation/aiHromadas'
+import {KoboBnReHelper} from '@/core/sdk/server/kobo/custom/KoboBnRe'
 
 export type AiSnfiBundle = Omit<AiBundle, 'data'> & {
   nta?: KoboAnswer<Shelter_NTA>[]
@@ -87,7 +88,7 @@ export class AiShelterData {
 
   static readonly reqEsk = (api: ApiSdk) => (period: Period): Promise<AiSnfiBundle[]> => {
     return api.kobo.typedAnswers.searchBn_Re({filters: period})
-      .then(_ => _.data.filter(_ => _.back_prog_type?.find(p => p.includes('esk'))).map(_ => ({..._, ...getAiLocation(_)})))
+      .then(_ => _.data.filter(_ => _.back_prog_type?.find(p => p.includes('esk') || p.includes('nfi'))).map(_ => ({..._, ...getAiLocation(_)})))
       .then(data => {
         const bundle: AiSnfiBundle[] = []
         let index = 0
@@ -107,24 +108,14 @@ export class AiShelterData {
                 ret: 'Returnees',
                 ref_asy: 'Non-Displaced',
               }, () => 'Non-Displaced')
-            }
-
+            },
+            {by: _ => _.back_prog_type!.find(p => p.includes('esk')) ? 'esk' : 'nfi'}
           ],
-          finalTransform: (grouped, [project, oblast, raion, hromada, status]) => {
-            const persons: Person.Person[] = grouped
-              .flatMap(_ => _.hh_char_hh_det ?? [])
-              .compactBy('hh_char_hh_det_age')
-              .compactBy('hh_char_hh_det_gender')
-              .map(_ => ({
-                age: _.hh_char_hh_det_age,
-                gender: fnSwitch(_.hh_char_hh_det_gender!, {
-                  female: Gender.Female,
-                  male: Gender.Male
-                })
-              }))
+          finalTransform: (grouped, [project, oblast, raion, hromada, status, kitType]) => {
+            const persons: Person.Person[] = grouped.flatMap(_ => Person.filterDefined(KoboBnReHelper.getPersons(_)))
             const disaggregation = Person.groupByGenderAndGroup(Person.ageGroup.UNHCR)(persons)
             const activity: AiSnfiInterface.Type = {
-              'SNFI indictors': 'emergency',
+              'SNFI indictors': kitType,
               'Implementing Partner': 'Danish Refugee Council',
               'Report to a planned project': DrcProject ? 'Yes' : 'No',
               ...(DrcProject ? {'Plan Code': project} : {}) as any,
@@ -137,7 +128,7 @@ export class AiShelterData {
               'Reporting Date (YYYY-MM-DD)': format(period.end, 'yyyy-MM-dd'),
               'Population Group': status,
               'Indicator Value (HHs reached, buildings, etc.)': grouped.length,
-              // '# Individuals Reached': persons.length,
+              '# Individuals Reached': persons.length,
               'Girls (0-17)': disaggregation['0 - 17'].Female,
               'Boys (0-17)': disaggregation['0 - 17'].Male,
               'Women (18-59)': disaggregation['18 - 59'].Female,
@@ -157,7 +148,6 @@ export class AiShelterData {
                 activityIndex: index++,
               })
             })
-
           }
         })
         return bundle

@@ -1,6 +1,7 @@
 import {Enum} from '@alexandreannic/ts-utils'
 import {KeyOf, Utils} from '@/utils/utils'
 import {endOfDay, endOfMonth, startOfMonth, subDays} from 'date-fns'
+import {NonNullableKey, NonNullableKeys} from '@/utils/utilsType'
 
 export type UUID = string
 
@@ -75,6 +76,8 @@ export namespace Person {
     Female = 'Female',
     Other = 'Other',
   }
+
+  export const filterDefined = (p: Person[]): NonNullableKeys<Person>[] => p.filter(_ => !!_.gender && _.age) as any
 
   export const elderlyLimitIncluded = 60
 
