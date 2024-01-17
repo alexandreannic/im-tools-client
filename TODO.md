@@ -1,9 +1,8 @@
 - Harmonize useFetcher, useAsync, useMap, ...
 - Remove sortObject and others since new Enum()
-- Delete old MPCA form mapping methods
 - Remove ScLineChart2?
 - Remove Alexlib
-- Harmonize files component nanes like MpcaData or MpcaTable.
+- Harmonize files component names like MpcaData or MpcaTable.
 - Find consistent name for types over component
 - Remove deprecated AaSelect
 - Use <TableInput/> whenever possible

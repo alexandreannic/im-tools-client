@@ -5,6 +5,8 @@ import {NonNullableKeys} from '@/utils/utilsType'
 
 export type UUID = string
 
+export type StateStatus = 'error' | 'warning' | 'info' | 'success'
+
 export interface ApiPaginate<T> {
   total: number
   data: T[]

@@ -24,6 +24,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
 import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {useAppSettings} from '@/core/context/ConfigContext'
+import {TableInput} from '@/shared/TableInput'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -148,24 +149,21 @@ export const CfmDetails = ({entry}: {
           <Panel>
             <PanelBody>
               <ListRow icon="support_agent" label={m.focalPoint}>
-                <DebouncedInput<string>
-                  debounce={1250}
+                <TableInput
                   value={entry.tags?.focalPointEmail}
+                  placeholder="@drc.ngo"
+                  helper={(() => {
+                    const email = entry.tags?.focalPointEmail
+                    if (email && !Utils.regexp.drcEmail.test(email)) return {
+                      text: m.invalidEmail,
+                      status: 'error'
+                    }
+                  })()}
                   onChange={_ => {
-                    if (_ === '' || Utils.regexp.drcEmail.test(_))
+                    if (_ === undefined || Utils.regexp.drcEmail.test(_))
                       ctx.updateTag.call({formId: entry.formId, answerId: entry.id, key: 'focalPointEmail', value: _})
                   }}
-                >
-                  {(value, onChange) => (
-                    <IpInput
-                      helperText={null}
-                      value={value}
-                      onChange={e => onChange(e.target.value)}
-                      placeholder="@drc.ngo"
-                      endAdornment={value && !Utils.regexp.drcEmail.test(value) && <TableIcon tooltip={m.invalidEmail} color="error">error</TableIcon>}
-                    />
-                  )}
-                </DebouncedInput>
+                />
               </ListRow>
               <ListRow icon="work" label={m.program}>
                 <KoboSelectTag<KoboMealCfmTag, CfmData>
@@ -198,23 +196,15 @@ export const CfmDetails = ({entry}: {
                 />
               </ListRow>
               <Divider sx={{mb: 2}}/>
-              <DebouncedInput<string>
-                debounce={1250}
+              <TableInput
                 value={entry.tags?.notes}
+                multiline
+                rows={8}
+                label={m.note}
                 onChange={_ => {
                   ctx.updateTag.call({formId: entry.formId, answerId: entry.id, key: 'notes', value: _})
                 }}
-              >
-                {(value, onChange) => (
-                  <IpInput
-                    multiline
-                    rows={8}
-                    value={value}
-                    onChange={e => onChange(e.target.value)}
-                    label={m.note}
-                  />
-                )}
-              </DebouncedInput>
+              />
             </PanelBody>
           </Panel>
         </Grid>

@@ -62,7 +62,13 @@ export const appConfig = {
   icons: {
     matrix: 'hub',
     koboFormLink: appFeaturesIndex.kobo_database.materialIcons,
-    dataTable: ''
+    dataTable: '',
+  },
+  iconStatus: {
+    error: 'error',
+    warning: 'warning',
+    success: 'check_circle',
+    info: 'info'
   }
 }
 
