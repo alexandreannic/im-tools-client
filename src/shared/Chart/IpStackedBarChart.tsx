@@ -61,7 +61,7 @@ export const IpStackedBarChart = ({
   )
 }
 
-export const AAStackedBarChartSplit = ({
+export const IpStackedBarChartSplit = ({
   data,
   height,
   width,
