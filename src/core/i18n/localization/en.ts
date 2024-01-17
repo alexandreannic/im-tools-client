@@ -63,6 +63,7 @@ export const en = Object.freeze({
     noComment: 'No comment',
     answers: 'Answers',
     seeResults: `See results`,
+    updating: 'Updating',
     users: 'Users',
     select3Outcomes: `Please, select 3 outcomes`,
     oblast: 'Oblast',
@@ -1249,6 +1250,7 @@ export const en = Object.freeze({
       createGroup: 'Create group',
     },
     _shelter: {
+      updatingTag: (rowsCount: number, key: string, value: string) => `Updating ${key}=${value} on ${rowsCount} rows...`,
       cannotUpdateTag: (rowsCount: number, key: string, value: string) => `Update failed for ${key}=${value} on ${rowsCount} rows. Table not edited.`,
       assignedContractor: 'Assigned contractors',
       assessmentLocations: 'Assessments locations',

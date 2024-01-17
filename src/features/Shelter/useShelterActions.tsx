@@ -27,7 +27,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
 }) => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const {toastError, toastHttpError} = useIpToast()
+  const {toastError, toastLoading} = useIpToast()
 
   const helper = useMemo(() => {
     const schemaHelper = buildKoboSchemaHelper({schema, m})
@@ -64,14 +64,16 @@ export const useShelterActions = <T extends Record<string, any>, >({
     key: K,
     value: T[K] | null
   }) => {
-    // updateTag(props)
+    const loading = toastLoading(m._shelter.updatingTag(props.answerIds.length, props.key as string, props.value as string))
     await api.kobo.answer.updateTag({
       formId,
       answerIds: props.answerIds,
       tags: {[props.key]: props.value},
     }).then(() => {
+      loading.setOpen(false)
       updateTag(props)
     }).catch(() => {
+      loading.setOpen(false)
       toastError(m._shelter.cannotUpdateTag(props.answerIds.length, props.key as string, props.value as string))
     })
   })
@@ -81,13 +83,16 @@ export const useShelterActions = <T extends Record<string, any>, >({
     key: K,
     value: T[K] | null
   }) => {
+    const loading = toastLoading(m._shelter.updatingTag(1, key as string, value as string))
     return api.kobo.answer.updateTag({
       formId,
       answerIds: [answerId],
       tags: {[key]: value},
     }).then(() => {
+      loading.setOpen(false)
       updateTag({answerIds: [answerId], key, value,})
     }).catch(() => {
+      loading.setOpen(false)
       toastError(m._shelter.cannotUpdateTag(1, key as string, value as string))
     })
   }, {

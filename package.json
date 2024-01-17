@@ -35,7 +35,7 @@
     "html2canvas": "^1.4.1",
     "lodash": "^4.17.21",
     "lokijs": "^1.5.12",
-    "mui-extension": "^4.3.0",
+    "mui-extension": "^4.3.2",
     "next": "13.4.13",
     "npm": "^9.8.1",
     "openai": "^4.20.1",
