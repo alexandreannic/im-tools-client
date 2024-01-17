@@ -19,7 +19,7 @@ import {AaSelect} from '@/shared/Select/Select'
 import {Enum} from '@alexandreannic/ts-utils'
 import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
 import {AaBtn} from '@/shared/Btn/AaBtn'
-import {cfmModule} from '@/features/Cfm/CfmModule'
+import {cfmIndex} from '@/features/Cfm/Cfm'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
 import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
@@ -241,7 +241,7 @@ export const CfmDetails = ({entry}: {
           <Modal
             loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(entry.formId, entry.id))}
             content={m._cfm.deleteWarning}
-            onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmModule.siteMap.data))}
+            onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmIndex.siteMap.data))}
             title={m.shouldDelete}
           >
             <AaBtn

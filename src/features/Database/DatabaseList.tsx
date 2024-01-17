@@ -8,9 +8,9 @@ import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {Txt} from 'mui-extension'
-import {databaseModule} from '@/features/Database/databaseModule'
+import {databaseIndex} from '@/features/Database/databaseIndex'
 
-export const DatabaseIndex = ({
+export const DatabaseList = ({
   forms,
 }: {
   forms?: KoboForm[]
@@ -23,7 +23,7 @@ export const DatabaseIndex = ({
         <>
           <PageTitle>{m.selectADatabase}</PageTitle>
           <Panel>
-            <Sheet defaultLimit={200} id="kobo-index" onClickRows={_ => navigate(databaseModule.siteMap.database.absolute(_.serverId, _.id))} data={forms} columns={[
+            <Sheet defaultLimit={200} id="kobo-index" onClickRows={_ => navigate(databaseIndex.siteMap.database.absolute(_.serverId, _.id))} data={forms} columns={[
               {
                 id: 'name',
                 type: 'string',

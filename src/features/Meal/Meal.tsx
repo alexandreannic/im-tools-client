@@ -26,7 +26,7 @@ const relatedKoboForms: KoboFormName[] = [
   'meal_visitMonitoring'
 ]
 
-export const mealModule = {
+export const mealIndex = {
   basePath: '/meal',
   siteMap: {
     visit: {
@@ -57,7 +57,7 @@ const MealSidebar = ({
     <Sidebar>
       <SidebarBody>
         <SidebarSection title={m._meal.visitMonitoring}>
-          <NavLink to={path(mealModule.siteMap.visit._)}>
+          <NavLink to={path(mealIndex.siteMap.visit._)}>
             {({isActive, isPending}) => (
               <SidebarItem icon="assignment_turned_in" active={isActive}>{m.dashboard}</SidebarItem>
             )}
@@ -65,22 +65,22 @@ const MealSidebar = ({
           <a href="https://drcngo.sharepoint.com/:x:/s/UKR-MEAL_DM-WS/Ee4lwQ1OMKhCkzyeza_UejoBVWdn-2zgxjoCbpPjN4DZZQ?e=zn5LHw" target="_blank">
             <SidebarItem icon={appConfig.icons.matrix} iconEnd="open_in_new">{m._meal.openTracker}</SidebarItem>
           </a>
-          <SidebarKoboLink path={path(mealModule.siteMap.form('meal_visitMonitoring'))} name="meal_visitMonitoring"/>
+          <SidebarKoboLink path={path(mealIndex.siteMap.form('meal_visitMonitoring'))} name="meal_visitMonitoring"/>
         </SidebarSection>
         {access.verification && (
           <SidebarSection title={m._meal.verification}>
-            <NavLink to={path(mealModule.siteMap.verification.list)}>
+            <NavLink to={path(mealIndex.siteMap.verification.list)}>
               {({isActive, isPending}) => (
                 <SidebarItem icon="manage_search" active={isActive}>{m.data}</SidebarItem>
               )}
             </NavLink>
-            <NavLink to={path(mealModule.siteMap.verification.form)}>
+            <NavLink to={path(mealIndex.siteMap.verification.form)}>
               {({isActive, isPending}) => (
                 <SidebarItem icon="add_circle" active={isActive}>{m._mealVerif.newRequest}</SidebarItem>
               )}
             </NavLink>
-            <SidebarKoboLink path={path(mealModule.siteMap.form('meal_verificationEcrec'))} name="meal_verificationEcrec"/>
-            <SidebarKoboLink path={path(mealModule.siteMap.form('meal_verificationWinterization'))} name="meal_verificationWinterization"/>
+            <SidebarKoboLink path={path(mealIndex.siteMap.form('meal_verificationEcrec'))} name="meal_verificationEcrec"/>
+            <SidebarKoboLink path={path(mealIndex.siteMap.form('meal_verificationWinterization'))} name="meal_verificationWinterization"/>
           </SidebarSection>
         )}
       </SidebarBody>
@@ -116,22 +116,22 @@ export const Meal = () => {
         header={<AppHeader id="app-header"/>}
       >
         <Routes>
-          <Route path={mealModule.siteMap.visit._} element={<MealVisit/>}>
-            <Route index element={<Navigate to={mealModule.siteMap.visit.dashboard}/>}/>
-            <Route path={mealModule.siteMap.visit.dashboard} element={<MealVisitDashboard/>}/>
-            <Route path={mealModule.siteMap.visit.details()} element={<MealVisitDetails/>}/>
+          <Route path={mealIndex.siteMap.visit._} element={<MealVisit/>}>
+            <Route index element={<Navigate to={mealIndex.siteMap.visit.dashboard}/>}/>
+            <Route path={mealIndex.siteMap.visit.dashboard} element={<MealVisitDashboard/>}/>
+            <Route path={mealIndex.siteMap.visit.details()} element={<MealVisitDetails/>}/>
           </Route>
           {access.verification && (
-            <Route path={mealModule.siteMap.verification._} element={<MealVerification/>}>
-              <Route index element={<Navigate to={mealModule.siteMap.verification.list}/>}/>
-              <Route path={mealModule.siteMap.verification.list} element={<MealVerificationList/>}/>
-              <Route path={mealModule.siteMap.verification.form} element={<MealVerificationForm/>}/>
-              <Route path={mealModule.siteMap.verification.data()} element={<MealVerificationTable/>}/>
+            <Route path={mealIndex.siteMap.verification._} element={<MealVerification/>}>
+              <Route index element={<Navigate to={mealIndex.siteMap.verification.list}/>}/>
+              <Route path={mealIndex.siteMap.verification.list} element={<MealVerificationList/>}/>
+              <Route path={mealIndex.siteMap.verification.form} element={<MealVerificationForm/>}/>
+              <Route path={mealIndex.siteMap.verification.data()} element={<MealVerificationTable/>}/>
             </Route>
           )}
-          <Route index element={<Navigate to={mealModule.siteMap.visit.dashboard}/>}/>
+          <Route index element={<Navigate to={mealIndex.siteMap.visit.dashboard}/>}/>
           {relatedKoboForms.map(_ =>
-            <Route key={_} {...getKoboFormRouteProps({path: mealModule.siteMap.form(_), name: _})}/>
+            <Route key={_} {...getKoboFormRouteProps({path: mealIndex.siteMap.form(_), name: _})}/>
           )}
         </Routes>
       </Layout>

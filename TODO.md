@@ -5,9 +5,10 @@
 - Remove Alexlib
 - Harmonize files component nanes like MpcaData or MpcaTable.
 - Find consistent name for types over component
-- Harmonize entry component of module like CfmModule.tsx
 - Change prefix Aa to Ip
 - Remove deprecated AaSelect
 - Use <TableInput/> whenever possible
-- Clean koboDrcUaForm. 
 - Harmonize all fetchAll to getAll in SDK
+
+DONE:
+- Clean koboDrcUaForm. 

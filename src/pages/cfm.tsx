@@ -1,12 +1,12 @@
 import React from 'react'
 import {SessionProvider} from '@/core/Session/SessionContext'
-import {CfmModule} from '@/features/Cfm/CfmModule'
+import {Cfm} from '@/features/Cfm/Cfm'
 
 const CfmPage = () => {
 
   return (
     <SessionProvider>
-      <CfmModule/>
+      <Cfm/>
     </SessionProvider>
   )
 }

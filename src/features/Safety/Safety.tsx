@@ -19,7 +19,7 @@ const relatedKoboForms: (KoboFormName)[] = [
   'safety_incident',
 ]
 
-export const safetyModule = {
+export const safetyIndex = {
   basePath: '/safety',
   siteMap: {
     incidentDashboard: '/incident-dashboard',
@@ -33,7 +33,7 @@ const MpcaSidebar = () => {
   return (
     <Sidebar>
       <SidebarBody>
-        <NavLink to={path(safetyModule.siteMap.incidentDashboard)}>
+        <NavLink to={path(safetyIndex.siteMap.incidentDashboard)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="equalizer" active={isActive}>{m.safety.incidentTrackerTitle}</SidebarItem>
           )}
@@ -41,7 +41,7 @@ const MpcaSidebar = () => {
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
           {relatedKoboForms.map(_ =>
-            <SidebarKoboLink key={_} path={path(safetyModule.siteMap.form(_))} name={_}/>
+            <SidebarKoboLink key={_} path={path(safetyIndex.siteMap.form(_))} name={_}/>
           )}
         </SidebarSection>
       </SidebarBody>
@@ -64,10 +64,10 @@ export const Safety = () => {
         header={<AppHeader id="app-header"/>}
       >
         <Routes>
-          <Route index element={<Navigate to={safetyModule.siteMap.incidentDashboard}/>}/>
-          <Route index path={safetyModule.siteMap.incidentDashboard} element={<SafetyIncidentDashboard/>}/>
+          <Route index element={<Navigate to={safetyIndex.siteMap.incidentDashboard}/>}/>
+          <Route index path={safetyIndex.siteMap.incidentDashboard} element={<SafetyIncidentDashboard/>}/>
           {relatedKoboForms.map(_ =>
-            <Route key={_} path={safetyModule.siteMap.form(_)} element={
+            <Route key={_} path={safetyIndex.siteMap.form(_)} element={
               <Page width="full">
                 <Panel>
                   <DatabaseTable formId={KoboIndex.byName(_).id}/>

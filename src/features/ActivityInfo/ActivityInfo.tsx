@@ -60,7 +60,7 @@ const activities = {
   },
 }
 
-export const activityInfoModule = {
+export const activityInfoIndex = {
   basePath: '/activity-info',
   siteMap: new Enum(activities).transform((k, v) => [k, v.path]).get()
 }

@@ -19,7 +19,7 @@ import {useAaToast} from '@/core/useToast'
 import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useNavigate} from 'react-router'
 import {mealVerificationActivities, mealVerificationActivitiesIndex, mealVerificationConf} from '@/features/Meal/Verification/mealVerificationConfig'
-import {mealModule} from '@/features/Meal/Meal'
+import {mealIndex} from '@/features/Meal/Meal'
 
 export interface MealVerificationForm {
   activity: string
@@ -105,7 +105,7 @@ export const MealVerificationForm = () => {
         }))
       await asyncCreate.call({...form, answers})
       toastSuccess(m._mealVerif.requested)
-      navigate(mealModule.siteMap.verification._)
+      navigate(mealIndex.siteMap.verification._)
     } catch (e) {
     }
   }

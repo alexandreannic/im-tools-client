@@ -1,5 +1,6 @@
 const base = (serverId = ':serverId', formId = ':formId') => `/form/${serverId}/${formId}`
-export const databaseModule = {
+
+export const databaseIndex = {
   basePath: '/database',
   siteMap: {
     index: '/',

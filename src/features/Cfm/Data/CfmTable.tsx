@@ -14,7 +14,7 @@ import {AaSelect} from '@/shared/Select/Select'
 import {DrcOffice} from '@/core/drcUa'
 import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
-import {cfmModule} from '@/features/Cfm/CfmModule'
+import {cfmIndex} from '@/features/Cfm/Cfm'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -398,7 +398,7 @@ export const CfmTable = ({}: any) => {
                       </Modal>
                     </>
                   )}
-                  <NavLink to={cfmModule.siteMap.entry(row.formId, '' + row.id)}>
+                  <NavLink to={cfmIndex.siteMap.entry(row.formId, '' + row.id)}>
                     <TableIconBtn children="keyboard_arrow_right"/>
                   </NavLink>
                 </>

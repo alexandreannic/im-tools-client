@@ -22,7 +22,7 @@ import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_V
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
-import {mealModule} from '@/features/Meal/Meal'
+import {mealIndex} from '@/features/Meal/Meal'
 import {Page} from '@/shared/Page'
 
 export interface DashboardPageProps {
@@ -240,7 +240,7 @@ export const MealVisitDashboard = () => {
                         )}
                       </Box>
                       <Box sx={{textAlign: 'right'}}>
-                        <NavLink to={mealModule.siteMap.visit.details(row.id)}>
+                        <NavLink to={mealIndex.siteMap.visit.details(row.id)}>
                           <AaBtn iconAfter="chevron_right">View details</AaBtn>
                         </NavLink>
                       </Box>

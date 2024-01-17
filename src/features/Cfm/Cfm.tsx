@@ -23,7 +23,7 @@ import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {Fender} from 'mui-extension'
 import {appConfig} from '@/conf/AppConfig'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
-import {shelterModule} from '@/features/Shelter/Shelter'
+import {shelterIndex} from '@/features/Shelter/Shelter'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 
 const relatedKoboForms: KoboFormName[] = [
@@ -31,7 +31,7 @@ const relatedKoboForms: KoboFormName[] = [
   'meal_cfmExternal',
 ]
 
-export const cfmModule = {
+export const cfmIndex = {
   basePath: '/cfm',
   siteMap: {
     access: '/access',
@@ -40,7 +40,7 @@ export const cfmModule = {
   }
 }
 
-const FcmSidebar = () => {
+const CfmSidebar = () => {
   const path = (page: string) => '' + page
   const {conf} = useAppSettings()
   const {m} = useI18n()
@@ -64,12 +64,12 @@ const FcmSidebar = () => {
   return (
     <Sidebar>
       <SidebarBody>
-        <NavLink to={path(cfmModule.siteMap.data)}>
+        <NavLink to={path(cfmIndex.siteMap.data)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
           )}
         </NavLink>
-        <NavLink to={path(cfmModule.siteMap.access)}>
+        <NavLink to={path(cfmIndex.siteMap.access)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="person_add" active={isActive}>{m.access}</SidebarItem>
           )}
@@ -86,7 +86,7 @@ const FcmSidebar = () => {
         </SidebarItem>
         <SidebarSection title={m.koboForms}>
           {relatedKoboForms.map(_ =>
-            <SidebarKoboLink key={_} path={path(shelterModule.siteMap.form(_))} name={_}/>
+            <SidebarKoboLink key={_} path={path(shelterIndex.siteMap.form(_))} name={_}/>
           )}
         </SidebarSection>
       </SidebarBody>
@@ -123,7 +123,7 @@ const FcmSidebar = () => {
   )
 }
 
-export const CfmModule = () => {
+export const Cfm = () => {
   const {session, accesses} = useSession()
   const {toastHttpError} = useAaToast()
   const access = useMemo(() => !!appFeaturesIndex.cfm.showIf?.(session, accesses), [accesses])
@@ -154,16 +154,16 @@ export const CfmModule = () => {
           <Router>
             <Layout
               title={appFeaturesIndex.cfm.name}
-              sidebar={<FcmSidebar/>}
+              sidebar={<CfmSidebar/>}
               header={<AppHeader id="app-header"/>}
             >
               <Routes>
-                <Route index element={<Navigate to={cfmModule.siteMap.data}/>}/>
-                <Route path={cfmModule.siteMap.data} element={<CfmTable/>}/>
-                <Route path={cfmModule.siteMap.entry()} element={<CfmEntryRoute/>}/>
-                <Route path={cfmModule.siteMap.access} element={<CfmAccess/>}/>
+                <Route index element={<Navigate to={cfmIndex.siteMap.data}/>}/>
+                <Route path={cfmIndex.siteMap.data} element={<CfmTable/>}/>
+                <Route path={cfmIndex.siteMap.entry()} element={<CfmEntryRoute/>}/>
+                <Route path={cfmIndex.siteMap.access} element={<CfmAccess/>}/>
                 {relatedKoboForms.map(_ =>
-                  <Route key={_} {...getKoboFormRouteProps({path: shelterModule.siteMap.form(_), name: _})}/>
+                  <Route key={_} {...getKoboFormRouteProps({path: shelterIndex.siteMap.form(_), name: _})}/>
                 )}
               </Routes>
             </Layout>

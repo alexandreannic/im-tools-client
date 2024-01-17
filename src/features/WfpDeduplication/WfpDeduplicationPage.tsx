@@ -14,7 +14,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {WfpDeduplicationAccess} from '@/features/WfpDeduplication/WfpDeduplicationAccess'
 
-export const wfpDeduplicationModule = {
+export const wfpDeduplicationIndex = {
   basePath: '/wfp-deduplication',
   siteMap: {
     data: '/',
@@ -62,7 +62,7 @@ const WpfDeduplicationSidebar = () => {
             <SidebarHr sx={{my: 2}}/>
           </>
         )}
-        <NavLink to={path(wfpDeduplicationModule.siteMap.data)}>
+        <NavLink to={path(wfpDeduplicationIndex.siteMap.data)}>
           {({isActive}) =>
             <SidebarItem icon="list_alt" active={isActive}>
               {m.data}
@@ -72,7 +72,7 @@ const WpfDeduplicationSidebar = () => {
         {/*<SidebarItem icon="bar_chart">*/}
         {/*  {m.dashboard}*/}
         {/*</SidebarItem>*/}
-        <NavLink to={path(wfpDeduplicationModule.siteMap.access)}>
+        <NavLink to={path(wfpDeduplicationIndex.siteMap.access)}>
           {({isActive}) =>
             <SidebarItem icon="person_add" active={isActive}>
               {m.accesses}
@@ -97,7 +97,7 @@ export const WfpDeduplicationPage = () => {
       <Layout title={appFeaturesIndex.wfp_deduplication.name} sidebar={<WpfDeduplicationSidebar/>}>
         <Routes>
           <Route index element={<WfpDeduplicationData/>}/>
-          <Route path={wfpDeduplicationModule.siteMap.access} element={<WfpDeduplicationAccess/>}/>
+          <Route path={wfpDeduplicationIndex.siteMap.access} element={<WfpDeduplicationAccess/>}/>
         </Routes>
       </Layout>
     </Router>

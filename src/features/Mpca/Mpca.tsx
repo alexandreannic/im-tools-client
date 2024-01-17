@@ -31,7 +31,7 @@ const relatedKoboForms: (KoboFormName)[] = [
   'bn_0_mpcaRegNewShort',
 ]
 
-export const mpcaModule = {
+export const mpcaIndex = {
   basePath: '/mpca',
   siteMap: {
     deduplication: '/deduplication',
@@ -61,12 +61,12 @@ const MpcaSidebar = () => {
           </Box>
         </SidebarItem>
         <SidebarHr/>
-        <NavLink to={path(mpcaModule.siteMap.dashboard)}>
+        <NavLink to={path(mpcaIndex.siteMap.dashboard)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="equalizer" active={isActive}>{m.dashboard}</SidebarItem>
           )}
         </NavLink>
-        <NavLink to={path(mpcaModule.siteMap.data)}>
+        <NavLink to={path(mpcaIndex.siteMap.data)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
           )}
@@ -74,7 +74,7 @@ const MpcaSidebar = () => {
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
           {relatedKoboForms.map(_ =>
-            <SidebarKoboLink size="small" key={_} path={path(mpcaModule.siteMap.form(_))} name={_}/>
+            <SidebarKoboLink size="small" key={_} path={path(mpcaIndex.siteMap.form(_))} name={_}/>
           )}
         </SidebarSection>
         {/*<NavLink to={path(mpcaModule.siteMap.paymentTools)}>*/}
@@ -104,13 +104,13 @@ export const Mpca = () => {
           header={<AppHeader id="app-header"/>}
         >
           <Routes>
-            <Route path={mpcaModule.siteMap.dashboard} element={<MpcaDashboard/>}/>
-            <Route path={mpcaModule.siteMap.deduplication} element={<WfpDeduplicationData/>}/>
-            <Route path={mpcaModule.siteMap.data} element={<MpcaData/>}/>
-            <Route path={mpcaModule.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
-            <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
+            <Route path={mpcaIndex.siteMap.dashboard} element={<MpcaDashboard/>}/>
+            <Route path={mpcaIndex.siteMap.deduplication} element={<WfpDeduplicationData/>}/>
+            <Route path={mpcaIndex.siteMap.data} element={<MpcaData/>}/>
+            <Route path={mpcaIndex.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
+            <Route path={mpcaIndex.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
             {relatedKoboForms.map(_ =>
-              <Route key={_} {...getKoboFormRouteProps({path: mpcaModule.siteMap.form(_), name: _})}/>
+              <Route key={_} {...getKoboFormRouteProps({path: mpcaIndex.siteMap.form(_), name: _})}/>
             )}
           </Routes>
         </Layout>

@@ -6,7 +6,7 @@ import React from 'react'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
-import {mealModule} from '@/features/Meal/Meal'
+import {mealIndex} from '@/features/Meal/Meal'
 import {appConfig} from '@/conf/AppConfig'
 import {SidebarItemProps} from '@/shared/Layout/Sidebar/SidebarItem'
 

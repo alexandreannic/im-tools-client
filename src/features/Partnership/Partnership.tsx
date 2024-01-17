@@ -15,7 +15,7 @@ import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAaToast} from '@/core/useToast'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {Tooltip} from '@mui/material'
-import {mpcaModule} from '@/features/Mpca/Mpca'
+import {mpcaIndex} from '@/features/Mpca/Mpca'
 import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
 
 const relatedKoboForms: KoboFormName[] = [
@@ -24,7 +24,7 @@ const relatedKoboForms: KoboFormName[] = [
   'partnership_initialQuestionnaire',
 ]
 
-export const partnershipModule = {
+export const partnershipIndex = {
   basePath: '/partnership',
   siteMap: {
     data: '/data',
@@ -43,7 +43,7 @@ const PartnershipSidebar = () => {
   return (
     <Sidebar>
       <SidebarBody>
-        <NavLink to={path(partnershipModule.siteMap.dashboard)}>
+        <NavLink to={path(partnershipIndex.siteMap.dashboard)}>
           {({isActive, isPending}) => (
             <SidebarItem icon="insights" active={isActive}>{m.dashboard}</SidebarItem>
           )}
@@ -59,7 +59,7 @@ const PartnershipSidebar = () => {
             const name = KoboIndex.byName(_).name
             return (
               <Tooltip key={_} title={name} placement="right">
-                <NavLink to={path(mpcaModule.siteMap.form(_))}>
+                <NavLink to={path(mpcaIndex.siteMap.form(_))}>
                   {({isActive, isPending}) => (
                     <SidebarItem size="small" active={isActive} icon="calendar_view_month">{KoboIndex.byName(name).parsed.name}</SidebarItem>
                   )}
@@ -111,10 +111,10 @@ export const Partnership = () => {
           <KoboSchemaProvider schema={_schemas.entity.partnersDatabase}>
             <PartnershipProvider>
               <Routes>
-                <Route index element={<Navigate to={partnershipModule.siteMap.dashboard}/>}/>
-                <Route path={partnershipModule.siteMap.dashboard} element={<PartnershipDashboard/>}/>
+                <Route index element={<Navigate to={partnershipIndex.siteMap.dashboard}/>}/>
+                <Route path={partnershipIndex.siteMap.dashboard} element={<PartnershipDashboard/>}/>
                 {/*<Route path={partnershipModule.siteMap.data} element={<PartnershipDatabase/>}/>*/}
-                <Route path={partnershipModule.siteMap.koboPartnersDatabase}
+                <Route path={partnershipIndex.siteMap.koboPartnersDatabase}
                        element={<DatabaseTable formId={KoboIndex.byName('partnership_partnersDatabase').id} schema={_schemas.entity.partnersDatabase}/>}/>
                 {/*<Route path={partnershipModule.siteMap.koboAssessment}*/}
                 {/*       element={<DatabaseTable formId={KoboIndex.byName('partnership_assessment').id} schema={_schemas.entity.assessment}/>}/>*/}

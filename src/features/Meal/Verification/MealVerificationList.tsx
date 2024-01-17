@@ -13,14 +13,14 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useSession} from '@/core/Session/SessionContext'
 import {kobo, KoboIndex} from '@/KoboIndex'
 import {AppFeatureId} from '@/features/appFeatureId'
-import {databaseModule} from '@/features/Database/databaseModule'
+import {databaseIndex} from '@/features/Database/databaseIndex'
 import Link from 'next/link'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
-import {mealModule} from '@/features/Meal/Meal'
+import {mealIndex} from '@/features/Meal/Meal'
 import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
 import {mealVerificationActivitiesIndex} from '@/features/Meal/Verification/mealVerificationConfig'
 
@@ -34,7 +34,7 @@ export const MealVerificationLinkToForm = ({
   return (
     <Link target="_blank" href={conf.linkToFeature(
       AppFeatureId.kobo_database,
-      databaseModule.siteMap.database.absolute(kobo.drcUa.server.prod, koboFormId)
+      databaseIndex.siteMap.database.absolute(kobo.drcUa.server.prod, koboFormId)
     )}>
       <Txt link sx={{display: 'flex', alignItems: 'center', ...sx}}>
         <Icon fontSize="inherit" sx={{mr: .5}}>open_in_new</Icon>
@@ -61,7 +61,7 @@ export const MealVerificationList = () => {
         <Sheet
           header={
             <>
-              <NavLink to={mealModule.siteMap.verification.form}>
+              <NavLink to={mealIndex.siteMap.verification.form}>
                 <AaBtn variant="contained" icon="add">{m._mealVerif.newRequest}</AaBtn>
               </NavLink>
             </>
@@ -166,7 +166,7 @@ export const MealVerificationList = () => {
                       <TableIconBtn>delete</TableIconBtn>
                     </Modal>
                   )}
-                  <NavLink to={mealModule.siteMap.verification.data(_.id)}>
+                  <NavLink to={mealIndex.siteMap.verification.data(_.id)}>
                     <TableIconBtn>chevron_right</TableIconBtn>
                   </NavLink>
                 </>

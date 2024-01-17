@@ -6,7 +6,7 @@ import {Panel, PanelTitle} from '@/shared/Panel'
 import {useI18n} from '../../../core/i18n'
 import {Txt} from 'mui-extension'
 import {useNavigate} from 'react-router'
-import {mpcaModule} from '../Mpca'
+import {mpcaIndex} from '../Mpca'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 
 export const MpcaPaymentTools = () => {
@@ -76,7 +76,7 @@ export const MpcaPaymentTools = () => {
               id: 'actions',
               head: '',
               align: 'right',
-              onClick: _ => navigate(mpcaModule.siteMap.paymentTool(_.id)),
+              onClick: _ => navigate(mpcaIndex.siteMap.paymentTool(_.id)),
               render: _ => (
                 <TableIcon>chevron_right</TableIcon>
               )
