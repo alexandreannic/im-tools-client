@@ -10,7 +10,7 @@ import {DatabaseKoboTableGroupModal} from '@/features/Database/KoboTable/Databas
 import {IpIconBtn} from '@/shared/IconBtn'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {Icon, Switch, Theme, useTheme} from '@mui/material'
-import {usePersistentState} from '@/alexlib-labo/usePersistantState'
+import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'

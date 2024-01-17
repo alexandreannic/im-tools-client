@@ -12,7 +12,7 @@ import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/f
 import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
 import {IpBtn} from '@/shared/Btn'
 import {useIpToast} from '@/core/useToast'
-import {useAsync} from '@/alexlib-labo/useAsync'
+import {useAsync} from '@/shared/hook/useAsync'
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
 
 export const AiSnfi = () => {

@@ -1,5 +1,5 @@
 import React, {ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react'
-import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
+import {UseAsync, useAsync} from '@/shared/hook/useAsync'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UUID} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'

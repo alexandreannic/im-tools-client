@@ -22,7 +22,7 @@ import {MealVerificationAnsers, MealVerificationAnswersStatus, MealVerificationS
 import {mealVerificationActivities, MealVerificationActivity, mealVerificationConf} from '@/features/Meal/Verification/mealVerificationConfig'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
-import {useAsync} from '@/alexlib-labo/useAsync'
+import {useAsync} from '@/shared/hook/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
 import {MealVerificationLinkToForm} from '@/features/Meal/Verification/MealVerificationList'

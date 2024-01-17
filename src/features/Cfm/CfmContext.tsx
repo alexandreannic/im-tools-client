@@ -1,7 +1,7 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
+import {UseAsync, useAsync} from '@/shared/hook/useAsync'
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'

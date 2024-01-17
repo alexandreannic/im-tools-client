@@ -11,7 +11,7 @@ import {useI18n} from '@/core/i18n'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {IpBtn} from '@/shared/Btn'
 import {useIpToast} from '@/core/useToast'
-import {useAsync} from '@/alexlib-labo/useAsync'
+import {useAsync} from '@/shared/hook/useAsync'
 import {AiFslcData} from '@/features/ActivityInfo/Fslc/aiFslcData'
 
 export const AiFslc = () => {

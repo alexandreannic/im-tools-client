@@ -25,7 +25,7 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardH
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
-import {useFetcherIp} from '@/alexlib-labo/UseFetcher'
+import {useFetcher} from '@/shared/hook/useFetcher'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 
 type CustomFilterOptionFilters = {
@@ -42,10 +42,10 @@ export interface DashboardPageProps {
 export const DashboardProtHHS2 = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const _period = useFetcherIp(() => api.kobo.answer.getPeriod(KoboIndex.byName('protection_hhs2_1').id))
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('protection_hhs2_1').id))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
 
-  const _answers = useFetcherIp((filter?: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
+  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
     filters: {
       start: filter?.start,
       end: filter?.end,

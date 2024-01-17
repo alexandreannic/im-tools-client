@@ -13,7 +13,7 @@ import {UUID} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
-import {DrcJobInputMultiple} from '@/shared/customInputs/DrcJobInput'
+import {DrcJobInputMultiple} from '@/shared/customInput/DrcJobInput'
 
 export interface IAccessForm {
   selectBy?: 'email' | 'job' | 'group' | null

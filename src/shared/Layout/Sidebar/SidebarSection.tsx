@@ -2,7 +2,7 @@ import {Box, Collapse} from '@mui/material'
 import {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
 import {IpIconBtn} from '@/shared/IconBtn'
-import {usePersistentState} from '@/alexlib-labo/usePersistantState'
+import {usePersistentState} from '@/shared/hook/usePersistantState'
 
 export const SidebarSection = ({
   title,

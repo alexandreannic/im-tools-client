@@ -16,7 +16,7 @@ import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmC
 import {NavLink} from 'react-router-dom'
 import {cfmIndex} from '@/features/Cfm/Cfm'
 import {IpIconBtn} from '@/shared/IconBtn'
-import {useAsync} from '@/alexlib-labo/useAsync'
+import {useAsync} from '@/shared/hook/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {kobo, KoboIndex} from '@/KoboIndex'
 import {Autocomplete} from '@mui/material'

@@ -5,7 +5,7 @@ import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useEffect, useState} from 'react'
 import {KoboFormListButton} from './KoboFormList'
 import {UUID} from '../../../core/type'
-import {useFetchers} from '@/alexlib-labo/useFetchersFn'
+import {useFetchers} from '@/shared/hook/useFetchers'
 import {map} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 

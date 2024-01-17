@@ -25,7 +25,7 @@ export type UseFetcher<F extends Func<Promise<FetcherResult<F>>>, E = any> = {
 /**
  * Factorize fetching logic which goal is to prevent unneeded fetchs and expose loading indicator + error status.
  */
-export const useFetcherIp = <F extends Func<Promise<any>>, E = any>(
+export const useFetcher = <F extends Func<Promise<any>>, E = any>(
   fetcher: F,
   initialValue?: FetcherResult<F>,
   mapError: (_: any) => E = _ => _

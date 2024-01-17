@@ -1,5 +1,5 @@
 import {Func} from '@alexandreannic/react-hooks-lib'
-import {UseMap2, useMap2} from '@/alexlib-labo/useMap'
+import {UseMap2, useMap2} from '@/shared/hook/useMap'
 import {useState} from 'react'
 
 export interface UseAsync<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> {

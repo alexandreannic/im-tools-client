@@ -2,7 +2,7 @@ import {Box, BoxProps, Checkbox, useTheme} from '@mui/material'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {Txt} from 'mui-extension'
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
-import {UseSetState} from '@/alexlib-labo/useSetState2'
+import {UseSetState} from '@/shared/hook/useSetState2'
 
 export const PartnershipCard = ({
   partner,

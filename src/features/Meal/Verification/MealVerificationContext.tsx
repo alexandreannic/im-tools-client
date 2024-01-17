@@ -4,7 +4,7 @@ import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {useSession} from '@/core/Session/SessionContext'
-import {UseAsync, useAsync} from '@/alexlib-labo/useAsync'
+import {UseAsync, useAsync} from '@/shared/hook/useAsync'
 
 export interface MealVerificationContext {
   fetcherVerifications: UseFetcher<ApiSdk['mealVerification']['getAll']>

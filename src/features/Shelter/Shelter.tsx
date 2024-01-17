@@ -9,7 +9,7 @@ import {AppFeatureId, appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {ShelterTable} from '@/features/Shelter/Data/ShelterTable'
 import {ShelterProvider} from '@/features/Shelter/ShelterContext'
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
@@ -23,6 +23,7 @@ import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {PagePlaceholder} from '@/shared/Page'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 const relatedKoboForms: KoboFormName[] = [
   'shelter_nta',

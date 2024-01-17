@@ -1,7 +1,7 @@
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import React, {Dispatch, ReactNode, SetStateAction} from 'react'
 import {AaSelect, AaSelectProps} from '@/shared/Select/Select'
-import {useAsync} from '@/alexlib-labo/useAsync'
+import {useAsync} from '@/shared/hook/useAsync'
 import {cfmMakeUpdateRequestKey} from '@/features/Cfm/CfmContext'
 import {Enum} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'

@@ -17,7 +17,7 @@ import {IpBtn} from '@/shared/Btn'
 import {useIpToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
-import {useAsync} from '@/alexlib-labo/useAsync'
+import {useAsync} from '@/shared/hook/useAsync'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 
