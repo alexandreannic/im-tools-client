@@ -6,7 +6,7 @@ import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtecti
 import {Page} from '@/shared/Page'
 import {Txt} from 'mui-extension'
 import {Panel} from '@/shared/Panel'
-import {IpInput} from '@/shared/ItInput/Input'
+import {IpInput} from '@/shared/Input/Input'
 import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material'
 import {IpBtn} from '@/shared/Btn'
 import {AaSelect} from '@/shared/Select/Select'

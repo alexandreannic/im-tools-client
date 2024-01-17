@@ -2,7 +2,7 @@ import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, Popov
 import {IpBtn} from '../../Btn'
 import {useI18n} from '../../../core/i18n'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
-import {IpInput} from '../../ItInput/Input'
+import {IpInput} from '../../Input/Input'
 import {MultipleChoices} from '../../MultipleChoices'
 import {PeriodPicker} from '../../PeriodPicker/PeriodPicker'
 import {IpIconBtn} from '../../IconBtn'

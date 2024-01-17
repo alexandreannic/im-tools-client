@@ -1,7 +1,7 @@
 import {Autocomplete, AutocompleteProps, Chip} from '@mui/material'
 import {Enum} from '@alexandreannic/ts-utils'
 import {DrcJob} from '@/core/drcUa'
-import {IpInput} from '@/shared/ItInput/Input'
+import {IpInput} from '@/shared/Input/Input'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 

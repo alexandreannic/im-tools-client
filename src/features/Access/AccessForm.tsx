@@ -4,7 +4,7 @@ import {AccessLevel, accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Autocomplete, autocompleteClasses, Box, BoxProps, Chip, SxProps, Theme} from '@mui/material'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
-import {IpInput} from '@/shared/ItInput/Input'
+import {IpInput} from '@/shared/Input/Input'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {useFetcher} from '@alexandreannic/react-hooks-lib'
@@ -13,7 +13,7 @@ import {UUID} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
-import {DrcJobInputMultiple} from '@/shared/input/DrcJobInput'
+import {DrcJobInputMultiple} from '@/shared/customInputs/DrcJobInput'
 
 export interface IAccessForm {
   selectBy?: 'email' | 'job' | 'group' | null

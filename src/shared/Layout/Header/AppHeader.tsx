@@ -45,7 +45,7 @@ export const AppHeader = ({children, sx, id = 'aa-header-id', ...props}: Props) 
         }}
       >
         {showSidebarButton && (
-          <IpIconBtn
+          <IconBtn
             size="small"
             sx={{
               mr: 1,
@@ -59,7 +59,7 @@ export const AppHeader = ({children, sx, id = 'aa-header-id', ...props}: Props) 
             onClick={() => setSidebarOpen(_ => !_)}
           >
             <Icon>menu</Icon>
-          </IpIconBtn>
+          </IconBtn>
         )}
         <Txt sx={{ml: 1}} size="title" bold dangerouslySetInnerHTML={{__html: title ?? ''}}/>
         {children}

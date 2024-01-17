@@ -4,7 +4,7 @@ import {AaSelect} from '@/shared/Select/Select'
 import React, {useEffect} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {ListRow} from '@/shared/ListRow'
-import {IpInput} from '@/shared/ItInput/Input'
+import {IpInput} from '@/shared/Input/Input'
 import {IpIconBtn} from '@/shared/IconBtn'
 
 const budgetLines = [
