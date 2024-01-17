@@ -11,9 +11,7 @@ import {SnapshotProtMonitoEchoDisplacement} from '@/features/Snapshot/SnapshotPr
 import {SnapshotProtMonitoEchoRegistration} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoRegistration'
 import {alpha, Box, Theme} from '@mui/material'
 import {Period} from '@/core/type'
-import {PeriodPickerMui} from '@/shared/PeriodPicker/PeriodPickerMui'
 import {endOfMonth, startOfMonth, subMonths} from 'date-fns'
-import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 
 export const snapshotAlternateColor = (t: Theme) => alpha(t.palette.primary.main, .26)//t.palette.grey[500]

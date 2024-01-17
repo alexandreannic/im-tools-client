@@ -1,14 +1,12 @@
-import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {Dispatch, SetStateAction, useMemo} from 'react'
 import {useAsync} from '@/alexlib-labo/useAsync'
-import {kobo} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {buildKoboSchemaHelper, getKoboTranslations} from '@/features/Database/KoboTable/useKoboSchema'
 import {useI18n} from '@/core/i18n'
-import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 

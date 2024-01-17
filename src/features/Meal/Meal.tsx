@@ -1,5 +1,5 @@
 import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
-import {Sidebar, SidebarBody, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
+import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
 import {Layout} from '@/shared/Layout'
 import {useI18n} from '@/core/i18n'
 import React, {useMemo} from 'react'

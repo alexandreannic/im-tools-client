@@ -16,7 +16,6 @@ import {DrcProject} from '@/core/drcUa'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {IpInput} from '@/shared/Input/Input'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
-import {IpIconBtn} from '@/shared/IconBtn'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {IpBtn} from '@/shared/Btn'
 

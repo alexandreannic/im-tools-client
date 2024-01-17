@@ -1,12 +1,9 @@
 import React from 'react'
-import {Icon, Tooltip} from '@mui/material'
 import {AnswerTable} from './AnswerTable'
 import {Modal} from 'mui-extension/lib/Modal'
 import {useI18n} from '@/core/i18n'
-import {IconBtn} from 'mui-extension'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
-import exp from 'constants'
 import {IpBtnProps} from '@/shared/Btn'
 
 export const ActivityInfoActions = ({

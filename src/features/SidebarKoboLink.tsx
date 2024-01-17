@@ -1,12 +1,11 @@
 import {KoboFormName, KoboIndex} from '@/KoboIndex'
 import {Tooltip} from '@mui/material'
-import {NavLink, Route} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import {SidebarItem} from '@/shared/Layout/Sidebar'
 import React from 'react'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
-import {mealIndex} from '@/features/Meal/Meal'
 import {appConfig} from '@/conf/AppConfig'
 import {SidebarItemProps} from '@/shared/Layout/Sidebar/SidebarItem'
 

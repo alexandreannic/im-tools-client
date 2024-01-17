@@ -2,7 +2,6 @@ import React from 'react'
 import {SnapshotProtMonitoEcho} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {GlobalStyles, ThemeProvider} from '@mui/material'
 import {muiTheme} from '@/core/theme'
-import {endOfMonth, startOfMonth} from 'date-fns'
 
 const generalStyles = <GlobalStyles styles={{
   body: {

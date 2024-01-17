@@ -1,5 +1,5 @@
-import {Bar, BarChart, Legend, LegendProps, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
-import React, {forwardRef} from 'react'
+import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
+import React from 'react'
 import {Box, BoxProps, Theme, useTheme} from '@mui/material'
 import {chartConfig} from './chartConfig'
 import {seq} from '@alexandreannic/ts-utils'

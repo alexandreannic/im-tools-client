@@ -1,4 +1,4 @@
-import {Badge, Box, Icon, LinearProgress, Skeleton, TablePagination,} from '@mui/material'
+import {Badge, Box, Icon, LinearProgress, TablePagination,} from '@mui/material'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'

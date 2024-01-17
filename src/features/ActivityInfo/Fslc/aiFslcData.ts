@@ -5,17 +5,13 @@ import {Utils} from '@/utils/utils'
 import {fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {DrcProject} from '@/core/drcUa'
-import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
-import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Ecrec_CashRegistration} from '@/core/koboModel/Ecrec_CashRegistration/Ecrec_CashRegistration'
 import {addDays, format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
-import {EcrecCashRegistrationPaymentStatus} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
+import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import groupByGenderAndGroup = Person.groupByGenderAndGroup
 import Gender = Person.Gender
-import {AiSnfiBundle} from '@/features/ActivityInfo/Snfi/aiSnfiData'
-import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 
 export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_CashRegistration>
 

@@ -1,4 +1,4 @@
-import {orange, red, yellow} from '@mui/material/colors'
+import {orange, red} from '@mui/material/colors'
 import {alpha, createTheme, darken, SxProps, Theme} from '@mui/material'
 import {ThemeOptions} from '@mui/material/styles/createTheme'
 import {lighten} from '@mui/system/colorManipulator'

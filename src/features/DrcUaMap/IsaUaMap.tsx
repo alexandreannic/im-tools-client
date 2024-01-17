@@ -1,4 +1,3 @@
-import {Enum} from '@alexandreannic/ts-utils'
 import React, {useEffect} from 'react'
 import {Box, GlobalStyles, useTheme} from '@mui/material'
 import {useAppSettings} from '../../core/context/ConfigContext'

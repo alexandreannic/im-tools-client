@@ -12,7 +12,6 @@ import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
-import Gender = Person.Gender
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
 import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'

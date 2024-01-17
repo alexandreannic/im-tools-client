@@ -26,7 +26,7 @@ import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {SelectDrcProject, SelectDrcProjects} from '@/shared/SelectDrcProject'
+import {SelectDrcProject} from '@/shared/SelectDrcProject'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }

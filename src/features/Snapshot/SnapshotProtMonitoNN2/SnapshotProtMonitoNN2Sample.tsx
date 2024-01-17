@@ -4,7 +4,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {DRCLogo} from '@/shared/logo/logo'
-import {IpStackedBarChart, commonLegendProps} from '@/shared/Chart/StackedBarChart'
+import {commonLegendProps, IpStackedBarChart} from '@/shared/Chart/StackedBarChart'
 import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'

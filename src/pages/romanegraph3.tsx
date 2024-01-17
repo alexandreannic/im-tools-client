@@ -1,5 +1,5 @@
-import {Box, Icon} from '@mui/material'
-import React, {ReactNode, useCallback, useEffect, useState} from 'react'
+import {Box} from '@mui/material'
+import React, {ReactNode, useCallback, useEffect} from 'react'
 import {Txt} from 'mui-extension'
 import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -13,7 +13,6 @@ import {IpStackedBarChart} from '@/shared/Chart/StackedBarChart'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {usePersistentState} from '@/alexlib-labo/usePersistantState'
 import {useI18n} from '@/core/i18n'
 
 export const Pan = ({

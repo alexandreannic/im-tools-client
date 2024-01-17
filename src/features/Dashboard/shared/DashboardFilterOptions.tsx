@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback} from 'react'
 import {BoxProps, Checkbox, FormControlLabel, FormGroup} from '@mui/material'
 import {makeSx, Txt} from 'mui-extension'
 import {DashboardFilterLabel} from './DashboardFilterLabel'

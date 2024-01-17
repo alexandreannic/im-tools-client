@@ -6,7 +6,6 @@ import {useSetState2} from '@/alexlib-labo/useSetState2'
 import {seq} from '@alexandreannic/ts-utils'
 import {SheetInnerColumnProps, SheetRow, SheetTableProps} from '@/shared/Sheet/util/sheetType'
 import {UseSheetOptions, useSheetOptions} from '@/shared/Sheet/context/useSheetOptions'
-import {Paginate} from '@/utils/utils'
 
 export interface SheetContext<T extends SheetRow> {
   data: UseSheetData<T>

@@ -3,7 +3,6 @@ import React from 'react'
 import {ButtonBase, ButtonBaseProps, Icon, useTheme} from '@mui/material'
 import {Txt} from 'mui-extension'
 import Link from 'next/link'
-import {useTab} from '@mui/base'
 
 export const FeatureLogo = ({
   feature,

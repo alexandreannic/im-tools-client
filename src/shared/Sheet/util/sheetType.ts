@@ -1,6 +1,6 @@
 import React, {CSSProperties, ReactNode} from 'react'
 import {BoxProps} from '@mui/material'
-import {KeyOf, Paginate, Utils} from '@/utils/utils'
+import {KeyOf, Paginate} from '@/utils/utils'
 import {NonNullableKeys} from '@/utils/utilsType'
 
 export type SheetPropertyType = 'date' | 'number' | 'string' | 'select_one' | 'select_multiple'

@@ -1,7 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
-import {sub} from 'date-fns'
 
 interface ActivityInfoRequest {
   activityIdPrefix: string

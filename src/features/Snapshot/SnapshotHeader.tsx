@@ -1,11 +1,10 @@
 import {Period} from '@/core/type'
-import {format, subDays} from 'date-fns'
+import {format} from 'date-fns'
 import {NullableKey} from '@/utils/utilsType'
-import React, {ReactNode, useMemo} from 'react'
-import {Box, Icon} from '@mui/material'
+import React, {ReactNode} from 'react'
+import {Box} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {SnapshotPeriod} from '@/features/Snapshot/SnapshotPeriod'
-import {DRCLogo, EULogo} from '@/shared/logo/logo'
 import {useI18n} from '@/core/i18n'
 
 const periodToString = (period: NullableKey<Period, 'end'>) => {

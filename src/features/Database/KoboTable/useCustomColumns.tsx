@@ -7,7 +7,7 @@ import {DrcProject} from '@/core/drcUa'
 import {useI18n} from '@/core/i18n'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
-import {kobo, KoboIndex} from '@/KoboIndex'
+import {KoboIndex} from '@/KoboIndex'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 

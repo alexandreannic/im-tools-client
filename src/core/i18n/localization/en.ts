@@ -4,7 +4,6 @@ import {Period} from '../../type'
 import {appConfig} from '@/conf/AppConfig'
 import {capitalize} from '@/utils/utils'
 import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
-import {kobo} from '@/KoboIndex'
 
 const invalidDate = ''
 

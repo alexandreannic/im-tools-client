@@ -3,7 +3,6 @@ import {kobo} from '@/KoboIndex'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {useMemo} from 'react'
-import {SxProps, Theme} from '@mui/material'
 
 export const proxyKoboImg = ({
   url,

@@ -1,17 +1,17 @@
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
-import {Oblast, OblastIndex, OblastName} from '@/shared/UkraineMap/oblastIndex'
-import {fnSwitch, PromiseReturn, seq} from '@alexandreannic/ts-utils'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {fnSwitch, PromiseReturn} from '@alexandreannic/ts-utils'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {Person} from '@/core/type'
 import {Protection_groupSession} from '@/core/koboModel/Protection_groupSession/Protection_groupSession'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {DrcProject} from '@/core/drcUa'
 import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import Gender = Person.Gender
 import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {AiOblast} from '@/core/uaLocation/aiOblasts'
 import {AiRaions} from '@/core/uaLocation/aiRaions'
 import {AiHromadas} from '@/core/uaLocation/aiHromadas'
+import Gender = Person.Gender
 
 const disaggregatePersons = (persons: Person.Person[]) => {
   const personsDefined = persons.filter(_ => !!_.gender && !!_.age)

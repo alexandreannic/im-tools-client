@@ -1,4 +1,4 @@
-import React, {ReactNode, useContext, useEffect, useState} from 'react'
+import React, {ReactNode, useContext, useEffect} from 'react'
 import {UseProtHHS2Data, useProtHhs2Data} from '@/features/Dashboard/DashboardHHS2/useProtHhs2Data'
 import {Period} from '@/core/type'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
@@ -7,7 +7,6 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {useI18n} from '@/core/i18n'
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1'
-import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export interface SnapshotProtMonitoContext {
   computed: NonNullable<UseProtHHS2Data>
