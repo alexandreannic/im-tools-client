@@ -1,7 +1,7 @@
 import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/IpSelectMultiple'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
@@ -130,7 +130,7 @@ export const MinusRusChartPanel = () => {
           <ScRadioGroupItem hideRadio value="yyyy-MM-dd">{m.daily}</ScRadioGroupItem>
           <ScRadioGroupItem hideRadio value="yyyy-MM">{m.monthly}</ScRadioGroupItem>
         </ScRadioGroup>
-        <AaSelectMultiple
+        <IpSelectMultiple
           sx={{width: 200}}
           options={minusResKeys.map(_ => ({value: _, children: m.safety.minusRusLabel[_]}))}
           value={minusResKeys.filter(_ => minusRusCurves[_])}

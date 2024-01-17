@@ -9,7 +9,7 @@ type Option<T extends string | number = string> = {
   key?: string
 }
 
-export type AaSelectSingleProps<T extends string | number = string> = {
+export type IpSelectSingleProps<T extends string | number = string> = {
   label?: ReactNode
   options: Option<T>[] | string[]
   sx?: SxProps<Theme>
@@ -34,7 +34,7 @@ const style = makeSx({
 
 const IGNORED_VALUE_EMPTY = ''
 
-export const AaSelectSingle = <T extends string | number>({
+export const IpSelectSingle = <T extends string | number>({
   defaultValue,
   hideNullOption,
   label,
@@ -44,7 +44,7 @@ export const AaSelectSingle = <T extends string | number>({
   value,
   placeholder,
   ...props
-}: AaSelectSingleProps<T>) => {
+}: IpSelectSingleProps<T>) => {
   const {m} = useI18n()
   // const [innerValue, setInnerValue] = useState<T | null>(null)
 

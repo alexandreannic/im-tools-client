@@ -5,8 +5,8 @@ import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/Databas
 import {Enum, map} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/drcUa'
 import {useI18n} from '@/core/i18n'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectMultiple} from '@/shared/Select/IpSelectMultiple'
+import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
 import {kobo, KoboIndex} from '@/KoboIndex'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
@@ -27,7 +27,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blank,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
-            <AaSelectSingle
+            <IpSelectSingle
               disabled={!ctx.canEdit}
               hideNullOption
               value={row.tags?.project}
@@ -49,7 +49,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blank,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
-            <AaSelectSingle
+            <IpSelectSingle
               hideNullOption
               disabled={!ctx.canEdit}
               value={row.tags?.project}
@@ -71,7 +71,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => map(row.tags?.projects, p => p.length === 0 ? undefined : p) ?? [SheetUtils.blank],
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => (
-            <AaSelectMultiple
+            <IpSelectMultiple
               disabled={!ctx.canEdit}
               value={row.tags?.projects ?? []}
               onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'projects'})}

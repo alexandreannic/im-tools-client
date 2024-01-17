@@ -5,7 +5,7 @@ import {makeSx} from '@/core/theme'
 
 type Option<T extends string | number = string> = {value: T, children: ReactNode, key?: string}
 
-export interface AaSelectMultipleProps<T extends string | number = string> extends Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> {
+export interface IpSelectMultipleProps<T extends string | number = string> extends Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> {
   label?: ReactNode
   showUndefinedOption?: boolean
   options: Option<T>[] | string[]
@@ -24,14 +24,14 @@ const style = makeSx({
 
 const IGNORED_VALUE_FOR_SELECT_ALL_ITEM = 'IGNORED_VALUE'
 
-export const AaSelectMultiple = <T extends string | number>({
+export const IpSelectMultiple = <T extends string | number>({
   showUndefinedOption,
   label,
   id,
   onChange,
   sx,
   ...props
-}: AaSelectMultipleProps<T>) => {
+}: IpSelectMultipleProps<T>) => {
   const {m} = useI18n()
   const [uncontrolledInnerState, setUncontrolledInnerState] = useState<T[]>(props.defaultValue ?? [])
 

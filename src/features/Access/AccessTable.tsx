@@ -7,7 +7,7 @@ import {useAsync, UseAsync} from '@/alexlib-labo/useAsync'
 import {UseFetchersSimple} from '@/alexlib-labo/useFetchersFn'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 
@@ -87,7 +87,7 @@ export const AccessTable = ({
           render: row => {
             if (!!row.groupName) return
             if (isAdmin) return (
-              <AaSelectSingle
+              <IpSelectSingle
                 hideNullOption
                 disabled={!!row.groupName}
                 value={row.level}

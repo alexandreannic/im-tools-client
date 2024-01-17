@@ -4,7 +4,7 @@ import {AAIconBtn} from '@/shared/IconBtn'
 import {Enum} from '@alexandreannic/ts-utils'
 import {FilterLayoutProps} from '@/features/Dashboard/helper/FilterLayout'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/IpSelectMultiple'
 import {Txt} from 'mui-extension'
 import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useI18n} from '@/core/i18n'
@@ -77,7 +77,7 @@ export const FilterLayoutPopup = ({
               <Icon color="disabled">{shape.icon}</Icon>
               <Txt truncate sx={{mx: 1, width: 140, maxWidth: 140}}>{shape.label}</Txt>
               <Box sx={{flex: 1}}>
-                <AaSelectMultiple
+                <IpSelectMultiple
                   sx={{maxWidth: 250, width: 250}}
                   value={innerFilters[name] ?? []}
                   onChange={_ => setInnerFilters((prev: any) => ({...prev, [name]: _}))}

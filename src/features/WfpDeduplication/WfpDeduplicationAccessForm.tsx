@@ -14,7 +14,7 @@ import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcUa'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
-import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/IpSelectMultiple'
 import {Utils} from '@/utils/utils'
 
 interface Form extends IAccessForm {
@@ -67,7 +67,7 @@ export const WfpDeduplicationAccessForm = ({
               rules={{required: {value: true, message: m.required}}}
               control={accessForm.control}
               render={({field: {onChange, ...field}}) => (
-                <AaSelectMultiple<DrcOffice>
+                <IpSelectMultiple<DrcOffice>
                   {...field}
                   defaultValue={[]}
                   label={m.drcOffice}

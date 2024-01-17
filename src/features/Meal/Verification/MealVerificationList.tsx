@@ -17,7 +17,7 @@ import {databaseIndex} from '@/features/Database/databaseIndex'
 import Link from 'next/link'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
 import {MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
@@ -80,7 +80,7 @@ export const MealVerificationList = () => {
               renderOption: (row) => row.status ? m[row.status!] : SheetUtils.blank,
               render: row => (
                 <>
-                  <AaSelectSingle
+                  <IpSelectSingle
                     disabled={!ctx.access.admin}
                     value={row.status}
                     options={[

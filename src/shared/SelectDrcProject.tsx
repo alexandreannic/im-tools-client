@@ -1,15 +1,15 @@
 import React from 'react'
 import {DrcProject, DrcProjectHelper} from '@/core/drcUa'
-import {AaSelectMultiple, AaSelectMultipleProps} from '@/shared/Select/AaSelectMultiple'
-import {AaSelectSingle, AaSelectSingleProps} from '@/shared/Select/AaSelectSingle'
+import {IpSelectMultiple, IpSelectMultipleProps} from '@/shared/Select/IpSelectMultiple'
+import {IpSelectSingle, IpSelectSingleProps} from '@/shared/Select/IpSelectSingle'
 import {useI18n} from '@/core/i18n'
 
-export const SelectDrcProjects = (props: Omit<AaSelectMultipleProps<DrcProject>, 'options'> & {
+export const SelectDrcProjects = (props: Omit<IpSelectMultipleProps<DrcProject>, 'options'> & {
   options?: DrcProject[]
 }) => {
   const {m} = useI18n()
   return (
-    <AaSelectMultiple<DrcProject>
+    <IpSelectMultiple<DrcProject>
       label={m.project}
       options={DrcProjectHelper.list}
       {...props}
@@ -17,13 +17,13 @@ export const SelectDrcProjects = (props: Omit<AaSelectMultipleProps<DrcProject>,
   )
 }
 
-export const SelectDrcProject = (props: Omit<AaSelectSingleProps<DrcProject>, 'onChange' | 'hideNullOption' | 'options'> & {
+export const SelectDrcProject = (props: Omit<IpSelectSingleProps<DrcProject>, 'onChange' | 'hideNullOption' | 'options'> & {
   options?: DrcProject[]
   onChange: (_: DrcProject | null) => void
 }) => {
   const {m} = useI18n()
   return (
-    <AaSelectSingle<DrcProject>
+    <IpSelectSingle<DrcProject>
       hideNullOption={false}
       label={m.project}
       options={DrcProjectHelper.list}

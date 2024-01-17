@@ -12,7 +12,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {UUID} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
 import {DrcJobInputMultiple} from '@/shared/input/DrcJobInput'
 
 export interface IAccessForm {
@@ -131,7 +131,7 @@ export const AccessFormInputDrcOffice = ({
       name="drcOffice"
       control={form.control}
       render={({field: {onChange, ...field}}) => (
-        <AaSelectSingle<DrcOffice>
+        <IpSelectSingle<DrcOffice>
           {...field}
           label={m.drcOffice}
           onChange={_ => onChange(_)}

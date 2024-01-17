@@ -23,7 +23,7 @@ import {SelectDrcProject} from '@/shared/SelectDrcProject'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {Datepicker} from '@/shared/Datepicker/Datepicker'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
 import {TableInput} from '@/shared/TableInput'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
 
@@ -492,7 +492,7 @@ export const ShelterTable = () => {
         render: row => map(row.ta, ta => {
           return (
             <>
-              <AaSelectSingle<ShelterTaPriceLevel>
+              <IpSelectSingle<ShelterTaPriceLevel>
                 value={ta.tags?.damageLevel}
                 onChange={(tagChange) => {
                   ctx.ta.asyncUpdate.call({

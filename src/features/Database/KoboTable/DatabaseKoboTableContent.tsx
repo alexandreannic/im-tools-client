@@ -17,7 +17,7 @@ import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'
 import {useCustomSelectedHeader} from '@/features/Database/KoboTable/useCustomSelectedHeader'
 import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
-import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
@@ -77,7 +77,7 @@ export const DatabaseKoboTableContent = ({
       renderOption: (row: KoboAnswer) => row.tags?._validation ? m[row.tags?._validation!] : SheetUtils.blank,
       render: (row: KoboAnswer) => (
         <>
-          <AaSelectSingle
+          <IpSelectSingle
             disabled={!ctx.canEdit || ctx.fetcherAnswers.loading}
             value={row.tags?._validation}
             options={[
