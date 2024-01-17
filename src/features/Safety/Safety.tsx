@@ -7,14 +7,13 @@ import {AppHeader} from '@/shared/Layout/Header/AppHeader'
 import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
-import {Tooltip} from '@mui/material'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {KoboFormName, KoboIndex} from '@/KoboIndex'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {Panel} from '@/shared/Panel'
 import {Page} from '@/shared/Page'
-import {shelterModule} from '@/features/Shelter/Shelter'
+import {SidebarKoboLink} from '@/features/SidebarKoboLink'
 
 const relatedKoboForms: (KoboFormName)[] = [
   'safety_incident',
@@ -41,25 +40,10 @@ const MpcaSidebar = () => {
         </NavLink>
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
-          {relatedKoboForms.map(_ => {
-            const name = KoboIndex.byName(_).parsed.name
-            return (
-              <Tooltip key={_} title={name} placement="right">
-                <NavLink to={path(safetyModule.siteMap.form(_))}>
-                  {({isActive, isPending}) => (
-                    <SidebarItem size="small" active={isActive} icon="calendar_view_month">{name}</SidebarItem>
-                  )}
-                </NavLink>
-              </Tooltip>
-            )
-          })}
+          {relatedKoboForms.map(_ =>
+            <SidebarKoboLink key={_} path={path(safetyModule.siteMap.form(_))} name={_}/>
+          )}
         </SidebarSection>
-        {/*<NavLink to={path(mpcaModule.siteMap.paymentTools)}>*/}
-        {/*  <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>*/}
-        {/*</NavLink>*/}
-        {/*<NavLink to={path(mpcaModule.siteMap.deduplication)}>*/}
-        {/*  <SidebarItem icon="join_left">{m.wfpDeduplication}</SidebarItem>*/}
-        {/*</NavLink>*/}
       </SidebarBody>
     </Sidebar>
   )

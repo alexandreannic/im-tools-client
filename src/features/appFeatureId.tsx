@@ -9,7 +9,6 @@ export enum AppFeatureId {
   kobo_database = 'kobo_database',
   mpca = 'mpca',
   shelter = 'shelter',
-  meal_verification = 'meal_verification',
   partnership = 'partnership',
   wfp_deduplication = 'wfp_deduplication',
   activity_info = 'activity_info',
@@ -53,7 +52,7 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
   },
   mpca: {
     id: AppFeatureId.mpca,
-    name: 'MPCA and Basic Needs',
+    name: 'MPCA & Basic Needs',
     materialIcons: 'savings',
     color: 'green',
     path: '/mpca',
@@ -110,20 +109,6 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
         .find(_ => _.params?.koboFormId === KoboIndex.byName('bn_re').id)
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
-  },
-  meal_verification: {
-    id: AppFeatureId.meal_verification,
-    name: 'Meal Verification',
-    materialIcons: 'troubleshoot',
-    color: '#afd0d6',
-    path: '/meal-verification',
-    showIf: (_, accesses) => _ && _?.admin || accesses && !!accesses
-      .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-      .find(_ => {
-        return _.params?.koboFormId === KoboIndex.byName('bn_re').id ||
-          _.params?.koboFormId === KoboIndex.byName('ecrec_cashRegistration').id ||
-          _.params?.koboFormId === KoboIndex.byName('meal_visitMonitoring').id
-      })
   },
   activity_info: {
     materialIcons: 'group_work',

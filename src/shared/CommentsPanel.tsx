@@ -8,6 +8,7 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 
 export interface CommentsPanelProps {
   pageSize?: number
+  height?: number
   data: Seq<{
     id: number | string
     title?: ReactNode
@@ -19,12 +20,13 @@ export interface CommentsPanelProps {
 
 export const CommentsPanel = memo(({
   data,
+  height = 650,
   pageSize = 5,
 }: CommentsPanelProps) => {
   const [limit, setLimit] = useState(pageSize)
   const {m, formatDateTime} = useI18n()
   return (
-    <Box sx={{maxHeight: '650px', overflowY: 'auto'}}>
+    <Box sx={{maxHeight: height, overflowY: 'auto'}}>
       {data.slice(0, limit).map(row => (
         <Box key={row.id} sx={{
           pb: 2,

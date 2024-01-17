@@ -1,4 +1,3 @@
-import {useDashboardMealVisitContext} from '@/features/Meal/DashboardMealVisitContext'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
 import React, {ReactNode} from 'react'
@@ -15,7 +14,7 @@ import {DrawingCanvas} from '@/shared/DrawingCanvas'
 import {mapFor, seq} from '@alexandreannic/ts-utils'
 import {koboImgHelper} from '@/shared/TableImg/KoboAttachedImg'
 import {CompressedImg} from '@/shared/CompressedImg'
-import {useAppSettings} from '@/core/context/ConfigContext'
+import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 
 const urlValidation = yup.object({
   id: yup.string().required()
@@ -33,6 +32,21 @@ const generalStyles = <GlobalStyles styles={t => ({
   },
   td: {
     padding: 0,
+  },
+  '@media print': {
+    'body *': {
+      visibility: 'hidden',
+    },
+    '#meal-visit-details-content *': {
+      visibility: 'visible',
+    },
+    '#meal-visit-details-content': {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      visibility: 'visible',
+    },
   }
 })}/>
 
@@ -61,7 +75,7 @@ const Row = ({
   )
 }
 
-export const DashboardMealVisitPdf = () => {
+export const MealVisitDetails = () => {
   return (
     <ThemeProvider theme={muiTheme({
       dark: false,
@@ -78,10 +92,9 @@ export const DashboardMealVisitPdf = () => {
 }
 
 export const _DashboardMealVisitPdf = () => {
-  const ctx = useDashboardMealVisitContext()
+  const ctx = useMealVisitContext()
   const ctxSchema = useKoboSchemaContext()
   const {session} = useSession()
-  const {conf} = useAppSettings()
   const {m, formatDate} = useI18n()
   const {id} = urlValidation.validateSync(useParams())
   const entry = ctx.answersIndex?.[id]
@@ -89,7 +102,7 @@ export const _DashboardMealVisitPdf = () => {
   if (!entry)
     return 'Not found'
   return (
-    <Box sx={{
+    <Box id="meal-visit-details-content" sx={{
       background: 'white',
       '@media screen': {
         margin: 'auto',

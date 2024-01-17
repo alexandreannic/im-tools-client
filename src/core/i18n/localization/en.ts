@@ -270,7 +270,6 @@ export const en = Object.freeze({
     submissionTime: 'Submission',
     submittedBy: 'By',
     add: 'Add',
-    mealVisitMonitoringDashboard: 'MEAL Visit Monitoring Dashboard',
     protectionMonitoringDashboard: 'Protection monitoring dashboard',
     undefined: 'Unknown',
     women: 'Women',
@@ -341,6 +340,11 @@ export const en = Object.freeze({
     ukrainianCitizenShip: 'Ukrainian citizenship',
     hhBarriersToPersonalDocument: 'Experienced barriers to obtain civil documents',
     atLeastOneMemberWorking: 'HHs with at least one member working',
+    _meal: {
+      openTracker: 'Open Excel tracker',
+      visitMonitoring: 'Visit Monitoring',
+      verification: 'Verification',
+    },
     mealMonitoringVisit: {
       ecrec: 'ECREC activities',
       protection: 'Protection activities',
@@ -1123,6 +1127,7 @@ export const en = Object.freeze({
     year: 'Year',
     vehicule: 'Vehicule',
     koboForms: 'Kobo forms',
+    otherKoboForms: 'Other Kobo forms',
     _wfpDeduplication: {},
     _partner: {
       residualRisk: 'Residual Risk',

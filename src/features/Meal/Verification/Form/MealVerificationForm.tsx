@@ -6,7 +6,7 @@ import {useI18n} from '@/core/i18n'
 import {KoboIndex} from '@/KoboIndex'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Controller, useForm} from 'react-hook-form'
-import {MealVerificationFormData} from '@/features/MealVerification/Form/MealVerificationFormData'
+import {MealVerificationFormData} from '@/features/Meal/Verification/Form/MealVerificationFormData'
 import {AaBtn, AaBtnProps} from '@/shared/Btn/AaBtn'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {Panel, PanelBody} from '@/shared/Panel'
@@ -18,8 +18,8 @@ import {useEffectFn, useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {useAaToast} from '@/core/useToast'
 import {MealVerificationAnsers, MealVerificationAnswersStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {useNavigate} from 'react-router'
-import {mealVerificationModule} from '@/features/MealVerification/MealVerification'
-import {mealVerificationActivities, mealVerificationActivitiesIndex, mealVerificationConf} from '@/features/MealVerification/mealVerificationConfig'
+import {mealVerificationActivities, mealVerificationActivitiesIndex, mealVerificationConf} from '@/features/Meal/Verification/mealVerificationConfig'
+import {mealModule} from '@/features/Meal/Meal'
 
 export interface MealVerificationForm {
   activity: string
@@ -105,7 +105,7 @@ export const MealVerificationForm = () => {
         }))
       await asyncCreate.call({...form, answers})
       toastSuccess(m._mealVerif.requested)
-      navigate(mealVerificationModule.siteMap.index)
+      navigate(mealModule.siteMap.verification._)
     } catch (e) {
     }
   }

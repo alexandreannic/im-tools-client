@@ -7,11 +7,11 @@ import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {CommentsPanel, CommentsPanelProps} from '@/features/Meal/CommentsPanel'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {useSession} from '@/core/Session/SessionContext'
 import {DashboardSafetyIncidentsPageProps, SafetyIncidentsTrackerBarChart} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
+import {CommentsPanel, CommentsPanelProps} from '@/shared/CommentsPanel'
 
 export const SafetyIncidentDashboardBody = ({
   data,

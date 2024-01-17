@@ -1,13 +1,13 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo, KoboIndex} from '@/KoboIndex'
+import {KoboIndex} from '@/KoboIndex'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {Period} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
 
-export interface DashboardMealVisitContext {
+export interface MealVisitContext {
   fetcherAnswers: UseFetcher<(filter: Partial<Period>) => Promise<Seq<KoboAnswer<Meal_VisitMonitoring, any>>>>
   fetcherPeriod: UseFetcher<() => Promise<Period>>
   periodFilter: Partial<Period>
@@ -15,11 +15,11 @@ export interface DashboardMealVisitContext {
   answersIndex?: Record<KoboAnswerId, KoboAnswer<Meal_VisitMonitoring, any>>
 }
 
-const Context = React.createContext({} as DashboardMealVisitContext)
+const Context = React.createContext({} as MealVisitContext)
 
-export const useDashboardMealVisitContext = () => useContext<DashboardMealVisitContext>(Context)
+export const useMealVisitContext = () => useContext<MealVisitContext>(Context)
 
-export const DashboardMealVisitProvider = ({
+export const MealVisitProvider = ({
   children,
 }: {
   children: ReactNode

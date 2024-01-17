@@ -1,19 +1,16 @@
 import React, {useEffect} from 'react'
 import {Page} from '@/shared/Page'
-import {useMealVerificationContext} from '@/features/MealVerification/MealVerificationContext'
 import {Panel} from '@/shared/Panel'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {Avatar, Box, BoxProps, Icon, useTheme} from '@mui/material'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
-import {mealVerificationModule} from '@/features/MealVerification/MealVerification'
 import {NavLink} from 'react-router-dom'
 import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Modal, Txt} from 'mui-extension'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useSession} from '@/core/Session/SessionContext'
-import {mealVerificationActivitiesIndex} from '@/features/MealVerification/mealVerificationConfig'
 import {kobo, KoboIndex} from '@/KoboIndex'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {databaseModule} from '@/features/Database/databaseModule'
@@ -22,6 +19,10 @@ import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
+import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
+import {mealModule} from '@/features/Meal/Meal'
+import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
+import {mealVerificationActivitiesIndex} from '@/features/Meal/Verification/mealVerificationConfig'
 
 export const MealVerificationLinkToForm = ({
   koboFormId,
@@ -60,7 +61,7 @@ export const MealVerificationList = () => {
         <Sheet
           header={
             <>
-              <NavLink to={mealVerificationModule.siteMap.form}>
+              <NavLink to={mealModule.siteMap.verification.form}>
                 <AaBtn variant="contained" icon="add">{m._mealVerif.newRequest}</AaBtn>
               </NavLink>
             </>
@@ -165,7 +166,7 @@ export const MealVerificationList = () => {
                       <TableIconBtn>delete</TableIconBtn>
                     </Modal>
                   )}
-                  <NavLink to={mealVerificationModule.siteMap.data(_.id)}>
+                  <NavLink to={mealModule.siteMap.verification.data(_.id)}>
                     <TableIconBtn>chevron_right</TableIconBtn>
                   </NavLink>
                 </>

@@ -10,7 +10,7 @@ import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {CfmTable} from '@/features/Cfm/Data/CfmTable'
 import {CfmProvider, useCfmContext} from '@/features/Cfm/CfmContext'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
-import {kobo, KoboIndex} from '@/KoboIndex'
+import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useAaToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
@@ -21,6 +21,15 @@ import {Box} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {Fender} from 'mui-extension'
+import {appConfig} from '@/conf/AppConfig'
+import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
+import {shelterModule} from '@/features/Shelter/Shelter'
+import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
+
+const relatedKoboForms: KoboFormName[] = [
+  'meal_cfmInternal',
+  'meal_cfmExternal',
+]
 
 export const cfmModule = {
   basePath: '/cfm',
@@ -67,7 +76,7 @@ const FcmSidebar = () => {
         </NavLink>
         <SidebarHr/>
         <SidebarItem
-          icon="view_compact_alt"
+          icon={appConfig.icons.matrix}
           onClick={() => void 0}
           href={conf.externalLink.mealReferralMatrix}
           target="_blank"
@@ -75,24 +84,11 @@ const FcmSidebar = () => {
         >
           {m._cfm.referralMatrix}
         </SidebarItem>
-        <SidebarItem
-          href={ctx.schemaExternal.sanitizedSchema.deployment__links.url}
-          target="_blank"
-          icon="calendar_view_month"
-          iconEnd="open_in_new"
-          onClick={() => void 0}
-        >
-          {m._cfm.formLong.External}
-        </SidebarItem>
-        <SidebarItem
-          href={ctx.schemaInternal.sanitizedSchema.deployment__links.url}
-          target="_blank"
-          onClick={() => void 0}
-          icon="calendar_view_month"
-          iconEnd="open_in_new"
-        >
-          {m._cfm.formLong.Internal}
-        </SidebarItem>
+        <SidebarSection title={m.koboForms}>
+          {relatedKoboForms.map(_ =>
+            <SidebarKoboLink key={_} path={path(shelterModule.siteMap.form(_))} name={_}/>
+          )}
+        </SidebarSection>
       </SidebarBody>
       <SidebarHr/>
       <SidebarBody>
@@ -166,6 +162,9 @@ export const CfmModule = () => {
                 <Route path={cfmModule.siteMap.data} element={<CfmTable/>}/>
                 <Route path={cfmModule.siteMap.entry()} element={<CfmEntryRoute/>}/>
                 <Route path={cfmModule.siteMap.access} element={<CfmAccess/>}/>
+                {relatedKoboForms.map(_ =>
+                  <Route key={_} {...getKoboFormRouteProps({path: shelterModule.siteMap.form(_), name: _})}/>
+                )}
               </Routes>
             </Layout>
           </Router>

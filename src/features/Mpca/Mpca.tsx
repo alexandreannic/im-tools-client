@@ -17,10 +17,8 @@ import {AaBtn} from '@/shared/Btn/AaBtn'
 import {Box, Tooltip} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
-import {KoboFormName, KoboIndex} from '@/KoboIndex'
-import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
-import {Page} from '@/shared/Page'
-import {Panel} from '@/shared/Panel'
+import {KoboFormName} from '@/KoboIndex'
+import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 
 const relatedKoboForms: (KoboFormName)[] = [
   'bn_re',
@@ -75,18 +73,9 @@ const MpcaSidebar = () => {
         </NavLink>
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
-          {relatedKoboForms.map(_ => {
-            const name = KoboIndex.byName(_).parsed.name
-            return (
-              <Tooltip key={_} title={name} placement="right">
-                <NavLink to={path(mpcaModule.siteMap.form(_))}>
-                  {({isActive, isPending}) => (
-                    <SidebarItem size="small" active={isActive} icon="calendar_view_month">{name}</SidebarItem>
-                  )}
-                </NavLink>
-              </Tooltip>
-            )
-          })}
+          {relatedKoboForms.map(_ =>
+            <SidebarKoboLink size="small" key={_} path={path(mpcaModule.siteMap.form(_))} name={_}/>
+          )}
         </SidebarSection>
         {/*<NavLink to={path(mpcaModule.siteMap.paymentTools)}>*/}
         {/*  <SidebarItem icon="savings">{m.mpcaDb.paymentTools}</SidebarItem>*/}
@@ -121,13 +110,7 @@ export const Mpca = () => {
             <Route path={mpcaModule.siteMap.paymentTools} element={<MpcaPaymentTools/>}/>
             <Route path={mpcaModule.siteMap.paymentTool()} element={<MpcaPaymentTool/>}/>
             {relatedKoboForms.map(_ =>
-              <Route key={_} path={mpcaModule.siteMap.form(_)} element={
-                <Page width="full">
-                  <Panel>
-                    <DatabaseTable formId={KoboIndex.byName(_).id}/>
-                  </Panel>
-                </Page>
-              }/>
+              <Route key={_} {...getKoboFormRouteProps({path: mpcaModule.siteMap.form(_), name: _})}/>
             )}
           </Routes>
         </Layout>

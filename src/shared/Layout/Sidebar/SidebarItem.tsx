@@ -73,9 +73,9 @@ export const SidebarItem = ({
         ...props.disabled && {
           opacity: .5,
         },
-        '&:hover': props.onClick ? {
+        '&:hover': {
           background: t => alpha(t.palette.primary.main, 0.06),
-        } : {},
+        },
         ...(large && {
           minHeight: 38,
         }),

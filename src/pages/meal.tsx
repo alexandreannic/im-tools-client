@@ -1,11 +1,11 @@
 import React from 'react'
 import {SessionProvider} from '@/core/Session/SessionContext'
-import {DashboardMealVisit} from '@/features/Meal/DashboardMealVisit'
+import {Meal} from '@/features/Meal/Meal'
 
 export default () => {
   return (
     <SessionProvider>
-      <DashboardMealVisit/>
+      <Meal/>
     </SessionProvider>
   )
 }

@@ -18,14 +18,14 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {AaSelectSingle} from '@/shared/Select/AaSelectSingle'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
-import {useMealVerificationContext} from '@/features/MealVerification/MealVerificationContext'
 import {MealVerificationAnsers, MealVerificationAnswersStatus, MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
-import {mealVerificationActivities, MealVerificationActivity, mealVerificationConf} from '@/features/MealVerification/mealVerificationConfig'
+import {mealVerificationActivities, MealVerificationActivity, mealVerificationConf} from '@/features/Meal/Verification/mealVerificationConfig'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
-import {MealVerificationLinkToForm} from '@/features/MealVerification/MealVerificationList'
+import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
+import {MealVerificationLinkToForm} from '@/features/Meal/Verification/MealVerificationList'
 
 export enum MergedDataStatus {
   Selected = 'Selected',
