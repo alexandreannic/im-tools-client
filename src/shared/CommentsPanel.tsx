@@ -4,7 +4,7 @@ import {ViewMoreText} from '@/shared/ViewMoreText'
 import {Seq} from '@alexandreannic/ts-utils'
 import React, {memo, ReactNode, useState} from 'react'
 import {useI18n} from '@/core/i18n'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 
 export interface CommentsPanelProps {
   pageSize?: number

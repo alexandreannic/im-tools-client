@@ -1,5 +1,5 @@
 import {Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, LinearProgress, PaperProps} from '@mui/material'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {EventHandler, ReactNode, SyntheticEvent} from 'react'
 
 export type BasicDialogProps = Omit<DialogProps, 'children' | 'onClick'> & {

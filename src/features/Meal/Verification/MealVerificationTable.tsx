@@ -15,7 +15,7 @@ import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKobo
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {useParams} from 'react-router'
 import * as yup from 'yup'
 import {MealVerificationAnsers, MealVerificationAnswersStatus, MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'

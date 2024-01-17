@@ -1,6 +1,6 @@
 import React from 'react'
 import {styleUtils} from '../../../core/theme'
-import {IpBtn} from '../../Btn/IpBtn'
+import {IpBtn} from '../../Btn'
 
 export const AppHeaderItem = ({children, href}: {children: any; href?: string}) => {
   return (

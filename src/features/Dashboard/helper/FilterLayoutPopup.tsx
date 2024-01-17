@@ -4,9 +4,9 @@ import {IpIconBtn} from '@/shared/IconBtn'
 import {Enum} from '@alexandreannic/ts-utils'
 import {FilterLayoutProps} from '@/features/Dashboard/helper/FilterLayout'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {IpSelectMultiple} from '@/shared/Select/IpSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Txt} from 'mui-extension'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 
 export const FilterLayoutPopup = ({

@@ -1,4 +1,4 @@
-import {IpBtn, IpBtnProps} from '@/shared/Btn/IpBtn'
+import {IpBtn, IpBtnProps} from '@/shared/Btn'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 

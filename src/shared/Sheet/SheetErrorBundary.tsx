@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Box} from '@mui/material'
 import {Txt} from 'mui-extension'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {Enum} from '@alexandreannic/ts-utils'
 import {appConfig} from '@/conf/AppConfig'

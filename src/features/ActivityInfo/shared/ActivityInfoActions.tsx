@@ -7,7 +7,7 @@ import {IconBtn} from 'mui-extension'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import exp from 'constants'
-import {IpBtnProps} from '@/shared/Btn/IpBtn'
+import {IpBtnProps} from '@/shared/Btn'
 
 export const ActivityInfoActions = ({
   data,

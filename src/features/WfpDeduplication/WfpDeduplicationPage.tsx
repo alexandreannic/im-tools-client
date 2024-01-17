@@ -10,7 +10,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {WfpDeduplicationAccess} from '@/features/WfpDeduplication/WfpDeduplicationAccess'
 

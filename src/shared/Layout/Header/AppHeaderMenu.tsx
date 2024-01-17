@@ -4,7 +4,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {Box, Icon, Popover} from '@mui/material'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {alpha} from '@mui/material/styles'
 
 const Row = ({

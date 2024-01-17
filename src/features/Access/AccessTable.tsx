@@ -7,7 +7,7 @@ import {useAsync, UseAsync} from '@/alexlib-labo/useAsync'
 import {UseFetchersSimple} from '@/alexlib-labo/useFetchersFn'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {IpSelectSingle} from '@/shared/Select/IpSelectSingle'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 

@@ -14,7 +14,7 @@ import {MpcaPaymentToolForm} from './MpcaPaymentToolForm'
 import * as yup from 'yup'
 import {Grid} from '@mui/material'
 import {ListRow} from '@/shared/ListRow'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {TableImg} from '@/shared/TableImg/TableImg'
 
 const urlValidation = yup.object({

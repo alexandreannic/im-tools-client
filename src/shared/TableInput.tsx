@@ -1,4 +1,4 @@
-import {IpInput, IpInputProps} from '@/shared/ItInput/IpInput'
+import {IpInput, IpInputProps} from '@/shared/ItInput/Input'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import React from 'react'

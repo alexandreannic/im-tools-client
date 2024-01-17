@@ -1,7 +1,7 @@
 import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {IpSelectMultiple} from '@/shared/Select/IpSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {ScLineChart2} from '@/shared/Chart/ScLineChart2'

@@ -14,7 +14,7 @@ import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {DrcOffice} from '@/core/drcUa'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
-import {IpSelectMultiple} from '@/shared/Select/IpSelectMultiple'
+import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Utils} from '@/utils/utils'
 
 interface Form extends IAccessForm {

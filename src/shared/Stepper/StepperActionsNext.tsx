@@ -1,4 +1,4 @@
-import {IpBtn, IpBtnProps} from '../Btn/IpBtn'
+import {IpBtn, IpBtnProps} from '../Btn'
 import {useI18n} from '@/core/i18n'
 
 interface Props extends IpBtnProps {

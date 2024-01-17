@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
-import {IpInput} from '@/shared/ItInput/IpInput'
+import {IpInput} from '@/shared/ItInput/Input'
 import {format, getDaysInMonth, parse, subMonths} from 'date-fns'
 import {mapFor} from '@alexandreannic/ts-utils'
 

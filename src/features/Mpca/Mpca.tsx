@@ -13,7 +13,7 @@ import {WfpDeduplicationData} from '@/features/WfpDeduplication/WfpDeduplication
 import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {Box, Tooltip} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'

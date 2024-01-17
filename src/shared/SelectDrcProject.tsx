@@ -1,7 +1,7 @@
 import React from 'react'
 import {DrcProject, DrcProjectHelper} from '@/core/drcUa'
-import {IpSelectMultiple, IpSelectMultipleProps} from '@/shared/Select/IpSelectMultiple'
-import {IpSelectSingle, IpSelectSingleProps} from '@/shared/Select/IpSelectSingle'
+import {IpSelectMultiple, IpSelectMultipleProps} from '@/shared/Select/SelectMultiple'
+import {IpSelectSingle, IpSelectSingleProps} from '@/shared/Select/SelectSingle'
 import {useI18n} from '@/core/i18n'
 
 export const SelectDrcProjects = (props: Omit<IpSelectMultipleProps<DrcProject>, 'options'> & {

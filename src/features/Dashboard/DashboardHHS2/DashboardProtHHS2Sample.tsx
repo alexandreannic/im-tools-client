@@ -9,7 +9,7 @@ import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Prote
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/core/chartTools'
 import {chain} from '@/utils/utils'
-import {IpStackedBarChart} from '@/shared/Chart/IpStackedBarChart'
+import {IpStackedBarChart} from '@/shared/Chart/StackedBarChart'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {Person} from '@/core/type'

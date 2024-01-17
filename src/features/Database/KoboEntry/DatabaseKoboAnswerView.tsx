@@ -1,5 +1,5 @@
 import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} from '@mui/material'
-import {IpBtn} from '@/shared/Btn/IpBtn'
+import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer, KoboAttachment, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
