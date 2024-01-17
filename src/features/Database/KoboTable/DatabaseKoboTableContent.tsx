@@ -1,6 +1,6 @@
 import {KoboAnswer, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '@/core/i18n'
@@ -127,7 +127,7 @@ export const DatabaseKoboTableContent = ({
               ]}
             />
             {ctxSchema.schemaHelper.groupsCount > 0 && (
-              <AaBtn
+              <IpBtn
                 icon="move_up"
                 variant="outlined"
                 iconSx={{color: (t: Theme) => t.palette.text.disabled, transform: 'rotate(90deg)'}}
@@ -135,7 +135,7 @@ export const DatabaseKoboTableContent = ({
                 tooltip={m._koboDatabase.repeatGroupsAsColumns}
               >
                 <Switch size="small" sx={{mr: -1}} checked={repeatGroupsAsColumns}/>
-              </AaBtn>
+              </IpBtn>
             )}
 
             <AAIconBtn

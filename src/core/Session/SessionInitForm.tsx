@@ -4,7 +4,7 @@ import {UserSession} from '@/core/sdk/server/session/Session'
 import {Txt} from 'mui-extension'
 import {useI18n} from '@/core/i18n'
 import {Box} from '@mui/material'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useEffect, useState} from 'react'
 import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -36,7 +36,7 @@ export const SessionInitForm = ({
   return (
     <Box sx={{p: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <Box sx={{width: '100%', maxWidth: 400}}>
-        <AaBtn icon="arrow_back" color="primary" onClick={onChangeAccount}>{m.changeAccount}</AaBtn>
+        <IpBtn icon="arrow_back" color="primary" onClick={onChangeAccount}>{m.changeAccount}</IpBtn>
       </Box>
       <Box sx={{
         mb: 4,
@@ -59,14 +59,14 @@ export const SessionInitForm = ({
           onConfirm={() => _updateUser.fetch({}, {drcOffice: drcOffice})}
           loading={_updateUser.loading}
         >
-          <AaBtn
+          <IpBtn
             icon="arrow_forward"
             disabled={!drcOffice}
             variant="contained"
             sx={{mt: 2}}
           >
             {m.select}
-          </AaBtn>
+          </IpBtn>
         </Modal>
       </Box>
     </Box>

@@ -3,14 +3,14 @@ import {ScRadioGroup, ScRadioGroupItem} from '../../../shared/RadioGroup'
 import {UUID} from '../../../core/type'
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material'
 import {useI18n} from '../../../core/i18n'
-import {AaBtn, AaBtnProps} from '../../../shared/Btn/AaBtn'
+import {IpBtn, IpBtnProps} from '../../../shared/Btn/IpBtn'
 import React, {useState} from 'react'
 
-export const KoboFormListButton = ({children, variant = 'contained', ...props}: Omit<AaBtnProps, 'onChange'> & KoboFormListProps) => {
+export const KoboFormListButton = ({children, variant = 'contained', ...props}: Omit<IpBtnProps, 'onChange'> & KoboFormListProps) => {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <AaBtn onClick={() => setOpen(_ => !_)} children={children} variant={variant}/>
+      <IpBtn onClick={() => setOpen(_ => !_)} children={children} variant={variant}/>
       <KoboFormListDialog open={open} onClose={() => setOpen(false)} {...props}/>
     </>
   )
@@ -40,9 +40,9 @@ export const KoboFormListDialog = ({
         />
       </DialogContent>
       <DialogActions>
-        <AaBtn color="primary" onClick={onClose}>
+        <IpBtn color="primary" onClick={onClose}>
           {m.close}
-        </AaBtn>
+        </IpBtn>
       </DialogActions>
     </Dialog>
   )

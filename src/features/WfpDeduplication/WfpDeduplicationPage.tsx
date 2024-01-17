@@ -10,7 +10,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {WfpDeduplicationAccess} from '@/features/WfpDeduplication/WfpDeduplicationAccess'
 
@@ -55,9 +55,9 @@ const WpfDeduplicationSidebar = () => {
               />
             </SidebarItem>
             <SidebarItem>
-              <AaBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.getLoading()}>
+              <IpBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.getLoading()}>
                 {m.refresh}
-              </AaBtn>
+              </IpBtn>
             </SidebarItem>
             <SidebarHr sx={{my: 2}}/>
           </>

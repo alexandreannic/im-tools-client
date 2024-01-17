@@ -10,7 +10,7 @@ import {useParams} from 'react-router'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {Page} from '@/shared/Page'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {DatabaseAccessForm} from '@/features/Database/Access/DatabaseAccessForm'
 import {Panel} from '@/shared/Panel'
@@ -79,7 +79,7 @@ export const DatabaseAccess = ({
           header={
             accessSum && (
               <DatabaseAccessForm formId={formId} form={form} onAdded={refresh}>
-                <AaBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</AaBtn>
+                <IpBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</IpBtn>
               </DatabaseAccessForm>
             )
           }/>

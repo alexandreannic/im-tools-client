@@ -10,7 +10,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiShelterData} from '@/features/ActivityInfo/Snfi/aiSnfiData'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useAaToast} from '@/core/useToast'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
@@ -54,7 +54,7 @@ export const AiSnfi = () => {
           header={
             <>
               <AaInput type="month" sx={{width: 200, mr: 1}} helperText={null} value={period} onChange={_ => setPeriod(_.target.value)}/>
-              <AaBtn
+              <IpBtn
                 loading={_submit.anyLoading}
                 icon="send"
                 variant="contained"
@@ -65,7 +65,7 @@ export const AiSnfi = () => {
                 }}
               >
                 {m.submitAll}
-              </AaBtn>
+              </IpBtn>
             </>
           }
           defaultLimit={100}

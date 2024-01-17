@@ -4,7 +4,7 @@ import {ViewMoreText} from '@/shared/ViewMoreText'
 import {Seq} from '@alexandreannic/ts-utils'
 import React, {memo, ReactNode, useState} from 'react'
 import {useI18n} from '@/core/i18n'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 
 export interface CommentsPanelProps {
   pageSize?: number
@@ -50,10 +50,10 @@ export const CommentsPanel = memo(({
       ))}
       <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
         {limit > pageSize && (
-          <AaBtn icon="remove" variant="outlined" sx={{mr: 1}} color="primary" onClick={() => setLimit(_ => _ - pageSize)}>{m.viewNMore(pageSize)}</AaBtn>
+          <IpBtn icon="remove" variant="outlined" sx={{mr: 1}} color="primary" onClick={() => setLimit(_ => _ - pageSize)}>{m.viewNMore(pageSize)}</IpBtn>
         )}
         {limit < data.length && (
-          <AaBtn icon="add" variant="outlined" color="primary" onClick={() => setLimit(_ => _ + pageSize)}>{m.viewNMore(pageSize)}</AaBtn>
+          <IpBtn icon="add" variant="outlined" color="primary" onClick={() => setLimit(_ => _ + pageSize)}>{m.viewNMore(pageSize)}</IpBtn>
         )}
       </Box>
     </Box>

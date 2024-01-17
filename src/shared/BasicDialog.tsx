@@ -1,5 +1,5 @@
 import {Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, LinearProgress, PaperProps} from '@mui/material'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {EventHandler, ReactNode, SyntheticEvent} from 'react'
 
 export type BasicDialogProps = Omit<DialogProps, 'children' | 'onClick'> & {
@@ -48,13 +48,13 @@ export const BasicDialog = ({
       <DialogActions>
         {overrideActions ? overrideActions : (
           <>
-            <AaBtn color="primary" onClick={onClose}>
+            <IpBtn color="primary" onClick={onClose}>
               {cancelLabel || 'Cancel'}
-            </AaBtn>
+            </IpBtn>
             {onConfirm && (
-              <AaBtn color="primary" onClick={onConfirm} disabled={confirmDisabled}>
+              <IpBtn color="primary" onClick={onConfirm} disabled={confirmDisabled}>
                 {confirmLabel || 'Confirm'}
-              </AaBtn>
+              </IpBtn>
             )}
           </>
         )}

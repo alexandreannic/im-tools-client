@@ -7,7 +7,7 @@ import {IconBtn} from 'mui-extension'
 import {AAIconBtn} from '@/shared/IconBtn'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import exp from 'constants'
-import {AaBtnProps} from '@/shared/Btn/AaBtn'
+import {IpBtnProps} from '@/shared/Btn/IpBtn'
 
 export const ActivityInfoActions = ({
   data,
@@ -92,7 +92,7 @@ const AIPreviewJSON = ({
   )
 }
 
-export const AiSendBtn = (props: AaBtnProps) => {
+export const AiSendBtn = (props: IpBtnProps) => {
   return (
     <AAIconBtn
       tooltip="Submit 🚀"

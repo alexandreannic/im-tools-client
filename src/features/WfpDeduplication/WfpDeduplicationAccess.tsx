@@ -3,7 +3,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {useFetchers} from '@/alexlib-labo/useFetchersFn'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {AccessTable} from '@/features/Access/AccessTable'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {Panel} from '@/shared/Panel'
 import React, {useEffect} from 'react'
 import {useSession} from '@/core/Session/SessionContext'
@@ -40,7 +40,7 @@ export const WfpDeduplicationAccess = () => {
           header={
             session.admin && (
               <WfpDeduplicationAccessForm onAdded={refresh}>
-                <AaBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</AaBtn>
+                <IpBtn sx={{mr: 1}} variant="contained" icon="person_add">{m.grantAccess}</IpBtn>
               </WfpDeduplicationAccessForm>
             )
           }/>

@@ -13,7 +13,7 @@ import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {Box} from '@mui/material'
 import {AaInput} from '@/shared/ItInput/AaInput'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useAaToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
@@ -151,12 +151,12 @@ export const AiMpca = () => {
               <Txt color="hint" sx={{ml: 1}}>
                 USD to UAH: <b>{conf.uahToUsd}</b>
               </Txt>
-              <AaBtn icon="send" variant="contained" loading={_submit.anyLoading} sx={{ml: 'auto'}} onClick={() => {
+              <IpBtn icon="send" variant="contained" loading={_submit.anyLoading} sx={{ml: 'auto'}} onClick={() => {
                 if (!fetcher.entity) return
                 _submit.call(-1, fetcher.entity.filter(_ => !!_.activity.Hromada).map((_, i) => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
-              </AaBtn>
+              </IpBtn>
             </Box>
           }
           loading={fetcher.loading}

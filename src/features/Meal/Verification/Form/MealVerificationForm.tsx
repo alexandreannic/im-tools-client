@@ -7,7 +7,7 @@ import {KoboIndex} from '@/KoboIndex'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Controller, useForm} from 'react-hook-form'
 import {MealVerificationFormData} from '@/features/Meal/Verification/Form/MealVerificationFormData'
-import {AaBtn, AaBtnProps} from '@/shared/Btn/AaBtn'
+import {IpBtn, IpBtnProps} from '@/shared/Btn/IpBtn'
 import {AaInput} from '@/shared/ItInput/AaInput'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
@@ -68,12 +68,12 @@ export const MealVerificationForm = () => {
   const form = useForm<MealVerificationForm>()
 
   const BackBtn = ({}: {}) => (
-    <AaBtn
+    <IpBtn
       onClick={prevStep}
       sx={{mt: 1, mr: 1}}
     >
       {m.back}
-    </AaBtn>
+    </IpBtn>
   )
 
   const NextBtn = ({
@@ -82,8 +82,8 @@ export const MealVerificationForm = () => {
     ...props
   }: {
     label?: string
-  } & AaBtnProps) => (
-    <AaBtn
+  } & IpBtnProps) => (
+    <IpBtn
       disabled={disabled}
       variant="contained"
       onClick={nextStep}
@@ -91,7 +91,7 @@ export const MealVerificationForm = () => {
       sx={{mt: 1, mr: 1}}
     >
       {label ?? m.continue}
-    </AaBtn>
+    </IpBtn>
   )
 
   const submit = async ({answerIds, ...form}: MealVerificationForm) => {

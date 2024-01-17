@@ -18,7 +18,7 @@ import {DebouncedInput} from '@/shared/DebouncedInput'
 import {AaSelect} from '@/shared/Select/Select'
 import {Enum} from '@alexandreannic/ts-utils'
 import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {cfmIndex} from '@/features/Cfm/Cfm'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
@@ -100,13 +100,13 @@ export const CfmDetails = ({entry}: {
           <Panel>
             <PanelHead action={
               canEdit && (
-                <AaBtn
+                <IpBtn
                   variant="outlined"
                   color="primary"
                   icon="edit"
                   href={api.koboApi.getEditUrl({formId: entry.formId, answerId: entry.id})}
                   target="_blank"
-                >{m.edit}</AaBtn>
+                >{m.edit}</IpBtn>
               )}
             >{m._cfm.reporterDetails}</PanelHead>
             <PanelBody>
@@ -244,14 +244,14 @@ export const CfmDetails = ({entry}: {
             onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmIndex.siteMap.data))}
             title={m.shouldDelete}
           >
-            <AaBtn
+            <IpBtn
               icon="delete"
               size="large"
               sx={{margin: 'auto'}}
               variant="contained"
             >
               {m.remove}
-            </AaBtn>
+            </IpBtn>
           </Modal>
         </Box>
       )}

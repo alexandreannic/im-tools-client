@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Box} from '@mui/material'
 import {Txt} from 'mui-extension'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {Enum} from '@alexandreannic/ts-utils'
 import {appConfig} from '@/conf/AppConfig'
@@ -60,8 +60,8 @@ export class SheetErrorBoundary extends Component<ErrorBoundaryProps, ErrorBound
           <Txt bold size="title" block sx={{mb: 1}}>{en.messages.somethingWentWrong}</Txt>
           <Box sx={{mb: 1}}>If the problem persist, please contact <b>{appConfig.contact}</b> and include the snippet below.</Box>
 
-          <AaBtn icon="refresh" onClick={() => this.refreshPage()} color="primary" variant="contained" sx={{mr: 1}}>{en.messages.refresh}</AaBtn>
-          <AaBtn icon="settings_backup_restore" onClick={() => this.refreshPage(true)} color="primary" variant="text">{en.messages.hardRefresh}</AaBtn>
+          <IpBtn icon="refresh" onClick={() => this.refreshPage()} color="primary" variant="contained" sx={{mr: 1}}>{en.messages.refresh}</IpBtn>
+          <IpBtn icon="settings_backup_restore" onClick={() => this.refreshPage(true)} color="primary" variant="text">{en.messages.hardRefresh}</IpBtn>
 
           <Box sx={t => ({
             fontFamily: 'monospace',

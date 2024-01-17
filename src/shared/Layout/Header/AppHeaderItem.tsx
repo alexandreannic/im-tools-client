@@ -1,10 +1,10 @@
 import React from 'react'
 import {styleUtils} from '../../../core/theme'
-import {AaBtn} from '../../Btn/AaBtn'
+import {IpBtn} from '../../Btn/IpBtn'
 
 export const AppHeaderItem = ({children, href}: {children: any; href?: string}) => {
   return (
-    <AaBtn
+    <IpBtn
       color="primary"
       href={href}
       sx={{
@@ -15,6 +15,6 @@ export const AppHeaderItem = ({children, href}: {children: any; href?: string}) 
       }}
     >
       {children}
-    </AaBtn>
+    </IpBtn>
   )
 }

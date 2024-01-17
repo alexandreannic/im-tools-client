@@ -10,7 +10,7 @@ import {ActivityInfoActions, AiSendBtn} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useAaToast} from '@/core/useToast'
 import {Panel} from '@/shared/Panel'
 import {AaInput} from '@/shared/ItInput/AaInput'
@@ -233,11 +233,11 @@ const _ActivityInfo = ({
         <Sheet<Row>
           getRenderRowKey={_ => _.request.changes[0].recordId}
           header={
-            <AaBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+            <IpBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
               _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
             }}>
               {m.submitAll} {seq(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
-            </AaBtn>
+            </IpBtn>
           }
           id="ai-nfi" data={data} columns={[
           {

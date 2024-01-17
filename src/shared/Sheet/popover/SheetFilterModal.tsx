@@ -1,5 +1,5 @@
 import {Box, Checkbox, Divider, FormControlLabel, Icon, MenuItem, Popover, PopoverProps, Slider, Switch} from '@mui/material'
-import {AaBtn} from '../../Btn/AaBtn'
+import {IpBtn} from '../../Btn/IpBtn'
 import {useI18n} from '../../../core/i18n'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
 import {AaInput} from '../../ItInput/AaInput'
@@ -125,12 +125,12 @@ export const SheetFilterModal = ({
         })()}
       </PanelBody>
       <PanelFoot alignEnd>
-        <AaBtn color="primary" onClick={onClose}>
+        <IpBtn color="primary" onClick={onClose}>
           {m.close}
-        </AaBtn>
-        <AaBtn color="primary" onClick={() => onChange && onChange(columnId, innerValue)}>
+        </IpBtn>
+        <IpBtn color="primary" onClick={() => onChange && onChange(columnId, innerValue)}>
           {m.filter}
-        </AaBtn>
+        </IpBtn>
       </PanelFoot>
     </Popover>
   )

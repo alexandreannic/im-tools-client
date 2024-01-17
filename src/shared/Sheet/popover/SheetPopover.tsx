@@ -3,7 +3,7 @@ import React, {ReactNode, useMemo} from 'react'
 import {ChartTools} from '@/core/chartTools'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {PanelBody, PanelHead} from '@/shared/Panel'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useI18n} from '@/core/i18n'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
@@ -57,9 +57,9 @@ export const NumberChoicesPopover = <T, >({
         <RenderRow label={m.max} value={formatLargeNumber(chart.max)}/>
       </PanelBody>
       <PanelFoot alignEnd>
-        <AaBtn color="primary" onClick={onClose as any}>
+        <IpBtn color="primary" onClick={onClose as any}>
           {m.close}
-        </AaBtn>
+        </IpBtn>
       </PanelFoot>
     </Popover>
   )
@@ -110,9 +110,9 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
         <HorizontalBarChartGoogle data={chart}/>
       </PanelBody>
       <PanelFoot alignEnd>
-        <AaBtn color="primary" onClick={onClose as any}>
+        <IpBtn color="primary" onClick={onClose as any}>
           {m.close}
-        </AaBtn>
+        </IpBtn>
       </PanelFoot>
     </Popover>
   )
@@ -150,9 +150,9 @@ export const DatesPopover = <T, >({
         <KoboLineChartDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
       </PanelBody>
       <PanelFoot alignEnd>
-        <AaBtn color="primary" onClick={onClose as any}>
+        <IpBtn color="primary" onClick={onClose as any}>
           {m.close}
-        </AaBtn>
+        </IpBtn>
       </PanelFoot>
     </Popover>
   )

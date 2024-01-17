@@ -6,7 +6,7 @@ import {useI18n} from '@/core/i18n'
 import {Avatar, Box, BoxProps, Icon, useTheme} from '@mui/material'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {NavLink} from 'react-router-dom'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {Modal, Txt} from 'mui-extension'
 import {useAsync} from '@/alexlib-labo/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -62,7 +62,7 @@ export const MealVerificationList = () => {
           header={
             <>
               <NavLink to={mealIndex.siteMap.verification.form}>
-                <AaBtn variant="contained" icon="add">{m._mealVerif.newRequest}</AaBtn>
+                <IpBtn variant="contained" icon="add">{m._mealVerif.newRequest}</IpBtn>
               </NavLink>
             </>
           }

@@ -6,7 +6,7 @@ import {FilterLayoutProps} from '@/features/Dashboard/helper/FilterLayout'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {AaSelectMultiple} from '@/shared/Select/AaSelectMultiple'
 import {Txt} from 'mui-extension'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {useI18n} from '@/core/i18n'
 
 export const FilterLayoutPopup = ({
@@ -88,9 +88,9 @@ export const FilterLayoutPopup = ({
           )}
           <Box sx={{mt: 1}}>{after}</Box>
           <Box sx={{display: 'flex', mt: 1}}>
-            <AaBtn color="primary" onClick={() => setInnerFilters({})}>{m.reinitialize}</AaBtn>
-            <AaBtn color="primary" onClick={handleClose} sx={{marginLeft: 'auto', mr: 1}}>{m.close}</AaBtn>
-            <AaBtn color="primary" variant="contained" onClick={handleSubmit}>{m.confirm}</AaBtn>
+            <IpBtn color="primary" onClick={() => setInnerFilters({})}>{m.reinitialize}</IpBtn>
+            <IpBtn color="primary" onClick={handleClose} sx={{marginLeft: 'auto', mr: 1}}>{m.close}</IpBtn>
+            <IpBtn color="primary" variant="contained" onClick={handleSubmit}>{m.confirm}</IpBtn>
           </Box>
         </Box>
       </Popover>

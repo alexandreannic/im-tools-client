@@ -4,7 +4,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
-import {AaBtn} from '@/shared/Btn/AaBtn'
+import {IpBtn} from '@/shared/Btn/IpBtn'
 import {Panel} from '@/shared/Panel'
 import {Box, Chip, Icon} from '@mui/material'
 import {Modal} from 'mui-extension'
@@ -78,7 +78,7 @@ export const AdminGroups = () => {
                   </>
                 }
               >
-                <AaBtn icon="add" variant="outlined">{m.create}</AaBtn>
+                <IpBtn icon="add" variant="outlined">{m.create}</IpBtn>
               </Modal>
             </>
           }
