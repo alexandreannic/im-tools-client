@@ -1,12 +1,23 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {buildSchemaBundle, KoboSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
-import {KoboFormName, KoboIndex} from '@/KoboIndex'
+import {buildSchemaBundle, KoboSchemaBundle, UseKoboSchema} from '@/features/KoboSchema/useKoboSchema'
+import {KoboFormName} from '@/KoboIndex'
 import {useI18n} from '@/core/i18n'
 import {useSchemaFetchers} from '@/features/KoboSchema/useSchemaFetcher'
 import {UseFetchers} from '@/shared/hook/useFetchers'
 import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Enum} from '@alexandreannic/ts-utils'
-import {Kobo} from '@/core/sdk/server/kobo/Kobo'
+
+export type KoboTranslateQuestion = (key: string) => string
+export type KoboTranslateChoice = (key: string, choice?: string) => string
+
+export interface SchemaBundle {
+  schemaHelper: UseKoboSchema
+  schemaUnsanitized: KoboSchema
+  translate: {
+    question: KoboTranslateQuestion
+    choice: KoboTranslateChoice
+  }
+}
 
 interface KoboSchemasProviderProps {
   defaultLangIndex?: number

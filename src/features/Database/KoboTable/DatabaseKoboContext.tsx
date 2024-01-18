@@ -6,13 +6,14 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useIpToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {useI18n} from '@/core/i18n'
 import {UseFetcher} from '@/shared/hook/useFetcher'
+import {SchemaBundle} from '@/features/KoboSchema/KoboSchemasContext'
 
 export interface DatabaseKoboContext {
   fetcherAnswers: UseFetcher<() => ReturnType<ApiSdk['kobo']['answer']['searchByAccess']>>
   serverId: UUID
+  schema: SchemaBundle
   canEdit?: boolean
   form: KoboForm
   updateTag: ApiSdk['kobo']['answer']['updateTag']
@@ -31,6 +32,7 @@ const Context = React.createContext({} as DatabaseKoboContext)
 export const useDatabaseKoboTableContext = () => useContext<DatabaseKoboContext>(Context)
 
 export const DatabaseKoboTableProvider = (props: {
+  schema: SchemaBundle
   dataFilter?: (_: KoboMappedAnswer) => boolean
   children: ReactNode
   fetcherAnswers: DatabaseKoboContext['fetcherAnswers']
@@ -39,7 +41,6 @@ export const DatabaseKoboTableProvider = (props: {
   form: DatabaseKoboContext['form']
   data: KoboAnswer[]
 }) => {
-  const ctxSchema = useKoboSchemaContext()
   const {m} = useI18n()
   const {
     form,
@@ -53,7 +54,7 @@ export const DatabaseKoboTableProvider = (props: {
   const refreshRequestedFlag = useRef(false)
 
   const mapData = (data: KoboAnswer[]) => {
-    const mapped = data.map(_ => Kobo.mapAnswerBySchema(ctxSchema.schemaHelper.questionIndex, _))
+    const mapped = data.map(_ => Kobo.mapAnswerBySchema(props.schema.schemaHelper.questionIndex, _))
     return props.dataFilter ? mapped.filter(props.dataFilter) : mapped
   }
 

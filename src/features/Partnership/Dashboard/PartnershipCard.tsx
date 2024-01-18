@@ -1,8 +1,8 @@
 import {Box, BoxProps, Checkbox, useTheme} from '@mui/material'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {Txt} from 'mui-extension'
-import {SchemaBundle, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {UseSetState} from '@/shared/hook/useSetState2'
+import {SchemaBundle} from '@/features/KoboSchema/KoboSchemasContext'
 
 export const PartnershipCard = ({
   schema,

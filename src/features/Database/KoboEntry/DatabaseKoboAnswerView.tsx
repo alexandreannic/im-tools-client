@@ -2,24 +2,23 @@ import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} fr
 import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {KoboSchema, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboQuestionSchema, KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import React, {useMemo, useState} from 'react'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Txt} from 'mui-extension'
 import {useModal} from '@/shared/Modal/useModal'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
-import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboSchema) => {
   const [open, close] = useModal((answer: T) => (
-    <KoboSchemaProvider schema={schema}>
-      <DatabaseKoboAnswerView
-        open={true}
-        onClose={close}
-        answer={answer}
-      />
-    </KoboSchemaProvider>
+    <DatabaseKoboAnswerView
+      open={true}
+      onClose={close}
+      answer={answer}
+    />
   ), [schema])
   return [open, close]
 }
@@ -65,10 +64,10 @@ const KoboAnswerFormView = ({
   showQuestionWithoutAnswer?: boolean
   answer: KoboMappedAnswer<any>
 }) => {
-  const ctxSchema = useKoboSchemaContext()
+  const ctx = useDatabaseKoboTableContext()
   return (
     <Box>
-      {ctxSchema.schemaHelper.sanitizedSchema.content.survey
+      {ctx.schema.schemaHelper.sanitizedSchema.content.survey
         .filter(q => showQuestionWithoutAnswer || q.type === 'begin_group' || (answer[q.name] !== '' && answer[q.name]))
         .map(q => (
           <Box key={q.name} sx={{mb: 1.5}}>
@@ -89,7 +88,8 @@ const KoboAnswerQuestionView = ({
   questionSchema: KoboQuestionSchema
   answer: KoboMappedAnswer<any>
 }) => {
-  const ctx = useKoboSchemaContext()
+  const ctx = useDatabaseKoboTableContext().schema
+  const langIndex = useKoboSchemasContext()
   const {formatDateTime} = useI18n()
   const {m} = useI18n()
   const columns = useMemo(() => {
@@ -103,7 +103,7 @@ const KoboAnswerQuestionView = ({
         choicesIndex: ctx.schemaHelper.choicesIndex,
         groupSchemas: ctx.schemaHelper.groupSchemas,
       })
-  }, [ctx.schemaHelper.sanitizedSchema, ctx.langIndex])
+  }, [ctx.schemaHelper.sanitizedSchema, langIndex])
   switch (questionSchema.type) {
     case 'begin_group': {
       return <Box sx={{pt: 1, mt: 2, borderTop: t => `1px solid ${t.palette.divider}`}}>

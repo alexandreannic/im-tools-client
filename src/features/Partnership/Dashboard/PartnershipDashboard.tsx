@@ -25,9 +25,8 @@ import {Box, Checkbox} from '@mui/material'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {SchemaBundle} from '@/features/KoboSchema/KoboSchemaContext'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
-import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {SchemaBundle, useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export const PartnershipDashboard = ({}: {}) => {
   const ctx = usePartnershipContext()

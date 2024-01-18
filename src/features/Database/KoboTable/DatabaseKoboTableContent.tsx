@@ -15,23 +15,23 @@ import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'
 import {useCustomSelectedHeader} from '@/features/Database/KoboTable/useCustomSelectedHeader'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export const DatabaseKoboTableContent = ({
   onFiltersChange,
   onDataChange,
 }: Pick<DatabaseTableProps, 'onFiltersChange' | 'onDataChange'>) => {
   const ctx = useDatabaseKoboTableContext()
+  const {langIndex, setLangIndex} = useKoboSchemasContext()
   const {m} = useI18n()
   const theme = useTheme()
   const [repeatGroupsAsColumns, setRepeatGroupAsColumns] = usePersistentState<boolean>(false, {storageKey: `database-${ctx.form.id}-repeat-groups`})
   const [selectedIds, setSelectedIds] = useState<string[]>([])
-  const ctxSchema = useKoboSchemaContext()
   const [openModalAnswer, setOpenModalAnswer] = useState<KoboAnswer | undefined>()
   const [groupModalOpen, setOpenGroupModalAnswer] = useState<{
     columnId: string,
@@ -43,16 +43,16 @@ export const DatabaseKoboTableContent = ({
   const schemaColumns = useMemo(() => {
     return getColumnBySchema({
       data: ctx.data,
-      schema: ctxSchema.schemaHelper.sanitizedSchema.content.survey,
-      groupSchemas: ctxSchema.schemaHelper.groupSchemas,
-      translateQuestion: ctxSchema.translate.question,
-      translateChoice: ctxSchema.translate.choice,
-      choicesIndex: ctxSchema.schemaHelper.choicesIndex,
+      schema: ctx.schema.schemaHelper.sanitizedSchema.content.survey,
+      groupSchemas: ctx.schema.schemaHelper.groupSchemas,
+      translateQuestion: ctx.schema.translate.question,
+      translateChoice: ctx.schema.translate.choice,
+      choicesIndex: ctx.schema.schemaHelper.choicesIndex,
       m,
       repeatGroupsAsColumn: repeatGroupsAsColumns,
       onOpenGroupModal: setOpenGroupModalAnswer,
     })
-  }, [ctxSchema.schemaUnsanitized, ctxSchema.langIndex, repeatGroupsAsColumns])
+  }, [ctx.schema.schemaUnsanitized, langIndex, repeatGroupsAsColumns])
 
   const columns = useMemo(() => {
     const action: SheetColumnProps<any> = {
@@ -119,14 +119,14 @@ export const DatabaseKoboTableContent = ({
           <>
             <AaSelect<number>
               sx={{maxWidth: 128, mr: 1}}
-              defaultValue={ctxSchema.langIndex}
-              onChange={ctxSchema.setLangIndex}
+              defaultValue={langIndex}
+              onChange={setLangIndex}
               options={[
                 {children: 'XML', value: -1},
-                ...ctxSchema.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
+                ...ctx.schema.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
               ]}
             />
-            {ctxSchema.schemaHelper.groupsCount > 0 && (
+            {ctx.schema.schemaHelper.groupsCount > 0 && (
               <IpBtn
                 icon="move_up"
                 variant="outlined"
@@ -139,7 +139,7 @@ export const DatabaseKoboTableContent = ({
             )}
 
             <IpIconBtn
-              href={ctxSchema.schemaUnsanitized.deployment__links.url}
+              href={ctx.schema.schemaUnsanitized.deployment__links.url}
               target="_blank"
               children="file_open"
               tooltip={m._koboDatabase.openKoboForm}

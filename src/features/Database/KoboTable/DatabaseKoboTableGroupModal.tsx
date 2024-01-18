@@ -6,7 +6,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 
 export const DatabaseKoboTableGroupModal = ({
   groupData,
@@ -20,24 +20,24 @@ export const DatabaseKoboTableGroupModal = ({
   anchorEl: any,
 }) => {
   const {m} = useI18n()
-  const ctxSchema = useKoboSchemaContext()
+  const ctx = useDatabaseKoboTableContext()
 
   const columns = useMemo(() => {
     return getColumnBySchema({
       data: groupData,
       m,
-      schema: ctxSchema.schemaHelper.groupSchemas[name],
-      translateQuestion: ctxSchema.translate.question,
-      translateChoice: ctxSchema.translate.choice,
-      choicesIndex: ctxSchema.schemaHelper.choicesIndex,
-      groupSchemas: ctxSchema.schemaHelper.groupSchemas,
+      schema: ctx.schema.schemaHelper.groupSchemas[name],
+      translateQuestion: ctx.schema.translate.question,
+      translateChoice: ctx.schema.translate.choice,
+      choicesIndex: ctx.schema.schemaHelper.choicesIndex,
+      groupSchemas: ctx.schema.schemaHelper.groupSchemas,
     })
-  }, [ctxSchema.schemaUnsanitized])
+  }, [ctx.schema.schemaUnsanitized])
 
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       <PanelHead>
-        <Txt block sx={{maxWidth: 400}} truncate>{ctxSchema.translate.question(name)}</Txt>
+        <Txt block sx={{maxWidth: 400}} truncate>{ctx.schema.translate.question(name)}</Txt>
       </PanelHead>
       <PanelBody>
         <Sheet columns={columns} data={groupData} id={name}/>

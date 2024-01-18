@@ -10,9 +10,9 @@ import {IpBtn} from '@/shared/Btn'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import React from 'react'
 import {Utils} from '@/utils/utils'
-import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/KoboSchemasContext'
 
 const ignoredColType: KoboApiColType[] = [
   'begin_group',

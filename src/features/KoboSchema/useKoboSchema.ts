@@ -5,7 +5,7 @@ import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Messages} from '@/core/i18n/localization/en'
 import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
-import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/KoboSchemaContext'
+import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/KoboSchemasContext'
 
 export type KoboSchemaHelper = ReturnType<typeof buildKoboSchemaHelper>
 
