@@ -74,21 +74,21 @@ export const SafetyIncidentDashboardBody = ({
         <SlidePanel title={m.safety.attackTypes}>
           <ChartBarMultipleBy
             data={data}
-            getValue={_ => _.attack_type}
+            by={_ => _.attack_type}
             label={SafetyIncidentTrackerOptions.attack_type}
           />
         </SlidePanel>
         <SlidePanel title={m.safety.target}>
           <ChartBarMultipleBy
             data={data}
-            getValue={_ => _.what_destroyed}
+            by={_ => _.what_destroyed}
             label={SafetyIncidentTrackerOptions.what_destroyed}
           />
         </SlidePanel>
         <SlidePanel title={m.safety.typeOfCasualties}>
           <ChartBarMultipleBy
             data={data}
-            getValue={_ => _.type_casualties}
+            by={_ => _.type_casualties}
             label={SafetyIncidentTrackerOptions.type_casualties}
           />
         </SlidePanel>

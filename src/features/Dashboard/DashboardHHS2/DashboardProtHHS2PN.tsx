@@ -2,7 +2,8 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {useI18n} from '../../../core/i18n'
 import {useTheme} from '@mui/material'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 
 export const DashboardProtHHS2PN = ({
   data,
@@ -15,31 +16,34 @@ export const DashboardProtHHS2PN = ({
     <>
       <Div responsive>
         <SlidePanel title={m.firstPriorityNeed}>
-          <ProtHHS2BarChart
+          <ChartBarSingleBy
             data={data}
-            question="what_is_your_1_priority"
-            filterValue={['unable_unwilling_to_answer']}
-            overrideLabel={{
+            by={_ => _.what_is_your_1_priority}
+            filter={_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer'}
+            label={{
+              ...Protection_Hhs2_1Options.what_is_your_1_priority,
               health_1_2: m.health,
             }}
           />
         </SlidePanel>
         <SlidePanel title={m.secondPriorityNeed}>
-          <ProtHHS2BarChart
+          <ChartBarSingleBy
             data={data}
-            question="what_is_your_2_priority"
-            filterValue={['unable_unwilling_to_answer']}
-            overrideLabel={{
+            by={_ => _.what_is_your_2_priority}
+            filter={_ => _.what_is_your_2_priority !== 'unable_unwilling_to_answer'}
+            label={{
+              ...Protection_Hhs2_1Options.what_is_your_2_priority,
               health_1_2: m.health,
             }}
           />
         </SlidePanel>
         <SlidePanel title={m.thirdPriorityNeed}>
-          <ProtHHS2BarChart
+          <ChartBarSingleBy
             data={data}
-            question="what_is_your_3_priority"
-            filterValue={['unable_unwilling_to_answer']}
-            overrideLabel={{
+            by={_ => _.what_is_your_3_priority}
+            filter={_ => _.what_is_your_3_priority !== 'unable_unwilling_to_answer'}
+            label={{
+              ...Protection_Hhs2_1Options.what_is_your_3_priority,
               health_1_2: m.health,
             }}
           />

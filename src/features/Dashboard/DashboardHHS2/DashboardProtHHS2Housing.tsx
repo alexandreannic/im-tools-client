@@ -3,10 +3,11 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
-import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const DashboardProtHHS2Housing = ({
   data,
@@ -20,10 +21,10 @@ export const DashboardProtHHS2Housing = ({
       <Div responsive>
         <Div column>
           <SlidePanel title={m.housingStructure}>
-            <ProtHHS2BarChart
+            <ChartBarSingleBy
               data={data}
-              question="what_is_your_current_housing_structure"
-              filterValue={['unable_unwilling_to_answer']}
+              by={_ => _.what_is_your_current_housing_structure}
+              filter={_ => _.what_is_your_current_housing_structure !== 'unable_unwilling_to_answer'}
             />
           </SlidePanel>
           <SlidePanel>
@@ -36,10 +37,11 @@ export const DashboardProtHHS2Housing = ({
               data={data}
               sx={{mb: 2}}
             />
-            <ProtHHS2BarChart
+            <ChartBarSingleBy
               data={data}
-              question="do_you_have_formal_rental_documents_to_stay_in_your_accommodation"
-              filterValue={['unable_unwilling_to_answer']}
+              by={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation}
+              filter={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'unable_unwilling_to_answer'}
+              label={Protection_Hhs2_1Options.do_you_have_formal_rental_documents_to_stay_in_your_accommodation}
             />
           </SlidePanel>
         </Div>
@@ -53,17 +55,17 @@ export const DashboardProtHHS2Housing = ({
               data={data}
               sx={{mb: 1}}
             />
-            <ProtHHS2BarChart
-              questionType="multiple"
+            <ChartBarMultipleBy
               data={data}
-              question="what_are_your_main_concerns_regarding_your_accommodation"
+              by={_ => _.what_are_your_main_concerns_regarding_your_accommodation}
               filterValue={['unable_unwilling_to_answer', 'none']}
+              label={Protection_Hhs2_1Options.what_are_your_main_concerns_regarding_your_accommodation}
             />
           </SlidePanel>
           <SlidePanel title={m.accommodationCondition}>
-            <ProtHHS2BarChart
+            <ChartBarSingleBy
               data={data}
-              question="what_is_the_general_condition_of_your_accommodation"
+              by={_ => _.what_is_the_general_condition_of_your_accommodation}
               sortBy={ChartTools.sortBy.custom([
                 'sound_condition',
                 'partially_damaged',
@@ -71,7 +73,7 @@ export const DashboardProtHHS2Housing = ({
                 'destroyed',
                 'unfinished',
               ])}
-              filterValue={['unable_unwilling_to_answer']}
+              filter={_ => _.what_is_the_general_condition_of_your_accommodation === 'unable_unwilling_to_answer'}
             />
           </SlidePanel>
         </Div>

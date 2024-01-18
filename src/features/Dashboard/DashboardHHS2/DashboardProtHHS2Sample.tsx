@@ -11,14 +11,14 @@ import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
 import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
-import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
 import {makeSx} from 'mui-extension'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 const css = makeSx({
   table: {
@@ -188,18 +188,18 @@ export const DashboardProtHHS2Sample = ({
             })}>
               {(_, last) => <ChartPieIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
-            <ProtHHS2BarChart
+            <ChartBarMultipleBy
               data={data}
-              question="do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household"
-              questionType="multiple"
+              by={_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household}
               filterValue={['no_specific_needs', 'unable_unwilling_to_answer', 'other_specify']}
+              label={Protection_Hhs2_1Options.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household}
             />
           </SlidePanel>
           <SlidePanel title={m.protHHS2.hhTypes}>
-            <ProtHHS2BarChart
+            <ChartBarSingleBy
               data={data}
-              question="what_is_the_type_of_your_household"
-              questionType="single"
+              by={_ => _.what_is_the_type_of_your_household}
+              label={Protection_Hhs2_1Options.what_is_the_type_of_your_household}
             />
           </SlidePanel>
 

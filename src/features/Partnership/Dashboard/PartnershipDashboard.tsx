@@ -390,7 +390,7 @@ export const _PartnershipDashboard = ({
           <SlidePanel title={m._partner.targetedMinorities}>
             <ChartBarMultipleBy
               data={filteredAndPickedData}
-              getValue={_ => _.Select_if_the_organi_inorities_in_Ukraine!}
+              by={_ => _.Select_if_the_organi_inorities_in_Ukraine!}
               label={Partnership_partnersDatabaseOptions.Minority_group}
             />
           </SlidePanel>
@@ -399,7 +399,7 @@ export const _PartnershipDashboard = ({
             <PanelBody>
               <ChartBarMultipleBy
                 data={filteredAndPickedData}
-                getValue={_ => _.Which_sectors_does_the_organiz!}
+                by={_ => _.Which_sectors_does_the_organiz!}
                 label={Partnership_partnersDatabaseOptions.Sectors_funded}
               />
             </PanelBody>

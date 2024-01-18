@@ -10,10 +10,10 @@ import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {Person} from '@/core/type'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const SnapshotProtMonitoEchoRegistration = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -93,10 +93,10 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 data={data}
                 {...snapShotDefaultPieProps}
               />
-              <ProtHHS2BarChart
-                questionType="multiple"
+              <ChartBarMultipleBy
                 data={data}
-                question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
+                by={_ => _.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
+                label={Protection_Hhs2_1Options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
                 mergeOptions={{
                   distrust_of_public_institutions_and_authorities: 'other_specify',
                   discrimination: 'other_specify',
@@ -142,10 +142,9 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 data={data}
                 {...snapShotDefaultPieProps}
               />
-              <ProtHHS2BarChart
+              <ChartBarMultipleBy
                 data={data}
-                question="what_housing_land_and_property_documents_do_you_lack"
-                questionType="multiple"
+                by={_ => _.what_housing_land_and_property_documents_do_you_lack}
                 filterValue={['unable_unwilling_to_answer', 'none']}
                 mergeOptions={{
                   cost_estimation_certificate_state_commission_issued_when_personal_request_is_made: 'other_specify',
@@ -157,7 +156,8 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                   construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'other_specify',
                   inheritance_will: 'other_specify',
                 }}
-                overrideLabel={{
+                label={{
+                  ...Protection_Hhs2_1Options.what_housing_land_and_property_documents_do_you_lack,
                   construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'Construction stage',
                   document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by authority',
                   // document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by local self-government proving a damaged house',

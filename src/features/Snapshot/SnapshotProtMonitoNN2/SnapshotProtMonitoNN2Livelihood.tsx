@@ -8,8 +8,8 @@ import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {chain, mapObjectValue, toPercent} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const SnapshotProtMonitoNN2Livelihood = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -103,20 +103,20 @@ export const SnapshotProtMonitoNN2Livelihood = () => {
 
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.mainSourceOfIncome}</SlidePanelTitle>
-              <ProtHHS2BarChart
-                question="what_are_the_main_sources_of_income_of_your_household"
+              <ChartBarMultipleBy
+                by={_ => _.what_are_the_main_sources_of_income_of_your_household}
+                label={Protection_Hhs2_1Options.what_are_the_main_sources_of_income_of_your_household}
                 data={data}
                 filterValue={['unable_unwilling_to_answer']}
-                questionType="multiple"
                 limit={4}
               />
             </SlidePanel>
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.unemploymentFactors}</SlidePanelTitle>
-              <ProtHHS2BarChart
+              <ChartBarMultipleBy
+                by={_ => _.what_are_the_reasons_for_being_out_of_work}
+                label={Protection_Hhs2_1Options.what_are_the_reasons_for_being_out_of_work}
                 data={data}
-                question="what_are_the_reasons_for_being_out_of_work"
-                questionType="multiple"
                 filterValue={['unable_unwilling_to_answer']}
               />
             </SlidePanel>

@@ -239,14 +239,14 @@ export const _ShelterDashboard = ({
           />
           <ChartBarMultipleBy
             data={data.filter(_ => !!_.nta?.hh_char_dis_select)}
-            getValue={_ => _.nta?.hh_char_dis_select ?? []}
+            by={_ => _.nta?.hh_char_dis_select ?? []}
             label={Shelter_NTAOptions.hh_char_dis_select}
           />
         </SlidePanel>
         <SlidePanel title={m.status}>
           <ChartBarSingleBy
             data={data.filter(_ => !!_.nta?.ben_det_res_stat)}
-            getValue={_ => _.nta?.ben_det_res_stat}
+            by={_ => _.nta?.ben_det_res_stat}
             label={Shelter_NTAOptions.ben_det_res_stat}
           />
         </SlidePanel>
@@ -305,8 +305,8 @@ export const _ShelterDashboard = ({
         <SlidePanel title={m.status}>
           <ChartBarSingleBy
             data={data}
-            filterData={_ => !!_.ta?.tags?.damageLevel}
-            getValue={_ => _.ta?.tags?.damageLevel}
+            filter={_ => !!_.ta?.tags?.damageLevel}
+            by={_ => _.ta?.tags?.damageLevel}
             label={ShelterTaPriceLevel}
           />
         </SlidePanel>

@@ -2,9 +2,11 @@ import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {ChartBarMultipleByKey} from '@/shared/chart/ChartBarMultipleByKey'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 export const DashboardProtHHS2Disability = ({
   data,
@@ -23,11 +25,11 @@ export const DashboardProtHHS2Disability = ({
             data={data}
             sx={{mb: 1}}
           />
-          <ProtHHS2BarChart
+          <ChartBarMultipleByKey
+            property="do_you_have_a_household_member_that_has_a_lot_of_difficulty"
             data={data}
-            question="do_you_have_a_household_member_that_has_a_lot_of_difficulty"
-            questionType="multiple"
-            overrideLabel={{
+            label={{
+              ...Protection_Hhs2_1Options.do_you_have_a_household_member_that_has_a_lot_of_difficulty,
               wg_using_your_usual_language_have_difficulty_communicating: m.protHHS2.wg_using_your_usual_language_have_difficulty_communicating,
             }}
             filterValue={['no', 'unable_unwilling_to_answer']}
@@ -43,7 +45,7 @@ export const DashboardProtHHS2Disability = ({
             data={data}
             sx={{mb: 1}}
           />
-          <ProtHHS2BarChart data={data} question="why_dont_they_have_status"/>
+          <ChartBarSingleBy data={data} by={_ => _.why_dont_they_have_status} label={Protection_Hhs2_1Options.why_dont_they_have_status}/>
         </SlidePanel>
       </Div>
       <Div column>
@@ -57,10 +59,10 @@ export const DashboardProtHHS2Disability = ({
             filterBase={_ => _ !== 'unable_unwilling_to_answer'}
             data={data}
           />
-          <ProtHHS2BarChart
+          <ChartBarMultipleBy
             data={data}
-            questionType="multiple"
-            question="what_are_the_barriers_to_accessing_health_services"
+            by={_ => _.what_are_the_barriers_to_accessing_health_services}
+            label={Protection_Hhs2_1Options.what_are_the_barriers_to_accessing_health_services}
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>

@@ -8,11 +8,12 @@ import {ChartTools} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
-import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 // do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area
 // what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members
@@ -71,10 +72,10 @@ export const DashboardProtHHS2Displacement = ({
           </Lazy>
         </SlidePanel>
         <SlidePanel title={m.protHHS2.reasonForLeaving}>
-          <ProtHHS2BarChart
+          <ChartBarMultipleBy
             data={data}
-            question="why_did_you_leave_your_area_of_origin"
-            questionType="multiple"
+            by={_ => _.why_did_you_leave_your_area_of_origin}
+            label={Protection_Hhs2_1Options.why_did_you_leave_your_area_of_origin}
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>
@@ -91,21 +92,22 @@ export const DashboardProtHHS2Displacement = ({
               <ChartPieIndicator sx={{mb: 1}} value={_.value} base={_.base} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
             )}
           </Lazy>
-          <ProtHHS2BarChart
-            questionType="multiple"
+          <ChartBarMultipleBy
             data={data}
             filterValue={['unable_unwilling_to_answer', 'none', 'other_specify']}
-            question="did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns"
+            by={_ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns}
+            label={Protection_Hhs2_1Options.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns}
           />
         </SlidePanel>
         <SlidePanel title={m.intentions}>
-          <ProtHHS2BarChart
+          <ChartBarSingleBy
             data={data}
-            filterValue={['unable_unwilling_to_answer']}
-            question="what_are_your_households_intentions_in_terms_of_place_of_residence"
+            filter={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence !== 'unable_unwilling_to_answer'}
+            by={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence}
             checked={intentionFilters}
             onToggle={_ => setIntentionFilters(prev => ({...prev, [_]: prev[_] ? !prev[_] : true}))}
-            overrideLabel={{
+            label={{
+              ...Protection_Hhs2_1Options.what_are_your_households_intentions_in_terms_of_place_of_residence,
               return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
             }}
           />
@@ -119,25 +121,25 @@ export const DashboardProtHHS2Displacement = ({
               <>
                 <Divider sx={{mt: 3, mb: 3, mx: -2}}/>
                 <SlidePanelTitle>{m.protHHS2.factorToHelpIntegration}</SlidePanelTitle>
-                <ProtHHS2BarChart
+                <ChartBarMultipleBy
                   data={filteredData}
                   filterValue={['unable_unwilling_to_answer']}
-                  questionType="multiple"
-                  question="what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community"
+                  by={_ => _.what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community}
+                  label={Protection_Hhs2_1Options.what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community}
                 />
                 <SlidePanelTitle sx={{mt: 4}}>{m.protHHS2.factorToReturn}</SlidePanelTitle>
-                <ProtHHS2BarChart
+                <ChartBarMultipleBy
                   data={filteredData}
                   filterValue={['unable_unwilling_to_answer']}
-                  questionType="multiple"
-                  question="what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin"
+                  by={_ => _.what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin}
+                  label={Protection_Hhs2_1Options.what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin}
                 />
                 <SlidePanelTitle sx={{mt: 4}}>{m.protHHS2.reasonForRelocate}</SlidePanelTitle>
-                <ProtHHS2BarChart
+                <ChartBarMultipleBy
                   data={filteredData}
                   filterValue={['unable_unwilling_to_answer']}
-                  questionType="multiple"
-                  question="why_are_planning_to_relocate_from_your_current_place_of_residence"
+                  by={_ => _.why_are_planning_to_relocate_from_your_current_place_of_residence}
+                  label={Protection_Hhs2_1Options.why_are_planning_to_relocate_from_your_current_place_of_residence}
                 />
               </>
             )}

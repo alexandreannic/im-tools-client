@@ -4,11 +4,13 @@ import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, S
 import {useI18n} from '@/core/i18n'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Txt} from 'mui-extension'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 
 export const SnapshotProtMonitoEchoNeeds = () => {
@@ -59,12 +61,12 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 filterBase={_ => _.do_you_have_access_to_health_care_in_your_current_location !== 'unable_unwilling_to_answer'}
                 data={data}
               />
-              <ProtHHS2BarChart
+              <ChartBarMultipleBy
                 data={data}
-                limit={5}
-                questionType="multiple"
-                question="what_are_the_barriers_to_accessing_health_services"
+                by={_ => _.what_are_the_barriers_to_accessing_health_services}
+                label={Protection_Hhs2_1Options.what_are_the_barriers_to_accessing_health_services}
                 filterValue={['unable_unwilling_to_answer']}
+                limit={5}
               />
             </SlidePanel>
             <SlidePanel>
@@ -77,11 +79,12 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 compare={{before: computed.lastMonth}}
                 data={data}
               />
-              <ProtHHS2BarChart
+              <ChartBarSingleBy
                 data={data}
-                question="why_dont_they_have_status"
-                filterValue={['unable_unwilling_to_answer']}
-                overrideLabel={{
+                by={_ => _.why_dont_they_have_status}
+                filter={_ => _.why_dont_they_have_status !== 'unable_unwilling_to_answer'}
+                label={{
+                  ...Protection_Hhs2_1Options.why_dont_they_have_status,
                   inability_to_access_registration_safety_risks: 'Inability to access registration',
                   status_registration_not_requested: 'Disability status not applied for',
                   status_registration_rejected_not_meeting_the_criteria_as_per_ukrainian_procedure: 'Status registration rejected',
@@ -106,18 +109,18 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 data={data}
                 sx={{mb: 0}}
               />
-              <ProtHHS2BarChart
-                questionType="multiple"
+              <ChartBarMultipleBy
                 data={data}
-                question="what_are_your_main_concerns_regarding_your_accommodation"
+                by={_ => _.what_are_your_main_concerns_regarding_your_accommodation}
+                label={Protection_Hhs2_1Options.what_are_your_main_concerns_regarding_your_accommodation}
                 filterValue={['unable_unwilling_to_answer', 'none']}
               />
             </SlidePanel>
             <SlidePanel>
               <SlidePanelTitle>{m.accommodationCondition}</SlidePanelTitle>
-              <ProtHHS2BarChart
+              <ChartBarSingleBy
                 data={data}
-                question="what_is_the_general_condition_of_your_accommodation"
+                by={_ => _.what_is_the_general_condition_of_your_accommodation}
                 sortBy={ChartTools.sortBy.custom([
                   'sound_condition',
                   'partially_damaged',
@@ -125,7 +128,8 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                   'destroyed',
                   'unfinished',
                 ])}
-                filterValue={['unable_unwilling_to_answer']}
+                label={Protection_Hhs2_1Options.what_is_the_general_condition_of_your_accommodation}
+                filter={_ => _.what_is_the_general_condition_of_your_accommodation !== 'unable_unwilling_to_answer'}
               />
             </SlidePanel>
           </Div>

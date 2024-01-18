@@ -8,13 +8,13 @@ import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {useTheme} from '@mui/material'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const SnapshotProtMonitoEchoSafety = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -139,14 +139,14 @@ export const SnapshotProtMonitoEchoSafety = () => {
             </SlidePanel>
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.freedomOfMovement}</SlidePanelTitle>
-              <ProtHHS2BarChart
-                questionType="multiple"
+              <ChartBarMultipleBy
                 data={data}
+                by={_ => _.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area}
                 limit={5}
-                overrideLabel={{
+                label={{
+                  ...Protection_Hhs2_1Options.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area,
                   lack_of_transportationfinancial_resources_to_pay_transportation: 'Lack of transportation'
                 }}
-                question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
                 filterValue={['no', 'unable_unwilling_to_answer']}
               />
             </SlidePanel>
@@ -171,11 +171,11 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   _.please_rate_your_sense_of_safety_in_this_location !== undefined}
               />
               <SlidePanelTitle sx={{mt: 2}}>{m.influencingFactors}</SlidePanelTitle>
-              <ProtHHS2BarChart
-                questionType="multiple"
+              <ChartBarMultipleBy
                 data={data}
-                question="what_are_the_main_factors_that_make_this_location_feel_unsafe"
+                by={_ => _.what_are_the_main_factors_that_make_this_location_feel_unsafe}
                 filterValue={['unable_unwilling_to_answer']}
+                label={Protection_Hhs2_1Options.what_are_the_main_factors_that_make_this_location_feel_unsafe}
                 // mergeOptions={{
                 //   intercommunity_tensions: 'other_specify',
               />

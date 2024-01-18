@@ -9,9 +9,9 @@ import {chain, forceArrayStringInference} from '@/utils/utils'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Checkbox} from '@mui/material'
 import {Person} from '@/core/type'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const DashboardProtHHS2Violence = ({
   data,
@@ -159,11 +159,11 @@ export const DashboardProtHHS2Violence = ({
           }
         </Lazy>
         <SlidePanel title={m.majorStressFactors}>
-          <ProtHHS2BarChart
+          <ChartBarMultipleBy
             data={data}
-            questionType="multiple"
             filterValue={['unable_unwilling_to_answer']}
-            question="what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members"
+            by={_ => _.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
+            label={Protection_Hhs2_1Options.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
           />
         </SlidePanel>
       </Div>

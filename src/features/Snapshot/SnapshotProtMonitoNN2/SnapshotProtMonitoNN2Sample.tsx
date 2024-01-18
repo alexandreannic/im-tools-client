@@ -4,15 +4,16 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {DRCLogo} from '@/shared/logo/logo'
-import {commonLegendProps, ChartBarStacker} from '@/shared/chart/ChartBarStacked'
+import {ChartBarStacker, commonLegendProps} from '@/shared/chart/ChartBarStacked'
 import {Person} from '@/core/type'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
 import {ChartPie} from '@/shared/chart/ChartPie'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 
 export const SnapshotProtMonitoNN2Sample = () => {
   const theme = useTheme()
@@ -75,10 +76,10 @@ export const SnapshotProtMonitoNN2Sample = () => {
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.protHHS2.hhTypes}</SlidePanelTitle>
-                  <ProtHHS2BarChart
+                  <ChartBarSingleBy
                     data={data}
-                    question="what_is_the_type_of_your_household"
-                    questionType="single"
+                    by={_ => _.what_is_the_type_of_your_household}
+                    label={Protection_Hhs2_1Options.what_is_the_type_of_your_household}
                   />
                 </SlidePanel>
               </Div>
@@ -92,7 +93,11 @@ export const SnapshotProtMonitoNN2Sample = () => {
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.displacementStatus}</SlidePanelTitle>
-                  <ProtHHS2BarChart data={data} question="do_you_identify_as_any_of_the_following"/>
+                  <ChartBarSingleBy
+                    data={data}
+                    by={_ => _.do_you_identify_as_any_of_the_following}
+                    label={Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following}
+                  />
                 </SlidePanel>
               </Div>
             </Div>

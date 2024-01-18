@@ -10,12 +10,12 @@ import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
-import {ProtHHS2BarChart, ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
@@ -96,10 +96,10 @@ export const DashboardProtHHS2Document = ({
               data={data}
               sx={{mb: 2}}
             />
-            <ProtHHS2BarChart
-              questionType="multiple"
+            <ChartBarMultipleBy
               data={data}
-              question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
+              by={_ => _.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
+              label={Protection_Hhs2_1Options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
               filterValue={[
                 'no',
                 'unable_unwilling_to_answer',
@@ -150,12 +150,12 @@ export const DashboardProtHHS2Document = ({
               data={data}
               sx={{mb: 2}}
             />
-            <ProtHHS2BarChart
+            <ChartBarMultipleBy
               data={data}
-              question="what_housing_land_and_property_documents_do_you_lack"
-              questionType="multiple"
+              by={_ => _.what_housing_land_and_property_documents_do_you_lack}
               filterValue={['unable_unwilling_to_answer', 'none']}
-              overrideLabel={{
+              label={{
+                ...Protection_Hhs2_1Options.what_housing_land_and_property_documents_do_you_lack,
                 construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'Construction stage',
                 document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by local self-government proving a damaged house',
                 cost_estimation_certificate_state_commission_issued_when_personal_request_is_made: 'Cost estimation certificate - state commission',

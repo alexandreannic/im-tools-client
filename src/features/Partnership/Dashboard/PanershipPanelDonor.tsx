@@ -23,12 +23,12 @@ export const PanershipPanelDonor = ({
       </ScRadioGroup>
       {fnSwitch(mode, {
         donor: (
-          <ChartBarSingleBy data={data.flatMap(_ => _.group_vi2hh32).compact()} label={Partnership_partnersDatabaseOptions.Donor} getValue={_ => _.Donor!}/>
+          <ChartBarSingleBy data={data.flatMap(_ => _.group_vi2hh32).compact()} label={Partnership_partnersDatabaseOptions.Donor} by={_ => _.Donor!}/>
         ),
         project: (
           <ChartBarSingleBy
             data={data.flatMap(_ => _.group_vi2hh32).compact()}
-            getValue={_ => Enum.values(DrcProject).find(p => p.includes('' + _.Project_code!))!}
+            by={_ => Enum.values(DrcProject).find(p => p.includes('' + _.Project_code!))!}
           />
         )
       })}

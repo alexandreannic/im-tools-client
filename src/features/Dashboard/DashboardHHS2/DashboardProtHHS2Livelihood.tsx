@@ -11,7 +11,7 @@ import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {ChartLineByKey} from '@/shared/chart/ChartLineByKey'
 import {Divider} from '@mui/material'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const DashboardProtHHS2Livelihood = ({
   data,
@@ -30,7 +30,8 @@ export const DashboardProtHHS2Livelihood = ({
               base: _ => _ !== undefined,
             })}>
               {(_, last) => {
-                return <ChartPieIndicator title={m.hhWithoutIncome} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+                return <ChartPieIndicator title={m.hhWithoutIncome} value={_.value} base={_.base} evolution={_.percent - last.percent}/>
+              }
               }
             </Lazy>
           </SlidePanel>
@@ -83,10 +84,10 @@ export const DashboardProtHHS2Livelihood = ({
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.unemploymentFactors}>
-            <ProtHHS2BarChart
+            <ChartBarMultipleBy
               data={data}
-              question="what_are_the_reasons_for_being_out_of_work"
-              questionType="multiple"
+              by={_ => _.what_are_the_reasons_for_being_out_of_work}
+              label={Protection_Hhs2_1Options.what_are_the_reasons_for_being_out_of_work}
               filterValue={['unable_unwilling_to_answer']}
             />
           </SlidePanel>
@@ -121,21 +122,21 @@ export const DashboardProtHHS2Livelihood = ({
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.mainSourceOfIncome}>
-            <ProtHHS2BarChart
-              question="what_are_the_main_sources_of_income_of_your_household"
+            <ChartBarMultipleBy
+              by={_ => _.what_are_the_main_sources_of_income_of_your_household}
               data={data}
               filterValue={['unable_unwilling_to_answer']}
-              questionType="multiple"
               limit={4}
+              label={Protection_Hhs2_1Options.what_are_the_main_sources_of_income_of_your_household}
             />
           </SlidePanel>
 
           <SlidePanel title={m.copyingMechanisms}>
-            <ProtHHS2BarChart
+            <ChartBarMultipleBy
               data={data}
-              question="what_are_the_strategies_that_your_household_uses_to_cope_with_these_challenges"
-              questionType="multiple"
-              overrideLabel={{
+              by={_ => _.what_are_the_strategies_that_your_household_uses_to_cope_with_these_challenges}
+              label={{
+                ...Protection_Hhs2_1Options.what_are_the_strategies_that_your_household_uses_to_cope_with_these_challenges,
                 reducing_consumption_of_food: m.protHHS2.reducing_consumption_of_food,
               }}
               filterValue={['unable_unwilling_to_answer']}

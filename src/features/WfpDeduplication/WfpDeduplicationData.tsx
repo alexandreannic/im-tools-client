@@ -4,7 +4,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
-import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {Txt} from 'mui-extension'
 import {DrcOffice} from '@/core/typeDrc'
@@ -12,7 +12,6 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {format} from 'date-fns'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {useFetcher} from '@/shared/hook/useFetcher'
-import {useAsync} from '@/shared/hook/useAsync'
 
 export const DeduplicationStatusIcon = ({status}: {status: WfpDeduplicationStatus}) => {
   return fnSwitch(status, {
