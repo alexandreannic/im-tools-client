@@ -8,7 +8,6 @@ import {ToastProvider, Txt} from 'mui-extension'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {ApiClient} from '@/core/sdk/server/ApiClient'
 import {AppSettingsProvider, useAppSettings} from '@/core/context/ConfigContext'
-import {NfiProvider} from '@/core/context/NfiContext'
 import {appConfig} from '@/conf/AppConfig'
 import {MsalProvider} from '@azure/msal-react'
 import {getMsalInstance} from '@/core/msal'
@@ -65,9 +64,6 @@ const App = ({
 }
 
 const AppWithConfig = (props: AppProps) => {
-  // LicenseInfo.setLicenseKey(
-  //   'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',
-  // );
   const settings = useAppSettings()
   const msal = useMemo(() => getMsalInstance(settings.conf), [settings.conf])
   return (
@@ -79,9 +75,8 @@ const AppWithConfig = (props: AppProps) => {
       _ => <CssBaseline children={_}/>,
       _ => <I18nProvider children={_}/>,
       _ => <MsalProvider children={_} instance={msal}/>,
-      _ => <NfiProvider children={_}/>,
+      _ => <KoboSchemasProvider children={_}/>,
       _ => <ModalProvider children={_}/>,
-      _ => <KoboSchemasProvider children={_}/>
     ]}>
       <AppWithBaseContext {...props}/>
     </Provide>

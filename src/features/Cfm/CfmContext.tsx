@@ -1,6 +1,6 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/KoboSchema/useKoboSchema'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {useAsync, UseAsyncMultiple, UseAsyncSimple} from '@/shared/hook/useAsync'
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -109,8 +109,8 @@ export const CfmProvider = ({
   schemas,
 }: {
   schemas: {
-    internal: KoboApiForm,
-    external: KoboApiForm,
+    internal: KoboSchema,
+    external: KoboSchema,
   }
   children: ReactNode
 }) => {

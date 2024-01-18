@@ -8,7 +8,7 @@ import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/shared/hook/useFetchers'
 import {useParams} from 'react-router'
 import {databaseUrlParamsValidation} from '@/features/Database/Database'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Page} from '@/shared/Page'
 import {IpBtn} from '@/shared/Btn'
 import {useAsync} from '@/shared/hook/useAsync'
@@ -42,7 +42,7 @@ export const DatabaseAccess = ({
   form,
 }: {
   formId: KoboId,
-  form: KoboApiForm
+  form: KoboSchema
 }) => {
   const {m} = useI18n()
   const {api} = useAppSettings()

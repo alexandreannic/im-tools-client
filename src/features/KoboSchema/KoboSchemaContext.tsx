@@ -1,19 +1,19 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState} from 'react'
 import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/KoboSchema/useKoboSchema'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
 
 export interface KoboSchemaProviderProps {
-  schema: KoboApiForm
+  schema: KoboSchema
   defaultLangIndex?: number
   children: ReactNode
 }
 
 export interface SchemaBundle {
   schemaHelper: UseKoboSchema
-  schemaUnsanitized: KoboApiForm
+  schemaUnsanitized: KoboSchema
   translate: {
     question: KoboTranslateQuestion
     choice: KoboTranslateChoice

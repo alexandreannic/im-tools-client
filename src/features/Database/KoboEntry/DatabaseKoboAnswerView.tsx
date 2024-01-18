@@ -2,7 +2,7 @@ import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Icon, Switch} fr
 import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {KoboApiForm, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import React, {useMemo, useState} from 'react'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Txt} from 'mui-extension'
@@ -11,7 +11,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
-export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboApiForm) => {
+export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboSchema) => {
   const [open, close] = useModal((answer: T) => (
     <KoboSchemaProvider schema={schema}>
       <DatabaseKoboAnswerView

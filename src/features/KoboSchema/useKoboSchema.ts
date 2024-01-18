@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {mapFor, seq} from '@alexandreannic/ts-utils'
-import {KoboApiForm, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema, KoboQuestionChoice, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Messages} from '@/core/i18n/localization/en'
@@ -9,7 +9,7 @@ import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/
 
 export type KoboSchemaHelper = ReturnType<typeof buildKoboSchemaHelper>
 
-const isolateGroups = (survey: KoboApiForm['content']['survey']) => {
+const isolateGroups = (survey: KoboSchema['content']['survey']) => {
   const surveyCleaned: KoboQuestionSchema[] = []
   const groupSchemas: Record<string, KoboQuestionSchema[]> = {}
   for (let i = 0; i < survey.length; i++) {
@@ -33,7 +33,7 @@ export const buildKoboSchemaHelper = ({
   schema,
   m
 }: {
-  schema: KoboApiForm,
+  schema: KoboSchema,
   m: Messages
 }) => {
   const customSchema = {
@@ -67,7 +67,7 @@ export const buildKoboSchemaHelper = ({
   }
   const {groupSchemas, surveyCleaned} = isolateGroups(schema.content.survey)
 
-  const sanitizedForm: KoboApiForm = {
+  const sanitizedForm: KoboSchema = {
     ...schema,
     content: {
       ...schema.content,
@@ -114,7 +114,7 @@ export const getKoboTranslations = ({
   langIndex,
   questionIndex,
 }: {
-  schema: KoboApiForm,
+  schema: KoboSchema,
   langIndex: number
   questionIndex: ReturnType<typeof useKoboSchema>['questionIndex']
 }): {
@@ -152,7 +152,7 @@ export const getKoboTranslations = ({
 
 export type KoboSchemaBundle = ReturnType<typeof buildSchemaBundle>
 
-export const buildSchemaBundle = ({m, schema, langIndex = 0}: {m: Messages, schema: KoboApiForm, langIndex?: number}) => {
+export const buildSchemaBundle = ({m, schema, langIndex = 0}: {m: Messages, schema: KoboSchema, langIndex?: number}) => {
   const schemaHelper = buildKoboSchemaHelper({schema: schema, m})
   const {translateQuestion, translateChoice} = getKoboTranslations({
     schema: schema,
@@ -173,7 +173,7 @@ export type UseKoboSchema = ReturnType<typeof useKoboSchema>
 export const useKoboSchema = ({
   schema
 }: {
-  schema: KoboApiForm
+  schema: KoboSchema
 }) => {
   const {m} = useI18n()
   return useMemo(() => buildKoboSchemaHelper({schema, m}), [schema])

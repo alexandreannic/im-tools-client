@@ -1,12 +1,12 @@
-export type KoboApiColType = KoboApiForm['content']['survey'][0]['type']
+export type KoboApiColType = KoboSchema['content']['survey'][0]['type']
 
-export type KoboQuestionSchema = KoboApiForm['content']['survey'][0]
+export type KoboQuestionSchema = KoboSchema['content']['survey'][0]
 
 export type KoboQuestionType = KoboQuestionSchema['type']
 
-export type KoboQuestionChoice = KoboApiForm['content']['choices'][0]
+export type KoboQuestionChoice = KoboSchema['content']['choices'][0]
 
-export interface KoboApiForm {
+export interface KoboSchema {
   name: string
   deployment__links: {
     iframe_url: string

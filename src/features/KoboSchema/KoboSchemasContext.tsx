@@ -4,7 +4,7 @@ import {KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useI18n} from '@/core/i18n'
 import {useSchemaFetchers} from '@/features/KoboSchema/useSchemaFetcher'
 import {UseFetchers} from '@/shared/hook/useFetchers'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Enum} from '@alexandreannic/ts-utils'
 import {Kobo} from '@/core/sdk/server/kobo/Kobo'
 
@@ -17,7 +17,7 @@ interface KoboSchemasContext {
   schema: Partial<Record<KoboFormName, KoboSchemaBundle>>
   langIndex: number
   setLangIndex: Dispatch<SetStateAction<number>>
-  fetchers: UseFetchers<(_: KoboFormName) => Promise<KoboApiForm>, KoboFormName>
+  fetchers: UseFetchers<(_: KoboFormName) => Promise<KoboSchema>, KoboFormName>
 }
 
 const Context = React.createContext({} as KoboSchemasContext)

@@ -10,7 +10,7 @@ import {KoboDatabaseAccessParams} from '@/core/sdk/server/access/Access'
 import {map, seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useFetchers} from '@/shared/hook/useFetchers'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {useAsync} from '@/shared/hook/useAsync'
 import {useIpToast} from '@/core/useToast'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
@@ -34,7 +34,7 @@ export const DatabaseAccessForm = ({
   onAdded?: () => void,
   children: ReactElement,
   formId: KoboId,
-  form: KoboApiForm
+  form: KoboSchema
 }) => {
   const langIndex = 0
   const survey = form.content.survey

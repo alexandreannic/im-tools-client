@@ -1,5 +1,5 @@
 import React, {ReactNode, useContext, useState} from 'react'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboIndex} from '@/KoboIndex'
 import {UseShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'

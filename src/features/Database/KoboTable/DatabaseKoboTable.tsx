@@ -16,7 +16,7 @@ import {DatabaseKoboTableProvider} from '@/features/Database/KoboTable/DatabaseK
 import {UUID} from '@/core/type'
 import {KoboForm, KoboId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/KoboIndex'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
+import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboSchemaProvider} from '@/features/KoboSchema/KoboSchemaContext'
 import {Skeleton} from '@mui/material'
 import {Paginate} from '@/utils/utils'
@@ -46,7 +46,7 @@ export const DatabaseTableRoute = () => {
 
 export interface DatabaseTableProps {
   form?: KoboForm
-  schema?: KoboApiForm
+  schema?: KoboSchema
   serverId?: UUID
   formId: KoboId
   dataFilter?: (_: KoboMappedAnswer) => boolean

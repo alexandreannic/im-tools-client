@@ -4,12 +4,12 @@ import {useMap2} from '@/shared/hook/useMap'
 
 export type Func<R = any> = (...args: any[]) => R
 
-export type Fetch<T extends Func<Promise<FetcherResult<T>>>> = (p?: {force?: boolean, clean?: boolean}, ..._: Parameters<T>) => ReturnType<T>;
-
 export interface FetchParams {
   force?: boolean,
   clean?: boolean
 }
+
+export type Fetch<T extends Func<Promise<FetcherResult<T>>>> = (p?: FetchParams, ..._: Parameters<T>) => ReturnType<T>;
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 
