@@ -1,12 +1,12 @@
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import React, {useMemo} from 'react'
-import {chain} from '@/utils/utils'
+import React, {ReactNode, useMemo} from 'react'
+import {chain, KeyOf} from '@/utils/utils'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Checkbox} from '@mui/material'
 import {ChartDataVal, ChartTools} from '@/core/chartTools'
 import {useI18n} from '@/core/i18n'
 
-interface ByPropertyProps<D extends Record<string, any>, K extends keyof D> {
+interface ByPropertyProps<D extends Record<string, any>, K extends KeyOf<D>> {
   debug?: boolean
   onClickData?: (_: K) => void
   limit?: number
@@ -22,7 +22,7 @@ interface ByPropertyProps<D extends Record<string, any>, K extends keyof D> {
   base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
 }
 
-export const ByProperty = <D extends Record<string, any>, K extends keyof D>({
+export const ByProperty = <D extends Record<string, any>, K extends KeyOf<D>>({
   property,
   data,
   limit,
@@ -72,7 +72,7 @@ export const ByProperty = <D extends Record<string, any>, K extends keyof D>({
       data={res}
       onClickData={_ => onClickData?.(_ as K)}
       labels={!onToggle ? undefined :
-        seq(Enum.keys(res)).reduceObject((option => [
+        seq(Enum.keys(res)).reduceObject<Record<string, ReactNode>>((option => [
             option,
             <Checkbox
               key={option as string}

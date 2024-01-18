@@ -1,17 +1,16 @@
 import {ChartDataVal, ChartTools} from '../../../core/chartTools'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../../core/i18n'
-import React, {useMemo} from 'react'
-import {chain} from '@/utils/utils'
+import React, {ReactNode, useMemo} from 'react'
+import {chain, KeyOf} from '@/utils/utils'
 import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
 import {Checkbox} from '@mui/material'
-
 
 export const makeKoboBarChartComponent = <D extends Record<string, any>, O extends Partial<Record<keyof D, Record<string, string>>>>({
   options,
 }: {
   options: O,
-}) => <K extends keyof D>({
+}) => <K extends KeyOf<D>>({
   question,
   data,
   limit,
@@ -208,7 +207,7 @@ export const KoboBarChartMultiple = <
       data={res}
       onClickData={_ => onClickData?.(_ as K)}
       labels={!onToggle ? undefined :
-        seq(Enum.keys(res)).reduceObject((option => [
+        seq(Enum.keys(res)).reduceObject<Record<string, ReactNode>>((option => [
             option,
             <Checkbox
               key={option as string}
