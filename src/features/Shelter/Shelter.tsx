@@ -21,7 +21,7 @@ import {Access} from '@/core/sdk/server/access/Access'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
-import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 const relatedKoboForms: KoboFormName[] = [
   'shelter_nta',
@@ -78,7 +78,7 @@ export const ShelterWithAccess = () => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
   const {toastHttpError} = useIpToast()
-  const schemaContext = useKoboSchemasContext()
+  const schemaContext = useKoboSchemaContext()
 
   const {access, allowedOffices} = useMemo(() => {
     const dbAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))

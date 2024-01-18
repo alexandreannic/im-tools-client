@@ -14,7 +14,7 @@ import {mapFor, seq} from '@alexandreannic/ts-utils'
 import {koboImgHelper} from '@/shared/TableImg/KoboAttachedImg'
 import {CompressedImg} from '@/shared/CompressedImg'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
-import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 const urlValidation = yup.object({
   id: yup.string().required()
@@ -93,7 +93,7 @@ export const MealVisitDetails = () => {
 
 export const _DashboardMealVisitPdf = () => {
   const ctx = useMealVisitContext()
-  const schema = useKoboSchemasContext().schema.meal_visitMonitoring!
+  const schema = useKoboSchemaContext().schema.meal_visitMonitoring!
   const {session} = useSession()
   const {m, formatDate} = useI18n()
   const {id} = urlValidation.validateSync(useParams())

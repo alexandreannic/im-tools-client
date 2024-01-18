@@ -23,7 +23,7 @@ import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
 import {Page} from '@/shared/Page'
-import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export interface DashboardPageProps {
   filters: Record<string, string[]>
@@ -40,7 +40,7 @@ export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<Meal_VisitM
 
 export const MealVisitDashboard = () => {
   const ctx = useMealVisitContext()
-  const {langIndex, schema: schemas} = useKoboSchemasContext()
+  const {langIndex, schema: schemas} = useKoboSchemaContext()
   const schema = schemas.meal_visitMonitoring!
   const {m, formatDateTime, formatDate} = useI18n()
   const [optionFilter, setOptionFilters] = useState<Record<string, string[] | undefined>>({})

@@ -19,22 +19,22 @@ export interface SchemaBundle {
   }
 }
 
-interface KoboSchemasProviderProps {
+interface KoboSchemaProviderProps {
   defaultLangIndex?: number
   children: ReactNode
 }
 
-interface KoboSchemasContext {
+interface KoboSchemaContext {
   schema: Partial<Record<KoboFormName, KoboSchemaBundle>>
   langIndex: number
   setLangIndex: Dispatch<SetStateAction<number>>
   fetchers: UseFetchers<(_: KoboFormName) => Promise<KoboSchema>, KoboFormName>
 }
 
-const Context = React.createContext({} as KoboSchemasContext)
+const Context = React.createContext({} as KoboSchemaContext)
 
-export const useKoboSchemasContext = ({autoFetch}: {autoFetch?: KoboFormName[]} = {}) => {
-  const ctx = useContext<KoboSchemasContext>(Context)
+export const useKoboSchemaContext = ({autoFetch}: {autoFetch?: KoboFormName[]} = {}) => {
+  const ctx = useContext<KoboSchemaContext>(Context)
   if (!ctx) throw Error('Cannot used useKoboSchemasContext outside of KoboSchemasProvider.')
   useEffect(() => {
     if (autoFetch) autoFetch.forEach(name => {
@@ -44,10 +44,10 @@ export const useKoboSchemasContext = ({autoFetch}: {autoFetch?: KoboFormName[]} 
   return ctx
 }
 
-export const KoboSchemasProvider = ({
+export const KoboSchemaProvider = ({
   defaultLangIndex = 0,
   children,
-}: KoboSchemasProviderProps) => {
+}: KoboSchemaProviderProps) => {
   const {m} = useI18n()
   const [langIndex, setLangIndex] = useState<number>(defaultLangIndex)
   const fetchers = useSchemaFetchers()

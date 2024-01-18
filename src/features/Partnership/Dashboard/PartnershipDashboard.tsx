@@ -26,11 +26,11 @@ import {IpIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
-import {SchemaBundle, useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {SchemaBundle, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export const PartnershipDashboard = ({}: {}) => {
   const ctx = usePartnershipContext()
-  const ctxSchema = useKoboSchemasContext()
+  const ctxSchema = useKoboSchemaContext()
   useEffect(() => {
     ctxSchema.fetchers.fetch({}, 'partnership_partnersDatabase')
   }, [])

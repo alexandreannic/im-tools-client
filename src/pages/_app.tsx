@@ -22,7 +22,7 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LicenseInfo} from '@mui/x-license-pro'
 import {useRouter} from 'next/router'
 import {initSentry} from '@/plugins/Sentry'
-import {KoboSchemasProvider} from '@/features/KoboSchema/KoboSchemasContext'
+import {KoboSchemaProvider} from '@/features/KoboSchema/KoboSchemasContext'
 
 LicenseInfo.setLicenseKey(appConfig.muiProLicenseKey ?? '')
 
@@ -75,7 +75,7 @@ const AppWithConfig = (props: AppProps) => {
       _ => <CssBaseline children={_}/>,
       _ => <I18nProvider children={_}/>,
       _ => <MsalProvider children={_} instance={msal}/>,
-      _ => <KoboSchemasProvider children={_}/>,
+      _ => <KoboSchemaProvider children={_}/>,
       _ => <ModalProvider children={_}/>,
     ]}>
       <AppWithBaseContext {...props}/>

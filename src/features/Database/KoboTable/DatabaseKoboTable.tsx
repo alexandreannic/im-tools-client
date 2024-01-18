@@ -23,7 +23,7 @@ import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {buildSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
 import {useI18n} from '@/core/i18n'
-import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -73,7 +73,7 @@ export const DatabaseTable = ({
   const {m} = useI18n()
   const {accesses, session} = useSession()
   const {toastHttpError, toastLoading} = useIpToast()
-  const ctxSchema = useKoboSchemasContext()
+  const ctxSchema = useKoboSchemaContext()
   const fetcherSchemaIfUnknown = useFetcher(() => api.koboApi.getForm({serverId, id: formId}).then(_ => buildSchemaBundle({m, schema: _, langIndex: ctxSchema.langIndex})))
   const formName = KoboIndex.searchById(formId)?.name
 

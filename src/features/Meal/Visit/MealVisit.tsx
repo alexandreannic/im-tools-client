@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react'
 import {Outlet} from 'react-router-dom'
 import {MealVisitProvider} from '@/features/Meal/Visit/MealVisitContext'
-import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export const MealVisit = () => {
-  const ctx = useKoboSchemasContext()
+  const ctx = useKoboSchemaContext()
   useEffect(() => {
     ctx.fetchers.fetch({}, 'meal_visitMonitoring')
   }, [])

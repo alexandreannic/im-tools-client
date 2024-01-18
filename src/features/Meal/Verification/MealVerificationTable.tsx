@@ -25,7 +25,7 @@ import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumn
 import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
 import {MealVerificationLinkToForm} from '@/features/Meal/Verification/MealVerificationList'
 import {useFetcher} from '@/shared/hook/useFetcher'
-import {SchemaBundle, useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {SchemaBundle, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
 import {KoboIndex} from '@/KoboIndex'
 
 export enum MergedDataStatus {
@@ -53,7 +53,7 @@ export const MealVerificationTable = () => {
   const {id} = paramSchema.validateSync(useParams())
   const {api, conf} = useAppSettings()
   const ctx = useMealVerificationContext()
-  const ctxSchema = useKoboSchemasContext()
+  const ctxSchema = useKoboSchemaContext()
   const fetcherVerificationAnswers = useFetcher(api.mealVerification.getAnswers)
   const {dateFromNow} = useI18n()
 
@@ -161,7 +161,7 @@ const MealVerificationTableContent = <
   const {api} = useAppSettings()
   const {m} = useI18n()
   const t = useTheme()
-  const {langIndex, setLangIndex} = useKoboSchemasContext()
+  const {langIndex, setLangIndex} = useKoboSchemaContext()
   const ctx = useMealVerificationContext()
 
   const indexVerification = useMemo(() => seq(verificationAnswers).groupByFirst(_ => _.koboAnswerId), [verificationAnswers])
