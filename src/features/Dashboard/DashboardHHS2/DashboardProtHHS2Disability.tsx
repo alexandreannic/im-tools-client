@@ -4,6 +4,7 @@ import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
 
 export const DashboardProtHHS2Disability = ({
   data,
@@ -14,9 +15,10 @@ export const DashboardProtHHS2Disability = ({
     <Div responsive>
       <Div column>
         <SlidePanel>
-          <ChartPieIndicator
+          <ChartPieIndicatorByKey
+            property="do_you_have_a_household_member_that_has_a_lot_of_difficulty"
             title={m.protHHS2.hhWithMemberHavingDifficulties}
-            filter={_ => !_.do_you_have_a_household_member_that_has_a_lot_of_difficulty.includes('no')}
+            filter={_ => !_.includes('no')}
             compare={{before: computed.lastMonth}}
             data={data}
             sx={{mb: 1}}
@@ -32,11 +34,12 @@ export const DashboardProtHHS2Disability = ({
           />
         </SlidePanel>
         <SlidePanel>
-          <ChartPieIndicator
+          <ChartPieIndicatorByKey
+            property="do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov"
             title={m.protHHS2.unregisteredDisability}
-            filter={_ => _.do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov !== 'yes_all'}
+            filter={_ => _ !== 'yes_all'}
             compare={{before: computed.lastMonth}}
-            filterBase={_ => _.do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov !== 'unable_unwilling_to_answer'}
+            filterBase={_ => _ !== 'unable_unwilling_to_answer'}
             data={data}
             sx={{mb: 1}}
           />
@@ -45,12 +48,13 @@ export const DashboardProtHHS2Disability = ({
       </Div>
       <Div column>
         <SlidePanel>
-          <ChartPieIndicator
+          <ChartPieIndicatorByKey
             title={m.protHHS2.barriersToAccessHealth}
             sx={{mb: 2}}
+            property="do_you_have_access_to_health_care_in_your_current_location"
             compare={{before: computed.lastMonth}}
-            filter={_ => _.do_you_have_access_to_health_care_in_your_current_location !== 'yes'}
-            filterBase={_ => _.do_you_have_access_to_health_care_in_your_current_location !== 'unable_unwilling_to_answer'}
+            filter={_ => _ !== 'yes'}
+            filterBase={_ => _ !== 'unable_unwilling_to_answer'}
             data={data}
           />
           <ProtHHS2BarChart

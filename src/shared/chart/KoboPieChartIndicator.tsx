@@ -2,7 +2,15 @@ import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/chart/PieChart
 import * as React from 'react'
 import {useMemo} from 'react'
 import {Seq} from '@alexandreannic/ts-utils'
-import {StringArrayKeys, StringKeys} from '../../core/type'
+
+export type ChartPieIndicatorProps<T> = {
+  compare?: {before: Seq<T>, now?: Seq<T>}
+  title?: string
+  data: Seq<T>
+  showValue?: boolean
+  showBase?: boolean
+  hideEvolution?: boolean
+} & Omit<PieChartIndicatorProps, 'base' | 'value'>
 
 export const ChartPieIndicator = <T, >({
   title,
@@ -12,16 +20,10 @@ export const ChartPieIndicator = <T, >({
   filterBase,
   hideEvolution,
   ...props
-}: {
-  compare?: {before: Seq<T>, now?: Seq<T>}
-  title?: string
+}: ChartPieIndicatorProps<T> & {
   filter: (_: T) => boolean
   filterBase?: (_: T) => boolean
-  data: Seq<T>
-  showValue?: boolean
-  showBase?: boolean
-  hideEvolution?: boolean
-} & Omit<PieChartIndicatorProps, 'base' | 'value'>) => {
+}) => {
   const percent = ({res, base}: {res: number, base: number}) => res / base
   const run = (d: Seq<T>) => {
     const base = filterBase ? d.filter(filterBase) : d

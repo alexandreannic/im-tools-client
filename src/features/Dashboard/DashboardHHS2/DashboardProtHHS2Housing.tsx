@@ -6,6 +6,7 @@ import {useTheme} from '@mui/material'
 import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
 
 export const DashboardProtHHS2Housing = ({
   data,
@@ -26,12 +27,13 @@ export const DashboardProtHHS2Housing = ({
             />
           </SlidePanel>
           <SlidePanel>
-            <ChartPieIndicator
+            <ChartPieIndicatorByKey
               compare={{before: computed.lastMonth}}
               title={m.protHHSnapshot.noAccommodationDocument}
-              filter={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'yes_i_have_a_written_lease_agreement' && _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'yes_i_have_state_assigned_shelter_with_proving_documents'}
-              filterBase={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'unable_unwilling_to_answer'}
-              data={data.filter(_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== undefined)}
+              property="do_you_have_formal_rental_documents_to_stay_in_your_accommodation"
+              filter={_ => _ !== 'yes_i_have_a_written_lease_agreement' && _ !== 'yes_i_have_state_assigned_shelter_with_proving_documents'}
+              filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+              data={data}
               sx={{mb: 2}}
             />
             <ProtHHS2BarChart
@@ -43,10 +45,11 @@ export const DashboardProtHHS2Housing = ({
         </Div>
         <Div column>
           <SlidePanel>
-            <ChartPieIndicator
+            <ChartPieIndicatorByKey
               compare={{before: computed.lastMonth}}
               title={m.protHHS2.mainConcernsRegardingHousing}
-              filter={_ => !_.what_are_your_main_concerns_regarding_your_accommodation?.includes('none')}
+              property="what_are_your_main_concerns_regarding_your_accommodation"
+              filter={_ => !_?.includes('none')}
               data={data}
               sx={{mb: 1}}
             />

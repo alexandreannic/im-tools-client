@@ -18,6 +18,7 @@ import {Enum} from '@alexandreannic/ts-utils'
 import {makeSx} from 'mui-extension'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Sheet} from '@/shared/Sheet/Sheet'
+import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
 
 const css = makeSx({
   table: {
@@ -75,11 +76,12 @@ export const DashboardProtHHS2Sample = ({
               </Lazy>
             </SlidePanel>
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <ChartPieIndicator
+              <ChartPieIndicatorByKey
                 title={m.uaCitizen}
                 data={data}
-                filterBase={_ => _.if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group !== 'unable_unwilling_to_answer'}
-                filter={_ => _.if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group === 'no'}
+                property="if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group"
+                filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+                filter={_ => _ === 'no'}
               />
               {/*<Lazy deps={[data]} fn={() => ChartTools.percentage({*/}
               {/*  data,*/}

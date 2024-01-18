@@ -15,6 +15,7 @@ import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ProtHHS2BarChart, ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
+import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
@@ -86,11 +87,12 @@ export const DashboardProtHHS2Document = ({
             }
           </Lazy>
           <SlidePanel>
-            <ChartPieIndicator
+            <ChartPieIndicatorByKey
               compare={{before: computed.lastMonth}}
+              property="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
               title={m.protHHS2.accessBarriersToObtainDocumentation}
-              filter={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation.includes('no')}
-              filterBase={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation?.includes('unable_unwilling_to_answer')}
+              filter={_ => !_.includes('no')}
+              filterBase={_ => !_?.includes('unable_unwilling_to_answer')}
               data={data}
               sx={{mb: 2}}
             />
@@ -139,11 +141,12 @@ export const DashboardProtHHS2Document = ({
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <ChartPieIndicator
+            <ChartPieIndicatorByKey
               compare={{before: computed.lastMonth}}
               title={m.lackOfHousingDoc}
-              filterBase={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('unable_unwilling_to_answer')}
-              filter={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('none')}
+              property="what_housing_land_and_property_documents_do_you_lack"
+              filterBase={_ => !_.includes('unable_unwilling_to_answer')}
+              filter={_ => !_.includes('none')}
               data={data}
               sx={{mb: 2}}
             />

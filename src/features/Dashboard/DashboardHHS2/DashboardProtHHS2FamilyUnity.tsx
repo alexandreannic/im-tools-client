@@ -11,6 +11,7 @@ import {chain} from '@/utils/utils'
 import {Box, Checkbox} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
+import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
 
 type Filters = Pick<Record<keyof typeof Protection_Hhs2_1Options['are_you_separated_from_any_of_your_households_members'], boolean>,
   'partner' |
@@ -58,10 +59,11 @@ export const DashboardProtHHS2FamilyUnity = ({
       <Div responsive>
         <Div column>
           <SlidePanel>
-            <ChartPieIndicator
+            <ChartPieIndicatorByKey
               compare={{before: computed.lastMonth}}
               title={m.protHHS2.familyMemberSeparated}
-              filter={_ => !_.are_you_separated_from_any_of_your_households_members.includes('no') && !_.are_you_separated_from_any_of_your_households_members.includes('unable_unwilling_to_answer')}
+              property="are_you_separated_from_any_of_your_households_members"
+              filter={_ => !_.includes('no') && !_.includes('unable_unwilling_to_answer')}
               sx={{mb: 2}}
               data={data}
             />
