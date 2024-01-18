@@ -5,7 +5,7 @@ import {Txt} from 'mui-extension'
 import {Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {IpIconBtn} from '../IconBtn'
-import {useAsync, useMemoFn} from '@alexandreannic/react-hooks-lib'
+import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Sheet/util/generateXLSFile'
 import {SheetBody} from './SheetBody'
 import {SheetHead} from './SheetHead'
@@ -18,6 +18,7 @@ import {SheetModal} from '@/shared/Sheet/SheetModal'
 import {SheetErrorBoundary} from '@/shared/Sheet/SheetErrorBundary'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
+import {useAsync} from '@/shared/hook/useAsync'
 
 export const Sheet = <T extends SheetRow = SheetRow>({
   total,
@@ -146,7 +147,7 @@ const _Sheet = <T extends SheetRow>({
             filteredAndSortedData: ctx.data.filteredAndSortedData as T[],
           }) : header}
           {showExportBtn && (
-            <IpIconBtn loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download"/>
+            <IpIconBtn loading={_generateXLSFromArray.loading} onClick={exportToCSV} children="download"/>
           )}
           {ctx.selected.size > 0 && (
             <Box sx={{

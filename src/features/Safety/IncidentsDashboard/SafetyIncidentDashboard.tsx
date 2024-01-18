@@ -1,4 +1,3 @@
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import React, {useEffect, useMemo, useState} from 'react'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
@@ -17,6 +16,7 @@ import {Page} from '@/shared/Page'
 import {useSafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/useSafetyIncidentDashboard'
 import {SafetyIncidentDashboardBody} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboardBody'
 import {makeKoboBarChartComponent} from '@/features/Dashboard/shared/KoboBarChart'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export interface DashboardSafetyIncidentsPageProps {
   filters: DataFilter.Filter
@@ -24,9 +24,9 @@ export interface DashboardSafetyIncidentsPageProps {
   computed: NonNullable<ReturnType<typeof useSafetyIncidentDashboard>>
 }
 
-export const SafetyIncidentsTrackerBarChart = makeKoboBarChartComponent<SafetyIncidentTracker, typeof SafetyIncidentTrackerOptions>({
-  options: SafetyIncidentTrackerOptions
-})
+// export const SafetyIncidentsTrackerBarChart = makeKoboBarChartComponent<SafetyIncidentTracker, typeof SafetyIncidentTrackerOptions>({
+//   options: SafetyIncidentTrackerOptions
+// })
 
 export const SafetyIncidentDashboard = () => {
   const {api} = useAppSettings()
@@ -63,18 +63,18 @@ export const SafetyIncidentDashboard = () => {
   }, [])
 
   useEffect(() => {
-    map(_period.entity, setPeriodFilter)
-  }, [_period.entity])
+    map(_period.get, setPeriodFilter)
+  }, [_period.get])
 
   useEffect(() => {
     _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
   const data: DashboardSafetyIncidentsPageProps['data'] | undefined = useMemo(() => {
-    return map(_answers.entity, _ => seq(DataFilter.filterData(_, filterShape, optionFilter)))
-  }, [_answers.entity, optionFilter])
+    return map(_answers.get, _ => seq(DataFilter.filterData(_, filterShape, optionFilter)))
+  }, [_answers.get, optionFilter])
 
-  const computed = useSafetyIncidentDashboard({data: _answers.entity, period: periodFilter})
+  const computed = useSafetyIncidentDashboard({data: _answers.get, period: periodFilter})
 
   return (
     <Page
@@ -95,8 +95,8 @@ export const SafetyIncidentDashboard = () => {
               sx={{marginTop: '-6px'}}
               defaultValue={value ?? [undefined, undefined]}
               onChange={onChange}
-              min={_period.entity?.start}
-              max={_period.entity?.end}
+              min={_period.get?.start}
+              max={_period.get?.end}
             />}
           </DebouncedInput>
         }

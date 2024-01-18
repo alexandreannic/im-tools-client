@@ -1,4 +1,3 @@
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
@@ -23,6 +22,8 @@ import {Bn_ReOptions} from '@/core/koboModel/Bn_Re/Bn_ReOptions'
 import {Utils} from '@/utils/utils'
 import {KoboBnReHelper} from '@/core/sdk/server/kobo/custom/KoboBnRe'
 import {NonNullableKeys} from '@/utils/utilsType'
+import {useFetcher} from '@/shared/hook/useFetcher'
+import {useAsync} from '@/shared/hook/useAsync'
 
 interface Answer {
   id: KoboAnswerId
@@ -206,7 +207,7 @@ export const AiWash = () => {
   return (
     <Page width={1200} loading={_data.loading}>
       <IpInput type="month" sx={{minWidth: 200, width: 200}} value={period} onChange={_ => setPeriod(_.target.value)}/>
-      {map(_data.entity, _ => (
+      {map(_data.get, _ => (
         <_ActivityInfo data={_}/>
       ))}
     </Page>
@@ -233,7 +234,7 @@ const _ActivityInfo = ({
         <Sheet<Row>
           getRenderRowKey={_ => _.request.changes[0].recordId}
           header={
-            <IpBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+            <IpBtn sx={{marginLeft: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.loading[-1]} onClick={() => {
               _submit.call(-1, data.map(_ => _.request)).catch(toastHttpError)
             }}>
               {m.submitAll} {seq(data).map(_ => _.activity['Total Reached (No Disaggregation)']).sum()}
@@ -244,7 +245,7 @@ const _ActivityInfo = ({
             id: 'actions', head: '', width: 120, render: _ =>
               <>
                 <AiSendBtn
-                  loading={_submit.getLoading(-1)}
+                  loading={_submit.loading[-1]}
                   onClick={() => {
                     _submit.call(-1, [_.request]).catch(toastHttpError)
                   }}

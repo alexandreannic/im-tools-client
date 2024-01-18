@@ -1,20 +1,21 @@
 import {Box, BoxProps, Checkbox, useTheme} from '@mui/material'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {Txt} from 'mui-extension'
-import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {SchemaBundle, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {UseSetState} from '@/shared/hook/useSetState2'
 
 export const PartnershipCard = ({
+  schema,
   partner,
   sx,
   state,
   ...props
 }: {
+  schema: SchemaBundle
   state: UseSetState<string>
   partner: PartnershipData
 } & BoxProps) => {
   const t = useTheme()
-  const ctxSchema = useKoboSchemaContext()
   return (
     <Box sx={{display: 'flex', mb: 1, alignItems: 'flex-start', ...sx}} {...props}>
       <Checkbox size="small" checked={state.has(partner.id)} onChange={(e, _) => state.set(partner.id, _)}/>
@@ -22,7 +23,7 @@ export const PartnershipCard = ({
         <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
           <Txt size={'small'} truncate bold>{partner.computed.name ?? partner.id}</Txt>
         </Box>
-        <Txt color="hint" truncate block size="small">{ctxSchema.translate.choice('Type_of_organization', partner.Type_of_organization)}</Txt>
+        <Txt color="hint" truncate block size="small">{schema.translate.choice('Type_of_organization', partner.Type_of_organization)}</Txt>
         {/*<Box sx={{display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start'}}>*/}
         {/*<Txt block size="small" color="hint" sx={{*/}
         {/*  borderRadius: '100px',*/}

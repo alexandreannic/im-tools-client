@@ -1,14 +1,14 @@
 import React, {ReactNode, useCallback, useContext, useEffect, useRef, useState} from 'react'
-import {UseAsync, useAsync} from '@/shared/hook/useAsync'
+import {useAsync, UseAsyncSimple} from '@/shared/hook/useAsync'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboForm, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {UUID} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {UseFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useIpToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
-import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {useI18n} from '@/core/i18n'
+import {UseFetcher} from '@/shared/hook/useFetcher'
 
 export interface DatabaseKoboContext {
   fetcherAnswers: UseFetcher<() => ReturnType<ApiSdk['kobo']['answer']['searchByAccess']>>
@@ -16,9 +16,9 @@ export interface DatabaseKoboContext {
   canEdit?: boolean
   form: KoboForm
   updateTag: ApiSdk['kobo']['answer']['updateTag']
-  asyncRefresh: UseAsync<() => Promise<void>>
+  asyncRefresh: UseAsyncSimple<() => Promise<void>>
   asyncEdit: (answerId: KoboAnswerId) => string
-  asyncUpdateTag: UseAsync<(_: {
+  asyncUpdateTag: UseAsyncSimple<(_: {
     answerIds: KoboAnswerId[],
     key: KeyOf<any>,
     value: any

@@ -11,14 +11,15 @@ import {WfpDeduplicationAccessForm} from '@/features/WfpDeduplication/WfpDedupli
 import {useI18n} from '@/core/i18n'
 import {Page} from '@/shared/Page'
 import {WfpDeduplicationAccessParams} from '@/core/sdk/server/access/Access'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const WfpDeduplicationAccess = () => {
   const {api} = useAppSettings()
   const {session} = useSession()
   const {m} = useI18n()
 
-  const _get = useFetchers(() => api.access.search({featureId: AppFeatureId.wfp_deduplication}))
-  const _remove = useAsync(api.access.remove)
+  const _get = useFetcher(() => api.access.search({featureId: AppFeatureId.wfp_deduplication}))
+  const _remove = useAsync(api.access.remove, {requestKey: _ => _[0]})
 
   const refresh = () => {
     _get.fetch({force: true, clean: false})

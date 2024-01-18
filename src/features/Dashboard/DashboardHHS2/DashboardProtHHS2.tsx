@@ -25,8 +25,9 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardH
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
-import {useFetcher} from '@/shared/hook/useFetcher'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {useFetchers} from '@/shared/hook/useFetchers'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 type CustomFilterOptionFilters = {
   hhComposition?: (keyof Messages['protHHS2']['_hhComposition'])[]
@@ -58,16 +59,16 @@ export const DashboardProtHHS2 = () => {
   }, [])
 
   useEffect(() => {
-    if (_period.entity) setPeriodFilter(_period.entity)
-  }, [_period.entity])
+    if (_period.get) setPeriodFilter(_period.get)
+  }, [_period.get])
 
   useEffect(() => {
-    if (periodFilter.start?.getTime() !== _period.entity?.start.getTime() || periodFilter.end?.getTime() !== _period.entity?.end.getTime())
+    if (periodFilter.start?.getTime() !== _period.get?.start.getTime() || periodFilter.end?.getTime() !== _period.get?.end.getTime())
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
   const getOption = (p: keyof ProtHHS2Enrich, option: keyof typeof Protection_Hhs2_1Options = p as any) => () => {
-    return _answers.entity
+    return _answers.get
       ?.flatMap(_ => _[p] as any)
       .distinct(_ => _)
       .compact()
@@ -128,12 +129,12 @@ export const DashboardProtHHS2 = () => {
         skipOption: ['unable_unwilling_to_answer', 'other_specify']
       }
     })
-  }, [_answers.entity])
+  }, [_answers.get])
 
   const [optionFilter, setOptionFilters] = useState<DataFilter.InferShape<typeof filterShape> & CustomFilterOptionFilters>({})
 
   const database = useMemo(() => {
-    if (!_answers.entity) return
+    if (!_answers.get) return
     const loki = new LokiDb(KoboIndex.byName('protection_hhs2_1').id, {
       persistenceMethod: 'memory',
     })
@@ -149,11 +150,11 @@ export const DashboardProtHHS2 = () => {
         'do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household',
       ]
     })
-    _answers.entity.forEach(_ => {
+    _answers.get.forEach(_ => {
       table.insert({..._})
     })
     return table
-  }, [_answers.entity])
+  }, [_answers.get])
 
   const data: Seq<ProtHHS2Enrich> | undefined = useMemo(() => {
     return map(database, _ => {
@@ -209,8 +210,8 @@ export const DashboardProtHHS2 = () => {
                 value={value}
                 onChange={onChange}
                 label={[m.start, m.endIncluded]}
-                min={_period.entity?.start}
-                max={_period.entity?.end}
+                min={_period.get?.start}
+                max={_period.get?.end}
               />}
             </DebouncedInput>
           }

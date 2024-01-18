@@ -19,8 +19,8 @@ export const useShelterData = () => {
   useEffectFn(fetcher.error, toastHttpError)
 
   const index: undefined | Record<KoboAnswerId, number> = useMemo(() => {
-    if (!fetcher.entity) return
-    return fetcher.entity.reduce((acc, _, i) => {
+    if (!fetcher.get) return
+    return fetcher.get.reduce((acc, _, i) => {
       acc[_.id] = i
       return acc
     }, {} as Record<KoboAnswerId, number>)
@@ -29,13 +29,13 @@ export const useShelterData = () => {
     //   nta: {},
     //   ta: {},
     // }
-    // fetcher.entity.forEach((_, i) => {
+    // fetcher.get.forEach((_, i) => {
     //   index.all[_.id] = i
     //   if (_.nta) index.all[_.nta.id] = i
     //   if (_.ta) index.all[_.ta.id] = i
     // })
     // return index
-  }, [fetcher.entity])
+  }, [fetcher.get])
 
   const fetchAll = fetcher.fetch
 
@@ -53,7 +53,7 @@ export const useShelterData = () => {
     fetchAll,
     asyncSyncAnswers,
     fetching: fetcher.loading,
-    mappedData: seq(fetcher.entity),
+    mappedData: seq(fetcher.get),
     index,
   } as const
 }

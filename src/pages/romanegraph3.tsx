@@ -5,7 +5,6 @@ import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {endOfMonth, startOfMonth} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {DeepPartial, Enum, seq} from '@alexandreannic/ts-utils'
 import {Period, Person} from '@/core/type'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
@@ -14,6 +13,7 @@ import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {useI18n} from '@/core/i18n'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const Pan = ({
   title,
@@ -150,7 +150,7 @@ export default () => {
     fetcher.fetch()
   }, [])
 
-  const data = fetcher.entity
+  const data = fetcher.get
 
   const ageGroup = useCallback((ageGroup: Person.AgeGroup, hideOther?: boolean) => {
     const gb = Person.groupByGenderAndGroup(ageGroup)(data?.flatMap(_ => _.persons)!)

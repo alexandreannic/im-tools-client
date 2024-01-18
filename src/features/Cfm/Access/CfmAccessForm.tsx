@@ -18,6 +18,7 @@ import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {useCfmContext} from '@/features/Cfm/CfmContext'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {Utils} from '@/utils/utils'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 interface Form extends IAccessForm {
   office: DrcOffice[]
@@ -40,10 +41,10 @@ export const CfmAccessForm = ({
   const _addAccess = useAsync(api.access.create)
   const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
-  const _access = useFetchers(requestInConstToFixTsInference)
+  const _access = useFetcher(requestInConstToFixTsInference)
 
-  useEffectFn(_addAccess.errors.size, _ => _ > 1 && toastHttpError)
-  useEffectFn(_access.getError(), toastHttpError)
+  useEffectFn(_addAccess.error, _ => _ > 1 && toastHttpError)
+  useEffectFn(_access.error, toastHttpError)
 
   const accessForm = useForm<Form>()
 
@@ -57,7 +58,7 @@ export const CfmAccessForm = ({
 
   return (
     <Modal
-      loading={_addAccess.loading.size > 0}
+      loading={_addAccess.loading}
       confirmDisabled={!accessForm.formState.isValid}
       onConfirm={(_, close) => accessForm.handleSubmit(_ => {
         submit(_)

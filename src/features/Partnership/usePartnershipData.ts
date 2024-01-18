@@ -1,11 +1,11 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useMemo} from 'react'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcSector} from '@/core/drcUa'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export type UsePartnershipData = ReturnType<typeof usePartnershipData>
 
@@ -19,9 +19,9 @@ export const usePartnershipData = () => {
   const fetcherPartnersDb = useFetcher(api.kobo.typedAnswers.searchPartnersDatabase)
 
   const mappedData = useMemo(() => {
-    if (!fetcherPartnersDb.entity) return
+    if (!fetcherPartnersDb.get) return
     const res: Seq<KoboAnswer<PartnershipData>> = seq([])
-    fetcherPartnersDb.entity.data.forEach(d => {
+    fetcherPartnersDb.get.data.forEach(d => {
       const oblast: OblastName[] | undefined = d.Which_oblasts_does_t_t_and_has_experience?.map(_ => fnSwitch(_, {
         cherkasy_oblast: 'Cherkaska',
         chernihiv_oblast: 'Chernihivska',
@@ -85,7 +85,7 @@ export const usePartnershipData = () => {
       })
     })
     return res
-  }, [fetcherPartnersDb.entity])
+  }, [fetcherPartnersDb.get])
 
   return {
     fetcherPartnersDb,

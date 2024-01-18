@@ -1,6 +1,5 @@
 import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {MicrosoftGraphClient} from '@/core/sdk/microsoftGraph/microsoftGraphClient'
-import {UseAsync, useAsync, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {MpcaPayment} from '@/core/sdk/server/mpcaPaymentTool/MpcaPayment'
@@ -10,6 +9,8 @@ import {Enum, map, Seq, seq} from '@alexandreannic/ts-utils'
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {NonNullableKey} from '@/utils/utilsType'
 import {DrcProjectHelper} from '@/core/drcUa'
+import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
+import {useAsync, UseAsyncSimple} from '@/shared/hook/useAsync'
 
 // [DONORS according to Alix]
 
@@ -28,12 +29,12 @@ interface UpdateTag<K extends keyof MpcaTypeTag> {
 }
 
 export interface MpcaContext {
-  refresh: UseAsync<() => Promise<void>>
+  refresh: UseAsyncSimple<() => Promise<void>>
   data?: Seq<MpcaEntity>
-  asyncUpdates: UseAsync<<K extends keyof MpcaTypeTag>(_: UpdateTag<K>) => Promise<void>>
+  asyncUpdates: UseAsyncSimple<<K extends keyof MpcaTypeTag>(_: UpdateTag<K>) => Promise<void>>
   fetcherData: UseFetcher<(filters?: KoboAnswerFilter) => Promise<Seq<MpcaEntity>>>
   _getPayments: UseFetcher<() => Promise<MpcaPayment[]>>
-  _create: UseAsync<(_: string[]) => Promise<MpcaPayment>>
+  _create: UseAsyncSimple<(_: string[]) => Promise<MpcaPayment>>
 }
 
 const Context = React.createContext({} as MpcaContext)
@@ -56,11 +57,11 @@ export const MpcaProvider = ({
   const fetcherData = useFetcher((_?: KoboAnswerFilter) => api.mpca.search(_).then(_ => seq(_.data)) as Promise<Seq<MpcaEntity>>)
   const dataIndex = useMemo(() => {
     const index: Record<KoboAnswerId, number> = {}
-    fetcherData.entity?.forEach((_, i) => {
+    fetcherData.get?.forEach((_, i) => {
       index[_.id] = i
     })
     return index
-  }, [fetcherData.entity])
+  }, [fetcherData.get])
 
   const asyncRefresh = useAsync(async () => {
     await api.mpca.refresh()
@@ -72,13 +73,13 @@ export const MpcaProvider = ({
   }, [])
 
   const mappedData = useMemo(() => {
-    return fetcherData.entity?.map(_ => {
+    return fetcherData.get?.map(_ => {
       _.finalProject = _.tags?.projects?.[0] ?? _.project
       _.finalDonor = map(_.tags?.projects?.[0], p => DrcProjectHelper.donorByProject[p]) ?? _.donor
       _.amountUahCommitted = !!_.tags?.committed ? _.amountUahFinal : 0
       return _
     })
-  }, [fetcherData.entity])
+  }, [fetcherData.get])
 
   const asyncUpdates = useAsync(async <K extends keyof MpcaTypeTag>({
     formId,
@@ -94,7 +95,7 @@ export const MpcaProvider = ({
         value,
       })
     } else {
-      const data = answerIds.map(_ => fetcherData.entity![dataIndex[_]])
+      const data = answerIds.map(_ => fetcherData.get![dataIndex[_]])
       const gb = seq(data).groupBy(_ => _.source)
       await Promise.all(Enum.entries(gb).map(([formName, answers]) => {
         return updateByFormId({
@@ -119,7 +120,7 @@ export const MpcaProvider = ({
       answerIds,
       tags: newTags,
     })
-    fetcherData.setEntity(prev => {
+    fetcherData.set(prev => {
       const copy = prev ? seq([...prev]) : seq([])
       answerIds.forEach(id => {
         copy[dataIndex[id]].tags = {

@@ -1,5 +1,5 @@
 import React, {Dispatch, ReactNode, SetStateAction, useCallback, useContext, useEffect, useState} from 'react'
-import {useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
@@ -12,6 +12,8 @@ import {SessionInitForm} from '@/core/Session/SessionInitForm'
 import {CenteredContent} from '@/shared/CenteredContent'
 import {Fender} from 'mui-extension'
 import {IpIconBtn} from '@/shared/IconBtn'
+import {useFetcher} from '@/shared/hook/useFetcher'
+import {useAsync} from '@/shared/hook/useAsync'
 
 export interface SessionContext {
   session: UserSession
@@ -63,16 +65,16 @@ export const SessionProvider = ({
     setIsInitialLoading(false)
   }, [])
 
-  useEffectFn(_getSession.getError(), () => toastError(m.youDontHaveAccess))
+  useEffectFn(_getSession.error, () => toastError(m.youDontHaveAccess))
 
-  if (_getSession.getLoading() || _access.loading) {
+  if (_getSession.loading || _access.loading) {
     return (
       <CenteredContent>
         <CircularProgress/>
       </CenteredContent>
     )
   }
-  if (!session || !_access.entity) {
+  if (!session || !_access.get) {
     return (
       <CenteredContent>
         <SessionLoginForm setSession={setSession}/>
@@ -99,13 +101,13 @@ export const SessionProvider = ({
       <Context.Provider value={{
         session,
         setSession,
-        accesses: _access.entity,
+        accesses: _access.get,
         logout,
       }}>
         {session.originalEmail && (
           <Box sx={{px: 2, py: .25, background: t => t.palette.background.paper}}>
             Connected as <b>{session.email}</b>. Go back as <b>{session.originalEmail}</b>
-            <IpIconBtn loading={_revertConnectAs.getLoading()} onClick={_revertConnectAs.call} color="primary">logout</IpIconBtn>
+            <IpIconBtn loading={_revertConnectAs.loading} onClick={_revertConnectAs.call} color="primary">logout</IpIconBtn>
           </Box>
         )}
         {children}

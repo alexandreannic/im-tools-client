@@ -1,4 +1,3 @@
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState} from 'react'
@@ -20,6 +19,8 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardH
 import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
 import {PeriodHelper, Person} from '@/core/type'
+import {useAsync} from '@/shared/hook/useAsync'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const AiProtectionGeneral = () => {
   const {api} = useAppSettings()
@@ -52,8 +53,8 @@ export const AiProtectionGeneral = () => {
   }, [period])
 
   const filteredData = useMemo(() => {
-    return _hhCurrent.entity?.filter(_ => !selectedOblast || _.staff_to_insert_their_DRC_office === selectedOblast)
-  }, [selectedOblast, _hhCurrent.entity])
+    return _hhCurrent.get?.filter(_ => !selectedOblast || _.staff_to_insert_their_DRC_office === selectedOblast)
+  }, [selectedOblast, _hhCurrent.get])
 
   return (
     <Page width={1200} loading={_hhCurrent.loading}>
@@ -166,7 +167,7 @@ const _ActivityInfo = ({
   return (
     <div>
       <Box sx={{mb: 2, display: 'flex', alignItems: 'center'}}>
-        <IpBtn sx={{marginRight: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.getLoading(-1)} onClick={() => {
+        <IpBtn sx={{marginRight: 'auto'}} icon="send" color="primary" variant="contained" loading={_submit.loading[-1]} onClick={() => {
           _submit.call(-1, formParams.map((_, i) => _.request)).catch(toastHttpError)
         }}>
           {m.submitAll} {data.length} {data.sum(_ => _.how_many_ind ?? 0)}
@@ -198,7 +199,7 @@ const _ActivityInfo = ({
                     <TableCell rowSpan={a.activity.subActivities.length} sx={{width: 0, whiteSpace: 'nowrap'}}>
                       <IpBtn
                         tooltip="Submit 🚀"
-                        loading={_submit.getLoading(i)}
+                        loading={_submit.loading[i]}
                         variant="contained"
                         size="small"
                         sx={{minWidth: 50, mr: .5}}

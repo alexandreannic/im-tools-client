@@ -24,7 +24,7 @@ export const MpcaPaymentTools = () => {
         <Sheet
           id="mpca-payments"
           header={<PanelTitle>{m.mpca.paymentTools}</PanelTitle>}
-          data={_getPayments.entity}
+          data={_getPayments.get}
           loading={_getPayments.loading}
           columns={[
             {

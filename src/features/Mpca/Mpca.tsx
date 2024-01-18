@@ -52,7 +52,7 @@ const MpcaSidebar = () => {
       <SidebarBody>
         <SidebarItem sx={{pr: 0}} iconEnd={
           <Tooltip placement="right" title={m.mpca.pullLastDataDesc + ' ' + m.timeConsumingOperation}>
-            <IpBtn onClick={ctx.refresh.call} loading={ctx.refresh.getLoading()} icon="cloud_sync">{m.pullLast}</IpBtn>
+            <IpBtn onClick={ctx.refresh.call} loading={ctx.refresh.loading} icon="cloud_sync">{m.pullLast}</IpBtn>
           </Tooltip>
         }>
           <Box>

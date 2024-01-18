@@ -1,6 +1,5 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {AppFeatureId} from '@/features/appFeatureId'
-import {useFetchers} from '@/shared/hook/useFetchers'
 import {useAsync} from '@/shared/hook/useAsync'
 import {AccessTable} from '@/features/Access/AccessTable'
 import {IpBtn} from '@/shared/Btn'
@@ -10,15 +9,15 @@ import {useI18n} from '@/core/i18n'
 import {Page} from '@/shared/Page'
 import {CfmAccessForm} from '@/features/Cfm/Access/CfmAccessForm'
 import {useCfmContext} from '@/features/Cfm/CfmContext'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const CfmAccess = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
   const ctx = useCfmContext()
 
-  const _get = useFetchers(() => api.access.search({featureId: AppFeatureId.cfm}))
-  const _remove = useAsync(api.access.remove)
-
+  const _get = useFetcher(() => api.access.search({featureId: AppFeatureId.cfm}))
+  const _remove = useAsync(api.access.remove, {requestKey: _ => _[0]})
 
   const refresh = () => {
     _get.fetch({force: true, clean: false})

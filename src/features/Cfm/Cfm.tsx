@@ -9,7 +9,6 @@ import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {CfmTable} from '@/features/Cfm/Data/CfmTable'
 import {CfmProvider, useCfmContext} from '@/features/Cfm/CfmContext'
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
@@ -25,6 +24,8 @@ import {appConfig} from '@/conf/AppConfig'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 import {shelterIndex} from '@/features/Shelter/Shelter'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
+import {useFetcher} from '@/shared/hook/useFetcher'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 
 const relatedKoboForms: KoboFormName[] = [
   'meal_cfmInternal',
@@ -149,8 +150,8 @@ export const Cfm = () => {
   }
   return (
     <>
-      {_schemas.entity ? (
-        <CfmProvider schemas={_schemas.entity}>
+      {_schemas.get ? (
+        <CfmProvider schemas={_schemas.get}>
           <Router>
             <Layout
               title={appFeaturesIndex.cfm.name}

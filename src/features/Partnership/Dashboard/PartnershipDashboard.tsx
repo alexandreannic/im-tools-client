@@ -25,27 +25,21 @@ import {Box, Checkbox} from '@mui/material'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
-import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
-import {useAppSettings} from '@/core/context/ConfigContext'
-import {KoboIndex} from '@/KoboIndex'
+import {SchemaBundle} from '@/features/KoboSchema/KoboSchemaContext'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
 
-export const PartnershipDashboard = () => {
+export const PartnershipDashboard = ({}: {}) => {
   const ctx = usePartnershipContext()
-  const {api} = useAppSettings()
-  const fetcherSchema = useFetcher(() => api.koboApi.getForm({id: KoboIndex.byName('partnership_partnersDatabase').id}))
-
+  const ctxSchema = useKoboSchemasContext()
   useEffect(() => {
-    fetcherSchema.fetch()
+    ctxSchema.fetchers.fetch({}, 'partnership_partnersDatabase')
   }, [])
 
   return (
     <Page width="lg" loading={ctx.data.fetcherPartnersDb.loading}>
-      {ctx.data.fetcherPartnersDb.entity && fetcherSchema.entity && (
-        <KoboSchemaProvider schema={fetcherSchema.entity}>
-          <_PartnershipDashboard/>
-        </KoboSchemaProvider>
+      {ctx.data.fetcherPartnersDb.get && ctxSchema.schema.partnership_partnersDatabase && (
+        <_PartnershipDashboard schema={ctxSchema.schema.partnership_partnersDatabase}/>
       )}
     </Page>
   )
@@ -63,31 +57,39 @@ const mapSga = (data: Seq<PartnershipData>) => {
 
 type SgaEntity = ReturnType<typeof mapSga>[0]
 
-export const _PartnershipDashboard = ({}: {}) => {
+export const _PartnershipDashboard = ({
+  schema,
+}: {
+  schema: SchemaBundle
+}) => {
   const {m, formatLargeNumber} = useI18n()
   const selecteIds = useSetState2<string>()
   const ctx = usePartnershipContext()
-  const ctxSchema = useKoboSchemaContext()
   const mappedData = ctx.data.mappedData!
+
+  const getOptions = (questionName: keyof typeof Partnership_partnersDatabaseOptions) => {
+    return schema.schemaHelper.getOptionsByQuestionName(questionName)
+      .map(_ => ({value: _.name, label: schema.translate.choice(questionName, _.name)}))
+  }
 
   const filterShape = useMemo(() => DataFilter.makeShape<KoboAnswer<PartnershipData>>({
     oblast: {
       getValue: _ => _.Which_oblasts_does_t_t_and_has_experience,
       icon: 'location_on',
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Oblast_001').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Oblast_001'),
       label: m.oblast,
       multiple: true
     },
     activities: {
       icon: 'local_activity',
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('The_organization_is_g_type_of_activities').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('The_organization_is_g_type_of_activities'),
       getValue: _ => _.The_organization_is_g_type_of_activities,
       label: m.activity,
       multiple: true
     },
     sector: {
       icon: 'support',
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Sectors_funded').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Sectors_funded'),
       getValue: _ => _.Which_sectors_does_the_organiz,
       label: m.sector,
       multiple: true
@@ -95,44 +97,44 @@ export const _PartnershipDashboard = ({}: {}) => {
     relation: {
       icon: 'share',
       getValue: _ => _.Is_there_an_ongoing_relationsh,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Is_there_an_ongoing_relationsh').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Is_there_an_ongoing_relationsh'),
       label: m._partner.relationship,
     },
     rapidMobilization: {
       icon: 'bolt',
       getValue: _ => _.Is_rapid_volunteer_mobilization_possible,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Is_rapid_volunteer_mobilization_possible').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Is_rapid_volunteer_mobilization_possible'),
       label: m._partner.rapidMobilization,
     },
     heardToReach: {
       icon: 'rocket_launch',
       getValue: _ => _.Is_access_possible_by_the_orga,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Is_access_possible_by_the_orga').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Is_access_possible_by_the_orga'),
       label: m._partner.rapidMobilization,
     },
     cars: {
       icon: 'local_shipping',
       getValue: _ => _.Own_vehicles,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Own_vehicles').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Own_vehicles'),
       label: m.vehicule,
       multiple: true,
     },
     warehouse: {
       icon: 'warehouse',
       getValue: _ => _.Own_warehouse_belonging_to_th,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Own_warehouse_belonging_to_th').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Own_warehouse_belonging_to_th'),
       label: m.warehouse,
     },
     vetting: {
       icon: 'check_circle',
       getValue: _ => _.Has_vetting_been_conducted,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Has_vetting_been_conducted').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Has_vetting_been_conducted'),
       label: m._partner.vetting,
     },
     risk: {
       icon: 'flag',
       getValue: _ => _.Overall_Residual_Risk,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Overall_Residual_Risk').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Overall_Residual_Risk'),
       label: m._partner.residualRisk,
     },
   }), [mappedData])
@@ -148,7 +150,7 @@ export const _PartnershipDashboard = ({}: {}) => {
     donor: {
       icon: drcMaterialIcons.donor,
       getValue: _ => _.Donor,
-      getOptions: () => ctxSchema.schemaHelper.getOptionsByQuestionName('Donor').map(_ => ({value: _.name, label: _.label[ctxSchema.langIndex]})),
+      getOptions: () => getOptions('Donor'),
       label: m.donor,
       multiple: false
     },
@@ -231,7 +233,7 @@ export const _PartnershipDashboard = ({}: {}) => {
               {selecteIds.toArray.length} {m.selected}
               <IpIconBtn sx={{marginLeft: 'auto'}} onClick={selecteIds.clear}>clear</IpIconBtn>
             </Box>
-            {filteredData.map(d => <PartnershipCard state={selecteIds} key={d.id} partner={d} sx={{mt: 1}}/>)}
+            {filteredData.map(d => <PartnershipCard schema={schema} state={selecteIds} key={d.id} partner={d} sx={{mt: 1}}/>)}
           </Panel>
         </Div>
         <Div column>

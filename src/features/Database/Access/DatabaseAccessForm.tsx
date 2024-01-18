@@ -18,6 +18,7 @@ import {AccessForm, IAccessForm} from '@/features/Access/AccessForm'
 import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {Utils} from '@/utils/utils'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 interface Form extends IAccessForm {
   question?: string
@@ -45,10 +46,10 @@ export const DatabaseAccessForm = ({
   const _addAccess = useAsync(api.access.create)
   const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
-  const _access = useFetchers(requestInConstToFixTsInference)
+  const _access = useFetcher(requestInConstToFixTsInference)
 
-  useEffectFn(_addAccess.errors.size, _ => _ > 1 && toastHttpError)
-  useEffectFn(_access.getError(), toastHttpError)
+  useEffectFn(_addAccess.error, toastHttpError)
+  useEffectFn(_access.error, toastHttpError)
 
   const accessForm = useForm<Form>()
 
@@ -92,7 +93,7 @@ export const DatabaseAccessForm = ({
 
   return (
     <Modal
-      loading={_addAccess.loading.size > 1}
+      loading={_addAccess.loading}
       confirmDisabled={!accessForm.formState.isValid}
       onConfirm={(_, close) => accessForm.handleSubmit(_ => {
         submit(_)

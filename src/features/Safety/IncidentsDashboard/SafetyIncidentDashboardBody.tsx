@@ -9,9 +9,11 @@ import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
 import {useSession} from '@/core/Session/SessionContext'
-import {DashboardSafetyIncidentsPageProps, SafetyIncidentsTrackerBarChart} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
+import {DashboardSafetyIncidentsPageProps} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
 import {CommentsPanel, CommentsPanelProps} from '@/shared/CommentsPanel'
+import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
+import {SafetyIncidentTrackerOptions} from '@/core/koboModel/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
 
 export const SafetyIncidentDashboardBody = ({
   data,
@@ -71,13 +73,25 @@ export const SafetyIncidentDashboardBody = ({
           })}
         </SlidePanel>
         <SlidePanel title={m.safety.attackTypes}>
-          <SafetyIncidentsTrackerBarChart data={data} question="attack_type" questionType="multiple"/>
+          <KoboBarChartMultiple
+            data={data}
+            getValue={_ => _.attack_type}
+            label={SafetyIncidentTrackerOptions.attack_type}
+          />
         </SlidePanel>
         <SlidePanel title={m.safety.target}>
-          <SafetyIncidentsTrackerBarChart data={data} question="what_destroyed" questionType="multiple"/>
+          <KoboBarChartMultiple
+            data={data}
+            getValue={_ => _.what_destroyed}
+            label={SafetyIncidentTrackerOptions.what_destroyed}
+          />
         </SlidePanel>
         <SlidePanel title={m.safety.typeOfCasualties}>
-          <SafetyIncidentsTrackerBarChart data={data} question="type_casualties"/>
+          <KoboBarChartMultiple
+            data={data}
+            getValue={_ => _.type_casualties}
+            label={SafetyIncidentTrackerOptions.type_casualties}
+          />
         </SlidePanel>
       </Div>
       <Div column>

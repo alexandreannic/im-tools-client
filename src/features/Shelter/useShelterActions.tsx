@@ -1,11 +1,10 @@
 import {KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {Dispatch, SetStateAction, useMemo} from 'react'
+import {Dispatch, SetStateAction} from 'react'
 import {useAsync} from '@/shared/hook/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
-import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {buildKoboSchemaHelper, getKoboTranslations} from '@/features/Database/KoboTable/useKoboSchema'
+import {KoboSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
 import {useI18n} from '@/core/i18n'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
@@ -16,30 +15,16 @@ export const useShelterActions = <T extends Record<string, any>, >({
   form,
   formId,
   schema,
-  langIndex,
   setEntity,
 }: {
   form: 'nta' | 'ta'
-  langIndex: number
-  schema: KoboApiForm
+  schema: KoboSchemaBundle
   formId: KoboId,
   setEntity: Dispatch<SetStateAction<ShelterEntity[] | undefined>>
 }) => {
   const {api} = useAppSettings()
   const {m} = useI18n()
   const {toastError, toastLoading} = useIpToast()
-
-  const helper = useMemo(() => {
-    const schemaHelper = buildKoboSchemaHelper({schema, m})
-    return {
-      schemaHelper,
-      ...getKoboTranslations({
-        schema,
-        langIndex,
-        questionIndex: schemaHelper.questionIndex,
-      })
-    }
-  }, [schema, langIndex])
 
   const updateTag = ({answerIds, key, value}: {
     answerIds: KoboAnswerId[]
@@ -101,13 +86,13 @@ export const useShelterActions = <T extends Record<string, any>, >({
 
   const asyncEdit = (answerId: KoboAnswerId) => api.koboApi.getEditUrl({formId, answerId})
 
-  const [openModalAnswer] = useDatabaseKoboAnswerView<ShelterEntity['ta']>(schema)
+  const [openModalAnswer] = useDatabaseKoboAnswerView<ShelterEntity['ta']>(schema.schemaUnsanitized)
 
   // useEffectFn(asyncUpdates.lastError, toastHttpError)
   // useEffectFn(asyncUpdate.lastError, toastHttpError)
 
   return {
-    helper,
+    schema,
     asyncUpdate,
     asyncUpdates,
     asyncEdit,

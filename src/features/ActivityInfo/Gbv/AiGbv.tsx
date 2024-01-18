@@ -3,7 +3,6 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
 import {useIpToast} from '@/core/useToast'
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {PeriodHelper, Person} from '@/core/type'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import {Utils} from '@/utils/utils'
@@ -18,6 +17,8 @@ import {IpInput} from '@/shared/Input/Input'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {IpBtn} from '@/shared/Btn'
+import {useAsync} from '@/shared/hook/useAsync'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 type AiGbvBundle = AiBundle<AiGbvInterface.Type>
 
@@ -144,7 +145,7 @@ export const AiGbv = () => {
   }, [period])
 
   const flatData = useMemo(() => {
-    return fetcher.entity?.flatMap(d => {
+    return fetcher.get?.flatMap(d => {
       return d.activity['Sub Activities'].map(a => {
         return {
           id: d.requestBody.changes[0].recordId,
@@ -157,15 +158,15 @@ export const AiGbv = () => {
         }
       })
     })
-  }, [fetcher.entity])
+  }, [fetcher.get])
 
   const indexActivity = useMemo(() => {
-    const gb = seq(fetcher.entity)?.groupBy(_ => _.requestBody.changes[0].recordId)
+    const gb = seq(fetcher.get)?.groupBy(_ => _.requestBody.changes[0].recordId)
     return new Enum(gb).transform((k, v) => {
       if (v.length !== 1) throw new Error('Should contains 1 request by ID.')
       return [k, v[0]]
     }).get()
-  }, [fetcher.entity])
+  }, [fetcher.get])
 
   return (
     <Page width="full">
@@ -178,8 +179,8 @@ export const AiGbv = () => {
             <>
               <IpInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <IpBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
-                if (!fetcher.entity) return
-                _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
+                if (!fetcher.get) return
+                _submit.call('all', fetcher.get.map(_ => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </IpBtn>

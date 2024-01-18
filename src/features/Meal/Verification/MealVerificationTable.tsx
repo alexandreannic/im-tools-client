@@ -1,5 +1,4 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {fnSwitch, map, Seq, seq} from '@alexandreannic/ts-utils'
 import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {Page, PageTitle} from '@/shared/Page'
@@ -10,7 +9,7 @@ import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
@@ -26,6 +25,7 @@ import {useAsync} from '@/shared/hook/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
 import {MealVerificationLinkToForm} from '@/features/Meal/Verification/MealVerificationList'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export enum MergedDataStatus {
   Selected = 'Selected',
@@ -61,12 +61,12 @@ export const MealVerificationTable = () => {
   }, [])
 
   const {mealVerification, activity} = useMemo(() => {
-    const mealVerification = ctx.fetcherVerifications.entity?.find(_ => _.id === id)
+    const mealVerification = ctx.fetcherVerifications.get?.find(_ => _.id === id)
     return {
       mealVerification,
       activity: mealVerificationActivities.find(_ => _.name === mealVerification?.activity)
     }
-  }, [id, ctx.fetcherVerifications.entity])
+  }, [id, ctx.fetcherVerifications.get])
 
   useEffect(() => {
     if (mealVerification && activity) {
@@ -77,7 +77,7 @@ export const MealVerificationTable = () => {
 
   return (
     <Page width="full">
-      {fetcherSchema.entity && fetcherVerificationAnswers.entity && activity && mealVerification ? (
+      {fetcherSchema.get && fetcherVerificationAnswers.get && activity && mealVerification ? (
         <>
           <PageTitle
             action={
@@ -124,10 +124,10 @@ export const MealVerificationTable = () => {
                 <Box>{mealVerification.desc}</Box>
               </Box>
             }>{mealVerification.name}</PageTitle>
-          <KoboSchemaProvider schema={fetcherSchema.entity}>
+          <KoboSchemaProvider schema={fetcherSchema.get}>
             <MealVerificationTableContent
               activity={activity}
-              verificationAnswers={fetcherVerificationAnswers.entity}
+              verificationAnswers={fetcherVerificationAnswers.get}
               verificationAnswersRefresh={() => fetcherVerificationAnswers.fetch({force: true, clean: false}, mealVerification.id)}
             />
           </KoboSchemaProvider>
@@ -191,7 +191,7 @@ const MealVerificationTableContent = <
   }
 
   const mergedData: Seq<MergedData> | undefined = useMemo(() => {
-    return map(fetcherDataOrigin.entity, fetcherDataVerified.entity, (origin, verified) => {
+    return map(fetcherDataOrigin.get, fetcherDataVerified.get, (origin, verified) => {
       const indexDataVerified = seq(verified).groupBy(_ => _[activity.joinColumn] ?? '')
       return seq(origin).filter(_ => indexVerification[_.id]).map(_ => {
         const dataVerified = indexDataVerified[_[activity.joinColumn]]
@@ -217,8 +217,8 @@ const MealVerificationTableContent = <
       }))
     })
   }, [
-    fetcherDataVerified.entity,
-    fetcherDataOrigin.entity,
+    fetcherDataVerified.get,
+    fetcherDataOrigin.get,
     indexVerification,
   ])
 
@@ -317,7 +317,7 @@ const MealVerificationTableContent = <
                         <>
                           <TableIconBtn
                             color="primary"
-                            loading={asyncUpdateAnswer.loading.get(verif.id)}
+                            loading={asyncUpdateAnswer.loading[verif.id]}
                             children="add"
                             onClick={() => asyncUpdateAnswer.call(verif.id, MealVerificationAnswersStatus.Selected).then(verificationAnswersRefresh)}
                           />
@@ -327,12 +327,12 @@ const MealVerificationTableContent = <
                         <>
                           <TableIconBtn
                             children="delete"
-                            loading={asyncUpdateAnswer.loading.get(verif.id)}
+                            loading={asyncUpdateAnswer.loading[verif.id]}
                             onClick={() => asyncUpdateAnswer.call(verif.id,).then(verificationAnswersRefresh)}
                           />
                           <TableIconBtn
                             children="casino"
-                            loading={asyncUpdateAnswer.loading.get(verif.id)}
+                            loading={asyncUpdateAnswer.loading[verif.id]}
                             disabled={unselectedAnswers.length === 0 || asyncUpdateAnswer.anyLoading}
                             onClick={() => {
                               Promise.all([

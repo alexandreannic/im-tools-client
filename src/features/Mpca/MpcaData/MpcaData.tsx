@@ -6,7 +6,6 @@ import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {map} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useAsync} from '@alexandreannic/react-hooks-lib'
 import {appConfig} from '@/conf/AppConfig'
 import {kobo, KoboIndex} from '@/KoboIndex'
 import {IpBtn} from '@/shared/Btn'
@@ -17,6 +16,7 @@ import {MpcaEntity, MpcaHelper} from '@/core/sdk/server/mpca/MpcaEntity'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
 import {Box, FormControlLabel, Switch} from '@mui/material'
+import {useAsync} from '@/shared/hook/useAsync'
 
 export const getKoboImagePath = (url: string): string => {
   return appConfig.apiURL + `/kobo-api/${kobo.drcUa.server.prod}/attachment?path=${url.split('api')[1]}`
@@ -101,7 +101,7 @@ export const MpcaData = () => {
                   color="primary"
                   icon="create_new_folder"
                   variant="outlined"
-                  loading={_payment.getLoading()}
+                  loading={_payment.loading}
                   onClick={() => {
                     _payment.call(selected)
                   }}

@@ -2,7 +2,6 @@ import {Page} from '@/shared/Page'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {format, subMonths} from 'date-fns'
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Panel} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
@@ -18,6 +17,8 @@ import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtecti
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import {PeriodHelper} from '@/core/type'
+import {useAsync} from '@/shared/hook/useAsync'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 type AiProtectionGeneralBundle = AiBundle<AiTypeProtectionRmm.FormParams>
 
@@ -128,7 +129,7 @@ export const AiProtectionGeneral = () => {
     fetcher.fetch({}, period)
   }, [period])
 
-  const flatData = useMemo(() => fetcher.entity?.flatMap(d => {
+  const flatData = useMemo(() => fetcher.get?.flatMap(d => {
     return d.activity.subActivities.map(a => {
       return {
         id: d.requestBody.changes[0].recordId,
@@ -139,15 +140,15 @@ export const AiProtectionGeneral = () => {
         ...a,
       }
     })
-  }), [fetcher.entity])
+  }), [fetcher.get])
 
   const indexActivity = useMemo(() => {
-    const gb = seq(fetcher.entity)?.groupBy(_ => _.requestBody.changes[0].recordId)
+    const gb = seq(fetcher.get)?.groupBy(_ => _.requestBody.changes[0].recordId)
     return new Enum(gb).transform((k, v) => {
       if (v.length !== 1) throw new Error('Should contains 1 request by ID.')
       return [k, v[0]]
     }).get()
-  }, [fetcher.entity])
+  }, [fetcher.get])
 
   return (
     <Page width="full">
@@ -159,8 +160,8 @@ export const AiProtectionGeneral = () => {
             <Box sx={{display: 'flex', alignItems: 'center', flex: 1,}}>
               <IpInput helperText={null} sx={{width: 200}} type="month" value={period} onChange={e => setPeriod(e.target.value)}/>
               <IpBtn icon="send" variant="contained" sx={{ml: 'auto'}} onClick={() => {
-                if (!fetcher.entity) return
-                _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
+                if (!fetcher.get) return
+                _submit.call('all', fetcher.get.map(_ => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </IpBtn>

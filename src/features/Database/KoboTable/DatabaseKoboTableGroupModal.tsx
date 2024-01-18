@@ -6,7 +6,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 export const DatabaseKoboTableGroupModal = ({
   groupData,

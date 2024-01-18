@@ -16,19 +16,20 @@ import {DatabaseAccessForm} from '@/features/Database/Access/DatabaseAccessForm'
 import {Panel} from '@/shared/Panel'
 import {useSession} from '@/core/Session/SessionContext'
 import {AccessTable} from '@/features/Access/AccessTable'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const DatabaseAccessRoute = () => {
   const {api} = useAppSettings()
   const _formSchemas = useFetchers(api.koboApi.getForm, {requestKey: ([p]) => p.id})
   const {serverId, formId} = databaseUrlParamsValidation.validateSync(useParams())
-  const form = _formSchemas.get(formId)
+  const form = _formSchemas.get[formId]
 
   useEffect(() => {
     _formSchemas.fetch({force: true}, {serverId, id: formId})
   }, [serverId, formId])
 
   return (
-    <Page width="lg" loading={_formSchemas.getLoading(formId)}>
+    <Page width="lg" loading={_formSchemas.loading[formId]}>
       {form && (
         <DatabaseAccess formId={formId} form={form}/>
       )}
@@ -56,8 +57,8 @@ export const DatabaseAccess = ({
 
   const requestInConstToFixTsInference = () => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === formId))
-  const _get = useFetchers(requestInConstToFixTsInference)
-  const _remove = useAsync(api.access.remove)
+  const _get = useFetcher(requestInConstToFixTsInference)
+  const _remove = useAsync(api.access.remove, {requestKey: _ => _[0]})
 
   const refresh = () => {
     _get.fetch({force: true, clean: false})

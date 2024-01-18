@@ -19,11 +19,12 @@ import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {NavLink} from 'react-router-dom'
 import {Meal_VisitMonitoringOptions} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
 import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
-import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
 import {Page} from '@/shared/Page'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 export interface DashboardPageProps {
   filters: Record<string, string[]>
@@ -40,7 +41,8 @@ export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<Meal_VisitM
 
 export const MealVisitDashboard = () => {
   const ctx = useMealVisitContext()
-  const schemaCtx = useKoboSchemaContext()
+  const {langIndex, schema: schemas} = useKoboSchemasContext()
+  const schema = schemas.meal_visitMonitoring!
   const {m, formatDateTime, formatDate} = useI18n()
   const [optionFilter, setOptionFilters] = useState<Record<string, string[] | undefined>>({})
 
@@ -48,19 +50,19 @@ export const MealVisitDashboard = () => {
     return DataFilter.makeShape<KoboAnswer<Meal_VisitMonitoring>>({
       oblast: {
         icon: 'location_on',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdro').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('mdro').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.office,
         getValue: _ => _.mdro,
       },
       focalPoint: {
         icon: 'person',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdp').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('mdp').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.focalPoint,
         getValue: _ => _.mdp,
       },
       donor: {
         icon: 'handshake',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdd_001').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('mdd_001').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.donor,
         getValue: _ => _.mdd_001,
         multiple: true,
@@ -68,53 +70,53 @@ export const MealVisitDashboard = () => {
       activity: {
         multiple: true,
         icon: 'edit_calendar',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('mdt').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('mdt').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.project,
         getValue: _ => _.mdt,
       },
       nfi: {
         // icon: 'edit_calendar',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pan').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('pan').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.mealMonitoringVisit.nfiDistribution,
         getValue: _ => _.pan,
         multiple: true,
       },
       ecrec: {
         // icon: 'edit_calendar',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pae').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('pae').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.mealMonitoringVisit.ecrec,
         getValue: _ => _.pae,
       },
       shelter: {
         // icon: 'edit_calendar',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pas').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('pas').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.mealMonitoringVisit.shelter,
         getValue: _ => _.pas,
       },
       lau: {
         // icon: 'edit_calendar',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pal').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('pal').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.mealMonitoringVisit.lau,
         getValue: _ => _.pal,
       },
       protection: {
         // icon: 'edit_calendar',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pap').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('pap').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.mealMonitoringVisit.protection,
         getValue: _ => _.pap,
       },
       eore: {
         // icon: 'edit_calendar',
-        getOptions: () => schemaCtx.schemaHelper.getOptionsByQuestionName('pao').map(_ => ({value: _.name, label: _.label[schemaCtx.langIndex]})),
+        getOptions: () => schema.schemaHelper.getOptionsByQuestionName('pao').map(_ => ({value: _.name, label: _.label[langIndex]})),
         label: m.mealMonitoringVisit.eore,
         getValue: _ => _.pao,
       },
     })
-  }, [schemaCtx])
+  }, [schema])
 
   const data = useMemo(() => {
-    return map(ctx.fetcherAnswers.entity, _ => seq(DataFilter.filterData(_, filterShape, optionFilter)))
-  }, [ctx.fetcherAnswers.entity, optionFilter, filterShape])
+    return map(ctx.fetcherAnswers.get, _ => seq(DataFilter.filterData(_, filterShape, optionFilter)))
+  }, [ctx.fetcherAnswers.get, optionFilter, filterShape])
 
   return (
     <Page
@@ -135,8 +137,8 @@ export const MealVisitDashboard = () => {
               sx={{marginTop: '-6px'}}
               defaultValue={value ?? [undefined, undefined]}
               onChange={onChange}
-              min={ctx.fetcherPeriod.entity?.start}
-              max={ctx.fetcherPeriod.entity?.end}
+              min={ctx.fetcherPeriod.get?.start}
+              max={ctx.fetcherPeriod.get?.end}
             />}
           </DebouncedInput>
         }
@@ -213,7 +215,7 @@ export const MealVisitDashboard = () => {
                 <Lazy deps={[data]} fn={() => data.map(row => ({
                   id: row.id,
                   title: <>
-                    {schemaCtx.translate.choice('mdp', row.mdp)}
+                    {schema.translate.choice('mdp', row.mdp)}
                     {/*<AAIconBtn>chevron_right</AAIconBtn>*/}
                   </>,
                   date: row.mdd ?? row.end,

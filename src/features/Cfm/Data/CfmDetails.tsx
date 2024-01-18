@@ -229,7 +229,7 @@ export const CfmDetails = ({entry}: {
       {canEdit && (
         <Box sx={{display: 'flex', justifyContent: 'center'}}>
           <Modal
-            loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(entry.formId, entry.id))}
+            loading={ctx.asyncRemove.loading[cfmMakeEditRequestKey(entry.formId, entry.id)]}
             content={m._cfm.deleteWarning}
             onConfirm={() => ctx.asyncRemove.call({formId: entry.formId, answerId: entry.id}).then(() => navigate(cfmIndex.siteMap.data))}
             title={m.shouldDelete}

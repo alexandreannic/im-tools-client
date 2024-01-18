@@ -1,10 +1,9 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/Database/KoboTable/useKoboSchema'
+import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/KoboSchema/useKoboSchema'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {UseAsync, useAsync} from '@/shared/hook/useAsync'
+import {useAsync, UseAsyncMultiple, UseAsyncSimple} from '@/shared/hook/useAsync'
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useEffectFn, UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboIndex} from '@/KoboIndex'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
@@ -20,7 +19,7 @@ import {Seq, seq} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternal'
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {useI18n} from '@/core/i18n'
-import {ToastRef} from 'mui-extension/lib/Toast/Toast'
+import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,
@@ -79,16 +78,16 @@ export interface CfmContext {
   schemaExternal: UseKoboSchema,
   translateExternal: ReturnType<typeof getKoboTranslations>,
   translateInternal: ReturnType<typeof getKoboTranslations>,
-  updateTag: UseAsync<(_: {
+  updateTag: UseAsyncMultiple<(_: {
     formId: KoboId,
     answerId: KoboAnswerId,
     key: keyof KoboMealCfmTag,
     value: any
-  }) => Promise<void>>
-  asyncRemove: UseAsync<(_: {
+  }) => Promise<void>, KoboId>
+  asyncRemove: UseAsyncMultiple<(_: {
     formId: KoboId,
     answerId: KoboAnswerId
-  }) => Promise<void>>
+  }) => Promise<void>, KoboId>
   users: UseFetcher<ApiSdk['user']['search']>
   data: UseFetcher<() => Promise<{
     [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal, KoboMealCfmTag>[]
@@ -160,7 +159,7 @@ export const CfmProvider = ({
 
   const mappedData = useMemo(() => {
     const res: CfmData[] = []
-    data.entity?.[CfmDataSource.External].forEach(_ => {
+    data.get?.[CfmDataSource.External].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride
       res.push({
         category,
@@ -177,7 +176,7 @@ export const CfmProvider = ({
         ..._,
       })
     })
-    data?.entity?.[CfmDataSource.Internal].forEach(_ => {
+    data?.get?.[CfmDataSource.Internal].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride ?? _.feedback_type
       res.push({
         project: DrcProjectHelper.searchByCode(_.project_code === 'Other' ? _.project_code_specify : _.project_code),
@@ -222,7 +221,7 @@ export const CfmProvider = ({
       tags: {[params.key]: params.value}
     }).then(() => {
       const formName = formIdMapping[params.formId]
-      data.setEntity(prev => prev ? ({
+      data.set(prev => prev ? ({
         ...prev,
         [formName]: prev[formName].map(_ => {
           if (_.id === params.answerId) {

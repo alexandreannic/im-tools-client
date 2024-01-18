@@ -3,7 +3,7 @@ import {WfpDeduplicationData} from '@/features/WfpDeduplication/WfpDeduplication
 import {Sidebar, SidebarBody, SidebarHr, SidebarItem} from '@/shared/Layout/Sidebar'
 import {BtnUploader} from 'mui-extension'
 import React, {useMemo} from 'react'
-import {useAsync, useEffectFn} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useIpToast} from '@/core/useToast'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -13,6 +13,7 @@ import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {IpBtn} from '@/shared/Btn'
 import {HashRouter as Router, NavLink, Route, Routes} from 'react-router-dom'
 import {WfpDeduplicationAccess} from '@/features/WfpDeduplication/WfpDeduplicationAccess'
+import {useAsync} from '@/shared/hook/useAsync'
 
 export const wfpDeduplicationIndex = {
   basePath: '/wfp-deduplication',
@@ -32,8 +33,8 @@ const WpfDeduplicationSidebar = () => {
   const {toastHttpError} = useIpToast()
   const path = (page: string) => '' + page
 
-  useEffectFn(_uploadTaxIdMapping.getError(), toastHttpError)
-  useEffectFn(_refreshData.getError(), toastHttpError)
+  useEffectFn(_uploadTaxIdMapping.error, toastHttpError)
+  useEffectFn(_refreshData.error, toastHttpError)
 
   return (
     <Sidebar headerId="app-header">
@@ -44,7 +45,7 @@ const WpfDeduplicationSidebar = () => {
               <BtnUploader
                 fullWidth
                 variant="outlined"
-                uploading={_uploadTaxIdMapping.getLoading()}
+                uploading={_uploadTaxIdMapping.loading}
                 onUpload={_uploadTaxIdMapping.call}
                 onDelete={console.log}
                 msg={{
@@ -55,7 +56,7 @@ const WpfDeduplicationSidebar = () => {
               />
             </SidebarItem>
             <SidebarItem>
-              <IpBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.getLoading()}>
+              <IpBtn variant="outlined" icon="refresh" onClick={_refreshData.call} loading={_refreshData.loading}>
                 {m.refresh}
               </IpBtn>
             </SidebarItem>

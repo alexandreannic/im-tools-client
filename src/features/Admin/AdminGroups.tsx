@@ -1,5 +1,4 @@
 import {Page} from '@/shared/Page'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
 import {Sheet} from '@/shared/Sheet/Sheet'
@@ -18,6 +17,7 @@ import {AdminGroupAccessForm} from '@/features/Admin/AdminGroupAccessForm'
 import {BasicDialog} from '@/shared/BasicDialog'
 import {UUID} from '@/core/type'
 import {Utils} from '@/utils/utils'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 interface GoupForm {
   name: string
@@ -60,7 +60,7 @@ export const AdminGroups = () => {
     <Page width="lg">
       <Panel>
         <Sheet
-          data={fetcher.entity}
+          data={fetcher.get}
           loading={fetcher.loading}
           id="group"
           header={
@@ -141,14 +141,14 @@ export const AdminGroups = () => {
                 >
                   <IpIconBtn size="small">edit</IpIconBtn>
                 </Modal>
-                <IpIconBtn size="small" onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading.has(_.id)}>delete</IpIconBtn>
+                <IpIconBtn size="small" onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading[_.id]}>delete</IpIconBtn>
               </>
             },
           ]}
         />
         <BasicDialog
           open={!!selectedGroupId}
-          loading={asyncItemCreate.loading.size > 0}
+          loading={asyncItemCreate.loading}
           onClose={() => setSelectedGroupId(undefined)}
           confirmDisabled={!accessForm.formState.isValid}
           onConfirm={(e) => accessForm.handleSubmit(f => {

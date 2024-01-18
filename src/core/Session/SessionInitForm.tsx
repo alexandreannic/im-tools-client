@@ -6,11 +6,12 @@ import {useI18n} from '@/core/i18n'
 import {Box} from '@mui/material'
 import {IpBtn} from '@/shared/Btn'
 import {useEffect, useState} from 'react'
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {Modal} from 'mui-extension/lib/Modal'
 import {DrcOffice} from '@/core/drcUa'
+import {useFetcher} from '@/shared/hook/useFetcher'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 
 export const SessionInitForm = ({
   user,
@@ -30,8 +31,8 @@ export const SessionInitForm = ({
   useEffectFn(_updateUser.error, toastHttpError)
 
   useEffect(() => {
-    map(_updateUser.entity?.drcOffice, _ => onSelectOffice(_ as DrcOffice))
-  }, [_updateUser.entity])
+    map(_updateUser.get?.drcOffice, _ => onSelectOffice(_ as DrcOffice))
+  }, [_updateUser.get])
 
   return (
     <Box sx={{p: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>

@@ -1,13 +1,13 @@
-import {Page} from '../../../shared/Page'
-import {useAppSettings} from '../../../core/context/ConfigContext'
-import {kobo} from '../../../KoboIndex'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
+import {Page} from '@/shared/Page'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {kobo} from '@/KoboIndex'
 import {useEffect, useState} from 'react'
 import {KoboFormListButton} from './KoboFormList'
-import {UUID} from '../../../core/type'
+import {UUID} from '@/core/type'
 import {useFetchers} from '@/shared/hook/useFetchers'
 import {map} from '@alexandreannic/ts-utils'
 import {Box} from '@mui/material'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const DatabaseSources = () => {
   const {api} = useAppSettings()
@@ -29,10 +29,10 @@ export const DatabaseSources = () => {
 
   return (
     <Page>
-      {_allKoboForm.entity && (
+      {_allKoboForm.get && (
         <>
-          <KoboFormListButton forms={_allKoboForm.entity} onChange={_ => setMainSource(_)}/>
-          {map(_sources.get(mainSource!), source => (
+          <KoboFormListButton forms={_allKoboForm.get} onChange={_ => setMainSource(_)}/>
+          {map(_sources.get[mainSource!], source => (
             <>
               {source.content.survey.map(q => (
                 <Box key={q.name}>{q.name}</Box>

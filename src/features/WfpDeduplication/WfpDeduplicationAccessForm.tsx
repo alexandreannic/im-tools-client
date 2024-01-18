@@ -16,6 +16,7 @@ import {DrcOffice} from '@/core/drcUa'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Utils} from '@/utils/utils'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 interface Form extends IAccessForm {
   drcOfficesDataFilter?: DrcOffice[]
@@ -35,10 +36,10 @@ export const WfpDeduplicationAccessForm = ({
   const _addAccess = useAsync(api.access.create)
   const requestInConstToFixTsInference = (databaseId: KoboId) => api.access.search({featureId: AppFeatureId.kobo_database})
     .then(_ => _.filter(_ => _.params?.koboFormId === databaseId))
-  const _access = useFetchers(requestInConstToFixTsInference)
+  const _access = useFetcher(requestInConstToFixTsInference)
 
-  useEffectFn(_addAccess.errors.size, _ => _ > 1 && toastHttpError)
-  useEffectFn(_access.getError(), toastHttpError)
+  useEffectFn(_addAccess.error, toastHttpError)
+  useEffectFn(_access.error, toastHttpError)
 
   const accessForm = useForm<Form>()
 
@@ -52,7 +53,7 @@ export const WfpDeduplicationAccessForm = ({
 
   return (
     <Modal
-      loading={_addAccess.loading.size > 0}
+      loading={_addAccess.loading}
       confirmDisabled={!accessForm.formState.isValid}
       onConfirm={(_, close) => accessForm.handleSubmit(_ => {
         submit(_)

@@ -1,7 +1,6 @@
 import {Page} from '@/shared/Page'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {useSession} from '@/core/Session/SessionContext'
@@ -12,6 +11,7 @@ import {Txt} from 'mui-extension'
 import {Box, Switch} from '@mui/material'
 import {useRouter} from 'next/router'
 import {seq} from '@alexandreannic/ts-utils'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const AdminUsers = () => {
   const {api, conf} = useAppSettings()
@@ -33,7 +33,7 @@ export const AdminUsers = () => {
     setSession(session)
   }
 
-  const filteredData = _users.entity
+  const filteredData = _users.get
 
   return (
     <Page width="lg">
@@ -81,14 +81,14 @@ export const AdminUsers = () => {
               head: m.drcJob,
               render: _ => _.drcJob,
               type: 'select_one',
-              options: () => seq(_users.entity?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+              options: () => seq(_users.get?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
               id: 'drcOffice',
               type: 'select_one',
               head: m.drcOffice,
               render: _ => _.drcOffice,
-              options: () => seq(_users.entity?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+              options: () => seq(_users.get?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
               type: 'select_one',

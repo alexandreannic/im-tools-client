@@ -96,14 +96,14 @@ export const ShelterDashboard = () => {
         icon: drcMaterialIcons.disability,
         label: m.vulnerabilities,
         getValue: _ => _.nta?.hh_char_dis_select,
-        getOptions: () => ctx.nta.helper.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]})),
+        getOptions: () => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]})),
         multiple: true,
       },
       displacementStatus: {
         icon: drcMaterialIcons.displacementStatus,
         label: m.displacement,
         getValue: _ => _.nta?.ben_det_res_stat,
-        getOptions: () => ctx.nta.helper.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
+        getOptions: () => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
       },
     })
   }, [ctx.data.mappedData])

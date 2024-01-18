@@ -3,13 +3,14 @@ import {DRCLogo} from '@/shared/logo/logo'
 import {Txt} from 'mui-extension'
 import React from 'react'
 import {useMsal} from '@azure/msal-react'
-import {useAsync, useEffectFn} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useIpToast} from '@/core/useToast'
 import {mapPromise} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UserSession} from '@/core/sdk/server/session/Session'
 import {CenteredContent} from '@/shared/CenteredContent'
+import {useAsync} from '@/shared/hook/useAsync'
 
 export const SessionLoginForm = ({
   setSession
@@ -30,7 +31,7 @@ export const SessionLoginForm = ({
     promise: api.session.login,
     mapThen: setSession,
   }))
-  useEffectFn(_saveSession.getError(), () => toastError(m.youDontHaveAccess))
+  useEffectFn(_saveSession.error, () => toastError(m.youDontHaveAccess))
 
   return (
     <CenteredContent>

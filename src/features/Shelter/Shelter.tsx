@@ -9,7 +9,6 @@ import {AppFeatureId, appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {ShelterTable} from '@/features/Shelter/Data/ShelterTable'
 import {ShelterProvider} from '@/features/Shelter/ShelterContext'
-import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
@@ -20,10 +19,9 @@ import {useShelterData} from '@/features/Shelter/useShelterData'
 import {seq} from '@alexandreannic/ts-utils'
 import {Access} from '@/core/sdk/server/access/Access'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
-import {PagePlaceholder} from '@/shared/Page'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
-import {useFetcher} from '@/shared/hook/useFetcher'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 const relatedKoboForms: KoboFormName[] = [
   'shelter_nta',
@@ -80,6 +78,7 @@ export const ShelterWithAccess = () => {
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
   const {toastHttpError} = useIpToast()
+  const schemaContext = useKoboSchemasContext()
 
   const {access, allowedOffices} = useMemo(() => {
     const dbAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))
@@ -92,41 +91,43 @@ export const ShelterWithAccess = () => {
     }
   }, [session, accesses])
 
-  const fetcherSchema = useFetcher(async () => {
-    if (!access) return
-    const [ta, nta] = await Promise.all([
-      api.koboApi.getForm({id: KoboIndex.byName('shelter_ta').id}),
-      api.koboApi.getForm({id: KoboIndex.byName('shelter_nta').id}),
-    ])
-    return {ta, nta}
-  })
+  // const fetcherSchema = useFetcher(async () => {
+  //   if (!access) return
+  //   const [ta, nta] = await Promise.all([
+  //     api.koboApi.getForm({id: KoboIndex.byName('shelter_ta').id}),
+  //     api.koboApi.getForm({id: KoboIndex.byName('shelter_nta').id}),
+  //   ])
+  //   return {ta, nta}
+  // })
 
   const fetcherData = useShelterData()
 
-  useEffectFn(fetcherSchema.error, toastHttpError)
+  // useEffectFn(fetcherSchema.error, toastHttpError)
 
   useEffect(() => {
+    schemaContext.fetchers.fetch({}, 'shelter_ta')
+    schemaContext.fetchers.fetch({}, 'shelter_nta')
     fetcherData.fetchAll()
-    fetcherSchema.fetch()
+    // fetcherSchema.fetch()
   }, [])
+
+  const schemaNta = schemaContext.schema.shelter_nta
 
   return (
     <Router>
       <Layout
-        loading={fetcherSchema.loading}
+        loading={schemaContext.fetchers.anyLoading}
         title={appFeaturesIndex.shelter.name}
         sidebar={<ShelterSidebar/>}
         header={<AppHeader id="app-header"/>}
       >
-        {fetcherSchema.loading ? (
-          <PagePlaceholder width="full"/>
-        ) : fetcherSchema.entity && (
+        {schemaContext.schema.shelter_nta && schemaContext.schema.shelter_ta && (
           <ShelterProvider
             access={access}
             data={fetcherData}
             allowedOffices={allowedOffices}
-            schemaNta={fetcherSchema.entity.nta}
-            schemaTa={fetcherSchema.entity.ta}
+            schemaNta={schemaContext.schema.shelter_nta}
+            schemaTa={schemaContext.schema.shelter_ta}
           >
             <Routes>
               <Route index element={<Navigate to={shelterIndex.siteMap.data}/>}/>

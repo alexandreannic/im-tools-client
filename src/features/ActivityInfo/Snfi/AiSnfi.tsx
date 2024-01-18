@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {IpInput} from '@/shared/Input/Input'
 import {format, subMonths} from 'date-fns'
 import {Period, PeriodHelper} from '@/core/type'
@@ -14,6 +13,7 @@ import {IpBtn} from '@/shared/Btn'
 import {useIpToast} from '@/core/useToast'
 import {useAsync} from '@/shared/hook/useAsync'
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const AiSnfi = () => {
   const {api} = useAppSettings()
@@ -36,7 +36,7 @@ export const AiSnfi = () => {
     requestKey: ([i]) => i
   })
 
-  // console.log(fetcher.entity?.map(_ => _.nta).compact().map(_ => {
+  // console.log(fetcher.get?.map(_ => _.nta).compact().map(_ => {
   //   const a = Utils.add(
   //     _.total_apt_damage_light,
   //     _.total_apt_damage_medium,
@@ -60,8 +60,8 @@ export const AiSnfi = () => {
                 variant="contained"
                 sx={{ml: 'auto'}}
                 onClick={() => {
-                  if (!fetcher.entity) return
-                  _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
+                  if (!fetcher.get) return
+                  _submit.call('all', fetcher.get.map(_ => _.requestBody)).catch(toastHttpError)
                 }}
               >
                 {m.submitAll}
@@ -70,7 +70,7 @@ export const AiSnfi = () => {
           }
           defaultLimit={100}
           id="ai-shelter"
-          data={fetcher.entity}
+          data={fetcher.get}
           loading={fetcher.loading}
           columns={[
             {

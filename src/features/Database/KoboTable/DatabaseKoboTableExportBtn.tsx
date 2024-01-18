@@ -1,4 +1,3 @@
-import {useAsync} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray, GenerateXlsFromArrayParams} from '@/shared/Sheet/util/generateXLSFile'
 import {Utils} from '@/utils/utils'
 import {Enum, map, mapFor, seq} from '@alexandreannic/ts-utils'
@@ -9,7 +8,8 @@ import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {IpIconBtn, IpIconBtnProps} from '@/shared/IconBtn'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {KoboTranslateChoice, KoboTranslateQuestion, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {KoboTranslateChoice, KoboTranslateQuestion, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {useAsync} from '@/shared/hook/useAsync'
 
 const renderExportSchema = <T extends KoboMappedAnswer>({
   schema,
@@ -154,6 +154,6 @@ export const DatabaseKoboTableExportBtn = <T extends KoboMappedAnswer, >({
     }
   }
   return (
-    <IpIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.getLoading()} onClick={exportToCSV} children="download" {...props}/>
+    <IpIconBtn tooltip={m.downloadAsXLS} loading={_generateXLSFromArray.loading} onClick={exportToCSV} children="download" {...props}/>
   )
 }

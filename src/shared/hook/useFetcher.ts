@@ -14,11 +14,11 @@ type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 type FetcherResult<T extends Func> = ThenArg<ReturnType<T>>
 
 export type UseFetcher<F extends Func<Promise<FetcherResult<F>>>, E = any> = {
-  entity?: FetcherResult<F>,
+  get?: FetcherResult<F>,
+  set: Dispatch<SetStateAction<FetcherResult<F> | undefined>>,
   loading: boolean,
   error?: E
   fetch: Fetch<F>,
-  setEntity: Dispatch<SetStateAction<FetcherResult<F> | undefined>>,
   clearCache: () => void,
 };
 
@@ -27,8 +27,13 @@ export type UseFetcher<F extends Func<Promise<FetcherResult<F>>>, E = any> = {
  */
 export const useFetcher = <F extends Func<Promise<any>>, E = any>(
   fetcher: F,
-  initialValue?: FetcherResult<F>,
-  mapError: (_: any) => E = _ => _
+  {
+    initialValue,
+    mapError = _ => _,
+  }: {
+    initialValue?: FetcherResult<F>,
+    mapError?: (_: any) => E
+  } = {}
 ): UseFetcher<F, E> => {
   const [entity, setEntity] = useState<FetcherResult<F> | undefined>(initialValue)
   const [error, setError] = useState<E | undefined>()
@@ -36,7 +41,6 @@ export const useFetcher = <F extends Func<Promise<any>>, E = any>(
   const fetch$ = useRef<Promise<FetcherResult<F>>>()
 
   const fetch = ({force = true, clean = true}: FetchParams = {}, ...args: any[]): Promise<FetcherResult<F>> => {
-    fetch$.current = undefined
     if (!force) {
       if (fetch$.current) {
         return fetch$.current!
@@ -44,6 +48,8 @@ export const useFetcher = <F extends Func<Promise<any>>, E = any>(
       if (entity) {
         return Promise.resolve(entity)
       }
+    } else {
+      fetch$.current = undefined
     }
     if (clean) {
       setError(undefined)
@@ -75,12 +81,12 @@ export const useFetcher = <F extends Func<Promise<any>>, E = any>(
   }
 
   return {
-    entity,
+    get: entity,
+    set: setEntity,
     loading,
     error,
     // TODO(Alex) not sure the error is legitimate
     fetch: fetch as any,
-    setEntity,
     clearCache
   }
 }

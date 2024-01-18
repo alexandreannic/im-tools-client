@@ -8,10 +8,11 @@ import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React, {useEffect, useState} from 'react'
 import {Messages} from '@/core/i18n/localization/en'
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useI18n} from '@/core/i18n'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 interface MinusRusData {
   aircraft: number
@@ -112,10 +113,6 @@ export const MinusRusChartPanel = () => {
     fetcherMinusRus.fetch()
   }, [])
 
-  useEffect(() => {
-    console.log(fetcherMinusRus.entity)
-  }, [fetcherMinusRus.entity])
-
   useEffectFn(fetcherMinusRus.error, () => toastError('Failed to parse minusrus.com'))
 
   return (
@@ -146,9 +143,9 @@ export const MinusRusChartPanel = () => {
         />
       </Box>
 
-      <Lazy deps={[fetcherMinusRus.entity, minusRusDateFormat, minusRusCurveType, minusRusCurves]} fn={() => {
-        if (!fetcherMinusRus.entity) return
-        const gb = fetcherMinusRus.entity?.sortByNumber(_ => _.date.getTime()).groupBy(_ => format(_.date, minusRusDateFormat))
+      <Lazy deps={[fetcherMinusRus.get, minusRusDateFormat, minusRusCurveType, minusRusCurves]} fn={() => {
+        if (!fetcherMinusRus.get) return
+        const gb = fetcherMinusRus.get?.sortByNumber(_ => _.date.getTime()).groupBy(_ => format(_.date, minusRusDateFormat))
         const res = Enum.entries(gb).map(([k, v]) => {
           return {
             name: k,

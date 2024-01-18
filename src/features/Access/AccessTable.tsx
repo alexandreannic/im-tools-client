@@ -3,13 +3,13 @@ import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
 import React, {ReactNode, useEffect} from 'react'
 import {useI18n} from '@/core/i18n'
 import {UUID} from '@/core/type'
-import {useAsync, UseAsync} from '@/shared/hook/useAsync'
-import {UseFetchersSimple} from '@/shared/hook/useFetchers'
+import {useAsync, UseAsyncMultiple, UseAsyncSimple} from '@/shared/hook/useAsync'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {UseFetcher} from '@/shared/hook/useFetcher'
 
 export const AccessTable = ({
   isAdmin,
@@ -20,8 +20,8 @@ export const AccessTable = ({
   asyncRemove,
 }: {
   isAdmin?: boolean
-  fetcherData: UseFetchersSimple<() => Promise<Access[]>>
-  asyncRemove: UseAsync<(_: UUID) => Promise<any>>
+  fetcherData: UseFetcher<() => Promise<Access[]>>
+  asyncRemove: UseAsyncMultiple<(_: UUID) => Promise<any>>
   renderParams?: (_: any) => ReactNode
   onRemoved?: (_: UUID) => void
   // data: Access[] | undefined
@@ -42,7 +42,7 @@ export const AccessTable = ({
       getRenderRowKey={_ => _.id}
       loading={fetcherData.loading}
       header={header}
-      data={fetcherData.get()}
+      data={fetcherData.get}
       columns={[
         {
           width: 80,
@@ -58,14 +58,14 @@ export const AccessTable = ({
           head: m.drcJob,
           render: _ => _.drcJob,
           type: 'select_one',
-          options: () => seq(fetcherData.get()?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+          options: () => seq(fetcherData.get?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
           id: 'drcOffice',
           head: m.drcOffice,
           render: _ => _.drcOffice,
           type: 'select_one',
-          options: () => seq(fetcherData.get()?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
+          options: () => seq(fetcherData.get?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
         },
         {
           id: 'email',
@@ -110,7 +110,7 @@ export const AccessTable = ({
           head: '',
           align: 'right',
           render: (_: Access) => (
-            <TableIconBtn loading={asyncRemove.loading.get(_.id)} onClick={() => asyncRemove.call(_.id).then(() => onRemoved?.(_.id))} children="delete"/>
+            <TableIconBtn loading={asyncRemove.loading[_.id]} onClick={() => asyncRemove.call(_.id).then(() => onRemoved?.(_.id))} children="delete"/>
           ),
         } as const] : [],
       ]}

@@ -1,4 +1,4 @@
-import {useAsync, useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {ReactElement, useEffect, useState} from 'react'
 import {Modal, Txt} from 'mui-extension'
@@ -8,6 +8,8 @@ import {useFetchers} from '@/shared/hook/useFetchers'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {KoboFormCreate} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {useIpToast} from '@/core/useToast'
+import {useFetcher} from '@/shared/hook/useFetcher'
+import {useAsync} from '@/shared/hook/useAsync'
 
 
 export const DatabaseNew = ({
@@ -27,21 +29,21 @@ export const DatabaseNew = ({
 
   useEffectFn(_server.error, toastHttpError)
   // useEffectFn(_form.error, toastHttpError)
-  useEffectFn(_create.getError(), toastHttpError)
+  useEffectFn(_create.error, toastHttpError)
 
   useEffect(() => {
     _server.fetch()
   }, [])
 
   useEffect(() => {
-    if (_server.entity) {
-      _server.entity.forEach(_ => _form.fetch({}, _.id))
+    if (_server.get) {
+      _server.get.forEach(_ => _form.fetch({}, _.id))
     }
-  }, [_server.entity])
+  }, [_server.get])
 
   return (
     <Modal
-      loading={_server.loading || _form.loading || _create.getLoading()}
+      loading={_server.loading || _form.anyLoading || _create.loading}
       title={m._koboDatabase.registerNewForm}
       confirmLabel={m.register}
       onConfirm={(event, close) => {
@@ -53,7 +55,7 @@ export const DatabaseNew = ({
       }}
       content={
         <>
-          {_server.entity?.map(server =>
+          {_server.get?.map(server =>
             <Box
               key={server.id}
               sx={{
@@ -64,7 +66,7 @@ export const DatabaseNew = ({
             >
               < Txt size="big" bold sx={{mb: .5}}>{server.url.replace('https://', '')}</Txt>
               <ScRadioGroup dense value={selectedForm?.uid}>
-                {_form.get(server.id)?.filter(_ => _.has_deployment).map(form =>
+                {_form.get[server.id]?.filter(_ => _.has_deployment).map(form =>
                   <ScRadioGroupItem
                     dense
                     key={form.uid}

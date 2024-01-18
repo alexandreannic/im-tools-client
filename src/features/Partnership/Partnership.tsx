@@ -10,12 +10,15 @@ import {PartnershipProvider} from '@/features/Partnership/PartnershipContext'
 import {PartnershipDashboard} from '@/features/Partnership/Dashboard/PartnershipDashboard'
 import {KoboFormName, KoboIndex} from '@/KoboIndex'
 import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {useIpToast} from '@/core/useToast'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {Tooltip} from '@mui/material'
 import {mpcaIndex} from '@/features/Mpca/Mpca'
-import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
+import {KoboSchemaProvider} from '@/features/KoboSchema/KoboSchemaContext'
+import {useFetcher} from '@/shared/hook/useFetcher'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 
 const relatedKoboForms: KoboFormName[] = [
   'partnership_partnersDatabase',
@@ -29,16 +32,13 @@ export const partnershipIndex = {
     data: '/data',
     // access: '/access',
     dashboard: '/dashboard',
-    koboPartnersDatabase: '/kobo-partners-database',
-    koboAssessment: '/kobo-assessment',
-    koboInitialQuestionnaire: '/kobo-initial-questionnaire',
+    form: (id = ':id') => '/form/' + id,
   }
 }
 
 const PartnershipSidebar = () => {
   const path = (page: string) => '' + page
   const {m} = useI18n()
-  const {conf} = useAppSettings()
   return (
     <Sidebar>
       <SidebarBody>
@@ -54,18 +54,9 @@ const PartnershipSidebar = () => {
         {/*</NavLink>*/}
         <SidebarHr/>
         <SidebarSection title={m.koboForms}>
-          {relatedKoboForms.map(_ => {
-            const name = KoboIndex.byName(_).name
-            return (
-              <Tooltip key={_} title={name} placement="right">
-                <NavLink to={path(mpcaIndex.siteMap.form(_))}>
-                  {({isActive, isPending}) => (
-                    <SidebarItem size="small" active={isActive} icon="calendar_view_month">{KoboIndex.byName(name).parsed.name}</SidebarItem>
-                  )}
-                </NavLink>
-              </Tooltip>
-            )
-          })}
+          {relatedKoboForms.map(_ =>
+            <SidebarKoboLink size="small" key={_} path={path(mpcaIndex.siteMap.form(_))} name={_}/>
+          )}
         </SidebarSection>
       </SidebarBody>
     </Sidebar>
@@ -73,32 +64,6 @@ const PartnershipSidebar = () => {
 }
 
 export const Partnership = () => {
-  const {api} = useAppSettings()
-  const {toastHttpError} = useIpToast()
-
-  const _schemas = useFetcher(async () => {
-    const [
-      partnersDatabase,
-      // assessment,
-      // initialQuestionnaire,
-    ] = await Promise.all([
-      api.koboApi.getForm({id: KoboIndex.byName('partnership_partnersDatabase').id}),
-      // api.koboApi.getForm({id: KoboIndex.byName('partnership_assessment').id}),
-      // api.koboApi.getForm({id: KoboIndex.byName('partnership_initialQuestionnaire').id}),
-    ])
-    return {
-      partnersDatabase,
-      // assessment,
-      // initialQuestionnaire,
-    }
-  })
-
-  useEffect(() => {
-    _schemas.fetch()
-  }, [])
-
-  useEffectFn(_schemas.error, toastHttpError)
-
   return (
     <Router>
       <Layout
@@ -106,23 +71,15 @@ export const Partnership = () => {
         sidebar={<PartnershipSidebar/>}
         header={<AppHeader id="app-header"/>}
       >
-        {_schemas.entity && (
-          <KoboSchemaProvider schema={_schemas.entity.partnersDatabase}>
-            <PartnershipProvider>
-              <Routes>
-                <Route index element={<Navigate to={partnershipIndex.siteMap.dashboard}/>}/>
-                <Route path={partnershipIndex.siteMap.dashboard} element={<PartnershipDashboard/>}/>
-                {/*<Route path={partnershipModule.siteMap.data} element={<PartnershipDatabase/>}/>*/}
-                <Route path={partnershipIndex.siteMap.koboPartnersDatabase}
-                       element={<DatabaseTable formId={KoboIndex.byName('partnership_partnersDatabase').id} schema={_schemas.entity.partnersDatabase}/>}/>
-                {/*<Route path={partnershipModule.siteMap.koboAssessment}*/}
-                {/*       element={<DatabaseTable formId={KoboIndex.byName('partnership_assessment').id} schema={_schemas.entity.assessment}/>}/>*/}
-                {/*<Route path={partnershipModule.siteMap.koboInitialQuestionnaire}*/}
-                {/*       element={<DatabaseTable formId={KoboIndex.byName('partnership_initialQuestionnaire').id} schema={_schemas.entity.initialQuestionnaire}/>}/>*/}
-              </Routes>
-            </PartnershipProvider>
-          </KoboSchemaProvider>
-        )}
+        <PartnershipProvider>
+          <Routes>
+            <Route index element={<Navigate to={partnershipIndex.siteMap.dashboard}/>}/>
+            <Route path={partnershipIndex.siteMap.dashboard} element={<PartnershipDashboard/>}/>
+            {relatedKoboForms.map(_ =>
+              <Route key={_} {...getKoboFormRouteProps({path: partnershipIndex.siteMap.form(_), name: _})}/>
+            )}
+          </Routes>
+        </PartnershipProvider>
       </Layout>
     </Router>
   )

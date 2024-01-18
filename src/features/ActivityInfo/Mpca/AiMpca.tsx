@@ -18,8 +18,8 @@ import {useIpToast} from '@/core/useToast'
 import {Txt} from 'mui-extension'
 import {Person} from '@/core/type'
 import {useAsync} from '@/shared/hook/useAsync'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 type AiMpcaBundle = AiBundle<AiMpcaInterface.Type> & {
   // Properties not asked in the AI form
@@ -152,15 +152,15 @@ export const AiMpca = () => {
                 USD to UAH: <b>{conf.uahToUsd}</b>
               </Txt>
               <IpBtn icon="send" variant="contained" loading={_submit.anyLoading} sx={{ml: 'auto'}} onClick={() => {
-                if (!fetcher.entity) return
-                _submit.call(-1, fetcher.entity.filter(_ => !!_.activity.Hromada).map((_, i) => _.requestBody)).catch(toastHttpError)
+                if (!fetcher.get) return
+                _submit.call(-1, fetcher.get.filter(_ => !!_.activity.Hromada).map((_, i) => _.requestBody)).catch(toastHttpError)
               }}>
                 {m.submitAll}
               </IpBtn>
             </Box>
           }
           loading={fetcher.loading}
-          data={fetcher.entity}
+          data={fetcher.get}
           columns={[
             {
               width: 130,

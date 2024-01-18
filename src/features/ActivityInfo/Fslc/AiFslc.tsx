@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {IpInput} from '@/shared/Input/Input'
 import {format, subMonths} from 'date-fns'
 import {PeriodHelper} from '@/core/type'
@@ -13,6 +12,7 @@ import {IpBtn} from '@/shared/Btn'
 import {useIpToast} from '@/core/useToast'
 import {useAsync} from '@/shared/hook/useAsync'
 import {AiFslcData} from '@/features/ActivityInfo/Fslc/aiFslcData'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const AiFslc = () => {
   const {api} = useAppSettings()
@@ -43,15 +43,15 @@ export const AiFslc = () => {
                 variant="contained"
                 sx={{ml: 'auto'}}
                 onClick={() => {
-                  if (!fetcher.entity) return
-                  _submit.call('all', fetcher.entity.map(_ => _.requestBody)).catch(toastHttpError)
+                  if (!fetcher.get) return
+                  _submit.call('all', fetcher.get.map(_ => _.requestBody)).catch(toastHttpError)
                 }}
               >
                 {m.submitAll}
               </IpBtn>
             </>
           }
-          defaultLimit={100} id="ai-fslc" data={fetcher.entity} loading={fetcher.loading} columns={[
+          defaultLimit={100} id="ai-fslc" data={fetcher.get} loading={fetcher.loading} columns={[
           {
             id: 'actions', renderExport: false, width: 120, head: '', render: _ => (
               <>

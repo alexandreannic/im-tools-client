@@ -56,7 +56,7 @@ export const MealVerificationForm = () => {
   const navigate = useNavigate()
 
   const asyncCreate = useAsync(api.mealVerification.create)
-  useEffectFn(asyncCreate.lastError, toastHttpError)
+  useEffectFn(asyncCreate.error, toastHttpError)
 
   const nextStep = () => {
     setActiveStep(_ => _ + 1)
@@ -112,6 +112,7 @@ export const MealVerificationForm = () => {
 
   const activity = useMemoFn(form.watch('activity'), name => mealVerificationActivities.find(_ => _.name === name))
 
+  console.log(form.watch('answerIds')?.length === undefined)
   return (
     <Page>
       <Panel title={m._mealVerif.requestTitle}>
@@ -156,7 +157,7 @@ export const MealVerificationForm = () => {
                   />
                 )}
                 <Box sx={{mb: 1}}>
-                  <NextBtn label={m._mealVerif.selectedNRows(form.watch('answerIds')?.length)}/>
+                  <NextBtn disabled={form.watch('answerIds')?.length === undefined} label={m._mealVerif.selectedNRows(form.watch('answerIds')?.length ?? '-')}/>
                   <BackBtn/>
                 </Box>
               </StepContent>
@@ -221,7 +222,7 @@ export const MealVerificationForm = () => {
                 </RenderRow>
 
                 <Box sx={{mb: 1}}>
-                  <NextBtn label={m.submit} loading={asyncCreate.anyLoading} disabled={!form.formState.isValid} onClick={form.handleSubmit(submit)}/>
+                  <NextBtn label={m.submit} loading={asyncCreate.loading} disabled={!form.formState.isValid} onClick={form.handleSubmit(submit)}/>
                   <BackBtn/>
                 </Box>
               </StepContent>

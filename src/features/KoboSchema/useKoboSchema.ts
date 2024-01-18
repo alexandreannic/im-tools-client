@@ -5,7 +5,7 @@ import {Utils} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Messages} from '@/core/i18n/localization/en'
 import {getKoboLabel} from '@/features/Database/KoboTable/DatabaseKoboTableContent'
-import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/Kobo/KoboSchemaContext'
+import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/KoboSchemaContext'
 
 export type KoboSchemaHelper = ReturnType<typeof buildKoboSchemaHelper>
 
@@ -101,6 +101,7 @@ export const buildKoboSchemaHelper = ({
   return {
     groupsCount: Object.keys(groupSchemas).length,
     groupSchemas,
+    schema: schema,
     sanitizedSchema: sanitizedForm,
     choicesIndex,
     questionIndex,
@@ -145,6 +146,25 @@ export const getKoboTranslations = ({
         // )
       }
       return ''
+    },
+  }
+}
+
+export type KoboSchemaBundle = ReturnType<typeof buildSchemaBundle>
+
+export const buildSchemaBundle = ({m, schema, langIndex = 0}: {m: Messages, schema: KoboApiForm, langIndex?: number}) => {
+  const schemaHelper = buildKoboSchemaHelper({schema: schema, m})
+  const {translateQuestion, translateChoice} = getKoboTranslations({
+    schema: schema,
+    langIndex,
+    questionIndex: schemaHelper.questionIndex,
+  })
+  return {
+    schemaUnsanitized: schema,
+    schemaHelper: schemaHelper,
+    translate: {
+      choice: translateChoice,
+      question: translateQuestion,
     },
   }
 }

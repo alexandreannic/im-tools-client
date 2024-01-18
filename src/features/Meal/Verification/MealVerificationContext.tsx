@@ -1,15 +1,15 @@
 import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {useSession} from '@/core/Session/SessionContext'
-import {UseAsync, useAsync} from '@/shared/hook/useAsync'
+import {useAsync, UseAsyncMultiple} from '@/shared/hook/useAsync'
+import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 
 export interface MealVerificationContext {
   fetcherVerifications: UseFetcher<ApiSdk['mealVerification']['getAll']>
   access: AccessSum,
-  asyncUpdate: UseAsync<ApiSdk['mealVerification']['update']>
+  asyncUpdate: UseAsyncMultiple<ApiSdk['mealVerification']['update']>
 }
 
 const Context = React.createContext({} as MealVerificationContext)

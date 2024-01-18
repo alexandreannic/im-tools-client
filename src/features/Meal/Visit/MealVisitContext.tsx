@@ -1,11 +1,11 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {UseFetcher, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {KoboIndex} from '@/KoboIndex'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {Period} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
+import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 
 export interface MealVisitContext {
   fetcherAnswers: UseFetcher<(filter: Partial<Period>) => Promise<Seq<KoboAnswer<Meal_VisitMonitoring, any>>>>
@@ -37,16 +37,16 @@ export const MealVisitProvider = ({
   const fetcherPeriod = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('meal_visitMonitoring').id))
   const fetcherAnswers = useFetcher(request)
   const answersIndex = useMemo(() => {
-    return seq(fetcherAnswers.entity).groupByFirst(_ => _.id)
-  }, [fetcherAnswers.entity])
+    return seq(fetcherAnswers.get).groupByFirst(_ => _.id)
+  }, [fetcherAnswers.get])
 
   useEffect(() => {
     fetcherPeriod.fetch()
   }, [])
 
   useEffect(() => {
-    map(fetcherPeriod.entity, setPeriodFilter)
-  }, [fetcherPeriod.entity])
+    map(fetcherPeriod.get, setPeriodFilter)
+  }, [fetcherPeriod.get])
 
   useEffect(() => {
     fetcherAnswers.fetch({force: true, clean: false}, periodFilter)

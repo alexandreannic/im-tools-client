@@ -1,5 +1,6 @@
-import {useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {useMap} from '@alexandreannic/react-hooks-lib'
+import {useMap2} from '@/shared/hook/useMap'
 
 export type Func<R = any> = (...args: any[]) => R
 
@@ -14,70 +15,46 @@ type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 
 type FetcherResult<T extends Func> = ThenArg<ReturnType<T>>
 
-// export type UseFetchers<F extends Func<Promise<FetcherResult<F>>>, K extends number | symbol | string = any, E = any> = {
-//   list: FetcherResult<F>[],
-//   loading: (key?: K) => boolean,
-//   get: (key: K) => FetcherResult<F> | undefined,
-//   error: (key: K) => E | undefined
-//   fetch: Fetch<F>,
-//   // setEntity: Dispatch<SetStateAction<FetcherResult<F> | undefined>>,
-//   clearCache: () => void,
-// };
+type Key = number | string
 
-interface BaseReturn<F extends Func<Promise<any>>> {
+export interface UseFetchers<F extends Func<Promise<any>>, K extends Key = any, E = any> {
   fetch: Fetch<F>
-  list: FetcherResult<F>[]
+  getAsArr: FetcherResult<F>[]
+  getAsObj: Partial<Record<K, FetcherResult<F>>>
   clearCache: () => void
-  loading: boolean
-  error?: boolean
-}
-
-export interface UseFetchersMultiple<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> extends BaseReturn<F> {
-  get: (key: K) => FetcherResult<F> | undefined,
-  getLoading: (k: K) => boolean,
-  getError: (k: K) => E
-}
-
-export interface UseFetchersSimple<F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any> extends BaseReturn<F> {
-  get: () => FetcherResult<F> | undefined,
-  getLoading: () => boolean,
-  getError: () => E
+  get: Partial<Record<K, FetcherResult<F>>>
+  loading: Partial<Record<K, boolean>>
+  error: Partial<Record<K, E>>
+  anyLoading: boolean
+  anyError?: boolean
+  lastError?: E
 }
 
 export interface UseFetchersFn {
-  <F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any>(
+  <F extends Func<Promise<any>>, K extends Key = any, E = any>(
     fetcher: F,
     params: {
       mapError?: (_: any) => E,
       requestKey: (_: Parameters<F>) => K,
     }
-  ): UseFetchersMultiple<F, K, E>
-
-  <F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any>(
-    fetcher: F,
-    params?: {
-      mapError?: (_: any) => E,
-      requestKey?: undefined,
-    }
-  ): UseFetchersSimple<F, K, E>
+  ): UseFetchers<F, K, E>
 }
-
-const defaultKey: any = 1
 
 /**
  * Factorize fetching logic which goal is to prevent unneeded fetchs and expose loading indicator + error status.
  */
-export const useFetchers: UseFetchersFn = <F extends Func<Promise<any>>, K extends number | symbol | string = any, E = any>(
+export const useFetchers: UseFetchersFn = <F extends Func<Promise<any>>, K extends Key = any, E = any>(
   fetcher: F,
   {
+    requestKey = undefined as any,
     mapError = (_: any) => _,
-    requestKey = (_: any) => defaultKey,
-  } = {}
+  }
 ) => {
-  const entities = useMap<K, FetcherResult<F>>()
-  const errors = useMap<K, E | undefined>()
-  const loadings = useMap<K, boolean>()
-  const list = useMemo(() => entities.values() ?? [], [entities])
+  const entities = useMap2<K, FetcherResult<F>>()
+  const errors = useMap2<K, E | undefined>()
+  const loadings = useMap2<K, boolean>()
+  const [lastError, setLastError] = useState<E | undefined>()
+  const list = useMemo(() => entities.values ?? [], [entities])
   const fetch$ = useRef<Promise<FetcherResult<F>>>()
 
   const fetch = ({force = true, clean = true}: FetchParams = {}, ...args: Parameters<F>): Promise<FetcherResult<F>> => {
@@ -102,6 +79,7 @@ export const useFetchers: UseFetchersFn = <F extends Func<Promise<any>>, K exten
       })
       .catch((e) => {
         errors.set(key, mapError ? mapError(e) : e)
+        setLastError(e)
         loadings.set(key, false)
         entities.delete(key)
         throw e
@@ -109,19 +87,21 @@ export const useFetchers: UseFetchersFn = <F extends Func<Promise<any>>, K exten
     return fetch$.current
   }
 
-  const clearCache = () => {
+  const clearCache = useCallback(() => {
     entities.clear()
     errors.clear()
     loadings.clear()
-  }
+  }, [entities, errors, loadings,])
 
   return {
-    list,
-    loading: !!loadings.values().find(_ => _),
-    error: errors.size > 0,
-    get: (k?: K) => entities.get(k ? k : defaultKey),
-    getLoading: (k?: K) => loadings.get(k ? k : defaultKey) ?? false,
-    getError: (k?: K) => errors.get(k ? k : defaultKey),
+    getAsArr: list,
+    getAsObj: entities.toObject,
+    get: entities.toObject,
+    loading: loadings.toObject,
+    error: errors.toObject,
+    lastError,
+    anyError: errors.size > 0,
+    anyLoading: !!loadings.values.find(_ => _),
     // TODO(Alex) not sure the error is legitimate
     fetch: fetch as any,
     // setEntity,

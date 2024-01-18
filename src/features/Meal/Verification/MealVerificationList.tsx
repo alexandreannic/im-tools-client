@@ -66,7 +66,7 @@ export const MealVerificationList = () => {
             </>
           }
           id="meal-verification-request"
-          data={ctx.fetcherVerifications.entity}
+          data={ctx.fetcherVerifications.get}
           loading={ctx.fetcherVerifications.loading}
           columns={[
             {
@@ -160,7 +160,7 @@ export const MealVerificationList = () => {
                         close()
                         ctx.fetcherVerifications.fetch({force: true, clean: false})
                       })}
-                      loading={asyncRemove.anyLoading}
+                      loading={asyncRemove.loading}
                     >
                       <TableIconBtn>delete</TableIconBtn>
                     </Modal>

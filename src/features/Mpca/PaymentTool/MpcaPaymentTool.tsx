@@ -5,7 +5,6 @@ import {useI18n} from '@/core/i18n'
 import {Alert, Txt} from 'mui-extension'
 import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {map} from '@alexandreannic/ts-utils'
@@ -16,6 +15,8 @@ import {Grid} from '@mui/material'
 import {ListRow} from '@/shared/ListRow'
 import {IpBtn} from '@/shared/Btn'
 import {TableImg} from '@/shared/TableImg/TableImg'
+import {useAsync} from '@/shared/hook/useAsync'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 const urlValidation = yup.object({
   id: yup.string().required()
@@ -39,7 +40,7 @@ export const MpcaPaymentTool = () => {
     }
   )
 
-  const tool = _getPayment.entity
+  const tool = _getPayment.get
 
   useEffect(() => {
     _getPayment.fetch({force: true}, id)
@@ -86,7 +87,7 @@ export const MpcaPaymentTool = () => {
           </Grid>
 
           <Panel>
-            <Sheet id="mpca-payment" data={_answers.entity} loading={_answers.loading} columns={[
+            <Sheet id="mpca-payment" data={_answers.get} loading={_answers.loading} columns={[
               {id: 'date', head: m.date, type: 'date', render: _ => formatDate(_.date)},
               {id: 'taxId', head: m.taxID, render: _ => _.taxId},
               {

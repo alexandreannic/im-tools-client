@@ -7,6 +7,7 @@ import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelte
 import {AccessSum} from '@/core/sdk/server/access/Access'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
+import {KoboSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
 
 export interface ShelterContext {
   access: AccessSum
@@ -31,8 +32,8 @@ export const ShelterProvider = ({
 }: {
   access: AccessSum
   data: UseShelterData
-  schemaTa: KoboApiForm
-  schemaNta: KoboApiForm
+  schemaTa: KoboSchemaBundle
+  schemaNta: KoboSchemaBundle
   children: ReactNode
   allowedOffices: ShelterContext['allowedOffices']
 }) => {
@@ -42,7 +43,7 @@ export const ShelterProvider = ({
     answerIds: KoboAnswerId[]
     key: any
     value: any
-  }) => data.fetcher.setEntity(prev => {
+  }) => data.fetcher.set(prev => {
     if (!data.index || !prev) return prev
     const set = new Set(answerIds)
     return prev.map(_ => {
@@ -60,16 +61,14 @@ export const ShelterProvider = ({
   const ntaActions = useShelterActions<ShelterNtaTags>({
     form: 'nta',
     formId: KoboIndex.byName('shelter_nta').id,
-    setEntity: data.fetcher.setEntity,
+    setEntity: data.fetcher.set,
     schema: schemaNta,
-    langIndex,
   })
   const taActions = useShelterActions<ShelterTaTags>({
     form: 'ta',
     formId: KoboIndex.byName('shelter_ta').id,
-    setEntity: data.fetcher.setEntity,
+    setEntity: data.fetcher.set,
     schema: schemaTa,
-    langIndex,
   })
 
   return (

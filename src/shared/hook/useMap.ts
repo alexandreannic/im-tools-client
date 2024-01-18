@@ -1,6 +1,7 @@
 import {useMemo, useState} from 'react'
 
-export type UseMap2<K, V> = Pick<Map<K, V>, 'size' | 'get' | 'entries' | 'clear'> & {
+type Key = string | number
+export type UseMap2<K extends Key, V> = Pick<Map<K, V>, 'size' | 'get' | 'entries' | 'clear'> & {
   reset: (arr: V[], getKey: (v: V) => K) => void
   set: (k: K, v: V) => void
   has: (k: K) => boolean
@@ -8,15 +9,18 @@ export type UseMap2<K, V> = Pick<Map<K, V>, 'size' | 'get' | 'entries' | 'clear'
   keys: K[]
   delete: (k: K) => void
   clear: () => void
+  map: Map<K, V>
+  toObject: Record<K, V>
   // size: number
   // get: (k: K) => V | undefined
 }
 
-export const useMap2 = <K, V>(initialValue: Map<K, V> = new Map()): UseMap2<K, V> => {
+export const useMap2 = <K extends Key, V>(initialValue: Map<K, V> = new Map()): UseMap2<K, V> => {
   const [map, setMap] = useState<Map<K, V>>(initialValue)
 
   return useMemo(() => ({
     // ...map,
+    map,
     reset: (arr: V[], getKey: (v: V) => K) => {
       const index: [K, V][] = arr.map(_ => [getKey(_), _])
       setMap(new Map(index))
@@ -38,5 +42,6 @@ export const useMap2 = <K, V>(initialValue: Map<K, V> = new Map()): UseMap2<K, V
     },
     size: map.size,
     get: (k: K) => map.get(k),
+    toObject: Object.fromEntries(map.entries()) as Record<K, V>
   }), [map])
 }

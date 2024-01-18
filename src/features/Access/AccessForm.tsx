@@ -7,13 +7,13 @@ import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
 import {IpInput} from '@/shared/Input/Input'
 import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
-import {useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {UUID} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {AccessFormSection} from '@/features/Access/AccessFormSection'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {DrcJobInputMultiple} from '@/shared/customInput/DrcJobInput'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export interface IAccessForm {
   selectBy?: 'email' | 'job' | 'group' | null
@@ -203,8 +203,8 @@ export const AccessFormInputGroup = ({
   const {api} = useAppSettings()
   const fetcherGroups = useFetcher(api.group.getAllWithItems)
   const groupIndex = useMemo(() => {
-    return seq(fetcherGroups.entity).groupByFirst(_ => _.id)
-  }, [fetcherGroups.entity])
+    return seq(fetcherGroups.get).groupByFirst(_ => _.id)
+  }, [fetcherGroups.get])
 
   useEffect(() => {
     fetcherGroups.fetch()
@@ -224,7 +224,7 @@ export const AccessFormInputGroup = ({
             loading={fetcherGroups.loading}
             getOptionLabel={_ => _.name}
             // renderTags={_ => }
-            options={fetcherGroups.entity ?? []}
+            options={fetcherGroups.get ?? []}
             renderOption={(props, option, state, ownerState) => (
               <Box
                 sx={{

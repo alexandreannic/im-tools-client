@@ -9,7 +9,7 @@ import {Txt} from 'mui-extension'
 import {useModal} from '@/shared/Modal/useModal'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
-import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboApiForm) => {
   const [open, close] = useModal((answer: T) => (

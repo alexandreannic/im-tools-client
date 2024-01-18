@@ -167,7 +167,7 @@ export const CfmTable = ({}: any) => {
                 ]}
               />
               <IpIconBtn
-                loading={_refresh.loading.size > 0}
+                loading={_refresh.loading}
                 children="cloud_sync"
                 tooltip={m._koboDatabase.pullData}
                 onClick={_refresh.call}
@@ -269,7 +269,7 @@ export const CfmTable = ({}: any) => {
                       disableClearable
                       value={value}
                       onChange={(e, _) => onChange(_)}
-                      options={ctx.users.entity?.map((option) => option.email) ?? []}
+                      options={ctx.users.get?.map((option) => option.email) ?? []}
                       // renderInput={(params) => <TextField {...params} label="freeSolo" />}
                       renderInput={({InputProps, ...props}) => <IpInput
                         {...InputProps}
@@ -389,7 +389,7 @@ export const CfmTable = ({}: any) => {
                         children="edit"
                       />
                       <Modal
-                        loading={ctx.asyncRemove.loading.get(cfmMakeEditRequestKey(row.formId, row.id))}
+                        loading={ctx.asyncRemove.loading[cfmMakeEditRequestKey(row.formId, row.id)]}
                         content={m._cfm.deleteWarning}
                         onConfirm={(e, close) => ctx.asyncRemove.call({formId: row.formId, answerId: row.id}).then(close)}
                         title={m.shouldDelete}

@@ -1,5 +1,4 @@
 import {Page} from '@/shared/Page'
-import {useAsync, useFetcher} from '@alexandreannic/react-hooks-lib'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import React, {useEffect, useMemo} from 'react'
@@ -13,6 +12,8 @@ import {DrcOffice} from '@/core/drcUa'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {format} from 'date-fns'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {useFetcher} from '@/shared/hook/useFetcher'
+import {useAsync} from '@/shared/hook/useAsync'
 
 export const DeduplicationStatusIcon = ({status}: {status: WfpDeduplicationStatus}) => {
   return fnSwitch(status, {
@@ -31,13 +32,13 @@ export const WfpDeduplicationData = () => {
   const {m} = useI18n()
 
   const existingOrga = useMemo(() => {
-    if (!_search.entity) return
-    return seq(_search.entity.data)
+    if (!_search.get) return
+    return seq(_search.get.data)
       .map(_ => _.existingOrga)
       .distinct(_ => _)
       .compact()
       .map(SheetUtils.buildOption)
-  }, [_search.entity])
+  }, [_search.get])
 
   useEffect(() => {
     _search.fetch()
@@ -159,7 +160,7 @@ export const WfpDeduplicationData = () => {
               type: 'date',
             },
           ]}
-          data={_search.entity?.data}
+          data={_search.get?.data}
         />
       </Panel>
     </Page>

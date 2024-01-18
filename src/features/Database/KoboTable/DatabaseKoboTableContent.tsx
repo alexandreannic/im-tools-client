@@ -15,7 +15,7 @@ import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'
 import {useCustomSelectedHeader} from '@/features/Database/KoboTable/useCustomSelectedHeader'
-import {useKoboSchemaContext} from '@/features/Kobo/KoboSchemaContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
@@ -151,7 +151,7 @@ export const DatabaseKoboTableContent = ({
               tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.downloadAsXLS}}/>}
             />
             <DatabaseKoboSyncBtn
-              loading={ctx.asyncRefresh.loading.size > 0}
+              loading={ctx.asyncRefresh.loading}
               tooltip={<div dangerouslySetInnerHTML={{__html: m._koboDatabase.pullDataAt(ctx.form.updatedAt)}}/>}
               onClick={ctx.asyncRefresh.call}
             />

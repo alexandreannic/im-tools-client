@@ -89,7 +89,7 @@ export const ShelterTable = () => {
         id: 'office',
         type: 'select_one',
         head: m.office,
-        render: _ => ctx.nta.helper.translateChoice('back_office', _.nta?.back_office),
+        render: _ => ctx.nta.schema.translate.choice('back_office', _.nta?.back_office),
         renderValue: _ => _.nta?.back_office,
       },
       {
@@ -97,7 +97,7 @@ export const ShelterTable = () => {
         type: 'select_one',
         options: () => Enum.entries(Shelter_NTAOptions.ben_det_oblast).map(([value, label]) => ({value, label})),
         head: m.oblast,
-        render: _ => ctx.nta.helper.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
+        render: _ => ctx.nta.schema.translate.choice('ben_det_oblast', _.nta?.ben_det_oblast),
         renderValue: _ => _.nta?.ben_det_oblast,
       },
       {
@@ -105,7 +105,7 @@ export const ShelterTable = () => {
         type: 'string',
         // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
         head: m.raion,
-        render: _ => ctx.nta.helper.translateChoice('ben_det_oblast', _.nta?.ben_det_oblast),
+        render: _ => ctx.nta.schema.translate.choice('ben_det_oblast', _.nta?.ben_det_oblast),
         renderValue: _ => _.nta?.ben_det_raion,
       },
       {
@@ -174,8 +174,8 @@ export const ShelterTable = () => {
         type: 'select_one',
         id: 'displacement',
         head: m.displacement,
-        renderOption: _ => ctx.nta.helper.translateChoice('ben_det_res_stat', _.nta?.ben_det_res_stat),
-        render: _ => ctx.nta.helper.translateChoice('ben_det_res_stat', _.nta?.ben_det_res_stat),
+        renderOption: _ => ctx.nta.schema.translate.choice('ben_det_res_stat', _.nta?.ben_det_res_stat),
+        render: _ => ctx.nta.schema.translate.choice('ben_det_res_stat', _.nta?.ben_det_res_stat),
         renderValue: (row: ShelterEntity) => row.nta?.ben_det_res_stat,
       },
       {
@@ -184,7 +184,7 @@ export const ShelterTable = () => {
         head: m._shelter.owner,
         options: () => Enum.entries(Shelter_NTAOptions.owner_tenant_type).map(([value, label]) => ({value, label})),
         renderValue: _ => _.nta?.owner_tenant_type,
-        render: _ => ctx.nta.helper.translateChoice('owner_tenant_type', _.nta?.owner_tenant_type),
+        render: _ => ctx.nta.schema.translate.choice('owner_tenant_type', _.nta?.owner_tenant_type),
       },
       {
         id: 'hhSize',
@@ -198,14 +198,14 @@ export const ShelterTable = () => {
         head: m._shelter.documentType,
         options: () => Enum.entries(Shelter_NTAOptions.document_type).map(([value, label]) => ({value, label})),
         renderValue: _ => _.nta?.document_type,
-        render: _ => ctx.nta.helper.translateChoice('document_type', _.nta?.document_type),
+        render: _ => ctx.nta.schema.translate.choice('document_type', _.nta?.document_type),
       },
       {
         id: 'dwelling_type',
         type: 'select_one',
         head: m._shelter.accommodation,
         options: () => Enum.entries(Shelter_NTAOptions.dwelling_type).map(([value, label]) => ({value, label})),
-        render: _ => ctx.nta.helper.translateChoice('dwelling_type', _.nta?.dwelling_type),
+        render: _ => ctx.nta.schema.translate.choice('dwelling_type', _.nta?.dwelling_type),
         renderValue: _ => _.nta?.dwelling_type,
       },
       {
@@ -723,13 +723,13 @@ export const ShelterTable = () => {
             <>
               <IpIconBtn
                 children="refresh"
-                loading={ctx.data.fetcher.entity && ctx.data.loading}
+                loading={ctx.data.fetcher.get && ctx.data.loading}
                 onClick={() => ctx.data.fetchAll({force: true, clean: true})}
                 tooltip={m.refreshTable}
               />
               <DatabaseKoboSyncBtn
                 sx={{marginLeft: 'auto'}}
-                loading={ctx.data.asyncSyncAnswers.anyLoading}
+                loading={ctx.data.asyncSyncAnswers.loading}
                 onClick={ctx.data.asyncSyncAnswers.call}
               />
             </>

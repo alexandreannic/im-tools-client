@@ -2,7 +2,7 @@ import React, {useEffect, useMemo} from 'react'
 import {useDatabaseContext} from '@/features/Database/DatabaseContext'
 import {useParams} from 'react-router'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useEffectFn, useFetcher} from '@alexandreannic/react-hooks-lib'
+import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 import {map} from '@alexandreannic/ts-utils'
 import {Page} from '@/shared/Page'
 import {Panel} from '@/shared/Panel'
@@ -17,11 +17,12 @@ import {UUID} from '@/core/type'
 import {KoboForm, KoboId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {kobo} from '@/KoboIndex'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
-import {KoboSchemaProvider} from '@/features/Kobo/KoboSchemaContext'
+import {KoboSchemaProvider} from '@/features/KoboSchema/KoboSchemaContext'
 import {Skeleton} from '@mui/material'
 import {Paginate} from '@/utils/utils'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
+import {useFetcher} from '@/shared/hook/useFetcher'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -96,22 +97,22 @@ export const DatabaseTable = ({
 
   return (
     <>
-      {(_formSchema.loading || _answers.loading) && !_answers.entity && (
+      {(_formSchema.loading || _answers.loading) && !_answers.get && (
         <>
           <Skeleton sx={{mx: 1, height: 54}}/>
           <SheetSkeleton/>
         </>
       )}
-      {_formSchema.entity && (
-        <KoboSchemaProvider schema={_formSchema.entity!}>
-          {_answers.entity && _form.entity && (
+      {_formSchema.get && (
+        <KoboSchemaProvider schema={_formSchema.get!}>
+          {_answers.get && _form.get && (
             <DatabaseKoboTableProvider
               dataFilter={dataFilter}
               canEdit={overrideEditAccess ?? access.write}
               serverId={serverId}
               fetcherAnswers={_answers}
-              data={_answers.entity?.data}
-              form={_form.entity!}
+              data={_answers.get?.data}
+              form={_form.get!}
             >
               <DatabaseKoboTableContent
                 onFiltersChange={onFiltersChange}
@@ -121,7 +122,7 @@ export const DatabaseTable = ({
           )}
         </KoboSchemaProvider>
       )}
-      {/*{map(_answers.entity, _formSchema.entity, _form.entity, (data, schema, form) => (*/}
+      {/*{map(_answers.get, _formSchema.get, _form.get, (data, schema, form) => (*/}
       {/*  <KoboSchemaProvider schema={schema}>*/}
       {/*    <DatabaseKoboTableProvider*/}
       {/*      canEdit={access.write}*/}
