@@ -1,6 +1,6 @@
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcDonor, DrcSector} from '@/core/drcUa'
-import {Partnership_partnersDatabase} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabase'
+import {Partnership_partnersDatabase} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabase'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 
 export interface PartnershipData extends Partnership_partnersDatabase {

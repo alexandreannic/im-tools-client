@@ -2,7 +2,7 @@ import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
 import {UseSetState} from '@alexandreannic/react-hooks-lib'
 import {UseSheetData, useSheetData} from '@/shared/Sheet/context/useSheetData'
 import {SheetModal, useSheetModal} from '@/shared/Sheet/context/useSheetModal'
-import {useSetState2} from '@/shared/hook/useSetState2'
+import {useSetStateIp} from '@/shared/hook/useSetState'
 import {seq} from '@alexandreannic/ts-utils'
 import {SheetInnerColumnProps, SheetRow, SheetTableProps} from '@/shared/Sheet/util/sheetType'
 import {UseSheetOptions, useSheetOptions} from '@/shared/Sheet/context/useSheetOptions'
@@ -48,7 +48,7 @@ export const SheetProvider = <T extends SheetRow>({
 
   children: ReactNode
 }) => {
-  const selected = useSetState2<string>()
+  const selected = useSetStateIp<string>()
   const columnsIndex = useMemo(() => seq(columns).reduceObject<Record<string, SheetInnerColumnProps<T>>>(_ => [_.id, _]), [columns])
   const data = useSheetData<T>({
     id,

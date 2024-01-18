@@ -1,5 +1,5 @@
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {Shelter_TA} from '@/core/koboModel/Shelter_TA/Shelter_TA'
+import {Shelter_TA} from '@/core/generatedKoboInterface/Shelter_TA/Shelter_TA'
 import {NumberKeys} from '@/core/type'
 import {map} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/drcUa'

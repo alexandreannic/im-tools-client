@@ -1,6 +1,6 @@
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {KoboBarChartSingle} from '@/features/Dashboard/shared/KoboBarChart'
-import {Partnership_partnersDatabaseOptions} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
+import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {Enum, fnSwitch, Seq} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/drcUa'
 import React, {useState} from 'react'

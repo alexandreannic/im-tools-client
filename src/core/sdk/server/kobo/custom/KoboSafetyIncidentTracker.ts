@@ -1,4 +1,4 @@
-import {mapSafetyIncidentTracker} from '@/core/koboModel/SafetyIncidentTracker/SafetyIncidentTrackerMapping'
+import {mapSafetyIncidentTracker} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTrackerMapping'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 
 export namespace KoboSafetyIncidentHelper {

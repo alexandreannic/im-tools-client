@@ -17,10 +17,10 @@ import {Utils} from '@/utils/utils'
 import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/drcUa'
 import {Txt} from 'mui-extension'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {Partnership_partnersDatabaseOptions} from '@/core/koboModel/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
+import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {PanershipPanelDonor} from '@/features/Partnership/Dashboard/PanershipPanelDonor'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
-import {useSetState2} from '@/shared/hook/useSetState2'
+import {useSetStateIp} from '@/shared/hook/useSetState'
 import {Box, Checkbox} from '@mui/material'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
@@ -63,7 +63,7 @@ export const _PartnershipDashboard = ({
   schema: KoboSchemaHelper.Bundle
 }) => {
   const {m, formatLargeNumber} = useI18n()
-  const selecteIds = useSetState2<string>()
+  const selecteIds = useSetStateIp<string>()
   const ctx = usePartnershipContext()
   const mappedData = ctx.data.mappedData!
 

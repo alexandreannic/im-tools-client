@@ -1,4 +1,4 @@
-import {Bn_Re} from '@/core/koboModel/Bn_Re/Bn_Re'
+import {Bn_Re} from '@/core/generatedKoboInterface/Bn_Re/Bn_Re'
 import {Person} from '@/core/type'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 

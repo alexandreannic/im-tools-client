@@ -4,7 +4,7 @@ import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {Period} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Meal_VisitMonitoring} from '@/core/koboModel/Meal_VisitMonitoring/Meal_VisitMonitoring'
+import {Meal_VisitMonitoring} from '@/core/generatedKoboInterface/Meal_VisitMonitoring/Meal_VisitMonitoring'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 
 export interface MealVisitContext {

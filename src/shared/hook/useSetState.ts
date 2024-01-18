@@ -15,7 +15,7 @@ export interface UseSetState<T> {
   get: Set<T>,
 }
 
-export const useSetState2 = <T>(initialValue: T[] = []): UseSetState<T> => {
+export const useSetStateIp = <T>(initialValue: T[] = []): UseSetState<T> => {
   const [set, setSet] = useState(new Set<T>(initialValue))
 
   return useMemo(() => {

@@ -3,7 +3,7 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {Protection_Hhs2_1Options} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/core/chartTools'
 import {chain, mapObjectValue} from '@/utils/utils'

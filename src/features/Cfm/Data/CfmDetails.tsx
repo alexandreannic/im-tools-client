@@ -20,7 +20,7 @@ import {IpBtn} from '@/shared/Btn'
 import {cfmIndex} from '@/features/Cfm/Cfm'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
-import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
+import {Meal_CfmInternalOptions} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {TableInput} from '@/shared/TableInput'
 

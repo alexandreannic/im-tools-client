@@ -1,5 +1,5 @@
 import {Func} from '@alexandreannic/react-hooks-lib'
-import {useMap2} from '@/shared/hook/useMap'
+import {useMapIp} from '@/shared/hook/useMap'
 import {useState} from 'react'
 
 type Key = number | string
@@ -54,8 +54,8 @@ export const useAsync: UseAsyncFn = <F extends Func<Promise<any>>, K extends Key
     requestKey?: (_: Parameters<F>) => K,
   } = {} as any
 ) => {
-  const loading = useMap2<K, boolean>()
-  const error = useMap2<K, E>()
+  const loading = useMapIp<K, boolean>()
+  const error = useMapIp<K, E>()
   const [callIndex, setCallIndex] = useState(0)
   const [lastError, setLastError] = useState<E | undefined>()
 

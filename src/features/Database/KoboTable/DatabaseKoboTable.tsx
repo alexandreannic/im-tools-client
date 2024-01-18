@@ -129,19 +129,6 @@ export const DatabaseTable = ({
           />
         </DatabaseKoboTableProvider>
       )}
-      {/*{map(_answers.get, _formSchema.get, _form.get, (data, schema, form) => (*/}
-      {/*  <KoboSchemaProvider schema={schema}>*/}
-      {/*    <DatabaseKoboTableProvider*/}
-      {/*      canEdit={access.write}*/}
-      {/*      serverId={serverId}*/}
-      {/*      fetcherAnswers={_answers}*/}
-      {/*      data={data.data}*/}
-      {/*      form={form}*/}
-      {/*    >*/}
-      {/*      <DatabaseKoboTableContent/>*/}
-      {/*    </DatabaseKoboTableProvider>*/}
-      {/*  </KoboSchemaProvider>*/}
-      {/*))}*/}
     </>
   )
 }

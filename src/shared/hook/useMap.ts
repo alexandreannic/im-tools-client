@@ -15,7 +15,7 @@ export type UseMap2<K extends Key, V> = Pick<Map<K, V>, 'size' | 'get' | 'entrie
   // get: (k: K) => V | undefined
 }
 
-export const useMap2 = <K extends Key, V>(initialValue: Map<K, V> = new Map()): UseMap2<K, V> => {
+export const useMapIp = <K extends Key, V>(initialValue: Map<K, V> = new Map()): UseMap2<K, V> => {
   const [map, setMap] = useState<Map<K, V>>(initialValue)
 
   return useMemo(() => ({

@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {useMap2} from '@/shared/hook/useMap'
+import {useMapIp} from '@/shared/hook/useMap'
 
 export type Func<R = any> = (...args: any[]) => R
 
@@ -49,9 +49,9 @@ export const useFetchers: UseFetchersFn = <F extends Func<Promise<any>>, K exten
     mapError = (_: any) => _,
   }
 ) => {
-  const entities = useMap2<K, FetcherResult<F>>()
-  const errors = useMap2<K, E | undefined>()
-  const loadings = useMap2<K, boolean>()
+  const entities = useMapIp<K, FetcherResult<F>>()
+  const errors = useMapIp<K, E | undefined>()
+  const loadings = useMapIp<K, boolean>()
   const [lastError, setLastError] = useState<E | undefined>()
   const list = useMemo(() => entities.values ?? [], [entities])
   const fetch$ = useRef<Promise<FetcherResult<F>>>()

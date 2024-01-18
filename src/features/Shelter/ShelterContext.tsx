@@ -5,7 +5,7 @@ import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboS
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
 import {AccessSum} from '@/core/sdk/server/access/Access'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
+import {Shelter_NTA} from '@/core/generatedKoboInterface/Shelter_NTA/Shelter_NTA'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
 export interface ShelterContext {

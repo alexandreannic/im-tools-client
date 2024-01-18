@@ -5,7 +5,7 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardH
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useI18n} from '@/core/i18n'
 import {seq, Seq} from '@alexandreannic/ts-utils'
-import {Protection_Hhs2_1} from '@/core/koboModel/Protection_Hhs2_1/Protection_Hhs2_1'
+import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {useFetcher} from '@/shared/hook/useFetcher'
 
 export interface SnapshotProtMonitoContext {

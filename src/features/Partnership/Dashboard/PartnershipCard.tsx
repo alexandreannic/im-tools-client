@@ -1,7 +1,7 @@
 import {Box, BoxProps, Checkbox, useTheme} from '@mui/material'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {Txt} from 'mui-extension'
-import {UseSetState} from '@/shared/hook/useSetState2'
+import {UseSetState} from '@/shared/hook/useSetState'
 
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
