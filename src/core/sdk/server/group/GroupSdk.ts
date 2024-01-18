@@ -2,7 +2,7 @@ import {ApiClient} from '../ApiClient'
 import {AccessLevel} from '@/core/sdk/server/access/Access'
 import {UUID} from '@/core/type'
 import {Group, GroupHelper} from '@/core/sdk/server/group/GroupItem'
-import {DrcJob, DrcOffice} from '@/core/drcUa'
+import {DrcJob, DrcOffice} from '@/core/typeDrc'
 
 type GroupCreate = Pick<Group, 'name' | 'desc'>
 

@@ -1,4 +1,4 @@
-import {DrcOffice} from '@/core/drcUa'
+import {DrcOffice} from '@/core/typeDrc'
 
 export interface User {
   email: string

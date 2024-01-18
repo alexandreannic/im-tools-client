@@ -1,5 +1,5 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {KoboIndex} from '@/KoboIndex'
+import {KoboIndex} from '@/core/KoboIndex'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {Period} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'

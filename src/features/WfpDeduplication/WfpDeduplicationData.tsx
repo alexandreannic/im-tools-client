@@ -7,8 +7,7 @@ import {Panel} from '@/shared/Panel'
 import {DrcSupportSuggestion, WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {Txt} from 'mui-extension'
-import {DrcOffice} from '@/core/drcUa'
-
+import {DrcOffice} from '@/core/typeDrc'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {format} from 'date-fns'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
@@ -27,7 +26,6 @@ export const DeduplicationStatusIcon = ({status}: {status: WfpDeduplicationStatu
 export const WfpDeduplicationData = () => {
   const {api} = useAppSettings()
   const _search = useFetcher(api.wfpDeduplication.search)
-  const _uploadTaxIdMapping = useAsync(api.wfpDeduplication.uploadTaxIdsMapping)
   const {formatDate, formatLargeNumber} = useI18n()
   const {m} = useI18n()
 
@@ -65,6 +63,7 @@ export const WfpDeduplicationData = () => {
               head: m.createdAt,
               renderExport: true,
               render: _ => formatDate(_.createdAt),
+              renderValue: _ => _.createdAt,
               type: 'date'
             },
             {
@@ -115,14 +114,16 @@ export const WfpDeduplicationData = () => {
               head: m.suggestion,
               renderExport: true,
               render: _ => m.mpca.drcSupportSuggestion[_.suggestion],
+              renderValue: _ => m.mpca.drcSupportSuggestion[_.suggestion] ?? SheetUtils.blank,
               width: 246,
               type: 'select_one',
-              options: () => Enum.keys(DrcSupportSuggestion).map(_ => ({label: m.mpca.drcSupportSuggestion[_], value: _})),
+              // options: () => Enum.keys(DrcSupportSuggestion).map(_ => ({label: m.mpca.drcSupportSuggestion[_], value: _})),
             },
             {
               id: 'status',
               align: 'center',
               head: m.status,
+              width: 0,
               type: 'select_one',
               options: () => SheetUtils.buildOptions(Enum.keys(WfpDeduplicationStatus), true),
               tooltip: _ => m.mpca.status[_.status],

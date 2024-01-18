@@ -3,7 +3,7 @@ import {ApiPaginate, ApiPagination, UUID} from '@/core/type'
 import {ApiKoboForm, Kobo, KoboAnswer, KoboAnswerId, KoboId} from './Kobo'
 import {KoboSchema} from './KoboApi'
 import {appConfig, AppConfig} from '@/conf/AppConfig'
-import {kobo} from '@/KoboIndex'
+import {kobo} from '@/core/KoboIndex'
 
 export interface FilterBy {
   column: string

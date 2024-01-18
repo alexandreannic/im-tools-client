@@ -1,7 +1,7 @@
 import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {aiRaions} from '@/core/uaLocation/aiRaions'
 import {aiHromadas} from '@/core/uaLocation/aiHromadas'
-import {DrcProject} from '@/core/drcUa'
+import {DrcProject} from '@/core/typeDrc'
 
 
 export namespace AiSnfiInterface {

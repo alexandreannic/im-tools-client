@@ -1,4 +1,4 @@
-import {KoboFormName, KoboIndex} from '@/KoboIndex'
+import {KoboFormName, KoboIndex} from '@/core/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {useFetchers} from '@/shared/hook/useFetchers'

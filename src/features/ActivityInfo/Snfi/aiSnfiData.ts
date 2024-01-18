@@ -1,5 +1,5 @@
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
-import {DrcProject} from '@/core/drcUa'
+import {DrcProject} from '@/core/typeDrc'
 import {Period, PeriodHelper, Person} from '@/core/type'
 import {fnSwitch, RequiredProperty, Seq, seq} from '@alexandreannic/ts-utils'
 import {AiLocation, getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'

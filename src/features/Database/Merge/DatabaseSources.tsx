@@ -1,6 +1,6 @@
 import {Page} from '@/shared/Page'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {kobo} from '@/KoboIndex'
+import {kobo} from '@/core/KoboIndex'
 import {useEffect, useState} from 'react'
 import {KoboFormListButton} from './KoboFormList'
 import {UUID} from '@/core/type'

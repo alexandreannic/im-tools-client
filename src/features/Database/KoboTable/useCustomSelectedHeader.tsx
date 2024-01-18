@@ -5,7 +5,7 @@ import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {currentProtectionProjects} from '@/core/sdk/server/kobo/custom/KoboProtection'
-import {KoboIndex} from '@/KoboIndex'
+import {KoboIndex} from '@/core/KoboIndex'
 
 export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode => {
   const ctx = useDatabaseKoboTableContext()

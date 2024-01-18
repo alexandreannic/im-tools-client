@@ -26,7 +26,7 @@ import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerif
 import {MealVerificationLinkToForm} from '@/features/Meal/Verification/MealVerificationList'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
-import {KoboIndex} from '@/KoboIndex'
+import {KoboIndex} from '@/core/KoboIndex'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
 export enum MergedDataStatus {

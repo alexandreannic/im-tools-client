@@ -1,5 +1,5 @@
 import React from 'react'
-import {DrcProject, DrcProjectHelper} from '@/core/drcUa'
+import {DrcProject, DrcProjectHelper} from '@/core/typeDrc'
 import {IpSelectMultiple, IpSelectMultipleProps} from '@/shared/Select/SelectMultiple'
 import {IpSelectSingle, IpSelectSingleProps} from '@/shared/Select/SelectSingle'
 import {useI18n} from '@/core/i18n'

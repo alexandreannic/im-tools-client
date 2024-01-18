@@ -2,7 +2,7 @@ import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor
 import {Shelter_TA} from '@/core/generatedKoboInterface/Shelter_TA/Shelter_TA'
 import {NumberKeys} from '@/core/type'
 import {map} from '@alexandreannic/ts-utils'
-import {DrcProject} from '@/core/drcUa'
+import {DrcProject} from '@/core/typeDrc'
 import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
 export namespace KoboShelterTa {

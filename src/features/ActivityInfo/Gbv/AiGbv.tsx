@@ -11,7 +11,7 @@ import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGene
 import {Panel} from '@/shared/Panel'
 import {Page} from '@/shared/Page'
 import {AiGbvInterface} from '@/features/ActivityInfo/Gbv/aiGbvInterface'
-import {DrcProject} from '@/core/drcUa'
+import {DrcProject} from '@/core/typeDrc'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {IpInput} from '@/shared/Input/Input'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'

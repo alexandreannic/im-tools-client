@@ -2,7 +2,7 @@ import {ApiClient} from '../ApiClient'
 import {Access, AccessSearch, KoboDatabaseAccessParams, WfpDeduplicationAccessParams} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {UUID} from '@/core/type'
-import {DrcJob} from '@/core/drcUa'
+import {DrcJob} from '@/core/typeDrc'
 
 interface SearchByFeature {
   ({featureId, email}: {featureId: AppFeatureId.kobo_database, email?: string}): Promise<Access<KoboDatabaseAccessParams>[]>

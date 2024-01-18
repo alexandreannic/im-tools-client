@@ -14,7 +14,7 @@ import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBa
 import {PartnershipCard} from '@/features/Partnership/Dashboard/PartnershipCard'
 import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
 import {Utils} from '@/utils/utils'
-import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/drcUa'
+import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/typeDrc'
 import {Txt} from 'mui-extension'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'

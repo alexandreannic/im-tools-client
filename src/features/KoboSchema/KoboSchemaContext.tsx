@@ -1,6 +1,6 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
-import {KoboFormName} from '@/KoboIndex'
+import {KoboFormName} from '@/core/KoboIndex'
 import {useI18n} from '@/core/i18n'
 import {useSchemaFetchers} from '@/features/KoboSchema/useSchemaFetcher'
 import {UseFetchers} from '@/shared/hook/useFetchers'

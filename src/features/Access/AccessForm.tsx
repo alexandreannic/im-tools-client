@@ -1,5 +1,5 @@
 import {Controller, UseFormReturn} from 'react-hook-form'
-import {DrcJob, DrcOffice} from '@/core/drcUa'
+import {DrcJob, DrcOffice} from '@/core/typeDrc'
 import {AccessLevel, accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Autocomplete, autocompleteClasses, Box, SxProps, Theme} from '@mui/material'

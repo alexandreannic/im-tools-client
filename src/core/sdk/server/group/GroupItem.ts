@@ -1,6 +1,6 @@
 import {UUID} from '@/core/type'
 import {AccessLevel} from '@/core/sdk/server/access/Access'
-import {DrcJob, DrcOffice} from '@/core/drcUa'
+import {DrcJob, DrcOffice} from '@/core/typeDrc'
 
 export interface Group {
   id: UUID
