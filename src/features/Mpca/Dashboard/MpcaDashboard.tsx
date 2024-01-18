@@ -7,7 +7,7 @@ import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
 import {chain, toPercent, tryy} from '@/utils/utils'
 import {Txt} from 'mui-extension'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {Period, Person} from '@/core/type'
 import {BarChart} from '@/shared/chart/BarChart'
@@ -16,7 +16,7 @@ import {ChartTools, makeChartData} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {ScLineChart2} from '@/shared/chart/ScLineChart2'
+import {IpLineChart} from '@/shared/chart/LineChart'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/server/mpca/MpcaEntity'
@@ -256,7 +256,7 @@ export const _MPCADashboard = ({
                   .map(([k, v]) => ({name: k, [m.amount]: v}))
               }}>
                 {_ => (
-                  <ScLineChart2
+                  <IpLineChart
                     data={_ as any}
                     height={190}
                     hideLabelToggle

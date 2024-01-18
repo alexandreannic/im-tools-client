@@ -36,7 +36,7 @@ export type ScLineChart2Data = Record<string, number> & {
 
 // const colors = chartConfig.defaultColors
 
-export const ScLineChart2 = ({
+export const IpLineChart = ({
   data,
   loading,
   sx,

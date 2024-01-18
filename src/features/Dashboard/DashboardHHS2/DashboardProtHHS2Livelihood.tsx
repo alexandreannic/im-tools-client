@@ -7,9 +7,9 @@ import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain, mapObjectValue} from '@/utils/utils'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {KoboLineChart} from '@/shared/chart/KoboLineChart'
+import {LineChartByProperty} from '@/shared/chart/LineChartByProperty'
 import {Divider} from '@mui/material'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
@@ -67,7 +67,7 @@ export const DashboardProtHHS2Livelihood = ({
       <Div responsive alignItems="flex-start">
         <Div column sx={{flex: 1}}>
           <SlidePanel title={m.protHHS2.hhOutOfWorkAndSeekingEmployment}>
-            <KoboLineChart
+            <LineChartByProperty
               question="including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment"
               data={data}
               displayedValues={['yes']}

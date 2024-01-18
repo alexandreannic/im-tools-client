@@ -1,4 +1,4 @@
-import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/PieChartIndicator'
+import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/chart/PieChartIndicator'
 import * as React from 'react'
 import {useMemo} from 'react'
 import {Seq} from '@alexandreannic/ts-utils'

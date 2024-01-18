@@ -6,8 +6,8 @@ import {Box, Divider, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {KoboLineChartDate} from '@/shared/chart/KoboLineChartDate'
+import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
+import {LineChartByDate} from '@/shared/chart/LineChartByDate'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
@@ -36,7 +36,7 @@ export const DashboardProtHHS2Displacement = ({
           </Box>
         </SlidePanel>
         <SlidePanel title={m.displacementAndReturn}>
-          <KoboLineChartDate
+          <LineChartByDate
             data={data}
             start={new Date(2022, 0, 1)}
             curves={{

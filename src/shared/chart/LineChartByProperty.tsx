@@ -2,9 +2,9 @@ import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
 import {StringKeys} from '../../core/type'
-import {ScLineChart2, ScLineChart2Data} from '@/shared/chart/ScLineChart2'
+import {IpLineChart, ScLineChart2Data} from '@/shared/chart/LineChart'
 
-export const KoboLineChart = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
+export const LineChartByProperty = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
   data,
   question,
   displayedValues,
@@ -38,7 +38,7 @@ export const KoboLineChart = <T extends {end: Date}, K extends StringKeys<T>, V 
     })
   }, [data, question])
   return (
-    <ScLineChart2
+    <IpLineChart
       data={transform}
       percent
       height={height}

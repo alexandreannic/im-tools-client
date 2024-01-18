@@ -7,7 +7,7 @@ import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
-import {KoboLineChartDate} from '@/shared/chart/KoboLineChartDate'
+import {LineChartByDate} from '@/shared/chart/LineChartByDate'
 import {SheetOptions, SheetRow} from '@/shared/Sheet/util/sheetType'
 import {KeyOf} from '@/utils/utils'
 import {seq} from '@alexandreannic/ts-utils'
@@ -147,7 +147,7 @@ export const DatesPopover = <T, >({
         {title}
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-        <KoboLineChartDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
+        <LineChartByDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
       </PanelBody>
       <PanelFoot alignEnd>
         <IpBtn color="primary" onClick={onClose as any}>

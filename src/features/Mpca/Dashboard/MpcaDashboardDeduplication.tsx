@@ -3,7 +3,7 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
-import {ScLineChart2} from '@/shared/chart/ScLineChart2'
+import {IpLineChart} from '@/shared/chart/LineChart'
 import React, {useState} from 'react'
 import {MpcaEntity} from '@/core/sdk/server/mpca/MpcaEntity'
 import {useI18n} from '@/core/i18n'
@@ -77,7 +77,7 @@ export const MpcaDashboardDeduplication = ({
           .map(([k, v]) => ({name: k, ...v}))
       }}>
         {_ => (
-          <ScLineChart2
+          <IpLineChart
             colorsByKey={colors}
             data={_ as any}
             height={190}

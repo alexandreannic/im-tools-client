@@ -8,7 +8,7 @@ import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {Enum, Seq} from '@alexandreannic/ts-utils'

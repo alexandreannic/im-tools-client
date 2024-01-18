@@ -5,7 +5,7 @@ import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
-import {ScLineChart2} from '@/shared/chart/ScLineChart2'
+import {IpLineChart} from '@/shared/chart/LineChart'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {useSession} from '@/core/Session/SessionContext'
@@ -126,7 +126,7 @@ export const SafetyIncidentDashboardBody = ({
               .map(([k, v]) => ({name: k, ...v}))
           }}>
             {_ => (
-              <ScLineChart2 height={280} data={_ as any} translation={{
+              <IpLineChart height={280} data={_ as any} translation={{
                 total: m.safety.incidents,
                 dead: m.safety.dead,
                 injured: m.safety.injured,

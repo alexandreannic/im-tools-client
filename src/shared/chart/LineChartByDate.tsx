@@ -1,13 +1,13 @@
 import {format} from 'date-fns'
 import {Enum} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
-import {ScLineChart2, ScLineChartProps} from '@/shared/chart/ScLineChart2'
+import {IpLineChart, ScLineChartProps} from '@/shared/chart/LineChart'
 
 export type DateKeys<T> = {
   [K in keyof T]: T[K] extends (Date | undefined) ? K : never;
 }[keyof T]
 
-export const KoboLineChartDate = <T, K extends DateKeys<T>>({
+export const LineChartByDate = <T, K extends DateKeys<T>>({
   data,
   curves,
   label,
@@ -54,7 +54,7 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
 
   return (
     <>
-      <ScLineChart2
+      <IpLineChart
         {...props}
         hideLabelToggle={true}
         height={height ?? 220}

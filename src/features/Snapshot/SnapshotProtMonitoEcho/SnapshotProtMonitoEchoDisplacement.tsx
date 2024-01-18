@@ -5,7 +5,7 @@ import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, S
 import {useI18n} from '@/core/i18n'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {KoboLineChartDate} from '@/shared/chart/KoboLineChartDate'
+import {LineChartByDate} from '@/shared/chart/LineChartByDate'
 import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Txt} from 'mui-extension'
 
@@ -74,7 +74,7 @@ export const SnapshotProtMonitoEchoDisplacement = () => {
 
             <SlidePanel BodyProps={{sx: {paddingBottom: t => t.spacing(.25) + ' !important'}}}>
               <SlidePanelTitle>{m.displacementAndReturn}</SlidePanelTitle>
-              <KoboLineChartDate
+              <LineChartByDate
                 sx={{ml: -5}}
                 colors={snapshotColors}
                 height={188}

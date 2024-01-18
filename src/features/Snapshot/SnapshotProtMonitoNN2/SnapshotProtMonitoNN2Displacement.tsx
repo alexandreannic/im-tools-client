@@ -3,7 +3,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {KoboLineChartDate} from '@/shared/chart/KoboLineChartDate'
+import {LineChartByDate} from '@/shared/chart/LineChartByDate'
 import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
 export const SnapshotProtMonitoNN2Displacement = () => {
@@ -25,7 +25,7 @@ export const SnapshotProtMonitoNN2Displacement = () => {
 
             <SlidePanel>
               <SlidePanelTitle>{m.displacementAndReturn}</SlidePanelTitle>
-              <KoboLineChartDate
+              <LineChartByDate
                 colors={snapshotColors}
                 height={258}
                 data={data}
