@@ -12,7 +12,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {DashboardSafetyIncidentsPageProps} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
 import {CommentsPanel, CommentsPanelProps} from '@/shared/CommentsPanel'
-import {KoboBarChartMultiple} from '@/shared/chart/KoboBarChart'
+import {KoboBarChartMultiple} from '@/shared/chart/BarChartByProperty'
 import {SafetyIncidentTrackerOptions} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
 
 export const SafetyIncidentDashboardBody = ({
