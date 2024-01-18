@@ -2,9 +2,9 @@ import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
 import {StringKeys} from '../../core/type'
-import {IpLineChart, ScLineChart2Data} from '@/shared/chart/LineChart'
+import {ChartLine, ChartLineData} from '@/shared/chart/ChartLine'
 
-export const LineChartByProperty = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
+export const ChartLineByProperty = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
   data,
   question,
   displayedValues,
@@ -18,9 +18,9 @@ export const LineChartByProperty = <T extends {end: Date}, K extends StringKeys<
   // @ts-ignore
   translations?: Partial<Record<T[K], string>>
 }) => {
-  const transform: ScLineChart2Data[] = useMemo(() => {
+  const transform: ChartLineData[] = useMemo(() => {
     return Enum.entries(data.groupBy(_ => format(_.end, 'yyyy-MM'))).map(([date, group]) => {
-      const res = {} as ScLineChart2Data
+      const res = {} as ChartLineData
       group
         .map(_ => _[question])
         .filter(_ => _ !== undefined && (!displayedValues || displayedValues?.includes(_ as any)))
@@ -38,7 +38,7 @@ export const LineChartByProperty = <T extends {end: Date}, K extends StringKeys<
     })
   }, [data, question])
   return (
-    <IpLineChart
+    <ChartLine
       data={transform}
       percent
       height={height}

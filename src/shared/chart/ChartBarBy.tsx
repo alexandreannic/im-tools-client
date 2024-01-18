@@ -89,7 +89,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
   )
 }
 
-export const KoboBarChartSingle = <
+export const BarKoboChartSingle = <
   D extends Record<string, any>,
   K extends string,
   O extends Record<K, string>,
@@ -150,7 +150,7 @@ export const KoboBarChartSingle = <
   )
 }
 
-export const KoboBarChartMultiple = <
+export const ChartBarMultiple = <
   D extends Record<string, any>,
   K extends string | undefined,
   O extends Record<NonNullable<K>, string>,

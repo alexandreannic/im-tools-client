@@ -3,7 +3,7 @@ import * as React from 'react'
 import {useMemo} from 'react'
 import {Seq} from '@alexandreannic/ts-utils'
 
-export type ChartPieIndicatorProps<T> = {
+export type ChartPieWidgetProps<T> = {
   compare?: {before: Seq<T>, now?: Seq<T>}
   title?: string
   data: Seq<T>
@@ -12,7 +12,7 @@ export type ChartPieIndicatorProps<T> = {
   hideEvolution?: boolean
 } & Omit<PieChartIndicatorProps, 'base' | 'value'>
 
-export const ChartPieIndicator = <T, >({
+export const ChartPieWidget = <T, >({
   title,
   compare,
   data,
@@ -20,7 +20,7 @@ export const ChartPieIndicator = <T, >({
   filterBase,
   hideEvolution,
   ...props
-}: ChartPieIndicatorProps<T> & {
+}: ChartPieWidgetProps<T> & {
   filter: (_: T) => boolean
   filterBase?: (_: T) => boolean
 }) => {
