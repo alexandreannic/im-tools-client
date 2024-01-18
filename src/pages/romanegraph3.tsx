@@ -8,7 +8,7 @@ import {enrichProtHHS_2_1, ProtHHS2BarChart} from '@/features/Dashboard/Dashboar
 import {DeepPartial, Enum, seq} from '@alexandreannic/ts-utils'
 import {Period, Person} from '@/core/type'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
-import {IpStackedBarChart} from '@/shared/Chart/StackedBarChart'
+import {IpStackedBarChart} from '@/shared/chart/StackedBarChart'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'

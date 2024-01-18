@@ -1,7 +1,7 @@
 import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
 import React, {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
-import {IpPieChart} from './Chart/PieChart'
+import {IpPieChart} from '@/shared/chart/PieChart'
 import {SlidePanelTitle} from './PdfLayout/PdfSlide'
 import {PanelProps} from './Panel/Panel'
 import {useI18n} from '@/core/i18n'

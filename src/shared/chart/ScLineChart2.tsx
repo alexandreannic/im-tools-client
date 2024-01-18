@@ -4,9 +4,9 @@ import {useState} from 'react'
 import {Box, BoxProps, Checkbox, Theme, useTheme} from '@mui/material'
 import {map} from '@alexandreannic/ts-utils'
 import {styleUtils} from '@/core/theme'
-import {chartConfig} from '@/shared/Chart/chartConfig'
+import {chartConfig} from '@/shared/chart/chartConfig'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {commonLegendProps} from '@/shared/Chart/StackedBarChart'
+import {commonLegendProps} from '@/shared/chart/StackedBarChart'
 
 export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
   colorsByKey?: (t: Theme) => Record<string, string>

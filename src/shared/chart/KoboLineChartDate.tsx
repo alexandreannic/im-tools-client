@@ -1,7 +1,7 @@
 import {format} from 'date-fns'
 import {Enum} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
-import {ScLineChart2, ScLineChartProps} from '@/shared/Chart/ScLineChart2'
+import {ScLineChart2, ScLineChartProps} from '@/shared/chart/ScLineChart2'
 
 export type DateKeys<T> = {
   [K in keyof T]: T[K] extends (Date | undefined) ? K : never;

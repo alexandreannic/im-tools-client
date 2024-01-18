@@ -1,8 +1,8 @@
 import React from 'react'
 import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 import {Box, BoxProps, Theme, useTheme} from '@mui/material'
-import {chartConfig} from '@/shared/Chart/chartConfig'
-import {commonLegendProps} from '@/shared/Chart/StackedBarChart'
+import {chartConfig} from '@/shared/chart/chartConfig'
+import {commonLegendProps} from '@/shared/chart/StackedBarChart'
 
 export interface BarChartVerticalProps extends BoxProps {
   colors?: (t: Theme) => string[]

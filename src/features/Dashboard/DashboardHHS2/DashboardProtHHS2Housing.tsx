@@ -3,8 +3,8 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
-import {KoboPieChartIndicator} from '../../../shared/Chart/KoboPieChartIndicator'
-import {ChartTools} from '../../../shared/Chart/chartTools'
+import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartTools} from '@/shared/chart/chartHelper'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2Housing = ({

@@ -3,9 +3,9 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {KoboPieChartIndicator} from '../../../shared/Chart/KoboPieChartIndicator'
+import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {ChartTools} from '@/shared/Chart/chartTools'
+import {ChartTools} from '@/shared/chart/chartHelper'
 
 export const DashboardProtHHS2Safety = ({
   data,
