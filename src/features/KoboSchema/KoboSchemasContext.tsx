@@ -1,11 +1,12 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {buildSchemaBundle, KoboSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
-import {KoboFormName} from '@/KoboIndex'
+import {KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useI18n} from '@/core/i18n'
 import {useSchemaFetchers} from '@/features/KoboSchema/useSchemaFetcher'
 import {UseFetchers} from '@/shared/hook/useFetchers'
 import {KoboApiForm} from '@/core/sdk/server/kobo/KoboApi'
 import {Enum} from '@alexandreannic/ts-utils'
+import {Kobo} from '@/core/sdk/server/kobo/Kobo'
 
 interface KoboSchemasProviderProps {
   defaultLangIndex?: number

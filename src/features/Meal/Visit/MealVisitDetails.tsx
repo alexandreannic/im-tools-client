@@ -15,6 +15,7 @@ import {mapFor, seq} from '@alexandreannic/ts-utils'
 import {koboImgHelper} from '@/shared/TableImg/KoboAttachedImg'
 import {CompressedImg} from '@/shared/CompressedImg'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
 
 const urlValidation = yup.object({
   id: yup.string().required()
@@ -93,7 +94,7 @@ export const MealVisitDetails = () => {
 
 export const _DashboardMealVisitPdf = () => {
   const ctx = useMealVisitContext()
-  const ctxSchema = useKoboSchemaContext()
+  const schema = useKoboSchemasContext().schema.meal_visitMonitoring!
   const {session} = useSession()
   const {m, formatDate} = useI18n()
   const {id} = urlValidation.validateSync(useParams())
@@ -150,24 +151,24 @@ export const _DashboardMealVisitPdf = () => {
                 {entry.mdd_001?.map(_ => Meal_VisitMonitoringOptions.mdd_001[_]).join(', ')}
               </Row>
               <Row label={m.location}>
-                {ctxSchema.translate.choice('md_det_oblast', entry.md_det_oblast)} oblast,&nbsp;
-                {ctxSchema.translate.choice('md_det_raion', entry.md_det_raion)} raion,&nbsp;
-                {ctxSchema.translate.choice('md_det_hromada', entry.md_det_hromada)} hromada.<br/>
+                {schema.translate.choice('md_det_oblast', entry.md_det_oblast)} oblast,&nbsp;
+                {schema.translate.choice('md_det_raion', entry.md_det_raion)} raion,&nbsp;
+                {schema.translate.choice('md_det_hromada', entry.md_det_hromada)} hromada.<br/>
                 {entry.mds && <>{capitalize(entry.mds ?? '')}<br/></>}
-                {ctxSchema.translate.choice('location_details', entry.location_details)}
+                {schema.translate.choice('location_details', entry.location_details)}
               </Row>
               {entry.whom && (
                 <Row label="With whom">
-                  {entry.mdt && 'Team'} {entry.mdt?.map(_ => ctxSchema.translate.choice('mdt', _))}<br/>
+                  {entry.mdt && 'Team'} {entry.mdt?.map(_ => schema.translate.choice('mdt', _))}<br/>
                   {entry.whom}
                 </Row>
               )}
               {entry.visit_type && (
                 <Row label="Visit type">
-                  {ctxSchema.schemaHelper.choicesIndex['visit_type']?.map(_ =>
+                  {schema.schemaHelper.choicesIndex['visit_type']?.map(_ =>
                     <Box key={_.$kuid} sx={{display: 'flex', alignItems: 'center', mb: .5}}>
                       <Checkbox disabled size="small" sx={{p: 0, pr: 1}} checked={_.name === entry.visit_type}/>
-                      {ctxSchema.translate.choice('visit_type', _.name)}
+                      {schema.translate.choice('visit_type', _.name)}
                     </Box>
                   )}
                   {entry.visit_type_specify}
@@ -176,10 +177,10 @@ export const _DashboardMealVisitPdf = () => {
               <Row label="Concerns">
                 {entry.sei ? (
                   <>
-                    {ctxSchema.schemaHelper.choicesIndex['details']?.map(_ =>
+                    {schema.schemaHelper.choicesIndex['details']?.map(_ =>
                       <Box key={_.$kuid} sx={{display: 'flex', alignItems: 'center', mb: .5}}>
                         <Checkbox disabled size="small" sx={{p: 0, pr: 1}} checked={entry.sei?.includes(_.name as any)}/>
-                        {ctxSchema.translate.choice('sei', _.name)}
+                        {schema.translate.choice('sei', _.name)}
                       </Box>
                     )}
                     {entry.visit_type_specify}

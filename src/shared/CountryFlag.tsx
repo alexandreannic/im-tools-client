@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Flag = ({code}: {code: string}) => {
+export const CountryFlag = ({code}: {code: string}) => {
   return (
     <img
       loading="lazy"

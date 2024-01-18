@@ -112,7 +112,6 @@ export const MealVerificationForm = () => {
 
   const activity = useMemoFn(form.watch('activity'), name => mealVerificationActivities.find(_ => _.name === name))
 
-  console.log(form.watch('answerIds')?.length === undefined)
   return (
     <Page>
       <Panel title={m._mealVerif.requestTitle}>

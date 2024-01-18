@@ -29,6 +29,7 @@ const Context = React.createContext({} as KoboSchemaContext)
 
 export const useKoboSchemaContext = () => useContext<KoboSchemaContext>(Context)
 
+/** @deprecated use global KoboSchemasProvider whenever the form is implemented in KoboIndex */
 export const KoboSchemaProvider = ({
   schema,
   defaultLangIndex = 0,

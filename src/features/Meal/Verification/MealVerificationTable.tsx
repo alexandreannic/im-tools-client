@@ -9,7 +9,7 @@ import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {KoboSchemaProvider, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {KoboSchemaProvider, SchemaBundle, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboAnswer, KoboId} from '@/core/sdk/server/kobo/Kobo'
@@ -26,6 +26,8 @@ import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumn
 import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
 import {MealVerificationLinkToForm} from '@/features/Meal/Verification/MealVerificationList'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {useKoboSchemasContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {KoboIndex} from '@/KoboIndex'
 
 export enum MergedDataStatus {
   Selected = 'Selected',
@@ -52,7 +54,7 @@ export const MealVerificationTable = () => {
   const {id} = paramSchema.validateSync(useParams())
   const {api, conf} = useAppSettings()
   const ctx = useMealVerificationContext()
-  const fetcherSchema = useFetcher((formId: KoboId) => api.koboApi.getForm({id: formId}))
+  const ctxSchema = useKoboSchemasContext()
   const fetcherVerificationAnswers = useFetcher(api.mealVerification.getAnswers)
   const {dateFromNow} = useI18n()
 
@@ -60,24 +62,29 @@ export const MealVerificationTable = () => {
     ctx.fetcherVerifications.fetch({force: true})
   }, [])
 
-  const {mealVerification, activity} = useMemo(() => {
+  const {mealVerification, activity, formName} = useMemo(() => {
     const mealVerification = ctx.fetcherVerifications.get?.find(_ => _.id === id)
+    const activity = mealVerificationActivities.find(_ => _.name === mealVerification?.activity)
+    // if (!activity) throw new Error(`No activity ${mealVerification?.activity}.`)
+    const formInfo = activity ? KoboIndex.searchById(activity.registration.koboFormId) : undefined
+    // if (!formInfo) throw new Error(`No form coded for id ${activity.registration.koboFormId}.`)
     return {
       mealVerification,
-      activity: mealVerificationActivities.find(_ => _.name === mealVerification?.activity)
+      activity,
+      formName: formInfo?.name,
     }
   }, [id, ctx.fetcherVerifications.get])
 
   useEffect(() => {
-    if (mealVerification && activity) {
-      fetcherSchema.fetch({force: false, clean: false}, activity.registration.koboFormId)
+    if (mealVerification && activity && formName) {
+      ctxSchema.fetchers.fetch({}, formName)
       fetcherVerificationAnswers.fetch({force: false, clean: false}, mealVerification.id)
     }
   }, [mealVerification, activity])
 
   return (
     <Page width="full">
-      {fetcherSchema.get && fetcherVerificationAnswers.get && activity && mealVerification ? (
+      {formName && ctxSchema.schema[formName] && fetcherVerificationAnswers.get && activity && mealVerification ? (
         <>
           <PageTitle
             action={
@@ -124,13 +131,12 @@ export const MealVerificationTable = () => {
                 <Box>{mealVerification.desc}</Box>
               </Box>
             }>{mealVerification.name}</PageTitle>
-          <KoboSchemaProvider schema={fetcherSchema.get}>
-            <MealVerificationTableContent
-              activity={activity}
-              verificationAnswers={fetcherVerificationAnswers.get}
-              verificationAnswersRefresh={() => fetcherVerificationAnswers.fetch({force: true, clean: false}, mealVerification.id)}
-            />
-          </KoboSchemaProvider>
+          <MealVerificationTableContent
+            schema={ctxSchema.schema[formName]!}
+            activity={activity}
+            verificationAnswers={fetcherVerificationAnswers.get}
+            verificationAnswersRefresh={() => fetcherVerificationAnswers.fetch({force: true, clean: false}, mealVerification.id)}
+          />
         </>
       ) : (
         <SheetSkeleton/>
@@ -143,10 +149,12 @@ const MealVerificationTableContent = <
   TData extends keyof ApiSdk['kobo']['typedAnswers'] = any,
   TCheck extends keyof ApiSdk['kobo']['typedAnswers'] = any,
 >({
+  schema,
   activity,
   verificationAnswers,
   verificationAnswersRefresh,
 }: {
+  schema: SchemaBundle
   activity: MealVerificationActivity<TData, TCheck>
   verificationAnswers: MealVerificationAnsers[]
   verificationAnswersRefresh: () => Promise<any>
@@ -154,7 +162,7 @@ const MealVerificationTableContent = <
   const {api} = useAppSettings()
   const {m} = useI18n()
   const t = useTheme()
-  const ctxSchema = useKoboSchemaContext()
+  const {langIndex, setLangIndex} = useKoboSchemasContext()
   const ctx = useMealVerificationContext()
 
   const indexVerification = useMemo(() => seq(verificationAnswers).groupByFirst(_ => _.koboAnswerId), [verificationAnswers])
@@ -174,7 +182,7 @@ const MealVerificationTableContent = <
   const areEquals = (c: string, _: Pick<MergedData, 'data' | 'dataCheck'>) => {
     if (!_.dataCheck) return true
     if (_.dataCheck[c] === undefined && _.data?.[c] === undefined) return true
-    switch (ctxSchema.schemaHelper.questionIndex[c].type) {
+    switch (schema.schemaHelper.questionIndex[c].type) {
       case 'select_multiple':
         const checkArr = [_.dataCheck[c]].flat() as string[]
         const dataArr = [_.data?.[c]].flat() as string[]
@@ -273,11 +281,11 @@ const MealVerificationTableContent = <
               <IpSelectSingle<number>
                 hideNullOption
                 sx={{maxWidth: 128, mr: 1}}
-                value={ctxSchema.langIndex}
-                onChange={ctxSchema.setLangIndex}
+                value={langIndex}
+                onChange={setLangIndex}
                 options={[
                   {children: 'XML', value: -1},
-                  ...ctxSchema.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
+                  ...schema.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
                 ]}
               />
               <ScRadioGroup inline dense value={display} onChange={setDisplay} sx={{mr: 1}}>
@@ -373,16 +381,16 @@ const MealVerificationTableContent = <
               })
             },
             ...activity.dataColumns?.flatMap(c => {
-              const q = ctxSchema.schemaHelper.questionIndex[c]
+              const q = schema.schemaHelper.questionIndex[c]
               const w = getColumnByQuestionSchema({
                 data: mergedData,
                 q,
-                groupSchemas: ctxSchema.schemaHelper.groupSchemas,
-                translateChoice: ctxSchema.translate.choice,
-                translateQuestion: ctxSchema.translate.question,
+                groupSchemas: schema.schemaHelper.groupSchemas,
+                translateChoice: schema.translate.choice,
+                translateQuestion: schema.translate.question,
                 m,
                 getRow: _ => _.data,
-                choicesIndex: ctxSchema.schemaHelper.choicesIndex,
+                choicesIndex: schema.schemaHelper.choicesIndex,
               })
               return w as any
             }) ?? [],
@@ -390,7 +398,7 @@ const MealVerificationTableContent = <
               return {
                 id: c,
                 type: 'select_one',
-                head: ctxSchema.translate.question(c),
+                head: schema.translate.question(c),
                 style: (_: MergedData) => {
                   if (areEquals(c, _)) {
                     return {}
@@ -401,9 +409,9 @@ const MealVerificationTableContent = <
                     }
                 },
                 renderExport: (_: MergedData) => {
-                  const isOption = ctxSchema.schemaHelper.questionIndex[c].type === 'select_one' || ctxSchema.schemaHelper.questionIndex[c].type === 'select_multiple'
-                  const dataCheck = _.dataCheck && isOption ? ctxSchema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
-                  const data = isOption ? ctxSchema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
+                  const isOption = schema.schemaHelper.questionIndex[c].type === 'select_one' || schema.schemaHelper.questionIndex[c].type === 'select_multiple'
+                  const dataCheck = _.dataCheck && isOption ? schema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
+                  const data = isOption ? schema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
                   switch (display) {
                     case 'data':
                       return data
@@ -420,9 +428,9 @@ const MealVerificationTableContent = <
                   ? areEquals(c, _) ? '1' : '0'
                   : '',
                 render: (_: MergedData) => {
-                  const isOption = ctxSchema.schemaHelper.questionIndex[c].type === 'select_one' || ctxSchema.schemaHelper.questionIndex[c].type === 'select_multiple'
-                  const dataCheck = _.dataCheck && isOption ? ctxSchema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
-                  const data = isOption ? ctxSchema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
+                  const isOption = schema.schemaHelper.questionIndex[c].type === 'select_one' || schema.schemaHelper.questionIndex[c].type === 'select_multiple'
+                  const dataCheck = _.dataCheck && isOption ? schema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
+                  const data = isOption ? schema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
                   switch (display) {
                     case 'data':
                       return data
