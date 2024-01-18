@@ -1,5 +1,4 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {useMap} from '@alexandreannic/react-hooks-lib'
 import {useMap2} from '@/shared/hook/useMap'
 
 export type Func<R = any> = (...args: any[]) => R

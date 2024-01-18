@@ -13,7 +13,8 @@ import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {Panel} from '@/shared/Panel'
 import {Page} from '@/shared/Page'
-import {SidebarKoboLink} from '@/features/SidebarKoboLink'
+import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
+import {shelterIndex} from '@/features/Shelter/Shelter'
 
 const relatedKoboForms: (KoboFormName)[] = [
   'safety_incident',
@@ -67,13 +68,7 @@ export const Safety = () => {
           <Route index element={<Navigate to={safetyIndex.siteMap.incidentDashboard}/>}/>
           <Route index path={safetyIndex.siteMap.incidentDashboard} element={<SafetyIncidentDashboard/>}/>
           {relatedKoboForms.map(_ =>
-            <Route key={_} path={safetyIndex.siteMap.form(_)} element={
-              <Page width="full">
-                <Panel>
-                  <DatabaseTable formId={KoboIndex.byName(_).id}/>
-                </Panel>
-              </Page>
-            }/>
+            <Route key={_} {...getKoboFormRouteProps({path: safetyIndex.siteMap.form(_), name: _})}/>
           )}
         </Routes>
       </Layout>

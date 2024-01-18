@@ -1,5 +1,5 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {buildSchemaBundle, KoboSchemaBundle, UseKoboSchema} from '@/features/KoboSchema/useKoboSchema'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 import {KoboFormName} from '@/KoboIndex'
 import {useI18n} from '@/core/i18n'
 import {useSchemaFetchers} from '@/features/KoboSchema/useSchemaFetcher'
@@ -10,22 +10,13 @@ import {Enum} from '@alexandreannic/ts-utils'
 export type KoboTranslateQuestion = (key: string) => string
 export type KoboTranslateChoice = (key: string, choice?: string) => string
 
-export interface SchemaBundle {
-  schemaHelper: UseKoboSchema
-  schemaUnsanitized: KoboSchema
-  translate: {
-    question: KoboTranslateQuestion
-    choice: KoboTranslateChoice
-  }
-}
-
 interface KoboSchemaProviderProps {
   defaultLangIndex?: number
   children: ReactNode
 }
 
 interface KoboSchemaContext {
-  schema: Partial<Record<KoboFormName, KoboSchemaBundle>>
+  schema: Partial<Record<KoboFormName, KoboSchemaHelper.Bundle>>
   langIndex: number
   setLangIndex: Dispatch<SetStateAction<number>>
   fetchers: UseFetchers<(_: KoboFormName) => Promise<KoboSchema>, KoboFormName>
@@ -52,9 +43,9 @@ export const KoboSchemaProvider = ({
   const [langIndex, setLangIndex] = useState<number>(defaultLangIndex)
   const fetchers = useSchemaFetchers()
   const schemaBundle = useMemo(() => {
-    const res: Partial<Record<KoboFormName, KoboSchemaBundle>> = {}
+    const res: Partial<Record<KoboFormName, KoboSchemaHelper.Bundle>> = {}
     Enum.entries(fetchers.getAsObj).forEach(([name, schema]) => {
-      res[name] = buildSchemaBundle({schema, langIndex, m})
+      res[name] = KoboSchemaHelper.buildBundle({schema, langIndex, m})
     })
     return res
   }, [fetchers.getAsObj, langIndex])

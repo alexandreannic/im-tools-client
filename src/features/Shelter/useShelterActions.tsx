@@ -4,7 +4,7 @@ import {useAsync} from '@/shared/hook/useAsync'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {useDatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
-import {KoboSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 import {useI18n} from '@/core/i18n'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
@@ -18,7 +18,7 @@ export const useShelterActions = <T extends Record<string, any>, >({
   setEntity,
 }: {
   form: 'nta' | 'ta'
-  schema: KoboSchemaBundle
+  schema: KoboSchemaHelper.Bundle
   formId: KoboId,
   setEntity: Dispatch<SetStateAction<ShelterEntity[] | undefined>>
 }) => {

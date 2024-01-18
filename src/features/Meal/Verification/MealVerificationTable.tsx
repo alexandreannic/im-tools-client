@@ -25,8 +25,9 @@ import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumn
 import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
 import {MealVerificationLinkToForm} from '@/features/Meal/Verification/MealVerificationList'
 import {useFetcher} from '@/shared/hook/useFetcher'
-import {SchemaBundle, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {KoboIndex} from '@/KoboIndex'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
 export enum MergedDataStatus {
   Selected = 'Selected',
@@ -153,7 +154,7 @@ const MealVerificationTableContent = <
   verificationAnswers,
   verificationAnswersRefresh,
 }: {
-  schema: SchemaBundle
+  schema: KoboSchemaHelper.Bundle
   activity: MealVerificationActivity<TData, TCheck>
   verificationAnswers: MealVerificationAnsers[]
   verificationAnswersRefresh: () => Promise<any>

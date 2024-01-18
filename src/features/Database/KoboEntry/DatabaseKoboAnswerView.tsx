@@ -10,7 +10,7 @@ import {useModal} from '@/shared/Modal/useModal'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboSchema) => {
   const [open, close] = useModal((answer: T) => (

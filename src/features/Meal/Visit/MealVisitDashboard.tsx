@@ -23,7 +23,7 @@ import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
 import {Page} from '@/shared/Page'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 export interface DashboardPageProps {
   filters: Record<string, string[]>

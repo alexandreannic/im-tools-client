@@ -20,7 +20,7 @@ import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 export const DatabaseKoboTableContent = ({
   onFiltersChange,

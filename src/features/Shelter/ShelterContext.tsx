@@ -1,5 +1,4 @@
 import React, {ReactNode, useContext, useState} from 'react'
-import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboIndex} from '@/KoboIndex'
 import {UseShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
@@ -7,7 +6,7 @@ import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelte
 import {AccessSum} from '@/core/sdk/server/access/Access'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
-import {KoboSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
 export interface ShelterContext {
   access: AccessSum
@@ -32,8 +31,8 @@ export const ShelterProvider = ({
 }: {
   access: AccessSum
   data: UseShelterData
-  schemaTa: KoboSchemaBundle
-  schemaNta: KoboSchemaBundle
+  schemaTa: KoboSchemaHelper.Bundle
+  schemaNta: KoboSchemaHelper.Bundle
   children: ReactNode
   allowedOffices: ShelterContext['allowedOffices']
 }) => {

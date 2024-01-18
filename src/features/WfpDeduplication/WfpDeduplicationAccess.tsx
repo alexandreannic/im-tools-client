@@ -1,6 +1,5 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {AppFeatureId} from '@/features/appFeatureId'
-import {useFetchers} from '@/shared/hook/useFetchers'
 import {useAsync} from '@/shared/hook/useAsync'
 import {AccessTable} from '@/features/Access/AccessTable'
 import {IpBtn} from '@/shared/Btn'

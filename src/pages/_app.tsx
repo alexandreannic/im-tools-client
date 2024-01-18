@@ -22,7 +22,7 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {LicenseInfo} from '@mui/x-license-pro'
 import {useRouter} from 'next/router'
 import {initSentry} from '@/plugins/Sentry'
-import {KoboSchemaProvider} from '@/features/KoboSchema/KoboSchemasContext'
+import {KoboSchemaProvider} from '@/features/KoboSchema/KoboSchemaContext'
 
 LicenseInfo.setLicenseKey(appConfig.muiProLicenseKey ?? '')
 

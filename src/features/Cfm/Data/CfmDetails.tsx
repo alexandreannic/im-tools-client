@@ -13,8 +13,6 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboSelectTag} from '@/shared/KoboSelectTag'
 import {DrcOffice} from '@/core/drcUa'
 import {Utils} from '@/utils/utils'
-import {IpInput} from '@/shared/Input/Input'
-import {DebouncedInput} from '@/shared/DebouncedInput'
 import {AaSelect} from '@/shared/Select/Select'
 import {Enum} from '@alexandreannic/ts-utils'
 import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
@@ -114,11 +112,11 @@ export const CfmDetails = ({entry}: {
               <ListRow icon="person" label={entry.name}/>
               <ListRow icon="phone" label={entry.phone}/>
               <ListRow icon="email" label={entry.email}/>
-              <ListRow icon="female" label={ctx.translateExternal.translateChoice('gender', entry.gender)}/>
+              <ListRow icon="female" label={ctx.schemaExternal.translate.choice('gender', entry.gender)}/>
               <Divider/>
               <ListRow icon="location_on" label={m.oblast}>{entry.oblast}</ListRow>
-              <ListRow icon="" label={m.raion}>{ctx.translateExternal.translateChoice('ben_det_raion', entry.ben_det_raion)}</ListRow>
-              <ListRow icon="" label={m.hromada}>{ctx.translateExternal.translateChoice('ben_det_hromada', entry.ben_det_hromada)}</ListRow>
+              <ListRow icon="" label={m.raion}>{ctx.schemaExternal.translate.choice('ben_det_raion', entry.ben_det_raion)}</ListRow>
+              <ListRow icon="" label={m.hromada}>{ctx.schemaExternal.translate.choice('ben_det_hromada', entry.ben_det_hromada)}</ListRow>
               {entry.form === CfmDataSource.Internal ? (
                 <>
                   <Divider/>
@@ -137,7 +135,7 @@ export const CfmDetails = ({entry}: {
                       <Icon color="error">block</Icon>
                     )}
                     <Box sx={{ml: 1}}>
-                      {ctx.translateExternal.translateChoice('prot_support', entry.external_prot_support)}
+                      {ctx.schemaExternal.translate.choice('prot_support', entry.external_prot_support)}
                     </Box>
                   </ListRow>
                 </>

@@ -21,9 +21,9 @@ import {Paginate} from '@/utils/utils'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useFetcher} from '@/shared/hook/useFetcher'
-import {buildSchemaBundle} from '@/features/KoboSchema/useKoboSchema'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 import {useI18n} from '@/core/i18n'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -72,12 +72,13 @@ export const DatabaseTable = ({
   const {api} = useAppSettings()
   const {m} = useI18n()
   const {accesses, session} = useSession()
-  const {toastHttpError, toastLoading} = useIpToast()
+  const {toastHttpError} = useIpToast()
   const ctxSchema = useKoboSchemaContext()
-  const fetcherSchemaIfUnknown = useFetcher(() => api.koboApi.getForm({serverId, id: formId}).then(_ => buildSchemaBundle({m, schema: _, langIndex: ctxSchema.langIndex})))
+  const fetcherSchemaIfUnknown = useFetcher(() => api.koboApi.getForm({serverId, id: formId}).then(_ => KoboSchemaHelper.buildBundle({m, schema: _, langIndex: ctxSchema.langIndex})))
   const formName = KoboIndex.searchById(formId)?.name
 
   useEffect(function getSchema() {
+    console.log('fetch', formName)
     if (formName) ctxSchema.fetchers.fetch({force: false}, formName)
     else fetcherSchemaIfUnknown.fetch()
   }, [formId])
@@ -112,7 +113,7 @@ export const DatabaseTable = ({
           <SheetSkeleton/>
         </>
       )}
-      {_answers.get && _form.get && (
+      {_answers.get && _form.get && schemaBundle && (
         <DatabaseKoboTableProvider
           schema={schemaBundle}
           dataFilter={dataFilter}

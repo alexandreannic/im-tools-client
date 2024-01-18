@@ -49,8 +49,6 @@ export const MpcaProvider = ({
   children: ReactNode
 }) => {
   const {api} = useAppSettings()
-
-  const _form = useFetcher(() => api.koboApi.getForm({id: KoboIndex.byName('bn_re').id}))
   const _getPayments = useFetcher(api.mpcaPayment.getAll)
   const _create = useAsync(api.mpcaPayment.create)//
 

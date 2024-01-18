@@ -26,7 +26,8 @@ import {IpIconBtn} from '@/shared/IconBtn'
 import {BarChartVertical} from '@/shared/BarChartVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
-import {SchemaBundle, useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
 export const PartnershipDashboard = ({}: {}) => {
   const ctx = usePartnershipContext()
@@ -59,7 +60,7 @@ type SgaEntity = ReturnType<typeof mapSga>[0]
 export const _PartnershipDashboard = ({
   schema,
 }: {
-  schema: SchemaBundle
+  schema: KoboSchemaHelper.Bundle
 }) => {
   const {m, formatLargeNumber} = useI18n()
   const selecteIds = useSetState2<string>()

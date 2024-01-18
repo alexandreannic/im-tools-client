@@ -26,7 +26,6 @@ import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilte
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
-import {useFetchers} from '@/shared/hook/useFetchers'
 import {useFetcher} from '@/shared/hook/useFetcher'
 
 type CustomFilterOptionFilters = {

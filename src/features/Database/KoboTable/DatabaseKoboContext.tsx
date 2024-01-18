@@ -8,12 +8,12 @@ import {useIpToast} from '@/core/useToast'
 import {KeyOf} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {UseFetcher} from '@/shared/hook/useFetcher'
-import {SchemaBundle} from '@/features/KoboSchema/KoboSchemasContext'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
 export interface DatabaseKoboContext {
   fetcherAnswers: UseFetcher<() => ReturnType<ApiSdk['kobo']['answer']['searchByAccess']>>
   serverId: UUID
-  schema: SchemaBundle
+  schema: KoboSchemaHelper.Bundle
   canEdit?: boolean
   form: KoboForm
   updateTag: ApiSdk['kobo']['answer']['updateTag']
@@ -32,7 +32,7 @@ const Context = React.createContext({} as DatabaseKoboContext)
 export const useDatabaseKoboTableContext = () => useContext<DatabaseKoboContext>(Context)
 
 export const DatabaseKoboTableProvider = (props: {
-  schema: SchemaBundle
+  schema: KoboSchemaHelper.Bundle
   dataFilter?: (_: KoboMappedAnswer) => boolean
   children: ReactNode
   fetcherAnswers: DatabaseKoboContext['fetcherAnswers']

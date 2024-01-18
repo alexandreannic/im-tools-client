@@ -1,7 +1,6 @@
-import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {getKoboTranslations, UseKoboSchema, useKoboSchema} from '@/features/KoboSchema/useKoboSchema'
-import {KoboSchema} from '@/core/sdk/server/kobo/KoboApi'
-import {useAsync, UseAsyncMultiple, UseAsyncSimple} from '@/shared/hook/useAsync'
+import React, {ReactNode, useContext, useEffect, useMemo} from 'react'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
+import {useAsync, UseAsyncMultiple} from '@/shared/hook/useAsync'
 import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboIndex} from '@/KoboIndex'
@@ -66,28 +65,16 @@ export type CfmData = {
 >
 
 export interface CfmContext {
-  langIndex: number
-  setLangIndex: Dispatch<SetStateAction<number>>
   authorizations: {
     sum: AccessSum,
     accessibleOffices?: DrcOffice[]
     accessiblePrograms?: CfmDataProgram[]
     // seeHisOwn: boolean
   }
-  schemaInternal: UseKoboSchema,
-  schemaExternal: UseKoboSchema,
-  translateExternal: ReturnType<typeof getKoboTranslations>,
-  translateInternal: ReturnType<typeof getKoboTranslations>,
-  updateTag: UseAsyncMultiple<(_: {
-    formId: KoboId,
-    answerId: KoboAnswerId,
-    key: keyof KoboMealCfmTag,
-    value: any
-  }) => Promise<void>, KoboId>
-  asyncRemove: UseAsyncMultiple<(_: {
-    formId: KoboId,
-    answerId: KoboAnswerId
-  }) => Promise<void>, KoboId>
+  schemaInternal: KoboSchemaHelper.Bundle
+  schemaExternal: KoboSchemaHelper.Bundle
+  updateTag: UseAsyncMultiple<(_: {formId: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag, value: any}) => Promise<void>, KoboId>
+  asyncRemove: UseAsyncMultiple<(_: {formId: KoboId, answerId: KoboAnswerId}) => Promise<void>, KoboId>
   users: UseFetcher<ApiSdk['user']['search']>
   data: UseFetcher<() => Promise<{
     [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal, KoboMealCfmTag>[]
@@ -106,26 +93,17 @@ export const cfmMakeEditRequestKey = (form: KoboId, answerId: KoboAnswerId) => f
 
 export const CfmProvider = ({
   children,
-  schemas,
+  schemaInternal,
+  schemaExternal,
 }: {
-  schemas: {
-    internal: KoboSchema,
-    external: KoboSchema,
-  }
+  schemaInternal: KoboSchemaHelper.Bundle
+  schemaExternal: KoboSchemaHelper.Bundle
   children: ReactNode
 }) => {
   const {m} = useI18n()
   const {session, accesses} = useSession()
   const {api} = useAppSettings()
-  const {toastHttpError, toastError} = useIpToast()
-  const [langIndex, setLangIndex] = useState(0)
-  const schemaInternal = useKoboSchema({schema: schemas.internal})
-  const schemaExternal = useKoboSchema({schema: schemas.external})
-  const translateExternal = useMemo(() => getKoboTranslations({
-    schema: schemas.external,
-    langIndex,
-    questionIndex: schemaExternal.questionIndex,
-  }), [schemas.external, langIndex])
+  const {toastError} = useIpToast()
 
   const users = useFetcher(() => api.user.search())
 
@@ -142,12 +120,6 @@ export const CfmProvider = ({
       // seeHisOwn: seeHisOwn,
     }
   }, [session, accesses])
-
-  const translateInternal = useMemo(() => getKoboTranslations({
-    schema: schemas.internal,
-    langIndex,
-    questionIndex: schemaInternal.questionIndex,
-  }), [schemas.internal, langIndex])
 
   const data = useFetcher(async (filters?: CfmDataFilters) => {
     const [external, internal] = await Promise.all([
@@ -268,17 +240,13 @@ export const CfmProvider = ({
   return (
     <CfmContext.Provider value={{
       authorizations,
-      schemaInternal,
       asyncRemove,
-      schemaExternal,
-      translateExternal,
-      translateInternal,
       updateTag,
       data,
       users,
       mappedData,
-      langIndex,
-      setLangIndex,
+      schemaInternal,
+      schemaExternal,
     }}>
       {children}
     </CfmContext.Provider>

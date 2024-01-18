@@ -27,6 +27,7 @@ import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {Meal_CfmInternalOptions} from '@/core/koboModel/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -50,6 +51,7 @@ export const CfmPriorityLogo = ({
 
 export const CfmTable = ({}: any) => {
   const ctx = useCfmContext()
+  const {langIndex, setLangIndex} = useKoboSchemaContext()
   const {m, formatDate, formatLargeNumber} = useI18n()
   const {session} = useSession()
   const {api} = useAppSettings()
@@ -159,11 +161,11 @@ export const CfmTable = ({}: any) => {
             <>
               <AaSelect<number>
                 sx={{maxWidth: 128, mr: 1}}
-                defaultValue={ctx.langIndex}
-                onChange={ctx.setLangIndex}
+                defaultValue={langIndex}
+                onChange={setLangIndex}
                 options={[
                   {children: 'XML', value: -1},
-                  ...ctx.schemaExternal.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
+                  ...ctx.schemaExternal.schemaHelper.sanitizedSchema.content.translations.map((_, i) => ({children: _, value: i}))
                 ]}
               />
               <IpIconBtn
@@ -231,7 +233,7 @@ export const CfmTable = ({}: any) => {
               head: m.project,
               id: 'project',
               width: 180,
-              // options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.translateInternal.translateChoice('feedback_type', k)})),
+              // options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.schemaExternal.translate('feedback_type', k)})),
               renderValue: _ => _.project,
               renderOption: _ => _.project,
               render: row => row.form === CfmDataSource.Internal
@@ -289,10 +291,10 @@ export const CfmTable = ({}: any) => {
               head: m._cfm.feedbackType,
               id: 'feedbackType',
               width: 120,
-              options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.translateInternal.translateChoice('feedback_type', k)})),
+              options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.schemaExternal.translate.choice('feedback_type', k)})),
               renderValue: _ => _.category,
               render: row => row.form === CfmDataSource.Internal
-                ? ctx.translateInternal.translateChoice('feedback_type', row.category)
+                ? ctx.schemaExternal.translate.choice('feedback_type', row.category)
                 : <AaSelect
                   defaultValue={row.category}
                   onChange={newValue => {
@@ -332,9 +334,9 @@ export const CfmTable = ({}: any) => {
               head: m.gender,
               width: 80,
               id: 'gender',
-              options: () => Enum.keys(Meal_CfmInternalOptions.gender).map(value => ({value, label: ctx.translateExternal.translateChoice('gender', value)})),
+              options: () => Enum.keys(Meal_CfmInternalOptions.gender).map(value => ({value, label: ctx.schemaExternal.translate.choice('gender', value)})),
               renderValue: _ => _.gender,
-              render: _ => ctx.translateExternal.translateChoice('gender', _.gender)
+              render: _ => ctx.schemaExternal.translate.choice('gender', _.gender)
             },
             {
               type: 'string',
@@ -359,13 +361,13 @@ export const CfmTable = ({}: any) => {
               type: 'string',
               head: m.raion,
               id: 'raion',
-              render: _ => ctx.translateExternal.translateChoice('ben_det_raion', _.ben_det_raion),
+              render: _ => ctx.schemaExternal.translate.choice('ben_det_raion', _.ben_det_raion),
             },
             {
               type: 'string',
               head: m.hromada,
               id: 'hromada',
-              render: _ => ctx.translateExternal.translateChoice('ben_det_hromada', _.ben_det_hromada),
+              render: _ => ctx.schemaExternal.translate.choice('ben_det_hromada', _.ben_det_hromada),
             },
             {
               type: 'string',

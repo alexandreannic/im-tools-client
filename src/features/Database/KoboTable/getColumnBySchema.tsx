@@ -1,4 +1,4 @@
-import {useKoboSchema} from '@/features/KoboSchema/useKoboSchema'
+import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 import {I18nContextProps} from '@/core/i18n/I18n'
 import {KoboApiColType, KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
@@ -12,7 +12,7 @@ import React from 'react'
 import {Utils} from '@/utils/utils'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/KoboSchemasContext'
+import {KoboTranslateChoice, KoboTranslateQuestion} from '@/features/KoboSchema/KoboSchemaContext'
 
 const ignoredColType: KoboApiColType[] = [
   'begin_group',
@@ -25,7 +25,7 @@ const ignoredColType: KoboApiColType[] = [
 
 interface GetColumnBySchemaProps<T extends Record<string, any> = any> {
   data?: T[]
-  choicesIndex: ReturnType<typeof useKoboSchema>['choicesIndex']
+  choicesIndex: KoboSchemaHelper.Index['choicesIndex']
   m: I18nContextProps['m']
   translateChoice: KoboTranslateChoice
   translateQuestion: KoboTranslateQuestion

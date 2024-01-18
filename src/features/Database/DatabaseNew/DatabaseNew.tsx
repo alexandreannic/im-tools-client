@@ -11,7 +11,6 @@ import {useIpToast} from '@/core/useToast'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {useAsync} from '@/shared/hook/useAsync'
 
-
 export const DatabaseNew = ({
   children,
   onAdded,

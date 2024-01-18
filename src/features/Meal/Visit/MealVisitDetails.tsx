@@ -14,7 +14,7 @@ import {mapFor, seq} from '@alexandreannic/ts-utils'
 import {koboImgHelper} from '@/shared/TableImg/KoboAttachedImg'
 import {CompressedImg} from '@/shared/CompressedImg'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 const urlValidation = yup.object({
   id: yup.string().required()

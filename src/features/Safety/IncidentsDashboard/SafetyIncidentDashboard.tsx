@@ -15,7 +15,6 @@ import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 import {Page} from '@/shared/Page'
 import {useSafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/useSafetyIncidentDashboard'
 import {SafetyIncidentDashboardBody} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboardBody'
-import {makeKoboBarChartComponent} from '@/features/Dashboard/shared/KoboBarChart'
 import {useFetcher} from '@/shared/hook/useFetcher'
 
 export interface DashboardSafetyIncidentsPageProps {

@@ -9,23 +9,21 @@ import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {CfmTable} from '@/features/Cfm/Data/CfmTable'
 import {CfmProvider, useCfmContext} from '@/features/Cfm/CfmContext'
-import {KoboFormName, KoboIndex} from '@/KoboIndex'
+import {KoboFormName} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmEntryRoute} from '@/features/Cfm/Data/CfmDetails'
 import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {Box} from '@mui/material'
+import {Box, LinearProgress} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
-import {Fender} from 'mui-extension'
 import {appConfig} from '@/conf/AppConfig'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 import {shelterIndex} from '@/features/Shelter/Shelter'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
-import {useFetcher} from '@/shared/hook/useFetcher'
-import {useEffectFn} from '@alexandreannic/react-hooks-lib'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 const relatedKoboForms: KoboFormName[] = [
   'meal_cfmInternal',
@@ -128,20 +126,12 @@ export const Cfm = () => {
   const {session, accesses} = useSession()
   const {toastHttpError} = useIpToast()
   const access = useMemo(() => !!appFeaturesIndex.cfm.showIf?.(session, accesses), [accesses])
-  const {api} = useAppSettings()
-  const _schemas = useFetcher(async () => {
-    const [external, internal] = await Promise.all([
-      api.koboApi.getForm({id: KoboIndex.byName('meal_cfmExternal').id}),
-      api.koboApi.getForm({id: KoboIndex.byName('meal_cfmInternal').id}),
-    ])
-    return {external, internal}
-  })
+  const schemaContext = useKoboSchemaContext()
 
   useEffect(() => {
-    _schemas.fetch()
+    schemaContext.fetchers.fetch({force: false}, 'meal_cfmExternal')
+    schemaContext.fetchers.fetch({force: false}, 'meal_cfmInternal')
   }, [])
-
-  useEffectFn(_schemas.error, toastHttpError)
 
   if (!access) {
     return (
@@ -150,8 +140,11 @@ export const Cfm = () => {
   }
   return (
     <>
-      {_schemas.get ? (
-        <CfmProvider schemas={_schemas.get}>
+      {schemaContext.schema.meal_cfmExternal && schemaContext.schema.meal_cfmInternal ? (
+        <CfmProvider
+          schemaExternal={schemaContext.schema.meal_cfmExternal}
+          schemaInternal={schemaContext.schema.meal_cfmInternal}
+        >
           <Router>
             <Layout
               title={appFeaturesIndex.cfm.name}
@@ -170,10 +163,8 @@ export const Cfm = () => {
             </Layout>
           </Router>
         </CfmProvider>
-      ) : _schemas.loading && (
-        <>
-          <Fender type="loading"/>
-        </>
+      ) : schemaContext.fetchers.anyLoading && (
+        <LinearProgress/>
       )}
     </>
   )

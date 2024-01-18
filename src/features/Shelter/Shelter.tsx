@@ -11,7 +11,6 @@ import {ShelterTable} from '@/features/Shelter/Data/ShelterTable'
 import {ShelterProvider} from '@/features/Shelter/ShelterContext'
 import {kobo, KoboFormName, KoboIndex} from '@/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {useIpToast} from '@/core/useToast'
 import Link from 'next/link'
 import {databaseIndex} from '@/features/Database/databaseIndex'
 import {ShelterDashboard} from '@/features/Shelter/Dasbhoard/ShelterDashboard'
@@ -21,7 +20,7 @@ import {Access} from '@/core/sdk/server/access/Access'
 import {Shelter_NTA} from '@/core/koboModel/Shelter_NTA/Shelter_NTA'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
-import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemasContext'
+import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 
 const relatedKoboForms: KoboFormName[] = [
   'shelter_nta',
@@ -76,8 +75,6 @@ export const Shelter = () => {
 
 export const ShelterWithAccess = () => {
   const {session, accesses} = useSession()
-  const {api} = useAppSettings()
-  const {toastHttpError} = useIpToast()
   const schemaContext = useKoboSchemaContext()
 
   const {access, allowedOffices} = useMemo(() => {
@@ -91,27 +88,13 @@ export const ShelterWithAccess = () => {
     }
   }, [session, accesses])
 
-  // const fetcherSchema = useFetcher(async () => {
-  //   if (!access) return
-  //   const [ta, nta] = await Promise.all([
-  //     api.koboApi.getForm({id: KoboIndex.byName('shelter_ta').id}),
-  //     api.koboApi.getForm({id: KoboIndex.byName('shelter_nta').id}),
-  //   ])
-  //   return {ta, nta}
-  // })
-
   const fetcherData = useShelterData()
-
-  // useEffectFn(fetcherSchema.error, toastHttpError)
 
   useEffect(() => {
     schemaContext.fetchers.fetch({}, 'shelter_ta')
     schemaContext.fetchers.fetch({}, 'shelter_nta')
     fetcherData.fetchAll()
-    // fetcherSchema.fetch()
   }, [])
-
-  const schemaNta = schemaContext.schema.shelter_nta
 
   return (
     <Router>
