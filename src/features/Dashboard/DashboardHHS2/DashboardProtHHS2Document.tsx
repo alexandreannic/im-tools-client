@@ -10,7 +10,7 @@ import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ProtHHS2BarChart, ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Person} from '@/core/type'
@@ -86,12 +86,11 @@ export const DashboardProtHHS2Document = ({
             }
           </Lazy>
           <SlidePanel>
-            <KoboPieChartIndicator
+            <ChartPieIndicator
               compare={{before: computed.lastMonth}}
               title={m.protHHS2.accessBarriersToObtainDocumentation}
-              question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
-              filter={_ => !_.includes('no')}
-              filterBase={_ => !_?.includes('unable_unwilling_to_answer')}
+              filter={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation.includes('no')}
+              filterBase={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation?.includes('unable_unwilling_to_answer')}
               data={data}
               sx={{mb: 2}}
             />
@@ -140,13 +139,12 @@ export const DashboardProtHHS2Document = ({
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <KoboPieChartIndicator
+            <ChartPieIndicator
               compare={{before: computed.lastMonth}}
               title={m.lackOfHousingDoc}
-              filterBase={_ => !_.includes('unable_unwilling_to_answer')}
-              filter={_ => !_.includes('none')}
+              filterBase={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('unable_unwilling_to_answer')}
+              filter={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('none')}
               data={data}
-              question={'what_housing_land_and_property_documents_do_you_lack'}
               sx={{mb: 2}}
             />
             <ProtHHS2BarChart

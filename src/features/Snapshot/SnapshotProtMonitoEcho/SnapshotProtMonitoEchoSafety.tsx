@@ -7,7 +7,7 @@ import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {BarChart} from '@/shared/chart/BarChart'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
@@ -153,11 +153,10 @@ export const SnapshotProtMonitoEchoSafety = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieIndicator
                 title={m.protHHS2.poorSenseOfSafety}
-                question="please_rate_your_sense_of_safety_in_this_location"
-                filter={_ => _ === '_2_unsafe' || _ === '_1_very_unsafe'}
-                filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+                filter={_ => _.please_rate_your_sense_of_safety_in_this_location === '_2_unsafe' || _.please_rate_your_sense_of_safety_in_this_location === '_1_very_unsafe'}
+                filterBase={_ => _.please_rate_your_sense_of_safety_in_this_location !== 'unable_unwilling_to_answer'}
                 compare={{before: computed.lastMonth}}
                 data={data}
                 {...snapShotDefaultPieProps}

@@ -306,14 +306,14 @@ export const _PartnershipDashboard = ({
                 )}
               </Lazy>
 
-              {/*<KoboPieChartIndicator*/}
+              {/*<ChartPieIndicator*/}
               {/*  title={m._partner.womenLedOrganization}*/}
               {/*  question="Is_this_a_women_led_organization"*/}
               {/*  filter={_ => _ === 'yes'}*/}
               {/*  data={filteredAndPickedData.filter(_ => _.Select_if_the_organi_inorities_in_Ukraine?.includes('women_s_rights'))}*/}
               {/*  sx={{mb: 2}}*/}
               {/*/>*/}
-              {/*<KoboPieChartIndicator*/}
+              {/*<ChartPieIndicator*/}
               {/*  title={m._partner.youthLedOrganization}*/}
               {/*  question="Is_this_a_youth_led_organization"*/}
               {/*  filter={_ => _ === 'yes'}*/}

@@ -3,7 +3,7 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ChartTools} from '@/shared/chart/chartHelper'
 
@@ -16,12 +16,11 @@ export const DashboardProtHHS2Safety = ({
     <Div responsive>
       <Div column>
         <SlidePanel>
-          <KoboPieChartIndicator
+          <ChartPieIndicator
             sx={{mb: 1}}
             title={m.protHHS2.poorSenseOfSafety}
-            question="please_rate_your_sense_of_safety_in_this_location"
-            filter={_ => _ === '_2_unsafe' || _ === '_1_very_unsafe'}
-            filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+            filter={_ => _.please_rate_your_sense_of_safety_in_this_location === '_2_unsafe' || _.please_rate_your_sense_of_safety_in_this_location === '_1_very_unsafe'}
+            filterBase={_ => _.please_rate_your_sense_of_safety_in_this_location !== 'unable_unwilling_to_answer'}
             compare={{before: computed.lastMonth}}
             data={data}
           />
@@ -58,12 +57,11 @@ export const DashboardProtHHS2Safety = ({
       </Div>
       <Div column>
         <SlidePanel>
-          <KoboPieChartIndicator
+          <ChartPieIndicator
             sx={{mb: 1}}
             title={m.protHHS2.poorRelationshipWithHostCommunity}
-            question="how_would_you_describe_the_relationship_between_member_of_the_host_community"
-            filter={_ => _ === '_2_bad' || _ === '_1_very_bad'}
-            filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+            filter={_ => _.how_would_you_describe_the_relationship_between_member_of_the_host_community === '_2_bad' || _.how_would_you_describe_the_relationship_between_member_of_the_host_community === '_1_very_bad'}
+            filterBase={_ => _.how_would_you_describe_the_relationship_between_member_of_the_host_community !== 'unable_unwilling_to_answer'}
             compare={{before: computed.lastMonth}}
             data={data}
           />
@@ -99,12 +97,11 @@ export const DashboardProtHHS2Safety = ({
           />
         </SlidePanel>
         <SlidePanel>
-          <KoboPieChartIndicator
+          <ChartPieIndicator
             sx={{mb: 1}}
             title={m.protHHS2.freedomOfMovement}
-            question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
-            filter={_ => !_.includes('no')}
-            filterBase={_ => !_.includes('unable_unwilling_to_answer')}
+            filter={_ => !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area.includes('no')}
+            filterBase={_ => !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area.includes('unable_unwilling_to_answer')}
             compare={{before: computed.lastMonth}}
             data={data}
           />

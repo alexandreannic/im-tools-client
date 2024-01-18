@@ -11,7 +11,7 @@ import {LineChartByDate} from '@/shared/chart/LineChartByDate'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 
 // do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area
 // what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members
@@ -51,13 +51,12 @@ export const DashboardProtHHS2Displacement = ({
           />
         </SlidePanel>
         <SlidePanel>
-          <KoboPieChartIndicator
+          <ChartPieIndicator
             showValue showBase
             title={m.protHHS2.hhsAffectedByMultipleDisplacement}
-            question="have_you_been_displaced_prior_to_your_current_displacement"
             data={data}
-            filter={_ => _ === 'yes_after_february_24_2022'}
-            filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+            filter={_ => _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_february_24_2022'}
+            filterBase={_ => _.have_you_been_displaced_prior_to_your_current_displacement !== 'unable_unwilling_to_answer'}
           />
           <Lazy deps={[data]} fn={() => chain(ChartTools.byCategory({
             data,

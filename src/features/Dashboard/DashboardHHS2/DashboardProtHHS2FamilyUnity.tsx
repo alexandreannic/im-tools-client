@@ -5,7 +5,7 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {BarChart} from '@/shared/chart/BarChart'
 import {chain} from '@/utils/utils'
 import {Box, Checkbox} from '@mui/material'
@@ -58,11 +58,10 @@ export const DashboardProtHHS2FamilyUnity = ({
       <Div responsive>
         <Div column>
           <SlidePanel>
-            <KoboPieChartIndicator
+            <ChartPieIndicator
               compare={{before: computed.lastMonth}}
               title={m.protHHS2.familyMemberSeparated}
-              question="are_you_separated_from_any_of_your_households_members"
-              filter={_ => !_.includes('no') && !_.includes('unable_unwilling_to_answer')}
+              filter={_ => !_.are_you_separated_from_any_of_your_households_members.includes('no') && !_.are_you_separated_from_any_of_your_households_members.includes('unable_unwilling_to_answer')}
               sx={{mb: 2}}
               data={data}
             />

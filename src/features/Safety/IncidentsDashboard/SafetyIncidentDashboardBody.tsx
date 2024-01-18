@@ -7,7 +7,7 @@ import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {IpLineChart} from '@/shared/chart/LineChart'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {useSession} from '@/core/Session/SessionContext'
 import {DashboardSafetyIncidentsPageProps} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
@@ -33,13 +33,12 @@ export const SafetyIncidentDashboardBody = ({
             {formatLargeNumber(data.length)}
           </SlideWidget>
           <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <KoboPieChartIndicator
+            <ChartPieIndicator
               title={m.safety.attacks}
-              question="attack"
-              filter={_ => _ === 'yes'}
+              filter={_ => _.attack === 'yes'}
               showValue
               compare={{before: computed.lastMonth}}
-              filterBase={_ => _ !== undefined}
+              filterBase={_ => _.attack !== undefined}
               data={data}
             />
           </SlidePanel>

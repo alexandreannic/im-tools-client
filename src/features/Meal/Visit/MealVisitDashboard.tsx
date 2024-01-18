@@ -6,7 +6,7 @@ import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {makeKoboBarChartComponent} from '@/shared/chart/BarChartByProperty'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Lazy} from '@/shared/Lazy'
@@ -175,15 +175,15 @@ export const MealVisitDashboard = () => {
                 <MealVisitMonitoringBarChart data={data} question="mdd_001" questionType="multiple"/>
               </SlidePanel>
               <SlidePanel>
-                <KoboPieChartIndicator title={m.mealMonitoringVisit.securityConcerns} question="ssy" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
+                <ChartPieIndicator title={m.mealMonitoringVisit.securityConcerns} filter={_ => _.ssy === 'yes'} data={data} sx={{mb: 1}}/>
                 <MealVisitMonitoringBarChart data={data} question="sst"/>
               </SlidePanel>
               <SlidePanel>
-                <KoboPieChartIndicator title={m.mealMonitoringVisit.concerns} question="sef" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
+                <ChartPieIndicator title={m.mealMonitoringVisit.concerns} filter={_ => _.sef === 'yes'} data={data} sx={{mb: 1}}/>
                 <MealVisitMonitoringBarChart data={data} question="sei"/>
               </SlidePanel>
               <SlidePanel>
-                <KoboPieChartIndicator title={m.mealMonitoringVisit.criticalConcern} question="visf" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
+                <ChartPieIndicator title={m.mealMonitoringVisit.criticalConcern} filter={_ => _.visf === 'yes'} data={data} sx={{mb: 1}}/>
                 <MealVisitMonitoringBarChart data={data} question="visp"/>
               </SlidePanel>
             </Div>

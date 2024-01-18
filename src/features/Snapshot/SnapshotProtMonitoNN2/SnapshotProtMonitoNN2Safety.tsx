@@ -5,7 +5,7 @@ import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {toPercent} from '@/utils/utils'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
@@ -59,11 +59,10 @@ export const SnapshotProtMonitoNN2Safety = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieIndicator
                 title={m.protHHS2.poorSenseOfSafety}
-                question="please_rate_your_sense_of_safety_in_this_location"
-                filter={_ => _ === '_2_unsafe' || _ === '_1_very_unsafe'}
-                filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+                filter={_ => _.please_rate_your_sense_of_safety_in_this_location === '_2_unsafe' || _.please_rate_your_sense_of_safety_in_this_location === '_1_very_unsafe'}
+                filterBase={_ => _.please_rate_your_sense_of_safety_in_this_location !== 'unable_unwilling_to_answer'}
                 compare={{before: computed.lastMonth}}
                 data={data}
                 {...snapShotDefaultPieProps}
@@ -89,11 +88,10 @@ export const SnapshotProtMonitoNN2Safety = () => {
               />
             </SlidePanel>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieIndicator
                 title={m.protHHS2.freedomOfMovement}
-                question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
-                filter={_ => !_.includes('no')}
-                filterBase={_ => !_.includes('unable_unwilling_to_answer')}
+                filter={_ => !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area.includes('no')}
+                filterBase={_ => !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area.includes('unable_unwilling_to_answer')}
                 compare={{before: computed.lastMonth}}
                 data={data}
                 {...snapShotDefaultPieProps}

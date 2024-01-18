@@ -9,7 +9,7 @@ import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/Dashboa
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {BarChart} from '@/shared/chart/BarChart'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
@@ -84,12 +84,12 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               </Div>
             </SlidePanel>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieIndicator
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.accessBarriersToObtainDocumentation}
-                question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
-                filter={_ => !_.includes('no')}
-                filterBase={_ => !_?.includes('unable_unwilling_to_answer')}
+                filter={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation.includes('no')}
+                filterBase={_ => !_?.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation
+                  .includes('unable_unwilling_to_answer')}
                 data={data}
                 {...snapShotDefaultPieProps}
               />
@@ -133,14 +133,13 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               </Lazy>
             </SlidePanel>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieIndicator
                 hideEvolution
                 compare={{before: computed.lastMonth}}
                 title={m.lackOfHousingDoc}
-                filterBase={_ => !_.includes('unable_unwilling_to_answer')}
-                filter={_ => !_.includes('none')}
+                filterBase={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('unable_unwilling_to_answer')}
+                filter={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('none')}
                 data={data}
-                question={'what_housing_land_and_property_documents_do_you_lack'}
                 {...snapShotDefaultPieProps}
               />
               <ProtHHS2BarChart

@@ -3,7 +3,7 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
@@ -26,12 +26,11 @@ export const DashboardProtHHS2Housing = ({
             />
           </SlidePanel>
           <SlidePanel>
-            <KoboPieChartIndicator
+            <ChartPieIndicator
               compare={{before: computed.lastMonth}}
               title={m.protHHSnapshot.noAccommodationDocument}
-              question="do_you_have_formal_rental_documents_to_stay_in_your_accommodation"
-              filter={_ => _ !== 'yes_i_have_a_written_lease_agreement' && _ !== 'yes_i_have_state_assigned_shelter_with_proving_documents'}
-              filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+              filter={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'yes_i_have_a_written_lease_agreement' && _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'yes_i_have_state_assigned_shelter_with_proving_documents'}
+              filterBase={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'unable_unwilling_to_answer'}
               data={data.filter(_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== undefined)}
               sx={{mb: 2}}
             />
@@ -44,11 +43,10 @@ export const DashboardProtHHS2Housing = ({
         </Div>
         <Div column>
           <SlidePanel>
-            <KoboPieChartIndicator
+            <ChartPieIndicator
               compare={{before: computed.lastMonth}}
               title={m.protHHS2.mainConcernsRegardingHousing}
-              question="what_are_your_main_concerns_regarding_your_accommodation"
-              filter={_ => !_.includes('none')}
+              filter={_ => !_.what_are_your_main_concerns_regarding_your_accommodation?.includes('none')}
               data={data}
               sx={{mb: 1}}
             />

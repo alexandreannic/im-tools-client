@@ -11,7 +11,7 @@ import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {IpStackedBarChart} from '@/shared/chart/StackedBarChart'
 import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
-import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
@@ -75,12 +75,11 @@ export const DashboardProtHHS2Sample = ({
               </Lazy>
             </SlidePanel>
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <KoboPieChartIndicator
+              <ChartPieIndicator
                 title={m.uaCitizen}
                 data={data}
-                filterBase={_ => _ !== 'unable_unwilling_to_answer'}
-                filter={_ => _ === 'no'}
-                question="if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group"
+                filterBase={_ => _.if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group !== 'unable_unwilling_to_answer'}
+                filter={_ => _.if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group === 'no'}
               />
               {/*<Lazy deps={[data]} fn={() => ChartTools.percentage({*/}
               {/*  data,*/}
