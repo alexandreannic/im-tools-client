@@ -33,7 +33,7 @@ const CustomizedLabel = ({x, y, fill, value, percent, textAnchor}: PieLabelRende
 }
 
 
-export const IpPieChart = <T extends Record<string, number>>({
+export const ChartPie = <T extends Record<string, number>>({
   sx,
   height,
   width,

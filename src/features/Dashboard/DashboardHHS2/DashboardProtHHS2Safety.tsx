@@ -3,10 +3,10 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 export const DashboardProtHHS2Safety = ({
   data,
@@ -17,7 +17,7 @@ export const DashboardProtHHS2Safety = ({
     <Div responsive>
       <Div column>
         <SlidePanel>
-          <ChartPieIndicatorByKey
+          <ChartPieWidgetByKey
             sx={{mb: 1}}
             title={m.protHHS2.poorSenseOfSafety}
             property="please_rate_your_sense_of_safety_in_this_location"
@@ -59,7 +59,7 @@ export const DashboardProtHHS2Safety = ({
       </Div>
       <Div column>
         <SlidePanel>
-          <ChartPieIndicatorByKey
+          <ChartPieWidgetByKey
             sx={{mb: 1}}
             title={m.protHHS2.poorRelationshipWithHostCommunity}
             property="how_would_you_describe_the_relationship_between_member_of_the_host_community"
@@ -100,7 +100,7 @@ export const DashboardProtHHS2Safety = ({
           />
         </SlidePanel>
         <SlidePanel>
-          <ChartPieIndicatorByKey
+          <ChartPieWidgetByKey
             sx={{mb: 1}}
             title={m.protHHS2.freedomOfMovement}
             property="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"

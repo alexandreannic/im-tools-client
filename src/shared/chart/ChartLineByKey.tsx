@@ -4,7 +4,7 @@ import React, {useMemo} from 'react'
 import {StringKeys} from '../../core/type'
 import {ChartLine, ChartLineData} from '@/shared/chart/ChartLine'
 
-export const ChartLineByProperty = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
+export const ChartLineByKey = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
   data,
   question,
   displayedValues,

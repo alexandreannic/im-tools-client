@@ -4,12 +4,12 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {DRCLogo, EULogo, UhfLogo, UsaidLogo} from '@/shared/logo/logo'
-import {commonLegendProps, IpStackedBarChart} from '@/shared/chart/StackedBarChart'
+import {commonLegendProps, ChartBarStacker} from '@/shared/chart/ChartBarStacked'
 import {Person} from '@/core/type'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Legend} from 'recharts'
-import {IpPieChart} from '@/shared/chart/PieChart'
+import {ChartPie} from '@/shared/chart/ChartPie'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
@@ -76,7 +76,7 @@ export const SnapshotProtMonitoEchoSample = () => {
             <Div>
               <Div column>
                 <SlidePanel>
-                  <IpPieChart
+                  <ChartPie
                     outerRadius={65}
                     height={140}
                     width={270}
@@ -96,11 +96,11 @@ export const SnapshotProtMonitoEchoSample = () => {
                     }}
                   >
                     <Legend {...commonLegendProps} layout="vertical" verticalAlign="middle" align="right"/>
-                  </IpPieChart>
+                  </ChartPie>
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <IpStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} sx={{mt: 2}} height={300} colors={t => [
+                  <ChartBarStacker data={computed.ageGroup(Person.ageGroup['DRC'], true)} sx={{mt: 2}} height={300} colors={t => [
                     t.palette.primary.main,
                     snapshotAlternateColor(t),
                     darken(t.palette.primary.main, .5),

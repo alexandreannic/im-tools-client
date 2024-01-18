@@ -8,11 +8,11 @@ import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
 import {ChartData, ChartTools, makeChartData} from '@/shared/chart/chartHelper'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
-import {BarChart} from '@/shared/chart/BarChart'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {PartnershipCard} from '@/features/Partnership/Dashboard/PartnershipCard'
-import {KoboBarChartMultiple} from '@/shared/chart/BarChartByProperty'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Utils} from '@/utils/utils'
 import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/typeDrc'
 import {Txt} from 'mui-extension'
@@ -23,7 +23,7 @@ import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {useSetStateIp} from '@/shared/hook/useSetState'
 import {Box, Checkbox} from '@mui/material'
 import {IpIconBtn} from '@/shared/IconBtn'
-import {BarChartVertical} from '@/shared/chart/BarChartVertical'
+import {ChartBarVertical} from '@/shared/chart/ChartBarVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
@@ -238,7 +238,7 @@ export const _PartnershipDashboard = ({
         </Div>
         <Div column>
           <SlidePanel>
-            <PieChartIndicator dense showValue value={computed.ongoingGrant.length} base={filteredAndPickedData.length} title={m._partner.ongoingGrant}/>
+            <ChartPieIndicator dense showValue value={computed.ongoingGrant.length} base={filteredAndPickedData.length} title={m._partner.ongoingGrant}/>
           </SlidePanel>
           <PanershipPanelDonor data={filteredAndPickedData}/>
           <Lazy deps={[filteredAndPickedData]} fn={() => {
@@ -259,7 +259,7 @@ export const _PartnershipDashboard = ({
                 <Txt uppercase color="hint" bold>{m._partner.totalBudget}</Txt>
                 <Txt sx={{fontSize: '2em', mb: 2, lineHeight: 1}} bold block>${formatLargeNumber(seq(Enum.values(res)).sum(_ => _.value))}</Txt>
                 {Enum.entries(res).map(([project, budget]) => (
-                  <PieChartIndicator dense sx={{mb: 2}} key={project} value={budget.value} base={budget.base ?? 1} showValue showBase title={project}/>
+                  <ChartPieIndicator dense sx={{mb: 2}} key={project} value={budget.value} base={budget.base ?? 1} showValue showBase title={project}/>
                 ))}
               </PanelBody>
             </Panel>
@@ -274,7 +274,7 @@ export const _PartnershipDashboard = ({
                   value: _ => (_.Partnership_type === 'strategic_partnership' || _.Partnership_type === 'project_based_partnership') && _.Is_it_an_equitable_partnership === 'yes',
                 })
               }}>
-                {_ => <PieChartIndicator showValue dense title={m._partner.equitable} value={_.value} base={_.base} sx={{mb: 2}}/>}
+                {_ => <ChartPieIndicator showValue dense title={m._partner.equitable} value={_.value} base={_.base} sx={{mb: 2}}/>}
               </Lazy>
               <Lazy deps={[filteredAndPickedData]} fn={() => {
                 return ChartTools.percentage({
@@ -283,7 +283,7 @@ export const _PartnershipDashboard = ({
                   value: _ => (_.Partnership_type === 'strategic_partnership' || _.Partnership_type === 'project_based_partnership') && _.Is_it_an_equitable_partnership === 'partially',
                 })
               }}>
-                {_ => <PieChartIndicator showValue dense title={m._partner.partiallyEquitable} value={_.value} base={_.base}/>}
+                {_ => <ChartPieIndicator showValue dense title={m._partner.partiallyEquitable} value={_.value} base={_.base}/>}
               </Lazy>
             </PanelBody>
           </Panel>
@@ -302,7 +302,7 @@ export const _PartnershipDashboard = ({
                 return res
               }}>
                 {_ => (
-                  <BarChartVertical data={_}/>
+                  <ChartBarVertical data={_}/>
                 )}
               </Lazy>
 
@@ -380,15 +380,15 @@ export const _PartnershipDashboard = ({
             {res => (
               <Panel>
                 <PanelBody>
-                  <PieChartIndicator showValue showBase title={m._partner.benefReached} value={res.other.value} base={res.other.base!} sx={{mb: 2}}/>
-                  <PieChartIndicator showValue showBase title={m._partner.benefPwdReached} value={res.pwd.value} base={res.pwd.base!}/>
-                  <BarChart data={res.breakdown}/>
+                  <ChartPieIndicator showValue showBase title={m._partner.benefReached} value={res.other.value} base={res.other.base!} sx={{mb: 2}}/>
+                  <ChartPieIndicator showValue showBase title={m._partner.benefPwdReached} value={res.pwd.value} base={res.pwd.base!}/>
+                  <ChartBar data={res.breakdown}/>
                 </PanelBody>
               </Panel>
             )}
           </Lazy>
           <SlidePanel title={m._partner.targetedMinorities}>
-            <KoboBarChartMultiple
+            <ChartBarMultipleBy
               data={filteredAndPickedData}
               getValue={_ => _.Select_if_the_organi_inorities_in_Ukraine!}
               label={Partnership_partnersDatabaseOptions.Minority_group}
@@ -397,7 +397,7 @@ export const _PartnershipDashboard = ({
           <Panel>
             <PanelHead>{m.sector}</PanelHead>
             <PanelBody>
-              <KoboBarChartMultiple
+              <ChartBarMultipleBy
                 data={filteredAndPickedData}
                 getValue={_ => _.Which_sectors_does_the_organiz!}
                 label={Partnership_partnersDatabaseOptions.Sectors_funded}

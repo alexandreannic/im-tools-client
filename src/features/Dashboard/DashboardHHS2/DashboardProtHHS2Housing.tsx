@@ -3,10 +3,10 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 export const DashboardProtHHS2Housing = ({
   data,
@@ -27,7 +27,7 @@ export const DashboardProtHHS2Housing = ({
             />
           </SlidePanel>
           <SlidePanel>
-            <ChartPieIndicatorByKey
+            <ChartPieWidgetByKey
               compare={{before: computed.lastMonth}}
               title={m.protHHSnapshot.noAccommodationDocument}
               property="do_you_have_formal_rental_documents_to_stay_in_your_accommodation"
@@ -45,7 +45,7 @@ export const DashboardProtHHS2Housing = ({
         </Div>
         <Div column>
           <SlidePanel>
-            <ChartPieIndicatorByKey
+            <ChartPieWidgetByKey
               compare={{before: computed.lastMonth}}
               title={m.protHHS2.mainConcernsRegardingHousing}
               property="what_are_your_main_concerns_regarding_your_accommodation"

@@ -30,10 +30,10 @@ interface Props<K extends string> {
   barHeight?: number
 }
 
-export const BarChart = <K extends string>(props: Props<K>) => {
+export const ChartBar = <K extends string>(props: Props<K>) => {
   const {m} = useI18n()
   return props.data ? (
-    <BarChartContent {...props} data={props.data!}/>
+    <ChartBarContent {...props} data={props.data!}/>
   ) : (
     <Box sx={{
       textAlign: 'center',
@@ -46,7 +46,7 @@ export const BarChart = <K extends string>(props: Props<K>) => {
   )
 }
 
-export const BarChartContent = <K extends string>({
+export const ChartBarContent = <K extends string>({
   data,
   // base,
   icons,

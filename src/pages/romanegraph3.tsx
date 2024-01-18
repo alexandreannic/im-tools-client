@@ -8,7 +8,7 @@ import {enrichProtHHS_2_1, ProtHHS2BarChart} from '@/features/Dashboard/Dashboar
 import {DeepPartial, Enum, seq} from '@alexandreannic/ts-utils'
 import {Period, Person} from '@/core/type'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
-import {IpStackedBarChart} from '@/shared/chart/StackedBarChart'
+import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
@@ -179,7 +179,7 @@ export default () => {
       </Pan>
       <Pan title={title('Surveyed households per age and gender groups')}>
         {/*<Pan title={title('Опитанні сім\'ї за віком і статтю Female - Жінка; Male - Чоловік; Other - Інше')}>*/}
-        <IpStackedBarChart data={lang === 'en'
+        <ChartBarStacker data={lang === 'en'
           ? ageGroup(Person.ageGroup['DRC'], true)
           : ageGroup(Person.ageGroup['DRC'], true).map(_ => ({
             key: _.key,

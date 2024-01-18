@@ -4,10 +4,10 @@ import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, S
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {chain, mapObjectValue, toPercent} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {BarChart} from '@/shared/chart/BarChart'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
@@ -62,7 +62,7 @@ export const SnapshotProtMonitoNN2Livelihood = () => {
                 })
                 return {income, hhSize}
               }}>
-                {res => <BarChart data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
+                {res => <ChartBar data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
               </Lazy>
             </SlidePanel>
           </Div>
@@ -74,7 +74,7 @@ export const SnapshotProtMonitoNN2Livelihood = () => {
                   data: d,
                   base: _ => _ !== undefined,
                 })}>
-                  {(_, last) => <PieChartIndicator
+                  {(_, last) => <ChartPieIndicator
                     title={m.hhOutOfWork}
                     value={_.value}
                     base={_.base} evolution={_.percent - last.percent}
@@ -89,7 +89,7 @@ export const SnapshotProtMonitoNN2Livelihood = () => {
                   value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
                   data: d,
                 })}>
-                  {(_, last) => <PieChartIndicator
+                  {(_, last) => <ChartPieIndicator
                     title={m.hhWithGapMeetingBasicNeeds}
                     value={_.value}
                     base={_.base}

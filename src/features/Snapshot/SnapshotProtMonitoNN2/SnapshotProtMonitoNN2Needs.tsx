@@ -3,7 +3,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Lazy} from '@/shared/Lazy'
@@ -48,7 +48,7 @@ export const SnapshotProtMonitoNN2Needs = () => {
               </Lazy>
             </SlideTxt>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 {...snapShotDefaultPieProps}
                 title={m.protHHS2.barriersToAccessHealth}
                 compare={{before: computed.lastMonth}}
@@ -65,7 +65,7 @@ export const SnapshotProtMonitoNN2Needs = () => {
               />
             </SlidePanel>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 {...snapShotDefaultPieProps}
                 title={m.protHHS2.unregisteredDisability}
                 filter={_ => _.do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov !== 'yes_all'}
@@ -90,7 +90,7 @@ export const SnapshotProtMonitoNN2Needs = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 {...snapShotDefaultPieProps}
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.mainConcernsRegardingHousing}

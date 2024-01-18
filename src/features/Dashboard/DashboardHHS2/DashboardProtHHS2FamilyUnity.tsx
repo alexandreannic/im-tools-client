@@ -5,13 +5,13 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
-import {BarChart} from '@/shared/chart/BarChart'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {chain} from '@/utils/utils'
 import {Box, Checkbox} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
-import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 type Filters = Pick<Record<keyof typeof Protection_Hhs2_1Options['are_you_separated_from_any_of_your_households_members'], boolean>,
   'partner' |
@@ -59,7 +59,7 @@ export const DashboardProtHHS2FamilyUnity = ({
       <Div responsive>
         <Div column>
           <SlidePanel>
-            <ChartPieIndicatorByKey
+            <ChartPieWidgetByKey
               compare={{before: computed.lastMonth}}
               title={m.protHHS2.familyMemberSeparated}
               property="are_you_separated_from_any_of_your_households_members"
@@ -81,7 +81,7 @@ export const DashboardProtHHS2FamilyUnity = ({
                 .map(ChartTools.setLabel(Protection_Hhs2_1Options.are_you_separated_from_any_of_your_households_members))
                 .get
             }>
-              {_ => <BarChart
+              {_ => <ChartBar
                 data={_}
                 labels={{
                   partner: <Checkbox
@@ -141,7 +141,7 @@ export const DashboardProtHHS2FamilyUnity = ({
               // filterValue: ['unable_unwilling_to_answer']
             })).map(ChartTools.setLabel(Protection_Hhs2_1Options.where_is_your_partner)).get
             }>
-              {_ => <BarChart data={_}/>}
+              {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.reasonForRemainInOrigin}>
@@ -158,7 +158,7 @@ export const DashboardProtHHS2FamilyUnity = ({
               // filterValue: ['unable_unwilling_to_answer']
             })).map(ChartTools.setLabel(Protection_Hhs2_1Options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
             }>
-              {_ => <BarChart data={_}/>}
+              {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
         </Div>

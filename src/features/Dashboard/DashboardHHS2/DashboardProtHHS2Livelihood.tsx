@@ -1,5 +1,5 @@
 import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
-import {BarChart} from '@/shared/chart/BarChart'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -7,9 +7,9 @@ import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain, mapObjectValue} from '@/utils/utils'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {LineChartByProperty} from '@/shared/chart/LineChartByProperty'
+import {ChartLineByKey} from '@/shared/chart/ChartLineByKey'
 import {Divider} from '@mui/material'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
@@ -30,7 +30,7 @@ export const DashboardProtHHS2Livelihood = ({
               base: _ => _ !== undefined,
             })}>
               {(_, last) => {
-                return <PieChartIndicator title={m.hhWithoutIncome} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+                return <ChartPieIndicator title={m.hhWithoutIncome} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
               }
             </Lazy>
           </SlidePanel>
@@ -40,7 +40,7 @@ export const DashboardProtHHS2Livelihood = ({
               data: d,
               base: _ => _ !== undefined,
             })}>
-              {(_, last) => <PieChartIndicator title={m.hhOutOfWork} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieIndicator title={m.hhOutOfWork} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </Div>
@@ -51,7 +51,7 @@ export const DashboardProtHHS2Livelihood = ({
               data: d,
               base: _ => _.do_you_identify_as_any_of_the_following === 'idp',
             })}>
-              {(_, last) => <PieChartIndicator title={m.idpWithAllowance} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieIndicator title={m.idpWithAllowance} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
@@ -59,7 +59,7 @@ export const DashboardProtHHS2Livelihood = ({
               value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
               data: d,
             })}>
-              {(_, last) => <PieChartIndicator title={m.hhWithGapMeetingBasicNeeds} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieIndicator title={m.hhWithGapMeetingBasicNeeds} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </Div>
@@ -67,7 +67,7 @@ export const DashboardProtHHS2Livelihood = ({
       <Div responsive alignItems="flex-start">
         <Div column sx={{flex: 1}}>
           <SlidePanel title={m.protHHS2.hhOutOfWorkAndSeekingEmployment}>
-            <LineChartByProperty
+            <ChartLineByKey
               question="including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment"
               data={data}
               displayedValues={['yes']}
@@ -117,7 +117,7 @@ export const DashboardProtHHS2Livelihood = ({
               })
               return {income, hhSize}
             }}>
-              {res => <BarChart data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
+              {res => <ChartBar data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.mainSourceOfIncome}>

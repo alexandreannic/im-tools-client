@@ -1,7 +1,7 @@
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {fnSwitch, mapFor, seq} from '@alexandreannic/ts-utils'
-import {makeKoboBarChartComponent} from '@/shared/chart/BarChartByProperty'
+import {makeKoboBarChartComponent} from '@/shared/chart/ChartBarMultipleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {Person} from '@/core/type'

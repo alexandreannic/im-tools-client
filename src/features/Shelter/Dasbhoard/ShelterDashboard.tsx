@@ -15,21 +15,22 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {BarChart} from '@/shared/chart/BarChart'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
+import {ChartBar} from '@/shared/chart/ChartBar'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {drcMaterialIcons, DrcOffice} from '@/core/typeDrc'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
-import {KoboBarChartMultiple, KoboBarChartSingle} from '@/shared/chart/BarChartByProperty'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Shelter_NTAOptions} from '@/core/generatedKoboInterface/Shelter_NTA/Shelter_NTAOptions'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 const today = new Date()
 
@@ -230,20 +231,20 @@ export const _ShelterDashboard = ({
           }
         </Lazy>
         <SlidePanel>
-          <ChartPieIndicator
+          <ChartPieWidgetBy
             title={m.vulnerabilities}
             filter={_ => !_.nta?.hh_char_dis_select?.includes('diff_none')}
             filterBase={_ => !!_.nta?.hh_char_dis_select!}
             data={data}
           />
-          <KoboBarChartMultiple
+          <ChartBarMultipleBy
             data={data.filter(_ => !!_.nta?.hh_char_dis_select)}
             getValue={_ => _.nta?.hh_char_dis_select ?? []}
             label={Shelter_NTAOptions.hh_char_dis_select}
           />
         </SlidePanel>
         <SlidePanel title={m.status}>
-          <KoboBarChartSingle
+          <ChartBarSingleBy
             data={data.filter(_ => !!_.nta?.ben_det_res_stat)}
             getValue={_ => _.nta?.ben_det_res_stat}
             label={Shelter_NTAOptions.ben_det_res_stat}
@@ -295,14 +296,14 @@ export const _ShelterDashboard = ({
           {_ => (
             <Panel>
               <PanelBody>
-                <PieChartIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
-                <BarChart data={_.contractors}/>
+                <ChartPieIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
+                <ChartBar data={_.contractors}/>
               </PanelBody>
             </Panel>
           )}
         </Lazy>
         <SlidePanel title={m.status}>
-          <KoboBarChartSingle
+          <ChartBarSingleBy
             data={data}
             filterData={_ => !!_.ta?.tags?.damageLevel}
             getValue={_ => _.ta?.tags?.damageLevel}

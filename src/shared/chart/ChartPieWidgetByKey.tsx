@@ -1,16 +1,16 @@
 import {StringArrayKeys, StringKeys} from '@/core/type'
 import * as React from 'react'
 import {useMemo} from 'react'
-import {ChartPieIndicator, ChartPieIndicatorProps} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy, ChartPieWidgetProps} from '@/shared/chart/ChartPieWidgetBy'
 
-export const ChartPieIndicatorByKey = <T, K extends StringKeys<T> | StringArrayKeys<T>>({
+export const ChartPieWidgetByKey = <T, K extends StringKeys<T> | StringArrayKeys<T>>({
   property,
   filter,
   filterBase,
   data,
   compare,
   ...props
-}: ChartPieIndicatorProps<T> & {
+}: ChartPieWidgetProps<T> & {
   property: K
   filter: (_: T[K]) => boolean
   filterBase?: (_: T[K]) => boolean
@@ -26,7 +26,7 @@ export const ChartPieIndicatorByKey = <T, K extends StringKeys<T> | StringArrayK
     }
   }, [data, property])
   return (
-    <ChartPieIndicator
+    <ChartPieWidgetBy
       data={dataDefined as any}
       compare={compareDefined}
       filter={_ => filter(_[property])}

@@ -2,23 +2,23 @@ import React from 'react'
 import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 import {Box, BoxProps, Theme, useTheme} from '@mui/material'
 import {chartConfig} from '@/shared/chart/chartConfig'
-import {commonLegendProps} from '@/shared/chart/StackedBarChart'
+import {commonLegendProps} from '@/shared/chart/ChartBarStacked'
 
-export interface BarChartVerticalProps extends BoxProps {
+export interface ChartBarVerticalProps extends BoxProps {
   colors?: (t: Theme) => string[]
   height?: number | string
   width?: number | string
   data: ({name: string} | Record<string, number>)[]
 }
 
-export const BarChartVertical = ({
+export const ChartBarVertical = ({
   width,
   height,
   sx,
   data,
   colors = chartConfig.defaultColors,
   ...props
-}: BarChartVerticalProps) => {
+}: ChartBarVerticalProps) => {
   const theme = useTheme()
   height = height ?? width ?? 340
   width = width ?? '100%'

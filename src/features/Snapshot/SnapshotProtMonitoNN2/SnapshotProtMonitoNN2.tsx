@@ -3,7 +3,7 @@ import React, {useMemo, useState} from 'react'
 import {SnapshotProtMonitoringProvider, useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {useI18n} from '@/core/i18n'
 import {SnapshotProtMonitoNN2Safety} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Safety'
-import {PieChartIndicatorProps} from '@/shared/chart/PieChartIndicator'
+import {ChartPieIndicatorProps} from '@/shared/chart/ChartPieIndicator'
 import {SnapshotProtMonitoNN2Needs} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Needs'
 import {SnapshotProtMonitoNN2Livelihood} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Livelihood'
 import {SnapshotProtMonitoNN2Sample} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Sample'
@@ -21,7 +21,7 @@ export const snapshotColors = (t: Theme) => [
   snapshotAlternateColor(t),
 ]
 
-export const snapShotDefaultPieProps: Partial<Pick<PieChartIndicatorProps, 'dense' | 'evolution' | 'showValue' | 'sx' | 'showBase'>> & {
+export const snapShotDefaultPieProps: Partial<Pick<ChartPieIndicatorProps, 'dense' | 'evolution' | 'showValue' | 'sx' | 'showBase'>> & {
   hideEvolution?: boolean
 } = {
   dense: true,

@@ -1,13 +1,13 @@
 import {Box, Popover, PopoverProps} from '@mui/material'
 import React, {ReactNode, useMemo} from 'react'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {BarChart} from '@/shared/chart/BarChart'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
-import {LineChartByDate} from '@/shared/chart/LineChartByDate'
+import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
 import {SheetOptions, SheetRow} from '@/shared/Sheet/util/sheetType'
 import {KeyOf} from '@/utils/utils'
 import {seq} from '@alexandreannic/ts-utils'
@@ -107,7 +107,7 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
         <Txt truncate>{title}</Txt>
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-        <BarChart data={chart}/>
+        <ChartBar data={chart}/>
       </PanelBody>
       <PanelFoot alignEnd>
         <IpBtn color="primary" onClick={onClose as any}>
@@ -147,7 +147,7 @@ export const DatesPopover = <T, >({
         {title}
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-        <LineChartByDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
+        <ChartLineByDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
       </PanelBody>
       <PanelFoot alignEnd>
         <IpBtn color="primary" onClick={onClose as any}>

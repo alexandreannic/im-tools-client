@@ -6,13 +6,13 @@ import {Box, Divider, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
-import {LineChartByDate} from '@/shared/chart/LineChartByDate'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
-import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 // do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area
 // what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members
@@ -37,7 +37,7 @@ export const DashboardProtHHS2Displacement = ({
           </Box>
         </SlidePanel>
         <SlidePanel title={m.displacementAndReturn}>
-          <LineChartByDate
+          <ChartLineByDate
             data={data}
             start={new Date(2022, 0, 1)}
             curves={{
@@ -52,7 +52,7 @@ export const DashboardProtHHS2Displacement = ({
           />
         </SlidePanel>
         <SlidePanel>
-          <ChartPieIndicatorByKey
+          <ChartPieWidgetByKey
             showValue showBase
             title={m.protHHS2.hhsAffectedByMultipleDisplacement}
             data={data}
@@ -88,7 +88,7 @@ export const DashboardProtHHS2Displacement = ({
               && !_.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns.includes('unable_unwilling_to_answer'),
           })}>
             {(_, last) => (
-              <PieChartIndicator sx={{mb: 1}} value={_.value} base={_.base} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
+              <ChartPieIndicator sx={{mb: 1}} value={_.value} base={_.base} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
             )}
           </Lazy>
           <ProtHHS2BarChart

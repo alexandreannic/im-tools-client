@@ -1,4 +1,4 @@
-import {PieChartIndicator, PieChartIndicatorProps} from '@/shared/chart/PieChartIndicator'
+import {ChartPieIndicator, ChartPieIndicatorProps} from '@/shared/chart/ChartPieIndicator'
 import * as React from 'react'
 import {useMemo} from 'react'
 import {Seq} from '@alexandreannic/ts-utils'
@@ -10,9 +10,9 @@ export type ChartPieWidgetProps<T> = {
   showValue?: boolean
   showBase?: boolean
   hideEvolution?: boolean
-} & Omit<PieChartIndicatorProps, 'base' | 'value'>
+} & Omit<ChartPieIndicatorProps, 'base' | 'value'>
 
-export const ChartPieWidget = <T, >({
+export const ChartPieWidgetBy = <T, >({
   title,
   compare,
   data,
@@ -43,7 +43,7 @@ export const ChartPieWidget = <T, >({
   }, [compare, filter, filterBase])
 
   return (
-    <PieChartIndicator
+    <ChartPieIndicator
       title={title}
       value={all.res}
       base={all.base}

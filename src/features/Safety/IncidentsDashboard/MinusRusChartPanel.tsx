@@ -4,7 +4,7 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
-import {IpLineChart} from '@/shared/chart/LineChart'
+import {ChartLine} from '@/shared/chart/ChartLine'
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React, {useEffect, useState} from 'react'
 import {Messages} from '@/core/i18n/localization/en'
@@ -167,7 +167,7 @@ export const MinusRusChartPanel = () => {
         }))
       }}>
         {_ => (
-          <IpLineChart
+          <ChartLine
             loading={fetcherMinusRus.loading}
             hideLabelToggle
             height={280}

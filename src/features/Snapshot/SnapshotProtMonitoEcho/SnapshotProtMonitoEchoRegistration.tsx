@@ -4,12 +4,12 @@ import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, S
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Document'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {BarChart} from '@/shared/chart/BarChart'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartBar} from '@/shared/chart/ChartBar'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
@@ -48,7 +48,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
                   {(d, l) => (
-                    <PieChartIndicator
+                    <ChartPieIndicator
                       title={m.all}
                       value={d.value}
                       base={d.base}
@@ -67,7 +67,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
                   {(d, l) => (
-                    <PieChartIndicator
+                    <ChartPieIndicator
                       title={m.protHHSnapshot.male1860}
                       value={d.value}
                       base={d.base}
@@ -84,7 +84,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               </Div>
             </SlidePanel>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.accessBarriersToObtainDocumentation}
                 filter={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation.includes('no')}
@@ -115,7 +115,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 value: _ => !_.includes('none')
               })}>
-                {(_, last) => <PieChartIndicator
+                {(_, last) => <ChartPieIndicator
                   title={m.lackOfPersonalDoc}
                   value={_.value}
                   base={_.base}
@@ -129,11 +129,11 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
                 .map(ChartTools.sortBy.value)
                 .get}>
-                {_ => <BarChart data={_}/>}
+                {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 hideEvolution
                 compare={{before: computed.lastMonth}}
                 title={m.lackOfHousingDoc}

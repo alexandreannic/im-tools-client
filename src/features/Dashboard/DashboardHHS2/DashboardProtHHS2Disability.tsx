@@ -2,9 +2,9 @@ import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 export const DashboardProtHHS2Disability = ({
   data,
@@ -15,7 +15,7 @@ export const DashboardProtHHS2Disability = ({
     <Div responsive>
       <Div column>
         <SlidePanel>
-          <ChartPieIndicatorByKey
+          <ChartPieWidgetByKey
             property="do_you_have_a_household_member_that_has_a_lot_of_difficulty"
             title={m.protHHS2.hhWithMemberHavingDifficulties}
             filter={_ => !_.includes('no')}
@@ -34,7 +34,7 @@ export const DashboardProtHHS2Disability = ({
           />
         </SlidePanel>
         <SlidePanel>
-          <ChartPieIndicatorByKey
+          <ChartPieWidgetByKey
             property="do_you_or_anyone_in_your_household_have_a_disability_status_from_the_gov"
             title={m.protHHS2.unregisteredDisability}
             filter={_ => _ !== 'yes_all'}
@@ -48,7 +48,7 @@ export const DashboardProtHHS2Disability = ({
       </Div>
       <Div column>
         <SlidePanel>
-          <ChartPieIndicatorByKey
+          <ChartPieWidgetByKey
             title={m.protHHS2.barriersToAccessHealth}
             sx={{mb: 2}}
             property="do_you_have_access_to_health_care_in_your_current_location"

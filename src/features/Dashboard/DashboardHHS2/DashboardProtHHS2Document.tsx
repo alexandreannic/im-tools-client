@@ -1,5 +1,5 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {BarChart} from '@/shared/chart/BarChart'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -8,14 +8,14 @@ import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ProtHHS2BarChart, ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
@@ -60,7 +60,7 @@ export const DashboardProtHHS2Document = ({
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
                 {(d, l) => (
-                  <PieChartIndicator sx={{flex: 1}} title={m.all} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
+                  <ChartPieIndicator sx={{flex: 1}} title={m.all} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
                 )}
               </Lazy>
               <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
@@ -68,7 +68,7 @@ export const DashboardProtHHS2Document = ({
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
                 {(d, l) => (
-                  <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
+                  <ChartPieIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
                 )}
               </Lazy>
             </Div>
@@ -87,7 +87,7 @@ export const DashboardProtHHS2Document = ({
             }
           </Lazy>
           <SlidePanel>
-            <ChartPieIndicatorByKey
+            <ChartPieWidgetByKey
               compare={{before: computed.lastMonth}}
               property="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
               title={m.protHHS2.accessBarriersToObtainDocumentation}
@@ -128,7 +128,7 @@ export const DashboardProtHHS2Document = ({
               data: x.map(_ => _.lackDoc).compact().filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('none'),
             })}>
-              {(_, last) => <PieChartIndicator dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
+              {(_, last) => <ChartPieIndicator dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
             </Lazy>
             <Lazy deps={[filteredPersons]} fn={() => chain(ChartTools.multiple({
               data: filteredPersons.map(_ => _.lackDoc).compact(),
@@ -137,11 +137,11 @@ export const DashboardProtHHS2Document = ({
               .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
               .map(ChartTools.sortBy.value)
               .get}>
-              {_ => <BarChart data={_}/>}
+              {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <ChartPieIndicatorByKey
+            <ChartPieWidgetByKey
               compare={{before: computed.lastMonth}}
               title={m.lackOfHousingDoc}
               property="what_housing_land_and_property_documents_do_you_lack"

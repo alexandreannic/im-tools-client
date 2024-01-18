@@ -1,5 +1,5 @@
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {BarChart} from '@/shared/chart/BarChart'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useState} from 'react'
 import {useI18n} from '@/core/i18n'
@@ -9,16 +9,16 @@ import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
-import {IpStackedBarChart} from '@/shared/chart/StackedBarChart'
-import {PieChartIndicator} from '@/shared/chart/PieChartIndicator'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
+import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
 import {makeSx} from 'mui-extension'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {ChartPieIndicatorByKey} from '@/shared/chart/ChartPieIndicatorByKey'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 const css = makeSx({
   table: {
@@ -71,12 +71,12 @@ export const DashboardProtHHS2Sample = ({
                 value: _ => _.gender === 'Female'
               })}>
                 {_ => (
-                  <PieChartIndicator value={_.value} base={_.base} title={m.females}/>
+                  <ChartPieIndicator value={_.value} base={_.base} title={m.females}/>
                 )}
               </Lazy>
             </SlidePanel>
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <ChartPieIndicatorByKey
+              <ChartPieWidgetByKey
                 title={m.uaCitizen}
                 data={data}
                 property="if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group"
@@ -124,7 +124,7 @@ export const DashboardProtHHS2Sample = ({
             </Box>
             <Lazy deps={[ag, data]} fn={() => computed.ageGroup(Person.ageGroup[ag])}>
               {_ => agDisplay === 'chart' ? (
-                <IpStackedBarChart data={_} height={250}/>
+                <ChartBarStacker data={_} height={250}/>
               ) : (
                 <Sheet
                   id="prot-dash-population"
@@ -175,7 +175,7 @@ export const DashboardProtHHS2Sample = ({
                 .map(ChartTools.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
                 .get}
             >
-              {_ => <BarChart data={_}/>}
+              {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel>
@@ -186,7 +186,7 @@ export const DashboardProtHHS2Sample = ({
                 .filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('no_specific_needs'),
             })}>
-              {(_, last) => <PieChartIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
             <ProtHHS2BarChart
               data={data}

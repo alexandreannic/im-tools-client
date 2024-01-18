@@ -3,7 +3,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {ChartPieIndicator} from '@/shared/chart/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
@@ -50,7 +50,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
               </Lazy>
             </SlideTxt>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 {...snapShotDefaultPieProps}
                 sx={{mb: 0}}
                 title={m.protHHS2.barriersToAccessHealth}
@@ -68,7 +68,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
               />
             </SlidePanel>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 {...snapShotDefaultPieProps}
                 sx={{mb: 0}}
                 title={m.protHHS2.unregisteredDisability}
@@ -98,7 +98,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <ChartPieIndicator
+              <ChartPieWidgetBy
                 {...snapShotDefaultPieProps}
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.mainConcernsRegardingHousing}

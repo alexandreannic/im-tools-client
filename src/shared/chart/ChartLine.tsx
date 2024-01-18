@@ -6,9 +6,9 @@ import {map} from '@alexandreannic/ts-utils'
 import {styleUtils} from '@/core/theme'
 import {chartConfig} from '@/shared/chart/chartConfig'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {commonLegendProps} from '@/shared/chart/StackedBarChart'
+import {commonLegendProps} from '@/shared/chart/ChartBarStacked'
 
-export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
+export interface ChartLinePropsBase extends Pick<BoxProps, 'sx'> {
   colorsByKey?: (t: Theme) => Record<string, string>
   colors?: (t: Theme) => string[]
   /**
@@ -26,17 +26,17 @@ export interface ScLineChartPropsBase extends Pick<BoxProps, 'sx'> {
   loading?: boolean
 }
 
-export interface ScLineChartProps extends ScLineChartPropsBase {
-  data?: ScLineChart2Data[]
+export interface ChartLineProps extends ChartLinePropsBase {
+  data?: ChartLineData[]
 }
 
-export type ScLineChart2Data = Record<string, number> & {
+export type ChartLineData = Record<string, number> & {
   name: string
 }
 
 // const colors = chartConfig.defaultColors
 
-export const IpLineChart = ({
+export const ChartLine = ({
   data,
   loading,
   sx,
@@ -50,7 +50,7 @@ export const IpLineChart = ({
   hideLabelToggle,
   percent,
   height = 220
-}: ScLineChartProps) => {
+}: ChartLineProps) => {
   const theme = useTheme()
   const lines = Object.keys(data?.[0] ?? {}).filter(_ => _ !== 'name')
   const [showCurves, setShowCurves] = useState<boolean[]>(new Array(lines.length).fill(false))
