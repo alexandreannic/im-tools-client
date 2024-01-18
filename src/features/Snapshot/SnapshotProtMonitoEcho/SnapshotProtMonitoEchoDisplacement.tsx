@@ -5,7 +5,7 @@ import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, S
 import {useI18n} from '@/core/i18n'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
+import {KoboLineChartDate} from '@/shared/Chart/KoboLineChartDate'
 import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Txt} from 'mui-extension'
 

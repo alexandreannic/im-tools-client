@@ -4,14 +4,14 @@ import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Divider, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '../../../core/chartTools'
+import {ChartTools} from '../../../shared/Chart/chartTools'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {KoboLineChartDate} from '../shared/KoboLineChartDate'
+import {KoboLineChartDate} from '../../../shared/Chart/KoboLineChartDate'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
-import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
+import {KoboPieChartIndicator} from '@/shared/Chart/KoboPieChartIndicator'
 
 // do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area
 // what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members

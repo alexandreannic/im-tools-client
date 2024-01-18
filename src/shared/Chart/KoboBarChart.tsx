@@ -1,9 +1,9 @@
-import {ChartDataVal, ChartTools} from '../../../core/chartTools'
+import {ChartDataVal, ChartTools} from './chartTools'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import {useI18n} from '../../../core/i18n'
+import {useI18n} from '../../core/i18n'
 import React, {ReactNode, useMemo} from 'react'
 import {chain, KeyOf} from '@/utils/utils'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {HorizontalBarChartGoogle} from '@/shared/Chart/HorizontalBarChartGoogle'
 import {Checkbox} from '@mui/material'
 
 export const makeKoboBarChartComponent = <D extends Record<string, any>, O extends Partial<Record<keyof D, Record<string, string>>>>({

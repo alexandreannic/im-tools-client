@@ -2,7 +2,7 @@ import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
-import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
+import {KoboPieChartIndicator} from '../../../shared/Chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 
 export const DashboardProtHHS2Disability = ({

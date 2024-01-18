@@ -1,4 +1,4 @@
-import {ChartTools} from '@/core/chartTools'
+import {ChartTools} from '@/shared/Chart/chartTools'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useMemo} from 'react'
 import {Seq} from '@alexandreannic/ts-utils'

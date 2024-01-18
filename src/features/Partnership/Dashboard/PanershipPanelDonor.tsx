@@ -1,5 +1,5 @@
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {KoboBarChartSingle} from '@/features/Dashboard/shared/KoboBarChart'
+import {KoboBarChartSingle} from '@/shared/Chart/KoboBarChart'
 import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {Enum, fnSwitch, Seq} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/typeDrc'
