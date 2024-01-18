@@ -1,7 +1,7 @@
 import {Box, Popover, PopoverProps} from '@mui/material'
 import React, {ReactNode, useMemo} from 'react'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
@@ -107,7 +107,7 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
         <Txt truncate>{title}</Txt>
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-        <HorizontalBarChartGoogle data={chart}/>
+        <BarChart data={chart}/>
       </PanelBody>
       <PanelFoot alignEnd>
         <IpBtn color="primary" onClick={onClose as any}>

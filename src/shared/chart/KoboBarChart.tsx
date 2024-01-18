@@ -3,7 +3,7 @@ import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
 import React, {ReactNode, useMemo} from 'react'
 import {chain, KeyOf} from '@/utils/utils'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {Checkbox} from '@mui/material'
 
 export const makeKoboBarChartComponent = <D extends Record<string, any>, O extends Partial<Record<keyof D, Record<string, string>>>>({
@@ -70,7 +70,7 @@ export const makeKoboBarChartComponent = <D extends Record<string, any>, O exten
       .get as Record<K, ChartDataVal>
   }, [data, question, overrideLabel])
   return (
-    <HorizontalBarChartGoogle
+    <BarChart
       data={res}
       onClickData={_ => onClickData?.(_ as K)}
       labels={!onToggle ? undefined :
@@ -131,7 +131,7 @@ export const KoboBarChartSingle = <
       .get as Record<K, ChartDataVal>
   }, [data, getValue, label])
   return (
-    <HorizontalBarChartGoogle
+    <BarChart
       data={res}
       onClickData={_ => onClickData?.(_ as K)}
       labels={!onToggle ? undefined :
@@ -203,7 +203,7 @@ export const KoboBarChartMultiple = <
       .get as Record<NonNullable<K>, ChartDataVal>
   }, [data, getValue, label])
   return (
-    <HorizontalBarChartGoogle
+    <BarChart
       data={res}
       onClickData={_ => onClickData?.(_ as K)}
       labels={!onToggle ? undefined :

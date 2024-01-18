@@ -6,7 +6,7 @@ import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
@@ -133,7 +133,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   .get
               }>
                 {_ => (
-                  <HorizontalBarChartGoogle data={_}/>
+                  <BarChart data={_}/>
                 )}
               </Lazy>
             </SlidePanel>

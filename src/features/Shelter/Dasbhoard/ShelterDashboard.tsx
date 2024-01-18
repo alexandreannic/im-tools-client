@@ -15,7 +15,7 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {drcMaterialIcons, DrcOffice} from '@/core/typeDrc'
@@ -296,7 +296,7 @@ export const _ShelterDashboard = ({
             <Panel>
               <PanelBody>
                 <PieChartIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
-                <HorizontalBarChartGoogle data={_.contractors}/>
+                <BarChart data={_.contractors}/>
               </PanelBody>
             </Panel>
           )}

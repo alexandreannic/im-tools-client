@@ -4,7 +4,7 @@ import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {chain, forceArrayStringInference} from '@/utils/utils'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
@@ -122,7 +122,7 @@ export const DashboardProtHHS2Violence = ({
         }}>
           {_ =>
             <SlidePanel title={m.protHHS2.reportedIncidents}>
-              <HorizontalBarChartGoogle
+              <BarChart
                 data={_}
                 labels={{
                   total: <Checkbox indeterminate={!allChecked && oneChecked} checked={allChecked} onClick={() => {
@@ -179,7 +179,7 @@ export const DashboardProtHHS2Violence = ({
         }>
           {_ => (
             <SlidePanel title={m.protHHS2.typeOfIncident}>
-              <HorizontalBarChartGoogle data={_}/>
+              <BarChart data={_}/>
             </SlidePanel>
           )}
         </Lazy>
@@ -194,7 +194,7 @@ export const DashboardProtHHS2Violence = ({
         }>
           {_ => (
             <SlidePanel title={m.protHHS2.timelineOfIncident}>
-              <HorizontalBarChartGoogle data={_}/>
+              <BarChart data={_}/>
             </SlidePanel>
           )}
         </Lazy>

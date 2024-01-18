@@ -1,5 +1,5 @@
 import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -117,7 +117,7 @@ export const DashboardProtHHS2Livelihood = ({
               })
               return {income, hhSize}
             }}>
-              {res => <HorizontalBarChartGoogle data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
+              {res => <BarChart data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.mainSourceOfIncome}>

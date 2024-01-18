@@ -1,5 +1,5 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
@@ -136,7 +136,7 @@ export const DashboardProtHHS2Document = ({
               .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
               .map(ChartTools.sortBy.value)
               .get}>
-              {_ => <HorizontalBarChartGoogle data={_}/>}
+              {_ => <BarChart data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel>

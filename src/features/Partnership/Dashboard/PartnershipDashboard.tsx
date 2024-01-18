@@ -10,7 +10,7 @@ import {Lazy} from '@/shared/Lazy'
 import {ChartData, ChartTools, makeChartData} from '@/shared/chart/chartHelper'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {PartnershipCard} from '@/features/Partnership/Dashboard/PartnershipCard'
 import {KoboBarChartMultiple} from '@/shared/chart/KoboBarChart'
 import {Utils} from '@/utils/utils'
@@ -382,7 +382,7 @@ export const _PartnershipDashboard = ({
                 <PanelBody>
                   <PieChartIndicator showValue showBase title={m._partner.benefReached} value={res.other.value} base={res.other.base!} sx={{mb: 2}}/>
                   <PieChartIndicator showValue showBase title={m._partner.benefPwdReached} value={res.pwd.value} base={res.pwd.base!}/>
-                  <HorizontalBarChartGoogle data={res.breakdown}/>
+                  <BarChart data={res.breakdown}/>
                 </PanelBody>
               </Panel>
             )}

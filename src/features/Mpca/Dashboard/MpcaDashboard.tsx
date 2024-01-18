@@ -10,7 +10,7 @@ import {Txt} from 'mui-extension'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {Period, Person} from '@/core/type'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {Lazy} from '@/shared/Lazy'
 import {ChartTools, makeChartData} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
@@ -269,14 +269,14 @@ export const _MPCADashboard = ({
               <Lazy deps={[data]} fn={() => chain(ChartTools.single({
                 data: data.map(_ => _.source),
               })).map(ChartTools.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <BarChart data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.program}>
               <Lazy deps={[data]} fn={() => ChartTools.multiple({
                 data: data.map(_ => _.prog),
               })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <BarChart data={_}/>}
               </Lazy>
             </SlidePanel>
             {/*<SlidePanel title={m.submissionTime}>*/}
@@ -348,14 +348,14 @@ export const _MPCADashboard = ({
               <Lazy deps={[data]} fn={() => ChartTools.single({
                 data: data.map(_ => _.finalDonor ?? ''),
               })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <BarChart data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.project}>
               <Lazy deps={[data]} fn={() => ChartTools.single({
                 data: data.map(_ => _.finalProject ?? SheetUtils.blank),
               })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <BarChart data={_}/>}
               </Lazy>
             </SlidePanel>
           </Div>

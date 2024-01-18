@@ -8,7 +8,7 @@ import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Document'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
@@ -129,7 +129,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
                 .map(ChartTools.sortBy.value)
                 .get}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <BarChart data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel>

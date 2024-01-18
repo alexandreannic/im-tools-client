@@ -7,7 +7,7 @@ import {ChartTools} from '@/shared/chart/chartHelper'
 import {PieChartIndicator} from '@/shared/PieChartIndicator'
 import {chain, mapObjectValue, toPercent} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 
@@ -62,7 +62,7 @@ export const SnapshotProtMonitoNN2Livelihood = () => {
                 })
                 return {income, hhSize}
               }}>
-                {res => <HorizontalBarChartGoogle data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
+                {res => <BarChart data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
               </Lazy>
             </SlidePanel>
           </Div>

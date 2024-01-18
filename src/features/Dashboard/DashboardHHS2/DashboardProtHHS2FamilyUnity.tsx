@@ -6,7 +6,7 @@ import {Lazy} from '@/shared/Lazy'
 import {ChartTools} from '@/shared/chart/chartHelper'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {KoboPieChartIndicator} from '@/shared/chart/KoboPieChartIndicator'
-import {HorizontalBarChartGoogle} from '@/shared/chart/HorizontalBarChartGoogle'
+import {BarChart} from '@/shared/chart/BarChart'
 import {chain} from '@/utils/utils'
 import {Box, Checkbox} from '@mui/material'
 import {Txt} from 'mui-extension'
@@ -80,7 +80,7 @@ export const DashboardProtHHS2FamilyUnity = ({
                 .map(ChartTools.setLabel(Protection_Hhs2_1Options.are_you_separated_from_any_of_your_households_members))
                 .get
             }>
-              {_ => <HorizontalBarChartGoogle
+              {_ => <BarChart
                 data={_}
                 labels={{
                   partner: <Checkbox
@@ -140,7 +140,7 @@ export const DashboardProtHHS2FamilyUnity = ({
               // filterValue: ['unable_unwilling_to_answer']
             })).map(ChartTools.setLabel(Protection_Hhs2_1Options.where_is_your_partner)).get
             }>
-              {_ => <HorizontalBarChartGoogle data={_}/>}
+              {_ => <BarChart data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.reasonForRemainInOrigin}>
@@ -157,7 +157,7 @@ export const DashboardProtHHS2FamilyUnity = ({
               // filterValue: ['unable_unwilling_to_answer']
             })).map(ChartTools.setLabel(Protection_Hhs2_1Options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
             }>
-              {_ => <HorizontalBarChartGoogle data={_}/>}
+              {_ => <BarChart data={_}/>}
             </Lazy>
           </SlidePanel>
         </Div>
