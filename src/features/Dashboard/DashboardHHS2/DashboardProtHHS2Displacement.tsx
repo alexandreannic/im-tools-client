@@ -4,9 +4,9 @@ import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Divider, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/shared/chart/chartHelper'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
 import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
@@ -61,7 +61,7 @@ export const DashboardProtHHS2Displacement = ({
             filter={_ => _ === 'yes_after_february_24_2022'}
             filterBase={_ => _ !== 'unable_unwilling_to_answer'}
           />
-          <Lazy deps={[data]} fn={() => chain(ChartTools.byCategory({
+          <Lazy deps={[data]} fn={() => chain(ChartHelper.byCategory({
             data,
             categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
             filter: _ => _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_february_24_2022',
@@ -82,14 +82,14 @@ export const DashboardProtHHS2Displacement = ({
       </Div>
       <Div column>
         <SlidePanel>
-          <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartTools.percentage({
+          <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartHelper.percentage({
             value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,
             data: d,
             base: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns !== undefined
               && !_.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns.includes('unable_unwilling_to_answer'),
           })}>
             {(_, last) => (
-              <ChartPieIndicator sx={{mb: 1}} value={_.value} base={_.base} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
+              <ChartPieWidget sx={{mb: 1}} value={_.value} base={_.base} evolution={_.percent - last.percent} title={m.protHHS2.safetyOrSecurityConcernsDuringDisplacement}/>
             )}
           </Lazy>
           <ChartBarMultipleBy

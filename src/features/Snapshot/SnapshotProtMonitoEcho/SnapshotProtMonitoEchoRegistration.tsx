@@ -3,8 +3,8 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/shared/chart/chartHelper'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Document'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
@@ -25,7 +25,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
         <Div>
           <Div column>
             <Lazy deps={[data]} fn={() => {
-              const z = ChartTools.byCategory({
+              const z = ChartHelper.byCategory({
                 categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
                 data: computed.flatData,
                 filter: _ => _.lackDoc.includes('passport') || _.lackDoc.includes('tin'),
@@ -43,12 +43,12 @@ export const SnapshotProtMonitoEchoRegistration = () => {
             <SlidePanel>
               <SlidePanelTitle sx={{mb: 1}}>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
               <Div>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
                   data: getIdpsAnsweringRegistrationQuestion(d),
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
                   {(d, l) => (
-                    <ChartPieIndicator
+                    <ChartPieWidget
                       title={m.all}
                       value={d.value}
                       base={d.base}
@@ -62,12 +62,12 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                     />
                   )}
                 </Lazy>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
                   data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === Person.Gender.Male),
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
                   {(d, l) => (
-                    <ChartPieIndicator
+                    <ChartPieWidget
                       title={m.protHHSnapshot.male1860}
                       value={d.value}
                       base={d.base}
@@ -111,23 +111,23 @@ export const SnapshotProtMonitoEchoRegistration = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartTools.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartHelper.percentage({
                 data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 value: _ => !_.includes('none')
               })}>
-                {(_, last) => <ChartPieIndicator
+                {(_, last) => <ChartPieWidget
                   title={m.lackOfPersonalDoc}
                   value={_.value}
                   base={_.base}
                   {...snapShotDefaultPieProps}
                 />}
               </Lazy>
-              <Lazy deps={[data]} fn={() => chain(ChartTools.multiple({
+              <Lazy deps={[data]} fn={() => chain(ChartHelper.multiple({
                 data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 filterValue: ['none', 'unable_unwilling_to_answer'],
               }))
-                .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
-                .map(ChartTools.sortBy.value)
+                .map(ChartHelper.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
+                .map(ChartHelper.sortBy.value)
                 .get}>
                 {_ => <ChartBar data={_}/>}
               </Lazy>

@@ -1,4 +1,4 @@
-import {ChartDataVal, ChartTools} from '@/shared/chart/chartHelper'
+import {ChartDataVal, ChartHelper} from '@/shared/chart/chartHelper'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
 import {chain, KeyOf} from '@/utils/utils'
@@ -25,7 +25,7 @@ export const ChartBarSingleBy = <
   debug?: boolean
   onClickData?: (_: K) => void
   limit?: number
-  sortBy?: typeof ChartTools.sortBy.value
+  sortBy?: typeof ChartHelper.sortBy.value
   data: Seq<D>,
   mergeOptions?: Partial<Record<KeyOf<O>, KeyOf<O>>>
   label?: O
@@ -40,10 +40,10 @@ export const ChartBarSingleBy = <
       if (mergeOptions) return (mergeOptions as any)[by(d)] ?? by(d)
       return by(d)
     }).compact()
-    const chart = ChartTools.single({data: source})
-    return chain(chart).map(label ? ChartTools.setLabel(label) : _ => _)
-      .map(sortBy ?? ChartTools.sortBy.value)
-      .map(limit ? ChartTools.take(limit) : _ => _)
+    const chart = ChartHelper.single({data: source})
+    return chain(chart).map(label ? ChartHelper.setLabel(label) : _ => _)
+      .map(sortBy ?? ChartHelper.sortBy.value)
+      .map(limit ? ChartHelper.take(limit) : _ => _)
       .get as Record<K, ChartDataVal>
   }, [data, by, label])
   return (

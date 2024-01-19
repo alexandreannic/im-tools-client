@@ -10,13 +10,13 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {ChartTools, makeChartData} from '@/shared/chart/chartHelper'
+import {ChartHelper, makeChartData} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {ChartBar} from '@/shared/chart/ChartBar'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {drcMaterialIcons, DrcOffice} from '@/core/typeDrc'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
@@ -286,7 +286,7 @@ export const _ShelterDashboard = ({
           const contractors = data.map(_ => seq([_.ta?.tags?.contractor1 ?? undefined, _.ta?.tags?.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
           return {
             count: contractors.length,
-            contractors: ChartTools.multiple({
+            contractors: ChartHelper.multiple({
               data: contractors,
               base: 'percentOfTotalChoices',
               filterValue: [undefined as any]
@@ -296,7 +296,7 @@ export const _ShelterDashboard = ({
           {_ => (
             <Panel>
               <PanelBody>
-                <ChartPieIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
+                <ChartPieWidget title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
                 <ChartBar data={_.contractors}/>
               </PanelBody>
             </Panel>

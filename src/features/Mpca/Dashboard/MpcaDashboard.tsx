@@ -7,12 +7,12 @@ import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
 import {chain, toPercent, tryy} from '@/utils/utils'
 import {Txt} from 'mui-extension'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {Period, Person} from '@/core/type'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools, makeChartData} from '@/shared/chart/chartHelper'
+import {ChartHelper, makeChartData} from '@/shared/chart/chartHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
 import {Sheet} from '@/shared/Sheet/Sheet'
@@ -235,7 +235,7 @@ export const _MPCADashboard = ({
             <Txt color="hint" sx={{ml: 1}}>{toPercent(Enum.keys(computed.multipleTimeAssisted).length / data.length)}</Txt>
           </SlideWidget>
           <SlidePanel sx={{flex: 1}}>
-            <ChartPieIndicator showValue showBase value={computed.preventedAssistance.length} base={computed.deduplications.length} title="Prevented assistances"/>
+            <ChartPieWidget showValue showBase value={computed.preventedAssistance.length} base={computed.deduplications.length} title="Prevented assistances"/>
           </SlidePanel>
           {/*<SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>*/}
           {/*  {formatLargeNumber(computed?.flatData.length)}*/}
@@ -266,14 +266,14 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <MpcaDashboardDeduplication data={data}/>
             <SlidePanel title={m.form}>
-              <Lazy deps={[data]} fn={() => chain(ChartTools.single({
+              <Lazy deps={[data]} fn={() => chain(ChartHelper.single({
                 data: data.map(_ => _.source),
-              })).map(ChartTools.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
+              })).map(ChartHelper.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
                 {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.program}>
-              <Lazy deps={[data]} fn={() => ChartTools.multiple({
+              <Lazy deps={[data]} fn={() => ChartHelper.multiple({
                 data: data.map(_ => _.prog),
               })}>
                 {_ => <ChartBar data={_}/>}
@@ -345,14 +345,14 @@ export const _MPCADashboard = ({
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.donor}>
-              <Lazy deps={[data]} fn={() => ChartTools.single({
+              <Lazy deps={[data]} fn={() => ChartHelper.single({
                 data: data.map(_ => _.finalDonor ?? ''),
               })}>
                 {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.project}>
-              <Lazy deps={[data]} fn={() => ChartTools.single({
+              <Lazy deps={[data]} fn={() => ChartHelper.single({
                 data: data.map(_ => _.finalProject ?? SheetUtils.blank),
               })}>
                 {_ => <ChartBar data={_}/>}

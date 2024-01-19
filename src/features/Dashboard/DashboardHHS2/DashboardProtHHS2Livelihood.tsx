@@ -5,9 +5,9 @@ import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/shared/chart/chartHelper'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 import {chain, mapObjectValue} from '@/utils/utils'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {ChartLineByKey} from '@/shared/chart/ChartLineByKey'
 import {Divider} from '@mui/material'
@@ -24,43 +24,43 @@ export const DashboardProtHHS2Livelihood = ({
       <Div responsive>
         <Div>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
               value: _ => _.what_is_the_average_month_income_per_household === 'no_income',
               data: d,
               base: _ => _ !== undefined,
             })}>
               {(_, last) => {
-                return <ChartPieIndicator title={m.hhWithoutIncome} value={_.value} base={_.base} evolution={_.percent - last.percent}/>
+                return <ChartPieWidget title={m.hhWithoutIncome} value={_.value} base={_.base} evolution={_.percent - last.percent}/>
               }
               }
             </Lazy>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
               value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
               data: d,
               base: _ => _ !== undefined,
             })}>
-              {(_, last) => <ChartPieIndicator title={m.hhOutOfWork} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieWidget title={m.hhOutOfWork} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </Div>
         <Div>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
               value: _ => _.do_you_and_your_hh_members_receive_the_idp_allowance === 'yes',
               data: d,
               base: _ => _.do_you_identify_as_any_of_the_following === 'idp',
             })}>
-              {(_, last) => <ChartPieIndicator title={m.idpWithAllowance} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieWidget title={m.idpWithAllowance} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
               value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
               data: d,
             })}>
-              {(_, last) => <ChartPieIndicator title={m.hhWithGapMeetingBasicNeeds} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieWidget title={m.hhWithGapMeetingBasicNeeds} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
           </SlidePanel>
         </Div>
@@ -75,7 +75,7 @@ export const DashboardProtHHS2Livelihood = ({
             />
             <Divider sx={{mb: 3, mt: 2}}/>
             <SlidePanelTitle>{m.unemployedMemberByOblast}</SlidePanelTitle>
-            <Lazy deps={[data]} fn={() => ChartTools.byCategory({
+            <Lazy deps={[data]} fn={() => ChartHelper.byCategory({
               categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
               data,
               filter: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes'
@@ -95,15 +95,15 @@ export const DashboardProtHHS2Livelihood = ({
         <Div column sx={{flex: 1}}>
           <SlidePanel title={m.monthlyIncomePerHH}>
             <Lazy deps={[data]} fn={() => {
-              const income = chain(ChartTools.single({
+              const income = chain(ChartHelper.single({
                 filterValue: ['no_income', 'unable_unwilling_to_answer'],
                 data: data.map(_ => _.what_is_the_average_month_income_per_household).compact(),
               }))
-                .map(ChartTools.setLabel(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household))
-                .map(ChartTools.sortBy.custom(Object.keys(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household)))
+                .map(ChartHelper.setLabel(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household))
+                .map(ChartHelper.sortBy.custom(Object.keys(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household)))
                 .get
 
-              const hhSize = ChartTools.sumByCategory({
+              const hhSize = ChartHelper.sumByCategory({
                 data,
                 categories: {
                   // no_income: _ => _.what_is_the_average_month_income_per_household === 'no_income',

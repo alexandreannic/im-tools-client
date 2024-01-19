@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {ChartTools} from '@/shared/chart/chartHelper'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
@@ -40,25 +40,25 @@ export const useProtHhs2Data = ({
         {} as Record<OblastISO, (_: ProtHHS2Enrich) => boolean>
       )
 
-    const byCurrentOblast = ChartTools.byCategory({
+    const byCurrentOblast = ChartHelper.byCategory({
       categories: categoryOblasts('where_are_you_current_living_oblast'),
       data: data,
       filter: _ => true,
     })
 
-    const byOriginOblast = ChartTools.byCategory({
+    const byOriginOblast = ChartHelper.byCategory({
       categories: categoryOblasts('what_is_your_area_of_origin_oblast'),
       data: data,
       filter: _ => true,
     })
 
-    const idpsByCurrentOblast = ChartTools.byCategory({
+    const idpsByCurrentOblast = ChartHelper.byCategory({
       categories: categoryOblasts('where_are_you_current_living_oblast'),
       data: idps,
       filter: _ => true,
     })
 
-    const idpsByOriginOblast = ChartTools.byCategory({
+    const idpsByOriginOblast = ChartHelper.byCategory({
       categories: categoryOblasts('what_is_your_area_of_origin_oblast'),
       data: idps,
       filter: _ => true,
@@ -73,10 +73,10 @@ export const useProtHhs2Data = ({
       individualsCount: data.sum(_ => _.persons.length),
       categoryOblasts,
       ageGroup: ageGroup,
-      byGender: chain(ChartTools.single({
+      byGender: chain(ChartHelper.single({
         data: data.flatMap(_ => _.persons.map(_ => (_.gender === undefined || _.gender === 'Other') ? 'other' : _.gender)),
       }))
-        .map(ChartTools.mapValue(_ => _.value))
+        .map(ChartHelper.mapValue(_ => _.value))
         .get,
       idps,
       byCurrentOblast,

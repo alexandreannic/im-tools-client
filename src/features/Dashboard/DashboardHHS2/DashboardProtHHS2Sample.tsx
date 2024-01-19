@@ -7,10 +7,10 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon, useTheme} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/shared/chart/chartHelper'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
@@ -66,12 +66,12 @@ export const DashboardProtHHS2Sample = ({
               </Lazy>
             </SlideWidget>
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <Lazy deps={[data]} fn={() => ChartTools.percentage({
+              <Lazy deps={[data]} fn={() => ChartHelper.percentage({
                 data: computed.flatData,
                 value: _ => _.gender === 'Female'
               })}>
                 {_ => (
-                  <ChartPieIndicator value={_.value} base={_.base} title={m.females}/>
+                  <ChartPieWidget value={_.value} base={_.base} title={m.females}/>
                 )}
               </Lazy>
             </SlidePanel>
@@ -168,25 +168,25 @@ export const DashboardProtHHS2Sample = ({
           <SlidePanel title={m.poc}>
             <Lazy
               deps={[data]}
-              fn={() => chain(ChartTools.single({
+              fn={() => chain(ChartHelper.single({
                 data: data.map(_ => _.do_you_identify_as_any_of_the_following).compact(),
               }))
-                .map(ChartTools.sortBy.value)
-                .map(ChartTools.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
+                .map(ChartHelper.sortBy.value)
+                .map(ChartHelper.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
                 .get}
             >
               {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartHelper.percentage({
               data: d
                 .map(_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household)
                 .compact()
                 .filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('no_specific_needs'),
             })}>
-              {(_, last) => <ChartPieIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieWidget sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
             <ChartBarMultipleBy
               data={data}

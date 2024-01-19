@@ -22,7 +22,7 @@ export interface ChartPieIndicatorProps extends Omit<PanelProps, 'title'> {
   tooltip?: string
 }
 
-export const ChartPieIndicator = ({
+export const ChartPieWidget = ({
   titleIcon,
   title,
   evolution,

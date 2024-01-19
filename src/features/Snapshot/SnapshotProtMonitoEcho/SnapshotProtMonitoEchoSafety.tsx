@@ -3,7 +3,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/shared/chart/chartHelper'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
@@ -61,32 +61,32 @@ export const SnapshotProtMonitoEchoSafety = () => {
             <SlideTxt sx={{marginBottom: t.spacing() + ' !important'}}>
               <Lazy deps={[data]} fn={() => {
                 return {
-                  senseOfSafety: ChartTools.percentage({
+                  senseOfSafety: ChartHelper.percentage({
                     data: data.map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  poorSafetyChernihiv: ChartTools.percentage({
+                  poorSafetyChernihiv: ChartHelper.percentage({
                     data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.byName('Chernihivska').iso).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  poorSafetySumy: ChartTools.percentage({
+                  poorSafetySumy: ChartHelper.percentage({
                     data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.byName('Sumska').iso).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  senseOfSafetyUrban: ChartTools.percentage({
+                  senseOfSafetyUrban: ChartHelper.percentage({
                     data: data.filter(_ => _.type_of_site === 'urban_area').map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  senseOfSafetyRural: ChartTools.percentage({
+                  senseOfSafetyRural: ChartHelper.percentage({
                     data: data.filter(_ => _.type_of_site === 'rural_area').map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  incidents: ChartTools.percentage({
+                  incidents: ChartHelper.percentage({
                     data,
                     value: _ => _.has_any_adult_male_member_experienced_violence === 'yes'
                       || _.has_any_adult_female_member_experienced_violence === 'yes'
@@ -120,16 +120,16 @@ export const SnapshotProtMonitoEchoSafety = () => {
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.typeOfIncident}</SlidePanelTitle>
               <Lazy deps={[groupedIndividualsType.type]} fn={() =>
-                chain(ChartTools.multiple({
+                chain(ChartHelper.multiple({
                   data: groupedIndividualsType.type,
                   filterValue: ['unable_unwilling_to_answer']
                 }))
-                  .map(ChartTools.setLabel({
+                  .map(ChartHelper.setLabel({
                     ...Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence,
                     // TODO TO REMOVE
                     // other_specify: 'Psychological abuse',
                   }))
-                  .map(ChartTools.sortBy.value)
+                  .map(ChartHelper.sortBy.value)
                   .get
               }>
                 {_ => (

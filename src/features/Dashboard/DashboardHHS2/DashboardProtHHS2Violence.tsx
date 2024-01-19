@@ -3,7 +3,7 @@ import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/shared/chart/chartHelper'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {chain, forceArrayStringInference} from '@/utils/utils'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
@@ -111,7 +111,7 @@ export const DashboardProtHHS2Violence = ({
               }
             })
           })
-          return ChartTools.setLabel({
+          return ChartHelper.setLabel({
             total: m.selectAll,
             has_any_adult_female_member_experienced_violence: m.adultWomen,
             has_any_adult_male_member_experienced_violence: m.adultMen,
@@ -169,12 +169,12 @@ export const DashboardProtHHS2Violence = ({
       </Div>
       <Div column>
         <Lazy deps={[groupedIndividualsType.type]} fn={() =>
-          chain(ChartTools.multiple({
+          chain(ChartHelper.multiple({
             data: groupedIndividualsType.type,
             filterValue: ['unable_unwilling_to_answer']
           }))
-            .map(ChartTools.setLabel(Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
-            .map(ChartTools.sortBy.value)
+            .map(ChartHelper.setLabel(Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
+            .map(ChartHelper.sortBy.value)
             .get
         }>
           {_ => (
@@ -184,12 +184,12 @@ export const DashboardProtHHS2Violence = ({
           )}
         </Lazy>
         <Lazy deps={[groupedIndividualsType.when]} fn={() =>
-          chain(ChartTools.multiple({
+          chain(ChartHelper.multiple({
             data: groupedIndividualsType.when,
             filterValue: ['unable_unwilling_to_answer']
           }))
-            .map(ChartTools.setLabel(Protection_Hhs2_1Options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence))
-            .map(ChartTools.sortBy.value)
+            .map(ChartHelper.setLabel(Protection_Hhs2_1Options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence))
+            .map(ChartHelper.sortBy.value)
             .get
         }>
           {_ => (

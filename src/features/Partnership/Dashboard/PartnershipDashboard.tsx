@@ -7,8 +7,8 @@ import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartData, ChartTools, makeChartData} from '@/shared/chart/chartHelper'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartData, ChartHelper, makeChartData} from '@/shared/chart/chartHelper'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {PartnershipCard} from '@/features/Partnership/Dashboard/PartnershipCard'
@@ -238,7 +238,7 @@ export const _PartnershipDashboard = ({
         </Div>
         <Div column>
           <SlidePanel>
-            <ChartPieIndicator dense showValue value={computed.ongoingGrant.length} base={filteredAndPickedData.length} title={m._partner.ongoingGrant}/>
+            <ChartPieWidget dense showValue value={computed.ongoingGrant.length} base={filteredAndPickedData.length} title={m._partner.ongoingGrant}/>
           </SlidePanel>
           <PanershipPanelDonor data={filteredAndPickedData}/>
           <Lazy deps={[filteredAndPickedData]} fn={() => {
@@ -259,7 +259,7 @@ export const _PartnershipDashboard = ({
                 <Txt uppercase color="hint" bold>{m._partner.totalBudget}</Txt>
                 <Txt sx={{fontSize: '2em', mb: 2, lineHeight: 1}} bold block>${formatLargeNumber(seq(Enum.values(res)).sum(_ => _.value))}</Txt>
                 {Enum.entries(res).map(([project, budget]) => (
-                  <ChartPieIndicator dense sx={{mb: 2}} key={project} value={budget.value} base={budget.base ?? 1} showValue showBase title={project}/>
+                  <ChartPieWidget dense sx={{mb: 2}} key={project} value={budget.value} base={budget.base ?? 1} showValue showBase title={project}/>
                 ))}
               </PanelBody>
             </Panel>
@@ -268,22 +268,22 @@ export const _PartnershipDashboard = ({
           <Panel>
             <PanelBody>
               <Lazy deps={[filteredAndPickedData]} fn={() => {
-                return ChartTools.percentage({
+                return ChartHelper.percentage({
                   data: filteredAndPickedSgas,
                   base: _ => true,
                   value: _ => (_.Partnership_type === 'strategic_partnership' || _.Partnership_type === 'project_based_partnership') && _.Is_it_an_equitable_partnership === 'yes',
                 })
               }}>
-                {_ => <ChartPieIndicator showValue dense title={m._partner.equitable} value={_.value} base={_.base} sx={{mb: 2}}/>}
+                {_ => <ChartPieWidget showValue dense title={m._partner.equitable} value={_.value} base={_.base} sx={{mb: 2}}/>}
               </Lazy>
               <Lazy deps={[filteredAndPickedData]} fn={() => {
-                return ChartTools.percentage({
+                return ChartHelper.percentage({
                   data: filteredAndPickedSgas,
                   base: _ => true,
                   value: _ => (_.Partnership_type === 'strategic_partnership' || _.Partnership_type === 'project_based_partnership') && _.Is_it_an_equitable_partnership === 'partially',
                 })
               }}>
-                {_ => <ChartPieIndicator showValue dense title={m._partner.partiallyEquitable} value={_.value} base={_.base}/>}
+                {_ => <ChartPieWidget showValue dense title={m._partner.partiallyEquitable} value={_.value} base={_.base}/>}
               </Lazy>
             </PanelBody>
           </Panel>
@@ -380,8 +380,8 @@ export const _PartnershipDashboard = ({
             {res => (
               <Panel>
                 <PanelBody>
-                  <ChartPieIndicator showValue showBase title={m._partner.benefReached} value={res.other.value} base={res.other.base!} sx={{mb: 2}}/>
-                  <ChartPieIndicator showValue showBase title={m._partner.benefPwdReached} value={res.pwd.value} base={res.pwd.base!}/>
+                  <ChartPieWidget showValue showBase title={m._partner.benefReached} value={res.other.value} base={res.other.base!} sx={{mb: 2}}/>
+                  <ChartPieWidget showValue showBase title={m._partner.benefPwdReached} value={res.pwd.value} base={res.pwd.base!}/>
                   <ChartBar data={res.breakdown}/>
                 </PanelBody>
               </Panel>

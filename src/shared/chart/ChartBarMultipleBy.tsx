@@ -1,4 +1,4 @@
-import {ChartDataVal, ChartTools} from './chartHelper'
+import {ChartDataVal, ChartHelper} from './chartHelper'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
 import React, {ReactNode, useMemo} from 'react'
@@ -13,7 +13,7 @@ export interface ChartBarMultipleByProps<
 > {
   onClickData?: (_: R) => void
   limit?: number
-  sortBy?: typeof ChartTools.sortBy.value
+  sortBy?: typeof ChartHelper.sortBy.value
   data: Seq<D>,
   mergeOptions?: Partial<Record<KeyOf<O>, KeyOf<O>>>
   label?: O
@@ -49,14 +49,14 @@ export const ChartBarMultipleBy = <
       }
       return by(d)
     }).compact()
-    const chart = ChartTools.multiple({
+    const chart = ChartHelper.multiple({
       data: source,
       filterValue,
       base,
     })
-    return chain(chart).map(label ? ChartTools.setLabel(label) : _ => _)
-      .map(sortBy ?? ChartTools.sortBy.value)
-      .map(limit ? ChartTools.take(limit) : _ => _)
+    return chain(chart).map(label ? ChartHelper.setLabel(label) : _ => _)
+      .map(sortBy ?? ChartHelper.sortBy.value)
+      .map(limit ? ChartHelper.take(limit) : _ => _)
       .get as Record<NonNullable<K>, ChartDataVal>
   }, [data, by, label])
 

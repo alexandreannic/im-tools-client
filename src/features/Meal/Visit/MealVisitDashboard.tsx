@@ -11,7 +11,7 @@ import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Lazy} from '@/shared/Lazy'
 import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {IpBtn} from '@/shared/Btn'
 import {CommentsPanel} from '@/shared/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
@@ -156,13 +156,13 @@ export const MealVisitDashboard = () => {
                     const base = data.map(_ => _.sew).compact()
                     return {value: base.sum(), base: base.length * 100}
                   }}>
-                    {_ => <ChartPieIndicator titleIcon="female" title={m.women} value={_.value} base={_.base}/>}
+                    {_ => <ChartPieWidget titleIcon="female" title={m.women} value={_.value} base={_.base}/>}
                   </Lazy>
                   <Lazy deps={[data]} fn={() => {
                     const base = data.map(_ => _.sem).compact()
                     return {value: base.sum(), base: base.length * 100}
                   }}>
-                    {_ => <ChartPieIndicator titleIcon="male" title={m.men} value={_.value} base={_.base}/>}
+                    {_ => <ChartPieWidget titleIcon="male" title={m.men} value={_.value} base={_.base}/>}
                   </Lazy>
                 </Box>
               </SlidePanel>

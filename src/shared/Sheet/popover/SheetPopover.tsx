@@ -1,6 +1,6 @@
 import {Box, Popover, PopoverProps} from '@mui/material'
 import React, {ReactNode, useMemo} from 'react'
-import {ChartTools} from '@/shared/chart/chartHelper'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {IpBtn} from '@/shared/Btn'
@@ -91,15 +91,15 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
     const chart = (() => {
       if (multiple) {
         const mapped = seq(data).map(getValue).compact()
-        return ChartTools.multiple({data: mapped})
+        return ChartHelper.multiple({data: mapped})
       } else {
         const mapped = seq(data).map(getValue).compact()
-        return ChartTools.single({data: mapped})
+        return ChartHelper.single({data: mapped})
       }
     })()
     return translations
-      ? ChartTools.setLabel(seq(translations).reduceObject<Record<string, ReactNode>>(_ => [_.value!, _.label!]))(ChartTools.sortBy.value(chart))
-      : ChartTools.sortBy.value(chart)
+      ? ChartHelper.setLabel(seq(translations).reduceObject<Record<string, ReactNode>>(_ => [_.value!, _.label!]))(ChartHelper.sortBy.value(chart))
+      : ChartHelper.sortBy.value(chart)
   }, [getValue, data, translations])
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose} slotProps={{paper: {sx: {minWidth: 400, maxWidth: 500}}}}>

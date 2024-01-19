@@ -7,7 +7,7 @@ import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
 import {capitalize, toPercent} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
-import {ChartPieIndicator} from '@/shared/chart/ChartPieIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {DatabaseKoboAnswerView} from '@/features/Database/KoboEntry/DatabaseKoboAnswerView'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
@@ -252,7 +252,7 @@ const MealVerificationTableContent = <
       {stats && (
         <Div sx={{mb: 2, alignItems: 'stretch'}}>
           <SlidePanel sx={{flex: 1}}>
-            <ChartPieIndicator
+            <ChartPieWidget
               value={stats.selectedRows.length ?? 0}
               base={verificationAnswers.length}
               title={m._mealVerif.sampleSize}
@@ -260,10 +260,10 @@ const MealVerificationTableContent = <
             />
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <ChartPieIndicator dense showValue value={stats?.verifiedRows.length ?? 0} base={stats.selectedRows?.length ?? 1} title={m._mealVerif.verified}/>
+            <ChartPieWidget dense showValue value={stats?.verifiedRows.length ?? 0} base={stats.selectedRows?.length ?? 1} title={m._mealVerif.verified}/>
           </SlidePanel>
           <SlidePanel sx={{flex: 1}}>
-            <ChartPieIndicator dense showValue showBase value={stats?.globalScore ?? 0} base={stats?.indicatorsCount ?? 1} title={m._mealVerif.valid}/>
+            <ChartPieWidget dense showValue showBase value={stats?.globalScore ?? 0} base={stats?.indicatorsCount ?? 1} title={m._mealVerif.valid}/>
           </SlidePanel>
           <SlideWidget title={m._mealVerif.numericToleranceMargin} sx={{flex: 1}} icon="expand">
             {toPercent(mealVerificationConf.numericToleranceMargin)}
