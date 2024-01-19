@@ -5,14 +5,14 @@ import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
-import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
+import {ChartLine} from '@/shared/chart/ChartLine'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {useSession} from '@/core/Session/SessionContext'
 import {DashboardSafetyIncidentsPageProps} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
 import {CommentsPanel, CommentsPanelProps} from '@/shared/CommentsPanel'
-import {KoboBarChartMultiple} from '@/features/Dashboard/shared/KoboBarChart'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {SafetyIncidentTrackerOptions} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
 
 export const SafetyIncidentDashboardBody = ({
@@ -33,13 +33,12 @@ export const SafetyIncidentDashboardBody = ({
             {formatLargeNumber(data.length)}
           </SlideWidget>
           <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <KoboPieChartIndicator
+            <ChartPieWidgetBy
               title={m.safety.attacks}
-              question="attack"
-              filter={_ => _ === 'yes'}
+              filter={_ => _.attack === 'yes'}
               showValue
               compare={{before: computed.lastMonth}}
-              filterBase={_ => _ !== undefined}
+              filterBase={_ => _.attack !== undefined}
               data={data}
             />
           </SlidePanel>
@@ -73,23 +72,23 @@ export const SafetyIncidentDashboardBody = ({
           })}
         </SlidePanel>
         <SlidePanel title={m.safety.attackTypes}>
-          <KoboBarChartMultiple
+          <ChartBarMultipleBy
             data={data}
-            getValue={_ => _.attack_type}
+            by={_ => _.attack_type}
             label={SafetyIncidentTrackerOptions.attack_type}
           />
         </SlidePanel>
         <SlidePanel title={m.safety.target}>
-          <KoboBarChartMultiple
+          <ChartBarMultipleBy
             data={data}
-            getValue={_ => _.what_destroyed}
+            by={_ => _.what_destroyed}
             label={SafetyIncidentTrackerOptions.what_destroyed}
           />
         </SlidePanel>
         <SlidePanel title={m.safety.typeOfCasualties}>
-          <KoboBarChartMultiple
+          <ChartBarMultipleBy
             data={data}
-            getValue={_ => _.type_casualties}
+            by={_ => _.type_casualties}
             label={SafetyIncidentTrackerOptions.type_casualties}
           />
         </SlidePanel>
@@ -126,7 +125,7 @@ export const SafetyIncidentDashboardBody = ({
               .map(([k, v]) => ({name: k, ...v}))
           }}>
             {_ => (
-              <ScLineChart2 height={280} data={_ as any} translation={{
+              <ChartLine height={280} data={_ as any} translation={{
                 total: m.safety.incidents,
                 dead: m.safety.dead,
                 injured: m.safety.injured,

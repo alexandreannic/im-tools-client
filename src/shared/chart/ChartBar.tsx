@@ -2,13 +2,13 @@ import * as React from 'react'
 import {ReactNode, useMemo, useState} from 'react'
 import {alpha, Box, Icon, TooltipProps} from '@mui/material'
 import {useTimeout} from '@alexandreannic/react-hooks-lib'
-import {useI18n} from '../../core/i18n'
+import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
 import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
 import {toPercent} from '@/utils/utils'
 
-export interface HorizontalBarChartGoogleData {
+export interface BarChartData {
   label?: ReactNode
   value: number
   base?: number
@@ -18,7 +18,7 @@ export interface HorizontalBarChartGoogleData {
 }
 
 interface Props<K extends string> {
-  onClickData?: (_: K, item: HorizontalBarChartGoogleData) => void
+  onClickData?: (_: K, item: BarChartData) => void
   showLastBorder?: boolean
   hideValue?: boolean
   dense?: boolean
@@ -26,14 +26,14 @@ interface Props<K extends string> {
   icons?: Record<K, string>
   labels?: Record<K, ReactNode>
   descs?: Record<K, ReactNode>
-  data?: Record<K, HorizontalBarChartGoogleData>
+  data?: Record<K, BarChartData>
   barHeight?: number
 }
 
-export const HorizontalBarChartGoogle = <K extends string>(props: Props<K>) => {
+export const ChartBar = <K extends string>(props: Props<K>) => {
   const {m} = useI18n()
   return props.data ? (
-    <_HorizontalBarChartGoogle {...props} data={props.data!}/>
+    <ChartBarContent {...props} data={props.data!}/>
   ) : (
     <Box sx={{
       textAlign: 'center',
@@ -46,7 +46,7 @@ export const HorizontalBarChartGoogle = <K extends string>(props: Props<K>) => {
   )
 }
 
-export const _HorizontalBarChartGoogle = <K extends string>({
+export const ChartBarContent = <K extends string>({
   data,
   // base,
   icons,
@@ -64,7 +64,7 @@ export const _HorizontalBarChartGoogle = <K extends string>({
     // base,
     percents,
   } = useMemo(() => {
-    const values = Enum.values(data) as HorizontalBarChartGoogleData[]
+    const values = Enum.values(data) as BarChartData[]
     const maxValue = Math.max(...values.map(_ => _.value))
     const sumValue = values.reduce((sum, _) => _.value + sum, 0)
     // const base = values[0]?.base ?? sumValue
@@ -174,7 +174,7 @@ const TooltipWrapper = ({
 }: Omit<TooltipProps, 'title'> & {
   base: number
   sumValue: number
-  item: HorizontalBarChartGoogleData
+  item: BarChartData
 }) => {
   const {formatLargeNumber} = useI18n()
   const {m} = useI18n()

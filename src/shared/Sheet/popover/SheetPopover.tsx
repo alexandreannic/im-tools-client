@@ -1,13 +1,13 @@
 import {Box, Popover, PopoverProps} from '@mui/material'
 import React, {ReactNode, useMemo} from 'react'
-import {ChartTools} from '@/core/chartTools'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {PanelBody, PanelHead} from '@/shared/Panel'
 import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
-import {KoboLineChartDate} from '@/features/Dashboard/shared/KoboLineChartDate'
+import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
 import {SheetOptions, SheetRow} from '@/shared/Sheet/util/sheetType'
 import {KeyOf} from '@/utils/utils'
 import {seq} from '@alexandreannic/ts-utils'
@@ -91,15 +91,15 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
     const chart = (() => {
       if (multiple) {
         const mapped = seq(data).map(getValue).compact()
-        return ChartTools.multiple({data: mapped})
+        return ChartHelperOld.multiple({data: mapped})
       } else {
         const mapped = seq(data).map(getValue).compact()
-        return ChartTools.single({data: mapped})
+        return ChartHelperOld.single({data: mapped})
       }
     })()
     return translations
-      ? ChartTools.setLabel(seq(translations).reduceObject<Record<string, ReactNode>>(_ => [_.value!, _.label!]))(ChartTools.sortBy.value(chart))
-      : ChartTools.sortBy.value(chart)
+      ? ChartHelperOld.setLabel(seq(translations).reduceObject<Record<string, ReactNode>>(_ => [_.value!, _.label!]))(ChartHelperOld.sortBy.value(chart))
+      : ChartHelperOld.sortBy.value(chart)
   }, [getValue, data, translations])
   return (
     <Popover open={!!anchorEl} anchorEl={anchorEl} onClose={onClose} slotProps={{paper: {sx: {minWidth: 400, maxWidth: 500}}}}>
@@ -107,7 +107,7 @@ export const MultipleChoicesPopover = <T extends SheetRow, >({
         <Txt truncate>{title}</Txt>
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-        <HorizontalBarChartGoogle data={chart}/>
+        <ChartBar data={chart}/>
       </PanelBody>
       <PanelFoot alignEnd>
         <IpBtn color="primary" onClick={onClose as any}>
@@ -147,7 +147,7 @@ export const DatesPopover = <T, >({
         {title}
       </PanelHead>
       <PanelBody sx={{maxHeight: '50vh', overflowY: 'auto'}}>
-        <KoboLineChartDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
+        <ChartLineByDate data={data} curves={{[title]: getValue}} sx={{minWidth: 360}}/>
       </PanelBody>
       <PanelFoot alignEnd>
         <IpBtn color="primary" onClick={onClose as any}>

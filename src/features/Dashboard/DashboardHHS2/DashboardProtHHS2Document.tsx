@@ -1,20 +1,21 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '../../../core/chartTools'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {chain} from '@/utils/utils'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
-import {ProtHHS2BarChart, ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
@@ -54,25 +55,25 @@ export const DashboardProtHHS2Document = ({
         <Div column sx={{flex: 1}}>
           <SlidePanel title={m.protHHSnapshot.maleWithoutIDPCert}>
             <Div>
-              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                 data: getIdpsAnsweringRegistrationQuestion(d),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
                 {(d, l) => (
-                  <PieChartIndicator sx={{flex: 1}} title={m.all} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
+                  <ChartPieWidget sx={{flex: 1}} title={m.all} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
                 )}
               </Lazy>
-              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                 data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === Person.Gender.Male),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
                 {(d, l) => (
-                  <PieChartIndicator sx={{flex: 1}} title={m.protHHSnapshot.male1860} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
+                  <ChartPieWidget sx={{flex: 1}} title={m.protHHSnapshot.male1860} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
                 )}
               </Lazy>
             </Div>
           </SlidePanel>
-          <Lazy deps={[computed.flatData]} fn={() => ChartTools.byCategory({
+          <Lazy deps={[computed.flatData]} fn={() => ChartHelperOld.byCategory({
             data: computed.flatData,
             categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
             filter: _ => !_.lackDoc?.includes('none'),
@@ -86,19 +87,19 @@ export const DashboardProtHHS2Document = ({
             }
           </Lazy>
           <SlidePanel>
-            <KoboPieChartIndicator
+            <ChartPieWidgetByKey
               compare={{before: computed.lastMonth}}
+              property="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
               title={m.protHHS2.accessBarriersToObtainDocumentation}
-              question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
               filter={_ => !_.includes('no')}
               filterBase={_ => !_?.includes('unable_unwilling_to_answer')}
               data={data}
               sx={{mb: 2}}
             />
-            <ProtHHS2BarChart
-              questionType="multiple"
+            <ChartBarMultipleBy
               data={data}
-              question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
+              by={_ => _.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
+              label={Protection_Hhs2_1Options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
               filterValue={[
                 'no',
                 'unable_unwilling_to_answer',
@@ -123,38 +124,38 @@ export const DashboardProtHHS2Document = ({
                 )}
               </ScRadioGroup>
             </Box>
-            <Lazy deps={[filteredPersons, filteredPersonsLastMonth]} fn={(x) => ChartTools.percentage({
+            <Lazy deps={[filteredPersons, filteredPersonsLastMonth]} fn={(x) => ChartHelperOld.percentage({
               data: x.map(_ => _.lackDoc).compact().filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('none'),
             })}>
-              {(_, last) => <PieChartIndicator dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
+              {(_, last) => <ChartPieWidget dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
             </Lazy>
-            <Lazy deps={[filteredPersons]} fn={() => chain(ChartTools.multiple({
+            <Lazy deps={[filteredPersons]} fn={() => chain(ChartHelperOld.multiple({
               data: filteredPersons.map(_ => _.lackDoc).compact(),
               filterValue: ['none', 'unable_unwilling_to_answer'],
             }))
-              .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
-              .map(ChartTools.sortBy.value)
+              .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
+              .map(ChartHelperOld.sortBy.value)
               .get}>
-              {_ => <HorizontalBarChartGoogle data={_}/>}
+              {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <KoboPieChartIndicator
+            <ChartPieWidgetByKey
               compare={{before: computed.lastMonth}}
               title={m.lackOfHousingDoc}
+              property="what_housing_land_and_property_documents_do_you_lack"
               filterBase={_ => !_.includes('unable_unwilling_to_answer')}
               filter={_ => !_.includes('none')}
               data={data}
-              question={'what_housing_land_and_property_documents_do_you_lack'}
               sx={{mb: 2}}
             />
-            <ProtHHS2BarChart
+            <ChartBarMultipleBy
               data={data}
-              question="what_housing_land_and_property_documents_do_you_lack"
-              questionType="multiple"
+              by={_ => _.what_housing_land_and_property_documents_do_you_lack}
               filterValue={['unable_unwilling_to_answer', 'none']}
-              overrideLabel={{
+              label={{
+                ...Protection_Hhs2_1Options.what_housing_land_and_property_documents_do_you_lack,
                 construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'Construction stage',
                 document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by local self-government proving a damaged house',
                 cost_estimation_certificate_state_commission_issued_when_personal_request_is_made: 'Cost estimation certificate - state commission',

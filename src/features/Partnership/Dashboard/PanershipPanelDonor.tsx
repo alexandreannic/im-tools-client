@@ -1,5 +1,4 @@
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {KoboBarChartSingle} from '@/features/Dashboard/shared/KoboBarChart'
 import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {Enum, fnSwitch, Seq} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/typeDrc'
@@ -7,6 +6,7 @@ import React, {useState} from 'react'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {useI18n} from '@/core/i18n'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 export const PanershipPanelDonor = ({
   data,
@@ -23,12 +23,12 @@ export const PanershipPanelDonor = ({
       </ScRadioGroup>
       {fnSwitch(mode, {
         donor: (
-          <KoboBarChartSingle data={data.flatMap(_ => _.group_vi2hh32).compact()} label={Partnership_partnersDatabaseOptions.Donor} getValue={_ => _.Donor!}/>
+          <ChartBarSingleBy data={data.flatMap(_ => _.group_vi2hh32).compact()} label={Partnership_partnersDatabaseOptions.Donor} by={_ => _.Donor!}/>
         ),
         project: (
-          <KoboBarChartSingle
+          <ChartBarSingleBy
             data={data.flatMap(_ => _.group_vi2hh32).compact()}
-            getValue={_ => Enum.values(DrcProject).find(p => p.includes('' + _.Project_code!))!}
+            by={_ => Enum.values(DrcProject).find(p => p.includes('' + _.Project_code!))!}
           />
         )
       })}

@@ -23,7 +23,8 @@ export const makeChartData: {
 
 export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
-export namespace ChartTools {
+/** @deprecated */
+export namespace ChartHelperOld {
 
   export const mapValue = <K extends string, V, R>(fn: (_: V) => R) => (obj: Record<K, V>): Record<K, R> => mapObjectValue(obj, fn)
 
@@ -76,30 +77,8 @@ export namespace ChartTools {
     Enum.keys(obj).forEach(k => {
       res[k] = {value: obj[k] / (percent ? data.length : 1)}
     })
-    return ChartTools.sortBy.value(res)
+    return ChartHelperOld.sortBy.value(res)
   }
-
-  // export const singleBy = <A>({
-  //   data,
-  //   percent,
-  //   filterValue,
-  //   filterBase,
-  // }: {
-  //   data: Seq<A>,
-  //   getValue: (_: A) => string,
-  //   filterValue: (_: A) => boolean,
-  //   filterBase?: (_: A) => boolean,
-  //   percent?: boolean
-  // }) => {
-  //   const base = filterBase ? data.filter(filterBase) : data
-  //   const value = base.filter(filterValue)
-  //
-  //   const res = {} as ChartData<A>
-  //   Enum.keys(obj).forEach(k => {
-  //     res[k] = {value: obj[k] / (percent ? data.length : 1)}
-  //   })
-  //   return ChartTools.sortBy.value(res)
-  // }
 
   export const multiple = <A extends string>({
     data,
@@ -123,7 +102,7 @@ export namespace ChartTools {
       res[k].value = obj[k]
       res[k].base = baseCount
     })
-    return ChartTools.sortBy.value(res)
+    return ChartHelperOld.sortBy.value(res)
   }
 
   export const groupBy = <A extends Record<string, any>, K extends string>({
@@ -184,27 +163,6 @@ export namespace ChartTools {
     }
     return res
   }
-  // export const reduceByCategory = <A extends Record<string, any>, K extends string, R>({
-  //   data,
-  //   reduce,
-  //   categories,
-  //   initialValue,
-  // }: {
-  //   data: A[]
-  //   reduce: (acc: R, _: A) => R
-  //   categories: Record<K, (_: A) => boolean>
-  //   initialValue: R,
-  // }): Record<K, R> => {
-  //   const res = Enum.keys(categories).reduce((acc, category) => ({...acc, [category]: undefined}), {} as Record<K, R>)
-  //   data.forEach(x => {
-  //     Enum.entries(categories).forEach(([category, isCategory]) => {
-  //       if (!isCategory(x)) return
-  //       res[category] = filter(res[category], x)
-  //     })
-  //   })
-  //   return res
-
-  // }
 
   export const sumByCategory = <A extends Record<string, any>, K extends string>({
     data,
@@ -237,7 +195,6 @@ export namespace ChartTools {
     })
     return data
   }
-
 
   export const setDesc = (m: Record<string, string>) => (data: ChartData): ChartData => {
     Object.keys(data).forEach(k => {

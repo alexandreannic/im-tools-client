@@ -1,6 +1,6 @@
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {Person} from '../core/type'
-import {ChartTools} from '../core/chartTools'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import Gender = Person.Gender
@@ -27,8 +27,8 @@ export const getProtHhsIptData = (data?: Seq<ProtHHS2Enrich>) => {
         _.staff_to_insert_their_DRC_office === 'lviv'
       )
       .groupBy(_ => _.staff_to_insert_their_DRC_office)
-    Enum.entries(ChartTools.sortBy.custom(['dnipro', 'kharkiv', 'chernihiv', 'lviv'])(byOffice)).forEach(([base, v]) => {
-      Enum.entries(ChartTools.sortBy.custom([Gender.Male, Gender.Female])(
+    Enum.entries(ChartHelperOld.sortBy.custom(['dnipro', 'kharkiv', 'chernihiv', 'lviv'])(byOffice)).forEach(([base, v]) => {
+      Enum.entries(ChartHelperOld.sortBy.custom([Gender.Male, Gender.Female])(
         seq(v)
           // .filter(_ => _.gender === 'male' || _.gender === 'female')
           .groupBy(_ => _.gender!))

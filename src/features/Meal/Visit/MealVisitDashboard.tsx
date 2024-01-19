@@ -3,15 +3,15 @@ import {map, mapFor, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Box, Icon} from '@mui/material'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
-import {makeKoboBarChartComponent} from '../../Dashboard/shared/KoboBarChart'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {Lazy} from '@/shared/Lazy'
 import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {IpBtn} from '@/shared/Btn'
 import {CommentsPanel} from '@/shared/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
@@ -24,6 +24,7 @@ import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
 import {Page} from '@/shared/Page'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 export interface DashboardPageProps {
   filters: Record<string, string[]>
@@ -31,12 +32,6 @@ export interface DashboardPageProps {
 }
 
 const mapOblast = OblastIndex.koboOblastIndexIso
-
-export const MealVisitMonitoringBarChart = makeKoboBarChartComponent<Meal_VisitMonitoring, typeof Meal_VisitMonitoringOptions>({
-  options: Meal_VisitMonitoringOptions
-})
-
-// export type Filters = DashboardFilterHelper.InferShape<typeof fiterShape>
 
 export const MealVisitDashboard = () => {
   const ctx = useMealVisitContext()
@@ -161,51 +156,55 @@ export const MealVisitDashboard = () => {
                     const base = data.map(_ => _.sew).compact()
                     return {value: base.sum(), base: base.length * 100}
                   }}>
-                    {_ => <PieChartIndicator titleIcon="female" title={m.women} value={_.value} base={_.base}/>}
+                    {_ => <ChartPieWidget titleIcon="female" title={m.women} value={_.value} base={_.base}/>}
                   </Lazy>
                   <Lazy deps={[data]} fn={() => {
                     const base = data.map(_ => _.sem).compact()
                     return {value: base.sum(), base: base.length * 100}
                   }}>
-                    {_ => <PieChartIndicator titleIcon="male" title={m.men} value={_.value} base={_.base}/>}
+                    {_ => <ChartPieWidget titleIcon="male" title={m.men} value={_.value} base={_.base}/>}
                   </Lazy>
                 </Box>
               </SlidePanel>
               <SlidePanel title={m.donor}>
-                <MealVisitMonitoringBarChart data={data} question="mdd_001" questionType="multiple"/>
+                <ChartBarMultipleBy
+                  label={Meal_VisitMonitoringOptions.mdd_001}
+                  data={data}
+                  by={_ => _.mdd_001}
+                />
               </SlidePanel>
               <SlidePanel>
-                <KoboPieChartIndicator title={m.mealMonitoringVisit.securityConcerns} question="ssy" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
-                <MealVisitMonitoringBarChart data={data} question="sst"/>
+                <ChartPieWidgetBy title={m.mealMonitoringVisit.securityConcerns} filter={_ => _.ssy === 'yes'} data={data} sx={{mb: 1}}/>
+                <ChartBarMultipleBy data={data} by={_ => _.sst} label={Meal_VisitMonitoringOptions.sst}/>
               </SlidePanel>
               <SlidePanel>
-                <KoboPieChartIndicator title={m.mealMonitoringVisit.concerns} question="sef" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
-                <MealVisitMonitoringBarChart data={data} question="sei"/>
+                <ChartPieWidgetBy title={m.mealMonitoringVisit.concerns} filter={_ => _.sef === 'yes'} data={data} sx={{mb: 1}}/>
+                <ChartBarMultipleBy data={data} by={_ => _.sei} label={Meal_VisitMonitoringOptions.sei}/>
               </SlidePanel>
               <SlidePanel>
-                <KoboPieChartIndicator title={m.mealMonitoringVisit.criticalConcern} question="visf" filter={_ => _ === 'yes'} data={data} sx={{mb: 1}}/>
-                <MealVisitMonitoringBarChart data={data} question="visp"/>
+                <ChartPieWidgetBy title={m.mealMonitoringVisit.criticalConcern} filter={_ => _.visf === 'yes'} data={data} sx={{mb: 1}}/>
+                <ChartBarMultipleBy data={data} by={_ => _.visp} label={Meal_VisitMonitoringOptions.visp}/>
               </SlidePanel>
             </Div>
 
             <Div column sx={{maxHeight: '33%'}}>
               <SlidePanel title={m.mealMonitoringVisit.nfiDistribution}>
-                <MealVisitMonitoringBarChart data={data} question="pan" questionType="multiple"/>
+                <ChartBarMultipleBy data={data} by={_ => _.pan} label={Meal_VisitMonitoringOptions.pan}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.ecrec}>
-                <MealVisitMonitoringBarChart data={data} question="pae"/>
+                <ChartBarSingleBy data={data} by={_ => _.pae} label={Meal_VisitMonitoringOptions.pae}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.shelter}>
-                <MealVisitMonitoringBarChart data={data} question="pas"/>
+                <ChartBarSingleBy data={data} by={_ => _.pas} label={Meal_VisitMonitoringOptions.pas}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.lau}>
-                <MealVisitMonitoringBarChart data={data} question="pal"/>
+                <ChartBarSingleBy data={data} by={_ => _.pal} label={Meal_VisitMonitoringOptions.pal}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.protection}>
-                <MealVisitMonitoringBarChart data={data} question="pap"/>
+                <ChartBarSingleBy data={data} by={_ => _.pap} label={Meal_VisitMonitoringOptions.pap}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.eore}>
-                <MealVisitMonitoringBarChart data={data} question="pao"/>
+                <ChartBarSingleBy data={data} by={_ => _.pao} label={Meal_VisitMonitoringOptions.pao}/>
               </SlidePanel>
             </Div>
 

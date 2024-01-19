@@ -3,17 +3,17 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/core/chartTools'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Document'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartBar} from '@/shared/chart/ChartBar'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {Person} from '@/core/type'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const SnapshotProtMonitoEchoRegistration = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -25,7 +25,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
         <Div>
           <Div column>
             <Lazy deps={[data]} fn={() => {
-              const z = ChartTools.byCategory({
+              const z = ChartHelperOld.byCategory({
                 categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
                 data: computed.flatData,
                 filter: _ => _.lackDoc.includes('passport') || _.lackDoc.includes('tin'),
@@ -43,12 +43,12 @@ export const SnapshotProtMonitoEchoRegistration = () => {
             <SlidePanel>
               <SlidePanelTitle sx={{mb: 1}}>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
               <Div>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   data: getIdpsAnsweringRegistrationQuestion(d),
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
                   {(d, l) => (
-                    <PieChartIndicator
+                    <ChartPieWidget
                       title={m.all}
                       value={d.value}
                       base={d.base}
@@ -62,12 +62,12 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                     />
                   )}
                 </Lazy>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === Person.Gender.Male),
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
                   {(d, l) => (
-                    <PieChartIndicator
+                    <ChartPieWidget
                       title={m.protHHSnapshot.male1860}
                       value={d.value}
                       base={d.base}
@@ -84,19 +84,19 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               </Div>
             </SlidePanel>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieWidgetBy
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.accessBarriersToObtainDocumentation}
-                question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
-                filter={_ => !_.includes('no')}
-                filterBase={_ => !_?.includes('unable_unwilling_to_answer')}
+                filter={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation.includes('no')}
+                filterBase={_ => !_?.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation
+                  .includes('unable_unwilling_to_answer')}
                 data={data}
                 {...snapShotDefaultPieProps}
               />
-              <ProtHHS2BarChart
-                questionType="multiple"
+              <ChartBarMultipleBy
                 data={data}
-                question="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
+                by={_ => _.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
+                label={Protection_Hhs2_1Options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
                 mergeOptions={{
                   distrust_of_public_institutions_and_authorities: 'other_specify',
                   discrimination: 'other_specify',
@@ -111,42 +111,40 @@ export const SnapshotProtMonitoEchoRegistration = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartTools.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartHelperOld.percentage({
                 data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 value: _ => !_.includes('none')
               })}>
-                {(_, last) => <PieChartIndicator
+                {(_, last) => <ChartPieWidget
                   title={m.lackOfPersonalDoc}
                   value={_.value}
                   base={_.base}
                   {...snapShotDefaultPieProps}
                 />}
               </Lazy>
-              <Lazy deps={[data]} fn={() => chain(ChartTools.multiple({
+              <Lazy deps={[data]} fn={() => chain(ChartHelperOld.multiple({
                 data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 filterValue: ['none', 'unable_unwilling_to_answer'],
               }))
-                .map(ChartTools.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
-                .map(ChartTools.sortBy.value)
+                .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
+                .map(ChartHelperOld.sortBy.value)
                 .get}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieWidgetBy
                 hideEvolution
                 compare={{before: computed.lastMonth}}
                 title={m.lackOfHousingDoc}
-                filterBase={_ => !_.includes('unable_unwilling_to_answer')}
-                filter={_ => !_.includes('none')}
+                filterBase={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('unable_unwilling_to_answer')}
+                filter={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('none')}
                 data={data}
-                question={'what_housing_land_and_property_documents_do_you_lack'}
                 {...snapShotDefaultPieProps}
               />
-              <ProtHHS2BarChart
+              <ChartBarMultipleBy
                 data={data}
-                question="what_housing_land_and_property_documents_do_you_lack"
-                questionType="multiple"
+                by={_ => _.what_housing_land_and_property_documents_do_you_lack}
                 filterValue={['unable_unwilling_to_answer', 'none']}
                 mergeOptions={{
                   cost_estimation_certificate_state_commission_issued_when_personal_request_is_made: 'other_specify',
@@ -158,7 +156,8 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                   construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'other_specify',
                   inheritance_will: 'other_specify',
                 }}
-                overrideLabel={{
+                label={{
+                  ...Protection_Hhs2_1Options.what_housing_land_and_property_documents_do_you_lack,
                   construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'Construction stage',
                   document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by authority',
                   // document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by local self-government proving a damaged house',

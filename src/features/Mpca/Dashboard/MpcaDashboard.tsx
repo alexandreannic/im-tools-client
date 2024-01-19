@@ -7,16 +7,16 @@ import {UseBNREComputed, useBNREComputed} from '../useBNREComputed'
 import {Enum, fnSwitch, Seq, seq} from '@alexandreannic/ts-utils'
 import {chain, toPercent, tryy} from '@/utils/utils'
 import {Txt} from 'mui-extension'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {Period, Person} from '@/core/type'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools, makeChartData} from '@/core/chartTools'
+import {ChartHelperOld, makeChartData} from '@/shared/chart/chartHelperOld'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {ScLineChart2} from '@/shared/Chart/ScLineChart2'
+import {ChartLine} from '@/shared/chart/ChartLine'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/server/mpca/MpcaEntity'
@@ -235,7 +235,7 @@ export const _MPCADashboard = ({
             <Txt color="hint" sx={{ml: 1}}>{toPercent(Enum.keys(computed.multipleTimeAssisted).length / data.length)}</Txt>
           </SlideWidget>
           <SlidePanel sx={{flex: 1}}>
-            <PieChartIndicator showValue showBase value={computed.preventedAssistance.length} base={computed.deduplications.length} title="Prevented assistances"/>
+            <ChartPieWidget showValue showBase value={computed.preventedAssistance.length} base={computed.deduplications.length} title="Prevented assistances"/>
           </SlidePanel>
           {/*<SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>*/}
           {/*  {formatLargeNumber(computed?.flatData.length)}*/}
@@ -256,7 +256,7 @@ export const _MPCADashboard = ({
                   .map(([k, v]) => ({name: k, [m.amount]: v}))
               }}>
                 {_ => (
-                  <ScLineChart2
+                  <ChartLine
                     data={_ as any}
                     height={190}
                     hideLabelToggle
@@ -266,17 +266,17 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <MpcaDashboardDeduplication data={data}/>
             <SlidePanel title={m.form}>
-              <Lazy deps={[data]} fn={() => chain(ChartTools.single({
+              <Lazy deps={[data]} fn={() => chain(ChartHelperOld.single({
                 data: data.map(_ => _.source),
-              })).map(ChartTools.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+              })).map(ChartHelperOld.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
+                {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.program}>
-              <Lazy deps={[data]} fn={() => ChartTools.multiple({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.multiple({
                 data: data.map(_ => _.prog),
               })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             {/*<SlidePanel title={m.submissionTime}>*/}
@@ -345,17 +345,17 @@ export const _MPCADashboard = ({
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.donor}>
-              <Lazy deps={[data]} fn={() => ChartTools.single({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.single({
                 data: data.map(_ => _.finalDonor ?? ''),
               })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.project}>
-              <Lazy deps={[data]} fn={() => ChartTools.single({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.single({
                 data: data.map(_ => _.finalProject ?? SheetUtils.blank),
               })}>
-                {_ => <HorizontalBarChartGoogle data={_}/>}
+                {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
           </Div>

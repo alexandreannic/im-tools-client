@@ -1,13 +1,13 @@
 import {format} from 'date-fns'
 import {Enum} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
-import {ScLineChart2, ScLineChartProps} from '@/shared/Chart/ScLineChart2'
+import {ChartLine, ChartLineProps} from '@/shared/chart/ChartLine'
 
 export type DateKeys<T> = {
   [K in keyof T]: T[K] extends (Date | undefined) ? K : never;
 }[keyof T]
 
-export const KoboLineChartDate = <T, K extends DateKeys<T>>({
+export const ChartLineByDate = <T, K extends DateKeys<T>>({
   data,
   curves,
   label,
@@ -25,7 +25,7 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
   end?: Date
   // @ts-ignore
   // translations?: Partial<Record<T[K], string>>
-} & Pick<ScLineChartProps, 'colors' | 'sx'>) => {
+} & Pick<ChartLineProps, 'colors' | 'sx'>) => {
   const curve = useMemo(() => {
     // const questions = ([question].flat() as K[])
     // const _end = format(end, 'yyyy-MM')
@@ -54,7 +54,7 @@ export const KoboLineChartDate = <T, K extends DateKeys<T>>({
 
   return (
     <>
-      <ScLineChart2
+      <ChartLine
         {...props}
         hideLabelToggle={true}
         height={height ?? 220}

@@ -3,18 +3,18 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/core/chartTools'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {KoboPieChartIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartBar} from '@/shared/chart/ChartBar'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {useTheme} from '@mui/material'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const SnapshotProtMonitoEchoSafety = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -61,32 +61,32 @@ export const SnapshotProtMonitoEchoSafety = () => {
             <SlideTxt sx={{marginBottom: t.spacing() + ' !important'}}>
               <Lazy deps={[data]} fn={() => {
                 return {
-                  senseOfSafety: ChartTools.percentage({
+                  senseOfSafety: ChartHelperOld.percentage({
                     data: data.map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  poorSafetyChernihiv: ChartTools.percentage({
+                  poorSafetyChernihiv: ChartHelperOld.percentage({
                     data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.byName('Chernihivska').iso).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  poorSafetySumy: ChartTools.percentage({
+                  poorSafetySumy: ChartHelperOld.percentage({
                     data: data.filter(_ => _.where_are_you_current_living_oblast === OblastIndex.byName('Sumska').iso).map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  senseOfSafetyUrban: ChartTools.percentage({
+                  senseOfSafetyUrban: ChartHelperOld.percentage({
                     data: data.filter(_ => _.type_of_site === 'urban_area').map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  senseOfSafetyRural: ChartTools.percentage({
+                  senseOfSafetyRural: ChartHelperOld.percentage({
                     data: data.filter(_ => _.type_of_site === 'rural_area').map(_ => _.please_rate_your_sense_of_safety_in_this_location),
                     value: _ => _ === '_2_unsafe' || _ === '_1_very_unsafe',
                     base: _ => _ !== 'unable_unwilling_to_answer',
                   }),
-                  incidents: ChartTools.percentage({
+                  incidents: ChartHelperOld.percentage({
                     data,
                     value: _ => _.has_any_adult_male_member_experienced_violence === 'yes'
                       || _.has_any_adult_female_member_experienced_violence === 'yes'
@@ -120,44 +120,43 @@ export const SnapshotProtMonitoEchoSafety = () => {
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.typeOfIncident}</SlidePanelTitle>
               <Lazy deps={[groupedIndividualsType.type]} fn={() =>
-                chain(ChartTools.multiple({
+                chain(ChartHelperOld.multiple({
                   data: groupedIndividualsType.type,
                   filterValue: ['unable_unwilling_to_answer']
                 }))
-                  .map(ChartTools.setLabel({
+                  .map(ChartHelperOld.setLabel({
                     ...Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence,
                     // TODO TO REMOVE
                     // other_specify: 'Psychological abuse',
                   }))
-                  .map(ChartTools.sortBy.value)
+                  .map(ChartHelperOld.sortBy.value)
                   .get
               }>
                 {_ => (
-                  <HorizontalBarChartGoogle data={_}/>
+                  <ChartBar data={_}/>
                 )}
               </Lazy>
             </SlidePanel>
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.freedomOfMovement}</SlidePanelTitle>
-              <ProtHHS2BarChart
-                questionType="multiple"
+              <ChartBarMultipleBy
                 data={data}
+                by={_ => _.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area}
                 limit={5}
-                overrideLabel={{
+                label={{
+                  ...Protection_Hhs2_1Options.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area,
                   lack_of_transportationfinancial_resources_to_pay_transportation: 'Lack of transportation'
                 }}
-                question="do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area"
                 filterValue={['no', 'unable_unwilling_to_answer']}
               />
             </SlidePanel>
           </Div>
           <Div column>
             <SlidePanel>
-              <KoboPieChartIndicator
+              <ChartPieWidgetBy
                 title={m.protHHS2.poorSenseOfSafety}
-                question="please_rate_your_sense_of_safety_in_this_location"
-                filter={_ => _ === '_2_unsafe' || _ === '_1_very_unsafe'}
-                filterBase={_ => _ !== 'unable_unwilling_to_answer'}
+                filter={_ => _.please_rate_your_sense_of_safety_in_this_location === '_2_unsafe' || _.please_rate_your_sense_of_safety_in_this_location === '_1_very_unsafe'}
+                filterBase={_ => _.please_rate_your_sense_of_safety_in_this_location !== 'unable_unwilling_to_answer'}
                 compare={{before: computed.lastMonth}}
                 data={data}
                 {...snapShotDefaultPieProps}
@@ -172,11 +171,11 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   _.please_rate_your_sense_of_safety_in_this_location !== undefined}
               />
               <SlidePanelTitle sx={{mt: 2}}>{m.influencingFactors}</SlidePanelTitle>
-              <ProtHHS2BarChart
-                questionType="multiple"
+              <ChartBarMultipleBy
                 data={data}
-                question="what_are_the_main_factors_that_make_this_location_feel_unsafe"
+                by={_ => _.what_are_the_main_factors_that_make_this_location_feel_unsafe}
                 filterValue={['unable_unwilling_to_answer']}
+                label={Protection_Hhs2_1Options.what_are_the_main_factors_that_make_this_location_feel_unsafe}
                 // mergeOptions={{
                 //   intercommunity_tensions: 'other_specify',
               />

@@ -15,7 +15,7 @@ import {useIpToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmEntryRoute} from '@/features/Cfm/Data/CfmDetails'
 import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Box, LinearProgress} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
 import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
@@ -92,7 +92,7 @@ const CfmSidebar = () => {
       <SidebarHr/>
       <SidebarBody>
         <Box sx={{pl: 2}}>
-          <PieChartIndicator
+          <ChartPieWidget
             dense
             showValue
             title={m._cfm.openTickets}
@@ -100,7 +100,7 @@ const CfmSidebar = () => {
             base={_stats.total ?? 1}
           />
           {/*<Divider sx={{my: 1.5}}/>*/}
-          <PieChartIndicator
+          <ChartPieWidget
             sx={{mt: 2}}
             dense
             showValue

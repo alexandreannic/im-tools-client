@@ -8,13 +8,9 @@ import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
-import {KoboFormName, KoboIndex} from '@/core/KoboIndex'
-import {DatabaseTable} from '@/features/Database/KoboTable/DatabaseKoboTable'
+import {KoboFormName} from '@/core/KoboIndex'
 import {SafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
-import {Panel} from '@/shared/Panel'
-import {Page} from '@/shared/Page'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
-import {shelterIndex} from '@/features/Shelter/Shelter'
 
 const relatedKoboForms: (KoboFormName)[] = [
   'safety_incident',

@@ -1,52 +1,14 @@
 import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
 import React, {ReactNode} from 'react'
 import {Txt} from 'mui-extension'
-import {IpPieChart} from './Chart/PieChart'
-import {SlidePanelTitle} from './PdfLayout/PdfSlide'
-import {PanelProps} from './Panel/Panel'
+import {ChartPie} from '@/shared/chart/ChartPie'
+import {SlidePanelTitle} from '../PdfLayout/PdfSlide'
+import {PanelProps} from '../Panel/Panel'
 import {useI18n} from '@/core/i18n'
 import {LightTooltip, TooltipRow} from '@/shared/LightTooltip'
 import {toPercent} from '@/utils/utils'
 
-const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
-  if (isNaN(value)) return '-'
-  return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value
-}
-
-export const Donut = ({
-  percent = 0,
-  size = 55,
-}: {
-  percent?: number
-  size?: number
-}) => {
-  const theme = useTheme()
-  return (
-    <IpPieChart
-      stroke="none"
-      hideTooltip={true}
-      outerRadius={size / 2}
-      innerRadius={(size / 2) - 9}
-      height={size}
-      width={size}
-      hideLabel
-      data={{
-        value: Math.round(percent * 100) / 100,
-        rest: 1 - percent,
-      }}
-      colors={{
-        value: theme.palette.primary.main,
-        rest: alpha(theme.palette.primary.main, .16),
-      }}
-      m={{
-        value: 'ukrainian',
-        rest: 'other',
-      }}
-    />
-  )
-}
-
-export interface PieChartIndicatorProps extends Omit<PanelProps, 'title'> {
+export interface ChartPieIndicatorProps extends Omit<PanelProps, 'title'> {
   fractionDigits?: number
   dense?: boolean
   noWrap?: boolean
@@ -60,7 +22,7 @@ export interface PieChartIndicatorProps extends Omit<PanelProps, 'title'> {
   tooltip?: string
 }
 
-export const PieChartIndicator = ({
+export const ChartPieWidget = ({
   titleIcon,
   title,
   evolution,
@@ -75,7 +37,7 @@ export const PieChartIndicator = ({
   fractionDigits = 0,
   sx,
   ...props
-}: PieChartIndicatorProps) => {
+}: ChartPieIndicatorProps) => {
   const {m, formatLargeNumber} = useI18n()
   return (
     <LightTooltip title={
@@ -133,5 +95,43 @@ export const PieChartIndicator = ({
         </Box>
       </Box>
     </LightTooltip>
+  )
+}
+
+const renderPercent = (value: number, isPercent?: boolean, fractionDigits = 1) => {
+  if (isNaN(value)) return '-'
+  return isPercent ? (value * 100).toFixed(fractionDigits) + '%' : value
+}
+
+const Donut = ({
+  percent = 0,
+  size = 55,
+}: {
+  percent?: number
+  size?: number
+}) => {
+  const theme = useTheme()
+  return (
+    <ChartPie
+      stroke="none"
+      hideTooltip={true}
+      outerRadius={size / 2}
+      innerRadius={(size / 2) - 9}
+      height={size}
+      width={size}
+      hideLabel
+      data={{
+        value: Math.round(percent * 100) / 100,
+        rest: 1 - percent,
+      }}
+      colors={{
+        value: theme.palette.primary.main,
+        rest: alpha(theme.palette.primary.main, .16),
+      }}
+      m={{
+        value: 'ukrainian',
+        rest: 'other',
+      }}
+    />
   )
 }

@@ -4,17 +4,18 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {DRCLogo, EULogo, UhfLogo, UsaidLogo} from '@/shared/logo/logo'
-import {commonLegendProps, IpStackedBarChart} from '@/shared/Chart/StackedBarChart'
+import {ChartBarStacker, commonLegendProps} from '@/shared/chart/ChartBarStacked'
 import {Person} from '@/core/type'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Legend} from 'recharts'
-import {IpPieChart} from '@/shared/Chart/PieChart'
+import {ChartPie} from '@/shared/chart/ChartPie'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 
 export const SnapshotProtMonitoEchoSample = () => {
   const theme = useTheme()
@@ -76,7 +77,7 @@ export const SnapshotProtMonitoEchoSample = () => {
             <Div>
               <Div column>
                 <SlidePanel>
-                  <IpPieChart
+                  <ChartPie
                     outerRadius={65}
                     height={140}
                     width={270}
@@ -96,11 +97,11 @@ export const SnapshotProtMonitoEchoSample = () => {
                     }}
                   >
                     <Legend {...commonLegendProps} layout="vertical" verticalAlign="middle" align="right"/>
-                  </IpPieChart>
+                  </ChartPie>
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.ageGroup}</SlidePanelTitle>
-                  <IpStackedBarChart data={computed.ageGroup(Person.ageGroup['DRC'], true)} sx={{mt: 2}} height={300} colors={t => [
+                  <ChartBarStacker data={computed.ageGroup(Person.ageGroup['DRC'], true)} sx={{mt: 2}} height={300} colors={t => [
                     t.palette.primary.main,
                     snapshotAlternateColor(t),
                     darken(t.palette.primary.main, .5),
@@ -110,15 +111,15 @@ export const SnapshotProtMonitoEchoSample = () => {
               <Div column>
                 <SlidePanel>
                   <SlidePanelTitle>{m.protHHS2.hhTypes}</SlidePanelTitle>
-                  <ProtHHS2BarChart
+                  <ChartBarSingleBy
                     data={data}
-                    question="what_is_the_type_of_your_household"
-                    questionType="single"
+                    by={_ => _.what_is_the_type_of_your_household}
+                    label={Protection_Hhs2_1Options.what_is_the_type_of_your_household}
                   />
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.displacementStatus}</SlidePanelTitle>
-                  <ProtHHS2BarChart data={data} question="do_you_identify_as_any_of_the_following"/>
+                  <ChartBarSingleBy data={data} by={_ => _.do_you_identify_as_any_of_the_following} label={Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following}/>
                 </SlidePanel>
               </Div>
             </Div>

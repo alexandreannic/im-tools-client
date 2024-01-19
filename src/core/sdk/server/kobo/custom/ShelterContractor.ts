@@ -477,7 +477,7 @@ const pricesCents: Partial<Record<ShelterContractor, Partial<Record<keyof Shelte
     bimetallic_radiator_sections_length_mm_pc: 1699962,
     wall_mountes_cable_wiring_lm: 42839,
   },
-  [ShelterContractor['Framplus']]: WAITING_FOR_PRICES,
+  // [ShelterContractor['Framplus']]: WAITING_FOR_PRICES,
   [ShelterContractor['Kronos']]: WAITING_FOR_PRICES,
   [ShelterContractor['Monolit']]: WAITING_FOR_PRICES,
 }

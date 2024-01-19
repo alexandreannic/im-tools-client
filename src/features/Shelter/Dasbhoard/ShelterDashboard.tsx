@@ -10,26 +10,27 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {ChartTools, makeChartData} from '@/core/chartTools'
+import {ChartHelperOld, makeChartData} from '@/shared/chart/chartHelperOld'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {ChartBar} from '@/shared/chart/ChartBar'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {drcMaterialIcons, DrcOffice} from '@/core/typeDrc'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
-import {KoboBarChartMultiple, KoboBarChartSingle} from '@/features/Dashboard/shared/KoboBarChart'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Shelter_NTAOptions} from '@/core/generatedKoboInterface/Shelter_NTA/Shelter_NTAOptions'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {ChartPieIndicator} from '@/features/Dashboard/shared/KoboPieChartIndicator'
+import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 const today = new Date()
 
@@ -230,22 +231,22 @@ export const _ShelterDashboard = ({
           }
         </Lazy>
         <SlidePanel>
-          <ChartPieIndicator
+          <ChartPieWidgetBy
             title={m.vulnerabilities}
             filter={_ => !_.nta?.hh_char_dis_select?.includes('diff_none')}
             filterBase={_ => !!_.nta?.hh_char_dis_select!}
             data={data}
           />
-          <KoboBarChartMultiple
+          <ChartBarMultipleBy
             data={data.filter(_ => !!_.nta?.hh_char_dis_select)}
-            getValue={_ => _.nta?.hh_char_dis_select ?? []}
+            by={_ => _.nta?.hh_char_dis_select ?? []}
             label={Shelter_NTAOptions.hh_char_dis_select}
           />
         </SlidePanel>
         <SlidePanel title={m.status}>
-          <KoboBarChartSingle
+          <ChartBarSingleBy
             data={data.filter(_ => !!_.nta?.ben_det_res_stat)}
-            getValue={_ => _.nta?.ben_det_res_stat}
+            by={_ => _.nta?.ben_det_res_stat}
             label={Shelter_NTAOptions.ben_det_res_stat}
           />
         </SlidePanel>
@@ -285,7 +286,7 @@ export const _ShelterDashboard = ({
           const contractors = data.map(_ => seq([_.ta?.tags?.contractor1 ?? undefined, _.ta?.tags?.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
           return {
             count: contractors.length,
-            contractors: ChartTools.multiple({
+            contractors: ChartHelperOld.multiple({
               data: contractors,
               base: 'percentOfTotalChoices',
               filterValue: [undefined as any]
@@ -295,17 +296,17 @@ export const _ShelterDashboard = ({
           {_ => (
             <Panel>
               <PanelBody>
-                <PieChartIndicator title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
-                <HorizontalBarChartGoogle data={_.contractors}/>
+                <ChartPieWidget title={m._shelter.assignedContractor} value={_.count} base={data.length}/>
+                <ChartBar data={_.contractors}/>
               </PanelBody>
             </Panel>
           )}
         </Lazy>
         <SlidePanel title={m.status}>
-          <KoboBarChartSingle
+          <ChartBarSingleBy
             data={data}
-            filterData={_ => !!_.ta?.tags?.damageLevel}
-            getValue={_ => _.ta?.tags?.damageLevel}
+            filter={_ => !!_.ta?.tags?.damageLevel}
+            by={_ => _.ta?.tags?.damageLevel}
             label={ShelterTaPriceLevel}
           />
         </SlidePanel>

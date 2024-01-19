@@ -1,5 +1,5 @@
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useState} from 'react'
 import {useI18n} from '@/core/i18n'
@@ -7,17 +7,18 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon, useTheme} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/core/chartTools'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {chain} from '@/utils/utils'
-import {IpStackedBarChart} from '@/shared/Chart/StackedBarChart'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
-import {KoboPieChartIndicator} from '../shared/KoboPieChartIndicator'
+import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
 import {makeSx} from 'mui-extension'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {Sheet} from '@/shared/Sheet/Sheet'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 const css = makeSx({
   table: {
@@ -65,22 +66,22 @@ export const DashboardProtHHS2Sample = ({
               </Lazy>
             </SlideWidget>
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <Lazy deps={[data]} fn={() => ChartTools.percentage({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.percentage({
                 data: computed.flatData,
                 value: _ => _.gender === 'Female'
               })}>
                 {_ => (
-                  <PieChartIndicator value={_.value} base={_.base} title={m.females}/>
+                  <ChartPieWidget value={_.value} base={_.base} title={m.females}/>
                 )}
               </Lazy>
             </SlidePanel>
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <KoboPieChartIndicator
+              <ChartPieWidgetByKey
                 title={m.uaCitizen}
                 data={data}
+                property="if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group"
                 filterBase={_ => _ !== 'unable_unwilling_to_answer'}
                 filter={_ => _ === 'no'}
-                question="if_ukrainian_do_you_or_your_household_members_identify_as_member_of_a_minority_group"
               />
               {/*<Lazy deps={[data]} fn={() => ChartTools.percentage({*/}
               {/*  data,*/}
@@ -123,7 +124,7 @@ export const DashboardProtHHS2Sample = ({
             </Box>
             <Lazy deps={[ag, data]} fn={() => computed.ageGroup(Person.ageGroup[ag])}>
               {_ => agDisplay === 'chart' ? (
-                <IpStackedBarChart data={_} height={250}/>
+                <ChartBarStacker data={_} height={250}/>
               ) : (
                 <Sheet
                   id="prot-dash-population"
@@ -167,38 +168,38 @@ export const DashboardProtHHS2Sample = ({
           <SlidePanel title={m.poc}>
             <Lazy
               deps={[data]}
-              fn={() => chain(ChartTools.single({
+              fn={() => chain(ChartHelperOld.single({
                 data: data.map(_ => _.do_you_identify_as_any_of_the_following).compact(),
               }))
-                .map(ChartTools.sortBy.value)
-                .map(ChartTools.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
+                .map(ChartHelperOld.sortBy.value)
+                .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
                 .get}
             >
-              {_ => <HorizontalBarChartGoogle data={_}/>}
+              {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartTools.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartHelperOld.percentage({
               data: d
                 .map(_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household)
                 .compact()
                 .filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('no_specific_needs'),
             })}>
-              {(_, last) => <PieChartIndicator sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
+              {(_, last) => <ChartPieWidget sx={{mb: 2}} title={m.protHHS2.HHSwSN} value={_.value} base={_.base} evolution={_.percent - last.percent}/>}
             </Lazy>
-            <ProtHHS2BarChart
+            <ChartBarMultipleBy
               data={data}
-              question="do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household"
-              questionType="multiple"
+              by={_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household}
               filterValue={['no_specific_needs', 'unable_unwilling_to_answer', 'other_specify']}
+              label={Protection_Hhs2_1Options.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household}
             />
           </SlidePanel>
           <SlidePanel title={m.protHHS2.hhTypes}>
-            <ProtHHS2BarChart
+            <ChartBarSingleBy
               data={data}
-              question="what_is_the_type_of_your_household"
-              questionType="single"
+              by={_ => _.what_is_the_type_of_your_household}
+              label={Protection_Hhs2_1Options.what_is_the_type_of_your_household}
             />
           </SlidePanel>
 

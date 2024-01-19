@@ -3,13 +3,13 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartTools} from '@/core/chartTools'
-import {PieChartIndicator} from '@/shared/PieChartIndicator'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
+import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {chain, mapObjectValue} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {HorizontalBarChartGoogle} from '@/shared/HorizontalBarChart/HorizontalBarChartGoogle'
-import {ProtHHS2BarChart} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ChartBar} from '@/shared/chart/ChartBar'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
+import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 
 export const SnapshotProtMonitoEchoLivelihood = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -22,7 +22,7 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
         <Div>
           <Div column>
             <SlideTxt>
-              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                 value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
                 data: d,
                 base: _ => _ !== undefined,
@@ -44,12 +44,12 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
 
             <Div>
               <SlidePanel sx={{flex: 1}}>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
                   data: d,
                   base: _ => _ !== undefined,
                 })}>
-                  {(_, last) => <PieChartIndicator
+                  {(_, last) => <ChartPieWidget
                     title={m.hhOutOfWork}
                     value={_.value}
                     base={_.base} evolution={_.percent - last.percent}
@@ -60,11 +60,11 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
               </SlidePanel>
 
               <SlidePanel sx={{flex: 1}}>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartTools.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
                   data: d,
                 })}>
-                  {(_, last) => <PieChartIndicator
+                  {(_, last) => <ChartPieWidget
                     title={m.hhWithGapMeetingBasicNeeds}
                     value={_.value}
                     base={_.base}
@@ -79,15 +79,15 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
             <SlidePanel>
               <SlidePanelTitle>{m.monthlyIncomePerHH}</SlidePanelTitle>
               <Lazy deps={[data]} fn={() => {
-                const income = chain(ChartTools.single({
+                const income = chain(ChartHelperOld.single({
                   filterValue: ['no_income', 'unable_unwilling_to_answer'],
                   data: data.map(_ => _.what_is_the_average_month_income_per_household).compact(),
                 }))
-                  .map(ChartTools.setLabel(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household))
-                  .map(ChartTools.sortBy.custom(Object.keys(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household)))
+                  .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household))
+                  .map(ChartHelperOld.sortBy.custom(Object.keys(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household)))
                   .get
 
-                const hhSize = ChartTools.sumByCategory({
+                const hhSize = ChartHelperOld.sumByCategory({
                   data,
                   categories: {
                     // no_income: _ => _.what_is_the_average_month_income_per_household === 'no_income',
@@ -102,27 +102,27 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
                 })
                 return {income, hhSize}
               }}>
-                {res => <HorizontalBarChartGoogle data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
+                {res => <ChartBar data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
               </Lazy>
             </SlidePanel>
           </Div>
           <Div column>
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.mainSourceOfIncome}</SlidePanelTitle>
-              <ProtHHS2BarChart
-                question="what_are_the_main_sources_of_income_of_your_household"
+              <ChartBarMultipleBy
                 data={data}
+                by={_ => _.what_are_the_main_sources_of_income_of_your_household}
+                label={Protection_Hhs2_1Options.what_are_the_main_sources_of_income_of_your_household}
                 filterValue={['unable_unwilling_to_answer']}
-                questionType="multiple"
                 limit={4}
               />
             </SlidePanel>
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.unemploymentFactors}</SlidePanelTitle>
-              <ProtHHS2BarChart
+              <ChartBarMultipleBy
                 data={data}
-                question="what_are_the_reasons_for_being_out_of_work"
-                questionType="multiple"
+                by={_ => _.what_are_the_reasons_for_being_out_of_work}
+                label={Protection_Hhs2_1Options.what_are_the_reasons_for_being_out_of_work}
                 filterValue={['unable_unwilling_to_answer']}
               />
             </SlidePanel>
