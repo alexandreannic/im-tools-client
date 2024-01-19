@@ -2,7 +2,7 @@ import React from 'react'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
@@ -26,15 +26,15 @@ export const SnapshotProtMonitoEchoNeeds = () => {
             <SlideTxt>
               <Lazy deps={[data]} fn={() => {
                 return {
-                  barriersRural: toPercent(ChartHelper.percentage({
+                  barriersRural: toPercent(ChartHelperOld.percentage({
                     data: data.filter(_ => _.type_of_site === 'rural_area'),
                     value: _ => _.do_you_have_access_to_health_care_in_your_current_location !== 'yes',
                   }).percent, 0),
-                  barriersUrban: toPercent(ChartHelper.percentage({
+                  barriersUrban: toPercent(ChartHelperOld.percentage({
                     data: data.filter(_ => _.type_of_site === 'urban_area'),
                     value: _ => _.do_you_have_access_to_health_care_in_your_current_location !== 'yes',
                   }).percent, 0),
-                  healthPn: toPercent(ChartHelper.percentage({
+                  healthPn: toPercent(ChartHelperOld.percentage({
                     data: data.filter(_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer'),
                     value: _ => _.what_is_your_1_priority?.includes('health_1_2')
                       || _.what_is_your_2_priority?.includes('health_1_2')
@@ -121,7 +121,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
               <ChartBarSingleBy
                 data={data}
                 by={_ => _.what_is_the_general_condition_of_your_accommodation}
-                sortBy={ChartHelper.sortBy.custom([
+                sortBy={ChartHelperOld.sortBy.custom([
                   'sound_condition',
                   'partially_damaged',
                   'severely_damaged',

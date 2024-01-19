@@ -6,7 +6,7 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {chain} from '@/utils/utils'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
@@ -55,7 +55,7 @@ export const DashboardProtHHS2Document = ({
         <Div column sx={{flex: 1}}>
           <SlidePanel title={m.protHHSnapshot.maleWithoutIDPCert}>
             <Div>
-              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                 data: getIdpsAnsweringRegistrationQuestion(d),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
@@ -63,7 +63,7 @@ export const DashboardProtHHS2Document = ({
                   <ChartPieWidget sx={{flex: 1}} title={m.all} value={d.value} base={d.base} evolution={d.percent - l.percent}/>
                 )}
               </Lazy>
-              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                 data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === Person.Gender.Male),
                 value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
               })}>
@@ -73,7 +73,7 @@ export const DashboardProtHHS2Document = ({
               </Lazy>
             </Div>
           </SlidePanel>
-          <Lazy deps={[computed.flatData]} fn={() => ChartHelper.byCategory({
+          <Lazy deps={[computed.flatData]} fn={() => ChartHelperOld.byCategory({
             data: computed.flatData,
             categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
             filter: _ => !_.lackDoc?.includes('none'),
@@ -124,18 +124,18 @@ export const DashboardProtHHS2Document = ({
                 )}
               </ScRadioGroup>
             </Box>
-            <Lazy deps={[filteredPersons, filteredPersonsLastMonth]} fn={(x) => ChartHelper.percentage({
+            <Lazy deps={[filteredPersons, filteredPersonsLastMonth]} fn={(x) => ChartHelperOld.percentage({
               data: x.map(_ => _.lackDoc).compact().filter(_ => !_.includes('unable_unwilling_to_answer')),
               value: _ => !_.includes('none'),
             })}>
               {(_, last) => <ChartPieWidget dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
             </Lazy>
-            <Lazy deps={[filteredPersons]} fn={() => chain(ChartHelper.multiple({
+            <Lazy deps={[filteredPersons]} fn={() => chain(ChartHelperOld.multiple({
               data: filteredPersons.map(_ => _.lackDoc).compact(),
               filterValue: ['none', 'unable_unwilling_to_answer'],
             }))
-              .map(ChartHelper.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
-              .map(ChartHelper.sortBy.value)
+              .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
+              .map(ChartHelperOld.sortBy.value)
               .get}>
               {_ => <ChartBar data={_}/>}
             </Lazy>

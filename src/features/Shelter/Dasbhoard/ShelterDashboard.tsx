@@ -10,7 +10,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {ChartHelper, makeChartData} from '@/shared/chart/chartHelper'
+import {ChartHelperOld, makeChartData} from '@/shared/chart/chartHelperOld'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
 import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
@@ -286,7 +286,7 @@ export const _ShelterDashboard = ({
           const contractors = data.map(_ => seq([_.ta?.tags?.contractor1 ?? undefined, _.ta?.tags?.contractor2 ?? undefined]).compact()).filter(_ => _.length > 0)
           return {
             count: contractors.length,
-            contractors: ChartHelper.multiple({
+            contractors: ChartHelperOld.multiple({
               data: contractors,
               base: 'percentOfTotalChoices',
               filterValue: [undefined as any]

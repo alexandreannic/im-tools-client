@@ -3,7 +3,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {chain, mapObjectValue} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
@@ -22,7 +22,7 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
         <Div>
           <Div column>
             <SlideTxt>
-              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                 value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
                 data: d,
                 base: _ => _ !== undefined,
@@ -44,7 +44,7 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
 
             <Div>
               <SlidePanel sx={{flex: 1}}>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   value: _ => _.including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment === 'yes',
                   data: d,
                   base: _ => _ !== undefined,
@@ -60,7 +60,7 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
               </SlidePanel>
 
               <SlidePanel sx={{flex: 1}}>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   value: _ => _.are_there_gaps_in_meeting_your_basic_needs === 'yes_somewhat' || _.are_there_gaps_in_meeting_your_basic_needs === 'yes_a_lot',
                   data: d,
                 })}>
@@ -79,15 +79,15 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
             <SlidePanel>
               <SlidePanelTitle>{m.monthlyIncomePerHH}</SlidePanelTitle>
               <Lazy deps={[data]} fn={() => {
-                const income = chain(ChartHelper.single({
+                const income = chain(ChartHelperOld.single({
                   filterValue: ['no_income', 'unable_unwilling_to_answer'],
                   data: data.map(_ => _.what_is_the_average_month_income_per_household).compact(),
                 }))
-                  .map(ChartHelper.setLabel(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household))
-                  .map(ChartHelper.sortBy.custom(Object.keys(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household)))
+                  .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household))
+                  .map(ChartHelperOld.sortBy.custom(Object.keys(Protection_Hhs2_1Options.what_is_the_average_month_income_per_household)))
                   .get
 
-                const hhSize = ChartHelper.sumByCategory({
+                const hhSize = ChartHelperOld.sumByCategory({
                   data,
                   categories: {
                     // no_income: _ => _.what_is_the_average_month_income_per_household === 'no_income',

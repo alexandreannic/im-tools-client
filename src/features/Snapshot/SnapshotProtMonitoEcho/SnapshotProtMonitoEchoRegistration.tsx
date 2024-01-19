@@ -3,7 +3,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Document'
 import {chain} from '@/utils/utils'
@@ -25,7 +25,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
         <Div>
           <Div column>
             <Lazy deps={[data]} fn={() => {
-              const z = ChartHelper.byCategory({
+              const z = ChartHelperOld.byCategory({
                 categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
                 data: computed.flatData,
                 filter: _ => _.lackDoc.includes('passport') || _.lackDoc.includes('tin'),
@@ -43,7 +43,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
             <SlidePanel>
               <SlidePanelTitle sx={{mb: 1}}>{m.protHHSnapshot.maleWithoutIDPCert}</SlidePanelTitle>
               <Div>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   data: getIdpsAnsweringRegistrationQuestion(d),
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
@@ -62,7 +62,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                     />
                   )}
                 </Lazy>
-                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelper.percentage({
+                <Lazy deps={[data, computed.lastMonth]} fn={d => ChartHelperOld.percentage({
                   data: getIdpsAnsweringRegistrationQuestion(d).filter(_ => _.age && _.age >= 18 && _.age <= 60 && _.gender && _.gender === Person.Gender.Male),
                   value: _ => _.isIdpRegistered !== 'yes' && _.are_you_and_your_hh_members_registered_as_idps !== 'yes_all'
                 })}>
@@ -111,7 +111,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartHelper.percentage({
+              <Lazy deps={[data, computed.lastMonth]} fn={(x) => ChartHelperOld.percentage({
                 data: x.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 value: _ => !_.includes('none')
               })}>
@@ -122,12 +122,12 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                   {...snapShotDefaultPieProps}
                 />}
               </Lazy>
-              <Lazy deps={[data]} fn={() => chain(ChartHelper.multiple({
+              <Lazy deps={[data]} fn={() => chain(ChartHelperOld.multiple({
                 data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 filterValue: ['none', 'unable_unwilling_to_answer'],
               }))
-                .map(ChartHelper.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
-                .map(ChartHelper.sortBy.value)
+                .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
+                .map(ChartHelperOld.sortBy.value)
                 .get}>
                 {_ => <ChartBar data={_}/>}
               </Lazy>

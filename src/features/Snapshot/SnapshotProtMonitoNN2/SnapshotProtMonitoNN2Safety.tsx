@@ -3,7 +3,7 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {toPercent} from '@/utils/utils'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
@@ -24,12 +24,12 @@ export const SnapshotProtMonitoNN2Safety = () => {
             <SlideTxt>
               <Lazy deps={[data]} fn={() => {
                 return {
-                  fearOfShelling: toPercent(ChartHelper.percentage({
+                  fearOfShelling: toPercent(ChartHelperOld.percentage({
                     data: data.map(_ => _.what_are_the_main_factors_that_make_this_location_feel_unsafe).compact(),
                     value: _ => _.includes('bombardment_shelling_or_threat_of_shelling'),
                     base: _ => !_.includes('unable_unwilling_to_answer'),
                   }).percent, 0),
-                  barrierToMovement: toPercent(ChartHelper.percentage({
+                  barrierToMovement: toPercent(ChartHelperOld.percentage({
                     data: data.map(_ => _.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area).compact(),
                     value: _ => !_.includes('no'),
                     base: _ => !_.includes('unable_unwilling_to_answer'),
@@ -71,7 +71,7 @@ export const SnapshotProtMonitoNN2Safety = () => {
               />
               <ChartBarSingleBy
                 data={data}
-                sortBy={ChartHelper.sortBy.custom([
+                sortBy={ChartHelperOld.sortBy.custom([
                   '_1_very_unsafe',
                   '_2_unsafe',
                   '_3_safe',

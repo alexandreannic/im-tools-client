@@ -1,4 +1,4 @@
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useMemo} from 'react'
 import {Seq} from '@alexandreannic/ts-utils'
@@ -20,7 +20,7 @@ export const KoboUkraineMap = <D extends Record<string, any>>({
   data: Seq<D>
 } & Pick<BoxProps, 'sx'>) => {
   const res = useMemo(() => {
-    return ChartHelper.groupBy({
+    return ChartHelperOld.groupBy({
       data: data,
       groupBy: _ => getOblast(_),
       filter: value,

@@ -2,7 +2,7 @@ import React from 'react'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Lazy} from '@/shared/Lazy'
@@ -24,13 +24,13 @@ export const SnapshotProtMonitoNN2Needs = () => {
             <SlideTxt>
               <Lazy deps={[data]} fn={() => {
                 return {
-                  healthPn: toPercent(ChartHelper.percentage({
+                  healthPn: toPercent(ChartHelperOld.percentage({
                     data,
                     value: _ => _.what_is_your_1_priority?.includes('health_1_2')
                       || _.what_is_your_2_priority?.includes('health_1_2')
                       || _.what_is_your_3_priority?.includes('health_1_2'),
                   }).percent, 0),
-                  damagedAcc: toPercent(ChartHelper.percentage({
+                  damagedAcc: toPercent(ChartHelperOld.percentage({
                     data: data.map(_ => _.what_is_the_general_condition_of_your_accommodation).compact(),
                     value: _ => _ !== 'sound_condition',
                     base: _ => _ !== 'unable_unwilling_to_answer',
@@ -114,7 +114,7 @@ export const SnapshotProtMonitoNN2Needs = () => {
                 data={data}
                 by={_ => _.what_is_the_general_condition_of_your_accommodation}
                 label={Protection_Hhs2_1Options.what_is_the_general_condition_of_your_accommodation}
-                sortBy={ChartHelper.sortBy.custom([
+                sortBy={ChartHelperOld.sortBy.custom([
                   'sound_condition',
                   'partially_damaged',
                   'severely_damaged',

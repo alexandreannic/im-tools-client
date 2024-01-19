@@ -12,7 +12,7 @@ import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {Period, Person} from '@/core/type'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper, makeChartData} from '@/shared/chart/chartHelper'
+import {ChartHelperOld, makeChartData} from '@/shared/chart/chartHelperOld'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Box, LinearProgress} from '@mui/material'
 import {Sheet} from '@/shared/Sheet/Sheet'
@@ -266,14 +266,14 @@ export const _MPCADashboard = ({
             </SlidePanel>
             <MpcaDashboardDeduplication data={data}/>
             <SlidePanel title={m.form}>
-              <Lazy deps={[data]} fn={() => chain(ChartHelper.single({
+              <Lazy deps={[data]} fn={() => chain(ChartHelperOld.single({
                 data: data.map(_ => _.source),
-              })).map(ChartHelper.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
+              })).map(ChartHelperOld.setLabel(new Enum(koboFormTranslation).transform((k, v) => [k, KoboFormSdk.parseFormName(v).name]).get() as any)).get}>
                 {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.program}>
-              <Lazy deps={[data]} fn={() => ChartHelper.multiple({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.multiple({
                 data: data.map(_ => _.prog),
               })}>
                 {_ => <ChartBar data={_}/>}
@@ -345,14 +345,14 @@ export const _MPCADashboard = ({
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.donor}>
-              <Lazy deps={[data]} fn={() => ChartHelper.single({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.single({
                 data: data.map(_ => _.finalDonor ?? ''),
               })}>
                 {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel title={m.project}>
-              <Lazy deps={[data]} fn={() => ChartHelper.single({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.single({
                 data: data.map(_ => _.finalProject ?? SheetUtils.blank),
               })}>
                 {_ => <ChartBar data={_}/>}

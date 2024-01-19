@@ -3,7 +3,7 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {useTheme} from '@mui/material'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
@@ -66,7 +66,7 @@ export const DashboardProtHHS2Housing = ({
             <ChartBarSingleBy
               data={data}
               by={_ => _.what_is_the_general_condition_of_your_accommodation}
-              sortBy={ChartHelper.sortBy.custom([
+              sortBy={ChartHelperOld.sortBy.custom([
                 'sound_condition',
                 'partially_damaged',
                 'severely_damaged',

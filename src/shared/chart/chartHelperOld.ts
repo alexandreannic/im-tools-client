@@ -23,119 +23,89 @@ export const makeChartData: {
 
 export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
-export class ChartHelper<K extends string = string> {
+/** @deprecated */
+export namespace ChartHelperOld {
 
-  static readonly single = <K extends string>({
-    data,
-    percent,
-    filterValue,
-  }: {
-    data: K[],
-    filterValue?: K[],
-    percent?: boolean
-  }): ChartHelper<K> => {
-    const obj = seq(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<K, number>>((curr, acc) => {
-      return [curr, (acc[curr] ?? 0) + 1]
-    })
-    const res = {} as ChartData<K>
-    Enum.keys(obj).forEach(k => {
-      res[k] = {value: obj[k] / (percent ? data.length : 1)}
-    })
-    return new ChartHelper(res).sortBy.value()
+  export const mapValue = <K extends string, V, R>(fn: (_: V) => R) => (obj: Record<K, V>): Record<K, R> => mapObjectValue(obj, fn)
+
+  export const map = <K extends string, V, NK extends string, NV>(fn: (_: [K, V]) => [NK, NV]) => (obj: Record<K, V>): Record<NK, NV> => mapObject(obj, fn)
+
+  export const take = <T extends string>(n: number) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+    return seq(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
   }
 
-  static readonly multiple = <K extends string>({
-    data,
-    base = 'percentOfTotalAnswers',
-    filterValue,
-  }: {
-    data: Seq<K[] | undefined>,
-    filterValue?: K[],
-    base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
-  }): ChartHelper<K> => {
-    const filteredData = data.compact().filter(_ => filterValue ? seq(_).intersect(filterValue).length === 0 : true)
-    const flatData: K[] = filteredData.flatMap(_ => _)
-    const obj = seq(flatData).reduceObject<Record<K, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
-    const baseCount = fnSwitch(base!, {
-      percentOfTotalAnswers: filteredData.length,
-      percentOfTotalChoices: flatData.length,
-    }, _ => undefined)
-    const res = {} as ChartData<K>
-    Enum.keys(obj).forEach(k => {
-      if (!res[k]) res[k] = {value: 0, base: 0}
-      res[k].value = obj[k]
-      res[k].base = baseCount
-    })
-    return new ChartHelper(res).sortBy.value()
-  }
-
-  constructor(private value: ChartData<K>) {
-  }
-
-  readonly get = () => this.value
-
-  readonly mapValue = <K extends string, V, R>(fn: (_: V) => R) => (obj: Record<K, V>): Record<K, R> => mapObjectValue(obj, fn)
-
-  readonly map = <K extends string, V, NK extends string, NV>(fn: (_: [K, V]) => [NK, NV]) => (obj: Record<K, V>): Record<NK, NV> => mapObject(obj, fn)
-
-  static readonly take = <K extends string>(n?: number) => (obj: Record<K, ChartDataVal>): ChartData<K> => {
-    if (n)
-      return seq(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)
-    return obj
-  }
-
-  readonly take = (n?: number) => {
-    this.value = ChartHelper.take(n)(this.value)
-    return this
-  }
-
-  static readonly sortBy = {
-    custom: <T extends string>(order: T[]) => <V>(obj: ChartData<T>): ChartData<T> => {
-      return new Enum(obj).sort(([aK, aV], [bK, bV]) => {
+  export const sortBy = {
+    custom: <T extends string>(order: T[]) => <V>(obj: Record<T, V>): Record<T, V> => {
+      return sortObject(obj as Record<T, V>, ([aK, aV], [bK, bV]) => {
         return order.indexOf(aK) - order.indexOf(bK)
-      }).get()
+      })
     },
-    percent: <T extends string>(obj: ChartData<T>): ChartData<T> => {
-      return new Enum(obj).sort(([aK, aV], [bK, bV]) => {
+    percent: <T extends string>(obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+      return sortObject(obj as Record<string, ChartDataVal>, ([aK, aV], [bK, bV]) => {
         try {
           return bV.value / (bV.base ?? 1) - aV.value / (aV.base ?? 1)
         } catch (e) {
           return 0
         }
-      }).get()
+      })
     },
-    value: <T extends string>(obj: ChartData<T>): ChartData<T> => {
-      return new Enum(obj).sort(([aK, aV], [bK, bV]) => {
+    value: <T extends string>(obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+      return sortObject(obj as Record<string, ChartDataVal>, ([aK, aV], [bK, bV]) => {
         return bV.value - aV.value
-      }).get()
+      })
     },
-    label: <T extends string>(obj: ChartData<T>): ChartData<T> => {
-      return new Enum(obj).sort(([aK, aV], [bK, bV]) => {
+    label: <T extends string>(obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
+      return sortObject(obj as Record<string, ChartDataVal>, ([aK, aV], [bK, bV]) => {
         return (bV.label as string ?? '').localeCompare(aV.label as string ?? '')
-      }).get()
+      })
     }
   }
 
-  readonly sortBy = {
-    custom: (order: K[]): ChartHelper<K> => {
-      this.value = ChartHelper.sortBy.custom(order)(this.value)
-      return this
-    },
-    percent: (): ChartHelper<K> => {
-      this.value = ChartHelper.sortBy.percent(this.value)
-      return this
-    },
-    value: (): ChartHelper<K> => {
-      this.value = ChartHelper.sortBy.value(this.value)
-      return this
-    },
-    label: (): ChartHelper<K> => {
-      this.value = ChartHelper.sortBy.label(this.value)
-      return this
-    }
+  export const single = <A extends string>({
+    data,
+    percent,
+    filterValue,
+  }: {
+    data: A[],
+    filterValue?: A[],
+    percent?: boolean
+  }): ChartData<Exclude<A, keyof typeof filterValue>> => {
+    const obj = seq(data.filter(_ => filterValue ? !filterValue.includes(_) : true)).reduceObject<Record<A, number>>((curr, acc) => {
+      return [curr, (acc[curr] ?? 0) + 1]
+    })
+    const res = {} as ChartData<A>
+    Enum.keys(obj).forEach(k => {
+      res[k] = {value: obj[k] / (percent ? data.length : 1)}
+    })
+    return ChartHelperOld.sortBy.value(res)
   }
 
-  readonly groupBy = <A extends Record<string, any>, K extends string>({
+  export const multiple = <A extends string>({
+    data,
+    base = 'percentOfTotalAnswers',
+    filterValue,
+  }: {
+    data: Seq<A[] | undefined>,
+    filterValue?: A[],
+    base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
+  }): ChartData<A> => {
+    const filteredData = data.compact().filter(_ => filterValue ? seq(_).intersect(filterValue).length === 0 : true)
+    const flatData: A[] = filteredData.flatMap(_ => _)
+    const obj = seq(flatData).reduceObject<Record<A, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
+    const baseCount = fnSwitch(base!, {
+      percentOfTotalAnswers: filteredData.length,
+      percentOfTotalChoices: flatData.length,
+    }, _ => undefined)
+    const res = {} as ChartData<A>
+    Enum.keys(obj).forEach(k => {
+      if (!res[k]) res[k] = {value: 0, base: 0}
+      res[k].value = obj[k]
+      res[k].base = baseCount
+    })
+    return ChartHelperOld.sortBy.value(res)
+  }
+
+  export const groupBy = <A extends Record<string, any>, K extends string>({
     data,
     filter,
     filterBase,
@@ -160,7 +130,7 @@ export class ChartHelper<K extends string = string> {
     return res
   }
 
-  readonly byCategory = <A extends Record<string, any>, K extends string>({
+  export const byCategory = <A extends Record<string, any>, K extends string>({
     data,
     filter,
     categories,
@@ -194,7 +164,7 @@ export class ChartHelper<K extends string = string> {
     return res
   }
 
-  readonly sumByCategory = <A extends Record<string, any>, K extends string>({
+  export const sumByCategory = <A extends Record<string, any>, K extends string>({
     data,
     filter,
     sumBase,
@@ -219,23 +189,21 @@ export class ChartHelper<K extends string = string> {
     return res
   }
 
-  readonly setLabel = (m?: Record<K, ReactNode>): ChartHelper<K> => {
-    if (m) {
-      Enum.keys(this.value).forEach(k => {
-        this.value[k].label = m[k]
-      })
-    }
-    return this
+  export const setLabel = <A extends string>(m: Record<A, ReactNode>) => (data: ChartData<A>): ChartData<A> => {
+    Enum.keys(data).forEach(k => {
+      data[k].label = m[k]
+    })
+    return data
   }
 
-  readonly setDesc = (m: Record<string, string>) => (data: ChartData): ChartData => {
+  export const setDesc = (m: Record<string, string>) => (data: ChartData): ChartData => {
     Object.keys(data).forEach(k => {
       data[k].desc = m[k]
     })
     return data
   }
 
-  readonly percentage = <A>({
+  export const percentage = <A>({
     data,
     value,
     base
@@ -249,7 +217,7 @@ export class ChartHelper<K extends string = string> {
     return {value: v, base: b, percent: v / b}
   }
 
-  readonly groupByDate = <F extends string>({
+  export const groupByDate = <F extends string>({
     data,
     getDate,
     percentageOf,

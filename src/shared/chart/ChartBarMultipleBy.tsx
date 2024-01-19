@@ -1,10 +1,11 @@
-import {ChartDataVal, ChartHelper} from './chartHelper'
+import {ChartDataVal, ChartHelperOld} from './chartHelperOld'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
 import React, {ReactNode, useMemo} from 'react'
 import {chain, KeyOf} from '@/utils/utils'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {Checkbox} from '@mui/material'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 
 export interface ChartBarMultipleByProps<
   D extends Record<string, any>,
@@ -13,7 +14,7 @@ export interface ChartBarMultipleByProps<
 > {
   onClickData?: (_: R) => void
   limit?: number
-  sortBy?: typeof ChartHelper.sortBy.value
+  // sortBy?: typeof ChartHelper2.sortBy.value
   data: Seq<D>,
   mergeOptions?: Partial<Record<KeyOf<O>, KeyOf<O>>>
   label?: O
@@ -33,7 +34,7 @@ export const ChartBarMultipleBy = <
   data,
   limit,
   onClickData,
-  sortBy,
+  // sortBy,
   checked,
   onToggle,
   label,
@@ -42,22 +43,21 @@ export const ChartBarMultipleBy = <
   mergeOptions,
 }: ChartBarMultipleByProps<D, K, O>) => {
   const res = useMemo(() => {
-    const source = seq(data).map(d => {
+    const source = data.map(d => {
       if (by(d) === undefined) return
       if (mergeOptions) {
-        return seq(by(d) as string[]).map(_ => (mergeOptions as any)[_] ?? _).distinct(_ => _)
+        return seq(by(d) as string[]).map(_ => (mergeOptions as any)[_] ?? _).distinct(_ => _).get()
       }
       return by(d)
     }).compact()
-    const chart = ChartHelper.multiple({
+    console.log('source', source)
+    const x = ChartHelper.multiple({
       data: source,
       filterValue,
       base,
-    })
-    return chain(chart).map(label ? ChartHelper.setLabel(label) : _ => _)
-      .map(sortBy ?? ChartHelper.sortBy.value)
-      .map(limit ? ChartHelper.take(limit) : _ => _)
-      .get as Record<NonNullable<K>, ChartDataVal>
+    }).setLabel(label).take(limit).get()
+    console.log('x', x)
+    return x
   }, [data, by, label])
 
   return (
@@ -70,7 +70,7 @@ export const ChartBarMultipleBy = <
             <Checkbox
               key={option as string}
               size="small"
-              checked={checked?.[option] ?? false}
+              checked={(checked as any)?.[option] ?? false}
               onChange={() => onToggle(option)}
             />
           ]

@@ -4,7 +4,7 @@ import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Divider, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
@@ -61,7 +61,7 @@ export const DashboardProtHHS2Displacement = ({
             filter={_ => _ === 'yes_after_february_24_2022'}
             filterBase={_ => _ !== 'unable_unwilling_to_answer'}
           />
-          <Lazy deps={[data]} fn={() => chain(ChartHelper.byCategory({
+          <Lazy deps={[data]} fn={() => chain(ChartHelperOld.byCategory({
             data,
             categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
             filter: _ => _.have_you_been_displaced_prior_to_your_current_displacement === 'yes_after_february_24_2022',
@@ -82,7 +82,7 @@ export const DashboardProtHHS2Displacement = ({
       </Div>
       <Div column>
         <SlidePanel>
-          <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartHelper.percentage({
+          <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartHelperOld.percentage({
             value: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns?.includes('none') === false,
             data: d,
             base: _ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns !== undefined

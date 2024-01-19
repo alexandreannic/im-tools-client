@@ -3,7 +3,7 @@ import React from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {KoboUkraineMap} from '../shared/KoboUkraineMap'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
@@ -39,7 +39,7 @@ export const DashboardProtHHS2Safety = ({
           <SlidePanelTitle>{m.details}</SlidePanelTitle>
           <ChartBarSingleBy
             data={data}
-            sortBy={ChartHelper.sortBy.custom([
+            sortBy={ChartHelperOld.sortBy.custom([
               '_1_very_unsafe',
               '_2_unsafe',
               '_3_safe',
@@ -81,7 +81,7 @@ export const DashboardProtHHS2Safety = ({
           <SlidePanelTitle>{m.details}</SlidePanelTitle>
           <ChartBarSingleBy
             data={data}
-            sortBy={ChartHelper.sortBy.custom([
+            sortBy={ChartHelperOld.sortBy.custom([
               '_1_very_bad',
               '_2_bad',
               '_3_acceptable',

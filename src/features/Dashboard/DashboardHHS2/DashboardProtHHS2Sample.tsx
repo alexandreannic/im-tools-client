@@ -7,7 +7,7 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {Box, Icon, useTheme} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {chain} from '@/utils/utils'
 import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
@@ -66,7 +66,7 @@ export const DashboardProtHHS2Sample = ({
               </Lazy>
             </SlideWidget>
             <SlidePanel BodyProps={{sx: {p: '0px !important'}}} sx={{flex: 1, m: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-              <Lazy deps={[data]} fn={() => ChartHelper.percentage({
+              <Lazy deps={[data]} fn={() => ChartHelperOld.percentage({
                 data: computed.flatData,
                 value: _ => _.gender === 'Female'
               })}>
@@ -168,18 +168,18 @@ export const DashboardProtHHS2Sample = ({
           <SlidePanel title={m.poc}>
             <Lazy
               deps={[data]}
-              fn={() => chain(ChartHelper.single({
+              fn={() => chain(ChartHelperOld.single({
                 data: data.map(_ => _.do_you_identify_as_any_of_the_following).compact(),
               }))
-                .map(ChartHelper.sortBy.value)
-                .map(ChartHelper.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
+                .map(ChartHelperOld.sortBy.value)
+                .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following))
                 .get}
             >
               {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel>
-            <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartHelper.percentage({
+            <Lazy deps={[data, computed.lastMonth]} fn={(d) => ChartHelperOld.percentage({
               data: d
                 .map(_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household)
                 .compact()

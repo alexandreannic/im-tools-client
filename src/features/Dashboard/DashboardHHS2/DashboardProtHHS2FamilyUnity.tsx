@@ -3,7 +3,7 @@ import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {chain} from '@/utils/utils'
@@ -73,11 +73,11 @@ export const DashboardProtHHS2FamilyUnity = ({
               <Txt bold size="big">{m.selectAll}</Txt>
             </Box>
             <Lazy deps={[data]} fn={() =>
-              chain(ChartHelper.multiple({
+              chain(ChartHelperOld.multiple({
                 filterValue: ['unable_unwilling_to_answer', 'no'],
                 data: data.map(_ => _.are_you_separated_from_any_of_your_households_members).compact()
               }))
-                .map(ChartHelper.setLabel(Protection_Hhs2_1Options.are_you_separated_from_any_of_your_households_members))
+                .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.are_you_separated_from_any_of_your_households_members))
                 .get
             }>
               {_ => <ChartBar
@@ -127,7 +127,7 @@ export const DashboardProtHHS2FamilyUnity = ({
         </Div>
         <Div column>
           <SlidePanel title={m.protHHS2.locationOfSeparatedFamilyMembers}>
-            <Lazy deps={[data, category]} fn={() => chain(ChartHelper.single({
+            <Lazy deps={[data, category]} fn={() => chain(ChartHelperOld.single({
               data: data.flatMap(_ => [
                 ...category.partner ? [_.where_is_your_partner] : [],
                 ...category.child_lt_18 ? [_.where_is_your_child_lt_18] : [],
@@ -138,13 +138,13 @@ export const DashboardProtHHS2FamilyUnity = ({
                 ...category.other_relative ? [_.where_is_your_other_relative] : [],
               ]).compact(),
               // filterValue: ['unable_unwilling_to_answer']
-            })).map(ChartHelper.setLabel(Protection_Hhs2_1Options.where_is_your_partner)).get
+            })).map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.where_is_your_partner)).get
             }>
               {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.reasonForRemainInOrigin}>
-            <Lazy deps={[data, category]} fn={() => chain(ChartHelper.single({
+            <Lazy deps={[data, category]} fn={() => chain(ChartHelperOld.single({
               data: data.flatMap(_ => [
                 ...category.partner ? [_.where_is_your_partner_remain_behind_in_the_area_of_origin] : [],
                 ...category.child_lt_18 ? [_.where_is_your_child_lt_18_remain_behind_in_the_area_of_origin] : [],
@@ -155,7 +155,7 @@ export const DashboardProtHHS2FamilyUnity = ({
                 ...category.other_relative ? [_.where_is_your_other_relative_remain_behind_in_the_area_of_origin] : [],
               ]).compact(),
               // filterValue: ['unable_unwilling_to_answer']
-            })).map(ChartHelper.setLabel(Protection_Hhs2_1Options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
+            })).map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
             }>
               {_ => <ChartBar data={_}/>}
             </Lazy>

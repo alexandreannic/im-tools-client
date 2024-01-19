@@ -3,15 +3,16 @@ import React, {useMemo, useState} from 'react'
 import {useI18n} from '../../../core/i18n'
 import {DashboardPageProps} from './DashboardProtHHS2'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelper} from '@/shared/chart/chartHelper'
+import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartBar} from '@/shared/chart/ChartBar'
-import {chain, forceArrayStringInference} from '@/utils/utils'
+import {forceArrayStringInference} from '@/utils/utils'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {Checkbox} from '@mui/material'
 import {Person} from '@/core/type'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartHelper} from '@/shared/chart/chartHelper'
 
 export const DashboardProtHHS2Violence = ({
   data,
@@ -111,14 +112,14 @@ export const DashboardProtHHS2Violence = ({
               }
             })
           })
-          return ChartHelper.setLabel({
+          return new ChartHelper({total, ...res}).setLabel({
             total: m.selectAll,
             has_any_adult_female_member_experienced_violence: m.adultWomen,
             has_any_adult_male_member_experienced_violence: m.adultMen,
             has_any_boy_member_experienced_violence: m.boy,
             has_any_girl_member_experienced_violence: m.girl,
             has_any_other_member_experienced_violence: m.other,
-          })({total, ...res})
+          }).get()
         }}>
           {_ =>
             <SlidePanel title={m.protHHS2.reportedIncidents}>
@@ -169,13 +170,11 @@ export const DashboardProtHHS2Violence = ({
       </Div>
       <Div column>
         <Lazy deps={[groupedIndividualsType.type]} fn={() =>
-          chain(ChartHelper.multiple({
+          ChartHelper.multiple({
             data: groupedIndividualsType.type,
             filterValue: ['unable_unwilling_to_answer']
-          }))
-            .map(ChartHelper.setLabel(Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence))
-            .map(ChartHelper.sortBy.value)
-            .get
+          }).setLabel(Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence)
+            .sortBy.value().get()
         }>
           {_ => (
             <SlidePanel title={m.protHHS2.typeOfIncident}>
@@ -184,13 +183,13 @@ export const DashboardProtHHS2Violence = ({
           )}
         </Lazy>
         <Lazy deps={[groupedIndividualsType.when]} fn={() =>
-          chain(ChartHelper.multiple({
+          ChartHelper.multiple({
             data: groupedIndividualsType.when,
-            filterValue: ['unable_unwilling_to_answer']
-          }))
-            .map(ChartHelper.setLabel(Protection_Hhs2_1Options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence))
-            .map(ChartHelper.sortBy.value)
-            .get
+            // filterValue: ['unable_unwilling_to_answer']
+          }).setLabel(Protection_Hhs2_1Options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence)
+            .sortBy
+            .value()
+            .get()
         }>
           {_ => (
             <SlidePanel title={m.protHHS2.timelineOfIncident}>
