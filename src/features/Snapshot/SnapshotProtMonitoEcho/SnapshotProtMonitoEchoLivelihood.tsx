@@ -5,11 +5,12 @@ import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
-import {chain, mapObjectValue} from '@/utils/utils'
+import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Obj} from '@alexandreannic/ts-utils'
 
 export const SnapshotProtMonitoEchoLivelihood = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -102,7 +103,7 @@ export const SnapshotProtMonitoEchoLivelihood = () => {
                 })
                 return {income, hhSize}
               }}>
-                {res => <ChartBar data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
+                {res => <ChartBar data={res.income} descs={Obj.mapValues(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
               </Lazy>
             </SlidePanel>
           </Div>

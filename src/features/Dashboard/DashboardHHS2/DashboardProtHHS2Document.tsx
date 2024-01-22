@@ -12,10 +12,10 @@ import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Person} from '@/core/type/person'
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base

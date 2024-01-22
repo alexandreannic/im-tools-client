@@ -6,12 +6,13 @@ import {DashboardPageProps} from './DashboardProtHHS2'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
-import {chain, mapObjectValue} from '@/utils/utils'
+import {chain} from '@/utils/utils'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {ChartLineByKey} from '@/shared/chart/ChartLineByKey'
 import {Divider} from '@mui/material'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import { Obj } from '@alexandreannic/ts-utils'
 
 export const DashboardProtHHS2Livelihood = ({
   data,
@@ -118,7 +119,7 @@ export const DashboardProtHHS2Livelihood = ({
               })
               return {income, hhSize}
             }}>
-              {res => <ChartBar data={res.income} descs={mapObjectValue(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
+              {res => <ChartBar data={res.income} descs={Obj.mapValues(res.hhSize, _ => m.protHHSnapshot.avgHhSize(_.value / (_.base ?? 1)))}/>}
             </Lazy>
           </SlidePanel>
           <SlidePanel title={m.protHHS2.mainSourceOfIncome}>

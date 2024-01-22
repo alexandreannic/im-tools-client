@@ -1,11 +1,11 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
 import {KoboIndex} from '@/core/KoboIndex'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
-import {Period} from '@/core/type'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {Meal_VisitMonitoring} from '@/core/generatedKoboInterface/Meal_VisitMonitoring/Meal_VisitMonitoring'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
+import {Period} from '@/core/type/period'
 
 export interface MealVisitContext {
   fetcherAnswers: UseFetcher<(filter: Partial<Period>) => Promise<Seq<KoboAnswer<Meal_VisitMonitoring, any>>>>

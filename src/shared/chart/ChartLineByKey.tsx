@@ -1,7 +1,7 @@
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
-import {StringKeys} from '../../core/type'
+import {StringKeys} from '../../core/type/generic'
 import {ChartLine, ChartLineData} from '@/shared/chart/ChartLine'
 
 export const ChartLineByKey = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({

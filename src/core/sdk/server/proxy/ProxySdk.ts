@@ -1,5 +1,5 @@
 import {ApiClient} from '@/core/sdk/server/ApiClient'
-import {UUID} from '@/core/type'
+import {UUID} from '@/core/type/generic'
 import {Proxy} from '@/core/sdk/server/proxy/Proxy'
 
 export class ProxySdk {

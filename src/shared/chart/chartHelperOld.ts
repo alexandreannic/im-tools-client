@@ -1,5 +1,5 @@
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
-import {mapObject, mapObjectValue, sortObject} from '@/utils/utils'
+import {sortObject} from '@/utils/utils'
 import {ReactNode} from 'react'
 import {NonNullableKey} from '@/utils/utilsType'
 
@@ -25,10 +25,6 @@ export type ChartData<K extends string = string> = Record<K, ChartDataVal>
 
 /** @deprecated */
 export namespace ChartHelperOld {
-
-  export const mapValue = <K extends string, V, R>(fn: (_: V) => R) => (obj: Record<K, V>): Record<K, R> => mapObjectValue(obj, fn)
-
-  export const map = <K extends string, V, NK extends string, NV>(fn: (_: [K, V]) => [NK, NV]) => (obj: Record<K, V>): Record<NK, NV> => mapObject(obj, fn)
 
   export const take = <T extends string>(n: number) => (obj: Record<T, ChartDataVal>): Record<T, ChartDataVal> => {
     return seq(Enum.entries(obj).splice(0, n)).reduceObject(_ => _)

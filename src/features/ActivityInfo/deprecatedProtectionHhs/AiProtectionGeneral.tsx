@@ -18,9 +18,10 @@ import {format, subMonths} from 'date-fns'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {ActivityInfoActions} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProtectionGeneralType'
-import {PeriodHelper, Person} from '@/core/type'
 import {useAsync} from '@/shared/hook/useAsync'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {Person} from '@/core/type/person'
+import {PeriodHelper} from '@/core/type/period'
 
 export const AiProtectionGeneral = () => {
   const {api} = useAppSettings()

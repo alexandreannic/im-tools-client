@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
 import {fnSwitch, Seq} from '@alexandreannic/ts-utils'
-import {Person} from '@/core/type'
 
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
+import {Person} from '@/core/type/person'
 
 export type UseShelterComputedData = ReturnType<typeof useShelterComputedData>
 

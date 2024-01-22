@@ -1,6 +1,6 @@
 import {ApiKoboForm} from '../../../core/sdk/server/kobo/Kobo'
 import {ScRadioGroup, ScRadioGroupItem} from '../../../shared/RadioGroup'
-import {UUID} from '../../../core/type'
+import {UUID} from '../../../core/type/generic'
 import {Dialog, DialogActions, DialogContent, DialogTitle} from '@mui/material'
 import {useI18n} from '../../../core/i18n'
 import {IpBtn, IpBtnProps} from '../../../shared/Btn'

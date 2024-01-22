@@ -3,10 +3,10 @@ import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {chain} from '@/utils/utils'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
-import {Person} from '../../../core/type'
 import {subDays} from 'date-fns'
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
+import {Person} from '@/core/type/person'
 
 export type UseProtHHS2Data = ReturnType<typeof useProtHhs2Data>
 
@@ -76,7 +76,7 @@ export const useProtHhs2Data = ({
       byGender: chain(ChartHelperOld.single({
         data: data.flatMap(_ => _.persons.map(_ => (_.gender === undefined || _.gender === 'Other') ? 'other' : _.gender)),
       }))
-        .map(ChartHelperOld.mapValue(_ => _.value))
+        .map(x => Enum.transform(x, (k, v) => [k, v.value]))
         .get,
       idps,
       byCurrentOblast,

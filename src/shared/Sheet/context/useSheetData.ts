@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {KeyOf, multipleFilters, paginateData, Utils} from '@/utils/utils'
+import {multipleFilters, paginateData, Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {
   SheetFilterValue,
@@ -12,6 +12,7 @@ import {
   SheetSearch
 } from '@/shared/Sheet/util/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
+import {KeyOf} from '@/core/type/generic'
 
 export type UseSheetData<T extends SheetRow> = ReturnType<typeof useSheetData<T>>
 

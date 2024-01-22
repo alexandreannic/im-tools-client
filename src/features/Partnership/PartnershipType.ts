@@ -1,5 +1,5 @@
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
-import {DrcDonor, DrcSector} from '@/core/typeDrc'
+import {DrcDonor, DrcSector} from '@/core/type/drc'
 import {Partnership_partnersDatabase} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabase'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 

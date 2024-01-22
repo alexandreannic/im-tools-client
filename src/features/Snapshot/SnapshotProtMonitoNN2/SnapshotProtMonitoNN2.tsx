@@ -9,10 +9,10 @@ import {SnapshotProtMonitoNN2Livelihood} from '@/features/Snapshot/SnapshotProtM
 import {SnapshotProtMonitoNN2Sample} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Sample'
 import {SnapshotProtMonitoNN2Displacement} from '@/features/Snapshot/SnapshotProtMonitoNN2/SnapshotProtMonitoNN2Displacement'
 import {Box, Theme} from '@mui/material'
-import {Period} from '@/core/type'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {endOfMonth, startOfMonth} from 'date-fns'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
+import {Period} from '@/core/type/period'
 
 export const snapshotAlternateColor = (t: Theme) => t.palette.grey[500]
 

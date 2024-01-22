@@ -1,9 +1,9 @@
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import {Person} from '../core/type'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 
 import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import Gender = Person.Gender
+import {Person} from '@/core/type/person'
 
 export const getProtHhsIptData = (data?: Seq<ProtHHS2Enrich>) => {
   const csv: {base: string, gender: string, ageGroup: string, total: number}[] = []

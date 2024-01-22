@@ -15,7 +15,7 @@ import {IAccessForm} from '@/features/Access/AccessForm'
 import {accessLevelIcon} from '@/core/sdk/server/access/Access'
 import {AdminGroupAccessForm} from '@/features/Admin/AdminGroupAccessForm'
 import {BasicDialog} from '@/shared/BasicDialog'
-import {UUID} from '@/core/type'
+import {UUID} from '@/core/type/generic'
 import {Utils} from '@/utils/utils'
 import {useFetcher} from '@/shared/hook/useFetcher'
 

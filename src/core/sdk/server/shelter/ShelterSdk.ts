@@ -1,7 +1,9 @@
 import {ApiClient} from '@/core/sdk/server/ApiClient'
-import {ApiPaginate, Period} from '@/core/type'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {ShelterTaTagsHelper} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {Period} from '@/core/type/period'
+
+import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 export class ShelterSdk {
   constructor(private client: ApiClient) {

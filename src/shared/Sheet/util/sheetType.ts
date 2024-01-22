@@ -1,7 +1,8 @@
 import React, {CSSProperties, ReactNode} from 'react'
 import {BoxProps} from '@mui/material'
-import {KeyOf, Paginate} from '@/utils/utils'
 import {NonNullableKeys} from '@/utils/utilsType'
+import {KeyOf} from '@/core/type/generic'
+import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 export type SheetPropertyType = 'date' | 'number' | 'string' | 'select_one' | 'select_multiple'
 
@@ -53,7 +54,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
     data?: T[]
     filteredData?: T[]
     filteredAndSortedData?: T[]
-    filteredSortedAndPaginatedData?: Paginate<T>
+    filteredSortedAndPaginatedData?: ApiPaginate<T>
   }) => void
   sort?: {
     sortableColumns?: string[]

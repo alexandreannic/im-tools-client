@@ -10,9 +10,9 @@ import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {Checkbox} from '@mui/material'
-import {Person} from '@/core/type'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {ChartHelper} from '@/shared/chart/chartHelper'
+import {Person} from '@/core/type/person'
 
 export const DashboardProtHHS2Violence = ({
   data,

@@ -1,66 +1,6 @@
-import {Enum} from '@alexandreannic/ts-utils'
-import {KeyOf} from '@/utils/utils'
-import {endOfDay, endOfMonth, startOfMonth} from 'date-fns'
 import {NonNullableKeys} from '@/utils/utilsType'
-
-export type UUID = string
-
-export type StateStatus = 'error' | 'warning' | 'info' | 'success'
-
-export interface ApiPaginate<T> {
-  total: number
-  data: T[]
-}
-
-export interface Period {
-  start: Date
-  end: Date
-}
-
-export class PeriodHelper {
-
-  static readonly isDateIn = (period: Partial<Period>, date?: Date) => {
-    if (date) {
-      if (period?.start && period.start.getTime() >= date.getTime()) return false
-      if (period?.end && period.end.getTime() <= date.getTime()) return false
-      return true
-    }
-    return !period.start && !period.end
-  }
-
-  static readonly fromYYYYMM = (yyyyMM: string): Period => {
-    const [year, month] = yyyyMM.split('-')
-    return {
-      start: startOfMonth(new Date(+year, +month - 1, 1)),
-      end: endOfDay(endOfMonth(new Date(+year, +month - 1, 1))),
-      // start: new Date(parseInt(year), parseInt(month) - 1),
-      // end: subDays(new Date(parseInt(year), parseInt(month)), 1),
-    }
-  }
-}
-
-export interface ApiPagination {
-  offset: number
-  limit: number
-}
-
-export type DeepReadonly<T> = {
-  readonly [P in keyof T]: T[P] extends Record<string, unknown>
-    ? DeepReadonly<T[P]>
-    : T[P];
-}
-
-export type StringArrayKeys<T> = {
-  [K in keyof T]: T[K] extends string[] ? K : never;
-}[keyof T]
-
-export type StringKeys<T> = {
-  [K in keyof T]: T[K] extends string | undefined ? K : never;
-}[keyof T]
-
-export type NumberKeys<T> = {
-  [K in keyof T]: T[K] extends number | undefined ? K : never;
-}[keyof T]
+import {Enum} from '@alexandreannic/ts-utils'
+import {KeyOf} from '@/core/type/generic'
 
 export namespace Person {
 

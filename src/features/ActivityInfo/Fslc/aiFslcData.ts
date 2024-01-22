@@ -1,10 +1,9 @@
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {Period, Person} from '@/core/type'
 import {AiTypeFslc} from '@/features/ActivityInfo/Fslc/aiFslcInterface'
 import {Utils} from '@/utils/utils'
 import {fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
-import {DrcProject} from '@/core/typeDrc'
+import {DrcProject} from '@/core/type/drc'
 import {Ecrec_CashRegistration} from '@/core/generatedKoboInterface/Ecrec_CashRegistration/Ecrec_CashRegistration'
 import {addDays, format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
@@ -12,6 +11,8 @@ import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import groupByGenderAndGroup = Person.groupByGenderAndGroup
 import Gender = Person.Gender
+import {Person} from '@/core/type/person'
+import {Period} from '@/core/type/period'
 
 export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_CashRegistration>
 

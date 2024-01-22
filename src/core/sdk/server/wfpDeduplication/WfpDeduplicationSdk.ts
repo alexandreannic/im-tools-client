@@ -1,6 +1,7 @@
 import {ApiClient} from '@/core/sdk/server/ApiClient'
-import {ApiPaginate} from '@/core/type'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
+
+import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 interface WfpDeduplicationSearch {
   limit?: number

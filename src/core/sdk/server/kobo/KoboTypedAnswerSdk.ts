@@ -1,5 +1,4 @@
 import {ApiClient} from '../ApiClient'
-import {ApiPaginate} from '@/core/type'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {KoboIndex} from '@/core/KoboIndex'
 import {mapProtection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Mapping'
@@ -32,6 +31,8 @@ import {mapMeal_VerificationEcrec} from '@/core/generatedKoboInterface/Meal_Veri
 import {mapPartnership_partnersDatabase} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseMapping'
 import {EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
 import {mapProtection_gbv} from '@/core/generatedKoboInterface/Protection_gbv/Protection_gbvMapping'
+
+import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 export class KoboTypedAnswerSdk {
 

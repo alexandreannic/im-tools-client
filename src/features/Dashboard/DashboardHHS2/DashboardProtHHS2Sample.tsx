@@ -11,7 +11,6 @@ import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {chain} from '@/utils/utils'
 import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
-import {Person} from '@/core/type'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Enum} from '@alexandreannic/ts-utils'
 import {makeSx} from 'mui-extension'
@@ -19,6 +18,7 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {Person} from '@/core/type/person'
 
 const css = makeSx({
   table: {

@@ -2,7 +2,8 @@ import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {fnSwitch, mapFor, seq} from '@alexandreannic/ts-utils'
 import {ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
-import {Person} from '@/core/type'
+
+import {Person} from '@/core/type/person'
 
 export interface ProtHHS2Person extends Person.Person {
   // age: Protection_Hhs2_1['hh_age_1']

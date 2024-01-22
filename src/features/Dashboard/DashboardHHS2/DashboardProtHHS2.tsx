@@ -19,7 +19,6 @@ import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
 import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Disability'
 import {KoboIndex} from '@/core/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {Period, Person} from '@/core/type'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
 import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
@@ -27,6 +26,8 @@ import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
 import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {Person} from '@/core/type/person'
+import {Period} from '@/core/type/period'
 
 type CustomFilterOptionFilters = {
   hhComposition?: (keyof Messages['protHHS2']['_hhComposition'])[]

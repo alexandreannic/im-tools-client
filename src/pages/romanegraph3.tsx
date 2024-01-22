@@ -6,7 +6,6 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {endOfMonth, startOfMonth} from 'date-fns'
 import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
 import {DeepPartial, Enum, seq} from '@alexandreannic/ts-utils'
-import {Period, Person} from '@/core/type'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {ChartBarStacker} from '@/shared/chart/ChartBarStacked'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
@@ -16,6 +15,8 @@ import {useI18n} from '@/core/i18n'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Person} from '@/core/type/person'
+import {Period} from '@/core/type/period'
 
 export const Pan = ({
   title,

@@ -7,7 +7,6 @@ import {KoboIndex} from '@/core/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {Period} from '@/core/type'
 import {SafetyIncidentTracker} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTracker'
 import {SafetyIncidentTrackerOptions} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
@@ -16,6 +15,7 @@ import {Page} from '@/shared/Page'
 import {useSafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/useSafetyIncidentDashboard'
 import {SafetyIncidentDashboardBody} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboardBody'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {Period} from '@/core/type/period'
 
 export interface DashboardSafetyIncidentsPageProps {
   filters: DataFilter.Filter

@@ -1,9 +1,9 @@
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {KoboIndex} from '@/core/KoboIndex'
 import {KoboTypedAnswerSdk} from '@/core/sdk/server/kobo/KoboTypedAnswerSdk'
-import {KeyOf} from '@/utils/utils'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {seq} from '@alexandreannic/ts-utils'
+import {KeyOf} from '@/core/type/generic'
 
 export const mealVerificationConf = {
   sampleSizeRatio: .2,

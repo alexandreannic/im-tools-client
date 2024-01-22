@@ -3,7 +3,7 @@ import {useMemo} from 'react'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex, OblastName} from '@/shared/UkraineMap/oblastIndex'
-import {DrcSector} from '@/core/typeDrc'
+import {DrcSector} from '@/core/type/drc'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {useFetcher} from '@/shared/hook/useFetcher'
 

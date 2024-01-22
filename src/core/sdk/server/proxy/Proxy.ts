@@ -1,4 +1,4 @@
-import {UUID} from '@/core/type'
+import {UUID} from '@/core/type/generic'
 
 export interface Proxy {
   id: UUID

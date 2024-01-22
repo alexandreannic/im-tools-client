@@ -3,7 +3,7 @@ import {currentProtectionProjects, ProtectionHhsTags} from '@/core/sdk/server/ko
 import {useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {Enum, map} from '@alexandreannic/ts-utils'
-import {DrcProject} from '@/core/typeDrc'
+import {DrcProject} from '@/core/type/drc'
 import {useI18n} from '@/core/i18n'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'

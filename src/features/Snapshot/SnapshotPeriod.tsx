@@ -1,8 +1,8 @@
-import {Period} from '@/core/type'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
 import {Box, Icon} from '@mui/material'
 import {Txt} from 'mui-extension'
+import {Period} from '@/core/type/period'
 
 const periodToString = (period: Partial<Period>) => {
   return {

@@ -10,15 +10,15 @@ import {Meal_CfmExternal} from '@/core/generatedKoboInterface/Meal_CfmExternal/M
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
-import {DrcOffice, DrcProject, DrcProjectHelper} from '@/core/typeDrc'
+import {DrcOffice, DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useIpToast} from '@/core/useToast'
-import {KeyOf} from '@/utils/utils'
 import {Seq, seq} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternal'
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {useI18n} from '@/core/i18n'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
+import {KeyOf} from '@/core/type/generic'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,

@@ -5,7 +5,6 @@ import {Div, PdfSlide, PdfSlideBody, SlidePanel, SlidePanelTitle, SlideTxt, Slid
 import {useI18n} from '@/core/i18n'
 import {DRCLogo} from '@/shared/logo/logo'
 import {ChartBarStacker, commonLegendProps} from '@/shared/chart/ChartBarStacked'
-import {Person} from '@/core/type'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {PanelTitle} from '@/shared/Panel'
 import {Legend} from 'recharts'
@@ -14,6 +13,7 @@ import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Person} from '@/core/type/person'
 
 export const SnapshotProtMonitoNN2Sample = () => {
   const theme = useTheme()

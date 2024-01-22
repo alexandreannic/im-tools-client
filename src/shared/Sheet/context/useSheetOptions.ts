@@ -3,7 +3,8 @@ import {useCallback, useEffect, useMemo} from 'react'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {seq} from '@alexandreannic/ts-utils'
 import {UseSheetData} from '@/shared/Sheet/context/useSheetData'
-import {KeyOf} from '@/utils/utils'
+
+import {KeyOf} from '@/core/type/generic'
 
 export type UseSheetOptions<T extends SheetRow> = ReturnType<typeof useSheetOptions<T>>
 

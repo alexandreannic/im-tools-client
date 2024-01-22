@@ -2,10 +2,11 @@ import {ChartDataVal, ChartHelperOld} from './chartHelperOld'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '../../core/i18n'
 import React, {ReactNode, useMemo} from 'react'
-import {chain, KeyOf} from '@/utils/utils'
+import {chain} from '@/utils/utils'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {Checkbox} from '@mui/material'
 import {ChartHelper} from '@/shared/chart/chartHelper'
+import {KeyOf} from '@/core/type/generic'
 
 export interface ChartBarMultipleByProps<
   D extends Record<string, any>,

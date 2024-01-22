@@ -1,4 +1,4 @@
-import {StringArrayKeys, StringKeys} from '@/core/type'
+import {StringArrayKeys, StringKeys} from '@/core/type/generic'
 import * as React from 'react'
 import {useMemo} from 'react'
 import {ChartPieWidgetBy, ChartPieWidgetProps} from '@/shared/chart/ChartPieWidgetBy'

@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {KoboForm, KoboFormHelper, KoboId} from './Kobo'
-import {UUID} from '@/core/type'
+import {UUID} from '@/core/type/generic'
 
 export interface KoboFormCreate {
   name: string

@@ -12,8 +12,8 @@ import {ChartBar} from '@/shared/chart/ChartBar'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {Person} from '@/core/type'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Person} from '@/core/type/person'
 
 export const SnapshotProtMonitoEchoRegistration = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
