@@ -11,6 +11,7 @@ import {Txt} from 'mui-extension'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 
 
 export const SnapshotProtMonitoEchoNeeds = () => {
@@ -101,11 +102,12 @@ export const SnapshotProtMonitoEchoNeeds = () => {
           </Div>
           <Div column>
             <SlidePanel>
-              <ChartPieWidgetBy
+              <ChartPieWidgetByKey
                 {...snapShotDefaultPieProps}
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.mainConcernsRegardingHousing}
-                filter={_ => !_.what_are_your_main_concerns_regarding_your_accommodation.includes('none')}
+                property="what_are_your_main_concerns_regarding_your_accommodation"
+                filter={_ => !_.includes('none')}
                 data={data}
                 sx={{mb: 0}}
               />

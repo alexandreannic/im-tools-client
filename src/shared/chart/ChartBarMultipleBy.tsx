@@ -50,14 +50,11 @@ export const ChartBarMultipleBy = <
       }
       return by(d)
     }).compact()
-    console.log('source', source)
-    const x = ChartHelper.multiple({
+    return ChartHelper.multiple({
       data: source,
       filterValue,
       base,
     }).setLabel(label).take(limit).get()
-    console.log('x', x)
-    return x
   }, [data, by, label])
 
   return (
