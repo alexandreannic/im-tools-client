@@ -34,18 +34,19 @@ const generalStyles = <GlobalStyles styles={t => ({
     padding: 0,
   },
   '@media print': {
-    'body *': {
-      visibility: 'hidden',
+    main: {
+      padding: '0 !important',
     },
-    '#meal-visit-details-content *': {
-      visibility: 'visible',
+    '#app-sidebar-id': {
+      display: 'none',
     },
+    '#app-header': {
+      display: 'none',
+    },
+
     '#meal-visit-details-content': {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      visibility: 'visible',
+      margin: 0,
+      padding: 0,
     },
   }
 })}/>
@@ -189,6 +190,7 @@ export const _DashboardMealVisitPdf = () => {
             </Box>
             <Title sx={{mb: .5}} size="big">General Observation</Title>
             <Box sx={{textAlign: 'justify'}}>
+              {entry.fcpc}
               {entry.fcpc}
             </Box>
 
