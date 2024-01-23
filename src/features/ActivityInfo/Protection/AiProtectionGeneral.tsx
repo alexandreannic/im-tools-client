@@ -16,9 +16,9 @@ import {Enum, seq} from '@alexandreannic/ts-utils'
 import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
-import {PeriodHelper} from '@/core/type'
 import {useAsync} from '@/shared/hook/useAsync'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {PeriodHelper} from '@/core/type/period'
 
 type AiProtectionGeneralBundle = AiBundle<AiTypeProtectionRmm.FormParams>
 

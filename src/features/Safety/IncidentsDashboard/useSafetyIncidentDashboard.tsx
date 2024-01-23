@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {subDays} from 'date-fns'
-import {Period} from '@/core/type'
 import {DashboardSafetyIncidentsPageProps} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
+import {Period} from '@/core/type/period'
 
 export const useSafetyIncidentDashboard = ({
   data,

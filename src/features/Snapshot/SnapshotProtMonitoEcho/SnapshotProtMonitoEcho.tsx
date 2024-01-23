@@ -10,9 +10,9 @@ import {SnapshotProtMonitoEchoSample} from '@/features/Snapshot/SnapshotProtMoni
 import {SnapshotProtMonitoEchoDisplacement} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoDisplacement'
 import {SnapshotProtMonitoEchoRegistration} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEchoRegistration'
 import {alpha, Box, Theme} from '@mui/material'
-import {Period} from '@/core/type'
 import {endOfMonth, startOfMonth, subMonths} from 'date-fns'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
+import {Period} from '@/core/type/period'
 
 export const snapshotAlternateColor = (t: Theme) => alpha(t.palette.primary.main, .26)//t.palette.grey[500]
 

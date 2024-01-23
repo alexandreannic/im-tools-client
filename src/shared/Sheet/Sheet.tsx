@@ -143,7 +143,7 @@ const _Sheet = <T extends SheetRow>({
           />
           {typeof header === 'function' ? header({
             data: ctx.data.data as T[],
-            filteredData: ctx.data.filteredData as T[],
+            data: ctx.data.filteredData as T[],
             filteredAndSortedData: ctx.data.filteredAndSortedData as T[],
           }) : header}
           {showExportBtn && (

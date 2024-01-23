@@ -1,5 +1,5 @@
 import {ApiClient} from '../ApiClient'
-import {UUID} from '../../../type'
+import {UUID} from '../../../type/generic'
 import {KoboId} from '../kobo/Kobo'
 import {MpcaPayment, MpcaPaymentUpdate} from './MpcaPayment'
 

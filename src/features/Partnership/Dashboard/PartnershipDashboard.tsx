@@ -1,7 +1,7 @@
 import {Page} from '@/shared/Page'
 import {usePartnershipContext} from '@/features/Partnership/PartnershipContext'
 import React, {useEffect, useMemo, useState} from 'react'
-import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
+import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
 import {usePartnershipDashboard} from '@/features/Partnership/Dashboard/usePartnershipDashboard'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Panel, PanelBody, PanelHead} from '@/shared/Panel'
@@ -14,9 +14,9 @@ import {ChartBar} from '@/shared/chart/ChartBar'
 import {PartnershipCard} from '@/features/Partnership/Dashboard/PartnershipCard'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Utils} from '@/utils/utils'
-import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/typeDrc'
+import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {Txt} from 'mui-extension'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {PanershipPanelDonor} from '@/features/Partnership/Dashboard/PanershipPanelDonor'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
@@ -25,7 +25,7 @@ import {Box, Checkbox} from '@mui/material'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {ChartBarVertical} from '@/shared/chart/ChartBarVertical'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
@@ -187,7 +187,7 @@ export const _PartnershipDashboard = ({
   return (
     <Div column>
       <Box>
-        <FilterLayout
+        <DataFilterLayout
           shape={{...filterShape, ...filterSgaShape}}
           filters={optionFilter}
           setFilters={setOptionFilters}
@@ -336,7 +336,7 @@ export const _PartnershipDashboard = ({
           <Panel>
             <PanelHead>{m._partner.workingOblast}</PanelHead>
             <PanelBody>
-              <KoboUkraineMap
+              <UaMapBy
                 fillBaseOn="value"
                 data={computed.oblastIso.map(_ => ({oblast: _}))}
                 getOblast={_ => _.oblast}

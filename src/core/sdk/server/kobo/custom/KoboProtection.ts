@@ -1,4 +1,4 @@
-import {DrcDonor, DrcProject} from '@/core/typeDrc'
+import {DrcDonor, DrcProject} from '@/core/type/drc'
 import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
 export interface ProtectionCommunityMonitoringTags extends KoboBaseTags {

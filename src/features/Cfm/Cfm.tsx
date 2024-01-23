@@ -9,7 +9,7 @@ import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {CfmTable} from '@/features/Cfm/Data/CfmTable'
 import {CfmProvider, useCfmContext} from '@/features/Cfm/CfmContext'
-import {KoboFormName} from '@/core/KoboIndex'
+import {KoboFormName} from '@/core/koboForms/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
@@ -18,7 +18,7 @@ import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {Box, LinearProgress} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
-import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
+import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
 import {appConfig} from '@/conf/AppConfig'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 import {shelterIndex} from '@/features/Shelter/Shelter'
@@ -109,7 +109,7 @@ const CfmSidebar = () => {
             base={_stats.open ?? 1}
           />
         </Box>
-        <KoboUkraineMap
+        <UaMapBy
           sx={{ml: 1, mt: 2}}
           fillBaseOn="value"
           data={ctx.mappedData}

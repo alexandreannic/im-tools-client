@@ -8,7 +8,7 @@ import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
-import {KoboUkraineMap} from '@/features/Dashboard/shared/KoboUkraineMap'
+import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
@@ -161,7 +161,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
                 data={data}
                 {...snapShotDefaultPieProps}
               />
-              <KoboUkraineMap
+              <UaMapBy
                 sx={{mx: 4}}
                 data={data}
                 getOblast={_ => _.where_are_you_current_living_oblast as any}

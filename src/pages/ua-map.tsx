@@ -1,8 +1,8 @@
-import {DrcUaMap} from '@/features/DrcUaMap/DrcUaMap'
+import {UaMap} from '@/features/DrcUaMap/UaMap'
 
 const uaMap = () => {
   return (
-    <DrcUaMap/>
+    <UaMap/>
   )
 }
 

@@ -23,7 +23,7 @@ export const SidebarSection = ({
         borderBottom: t => `1px solid ${t.palette.divider}`,
       }
     }}>
-      <Box sx={{pl: 1}}>
+      <Box sx={{pl: 1, mb: -.75}}>
         <IpIconBtn onClick={() => setOpen(_ => !_)} size="small" sx={{mr: 1}}>
           {open ? 'expand_less' : 'expand_more'}
         </IpIconBtn>

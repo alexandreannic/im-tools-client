@@ -1,6 +1,5 @@
 import {AiSnfiInterface} from '@/features/ActivityInfo/Snfi/AiSnfiInterface'
-import {DrcProject} from '@/core/typeDrc'
-import {Period, PeriodHelper, Person} from '@/core/type'
+import {DrcProject} from '@/core/type/drc'
 import {fnSwitch, RequiredProperty, Seq, seq} from '@alexandreannic/ts-utils'
 import {AiLocation, getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {Utils} from '@/utils/utils'
@@ -20,6 +19,8 @@ import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {aiRaions} from '@/core/uaLocation/aiRaions'
 import {aiHromadas} from '@/core/uaLocation/aiHromadas'
 import {KoboBnReHelper} from '@/core/sdk/server/kobo/custom/KoboBnRe'
+import {Person} from '@/core/type/person'
+import {Period, PeriodHelper} from '@/core/type/period'
 
 export type AiSnfiBundle = Omit<AiBundle, 'data'> & {
   nta?: KoboAnswer<Shelter_NTA>[]

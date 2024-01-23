@@ -9,7 +9,7 @@ import {useEffect, useState} from 'react'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useIpToast} from '@/core/useToast'
 import {Modal} from 'mui-extension/lib/Modal'
-import {DrcOffice} from '@/core/typeDrc'
+import {DrcOffice} from '@/core/type/drc'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {useEffectFn} from '@alexandreannic/react-hooks-lib'
 

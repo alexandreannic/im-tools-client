@@ -1,5 +1,4 @@
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
-import {mapObject, mapObjectValue, sortObject} from '@/utils/utils'
 import {ReactNode} from 'react'
 import {NonNullableKey} from '@/utils/utilsType'
 
@@ -73,10 +72,6 @@ export class ChartHelper<K extends string = string> {
   }
 
   readonly get = () => this.value
-
-  readonly mapValue = <K extends string, V, R>(fn: (_: V) => R) => (obj: Record<K, V>): Record<K, R> => mapObjectValue(obj, fn)
-
-  readonly map = <K extends string, V, NK extends string, NV>(fn: (_: [K, V]) => [NK, NV]) => (obj: Record<K, V>): Record<NK, NV> => mapObject(obj, fn)
 
   static readonly take = <K extends string>(n?: number) => (obj: Record<K, ChartDataVal>): ChartData<K> => {
     if (n)

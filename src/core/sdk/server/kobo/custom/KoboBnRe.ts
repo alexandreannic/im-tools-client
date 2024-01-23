@@ -1,6 +1,6 @@
 import {Bn_Re} from '@/core/generatedKoboInterface/Bn_Re/Bn_Re'
-import {Person} from '@/core/type'
 import {fnSwitch} from '@alexandreannic/ts-utils'
+import {Person} from '@/core/type/person'
 
 export class KoboBnReHelper {
 

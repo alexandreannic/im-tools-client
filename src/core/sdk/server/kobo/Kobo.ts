@@ -1,6 +1,7 @@
-import {ApiPaginate} from '@/core/type'
 import {KoboQuestionSchema} from '@/core/sdk/server/kobo/KoboApi'
 import {Enum} from '@alexandreannic/ts-utils'
+
+import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 export type KoboId = string
 
@@ -135,6 +136,24 @@ export class Kobo {
       start: new Date(k.start),
       end: new Date(k.end),
       submissionTime: new Date(k.submissionTime),
+      version: k.version,
+      id: k.id,
+      validationStatus: k.validationStatus,
+      validatedBy: k.validatedBy,
+      lastValidatedTimestamp: k.lastValidatedTimestamp,
+      geolocation: k.geolocation,
+      tags: fnMapTags(k.tags) ?? {},
+    }
+  }
+
+  static readonly extraxtAnswerMetaData = (
+    k: KoboAnswerMetaData,
+    fnMapTags: (x: any) => any = _ => _
+  ): KoboAnswer<any, KoboBaseTags> => {
+    return {
+      start: k.start,
+      end: k.end,
+      submissionTime: k.submissionTime,
       version: k.version,
       id: k.id,
       validationStatus: k.validationStatus,

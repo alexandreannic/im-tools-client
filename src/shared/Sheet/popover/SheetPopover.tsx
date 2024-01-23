@@ -9,8 +9,8 @@ import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {Txt} from 'mui-extension'
 import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
 import {SheetOptions, SheetRow} from '@/shared/Sheet/util/sheetType'
-import {KeyOf} from '@/utils/utils'
 import {seq} from '@alexandreannic/ts-utils'
+import {KeyOf} from '@/core/type/generic'
 
 const RenderRow = ({label, value}: {
   label: ReactNode

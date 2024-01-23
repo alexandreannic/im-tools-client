@@ -35,7 +35,8 @@ export const appConfig = {
   uahToUsd: .027,
   muiProLicenseKey: _()(Env.NEXT_PUBLIC_MUI_PRO_LICENSE_KEY),
   linkToFeature: (feature: AppFeatureId, path: string) => {
-    return appFeaturesIndex[feature].path + '/#' + path
+    const featurePath = appFeaturesIndex[feature]?.path ?? feature
+    return featurePath + '/#' + path
   },
   contact: 'alexandre.annic@drc.ngo',
   apiURL: _(required)(Env.NEXT_PUBLIC_API_BASE_URL),

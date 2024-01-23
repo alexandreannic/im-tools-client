@@ -4,7 +4,6 @@ import {Panel} from '@/shared/Panel'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {IpInput} from '@/shared/Input/Input'
 import {format, subMonths} from 'date-fns'
-import {PeriodHelper} from '@/core/type'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {AiPreviewActivity, AiPreviewRequest, AiSendBtn, AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
@@ -13,6 +12,7 @@ import {useIpToast} from '@/core/useToast'
 import {useAsync} from '@/shared/hook/useAsync'
 import {AiFslcData} from '@/features/ActivityInfo/Fslc/aiFslcData'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {PeriodHelper} from '@/core/type/period'
 
 export const AiFslc = () => {
   const {api} = useAppSettings()

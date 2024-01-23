@@ -2,15 +2,15 @@ import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProt
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {fnSwitch, PromiseReturn} from '@alexandreannic/ts-utils'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {Person} from '@/core/type'
 import {Protection_groupSession} from '@/core/generatedKoboInterface/Protection_groupSession/Protection_groupSession'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
-import {DrcProject} from '@/core/typeDrc'
-import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {DrcProject} from '@/core/type/drc'
+import {enrichProtHHS_2_1} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {Bn_ReOptions} from '@/core/generatedKoboInterface/Bn_Re/Bn_ReOptions'
 import {AiOblast} from '@/core/uaLocation/aiOblasts'
 import {AiRaions} from '@/core/uaLocation/aiRaions'
 import {AiHromadas} from '@/core/uaLocation/aiHromadas'
+import {Person} from '@/core/type/person'
 import Gender = Person.Gender
 
 const disaggregatePersons = (persons: Person.Person[]) => {
@@ -54,8 +54,8 @@ export class ActivityInfoProtectionMapper {
         data.push({
           answer: d,
           Oblast: AILocationHelper.findOblast(OblastIndex.byIso(d.where_are_you_current_living_oblast).name)!,
-          Raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)._5w as any,
-          Hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada)._5w as any,
+          Raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)?._5w as any,
+          Hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada)?._5w as any,
           ...disaggregatePersons([ind]),
           'Reporting Month': reportingMonth,
           'Plan Code': fnSwitch(d.tags?.projects?.[0]!, AiProtectionGeneralType.planCode, () => undefined)!,

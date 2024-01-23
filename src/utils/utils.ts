@@ -1,13 +1,10 @@
-import {Enum, mapFor, seq} from '@alexandreannic/ts-utils'
+import {Enum} from '@alexandreannic/ts-utils'
 import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'date-fns'
 import {groupBy as _groupBy} from '@/utils/groupBy'
 import {NonNullableKeys} from '@/utils/utilsType'
-
-export type KeyOf<T> = Extract<keyof T, string>
+import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 export const generateId = () => ('' + Math.random()).split('.')[1]
-
-export type ValueOf<T> = T[keyof T];
 
 export const capitalize = (_: string) => {
   return _.charAt(0).toUpperCase() + _.slice(1)
@@ -35,6 +32,7 @@ export const objectToQueryString = (obj: {
   return params.toString()
 }
 
+/**@deprecated use Enum instead*/
 export const objToArray = <T extends object, K extends string = 'name', V extends string = 'value'>(
   obj: T,
   keyName: K = 'name' as K,
@@ -43,6 +41,7 @@ export const objToArray = <T extends object, K extends string = 'name', V extend
   return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
 }
 
+/**@deprecated use Enum instead*/
 export const sortObject = <T extends Record<any, any>>(
   obj: T,
   predicate: (a: [keyof T, T[keyof T]], b: [keyof T, T[keyof T]]) => number
@@ -82,17 +81,6 @@ class Chain<T> {
 
 export const chain = <T>(value?: T) => new Chain(value)
 
-export const getAvgAgeAndSex = (data: any[]) => {
-  const avgMember = seq(data.flatMap(_ => mapFor(6, i => _[`_8_${i + 2}_1_For_household_${i + 2}_what_is_their_age`]))).filter(_ => !!_)
-  const sexMember = seq(data.flatMap(_ => mapFor(6, i => _[`_8_${i + 2}_2_For_household_${i + 2}_what_is_their_sex`]))).filter(_ => !!_)
-  const avgHoHH = seq(data.flatMap(_ => _[`_8_1_1_For_household_member_1_`])).filter(_ => !!_)
-  const sexHoHH = seq(data.flatMap(_ => _[`_8_1_2_For_household_member_1_`])).filter(_ => !!_)
-  console.info('avgMember', avgMember.sum(_ => +_) / avgMember.length)
-  console.info('avgHoHH', avgHoHH.sum(_ => +_) / avgHoHH.length)
-  console.info('sexMember', sexMember.filter(_ => _ === 'female').length / sexMember.length)
-  console.info('sexHoHH', sexHoHH.filter(_ => _ === 'female').length / sexHoHH.length)
-}
-
 export const makeid = (length = 14) => {
   let result = ''
   const letters = 'abcdefghijklmnopqrstuvwxyz'
@@ -105,84 +93,6 @@ export const makeid = (length = 14) => {
   return result
 }
 
-export function groupByPredicates<T>(arr: T[], groupingFunctions: Array<(item: T) => string>): Record<string, any> {
-  const result: Record<string, any> = {}
-
-  arr.forEach((item) => {
-    let current = result
-
-    groupingFunctions.forEach((groupingFunction, index) => {
-      const group = groupingFunction(item)
-      const isLastFunction = index === groupingFunctions.length - 1
-
-      if (!current[group]) {
-        current[group] = isLastFunction ? [item] : {}
-      } else if (isLastFunction) {
-        current[group].push(item)
-      }
-
-      current = current[group]
-    })
-  })
-
-  return result
-}
-
-export function groupByAndTransform<T>(arr: T[], predicates: ((item: T) => any)[], transformFn?: (value: T[]) => any): {
-  [key: string]: any
-} {
-  const result: {
-    [key: string]: any
-  } = {}
-
-  arr.forEach((item) => {
-    let currentLevel = result
-    predicates.forEach((predicate, index) => {
-      const key = predicate(item)
-      if (!currentLevel[key]) {
-        currentLevel[key] = index === predicates.length - 1 ? [] : {}
-      }
-      currentLevel = currentLevel[key]
-    })
-    currentLevel.push(item)
-  })
-
-  if (transformFn) {
-    transform(result)
-  }
-
-  return result
-
-  function transform(obj: any) {
-    Object.keys(obj).forEach((key) => {
-      if (Array.isArray(obj[key])) {
-        if (predicates.length === 1 || Object.keys(obj[key][0]).length === predicates.length) {
-          obj[key] = transformFn!(obj[key])
-        }
-      } else {
-        transform(obj[key])
-      }
-    })
-  }
-}
-
-export const mapObjectValue = <K extends string, V, R>(t: Record<K, V>, fn: (_: V) => R): Record<K, R> => {
-  const output = {} as Record<K, R>
-  Enum.entries(t).forEach(([k, v]) => {
-    output[k] = fn(v)
-  })
-  return output
-}
-
-export const mapObject = <K extends string, V, NK extends string, NV>(t: Record<K, V>, fn: (_: [K, V]) => [NK, NV]): Record<NK, NV> => {
-  const output = {} as Record<NK, NV>
-  Enum.entries(t).forEach(_ => {
-    const res = fn(_)
-    output[res[0]] = res[1]
-  })
-  return output
-}
-
 export const multipleFilters = <T>(list: T[], filters: Array<undefined | boolean | ((value: T, index: number, array: T[]) => boolean)>) => {
   if (filters.length === 0) return list
   return list.filter((t: T, index: number, array: T[]) => filters
@@ -190,18 +100,6 @@ export const multipleFilters = <T>(list: T[], filters: Array<undefined | boolean
     // @ts-ignore
     .every(filter => filter(t, index, array))
   )
-}
-
-export interface Paginate<T> {
-  data: T[]
-  totalSize: number
-}
-
-export const paginateData = <T>(limit: number, offset: number) => (data: T[]): Paginate<T> => {
-  return {
-    data: data.slice(offset, offset + limit),
-    totalSize: data.length,
-  }
 }
 
 export const forceArrayStringInference = <T extends string>(a: T[]) => a
@@ -311,7 +209,7 @@ export class Utils {
     url: 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)',
   }
 
-  static readonly regexp = mapObjectValue(Utils.pattern, _ => new RegExp(_))
+  static readonly regexp = new Enum(Utils.pattern).transform((k, v) => [k, new RegExp(v)]).get()
 
 
   static readonly add = (...args: (string | number | undefined)[]) => {
@@ -347,14 +245,6 @@ export class Utils {
     .replaceAll(/[éèê]/g, 'e')
     .replaceAll(/[àâ]/g, 'a')
     .replaceAll(/[^a-zA-Z0-9_-]/g, '') as any
-
-  static readonly dateToPeriod = (date: Date) => {
-    const start = startOfMonth(date)
-    return {
-      start,
-      end: addMonths(start, 1)
-    }
-  }
 
   static readonly logThen = (log: string) => <T>(args: T): T => {
     console.log(log, args)
@@ -397,3 +287,9 @@ export const tryy = <T>(fn: () => T) => {
   }
 }
 
+export const paginateData = <T>(limit: number, offset: number) => (data: T[]): ApiPaginate<T> => {
+  return {
+    data: data.slice(offset, offset + limit),
+    total: data.length,
+  }
+}

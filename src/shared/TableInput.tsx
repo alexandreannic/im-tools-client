@@ -3,7 +3,7 @@ import {IpIconBtn} from '@/shared/IconBtn'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import React from 'react'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
-import {StateStatus} from '@/core/type'
+import {StateStatus} from '@/core/type/generic'
 import {appConfig} from '@/conf/AppConfig'
 
 export const TableInput = ({

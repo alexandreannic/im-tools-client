@@ -1,4 +1,3 @@
-import {Period} from '@/core/type'
 import {format} from 'date-fns'
 import {NullableKey} from '@/utils/utilsType'
 import React, {ReactNode} from 'react'
@@ -6,6 +5,7 @@ import {Box} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {SnapshotPeriod} from '@/features/Snapshot/SnapshotPeriod'
 import {useI18n} from '@/core/i18n'
+import {Period} from '@/core/type/period'
 
 const periodToString = (period: NullableKey<Period, 'end'>) => {
   return {

@@ -5,15 +5,15 @@ import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
-import {getIdpsAnsweringRegistrationQuestion} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Document'
+import {getIdpsAnsweringRegistrationQuestion} from '@/features/Protection/DashboardMonito/ProtectionDashboardMonitoDocument'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {Person} from '@/core/type'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {Person} from '@/core/type/person'
 
 export const SnapshotProtMonitoEchoRegistration = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()

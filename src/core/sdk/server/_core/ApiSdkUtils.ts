@@ -1,4 +1,12 @@
-import {ApiPaginate} from '@/core/type'
+export interface ApiPaginate<T> {
+  total: number
+  data: T[]
+}
+
+export interface ApiPagination {
+  offset: number
+  limit: number
+}
 
 export class ApiSdkUtils {
 

@@ -61,7 +61,7 @@ export const SheetProvider = <T extends SheetRow>({
     onFiltersChange?.(data.filters)
     onDataChange?.({
       data: data.data,
-      filteredData: data.filteredData,
+      data: data.filteredData,
       filteredAndSortedData: data.filteredAndSortedData,
       filteredSortedAndPaginatedData: data.filteredSortedAndPaginatedData,
     })

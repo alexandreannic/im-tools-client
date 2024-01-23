@@ -6,7 +6,7 @@ import {
   MealVerificationHelper,
   MealVerificationStatus
 } from '@/core/sdk/server/mealVerification/MealVerification'
-import {UUID} from '@/core/type'
+import {UUID} from '@/core/type/generic'
 
 export class MealVerificationClient {
   constructor(private client: ApiClient) {

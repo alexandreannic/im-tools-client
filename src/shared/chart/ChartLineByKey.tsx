@@ -1,17 +1,19 @@
-import {Enum, Seq} from '@alexandreannic/ts-utils'
+import {Enum, Obj, Seq} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
-import {StringKeys} from '../../core/type'
+import {StringKeys} from '../../core/type/generic'
 import {ChartLine, ChartLineData} from '@/shared/chart/ChartLine'
 
 export const ChartLineByKey = <T extends {end: Date}, K extends StringKeys<T>, V extends T[K]>({
   data,
   question,
+  getDate,
   displayedValues,
   translations,
   height,
 }: {
   height?: number
+  getDate: (_: T) => Date
   question: K
   data: Seq<T>
   displayedValues?: V[]
@@ -19,7 +21,7 @@ export const ChartLineByKey = <T extends {end: Date}, K extends StringKeys<T>, V
   translations?: Partial<Record<T[K], string>>
 }) => {
   const transform: ChartLineData[] = useMemo(() => {
-    return Enum.entries(data.groupBy(_ => format(_.end, 'yyyy-MM'))).map(([date, group]) => {
+    return Obj.entries(data.groupBy(_ => format(getDate(_), 'yyyy-MM'))).map(([date, group]) => {
       const res = {} as ChartLineData
       group
         .map(_ => _[question])
@@ -30,7 +32,7 @@ export const ChartLineByKey = <T extends {end: Date}, K extends StringKeys<T>, V
           // @ts-ignore
           else res[_] += 1
         })
-      Enum.keys(res).forEach(k => {
+      Obj.keys(res).forEach(k => {
         res[k] = Math.round(res[k] / group.length * 100)
       })
       res.name = date
@@ -40,7 +42,6 @@ export const ChartLineByKey = <T extends {end: Date}, K extends StringKeys<T>, V
   return (
     <ChartLine
       data={transform}
-      percent
       height={height}
       translation={translations as any}
       hideLabelToggle

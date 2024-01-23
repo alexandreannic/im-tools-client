@@ -16,7 +16,6 @@ import {IpInput} from '@/shared/Input/Input'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
-import {Person} from '@/core/type'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
 import {Bn_ReOptions} from '@/core/generatedKoboInterface/Bn_Re/Bn_ReOptions'
 import {Utils} from '@/utils/utils'
@@ -24,6 +23,7 @@ import {KoboBnReHelper} from '@/core/sdk/server/kobo/custom/KoboBnRe'
 import {NonNullableKeys} from '@/utils/utilsType'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {useAsync} from '@/shared/hook/useAsync'
+import {Person} from '@/core/type/person'
 
 interface Answer {
   id: KoboAnswerId

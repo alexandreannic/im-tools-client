@@ -17,7 +17,7 @@ import {IpBtn} from '@/shared/Btn'
 import {Box, Tooltip} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
-import {KoboFormName} from '@/core/KoboIndex'
+import {KoboFormName} from '@/core/koboForms/KoboIndex'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 
 const relatedKoboForms: (KoboFormName)[] = [

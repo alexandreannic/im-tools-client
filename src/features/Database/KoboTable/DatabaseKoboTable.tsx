@@ -13,17 +13,17 @@ import {useSession} from '@/core/Session/SessionContext'
 import {Access, AccessLevel} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {DatabaseKoboTableProvider} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {UUID} from '@/core/type'
+import {UUID} from '@/core/type/generic'
 import {KoboForm, KoboId, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {kobo, KoboIndex} from '@/core/KoboIndex'
+import {kobo, KoboIndex} from '@/core/koboForms/KoboIndex'
 import {Skeleton} from '@mui/material'
-import {Paginate} from '@/utils/utils'
 import {SheetFilterValue} from '@/shared/Sheet/util/sheetType'
 import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 import {useI18n} from '@/core/i18n'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 export const DatabaseTableRoute = () => {
   const ctx = useDatabaseContext()
@@ -55,7 +55,7 @@ export interface DatabaseTableProps {
     data?: KoboMappedAnswer[]
     filteredData?: KoboMappedAnswer[]
     filteredAndSortedData?: KoboMappedAnswer[]
-    filteredSortedAndPaginatedData?: Paginate<KoboMappedAnswer>
+    filteredSortedAndPaginatedData?: ApiPaginate<KoboMappedAnswer>
   }) => void
   overrideEditAccess?: boolean
 }

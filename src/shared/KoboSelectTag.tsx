@@ -5,7 +5,8 @@ import {useAsync} from '@/shared/hook/useAsync'
 import {cfmMakeUpdateRequestKey} from '@/features/Cfm/CfmContext'
 import {Enum} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {KeyOf} from '@/utils/utils'
+
+import {KeyOf} from '@/core/type/generic'
 
 export const KoboSelectTag = <
   TTag extends Record<string, any>,
