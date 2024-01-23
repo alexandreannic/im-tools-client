@@ -3,14 +3,14 @@ import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {DebouncedInput} from '@/shared/DebouncedInput'
-import {KoboIndex} from '@/core/KoboIndex'
+import {KoboIndex} from '@/core/koboForms/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {SafetyIncidentTracker} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTracker'
 import {SafetyIncidentTrackerOptions} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
-import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {Page} from '@/shared/Page'
 import {useSafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/useSafetyIncidentDashboard'
 import {SafetyIncidentDashboardBody} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboardBody'
@@ -80,7 +80,7 @@ export const SafetyIncidentDashboard = () => {
       width="lg"
       loading={_answers.loading}
     >
-      <FilterLayout
+      <DataFilterLayout
         shape={filterShape}
         filters={optionFilter}
         setFilters={setOptionFilters}

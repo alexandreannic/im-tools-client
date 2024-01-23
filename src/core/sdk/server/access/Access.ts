@@ -2,7 +2,7 @@ import {AppFeatureId} from '@/features/appFeatureId'
 import {DrcJob, DrcOffice} from '@/core/type/drc'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {CfmDataProgram} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {KoboFormName, KoboIndex} from '@/core/KoboIndex'
+import {KoboFormName, KoboIndex} from '@/core/koboForms/KoboIndex'
 import {UUID} from '@/core/type/generic'
 
 export enum AccessLevel {

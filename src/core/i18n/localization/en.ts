@@ -182,6 +182,7 @@ export const en = Object.freeze({
     displacementStatus: 'Displacement status',
     householdStatus: 'Household Status',
     individuals: 'Individuals',
+    submissions: 'Submissions',
     householdSize: 'Household size',
     hhSize: 'HH size',
     dashboard: 'Dashboard',
@@ -311,6 +312,7 @@ export const en = Object.freeze({
     monthlyIncomePerHH: 'Average monthly income per HH',
     HHsLocation: 'HHs Location',
     idp: 'IDP',
+    overview: 'Overview',
     requests: 'Requests',
     selectADatabase: 'Select a Kobo form',
     noIdp: 'Non-IDP',
@@ -344,6 +346,9 @@ export const en = Object.freeze({
       openTracker: 'Open Excel tracker',
       visitMonitoring: 'Visit Monitoring',
       verification: 'Verification',
+    },
+    _protection: {
+
     },
     mealMonitoringVisit: {
       ecrec: 'ECREC activities',
@@ -1126,7 +1131,9 @@ export const en = Object.freeze({
     warehouse: 'Warehouse',
     year: 'Year',
     vehicule: 'Vehicule',
+    koboForm: 'Kobo form',
     koboForms: 'Kobo forms',
+    disability: 'Disability',
     otherKoboForms: 'Other Kobo forms',
     _wfpDeduplication: {},
     _partner: {

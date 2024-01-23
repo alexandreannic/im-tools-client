@@ -1,6 +1,6 @@
 import {ApiClient} from '../ApiClient'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {KoboIndex} from '@/core/KoboIndex'
+import {KoboIndex} from '@/core/koboForms/KoboIndex'
 import {mapProtection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Mapping'
 import {Bn_Re} from '@/core/generatedKoboInterface/Bn_Re/Bn_Re'
 import {mapBn_Re} from '@/core/generatedKoboInterface/Bn_Re/Bn_ReMapping'
@@ -19,9 +19,6 @@ import {mapBn_OldMpcaNfi} from '@/core/generatedKoboInterface/Bn_OldMpcaNfi/Bn_O
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {mapBn_cashForRentApplication} from '@/core/generatedKoboInterface/Bn_cashForRentApplication/Bn_cashForRentApplicationMapping'
 import {Bn_cashForRentApplication} from '@/core/generatedKoboInterface/Bn_cashForRentApplication/Bn_cashForRentApplication'
-import {mapProtection_communityMonitoring} from '@/core/generatedKoboInterface/Protection_communityMonitoring/Protection_communityMonitoringMapping'
-import {mapProtection_pss} from '@/core/generatedKoboInterface/Protection_pss/Protection_pssMapping'
-import {mapProtection_groupSession} from '@/core/generatedKoboInterface/Protection_groupSession/Protection_groupSessionMapping'
 import {mapMeal_CfmInternal} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternalMapping'
 import {mapEcrec_CashRegistration} from '@/core/generatedKoboInterface/Ecrec_CashRegistration/Ecrec_CashRegistrationMapping'
 import {mapMeal_VisitMonitoring} from '@/core/generatedKoboInterface/Meal_VisitMonitoring/Meal_VisitMonitoringMapping'
@@ -30,9 +27,12 @@ import {mapMeal_VerificationWinterization} from '@/core/generatedKoboInterface/M
 import {mapMeal_VerificationEcrec} from '@/core/generatedKoboInterface/Meal_VerificationEcrec/Meal_VerificationEcrecMapping'
 import {mapPartnership_partnersDatabase} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseMapping'
 import {EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
-import {mapProtection_gbv} from '@/core/generatedKoboInterface/Protection_gbv/Protection_gbvMapping'
-
 import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
+import {Protection_communityMonitoring} from '@/core/generatedKoboInterface/Protection_communityMonitoring'
+import {Protection_pss} from '@/core/generatedKoboInterface/Protection_pss'
+import {Protection_groupSession} from '@/core/generatedKoboInterface/Protection_groupSession'
+import {Protection_gbv} from '@/core/generatedKoboInterface/Protection_gbv'
+
 
 export class KoboTypedAnswerSdk {
 
@@ -145,7 +145,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_communityMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_communityMonitoring').id,
-      fnMap: mapProtection_communityMonitoring,
+      fnMap: Protection_communityMonitoring.map,
       fnMapTags: _ => _ as ProtectionCommunityMonitoringTags,
       ...filters,
     })
@@ -154,7 +154,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_pss = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_pss').id,
-      fnMap: mapProtection_pss,
+      fnMap: Protection_pss.map,
       ...filters,
     })
   }
@@ -162,7 +162,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_groupSession = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_groupSession').id,
-      fnMap: mapProtection_groupSession,
+      fnMap: Protection_groupSession.map,
       ...filters,
     })
   }
@@ -170,7 +170,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_gbv = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_gbv').id,
-      fnMap: mapProtection_gbv,
+      fnMap: Protection_gbv.map,
       ...filters,
     })
   }

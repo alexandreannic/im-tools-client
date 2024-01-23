@@ -24,3 +24,4 @@ export type NumberKeys<T> = {
   [K in keyof T]: T[K] extends number | undefined ? K : never;
 }[keyof T]
 
+export type ArrayValues<T extends ReadonlyArray<string>> = T[keyof T]

@@ -145,6 +145,24 @@ export class Kobo {
       tags: fnMapTags(k.tags) ?? {},
     }
   }
+
+  static readonly extraxtAnswerMetaData = (
+    k: KoboAnswerMetaData,
+    fnMapTags: (x: any) => any = _ => _
+  ): KoboAnswer<any, KoboBaseTags> => {
+    return {
+      start: k.start,
+      end: k.end,
+      submissionTime: k.submissionTime,
+      version: k.version,
+      id: k.id,
+      validationStatus: k.validationStatus,
+      validatedBy: k.validatedBy,
+      lastValidatedTimestamp: k.lastValidatedTimestamp,
+      geolocation: k.geolocation,
+      tags: fnMapTags(k.tags) ?? {},
+    }
+  }
 }
 
 export interface ApiKoboForm {

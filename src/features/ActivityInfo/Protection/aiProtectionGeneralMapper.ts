@@ -2,16 +2,16 @@ import {AiProtectionGeneralType} from '@/features/ActivityInfo/Protection/aiProt
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {fnSwitch, PromiseReturn} from '@alexandreannic/ts-utils'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {Protection_groupSession} from '@/core/generatedKoboInterface/Protection_groupSession/Protection_groupSession'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {DrcProject} from '@/core/type/drc'
-import {enrichProtHHS_2_1} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {enrichProtHHS_2_1} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {Bn_ReOptions} from '@/core/generatedKoboInterface/Bn_Re/Bn_ReOptions'
 import {AiOblast} from '@/core/uaLocation/aiOblasts'
 import {AiRaions} from '@/core/uaLocation/aiRaions'
 import {AiHromadas} from '@/core/uaLocation/aiHromadas'
-import Gender = Person.Gender
 import {Person} from '@/core/type/person'
+import Gender = Person.Gender
+import {Protection_groupSession} from '@/core/generatedKoboInterface/Protection_groupSession'
 
 const disaggregatePersons = (persons: Person.Person[]) => {
   const personsDefined = persons.filter(_ => !!_.gender && !!_.age)
@@ -33,7 +33,7 @@ export interface AiLocation {
   Hromada: AiHromadas
 }
 
-export const getAiLocation = (d: Pick<Protection_groupSession, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>): AiLocation => {
+export const getAiLocation = (d: Pick<Protection_groupSession.T, 'ben_det_oblast' | 'ben_det_hromada' | 'ben_det_raion'>): AiLocation => {
   const oblast = OblastIndex.byKoboName(d.ben_det_oblast!).name
   const raion = AILocationHelper.findRaion(oblast, Bn_ReOptions.ben_det_raion[d.ben_det_raion as keyof typeof Bn_ReOptions.ben_det_raion] ?? d.ben_det_raion)!
   const hromada = AILocationHelper.findHromada(oblast, raion?.en, Bn_ReOptions.ben_det_hromada[d.ben_det_hromada as keyof typeof Bn_ReOptions.ben_det_hromada] ?? d.ben_det_hromada)
@@ -54,8 +54,8 @@ export class ActivityInfoProtectionMapper {
         data.push({
           answer: d,
           Oblast: AILocationHelper.findOblast(OblastIndex.byIso(d.where_are_you_current_living_oblast).name)!,
-          Raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)._5w as any,
-          Hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada)._5w as any,
+          Raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)?._5w as any,
+          Hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada)?._5w as any,
           ...disaggregatePersons([ind]),
           'Reporting Month': reportingMonth,
           'Plan Code': fnSwitch(d.tags?.projects?.[0]!, AiProtectionGeneralType.planCode, () => undefined)!,

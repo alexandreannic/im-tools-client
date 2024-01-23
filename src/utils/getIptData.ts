@@ -1,7 +1,7 @@
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 
-import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ProtHHS2Enrich} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import Gender = Person.Gender
 import {Person} from '@/core/type/person'
 

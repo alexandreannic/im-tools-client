@@ -12,7 +12,7 @@ import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {ChartHelperOld, makeChartData} from '@/shared/chart/chartHelperOld'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Currency} from '@/features/Mpca/Dashboard/MpcaDashboard'
-import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
+import {DashboardFilterLabel} from '@/shared/DashboardLayout/DashboardFilterLabel'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
@@ -24,11 +24,11 @@ import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Shelter_NTAOptions} from '@/core/generatedKoboInterface/Shelter_NTA/Shelter_NTAOptions'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {Person} from '@/core/type/person'
 import {Period, PeriodHelper} from '@/core/type/period'
@@ -124,7 +124,7 @@ export const ShelterDashboard = () => {
 
   return (
     <Page loading={ctx.data.loading} width="lg">
-      <FilterLayout
+      <DataFilterLayout
         sx={{mb: 1}}
         filters={filters}
         setFilters={setFilters}
