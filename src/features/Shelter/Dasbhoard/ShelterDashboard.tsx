@@ -68,7 +68,7 @@ export const ShelterDashboard = () => {
       project: {
         icon: drcMaterialIcons.project,
         label: m.project,
-        getValue: _ => _.office,
+        getValue: _ => _.ta?.tags?.project,
         getOptions: () => [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
       },
       validationStatus: {
