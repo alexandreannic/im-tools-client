@@ -358,13 +358,13 @@ export const CfmTable = ({}: any) => {
               render: _ => _.oblast,
             },
             {
-              type: 'string',
+              type: 'select_one',
               head: m.raion,
               id: 'raion',
               render: _ => ctx.schemaExternal.translate.choice('ben_det_raion', _.ben_det_raion),
             },
             {
-              type: 'string',
+              type: 'select_one',
               head: m.hromada,
               id: 'hromada',
               render: _ => ctx.schemaExternal.translate.choice('ben_det_hromada', _.ben_det_hromada),
