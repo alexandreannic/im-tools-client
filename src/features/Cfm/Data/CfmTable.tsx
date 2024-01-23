@@ -377,7 +377,7 @@ export const CfmTable = ({}: any) => {
             },
             {
               id: 'actions',
-              width: 95,
+              width: 115,
               align: 'center',
               stickyEnd: true,
               render: row => (
@@ -389,6 +389,19 @@ export const CfmTable = ({}: any) => {
                         href={api.koboApi.getEditUrl({formId: row.formId, answerId: row.id})}
                         target="_blank"
                         children="edit"
+                      />
+                      <TableIconBtn
+                        tooltip={m.archive}
+                        onClick={() => {
+                          ctx.updateTag.call({
+                            formId: row.formId,
+                            answerId: row.id,
+                            key: 'archivedBy',
+                            value: session.email
+                          })
+                        }}
+                        target="_blank"
+                        children="archive"
                       />
                       <Modal
                         loading={ctx.asyncRemove.loading[cfmMakeEditRequestKey(row.formId, row.id)]}

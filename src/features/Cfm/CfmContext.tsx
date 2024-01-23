@@ -221,11 +221,12 @@ export const CfmProvider = ({
     //   key: 'deletedAt',
     //   value: new Date(),
     // })
+    if (!session.email) throw new Error(`Cannot delete.`)
     await updateTag.call({
       formId,
       answerId,
       key: 'deletedBy',
-      value: session.email ?? 'unknown',
+      value: session.email,
     })
     // ])
   }, {

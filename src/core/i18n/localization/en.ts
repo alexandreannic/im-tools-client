@@ -183,6 +183,7 @@ export const en = Object.freeze({
     householdStatus: 'Household Status',
     individuals: 'Individuals',
     submissions: 'Submissions',
+    archive: 'Archive',
     householdSize: 'Household size',
     hhSize: 'HH size',
     dashboard: 'Dashboard',

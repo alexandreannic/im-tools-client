@@ -40,6 +40,7 @@ export interface KoboMealCfmTag extends KoboBaseTags {
   /* @deprecated FIXME bug cannot update deletedAt deletedBy in the same time */
   deletedAt?: Date
   deletedBy?: string
+  archivedBy?: string
   gca?: KoboMealCfmArea
   office?: DrcOffice
   program?: CfmDataProgram
