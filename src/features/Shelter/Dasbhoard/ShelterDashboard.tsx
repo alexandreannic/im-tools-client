@@ -32,6 +32,7 @@ import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {Person} from '@/core/type/person'
 import {Period, PeriodHelper} from '@/core/type/period'
+import {AgeGroupTable} from '@/shared/AgeGroupTable'
 
 const today = new Date()
 
@@ -182,7 +183,6 @@ export const _ShelterDashboard = ({
   computed: NonNullable<UseShelterComputedData>
 }) => {
   const {m, formatLargeNumber} = useI18n()
-  const [tableType, setTableType] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', {storageKey: 'shelter-dashboard-tableType'})
   const {conf} = useAppSettings()
 
   return (
@@ -199,38 +199,11 @@ export const _ShelterDashboard = ({
             {formatLargeNumber(computed.persons.length / data.length, {maximumFractionDigits: 2})}
           </SlideWidget>
         </Div>
-        <Lazy deps={[data, tableType]} fn={() => {
-          const gb = Person.groupByGenderAndGroup(Person.getAgeGroup(tableType))(computed.persons)
-          return Enum.entries(gb).map(([k, v]) => ({ageGroup: k, ...v}))
-        }}>
-          {_ =>
-            <Panel title={m.ageGroup}>
-              <PanelBody>
-                <Sheet
-                  id="shelter-dashboard-pop"
-                  className="ip-border"
-                  hidePagination
-                  header={
-                    <Box sx={{with: '100%', display: 'flex'}}>
-                      <ScRadioGroup value={tableType} onChange={setTableType} dense inline sx={{mr: 1}}>
-                        {Person.ageGroups.map(_ =>
-                          <ScRadioGroupItem key={_} value={_} title={m._ageGroup[_]} hideRadio/>
-                        )}
-                      </ScRadioGroup>
-                    </Box>
-                  }
-                  data={_}
-                  columns={[
-                    {width: 0, id: 'Group', head: m.ageGroup, type: 'select_one', render: _ => _.ageGroup},
-                    {width: 0, id: 'Male', head: m.male, type: 'number', renderValue: _ => _.Male, render: _ => formatLargeNumber(_.Male)},
-                    {width: 0, id: 'Female', head: m.female, type: 'number', renderValue: _ => _.Female, render: _ => formatLargeNumber(_.Female)},
-                    {width: 0, id: 'Other', head: m.other, type: 'number', renderValue: _ => _.Other ?? 0, render: _ => formatLargeNumber(_.Other ?? 0)},
-                  ]}
-                />
-              </PanelBody>
-            </Panel>
-          }
-        </Lazy>
+        <Panel title={m.ageGroup}>
+          <PanelBody>
+            <AgeGroupTable tableId="shelter-dashboard-ag" persons={computed.persons}/>
+          </PanelBody>
+        </Panel>
         <SlidePanel>
           <ChartPieWidgetBy
             title={m.vulnerabilities}

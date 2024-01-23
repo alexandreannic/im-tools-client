@@ -22,7 +22,7 @@ import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/se
 import {DashboardFilterLabel} from '@/shared/DashboardLayout/DashboardFilterLabel'
 import {drcMaterialIcons, DrcOffice, DrcProjectHelper} from '@/core/type/drc'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {Panel} from '@/shared/Panel'
+import {Panel, PanelBody} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
@@ -38,6 +38,7 @@ import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDedu
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
+import {AgeGroupTable} from '@/shared/AgeGroupTable'
 
 export const today = new Date()
 
@@ -211,10 +212,8 @@ export const _MPCADashboard = ({
   data: Seq<MpcaEntity>
   computed: NonNullable<UseBNREComputed>
 }) => {
-  const ctx = useMpcaContext()
   const {session} = useSession()
   const {m, formatDate, formatLargeNumber} = useI18n()
-  const [tableAgeGroup, setTableAgeGroup] = usePersistentState<typeof Person.ageGroups[0]>('ECHO', {storageKey: 'mpca-dashboard-ageGroup'})
 
   const totalAmount = useMemo(() => data.sum(_ => getAmount(_) ?? 0), [data, getAmount])
 
@@ -289,34 +288,11 @@ export const _MPCADashboard = ({
             {/*    }}*/}
             {/*  />*/}
             {/*</SlidePanel>*/}
-            <SlidePanel title={m.disaggregation}>
-              <Lazy deps={[computed.persons, tableAgeGroup]} fn={() => {
-                const gb = Person.groupByGenderAndGroup(Person.getAgeGroup(tableAgeGroup))(computed.persons)
-                return Enum.entries(gb).map(([k, v]) => ({ageGroup: k, ...v}))
-              }}>
-                {_ =>
-                  <Sheet
-                    id="mpca-dashboard-pop"
-                    className="ip-border"
-                    hidePagination
-                    header={
-                      <ScRadioGroup value={tableAgeGroup} onChange={setTableAgeGroup} dense inline>
-                        {Person.ageGroups.map(_ =>
-                          <ScRadioGroupItem key={_} value={_} title={m._ageGroup[_]} hideRadio/>
-                        )}
-                      </ScRadioGroup>
-                    }
-                    data={_}
-                    columns={[
-                      {width: 0, id: 'Group', head: m.ageGroup, type: 'select_one', render: _ => _.ageGroup},
-                      {width: 0, id: 'Male', head: m.male, type: 'number', renderValue: _ => _.Male, render: _ => formatLargeNumber(_.Male)},
-                      {width: 0, id: 'Female', head: m.female, type: 'number', renderValue: _ => _.Female, render: _ => formatLargeNumber(_.Female)},
-                      {width: 0, id: 'Other', head: m.other, type: 'number', renderValue: _ => _.Other ?? 0, render: _ => formatLargeNumber(_.Other ?? 0)},
-                    ]}
-                  />
-                }
-              </Lazy>
-            </SlidePanel>
+            <Panel title={m.disaggregation}>
+              <PanelBody>
+                <AgeGroupTable tableId="mpca-dashboard-ag" persons={computed.persons}/>
+              </PanelBody>
+            </Panel>
           </Div>
           {/*// POFU data Cghernihiv donestk lvivi zapo*/}
           <Div column>
