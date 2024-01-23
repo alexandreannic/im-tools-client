@@ -50,11 +50,17 @@ export class AILocationHelper {
   }
 
   static readonly findHromadaByIso = (iso: keyof typeof hromadas) => {
-    return hromadas[iso]
+    if (!iso) return
+    const res = hromadas[iso]
+    if (!res) throw new Error(`No hromada for ${iso}.`)
+    return res
   }
 
-  static readonly findRaionByIso = (iso: keyof typeof raions) => {
-    return raions[iso]
+  static readonly findRaionByIso = (iso?: keyof typeof raions) => {
+    if (!iso) return
+    const res = raions[iso]
+    if (!res) throw new Error(`No raion for ${iso}.`)
+    return res
   }
 
   static readonly findHromada = (oblastName: string, raionName: string, hromadaName?: string) => {

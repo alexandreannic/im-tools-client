@@ -1,7 +1,7 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React, {useMemo, useState} from 'react'
-import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
+import {useI18n} from '@/core/i18n'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartBar} from '@/shared/chart/ChartBar'
@@ -14,7 +14,7 @@ import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {ChartHelper} from '@/shared/chart/chartHelper'
 import {Person} from '@/core/type/person'
 
-export const DashboardProtHHS2Violence = ({
+export const ProtectionDashboardMonitoViolence = ({
   data,
   computed,
 }: DashboardPageProps) => {

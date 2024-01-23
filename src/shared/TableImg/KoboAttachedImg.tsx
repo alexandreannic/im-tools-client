@@ -1,5 +1,5 @@
 import {AppConfig, appConfig} from '@/conf/AppConfig'
-import {kobo} from '@/core/KoboIndex'
+import {kobo} from '@/core/koboForms/KoboIndex'
 import {TableImg} from '@/shared/TableImg/TableImg'
 import {KoboAttachment} from '@/core/sdk/server/kobo/Kobo'
 import {useMemo} from 'react'

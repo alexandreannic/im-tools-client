@@ -6,8 +6,6 @@ import {ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {Person} from '@/core/type/person'
 
 export interface ProtHHS2Person extends Person.Person {
-  // age: Protection_Hhs2_1['hh_age_1']
-  // gender: Protection_Hhs2_1['hh_sex_1']
   lackDoc: Protection_Hhs2_1['does_1_lack_doc']
   isIdpRegistered: Protection_Hhs2_1['is_member_1_registered']
 }

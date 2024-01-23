@@ -1,7 +1,7 @@
 import {ApiClient} from '../ApiClient'
 import {UUID} from '@/core/type/generic'
 import {Kobo, KoboAnswer, KoboAnswerId, KoboBaseTags, KoboId} from '@/core/sdk/server/kobo/Kobo'
-import {KoboIndex} from '@/core/KoboIndex'
+import {KoboIndex} from '@/core/koboForms/KoboIndex'
 import {AnswersFilters} from '@/core/sdk/server/kobo/KoboApiSdk'
 import {endOfDay, startOfDay} from 'date-fns'
 import {map} from '@alexandreannic/ts-utils'
@@ -53,8 +53,8 @@ export class KoboAnswerSdk {
   private static mapFilters = (_: AnswersFilters): AnswersFilters => {
     return {
       ..._,
-      start: map(_.start, startOfDay),
-      end: map(_.end, endOfDay),
+      start: map(_.start ?? undefined, startOfDay),
+      end: map(_.end ?? undefined, endOfDay),
     }
   }
 

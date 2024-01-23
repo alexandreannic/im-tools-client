@@ -1,14 +1,14 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
-import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
+import {useI18n} from '@/core/i18n'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarMultipleByKey} from '@/shared/chart/ChartBarMultipleByKey'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
-export const DashboardProtHHS2Disability = ({
+export const ProtectionDashboardMonitoDisability = ({
   data,
   computed,
 }: DashboardPageProps) => {

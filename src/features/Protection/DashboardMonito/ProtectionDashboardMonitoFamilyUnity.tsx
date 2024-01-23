@@ -1,7 +1,7 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React, {useMemo, useState} from 'react'
-import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
+import {useI18n} from '@/core/i18n'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
@@ -22,7 +22,7 @@ type Filters = Pick<Record<keyof typeof Protection_Hhs2_1Options['are_you_separa
   'other_relative'
 >
 
-export const DashboardProtHHS2FamilyUnity = ({
+export const ProtectionDashboardMonitoFamilyUnity = ({
   data,
   computed,
 }: DashboardPageProps) => {

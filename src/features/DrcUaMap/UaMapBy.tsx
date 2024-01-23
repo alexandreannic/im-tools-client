@@ -5,7 +5,7 @@ import {Seq} from '@alexandreannic/ts-utils'
 import {BoxProps} from '@mui/material'
 import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
 
-export const KoboUkraineMap = <D extends Record<string, any>>({
+export const UaMapBy = <D extends Record<string, any>>({
   data,
   getOblast,
   value,

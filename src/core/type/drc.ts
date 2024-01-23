@@ -1,4 +1,5 @@
 import {Enum} from '@alexandreannic/ts-utils'
+import {appFeaturesIndex} from '@/features/appFeatureId'
 
 export enum DrcOffice {
   Kyiv = 'Kyiv',
@@ -358,6 +359,7 @@ export enum DrcJob {
 }
 
 export const drcMaterialIcons = {
+  koboForm: appFeaturesIndex.kobo_database.materialIcons,
   project: 'inventory_2',
   donor: 'handshake',
   disability: 'assist_walker',

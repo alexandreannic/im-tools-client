@@ -1,15 +1,15 @@
 import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
-import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
-import {KoboUkraineMap} from '../shared/KoboUkraineMap'
+import {useI18n} from '@/core/i18n'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
+import {UaMapBy} from '../../DrcUaMap/UaMapBy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 
-export const DashboardProtHHS2Safety = ({
+export const ProtectionDashboardMonitoSafety = ({
   data,
   computed,
 }: DashboardPageProps) => {
@@ -27,7 +27,7 @@ export const DashboardProtHHS2Safety = ({
             compare={{before: computed.lastMonth}}
             data={data}
           />
-          <KoboUkraineMap
+          <UaMapBy
             sx={{mx: 2}}
             data={data}
             getOblast={_ => _.where_are_you_current_living_oblast as any}
@@ -69,7 +69,7 @@ export const DashboardProtHHS2Safety = ({
             compare={{before: computed.lastMonth}}
             data={data}
           />
-          <KoboUkraineMap
+          <UaMapBy
             sx={{mx: 2}}
             data={data}
             getOblast={_ => _.where_are_you_current_living_oblast as any}

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
-import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
+import {UaMapBy} from '../../DrcUaMap/UaMapBy'
 import {Lazy} from '@/shared/Lazy'
 import {format} from 'date-fns'
 import {ChartLine} from '@/shared/chart/ChartLine'
@@ -50,7 +50,7 @@ export const SafetyIncidentDashboardBody = ({
           </ScRadioGroup>
           {fnSwitch(mapType, {
             'incident': (
-              <KoboUkraineMap
+              <UaMapBy
                 sx={{mx: 3}}
                 fillBaseOn="value"
                 data={data}
@@ -60,7 +60,7 @@ export const SafetyIncidentDashboardBody = ({
               />
             ),
             'attack': (
-              <KoboUkraineMap
+              <UaMapBy
                 sx={{mx: 3}}
                 fillBaseOn="value"
                 data={data}

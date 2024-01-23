@@ -3,7 +3,7 @@ import {ChartBar} from '@/shared/chart/ChartBar'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import React, {useState} from 'react'
 import {useI18n} from '@/core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Box, Icon, useTheme} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
@@ -34,7 +34,7 @@ const css = makeSx({
     '& > tr': {}
   },
 })
-export const DashboardProtHHS2Sample = ({
+export const ProtectionDashboardMonitoSample = ({
   data,
   computed
 }: DashboardPageProps) => {

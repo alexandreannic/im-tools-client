@@ -1,4 +1,4 @@
-import {KoboFormName, KoboIndex} from '@/core/KoboIndex'
+import {KoboFormName, KoboIndex} from '@/core/koboForms/KoboIndex'
 import {Tooltip} from '@mui/material'
 import {NavLink} from 'react-router-dom'
 import {SidebarItem} from '@/shared/Layout/Sidebar'

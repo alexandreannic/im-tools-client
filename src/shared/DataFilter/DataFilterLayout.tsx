@@ -1,13 +1,13 @@
 import {themeLightScrollbar} from '@/core/theme'
 import React, {Dispatch, ReactNode, SetStateAction} from 'react'
 import {Box, BoxProps} from '@mui/material'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {Enum} from '@alexandreannic/ts-utils'
 import {DebouncedInput} from '@/shared/DebouncedInput'
-import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
+import {DashboardFilterOptions} from '@/shared/DashboardLayout/DashboardFilterOptions'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {useI18n} from '@/core/i18n'
-import {FilterLayoutPopup} from '@/features/Dashboard/helper/FilterLayoutPopup'
+import {DataFilterLayoutPopup} from '@/shared/DataFilter/DataFilterLayoutPopup'
 
 export interface FilterLayoutProps extends Pick<BoxProps, 'sx'> {
   onClear?: () => void
@@ -18,7 +18,7 @@ export interface FilterLayoutProps extends Pick<BoxProps, 'sx'> {
   shape: Record<string, DataFilter.Shape<any>>
 }
 
-export const FilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & {
+export const DataFilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & {
   hidePopup?: boolean
 }) => {
   const {m} = useI18n()
@@ -80,7 +80,7 @@ export const FilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & {
         mt: 1.25,
       }}>
         {!hidePopup && (
-          <FilterLayoutPopup {...props} onConfirm={setFilters} filters={filters} onClear={onClear}/>
+          <DataFilterLayoutPopup {...props} onConfirm={setFilters} filters={filters} onClear={onClear}/>
         )}
         {onClear && (
           <IpIconBtn children="clear" tooltip={m.clearFilter} onClick={onClear}/>

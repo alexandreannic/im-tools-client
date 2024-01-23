@@ -2,7 +2,7 @@ import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
@@ -14,7 +14,7 @@ import {Divider} from '@mui/material'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
 import { Obj } from '@alexandreannic/ts-utils'
 
-export const DashboardProtHHS2Livelihood = ({
+export const ProtectionDashboardMonitoLivelihood = ({
   data,
   computed,
 }: DashboardPageProps) => {
@@ -70,6 +70,7 @@ export const DashboardProtHHS2Livelihood = ({
         <Div column sx={{flex: 1}}>
           <SlidePanel title={m.protHHS2.hhOutOfWorkAndSeekingEmployment}>
             <ChartLineByKey
+              getDate={_ => _.submissionTime}
               question="including_yourself_are_there_members_of_your_household_who_are_out_of_work_and_seeking_employment"
               data={data}
               displayedValues={['yes']}

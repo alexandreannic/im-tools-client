@@ -1,5 +1,5 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {KoboIndex} from '@/core/KoboIndex'
+import {KoboIndex} from '@/core/koboForms/KoboIndex'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'

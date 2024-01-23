@@ -1,11 +1,11 @@
-import {DashboardPageProps} from './DashboardProtHHS2'
-import {useI18n} from '../../../core/i18n'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
+import {useI18n} from '@/core/i18n'
 import {useTheme} from '@mui/material'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 
-export const DashboardProtHHS2PN = ({
+export const ProtectionDashboardMonitoPN = ({
   data,
   computed,
 }: DashboardPageProps) => {

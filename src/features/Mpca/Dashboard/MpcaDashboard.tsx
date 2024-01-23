@@ -19,20 +19,20 @@ import {ChartLine} from '@/shared/chart/ChartLine'
 import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/server/mpca/MpcaEntity'
-import {DashboardFilterLabel} from '@/features/Dashboard/shared/DashboardFilterLabel'
+import {DashboardFilterLabel} from '@/shared/DashboardLayout/DashboardFilterLabel'
 import {drcMaterialIcons, DrcOffice, DrcProjectHelper} from '@/core/type/drc'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Panel} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {MpcaDashboardDeduplication} from '@/features/Mpca/Dashboard/MpcaDashboardDeduplication'
-import {koboFormTranslation, KoboIndex} from '@/core/KoboIndex'
+import {koboFormTranslation, KoboIndex} from '@/core/koboForms/KoboIndex'
 import {KoboFormSdk} from '@/core/sdk/server/kobo/KoboFormSdk'
 import {groupBy} from '@/utils/groupBy'
 import {MpcaDuplicatedCheckPanel} from '@/features/Mpca/Dashboard/MpcaDuplicatedCheck'
 import {useSession} from '@/core/Session/SessionContext'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
+import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
@@ -150,7 +150,7 @@ export const MpcaDashboard = () => {
 
   return (
     <Page width="lg" loading={ctx.fetcherData.loading}>
-      <FilterLayout
+      <DataFilterLayout
         filters={filters}
         shape={filterShape}
         setFilters={setFilters}

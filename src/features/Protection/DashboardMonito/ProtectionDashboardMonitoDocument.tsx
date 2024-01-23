@@ -1,8 +1,8 @@
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {ChartBar} from '@/shared/chart/ChartBar'
 import React, {useMemo, useState} from 'react'
-import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
+import {useI18n} from '@/core/i18n'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Box, Icon} from '@mui/material'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
@@ -11,7 +11,7 @@ import {chain} from '@/utils/utils'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
-import {ProtHHS2Enrich, ProtHHS2Person} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ProtHHS2Enrich, ProtHHS2Person} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
@@ -27,7 +27,7 @@ export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) 
     )
 }
 
-export const DashboardProtHHS2Document = ({
+export const ProtectionDashboardMonitoDocument = ({
   data,
   computed,
 }: DashboardPageProps) => {

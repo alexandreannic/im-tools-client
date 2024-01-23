@@ -19,6 +19,7 @@ export type UseFetcher<F extends Func<Promise<FetcherResult<F>>>, E = any> = {
   loading: boolean,
   error?: E
   fetch: Fetch<F>,
+  callIndex: number
   clearCache: () => void,
 };
 
@@ -38,6 +39,7 @@ export const useFetcher = <F extends Func<Promise<any>>, E = any>(
   const [entity, setEntity] = useState<FetcherResult<F> | undefined>(initialValue)
   const [error, setError] = useState<E | undefined>()
   const [loading, setLoading] = useState<boolean>(false)
+  const [callIndex, setCallIndex] = useState(0)
   const fetch$ = useRef<Promise<FetcherResult<F>>>()
 
   const fetch = ({force = true, clean = true}: FetchParams = {}, ...args: any[]): Promise<FetcherResult<F>> => {
@@ -59,11 +61,13 @@ export const useFetcher = <F extends Func<Promise<any>>, E = any>(
     fetch$.current = fetcher(...args)
     fetch$.current
       .then((x: FetcherResult<F>) => {
+        setCallIndex(_ => _ + 1)
         setLoading(false)
         setEntity(x)
         fetch$.current = undefined
       })
       .catch((e) => {
+        setCallIndex(_ => _ + 1)
         setLoading(false)
         fetch$.current = undefined
         setError(mapError(e))
@@ -85,6 +89,7 @@ export const useFetcher = <F extends Func<Promise<any>>, E = any>(
     set: setEntity,
     loading,
     error,
+    callIndex,
     // TODO(Alex) not sure the error is legitimate
     fetch: fetch as any,
     clearCache

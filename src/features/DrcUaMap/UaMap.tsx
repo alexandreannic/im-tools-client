@@ -1,10 +1,10 @@
 import {Enum, fnSwitch} from '@alexandreannic/ts-utils'
 import React, {useEffect} from 'react'
 import {Box, GlobalStyles, Icon, useTheme} from '@mui/material'
-import {useAppSettings} from '../../core/context/ConfigContext'
+import {useAppSettings} from '@/core/context/ConfigContext'
 import {Theme} from '@mui/material/styles'
 import {Txt} from 'mui-extension'
-import {OblastIndex} from '../../shared/UkraineMap/oblastIndex'
+import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {Panel} from '@/shared/Panel'
 import {getGoogle} from '@/core/google'
 
@@ -176,7 +176,7 @@ const drawOfficeMarkers = (selector: string, theme: Theme) => {
 
 }
 
-export const DrcUaMap = () => {
+export const UaMap = () => {
   const theme = useTheme()
   const {conf} = useAppSettings()
   useEffect(() => {

@@ -4,13 +4,13 @@ import {chain} from '@/utils/utils'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
 import {subDays} from 'date-fns'
-import {ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
+import {ProtHHS2Enrich} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
 import {Person} from '@/core/type/person'
 
-export type UseProtHHS2Data = ReturnType<typeof useProtHhs2Data>
+export type UseProtHHS2Data = ReturnType<typeof useProtectionDashboardMonitoData>
 
-export const useProtHhs2Data = ({
+export const useProtectionDashboardMonitoData = ({
   data,
 }: {
   data?: Seq<ProtHHS2Enrich>

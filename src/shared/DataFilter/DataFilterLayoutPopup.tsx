@@ -2,14 +2,14 @@ import {Box, Icon, Popover} from '@mui/material'
 import React, {useEffect, useState} from 'react'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {Enum} from '@alexandreannic/ts-utils'
-import {FilterLayoutProps} from '@/features/Dashboard/helper/FilterLayout'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {FilterLayoutProps} from '@/shared/DataFilter/DataFilterLayout'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {Txt} from 'mui-extension'
 import {IpBtn} from '@/shared/Btn'
 import {useI18n} from '@/core/i18n'
 
-export const FilterLayoutPopup = ({
+export const DataFilterLayoutPopup = ({
   before,
   after,
   sx,

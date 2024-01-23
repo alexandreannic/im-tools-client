@@ -1,7 +1,7 @@
 import {Div, SlidePanel, SlidePanelTitle} from '@/shared/PdfLayout/PdfSlide'
 import React, {useState} from 'react'
-import {useI18n} from '../../../core/i18n'
-import {DashboardPageProps} from './DashboardProtHHS2'
+import {useI18n} from '@/core/i18n'
+import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Box, Divider, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
@@ -17,7 +17,7 @@ import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
 
 // do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area
 // what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members
-export const DashboardProtHHS2Displacement = ({
+export const ProtectionDashboardMonitoDisplacement = ({
   data,
   computed,
 }: DashboardPageProps) => {

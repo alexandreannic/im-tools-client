@@ -8,9 +8,9 @@ import {DebouncedInput} from '@/shared/DebouncedInput'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {Lazy} from '@/shared/Lazy'
-import {KoboUkraineMap} from '../../Dashboard/shared/KoboUkraineMap'
+import {UaMapBy} from '../../DrcUaMap/UaMapBy'
 import {ChartPieWidget} from '@/shared/chart/ChartPieWidget'
 import {IpBtn} from '@/shared/Btn'
 import {CommentsPanel} from '@/shared/CommentsPanel'
@@ -19,7 +19,7 @@ import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {NavLink} from 'react-router-dom'
 import {Meal_VisitMonitoringOptions} from '@/core/generatedKoboInterface/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
 import {Meal_VisitMonitoring} from '@/core/generatedKoboInterface/Meal_VisitMonitoring/Meal_VisitMonitoring'
-import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
 import {Page} from '@/shared/Page'
@@ -117,7 +117,7 @@ export const MealVisitDashboard = () => {
       width="full"
       loading={ctx.fetcherAnswers.loading}
     >
-      <FilterLayout
+      <DataFilterLayout
         shape={filterShape}
         filters={optionFilter}
         setFilters={setOptionFilters}
@@ -142,7 +142,7 @@ export const MealVisitDashboard = () => {
           <Div>
             <Div column>
               <SlidePanel>
-                <KoboUkraineMap
+                <UaMapBy
                   fillBaseOn="value"
                   data={data}
                   getOblast={_ => mapOblast[_.md_det_oblast!]}

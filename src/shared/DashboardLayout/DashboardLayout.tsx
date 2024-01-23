@@ -1,13 +1,12 @@
 import React, {ReactNode, useEffect, useState} from 'react'
 import {Box, Collapse, LinearProgress, Typography} from '@mui/material'
 import {combineSx} from '@/core/theme'
-import {DashboardProvider} from '../DashboardContext'
 import {makeSx, Txt} from 'mui-extension'
 import {IpIconBtn} from '@/shared/IconBtn'
 import {useSetState} from '@alexandreannic/react-hooks-lib'
 import {Layout} from '@/shared/Layout'
 import {Sidebar, SidebarItem} from '@/shared/Layout/Sidebar'
-import {DashboardHeader, dashboardHeaderId} from '@/features/Dashboard/shared/DashboardHeader'
+import {DashboardHeader, dashboardHeaderId} from '@/shared/DashboardLayout/DashboardHeader'
 import {Page} from '@/shared/Page'
 import {map} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
@@ -93,7 +92,7 @@ export const DashboardLayout = ({
     })
   }, [sections])
   return (
-    <DashboardProvider>
+    <>
       {loading && (
         <LinearProgress sx={{position: 'fixed', top: 0, right: 0, left: 0}}/>
       )}
@@ -146,6 +145,6 @@ export const DashboardLayout = ({
           </Txt>
         </Page>
       </Layout>
-    </DashboardProvider>
+    </>
   )
 }

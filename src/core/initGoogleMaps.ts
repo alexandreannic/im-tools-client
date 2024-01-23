@@ -1,5 +1,8 @@
 import {sleep} from '@alexandreannic/ts-utils'
 
+/**
+ * Was used in old ProtMonito dashboard that had kobo geolocalisation
+ */
 export const initGoogleMaps = async (mapId: string, color: string, bubbles: {loc: [number, number], size: number | undefined}[]) => {
   // return;
   let trys = 0

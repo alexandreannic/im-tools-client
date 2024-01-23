@@ -1,30 +1,30 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
-import {useProtHhs2Data} from './useProtHhs2Data'
-import {DashboardProtHHS2Sample} from './DashboardProtHHS2Sample'
-import {DashboardLayout} from '../shared/DashboardLayout'
+import {useProtectionDashboardMonitoData} from './useProtectionDashboardMonitoData'
+import {ProtectionDashboardMonitoSample} from './ProtectionDashboardMonitoSample'
+import {DashboardLayout} from '@/shared/DashboardLayout/DashboardLayout'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {DashboardProtHHS2Document} from './DashboardProtHHS2Document'
-import {DashboardProtHHS2Livelihood} from './DashboardProtHHS2Livelihood'
+import {ProtectionDashboardMonitoDocument} from './ProtectionDashboardMonitoDocument'
+import {ProtectionDashboardMonitoLivelihood} from './ProtectionDashboardMonitoLivelihood'
 import {Alert, Txt} from 'mui-extension'
-import {DashboardProtHHS2Housing} from './DashboardProtHHS2Housing'
-import {DashboardProtHHS2Displacement} from './DashboardProtHHS2Displacement'
-import {DashboardProtHHS2PN} from './DashboardProtHHS2PN'
+import {ProtectionDashboardMonitoHousing} from './ProtectionDashboardMonitoHousing'
+import {ProtectionDashboardMonitoDisplacement} from './ProtectionDashboardMonitoDisplacement'
+import {ProtectionDashboardMonitoPN} from './ProtectionDashboardMonitoPN'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
-import {DashboardProtHHS2FamilyUnity} from './DashboardProtHHS2FamilyUnity'
-import {DashboardProtHHS2Safety} from './DashboardProtHHS2Safety'
+import {ProtectionDashboardMonitoFamilyUnity} from './ProtectionDashboardMonitoFamilyUnity'
+import {ProtectionDashboardMonitoSafety} from './ProtectionDashboardMonitoSafety'
 import {DebouncedInput} from '@/shared/DebouncedInput'
-import {DashboardProtHHS2Violence} from './DashboardProtHHS2Violence'
-import {DashboardProtHHS2Disability} from '@/features/Dashboard/DashboardHHS2/DashboardProtHHS2Disability'
-import {KoboIndex} from '@/core/KoboIndex'
+import {ProtectionDashboardMonitoViolence} from './ProtectionDashboardMonitoViolence'
+import {ProtectionDashboardMonitoDisability} from '@/features/Protection/DashboardMonito/ProtectionDashboardMonitoDisability'
+import {KoboIndex} from '@/core/koboForms/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {DataFilter} from '@/features/Dashboard/helper/dashoardFilterInterface'
-import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Dashboard/DashboardHHS2/dashboardHelper'
-import {DashboardFilterOptions} from '@/features/Dashboard/shared/DashboardFilterOptions'
+import {DataFilter} from '@/shared/DataFilter/DataFilter'
+import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Protection/DashboardMonito/dashboardHelper'
+import {DashboardFilterOptions} from '@/shared/DashboardLayout/DashboardFilterOptions'
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
-import {FilterLayout} from '@/features/Dashboard/helper/FilterLayout'
+import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
@@ -37,10 +37,10 @@ export interface DashboardPageProps {
   periodFilter: Partial<Period>
   optionFilter: CustomFilterOptionFilters & DataFilter.Filter
   data: Seq<ProtHHS2Enrich>
-  computed: NonNullable<ReturnType<typeof useProtHhs2Data>>
+  computed: NonNullable<ReturnType<typeof useProtectionDashboardMonitoData>>
 }
 
-export const DashboardProtHHS2 = () => {
+export const ProtectionDashboardMonito = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
   const _period = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('protection_hhs2_1').id))
@@ -179,7 +179,7 @@ export const DashboardProtHHS2 = () => {
     })
   }, [database, optionFilter])
 
-  const computed = useProtHhs2Data({data: data})
+  const computed = useProtectionDashboardMonitoData({data: data})
 
   return (
     <DashboardLayout
@@ -187,7 +187,7 @@ export const DashboardProtHHS2 = () => {
       title={m.ukraine}
       subTitle={m.protectionMonitoringDashboard}
       header={
-        <FilterLayout
+        <DataFilterLayout
           hidePopup
           sx={{mb: 0}}
           onClear={() => {
@@ -252,16 +252,16 @@ export const DashboardProtHHS2 = () => {
           computed,
         }
         return [
-          {icon: 'bar_chart', name: 'sample', title: m.sample, component: () => <DashboardProtHHS2Sample {...panelProps}/>},
-          {icon: 'explore', name: 'displacement', title: m.displacement, component: () => <DashboardProtHHS2Displacement {...panelProps}/>},
-          {icon: 'family_restroom', name: 'family_unity', title: m.familyUnity, component: () => <DashboardProtHHS2FamilyUnity {...panelProps}/>},
-          {icon: 'home', name: 'housing', title: m.housing, component: () => <DashboardProtHHS2Housing {...panelProps}/>},
-          {icon: 'savings', name: 'livelihood', title: m.livelihoods, component: () => <DashboardProtHHS2Livelihood {...panelProps}/>},
-          {icon: 'fingerprint', name: 'document', title: m.protHHS2.registrationAndDocumention, component: () => <DashboardProtHHS2Document {...panelProps}/>},
-          {icon: 'rocket_launch', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <DashboardProtHHS2Safety {...panelProps}/>},
-          {icon: 'local_police', name: 'violence', title: m.protHHS2.protectionIncidents, component: () => <DashboardProtHHS2Violence {...panelProps}/>},
-          {icon: 'healing', name: 'disability', title: m.protHHS2.disabilityAndHealth, component: () => <DashboardProtHHS2Disability {...panelProps}/>},
-          {icon: 'traffic', name: 'priorityneeds', title: m.priorityNeeds, component: () => <DashboardProtHHS2PN {...panelProps}/>},
+          {icon: 'bar_chart', name: 'sample', title: m.sample, component: () => <ProtectionDashboardMonitoSample {...panelProps}/>},
+          {icon: 'explore', name: 'displacement', title: m.displacement, component: () => <ProtectionDashboardMonitoDisplacement {...panelProps}/>},
+          {icon: 'family_restroom', name: 'family_unity', title: m.familyUnity, component: () => <ProtectionDashboardMonitoFamilyUnity {...panelProps}/>},
+          {icon: 'home', name: 'housing', title: m.housing, component: () => <ProtectionDashboardMonitoHousing {...panelProps}/>},
+          {icon: 'savings', name: 'livelihood', title: m.livelihoods, component: () => <ProtectionDashboardMonitoLivelihood {...panelProps}/>},
+          {icon: 'fingerprint', name: 'document', title: m.protHHS2.registrationAndDocumention, component: () => <ProtectionDashboardMonitoDocument {...panelProps}/>},
+          {icon: 'rocket_launch', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <ProtectionDashboardMonitoSafety {...panelProps}/>},
+          {icon: 'local_police', name: 'violence', title: m.protHHS2.protectionIncidents, component: () => <ProtectionDashboardMonitoViolence {...panelProps}/>},
+          {icon: 'healing', name: 'disability', title: m.protHHS2.disabilityAndHealth, component: () => <ProtectionDashboardMonitoDisability {...panelProps}/>},
+          {icon: 'traffic', name: 'priorityneeds', title: m.priorityNeeds, component: () => <ProtectionDashboardMonitoPN {...panelProps}/>},
         ]
       })()}/>
   )
