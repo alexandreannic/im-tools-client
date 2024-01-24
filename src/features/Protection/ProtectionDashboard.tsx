@@ -70,9 +70,13 @@ export const ProtectionDashboard = () => {
                 label={m.count}
               />
             </Panel>
-            <Panel title={m.ageGroup}>
+            <Panel title={m.form}>
               <PanelBody>
-                <AgeGroupTable tableId="protection-dashboard" persons={data.flatFiltered}/>
+                <ChartBarSingleBy
+                  data={data.flatFiltered}
+                  by={_ => _.koboForm}
+                  label={koboFormTranslation}
+                />
               </PanelBody>
             </Panel>
             <Panel title={m.form}>
@@ -92,6 +96,11 @@ export const ProtectionDashboard = () => {
                     by={_ => _.project!}
                   />
                 )}
+              </PanelBody>
+            </Panel>
+            <Panel title={m.ageGroup}>
+              <PanelBody>
+                <AgeGroupTable tableId="protection-dashboard" persons={data.flatFiltered}/>
               </PanelBody>
             </Panel>
           </Div>
