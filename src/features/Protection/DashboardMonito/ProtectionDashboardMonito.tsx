@@ -72,8 +72,8 @@ export const ProtectionDashboardMonito = () => {
       ?.flatMap(_ => _[p] as any)
       .distinct(_ => _)
       .compact()
-      .sortByString(_ => _, 'a-z')
       .map((_: any) => ({value: _, label: (Protection_Hhs2_1Options[option] as any)[_]}))
+      .sortByString(_ => _.label ?? '', 'a-z')
   }
 
   const filterShape = useMemo(() => {

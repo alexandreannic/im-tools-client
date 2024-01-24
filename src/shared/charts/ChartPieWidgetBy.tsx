@@ -1,4 +1,4 @@
-import {ChartPieWidget, ChartPieIndicatorProps} from '@/shared/chart/ChartPieWidget'
+import {ChartPieWidget, ChartPieIndicatorProps} from '@/shared/charts/ChartPieWidget'
 import * as React from 'react'
 import {useMemo} from 'react'
 import {Seq} from '@alexandreannic/ts-utils'

@@ -1,5 +1,5 @@
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
+import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 
 import {ProtHHS2Enrich} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import Gender = Person.Gender

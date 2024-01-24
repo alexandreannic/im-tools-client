@@ -34,6 +34,9 @@ import {Protection_groupSession} from '@/core/generatedKoboInterface/Protection_
 import {Protection_gbv} from '@/core/generatedKoboInterface/Protection_gbv'
 
 
+export type KoboUnwrapAnserType<T extends keyof KoboTypedAnswerSdk> = Promise<Awaited<ReturnType<KoboTypedAnswerSdk[T]>>['data']>
+
+
 export class KoboTypedAnswerSdk {
 
   constructor(private client: ApiClient, private sdk = new KoboAnswerSdk(client)) {

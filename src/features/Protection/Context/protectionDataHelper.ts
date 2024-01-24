@@ -27,12 +27,12 @@ export class ProtectionDataHelper {
       date: d.date ?? d.submissionTime,
       koboForm: 'protection_pss',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
-      oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast)?.name,
+      oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast),
       raion: aiLoc.Raion,
       hromada: aiLoc.Hromada,
       project: [project],
       donor: [DrcProjectHelper.donorByProject[project!]],
-      persons: d.hh_char_hh_det?.map(KoboGeneralMapping.mapPersonWithStatus),
+      persons: d.hh_char_hh_det?.filter((_: any) => _.hh_char_hh_new_ben !== 'no').map(KoboGeneralMapping.mapPersonWithStatus),
     }
   }
 
@@ -44,7 +44,7 @@ export class ProtectionDataHelper {
       date: d.date ?? d.submissionTime,
       koboForm: 'protection_gbv',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
-      oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast)?.name,
+      oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast),
       raion: aiLoc.Raion,
       hromada: aiLoc.Hromada,
       project: [project],
@@ -61,12 +61,13 @@ export class ProtectionDataHelper {
       date: d.date ?? d.submissionTime,
       koboForm: 'protection_groupSession',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
-      oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast)?.name,
+      oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast),
       raion: aiLoc.Raion,
       hromada: aiLoc.Hromada,
       project: [project],
       donor: [DrcProjectHelper.donorByProject[project!]],
       persons: d.hh_char_hh_det?.map(KoboGeneralMapping.mapPerson),
+        // ?.filter((_: any) => _.hh_char_hh_new_ben !== 'no')
     }
   }
 
@@ -76,7 +77,7 @@ export class ProtectionDataHelper {
       date: d.submissionTime,
       koboForm: 'protection_hhs2_1',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
-      oblast: OblastIndex.byIso(d.where_are_you_current_living_oblast).name,
+      oblast: OblastIndex.byIso(d.where_are_you_current_living_oblast),
       raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)?._5w as any,
       hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada)?._5w as any,
       project: [...d.tags?.projects ?? [], DrcProject['UKR-000322 ECHO2']],

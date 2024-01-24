@@ -1,4 +1,4 @@
-import {ChartBarMultipleBy, ChartBarMultipleByProps} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartBarMultipleBy, ChartBarMultipleByProps} from '@/shared/charts/ChartBarMultipleBy'
 import {StringArrayKeys} from '@/core/type/generic'
 
 export const ChartBarMultipleByKey = <

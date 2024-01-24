@@ -39,7 +39,8 @@ export class AILocationHelper {
 
   static readonly findOblast = (name: string): AiOblast | undefined => AILocationHelper.findLocation(aiOblasts, name, 'Oblast')
 
-  static readonly findRaion = (oblastName: string, raionName: string): undefined | AILocation => {
+  static readonly findRaion = (oblastName: string, raionName?: string): undefined | AILocation => {
+    if (!raionName) return
     const fixedRaion = {
       'Cnernivetskyi': 'Chernivetskyi',
       'Volodymyr-Volynskyi': 'Volodymyrskyi',

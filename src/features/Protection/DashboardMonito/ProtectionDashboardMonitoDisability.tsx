@@ -2,11 +2,11 @@ import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './ProtectionDashboardMonito'
-import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
-import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
+import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {ChartBarMultipleByKey} from '@/shared/chart/ChartBarMultipleByKey'
-import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {ChartBarMultipleByKey} from '@/shared/charts/ChartBarMultipleByKey'
+import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 
 export const ProtectionDashboardMonitoDisability = ({
   data,

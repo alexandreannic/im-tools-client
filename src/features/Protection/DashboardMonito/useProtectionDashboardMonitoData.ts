@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
+import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {chain} from '@/utils/utils'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'

@@ -3,14 +3,14 @@ import React, {useMemo, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
+import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {ChartBar} from '@/shared/chart/ChartBar'
+import {ChartBar} from '@/shared/charts/ChartBar'
 import {chain} from '@/utils/utils'
 import {Box, Checkbox} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
-import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
+import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 
 type Filters = Pick<Record<keyof typeof Protection_Hhs2_1Options['are_you_separated_from_any_of_your_households_members'], boolean>,
   'partner' |

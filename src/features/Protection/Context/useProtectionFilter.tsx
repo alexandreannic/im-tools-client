@@ -6,16 +6,33 @@ import {useI18n} from '@/core/i18n'
 import {useMemo, useState} from 'react'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {Period} from '@/core/type/period'
+import {endOfDay, startOfDay} from 'date-fns'
+import {KoboIndex} from '@/core/koboForms/KoboIndex'
 
 export type UseProtectionFilter = ReturnType<typeof useProtectionFilters>
 
 export const useProtectionFilters = (data?: Seq<ProtectionActivity>, flatData?: Seq<ProtectionActivityFlat>) => {
   const {m} = useI18n()
-  const [period, setPeriod] = useState<Partial<Period>>({})
+  const [period, setPeriod] = useState<Partial<Period>>({
+    start: startOfDay(new Date(2023, 4, 1)),
+    end: endOfDay(new Date(2023, 11, 31))
+  })
 
   const shape = useMemo(() => {
     const d = data ?? seq([])
     return DataFilter.makeShape<ProtectionActivity>({
+      office: {
+        icon: drcMaterialIcons.office,
+        label: m.office,
+        getValue: _ => _.office,
+        getOptions: () => DataFilter.buildOptions(d.flatMap(_ => _.office!).distinct(_ => _).sort())
+      },
+      oblast: {
+        icon: drcMaterialIcons.oblast,
+        label: m.oblast,
+        getValue: _ => _.oblast.name,
+        getOptions: () => DataFilter.buildOptions(d.flatMap(_ => _.oblast.name!).distinct(_ => _).sort())
+      },
       project: {
         multiple: true,
         icon: drcMaterialIcons.project,
@@ -27,7 +44,7 @@ export const useProtectionFilters = (data?: Seq<ProtectionActivity>, flatData?: 
         icon: drcMaterialIcons.koboForm,
         label: m.koboForms,
         getValue: _ => _.koboForm,
-        getOptions: () => DataFilter.buildOptions(d.map(_ => _.koboForm!).distinct(_ => _).sort())
+        getOptions: () => d.map(_ => _.koboForm!).distinct(_ => _).sort().map(_ => DataFilter.buildOption(_, KoboIndex.byName(_).translation))
       },
     })
   }, [data])

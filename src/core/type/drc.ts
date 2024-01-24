@@ -363,5 +363,7 @@ export const drcMaterialIcons = {
   project: 'inventory_2',
   donor: 'handshake',
   disability: 'assist_walker',
+  office: 'business',
+  oblast: 'location_on',
   displacementStatus: 'directions_run',
 }

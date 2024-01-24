@@ -6,7 +6,7 @@ import React, {useState} from 'react'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {useI18n} from '@/core/i18n'
-import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 
 export const PanershipPanelDonor = ({
   data,

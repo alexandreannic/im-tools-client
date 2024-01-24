@@ -1,5 +1,5 @@
 import {DrcDonor, DrcOffice, DrcProject} from '@/core/type/drc'
-import {OblastName} from '@/shared/UkraineMap/oblastIndex'
+import {Oblast, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {Person} from '@/core/type/person'
 import {Protection_pss} from '@/core/generatedKoboInterface/Protection_pss'
 import {KoboAnswerMetaData} from '@/core/sdk/server/kobo/Kobo'
@@ -21,7 +21,7 @@ export type ProtectionActivityFlat  = Omit<ProtectionActivity, 'persons'> & Pers
 export interface ProtectionActivity extends KoboAnswerMetaData {
   date: Date
   office?: DrcOffice
-  oblast?: OblastName
+  oblast: Oblast
   raion?: string
   hromada?: string
   project?: DrcProject[]

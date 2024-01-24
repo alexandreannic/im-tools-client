@@ -12,13 +12,15 @@ import {Utils} from '@/utils/utils'
 import {OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum} from '@alexandreannic/ts-utils'
-import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {AiViewAnswers} from '@/features/ActivityInfo/shared/ActivityInfoActions'
 import {Div, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Protection_pss} from '@/core/generatedKoboInterface/Protection_pss'
 import {format} from 'date-fns'
-import {ChartLineBy} from '@/shared/chart/ChartLineBy'
-import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartLineBy} from '@/shared/charts/ChartLineBy'
+import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
+import {koboFormTranslation} from '@/core/koboForms/KoboIndex'
+import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
 
 export const ProtectionDashboard = () => {
   const ctx = useProtectionContext()
@@ -53,7 +55,7 @@ export const ProtectionDashboard = () => {
           <Div column>
             <Div sx={{alignItems: 'stretch'}}>
               <SlideWidget sx={{flex: 1}} icon="group" title={m.submissions}>
-                {formatLargeNumber(data.all.length)}
+                {formatLargeNumber(data.filtered.length)}
               </SlideWidget>
               <SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>
                 {formatLargeNumber(data.flatFiltered.length)}
@@ -73,17 +75,13 @@ export const ProtectionDashboard = () => {
                 <AgeGroupTable tableId="protection-dashboard" persons={data.flatFiltered}/>
               </PanelBody>
             </Panel>
-          </Div>
-          <Div column>
-            <Panel title={m.displacementStatus}>
+            <Panel title={m.form}>
               <PanelBody>
-                {data.flatFiltered && (
-                  <ChartBarSingleBy
-                    data={data.flatFiltered}
-                    by={_ => _.status}
-                    label={Protection_pss.options.hh_char_hh_det_status}
-                  />
-                )}
+                <ChartBarSingleBy
+                  data={data.flatFiltered}
+                  by={_ => _.koboForm}
+                  label={koboFormTranslation}
+                />
               </PanelBody>
             </Panel>
             <Panel title={m.project}>
@@ -94,6 +92,22 @@ export const ProtectionDashboard = () => {
                     by={_ => _.project!}
                   />
                 )}
+              </PanelBody>
+            </Panel>
+          </Div>
+          <Div column>
+            <Panel title={m.individuals}>
+              <PanelBody>
+                <UaMapBy sx={{mx: 3}} fillBaseOn="value" getOblast={_ => _.oblast?.iso!} data={ctx.data.flatFiltered}/>
+              </PanelBody>
+            </Panel>
+            <Panel title={m.displacementStatus}>
+              <PanelBody>
+                <ChartBarSingleBy
+                  data={data.flatFiltered}
+                  by={_ => _.status}
+                  label={Protection_pss.options.hh_char_hh_det_status}
+                />
               </PanelBody>
             </Panel>
           </Div>
@@ -118,7 +132,7 @@ export const ProtectionDashboard = () => {
           Utils.groupBy({
             data: data.flatFiltered,
             groups: [
-              {by: _ => _.oblast!},
+              {by: _ => _.oblast.name},
               {by: _ => _.raion!},
               {by: _ => _.hromada!},
             ],

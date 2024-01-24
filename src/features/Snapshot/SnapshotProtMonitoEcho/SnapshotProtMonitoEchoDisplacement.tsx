@@ -4,12 +4,12 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
-import {ChartLineByDate} from '@/shared/chart/ChartLineByDate'
+import {ChartLineByDate} from '@/shared/charts/ChartLineByDate'
 import {snapshotColors} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Txt} from 'mui-extension'
-import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 
 export const SnapshotProtMonitoEchoDisplacement = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()

@@ -4,9 +4,9 @@ import {useState} from 'react'
 import {Box, BoxProps, Checkbox, Theme, useTheme} from '@mui/material'
 import {map} from '@alexandreannic/ts-utils'
 import {styleUtils} from '@/core/theme'
-import {chartConfig} from '@/shared/chart/chartConfig'
+import {chartConfig} from '@/shared/charts/chartConfig'
 import {formatLargeNumber} from '@/core/i18n/localization/en'
-import {commonLegendProps} from '@/shared/chart/ChartBarStacked'
+import {commonLegendProps} from '@/shared/charts/ChartBarStacked'
 
 export interface ChartLinePropsBase extends Pick<BoxProps, 'sx'> {
   colorsByKey?: (t: Theme) => Record<string, string>

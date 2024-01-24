@@ -1,7 +1,7 @@
 import {StringArrayKeys, StringKeys} from '@/core/type/generic'
 import * as React from 'react'
 import {useMemo} from 'react'
-import {ChartPieWidgetBy, ChartPieWidgetProps} from '@/shared/chart/ChartPieWidgetBy'
+import {ChartPieWidgetBy, ChartPieWidgetProps} from '@/shared/charts/ChartPieWidgetBy'
 
 export const ChartPieWidgetByKey = <T, K extends StringKeys<T> | StringArrayKeys<T>>({
   property,

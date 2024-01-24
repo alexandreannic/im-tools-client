@@ -1,6 +1,6 @@
-import {Obj, Seq} from '@alexandreannic/ts-utils'
+import {Obj, seq, Seq} from '@alexandreannic/ts-utils'
 import React, {useMemo} from 'react'
-import {ChartLine, ChartLineData} from '@/shared/chart/ChartLine'
+import {ChartLine, ChartLineData} from '@/shared/charts/ChartLine'
 import {BoxProps} from '@mui/material'
 
 export const ChartLineBy = <
@@ -21,12 +21,13 @@ export const ChartLineBy = <
 } & BoxProps) => {
   const transform = useMemo(() => {
     const gb = data.groupBy(getX)
-    return Obj.entries(gb).map(([k, v]) => {
+    const w = new Obj(gb).entries().map(([k, v]) => {
       return ({
         name: k,
         [label]: v.sum(getY as any),
       }) as unknown as ChartLineData
     })
+    return seq(w).sortByString(_ => _.name)
   }, [data])
   return (
     <ChartLine

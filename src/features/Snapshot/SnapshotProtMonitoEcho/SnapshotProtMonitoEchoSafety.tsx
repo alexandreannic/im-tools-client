@@ -3,18 +3,18 @@ import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProt
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
+import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {chain} from '@/utils/utils'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {ChartBar} from '@/shared/chart/ChartBar'
-import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
+import {ChartBar} from '@/shared/charts/ChartBar'
+import {ChartPieWidgetBy} from '@/shared/charts/ChartPieWidgetBy'
 import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {useTheme} from '@mui/material'
-import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 
 export const SnapshotProtMonitoEchoSafety = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()

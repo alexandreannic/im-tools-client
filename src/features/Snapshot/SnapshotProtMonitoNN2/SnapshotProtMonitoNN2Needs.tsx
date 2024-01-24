@@ -2,14 +2,14 @@ import React from 'react'
 import {useSnapshotProtMonitoringContext} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoContext'
 import {Div, PdfSlide, PdfSlideBody, SlideHeader, SlidePanel, SlidePanelTitle, SlideTxt} from '@/shared/PdfLayout/PdfSlide'
 import {useI18n} from '@/core/i18n'
-import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
-import {ChartPieWidgetBy} from '@/shared/chart/ChartPieWidgetBy'
+import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
+import {ChartPieWidgetBy} from '@/shared/charts/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
-import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 
 export const SnapshotProtMonitoNN2Needs = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()

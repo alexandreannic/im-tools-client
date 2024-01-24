@@ -3,11 +3,11 @@ import React from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {useTheme} from '@mui/material'
-import {ChartHelperOld} from '@/shared/chart/chartHelperOld'
-import {ChartPieWidgetByKey} from '@/shared/chart/ChartPieWidgetByKey'
-import {ChartBarSingleBy} from '@/shared/chart/ChartBarSingleBy'
+import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
+import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
+import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
-import {ChartBarMultipleBy} from '@/shared/chart/ChartBarMultipleBy'
+import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 
 export const ProtectionDashboardMonitoHousing = ({
   data,
