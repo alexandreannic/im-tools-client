@@ -81,6 +81,7 @@ export interface CfmContext {
     [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal, KoboMealCfmTag>[]
   }>>
   mappedData: Seq<CfmData>
+  mappedDataArchived: Seq<CfmData>
 }
 
 const CfmContext = React.createContext({} as CfmContext)
@@ -129,7 +130,7 @@ export const CfmProvider = ({
     return {[CfmDataSource.External]: external, [CfmDataSource.Internal]: internal}
   })
 
-  const mappedData = useMemo(() => {
+  const {mappedData, mappedDataArchived} = useMemo(() => {
     const res: CfmData[] = []
     data.get?.[CfmDataSource.External].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride
@@ -163,7 +164,7 @@ export const CfmProvider = ({
         ..._,
       })
     })
-    return seq(res)
+    const allData = seq(res)
       .filter(_ => {
         if (_.tags?.deletedBy) return false
         if (session.email === _.tags?.focalPointEmail)
@@ -179,6 +180,10 @@ export const CfmProvider = ({
         return true
       })
       .sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
+    return {
+      mappedDataArchived: allData.filter(_ => !!_.tags?.archivedBy),
+      mappedData: allData.filter(_ => !_.tags?.archivedBy),
+    }
   }, [data])
 
   const updateTag = useAsync((params: {
@@ -246,6 +251,7 @@ export const CfmProvider = ({
       data,
       users,
       mappedData,
+      mappedDataArchived,
       schemaInternal,
       schemaExternal,
     }}>

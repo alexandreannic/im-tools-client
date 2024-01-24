@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Box, ButtonBase, ButtonBaseProps, Icon, Theme, useTheme} from '@mui/material'
+import {Badge, Box, ButtonBase, ButtonBaseProps, Icon, Theme, useTheme} from '@mui/material'
 import {alpha} from '@mui/material/styles'
-import {makeSx} from 'mui-extension'
+import {makeSx, Txt} from 'mui-extension'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 
 const css = makeSx({
@@ -22,6 +22,7 @@ export interface SidebarItemProps extends ButtonBaseProps {
   iconEnd?: string | ReactNode
   disabled?: boolean
   large?: boolean
+  badge?: ReactNode
   href?: string
   target?: string
   active?: boolean
@@ -38,15 +39,16 @@ export const SidebarItem = ({
   active,
   large,
   sx,
+  badge,
   ...props
 }: SidebarItemProps) => {
-  const theme = useTheme()
+  const t = useTheme()
   return (
     <ButtonBase
       disableRipple={!props.onClick || !props.href}
       sx={{
         width: '100%',
-        transition: t => t.transitions.create('all'),
+        transition: t.transitions.create('all'),
         display: 'flex',
         alignItems: 'center',
         textDecoration: 'inherit',
@@ -60,7 +62,7 @@ export const SidebarItem = ({
         whiteSpace: 'nowrap',
         textAlign: 'left',
         textOverflow: 'ellipsis',
-        color: t => t.palette.text.secondary,
+        color: t.palette.text.secondary,
         pr: 1,
         pl: 1.5,
         my: 1 / (fnSwitch(size!, {
@@ -80,7 +82,7 @@ export const SidebarItem = ({
           minHeight: 38,
         }),
         ...(active && {
-          color: t => t.palette.primary.main,
+          color: t.palette.primary.main,
           background: t => alpha(t.palette.primary.main, 0.16),
         }),
         ...sx,
@@ -97,11 +99,23 @@ export const SidebarItem = ({
           display: 'flex',
           alignItems: 'center',
           flex: 1,
-          fontWeight: t => t.typography.fontWeightMedium,
+          fontWeight: t.typography.fontWeightMedium,
         }}
       >
         {children}
       </Box>
+      {badge && (
+        <Txt size="small" sx={{
+          display: 'flex',
+          alignItems: 'center',
+          fontWeight: t.typography.fontWeightBold,
+          borderRadius: '50px',
+          background: t.palette.primary.main,
+          color: t.palette.primary.contrastText,
+          py: 1 / 16,
+          px: .75,
+        }}>{badge}</Txt>
+      )}
       {iconEnd && (typeof iconEnd === 'string' ? <Icon sx={css.i} color="disabled">{iconEnd}</Icon> : <Box sx={css.i}>{iconEnd}</Box>)}
     </ButtonBase>
   )

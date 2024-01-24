@@ -24,6 +24,7 @@ import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink
 import {shelterIndex} from '@/features/Shelter/Shelter'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {CfmTableArchived} from '@/features/Cfm/Data/CfmTableArchived'
 
 const relatedKoboForms: KoboFormName[] = [
   'meal_cfmInternal',
@@ -35,6 +36,7 @@ export const cfmIndex = {
   siteMap: {
     access: '/access',
     data: '/data',
+    archived: '/archived',
     entry: (formId: KoboId = ':formId', answerId: string = ':answerId') => `/entry/${formId}/${answerId}`
   }
 }
@@ -65,7 +67,12 @@ const CfmSidebar = () => {
       <SidebarBody>
         <NavLink to={path(cfmIndex.siteMap.data)}>
           {({isActive, isPending}) => (
-            <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
+            <SidebarItem icon="table_chart" active={isActive} badge={_stats.open}>{m.data}</SidebarItem>
+          )}
+        </NavLink>
+        <NavLink to={path(cfmIndex.siteMap.archived)}>
+          {({isActive, isPending}) => (
+            <SidebarItem icon="archive" active={isActive} badge={ctx.mappedDataArchived.length}>{m.archived}</SidebarItem>
           )}
         </NavLink>
         <NavLink to={path(cfmIndex.siteMap.access)}>
@@ -92,14 +99,6 @@ const CfmSidebar = () => {
       <SidebarHr/>
       <SidebarBody>
         <Box sx={{pl: 2}}>
-          <ChartPieWidget
-            dense
-            showValue
-            title={m._cfm.openTickets}
-            value={_stats.open}
-            base={_stats.total ?? 1}
-          />
-          {/*<Divider sx={{my: 1.5}}/>*/}
           <ChartPieWidget
             sx={{mt: 2}}
             dense
@@ -154,6 +153,7 @@ export const Cfm = () => {
               <Routes>
                 <Route index element={<Navigate to={cfmIndex.siteMap.data}/>}/>
                 <Route path={cfmIndex.siteMap.data} element={<CfmTable/>}/>
+                <Route path={cfmIndex.siteMap.archived} element={<CfmTableArchived/>}/>
                 <Route path={cfmIndex.siteMap.entry()} element={<CfmEntryRoute/>}/>
                 <Route path={cfmIndex.siteMap.access} element={<CfmAccess/>}/>
                 {relatedKoboForms.map(_ =>
