@@ -83,6 +83,13 @@ export const CfmTable = ({}: any) => {
     <Page width="full">
       <Panel>
         <Sheet
+          select={{
+            onSelect: console.log,
+            getId: _ => _.id,
+            selectActions: (
+              <></>
+            )
+          }}
           id="cfm"
           header={
             <>
