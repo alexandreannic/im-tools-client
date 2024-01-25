@@ -251,9 +251,10 @@ export const CfmTable = ({}: any) => {
             {
               width: 170,
               type: 'select_one',
-              options: () => seq(ctx.mappedData).map(_ => _.tags?.focalPointEmail).compact().distinct(_ => _).map(SheetUtils.buildOption),
+              // options: () => seq(ctx.mappedData).map(_ => _.tags?.focalPointEmail).compact().distinct(_ => _).map(SheetUtils.buildOption),
               renderValue: _ => _.tags?.focalPointEmail,
               head: m.focalPoint,
+              renderOption: _ => _.tags?.focalPointEmail,
               id: 'focalPoint',
               render: row => (
                 <DebouncedInput<string>
@@ -291,10 +292,10 @@ export const CfmTable = ({}: any) => {
               head: m._cfm.feedbackType,
               id: 'feedbackType',
               width: 120,
-              options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.schemaExternal.translate.choice('feedback_type', k)})),
               renderValue: _ => _.category,
+              renderOption: _ => ctx.schemaInternal.translate.choice('feedback_type', _.category),
               render: row => row.form === CfmDataSource.Internal
-                ? ctx.schemaExternal.translate.choice('feedback_type', row.category)
+                ? ctx.schemaInternal.translate.choice('feedback_type', row.category)
                 : <AaSelect
                   defaultValue={row.category}
                   onChange={newValue => {
@@ -307,7 +308,7 @@ export const CfmTable = ({}: any) => {
               type: 'select_one',
               head: m._cfm.feedbackTypeExternal,
               id: 'feedbackTypeExternal',
-              options: () => Enum.entries(m._cfm._feedbackType).map(([k, v]) => ({value: k, label: v})),
+              // options: () => Enum.entries(m._cfm._feedbackType).map(([k, v]) => ({value: k, label: v})),
               renderValue: _ => _.external_feedback_type,
               render: _ => m._cfm._feedbackType[_.external_feedback_type!],
             },
