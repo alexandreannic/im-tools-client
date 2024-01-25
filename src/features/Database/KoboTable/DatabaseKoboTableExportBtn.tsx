@@ -68,7 +68,12 @@ const renderExportSchema = <T extends KoboMappedAnswer>({
         return {
           head: groupIndex ? `[${groupIndex}] ${translateQuestion(q.name)}` : translateQuestion(q.name),
           render: (row: T) => map(getVal(row, q.name) as any, (v: string[]) => {
-            return v.map(choiceName => translateChoice(q.name, choiceName)).join(' | ')
+            try {
+              return v.map(choiceName => translateChoice(q.name, choiceName)).join(' | ')
+            } catch (e) {
+              // Some issue looks to occur after deleting and recreating question
+              return v
+            }
           })
         }
       case 'calculate':
