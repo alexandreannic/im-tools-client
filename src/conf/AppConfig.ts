@@ -64,12 +64,19 @@ export const appConfig = {
     matrix: 'hub',
     koboFormLink: appFeaturesIndex.kobo_database.materialIcons,
     dataTable: '',
+    disability: 'assist_walker'
   },
   iconStatus: {
     error: 'error',
     warning: 'warning',
     success: 'check_circle',
     info: 'info'
+  },
+  other: {
+    protection: {
+      echoDuplicationEstimationPercent: 10,
+      echoDisabilityEstimationPercent: 13,
+    }
   }
 }
 

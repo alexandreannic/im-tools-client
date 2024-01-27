@@ -1,6 +1,7 @@
 import {NonNullableKeys} from '@/utils/utilsType'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, Obj, seq} from '@alexandreannic/ts-utils'
 import {KeyOf} from '@/core/type/generic'
+import {ca} from 'date-fns/locale'
 
 export namespace Person {
 
@@ -86,21 +87,30 @@ export namespace Person {
 
   export const filterByAgegroup = <AG extends AgeGroup>(ag: AG, key: keyof AG) => (p: Person) => {
     const [min, max] = ag[key]
-    return p.age && p.age >= min && p.age <= max
+    return p.age !== undefined && p.age >= min && p.age <= max
   }
 
+  // TODO Can improve perf if needed
   export const groupByGenderAndGroup = <AG extends AgeGroup>(
     ag: AG = Person.ageGroup.BHA as unknown as AG,
   ) => (
     data: Person[]
   ): Record<KeyOf<AG>, Record<Gender, number>> => {
-    const male = data.filter(_ => _.gender === Gender.Male)
-    const female = data.filter(_ => _.gender === Gender.Female)
-    return new Enum(ag).transform(k => {
-      return [k as KeyOf<AG>, {
-        [Gender.Female]: female.filter(filterByAgegroup(ag, k)).length,
-        [Gender.Male]: male.filter(filterByAgegroup(ag, k)).length,
-      }]
+    const res = seq(data).groupBy(_ => _.gender ?? Gender.Other)
+    // const order = [
+    //   Person.Gender.Female,
+    //   Person.Gender.Male,
+    //   Person.Gender.Other,
+    // ]
+    return new Obj(ag).map(k => {
+      return [
+        k as KeyOf<AG>,
+        new Obj(res).mapValues((byGender, gender) => {
+          return byGender.filter(filterByAgegroup(ag, k)).length
+        })
+          // .sort(([aK], [bK]) => order.indexOf(aK as any) - order.indexOf(bK as any))
+          .get()
+      ]
     }).get() as any
   }
 }

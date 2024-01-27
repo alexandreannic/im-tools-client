@@ -9,7 +9,7 @@ import {Layout} from '@/shared/Layout'
 import {mpcaIndex} from '@/features/Mpca/Mpca'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {ProtectionDashboard} from '@/features/Protection/ProtectionDashboard'
+import {ProtectionOverview} from '@/features/Protection/Overview/ProtectionOverview'
 import Link from 'next/link'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {ProtectionProvider, useProtectionContext} from '@/features/Protection/Context/ProtectionContext'
@@ -81,7 +81,7 @@ export const ProtectionWithContext = () => {
     >
       <Routes>
         <Route index element={<Navigate to={protectionIndex.siteMap.dashboard}/>}/>
-        <Route path={protectionIndex.siteMap.dashboard} element={<ProtectionDashboard/>}/>
+        <Route path={protectionIndex.siteMap.dashboard} element={<ProtectionOverview/>}/>
         {relatedKoboForms.map(_ =>
           <Route key={_} {...getKoboFormRouteProps({path: mpcaIndex.siteMap.form(_), name: _})}/>
         )}

@@ -5,6 +5,7 @@ import React, {useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {Enum} from '@alexandreannic/ts-utils'
+import {Utils} from '@/utils/utils'
 
 export const AgeGroupTable = ({
   tableId,
@@ -38,6 +39,7 @@ export const AgeGroupTable = ({
         {width: 0, id: 'Male', head: m.male, type: 'number', renderValue: _ => _.Male, render: _ => formatLargeNumber(_.Male)},
         {width: 0, id: 'Female', head: m.female, type: 'number', renderValue: _ => _.Female, render: _ => formatLargeNumber(_.Female)},
         {width: 0, id: 'Other', head: m.other, type: 'number', renderValue: _ => _.Other ?? 0, render: _ => formatLargeNumber(_.Other ?? 0)},
+        {width: 0, id: 'Total', head: m.total, type: 'number', renderValue: _ => Utils.add(_.Male, _.Female, _.Other), render: _ => formatLargeNumber(Utils.add(_.Male, _.Female, _.Other))},
       ]}
     />
   )

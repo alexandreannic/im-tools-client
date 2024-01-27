@@ -21,10 +21,18 @@ import {ChartLineBy} from '@/shared/charts/ChartLineBy'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {koboFormTranslation} from '@/core/koboForms/KoboIndex'
 import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
+import {Box, Icon, Switch, Theme} from '@mui/material'
+import {IpBtn} from '@/shared/Btn'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {DashboardFilterLabel} from '@/shared/DashboardLayout/DashboardFilterLabel'
+import {Txt} from 'mui-extension'
+import {PanelFoot} from '@/shared/Panel/PanelFoot'
+import {ProtectionOverviewFilterCustom} from '@/features/Protection/Overview/ProtectionOverviewFilterCustom'
 
-export const ProtectionDashboard = () => {
+export const ProtectionOverview = () => {
   const ctx = useProtectionContext()
   const {m, formatLargeNumber} = useI18n()
+  const {conf} = useAppSettings()
   if (!ctx.data) return
   const data = ctx.data
   return (
@@ -34,6 +42,7 @@ export const ProtectionDashboard = () => {
         shape={ctx.filters.shape}
         setFilters={ctx.filters.setFilters}
         onClear={() => {
+          ctx.filters.setCustom({})
           ctx.filters.setFilters({})
           ctx.filters.setPeriod({})
         }}
@@ -48,6 +57,9 @@ export const ProtectionDashboard = () => {
               max={today}
             />
           </>
+        }
+        after={
+          <ProtectionOverviewFilterCustom/>
         }
       />
       <Div column>

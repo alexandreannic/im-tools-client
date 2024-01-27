@@ -38,12 +38,12 @@ export const DashboardFilterLabel = ({
 }: {
   active?: boolean
   icon?: string
-  children: (open: boolean) => any
+  children: (opened: boolean, close: () => void) => any
   label: ReactNode
 } & Omit<BoxProps, 'children'>) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
 
-  const open = (!!anchorEl)
+  const opened = (!!anchorEl)
 
   return (
     <Box sx={{position: 'relative', display: 'inline-block', ...sx}}>
@@ -54,11 +54,11 @@ export const DashboardFilterLabel = ({
       >
         {icon && <Icon fontSize="small" sx={{mr: .75}}>{icon}</Icon>}
         {label}
-        <Icon color="disabled" sx={{ml: .25, mr: -.25}} fontSize="small">{open ? 'expand_less' : 'expand_more'}</Icon>
+        <Icon color="disabled" sx={{ml: .25, mr: -.25}} fontSize="small">{opened ? 'expand_less' : 'expand_more'}</Icon>
       </Box>
       <Popover
         disableScrollLock={true}
-        open={open}
+        open={opened}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -77,7 +77,7 @@ export const DashboardFilterLabel = ({
           overflowY: 'auto',
           maxHeight: '50vh',
         }}>
-          {children(open)}
+          {children(opened, () => setAnchorEl(null))}
         </Box>
       </Popover>
     </Box>

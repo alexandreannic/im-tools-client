@@ -68,6 +68,9 @@ export const en = Object.freeze({
     select3Outcomes: `Please, select 3 outcomes`,
     oblast: 'Oblast',
     edit: 'Edit',
+    apply: 'Apply',
+    clear: 'Clear',
+    custom: 'Custom',
     close: 'Close',
     reinitialize: 'Reinitialize',
     connectAs: 'Connect as',
@@ -348,7 +351,10 @@ export const en = Object.freeze({
       verification: 'Verification',
     },
     _protection: {
-
+      filterEchoReporting: 'Filter duplication',
+      filterEchoReportingDetails: (n: number) => `Skip ${n}% of HHS data to limit double counting.`,
+      filterEchoReportingDisability: 'Filter with disability',
+      filterEchoReportingDisabilityDetails: (n: number) => `Select ${n}% of individuals.`,
     },
     mealMonitoringVisit: {
       ecrec: 'ECREC activities',

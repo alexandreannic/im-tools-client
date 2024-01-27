@@ -22,6 +22,7 @@ export interface IpBtnProps extends ButtonProps {
   loading?: boolean
   icon?: string
   iconAfter?: string
+  before?: ReactNode
   iconSx?: ButtonProps['sx']
   target?: '_blank'
 }
@@ -31,6 +32,7 @@ export const IpBtn = forwardRef(({
   loading,
   children,
   disabled,
+  before,
   icon,
   iconAfter,
   color,
@@ -52,6 +54,7 @@ export const IpBtn = forwardRef(({
           visibility: 'hidden',
         }
       }}>
+        {before}
         {icon && (
           <Icon fontSize={props.size} className={classes.icon} sx={iconSx}>
             {icon}

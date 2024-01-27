@@ -1,18 +1,27 @@
 import {Seq, seq} from '@alexandreannic/ts-utils'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {ProtectionActivity, ProtectionActivityFlat} from '@/features/Protection/Context/protectionType'
-import {drcMaterialIcons} from '@/core/type/drc'
+import {drcMaterialIcons, DrcProject} from '@/core/type/drc'
 import {useI18n} from '@/core/i18n'
 import {useMemo, useState} from 'react'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {Period} from '@/core/type/period'
 import {endOfDay, startOfDay} from 'date-fns'
 import {KoboIndex} from '@/core/koboForms/KoboIndex'
+import {useAppSettings} from '@/core/context/ConfigContext'
+import {Utils} from '@/utils/utils'
 
 export type UseProtectionFilter = ReturnType<typeof useProtectionFilters>
 
+export interface ProtectionCustomFilter {
+  echo?: boolean
+  echoDisability?: boolean
+}
+
 export const useProtectionFilters = (data?: Seq<ProtectionActivity>, flatData?: Seq<ProtectionActivityFlat>) => {
   const {m} = useI18n()
+  const {conf} = useAppSettings()
+  const [custom, setCustom] = useState<ProtectionCustomFilter>({})
   const [period, setPeriod] = useState<Partial<Period>>({
     start: startOfDay(new Date(2023, 4, 1)),
     end: endOfDay(new Date(2023, 11, 31))
@@ -57,13 +66,15 @@ export const useProtectionFilters = (data?: Seq<ProtectionActivity>, flatData?: 
       try {
         if (period?.start && period.start.getTime() >= d.date.getTime()) return false
         if (period?.end && period.end.getTime() <= d.date.getTime()) return false
+        if (custom.echo && Utils.hash(d.id, 'dedup') % 100 <= conf.other.protection.echoDuplicationEstimationPercent) return false
+        if (custom.echoDisability && Utils.hash(d.id, 'disability') % 100 >= conf.other.protection.echoDisabilityEstimationPercent) return false
         return true
       } catch (e) {
         console.log(e, d)
       }
     })
     return DataFilter.filterData(filteredBy_date, shape, filters)
-  }, [data, filters, period, shape])
+  }, [data, filters, period, custom, shape])
 
   return {
     period,
@@ -71,6 +82,8 @@ export const useProtectionFilters = (data?: Seq<ProtectionActivity>, flatData?: 
     filters,
     setFilters,
     data: filteredData,
+    custom,
+    setCustom,
     shape,
   }
 }

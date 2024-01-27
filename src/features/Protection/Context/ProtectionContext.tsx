@@ -3,7 +3,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {UseFetcher, useFetcher} from '@/shared/hook/useFetcher'
 import {Period} from '@/core/type/period'
 import {ProtectionActivity, ProtectionActivityFlat} from '@/features/Protection/Context/protectionType'
-import {Seq, seq} from '@alexandreannic/ts-utils'
+import {Obj, Seq, seq} from '@alexandreannic/ts-utils'
 import {ProtectionDataHelper} from '@/features/Protection/Context/protectionDataHelper'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {PersonWithStatus} from '@/core/koboForms/koboGeneralMapping'
@@ -13,6 +13,7 @@ import {Protection_hhs} from '@/core/generatedKoboInterface/Protection_hhs'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {KoboUnwrapAnserType} from '@/core/sdk/server/kobo/KoboTypedAnswerSdk'
+import {Person} from '@/core/type/person'
 
 export interface ProtectionContext {
   filters: Omit<UseProtectionFilter, 'data'>
