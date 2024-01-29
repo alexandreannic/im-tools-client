@@ -153,7 +153,7 @@ export const MpcaDashboard = () => {
     <Page width="lg" loading={ctx.fetcherData.loading}>
       <DataFilterLayout
         filters={filters}
-        shape={filterShape}
+        shapes={filterShape}
         setFilters={setFilters}
         onClear={() => {
           setFilters({})

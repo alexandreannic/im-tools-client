@@ -1,7 +1,7 @@
 import {Box, Icon, Popover} from '@mui/material'
 import React, {useEffect, useState} from 'react'
 import {IpIconBtn} from '@/shared/IconBtn'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
 import {FilterLayoutProps} from '@/shared/DataFilter/DataFilterLayout'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
@@ -13,13 +13,15 @@ export const DataFilterLayoutPopup = ({
   before,
   after,
   sx,
-  shape,
+  shapes,
   filters,
   setFilters,
   onClear,
   onConfirm,
+  getFilteredOptions,
   onClose,
 }: FilterLayoutProps & {
+  getFilteredOptions: (name: string) => Seq<any>
   onConfirm: (_: DataFilter.Filter) => void
   onClose?: () => void
   onClear?: () => void
@@ -72,16 +74,16 @@ export const DataFilterLayoutPopup = ({
           // maxHeight: '50vh',
         }}>
           <Box sx={{mb: 1}}>{before}</Box>
-          {Enum.entries(shape).map(([name, shape]) =>
+          {Enum.entries(shapes).map(([name, shape]) =>
             <Box key={name} sx={{display: 'flex', alignItems: 'center', mb: 2}}>
-              <Icon color="disabled">{shape.icon}</Icon>
+              <Icon color="disabled" sx={{minWidth: 22}}>{shape.icon}</Icon>
               <Txt truncate sx={{mx: 1, width: 140, maxWidth: 140}}>{shape.label}</Txt>
               <Box sx={{flex: 1}}>
                 <IpSelectMultiple
                   sx={{maxWidth: 250, width: 250}}
                   value={innerFilters[name] ?? []}
                   onChange={_ => setInnerFilters((prev: any) => ({...prev, [name]: _}))}
-                  options={shape.getOptions()?.map(_ => ({value: _.value, children: _.label})) ?? []}
+                  options={shape.getOptions(() => getFilteredOptions(name))?.map(_ => ({value: _.value, children: _.label})) ?? []}
                 />
               </Box>
             </Box>

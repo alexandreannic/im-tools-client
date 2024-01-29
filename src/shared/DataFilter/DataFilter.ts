@@ -16,7 +16,7 @@ export namespace DataFilter {
     icon?: string
     // name: string
     addBlankOption?: boolean
-    getOptions: () => undefined | ShapeOption<TOption>[]
+    getOptions: (_: () => Seq<TData>) => undefined | ShapeOption<TOption>[]
     label: string
     customFilter?: (filterValue: string[], _: TData) => boolean
     skipOption?: string[]

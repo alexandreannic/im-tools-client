@@ -118,7 +118,7 @@ export const MealVisitDashboard = () => {
       loading={ctx.fetcherAnswers.loading}
     >
       <DataFilterLayout
-        shape={filterShape}
+        shapes={filterShape}
         filters={optionFilter}
         setFilters={setOptionFilters}
         before={

@@ -2,7 +2,7 @@ import {Page} from '@/shared/Page'
 import {UseShelterComputedData, useShelterComputedData} from '@/features/Shelter/Dasbhoard/useShelterComputedData'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Lazy} from '@/shared/Lazy'
-import React, {useMemo, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {Sheet} from '@/shared/Sheet/Sheet'
@@ -33,6 +33,7 @@ import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {Person} from '@/core/type/person'
 import {Period, PeriodHelper} from '@/core/type/period'
 import {AgeGroupTable} from '@/shared/AgeGroupTable'
+import {KeyOf} from '@/core/type/generic'
 
 const today = new Date()
 
@@ -49,77 +50,109 @@ export const ShelterDashboard = () => {
     return DataFilter.makeShape<ShelterEntity>({
       office: {
         icon: 'business',
-        label: 'Office',
+        label: m.office,
         getValue: _ => _.office,
-        getOptions: () => DataFilter.buildOptionsFromObject(DrcOffice),
+        getOptions: (get) => DataFilter.buildOptionsFromObject(DrcOffice),
       },
       oblast: {
         icon: 'location_on',
-        label: 'Oblast',
+        label: m.oblast,
         getValue: _ => _.oblast,
-        getOptions: () => d.map(_ => _.oblast).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
+        getOptions: (get) => get().map(_ => _.oblast)
+          .compact()
+          .distinct(_ => _)
+          .sort()
+          .map(_ => ({value: _, label: _}))
+      },
+      raion: {
+        // icon: 'location_on',
+        label: m.raion,
+        getValue: _ => _.nta?.ben_det_raion,
+        getOptions: (get) => get().map(_ => _.nta?.ben_det_raion).compact()
+          .distinct(_ => _)
+          .sort().map(_ => ({value: _, label: ctx.nta.schema.translate.choice('ben_det_raion', _)}))
+      },
+      hromada: {
+        // icon: 'location_on',
+        label: m.hromada,
+        getValue: _ => _.nta?.ben_det_hromada,
+        getOptions: (get) => get()
+          .map(_ => _.nta?.ben_det_hromada)
+          .compact()
+          .distinct(_ => _)
+          .sort()
+          .map(_ => ({value: _, label: ctx.nta.schema.translate.choice('ben_det_hromada', _)}))
       },
       settlement: {
-        icon: 'location_on',
+        // icon: 'location_on',
         label: m.settlement,
         getValue: _ => _.nta?.settlement,
-        getOptions: () => d.map(_ => _.nta?.settlement).compact().distinct(_ => _).sort().map(_ => ({value: _, label: _}))
+        getOptions: (get) => get().map(_ => _.nta?.settlement)
+          .compact()
+          .distinct(_ => _)
+          .sort()
+          .map(_ => ({value: _, label: _}))
       },
       project: {
         icon: drcMaterialIcons.project,
         label: m.project,
         getValue: _ => _.ta?.tags?.project,
-        getOptions: () => [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
+        getOptions: (get) => [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
       },
       validationStatus: {
         icon: 'check',
         label: m._shelter.validationStatus,
         getValue: _ => _.nta?.tags?.validation,
-        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTagValidation),
+        getOptions: (get) => DataFilter.buildOptionsFromObject(ShelterTagValidation),
       },
       status: {
         icon: 'engineering',
         label: m._shelter.progressStatus,
         getValue: _ => _.ta?.tags?.progress,
-        getOptions: () => DataFilter.buildOptionsFromObject(ShelterProgress),
+        getOptions: (get) => DataFilter.buildOptionsFromObject(ShelterProgress),
       },
       damageLevel: {
         icon: 'construction',
         label: m.levelOfPropertyDamaged,
         getValue: _ => _.ta?.tags?.damageLevel,
-        getOptions: () => DataFilter.buildOptionsFromObject(ShelterTaPriceLevel),
+        getOptions: (get) => DataFilter.buildOptionsFromObject(ShelterTaPriceLevel),
       },
       contractor: {
         icon: 'gavel',
         label: m._shelter.contractor,
         customFilter: (filters, _) => filters.includes(_.ta?.tags?.contractor1!) || filters.includes(_.ta?.tags?.contractor2!),
-        getOptions: () => DataFilter.buildOptionsFromObject(ShelterContractor),
+        getOptions: (get) => DataFilter.buildOptionsFromObject(ShelterContractor),
       },
       vulnerabilities: {
         icon: drcMaterialIcons.disability,
         label: m.vulnerabilities,
         getValue: _ => _.nta?.hh_char_dis_select,
-        getOptions: () => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]})),
+        getOptions: (get) => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]})),
         multiple: true,
       },
       displacementStatus: {
         icon: drcMaterialIcons.displacementStatus,
         label: m.displacement,
         getValue: _ => _.nta?.ben_det_res_stat,
-        getOptions: () => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
+        getOptions: (get) => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))
       },
     })
   }, [ctx.data.mappedData])
 
   const [filters, setFilters] = usePersistentState<DataFilter.InferShape<typeof filterShape>>({}, {storageKey: 'shelter-dashboard'})
 
-  const filteredData = useMemo(() => {
+  const filteredByDate = useMemo(() => {
     if (!ctx.data.mappedData) return
-    const filteredByDate = seq(ctx.data.mappedData).filter(d => {
+    return seq(ctx.data.mappedData).filter(d => {
       return PeriodHelper.isDateIn(periodFilter, d.nta?.submissionTime) && PeriodHelper.isDateIn(workDonePeriodFilter, d.ta?.tags?.workDoneAt)
     })
+  }, [ctx.data, periodFilter, workDonePeriodFilter])
+
+  const filteredData = useMemo(() => {
+    if (!filteredByDate) return
+    console.log('good', {filteredByDate, filterShape, filters})
     return DataFilter.filterData(filteredByDate, filterShape, filters)
-  }, [ctx.data, filters, periodFilter, filterShape, workDonePeriodFilter])
+  }, [ctx.data, filters, filterShape,])
 
   const computed = useShelterComputedData({data: filteredData})
 
@@ -129,7 +162,8 @@ export const ShelterDashboard = () => {
         sx={{mb: 1}}
         filters={filters}
         setFilters={setFilters}
-        shape={filterShape}
+        data={filteredByDate}
+        shapes={filterShape}
         onClear={() => {
           setFilters({})
           setPeriodFilter({})

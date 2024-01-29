@@ -81,7 +81,7 @@ export const SafetyIncidentDashboard = () => {
       loading={_answers.loading}
     >
       <DataFilterLayout
-        shape={filterShape}
+        shapes={filterShape}
         filters={optionFilter}
         setFilters={setOptionFilters}
         before={

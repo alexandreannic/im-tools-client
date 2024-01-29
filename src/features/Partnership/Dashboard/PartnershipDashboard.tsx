@@ -188,7 +188,7 @@ export const _PartnershipDashboard = ({
     <Div column>
       <Box>
         <DataFilterLayout
-          shape={{...filterShape, ...filterSgaShape}}
+          shapes={{...filterShape, ...filterSgaShape}}
           filters={optionFilter}
           setFilters={setOptionFilters}
           onClear={() => {

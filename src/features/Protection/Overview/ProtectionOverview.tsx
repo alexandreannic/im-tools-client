@@ -39,7 +39,7 @@ export const ProtectionOverview = () => {
     <Page width="lg">
       <DataFilterLayout
         filters={ctx.filters.filters}
-        shape={ctx.filters.shape}
+        shapes={ctx.filters.shape}
         setFilters={ctx.filters.setFilters}
         onClear={() => {
           ctx.filters.setCustom({})

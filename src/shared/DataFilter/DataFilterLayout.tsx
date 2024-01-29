@@ -2,7 +2,7 @@ import {themeLightScrollbar} from '@/core/theme'
 import React, {Dispatch, ReactNode, SetStateAction} from 'react'
 import {Box, BoxProps} from '@mui/material'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, Obj, Seq, seq} from '@alexandreannic/ts-utils'
 import {DebouncedInput} from '@/shared/DebouncedInput'
 import {DashboardFilterOptions} from '@/shared/DashboardLayout/DashboardFilterOptions'
 import {IpIconBtn} from '@/shared/IconBtn'
@@ -10,24 +10,37 @@ import {useI18n} from '@/core/i18n'
 import {DataFilterLayoutPopup} from '@/shared/DataFilter/DataFilterLayoutPopup'
 
 export interface FilterLayoutProps extends Pick<BoxProps, 'sx'> {
-  onClear?: () => void
-  filters: Record<string, string[] | undefined>
-  setFilters: Dispatch<SetStateAction<Record<string, undefined | string[]>>>
-  before?: ReactNode
-  after?: ReactNode
-  shape: Record<string, DataFilter.Shape<any>>
+  readonly onClear?: () => void
+  readonly filters: Record<string, string[] | undefined>
+  readonly setFilters: Dispatch<SetStateAction<Record<string, undefined | string[]>>>
+  readonly before?: ReactNode
+  readonly after?: ReactNode
+  readonly data?: Seq<any>
+  readonly shapes: Record<string, DataFilter.Shape<any, any>>
 }
 
-export const DataFilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & {
+export const DataFilterLayout = ({
+  sx,
+  hidePopup,
+  ...props
+}: FilterLayoutProps & {
   hidePopup?: boolean
 }) => {
   const {m} = useI18n()
+
+  const getFilteredOptions = (name: string) => {
+    const filtersCopy = {...filters}
+    delete filtersCopy[name]
+    return DataFilter.filterData(data ?? seq([]), shapes, filtersCopy)
+  }
+
   const {
     before,
     after,
-    shape,
+    shapes,
     filters,
     setFilters,
+    data,
     onClear,
   } = props
   return (
@@ -52,7 +65,7 @@ export const DataFilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & 
         ...sx as any,
       }}>
         {before}
-        {Enum.entries(shape).map(([name, shape]) =>
+        {Obj.entries(shapes).map(([name, shape]) =>
           <DebouncedInput<string[]>
             key={name}
             debounce={50}
@@ -65,7 +78,7 @@ export const DataFilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & 
                 value={value ?? []}
                 label={shape.label}
                 addBlankOption={shape.addBlankOption}
-                options={shape.getOptions}
+                options={() => shapes[name].getOptions(() => getFilteredOptions(name))}
                 onChange={onChange}
               />
             }
@@ -80,7 +93,13 @@ export const DataFilterLayout = ({sx, hidePopup, ...props}: FilterLayoutProps & 
         mt: 1.25,
       }}>
         {!hidePopup && (
-          <DataFilterLayoutPopup {...props} onConfirm={setFilters} filters={filters} onClear={onClear}/>
+          <DataFilterLayoutPopup
+            {...props}
+            onConfirm={setFilters}
+            filters={filters}
+            onClear={onClear}
+            getFilteredOptions={getFilteredOptions}
+          />
         )}
         {onClear && (
           <IpIconBtn children="clear" tooltip={m.clearFilter} onClick={onClear}/>

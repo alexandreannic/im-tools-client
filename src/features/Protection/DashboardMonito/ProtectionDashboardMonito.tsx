@@ -194,7 +194,7 @@ export const ProtectionDashboardMonito = () => {
             setPeriodFilter({})
             setOptionFilters({})
           }}
-          shape={filterShape}
+          shapes={filterShape}
           filters={optionFilter}
           setFilters={setOptionFilters}
           before={
