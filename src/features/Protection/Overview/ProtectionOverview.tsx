@@ -21,12 +21,7 @@ import {ChartLineBy} from '@/shared/charts/ChartLineBy'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {koboFormTranslation} from '@/core/koboForms/KoboIndex'
 import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
-import {Box, Icon, Switch, Theme} from '@mui/material'
-import {IpBtn} from '@/shared/Btn'
 import {useAppSettings} from '@/core/context/ConfigContext'
-import {DashboardFilterLabel} from '@/shared/DashboardLayout/DashboardFilterLabel'
-import {Txt} from 'mui-extension'
-import {PanelFoot} from '@/shared/Panel/PanelFoot'
 import {ProtectionOverviewFilterCustom} from '@/features/Protection/Overview/ProtectionOverviewFilterCustom'
 
 export const ProtectionOverview = () => {

@@ -2,10 +2,9 @@ import {Page} from '@/shared/Page'
 import {UseShelterComputedData, useShelterComputedData} from '@/features/Shelter/Dasbhoard/useShelterComputedData'
 import {Div, SlidePanel, SlideWidget} from '@/shared/PdfLayout/PdfSlide'
 import {Lazy} from '@/shared/Lazy'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {Box} from '@mui/material'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
-import {Sheet} from '@/shared/Sheet/Sheet'
 import {useI18n} from '@/core/i18n'
 import {Enum, fnSwitch, seq, Seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
@@ -17,7 +16,7 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {ChartBar} from '@/shared/charts/ChartBar'
 import {ChartPieWidget} from '@/shared/charts/ChartPieWidget'
 import {Panel, PanelBody} from '@/shared/Panel'
-import {drcMaterialIcons, DrcOffice} from '@/core/type/drc'
+import {DrcOffice} from '@/core/type/drc'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
@@ -30,10 +29,9 @@ import {shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPrice
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
 import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
-import {Person} from '@/core/type/person'
 import {Period, PeriodHelper} from '@/core/type/period'
 import {AgeGroupTable} from '@/shared/AgeGroupTable'
-import {KeyOf} from '@/core/type/generic'
+import {appConfig} from '@/conf/AppConfig'
 
 const today = new Date()
 
@@ -94,7 +92,7 @@ export const ShelterDashboard = () => {
           .map(_ => ({value: _, label: _}))
       },
       project: {
-        icon: drcMaterialIcons.project,
+        icon: appConfig.icons.project,
         label: m.project,
         getValue: _ => _.ta?.tags?.project,
         getOptions: (get) => [...shelterDrcProject, ''].sort().map(_ => ({value: _, label: _}))
@@ -124,14 +122,14 @@ export const ShelterDashboard = () => {
         getOptions: (get) => DataFilter.buildOptionsFromObject(ShelterContractor),
       },
       vulnerabilities: {
-        icon: drcMaterialIcons.disability,
+        icon: appConfig.icons.disability,
         label: m.vulnerabilities,
         getValue: _ => _.nta?.hh_char_dis_select,
         getOptions: (get) => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('hh_char_dis_select').map(_ => ({value: _.name, label: _.label[ctx.langIndex]})),
         multiple: true,
       },
       displacementStatus: {
-        icon: drcMaterialIcons.displacementStatus,
+        icon: appConfig.icons.displacementStatus,
         label: m.displacement,
         getValue: _ => _.nta?.ben_det_res_stat,
         getOptions: (get) => ctx.nta.schema.schemaHelper.getOptionsByQuestionName('ben_det_res_stat').map(_ => ({value: _.name, label: _.label[ctx.langIndex]}))

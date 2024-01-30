@@ -203,6 +203,7 @@ export const en = Object.freeze({
     expireAt: 'Expire at',
     slug: 'Slug',
     try: 'Try',
+    category: 'Category',
     origin: 'Origin',
     destination: 'Destination',
     invalidUrl: 'Invalid URL',
@@ -1223,6 +1224,7 @@ export const en = Object.freeze({
       openKoboForm: 'Open Kobo form',
     },
     _cfm: {
+      requestByOblast: 'Requests by Oblast',
       additionalInformation: 'Details',
       deleteWarning: `In case of mistake, you can still recover deleted data by contacting ${appConfig.contact}.`,
       _feedbackType: {

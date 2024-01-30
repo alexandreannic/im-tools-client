@@ -4,6 +4,7 @@ import {fnSwitch} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {Bn_Re} from '@/core/generatedKoboInterface/Bn_Re/Bn_Re'
 import {Person} from '@/core/type/person'
+import {Bn_ReOptions} from '@/core/generatedKoboInterface/Bn_Re/Bn_ReOptions'
 
 export interface PersonWithStatus extends Person.Person {
   status?: Protection_pss.Option<'hh_char_hh_det_status'>
@@ -32,6 +33,10 @@ export namespace KoboGeneralMapping {
   export const mapRaion = (_?: Bn_Re['ben_det_raion']) => _
 
   export const mapHromada = (_?: Bn_Re['ben_det_hromada']) => _
+
+  export const getRaionLabel = (_?: Bn_Re['ben_det_raion']) => (Bn_ReOptions.ben_det_raion as any)[_!]
+
+  export const getHromadaLabel = (_?: Bn_Re['ben_det_hromada']) => (Bn_ReOptions.ben_det_hromada as any)[_!]
 
   export const mapPersonWithStatus = (_: NonNullable<Protection_pss.T['hh_char_hh_det']>[0]): PersonWithStatus => {
     const res: PersonWithStatus = KoboGeneralMapping.mapPerson(_ as any)

@@ -357,13 +357,3 @@ export enum DrcJob {
   'Warehouse Assistant' = 'Warehouse Assistant',
   'Protection(PSS) Team Leader' = 'Protection(PSS) Team Leader',
 }
-
-export const drcMaterialIcons = {
-  koboForm: appFeaturesIndex.kobo_database.materialIcons,
-  project: 'inventory_2',
-  donor: 'handshake',
-  disability: 'assist_walker',
-  office: 'business',
-  oblast: 'location_on',
-  displacementStatus: 'directions_run',
-}

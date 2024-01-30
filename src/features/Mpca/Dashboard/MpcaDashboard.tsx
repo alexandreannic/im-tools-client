@@ -20,7 +20,7 @@ import {format} from 'date-fns'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {MpcaEntity, MpcaHelper, MpcaProgram, mpcaRowSources} from '@/core/sdk/server/mpca/MpcaEntity'
 import {DashboardFilterLabel} from '@/shared/DashboardLayout/DashboardFilterLabel'
-import {drcMaterialIcons, DrcOffice, DrcProjectHelper} from '@/core/type/drc'
+import {DrcOffice, DrcProjectHelper} from '@/core/type/drc'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Panel, PanelBody} from '@/shared/Panel'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
@@ -36,9 +36,9 @@ import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {WfpDeduplicationStatus} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {DeduplicationStatusIcon} from '@/features/WfpDeduplication/WfpDeduplicationData'
-import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
 import {AgeGroupTable} from '@/shared/AgeGroupTable'
+import {appConfig} from '@/conf/AppConfig'
 
 export const today = new Date()
 
@@ -86,13 +86,13 @@ export const MpcaDashboard = () => {
         getOptions: () => Enum.keys(mpcaRowSources).map(_ => SheetUtils.buildCustomOption(_, KoboIndex.byName(_).parsed.name))
       },
       finalDonor: {
-        icon: drcMaterialIcons.donor,
+        icon: appConfig.icons.donor,
         label: 'Donor',
         getValue: _ => _.finalDonor,
         getOptions: () => DataFilter.buildOptions(d.map(_ => _.finalDonor!).distinct(_ => _).sort())
       },
       finalProject: {
-        icon: drcMaterialIcons.project,
+        icon: appConfig.icons.project,
         label: 'Project',
         getValue: _ => _.finalProject,
         getOptions: () => DataFilter.buildOptions(d.map(_ => _.finalProject!).distinct(_ => _).sort()),

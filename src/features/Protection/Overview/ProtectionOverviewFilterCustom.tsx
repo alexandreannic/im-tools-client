@@ -49,6 +49,7 @@ export const ProtectionOverviewFilterCustom = () => {
   const hasActiveFilter = useMemo(() => {
     return Obj.entries(ctx.filters.custom).filter(([k, v]) => v).length > 0
   }, [ctx.filters.custom])
+
   return (
     <DashboardFilterLabel icon="filter_alt" label={m.custom} active={hasActiveFilter}>
       {(opened, close) => (
