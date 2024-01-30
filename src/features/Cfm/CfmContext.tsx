@@ -13,13 +13,14 @@ import {useSession} from '@/core/Session/SessionContext'
 import {DrcOffice, DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useIpToast} from '@/core/useToast'
-import {Seq, seq} from '@alexandreannic/ts-utils'
+import {Obj, Seq, seq} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternal'
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {useI18n} from '@/core/i18n'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 import {KeyOf} from '@/core/type/generic'
 import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
+import {Box} from '@mui/material'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,
@@ -36,6 +37,14 @@ export const cfmStatusIcon = {
   [KoboMealCfmStatus.Open]: <TableIcon tooltip="Open" color="warning">new_releases</TableIcon>,
   [KoboMealCfmStatus.Processing]: <TableIcon tooltip="Processing" color="info">schedule</TableIcon>,
 } as const
+
+export const cfmStatusIconLabel = Obj.map(cfmStatusIcon, (k, v) => [
+  k,
+  <>
+    {cfmStatusIcon[k]}&nbsp;
+    {k}
+  </> as any
+])
 
 
 export type CfmData = {

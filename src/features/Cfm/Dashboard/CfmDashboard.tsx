@@ -1,5 +1,5 @@
 import {Page} from '@/shared/Page'
-import {CfmData, CfmDataOrigin, cfmStatusIcon, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, CfmDataOrigin, cfmStatusIcon, cfmStatusIconLabel, useCfmContext} from '@/features/Cfm/CfmContext'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import React, {useMemo, useState} from 'react'
 import {Period, PeriodHelper} from '@/core/type/period'
@@ -14,6 +14,10 @@ import {Obj, seq} from '@alexandreannic/ts-utils'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {appConfig} from '@/conf/AppConfig'
+import {KoboGeneralMapping} from '@/core/koboForms/koboGeneralMapping'
+import {ChartLineBy} from '@/shared/charts/ChartLineBy'
+import {format} from 'date-fns'
 
 const feedbacTypeLabel = {
   'apprec_com': `Appreciation or compliments`,
@@ -37,7 +41,7 @@ export const CfmDashboard = () => {
       office: {
         icon: 'forum',
         label: m.category,
-        getValue: _ => _.category,
+        getValue: _ => _.category ?? DataFilter.blank,
         getOptions: () => d.flatMap(_ => _.category!).distinct(_ => _).sort().map(_ => DataFilter.buildOption(_ ?? DataFilter.blank, feedbacTypeLabel[_]))
       },
       source: {
@@ -52,14 +56,31 @@ export const CfmDashboard = () => {
         getValue: _ => _.tags?.status,
         getOptions: () => Obj.keys(KoboMealCfmStatus).map(_ => DataFilter.buildOption(
           _,
-          <>{cfmStatusIcon[_]} {_}</>
+          cfmStatusIconLabel[_]
         ))
       },
       oblast: {
-        icon: 'forum',
+        icon: appConfig.icons.oblast,
         label: m.oblast,
         getValue: _ => _.oblast,
         getOptions: () => DataFilter.buildOptions(d.flatMap(_ => _.oblast!).distinct(_ => _).sort())
+      },
+      raion: {
+        label: m.raion,
+        getValue: _ => _.ben_det_raion ?? DataFilter.blank,
+        getOptions: (get) => get().flatMap(_ => _.ben_det_raion!).distinct(_ => _).sort().map((_: any) => DataFilter.buildOption(_ ?? DataFilter.blank,
+          KoboGeneralMapping.getRaionLabel(_)))
+      },
+      hromada: {
+        label: m.hromada,
+        getValue: _ => _.ben_det_hromada ?? DataFilter.blank,
+        getOptions: (get) => get().flatMap(_ => _.ben_det_hromada!).distinct(_ => _).sort().map((_: any) => DataFilter.buildOption(_ ?? DataFilter.blank,
+          KoboGeneralMapping.getHromadaLabel(_)))
+      },
+      program: {
+        label: m.program,
+        getValue: _ => _.tags?.program ?? DataFilter.blank,
+        getOptions: (get) => get().flatMap(_ => _.tags?.program!).distinct(_ => _).sort().map((_: any) => DataFilter.buildOption(_ ?? DataFilter.blank, _)),
       },
     })
   }, [ctx.mappedData])
@@ -79,6 +100,7 @@ export const CfmDashboard = () => {
       <DataFilterLayout
         filters={filters}
         shapes={shape}
+        data={filteredByDateData}
         setFilters={setFilters}
         onClear={() => {
           setFilters({})
@@ -99,18 +121,15 @@ export const CfmDashboard = () => {
       />
       <Div>
         <Div column>
-          <Panel savableAsImg expendable title={m.category}>
-            <PanelBody>
-              <ChartBarSingleBy data={filteredData} by={_ => _.category} label={feedbacTypeLabel}/>
-            </PanelBody>
+          <Panel title={m.submissions}>
+            <ChartLineBy
+              sx={{mt: 1}}
+              data={filteredData}
+              getX={_ => format(_.submissionTime!, 'yyyy-MM')}
+              getY={_ => 1}
+              label={m.count}
+            />
           </Panel>
-          <Panel savableAsImg expendable title={m.program}>
-            <PanelBody>
-              <ChartBarSingleBy data={filteredData} by={_ => _.tags?.program}/>
-            </PanelBody>
-          </Panel>
-        </Div>
-        <Div column>
           <Panel savableAsImg expendable title={m._cfm.requestByOblast}>
             <PanelBody>
               <UaMapBy
@@ -121,6 +140,28 @@ export const CfmDashboard = () => {
                 getOblast={_ => _.oblastIso!}
                 base={_ => _.oblastIso !== undefined}
               />
+            </PanelBody>
+          </Panel>
+        </Div>
+        <Div column>
+          <Panel savableAsImg expendable title={m.category}>
+            <PanelBody>
+              <ChartBarSingleBy data={filteredData} by={_ => _.tags?.status} label={cfmStatusIconLabel}/>
+            </PanelBody>
+          </Panel>
+          <Panel savableAsImg expendable title={m.category}>
+            <PanelBody>
+              <ChartBarSingleBy data={filteredData} by={_ => _.category} label={feedbacTypeLabel}/>
+            </PanelBody>
+          </Panel>
+          <Panel savableAsImg expendable title={m.program}>
+            <PanelBody>
+              <ChartBarSingleBy data={filteredData} by={_ => _.tags?.program}/>
+            </PanelBody>
+          </Panel>
+          <Panel savableAsImg expendable title={m.program}>
+            <PanelBody>
+              <ChartBarSingleBy data={filteredData} by={_ => _.project}/>
             </PanelBody>
           </Panel>
         </Div>

@@ -116,14 +116,6 @@ const CfmSidebar = () => {
             base={_stats.open ?? 1}
           />
         </Box>
-        <UaMapBy
-          sx={{ml: 1, mt: 2}}
-          fillBaseOn="value"
-          data={ctx.mappedData}
-          value={_ => true}
-          getOblast={_ => _.oblastIso!}
-          base={_ => _.oblastIso !== undefined}
-        />
       </SidebarBody>
     </Sidebar>
   )

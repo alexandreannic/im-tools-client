@@ -1,7 +1,6 @@
 import {Seq, seq} from '@alexandreannic/ts-utils'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {ProtectionActivity, ProtectionActivityFlat} from '@/features/Protection/Context/protectionType'
-import {drcMaterialIcons, DrcProject} from '@/core/type/drc'
 import {useI18n} from '@/core/i18n'
 import {useMemo, useState} from 'react'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
@@ -10,6 +9,7 @@ import {endOfDay, startOfDay} from 'date-fns'
 import {KoboIndex} from '@/core/koboForms/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {Utils} from '@/utils/utils'
+import {appConfig} from '@/conf/AppConfig'
 
 export type UseProtectionFilter = ReturnType<typeof useProtectionFilters>
 
@@ -31,26 +31,26 @@ export const useProtectionFilters = (data?: Seq<ProtectionActivity>, flatData?: 
     const d = data ?? seq([])
     return DataFilter.makeShape<ProtectionActivity>({
       office: {
-        icon: drcMaterialIcons.office,
+        icon: appConfig.icons.office,
         label: m.office,
         getValue: _ => _.office,
         getOptions: () => DataFilter.buildOptions(d.flatMap(_ => _.office!).distinct(_ => _).sort())
       },
       oblast: {
-        icon: drcMaterialIcons.oblast,
+        icon: appConfig.icons.oblast,
         label: m.oblast,
         getValue: _ => _.oblast.name,
         getOptions: () => DataFilter.buildOptions(d.flatMap(_ => _.oblast.name!).distinct(_ => _).sort())
       },
       project: {
         multiple: true,
-        icon: drcMaterialIcons.project,
+        icon: appConfig.icons.project,
         label: m.project,
         getValue: _ => _.project,
         getOptions: () => DataFilter.buildOptions(d.flatMap(_ => _.project!).distinct(_ => _).sort())
       },
       form: {
-        icon: drcMaterialIcons.koboForm,
+        icon: appConfig.icons.koboForm,
         label: m.koboForms,
         getValue: _ => _.koboForm,
         getOptions: () => d.map(_ => _.koboForm!).distinct(_ => _).sort().map(_ => DataFilter.buildOption(_, KoboIndex.byName(_).translation))

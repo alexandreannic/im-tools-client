@@ -14,7 +14,7 @@ import {ChartBar} from '@/shared/charts/ChartBar'
 import {PartnershipCard} from '@/features/Partnership/Dashboard/PartnershipCard'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Utils} from '@/utils/utils'
-import {drcMaterialIcons, DrcProject, DrcProjectHelper} from '@/core/type/drc'
+import {DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {Txt} from 'mui-extension'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
@@ -28,6 +28,7 @@ import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
+import {appConfig} from '@/conf/AppConfig'
 
 export const PartnershipDashboard = ({}: {}) => {
   const ctx = usePartnershipContext()
@@ -148,14 +149,14 @@ export const _PartnershipDashboard = ({
       multiple: false
     },
     donor: {
-      icon: drcMaterialIcons.donor,
+      icon: appConfig.icons.donor,
       getValue: _ => _.Donor,
       getOptions: () => getOptions('Donor'),
       label: m.donor,
       multiple: false
     },
     project: {
-      icon: drcMaterialIcons.project,
+      icon: appConfig.icons.project,
       getValue: _ => _.project,
       getOptions: () => DataFilter.buildOptions(sgas?.map(_ => _.project).compact().distinct(_ => _)),
       label: m.project,
