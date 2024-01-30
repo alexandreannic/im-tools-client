@@ -24,6 +24,7 @@ import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink
 import {shelterIndex} from '@/features/Shelter/Shelter'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {CfmDashboard} from '@/features/Cfm/Dashboard/CfmDashboard'
 
 const relatedKoboForms: KoboFormName[] = [
   'meal_cfmInternal',
@@ -33,6 +34,7 @@ const relatedKoboForms: KoboFormName[] = [
 export const cfmIndex = {
   basePath: '/cfm',
   siteMap: {
+    dashboard: '/dashboard',
     access: '/access',
     data: '/data',
     entry: (formId: KoboId = ':formId', answerId: string = ':answerId') => `/entry/${formId}/${answerId}`
@@ -63,9 +65,14 @@ const CfmSidebar = () => {
   return (
     <Sidebar>
       <SidebarBody>
+        <NavLink to={path(cfmIndex.siteMap.dashboard)}>
+          {({isActive, isPending}) => (
+            <SidebarItem icon={appConfig.icons.dashboard} active={isActive}>{m.dashboard}</SidebarItem>
+          )}
+        </NavLink>
         <NavLink to={path(cfmIndex.siteMap.data)}>
           {({isActive, isPending}) => (
-            <SidebarItem icon="table_chart" active={isActive}>{m.data}</SidebarItem>
+            <SidebarItem icon={appConfig.icons.dataTable} active={isActive}>{m.data}</SidebarItem>
           )}
         </NavLink>
         <NavLink to={path(cfmIndex.siteMap.access)}>
@@ -153,6 +160,7 @@ export const Cfm = () => {
             >
               <Routes>
                 <Route index element={<Navigate to={cfmIndex.siteMap.data}/>}/>
+                <Route path={cfmIndex.siteMap.dashboard} element={<CfmDashboard/>}/>
                 <Route path={cfmIndex.siteMap.data} element={<CfmTable/>}/>
                 <Route path={cfmIndex.siteMap.entry()} element={<CfmEntryRoute/>}/>
                 <Route path={cfmIndex.siteMap.access} element={<CfmAccess/>}/>
