@@ -22,6 +22,7 @@ export namespace DataFilter {
     skipOption?: string[]
   }
 
+  export const blank = SheetUtils.blank
   export const blankOption = SheetUtils.blankOption
 
   export interface ShapeMultiple<TData, TOption extends string = string> extends ShapeBase<TData, TOption> {

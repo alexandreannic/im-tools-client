@@ -12,7 +12,7 @@ import {Utils} from '@/utils/utils'
 import {TableIcon, TableIconBtn, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect} from '@/shared/Select/Select'
 import {DrcOffice} from '@/core/type/drc'
-import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, cfmMakeEditRequestKey, cfmStatusIcon, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
 import {cfmIndex} from '@/features/Cfm/Cfm'
 import {IpIconBtn} from '@/shared/IconBtn'
@@ -131,11 +131,7 @@ export const CfmTable = ({}: any) => {
         tag: 'status',
         value: KoboMealCfmStatus.Open,
         enumerator: KoboMealCfmStatus,
-        translate: {
-          [KoboMealCfmStatus.Close]: <TableIcon tooltip={m._cfm.status.Close} color="success">check_circle</TableIcon>,
-          [KoboMealCfmStatus.Open]: <TableIcon tooltip={m._cfm.status.Open} color="warning">new_releases</TableIcon>,
-          [KoboMealCfmStatus.Processing]: <TableIcon tooltip={m._cfm.status.Processing} color="info">schedule</TableIcon>,
-        }
+        translate: cfmStatusIcon
       }),
       office: buildTagEnumColumn({
         head: m.office,

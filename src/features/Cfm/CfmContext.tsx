@@ -5,7 +5,7 @@ import {KoboAnswer, KoboAnswerId, KoboId} from '@/core/sdk/server/kobo/Kobo'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboIndex} from '@/core/koboForms/KoboIndex'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
-import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
+import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {Meal_CfmExternal} from '@/core/generatedKoboInterface/Meal_CfmExternal/Meal_CfmExternal'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
@@ -19,26 +19,40 @@ import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastInde
 import {useI18n} from '@/core/i18n'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 import {KeyOf} from '@/core/type/generic'
+import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,
   [KoboIndex.byName('meal_cfmInternal').id]: CfmDataSource.Internal,
 }
 
+export enum CfmDataOrigin {
+  Internal = 'Internal',
+  External = 'External',
+}
+
+export const cfmStatusIcon = {
+  [KoboMealCfmStatus.Close]: <TableIcon tooltip="Close" color="success">check_circle</TableIcon>,
+  [KoboMealCfmStatus.Open]: <TableIcon tooltip="Open" color="warning">new_releases</TableIcon>,
+  [KoboMealCfmStatus.Processing]: <TableIcon tooltip="Processing" color="info">schedule</TableIcon>,
+} as const
+
+
 export type CfmData = {
-  priority?: CfmDataPriority
-  formId: KoboId
-  tags?: KoboMealCfmTag
-  form: CfmDataSource
-  comments?: string
-  feedback?: string
-  additionalInformation?: string
-  project?: DrcProject
-  oblast: OblastName
-  oblastIso: OblastISO
-  category?: Meal_CfmInternal['feedback_type']
-  external_prot_support?: Meal_CfmExternal['prot_support']
-  internal_existing_beneficiary?: Meal_CfmInternal['existing_beneficiary']
+  readonly origin: CfmDataOrigin
+  readonly priority?: CfmDataPriority
+  readonly formId: KoboId
+  readonly tags?: KoboMealCfmTag
+  readonly form: CfmDataSource
+  readonly comments?: string
+  readonly feedback?: string
+  readonly additionalInformation?: string
+  readonly project?: DrcProject
+  readonly oblast: OblastName
+  readonly oblastIso: OblastISO
+  readonly category?: Meal_CfmInternal['feedback_type']
+  readonly external_prot_support?: Meal_CfmExternal['prot_support']
+  readonly internal_existing_beneficiary?: Meal_CfmInternal['existing_beneficiary']
   // internal_project_code?: Meal_CfmInternal['project_code']
   // external_thanks_feedback?: MealCfmExternal['thanks_feedback']
   // external_complaint?: MealCfmExternal['complaint']
@@ -138,6 +152,7 @@ export const CfmProvider = ({
         project: _.tags?.project,
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         formId: KoboIndex.byName('meal_cfmExternal').id,
+        origin: CfmDataOrigin.External,
         external_feedback_type: _.feedback_type,
         external_consent: _.consent,
         external_prot_support: _.prot_support,
@@ -155,6 +170,7 @@ export const CfmProvider = ({
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         category,
         formId: KoboIndex.byName('meal_cfmInternal').id,
+        origin: CfmDataOrigin.Internal,
         form: CfmDataSource.Internal,
         internal_existing_beneficiary: _.existing_beneficiary,
         // internal_project_code: _.project_code,
