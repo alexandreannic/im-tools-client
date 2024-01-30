@@ -14,6 +14,7 @@ import Link from 'next/link'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {ProtectionProvider, useProtectionContext} from '@/features/Protection/Context/ProtectionContext'
 import {shelterIndex} from '@/features/Shelter/Shelter'
+import {appFeaturesIndex} from '@/features/appFeatureId'
 
 const relatedKoboForms: (KoboFormName)[] = [
   // 'protection_hhs2_1',
@@ -75,6 +76,7 @@ export const ProtectionWithContext = () => {
 
   return (
     <Layout
+      title={appFeaturesIndex.protection.name}
       loading={ctx.fetching}
       sidebar={<ProtectionSidebar/>}
       header={<AppHeader id="app-header"/>}

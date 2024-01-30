@@ -89,6 +89,7 @@ const MpcaSidebar = () => {
 }
 
 export const Mpca = () => {
+  const {m} = useI18n()
   const {session, accesses} = useSession()
   const access = useMemo(() => !!appFeaturesIndex.mpca.showIf?.(session, accesses), [accesses])
   if (!access) {
@@ -100,6 +101,7 @@ export const Mpca = () => {
     <Router>
       <MpcaProvider>
         <Layout
+          title={appFeaturesIndex.mpca.name}
           sidebar={<MpcaSidebar/>}
           header={<AppHeader id="app-header"/>}
         >

@@ -9,6 +9,7 @@ import {AiSnfi} from '@/features/ActivityInfo/Snfi/AiSnfi'
 import {AiProtectionGeneral} from '@/features/ActivityInfo/Protection/AiProtectionGeneral'
 import {AiFslc} from '@/features/ActivityInfo/Fslc/AiFslc'
 import {AiGbv} from '@/features/ActivityInfo/Gbv/AiGbv'
+import {appFeaturesIndex} from '@/features/appFeatureId'
 
 export const activityInfoFormIds = {
   fslc: 'csgkp3xlg0yezpb8'
@@ -82,7 +83,7 @@ const ActivityInfoSidebar = () => {
 export const ActivityInfo = () => {
   return (
     <Router>
-      <Layout sidebar={<ActivityInfoSidebar/>}>
+      <Layout sidebar={<ActivityInfoSidebar/>} title={appFeaturesIndex.activity_info.name}>
         <Routes>
           {Enum.values(activities).map(k =>
             <Route key={k.path} path={k.path} element={k.componnent}/>

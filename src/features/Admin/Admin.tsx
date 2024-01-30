@@ -7,6 +7,7 @@ import {useI18n} from '@/core/i18n'
 import {Layout} from '@/shared/Layout'
 import {AdminProxy} from '@/features/Admin/AdminProxy'
 import {AdminGroups} from '@/features/Admin/AdminGroups'
+import {appFeaturesIndex} from '@/features/appFeatureId'
 
 export const adminModule = {
   basePath: '/admin',
@@ -47,6 +48,7 @@ export const Admin = () => {
   return (
     <Router>
       <Layout
+        title={appFeaturesIndex.admin.name}
         sidebar={<AdminSidebar/>}
         header={<AppHeader id="app-header"/>}
       >

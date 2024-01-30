@@ -112,6 +112,7 @@ export const Meal = () => {
   return (
     <Router>
       <Layout
+        title={appFeaturesIndex.meal.name}
         sidebar={<MealSidebar access={access}/>}
         header={<AppHeader id="app-header"/>}
       >

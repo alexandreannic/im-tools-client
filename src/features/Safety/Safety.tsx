@@ -57,6 +57,7 @@ export const Safety = () => {
   return (
     <Router>
       <Layout
+        title={appFeaturesIndex.safety.name}
         sidebar={<MpcaSidebar/>}
         header={<AppHeader id="app-header"/>}
       >
