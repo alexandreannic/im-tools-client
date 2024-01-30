@@ -43,7 +43,7 @@ export const PanelFeatures = ({
         position: 'absolute',
         display: 'none',
         background: t => t.palette.background.paper,
-        top: -30,
+        top: 0,
         right: 0,
       }}>
         {expendable && (
