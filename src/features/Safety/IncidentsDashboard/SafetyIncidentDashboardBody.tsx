@@ -26,7 +26,7 @@ export const SafetyIncidentDashboardBody = ({
   const [mapType, setMapType] = useState<'incident' | 'attack'>('incident')
   const {session} = useSession()
   return (
-    <Div sx={{alignItems: 'flex-start'}}>
+    <Div sx={{alignItems: 'flex-start'}} responsive>
       <Div column>
         <Div sx={{alignItems: 'stretch'}}>
           <SlideWidget sx={{flex: 1}} icon="report" title={m.safety.incidents}>

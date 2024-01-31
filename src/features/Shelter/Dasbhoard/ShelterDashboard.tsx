@@ -218,7 +218,7 @@ export const _ShelterDashboard = ({
   const {conf} = useAppSettings()
 
   return (
-    <Div>
+    <Div responsive>
       <Div column>
         <Div>
           <SlideWidget title={m.households} icon="home">

@@ -119,7 +119,7 @@ export const CfmDashboard = () => {
           </>
         }
       />
-      <Div>
+      <Div responsive>
         <Div column>
           <Panel title={m.submissions}>
             <ChartLineBy

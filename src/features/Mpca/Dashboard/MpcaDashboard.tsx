@@ -221,27 +221,31 @@ export const _MPCADashboard = ({
   return (
     <>
       <Div column>
-        <Div sx={{alignItems: 'stretch'}}>
-          <SlideWidget sx={{flex: 1}} icon="person" title="Beneficiaries">
-            <Lazy deps={[data]} fn={() => data.sum(_ => _.hhSize ?? 0)}>
-              {_ => formatLargeNumber(_)}
-            </Lazy>
-          </SlideWidget>
-          <SlideWidget sx={{flex: 1}} icon="how_to_reg" title="Duplications checked with WFP">
-            {formatLargeNumber(computed.deduplications.length)}
-          </SlideWidget>
-          <SlideWidget sx={{flex: 1}} icon="content_copy" title="Multiple time assisted">
-            {formatLargeNumber(Enum.keys(computed.multipleTimeAssisted).length)}
-            <Txt color="hint" sx={{ml: 1}}>{toPercent(Enum.keys(computed.multipleTimeAssisted).length / data.length)}</Txt>
-          </SlideWidget>
-          <SlidePanel sx={{flex: 1}}>
-            <ChartPieWidget showValue showBase value={computed.preventedAssistance.length} base={computed.deduplications.length} title="Prevented assistances"/>
-          </SlidePanel>
+        <Div responsive>
+          <Div sx={{alignItems: 'stretch'}}>
+            <SlideWidget sx={{flex: 1}} icon="person" title="Beneficiaries">
+              <Lazy deps={[data]} fn={() => data.sum(_ => _.hhSize ?? 0)}>
+                {_ => formatLargeNumber(_)}
+              </Lazy>
+            </SlideWidget>
+            <SlideWidget sx={{flex: 1}} icon="how_to_reg" title="Duplications checked with WFP">
+              {formatLargeNumber(computed.deduplications.length)}
+            </SlideWidget>
+          </Div>
+          <Div sx={{alignItems: 'stretch'}}>
+            <SlideWidget sx={{flex: 1}} icon="content_copy" title="Multiple time assisted">
+              {formatLargeNumber(Enum.keys(computed.multipleTimeAssisted).length)}
+              <Txt color="hint" sx={{ml: 1}}>{toPercent(Enum.keys(computed.multipleTimeAssisted).length / data.length)}</Txt>
+            </SlideWidget>
+            <SlidePanel sx={{flex: 1}}>
+              <ChartPieWidget showValue showBase value={computed.preventedAssistance.length} base={computed.deduplications.length} title="Prevented assistances"/>
+            </SlidePanel>
+          </Div>
           {/*<SlideWidget sx={{flex: 1}} icon="person" title={m.individuals}>*/}
           {/*  {formatLargeNumber(computed?.flatData.length)}*/}
           {/*</SlideWidget>*/}
         </Div>
-        <Div sx={{alignItems: 'flex-start'}}>
+        <Div sx={{alignItems: 'flex-start'}} responsive>
           <Div column>
             <SlidePanel BodyProps={{sx: {pt: 0}}}>
               <SlideWidget title="Total amount">

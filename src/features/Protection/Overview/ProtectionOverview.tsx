@@ -58,7 +58,7 @@ export const ProtectionOverview = () => {
         }
       />
       <Div column>
-        <Div>
+        <Div responsive>
           <Div column>
             <Div sx={{alignItems: 'stretch'}}>
               <SlideWidget sx={{flex: 1}} icon="group" title={m.submissions}>

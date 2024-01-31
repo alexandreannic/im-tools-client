@@ -205,7 +205,7 @@ export const _PartnershipDashboard = ({
         {/*  onChange={_ => setOptionFilters(prev => ({...prev, year: _}))}*/}
         {/*/>*/}
       </Box>
-      <Div>
+      <Div responsive>
         <Div column sx={{maxWidth: 320}}>
           <Panel sx={{display: 'flex'}}>
             <SlideWidget sx={{flex: 1}} title={m._partner.partners} icon="diversity_3">

@@ -139,7 +139,7 @@ export const MealVisitDashboard = () => {
       />
       {data && (
         <>
-          <Div>
+          <Div responsive>
             <Div column>
               <SlidePanel>
                 <UaMapBy

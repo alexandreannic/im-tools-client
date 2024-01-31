@@ -15,16 +15,16 @@ export const FeatureLogo = ({
 } & ButtonBaseProps) => {
   const t = useTheme()
   return (
-    <Link href={feature.path} key={feature.path}>
+    <Link href={feature.path} key={feature.path} style={{width: '100%'}}>
       <ButtonBase sx={{
-        width: 240,
+        p: 2,
+        width: '100%',
+        alignSelf: 'center',
+        justifySelf: 'center',
         display: 'inline-block',
         textAlign: 'center',
         overflow: 'hidden',
-        // flexDirection: 'column',
-        // justifyContent: 'center',
         borderRadius: t.shape.borderRadius + 'px',
-        padding: 2,
         transition: t.transitions.create('background'),
         '&:hover': {
           background: t.palette.action.hover,

@@ -221,6 +221,7 @@ export const en = Object.freeze({
     decidingFactorsToReturn: 'Deciding factors to return',
     displacement: 'Displacement',
     originOblast: 'Oblast of origin',
+    admin: 'Admin',
     idpOriginOblast: 'Origin oblast of IDPs',
     currentOblast: 'Current oblast',
     idpPopulationByOblast: 'IDP population by oblast',
