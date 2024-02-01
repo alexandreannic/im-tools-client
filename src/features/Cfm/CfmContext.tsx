@@ -175,8 +175,10 @@ export const CfmProvider = ({
     })
     data?.get?.[CfmDataSource.Internal].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride ?? _.feedback_type
+      const koboCode = _.project_code === 'Other' ? _.project_code_specify : _.project_code
+      const parsedCode = koboCode?.match(/UKR.(000\d\d\d)/)?.[1]
       res.push({
-        project: DrcProjectHelper.searchByCode(_.project_code === 'Other' ? _.project_code_specify : _.project_code),
+        project: DrcProjectHelper.searchByCode(parsedCode),
         priority: KoboMealCfmHelper.feedbackType2priority(category),
         category,
         formId: KoboIndex.byName('meal_cfmInternal').id,
