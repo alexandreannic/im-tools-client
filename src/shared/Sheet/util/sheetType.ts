@@ -23,7 +23,7 @@ export interface SheetSearch<T = any> {
 }
 
 export type SheetRow = Record<string, any> // Record<string, any/* string | number[] | string[] | Date | number | undefined*/>
-export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onSelect'> {
+export interface SheetTableProps<T extends SheetRow, K extends string = string> extends Omit<BoxProps, 'onSelect'> {
   header?: ReactNode | ((_: {
     data: T[]
     filteredData: T[]
@@ -32,6 +32,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   id: string
   loading?: boolean
   total?: number
+  defaultFilters?: Record<K, any>
   defaultLimit?: number
   title?: string
   readonly select?: {
@@ -43,7 +44,7 @@ export interface SheetTableProps<T extends SheetRow> extends Omit<BoxProps, 'onS
   getRenderRowKey?: (_: T, index: number) => string
   onClickRows?: (_: T, event: React.MouseEvent<HTMLElement>) => void
   rowsPerPageOptions?: number[]
-  columns: SheetColumnProps<T>[]
+  columns: SheetColumnProps<T, K>[]
   showColumnsToggle?: boolean
   hidePagination?: boolean
   showColumnsToggleBtnTooltip?: string
@@ -101,7 +102,7 @@ interface SheetColumnPropsUndefined<T> {
   renderValue?: (_: T) => string | boolean | number | undefined
 }
 
-export type SheetColumnProps<T extends SheetRow> = SheetColumnPropsBase<T> & (
+export type SheetColumnProps<T extends SheetRow, K extends string = string> = SheetColumnPropsBase<T, K> & (
   SheetColumnPropsText<T> |
   SheetColumnPropsSelectOne<T> |
   SheetColumnPropsDate<T> |
@@ -110,12 +111,12 @@ export type SheetColumnProps<T extends SheetRow> = SheetColumnPropsBase<T> & (
   SheetColumnPropsUndefined<T>
   )
 
-export interface SheetColumnPropsBase<T extends SheetRow> {
+export interface SheetColumnPropsBase<T extends SheetRow, K extends string = string> {
   // type?: SheetPropertyType//'number' | 'date' | 'string' | 'select_one' | 'select_multiple'
   // renderValue?: (_: T) => string | number | undefined
   // sx?: (_: T) => SxProps<Theme> | undefined
   // style?: CSSProperties
-  id: string
+  id: K
   render: (_: T) => ReactNode
   noSort?: boolean
   width?: number

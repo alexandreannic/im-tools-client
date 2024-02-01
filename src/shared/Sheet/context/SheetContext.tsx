@@ -32,6 +32,7 @@ export const SheetProvider = <T extends SheetRow>({
   onDataChange,
   onFiltersChange,
   getRenderRowKey,
+  defaultFilters,
   data: _data,
   id,
 }: {
@@ -43,6 +44,7 @@ export const SheetProvider = <T extends SheetRow>({
   select: SheetTableProps<T>['select']
   onFiltersChange: SheetTableProps<T>['onFiltersChange']
   onDataChange: SheetTableProps<T>['onDataChange']
+  defaultFilters: SheetTableProps<T>['defaultFilters']
   // sortBy?: KeyOf<T>
   // orderBy?: OrderBy
 
@@ -55,6 +57,7 @@ export const SheetProvider = <T extends SheetRow>({
     columnsIndex,
     data: _data,
     defaultLimit,
+    defaultFilters,
   })
 
   useEffect(() => {

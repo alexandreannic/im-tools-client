@@ -9,7 +9,7 @@ import {
   SheetFilterValueString,
   SheetInnerColumnProps,
   SheetRow,
-  SheetSearch
+  SheetSearch, SheetTableProps
 } from '@/shared/Sheet/util/sheetType'
 import {OrderBy} from '@alexandreannic/react-hooks-lib'
 import {KeyOf} from '@/core/type/generic'
@@ -21,13 +21,15 @@ export const useSheetData = <T extends SheetRow>({
   data,
   columnsIndex,
   defaultLimit = 20,
+  defaultFilters,
 }: {
   id: string
   defaultLimit?: number
+  defaultFilters?: SheetTableProps<T>['defaultFilters']
   data?: T[]
   columnsIndex: Record<KeyOf<T>, SheetInnerColumnProps<T>>
 }) => {
-  const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilterValue>>({} as any)
+  const [filters, setFilters] = useState<Record<KeyOf<T>, SheetFilterValue>>(defaultFilters ?? {} as any)
   const [search, setSearch] = useState<SheetSearch<any>>({
     limit: defaultLimit,
     offset: 0,

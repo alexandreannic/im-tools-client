@@ -2,7 +2,7 @@ import {KoboAnswerFilter} from '@/core/sdk/server/kobo/KoboAnswerSdk'
 import React, {ReactNode, useCallback, useMemo} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
-import {Enum, fnSwitch, seq} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, Obj} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {Panel} from '@/shared/Panel'
 import {IpInput} from '@/shared/Input/Input'
@@ -23,11 +23,11 @@ import {Autocomplete} from '@mui/material'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
-import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {Meal_CfmInternalOptions} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -152,6 +152,13 @@ export const CfmTable = ({}: any) => {
     <Page width="full">
       <Panel>
         <Sheet
+          defaultFilters={{
+            status: [
+              KoboMealCfmStatus.Processing,
+              KoboMealCfmStatus.Open,
+              KoboMealCfmStatus.Close,
+            ]
+          }}
           id="cfm"
           header={
             <>
@@ -176,7 +183,35 @@ export const CfmTable = ({}: any) => {
           loading={ctx.data.loading}
           getRenderRowKey={_ => _.form + _.id}
           columns={[
-            column.status,
+            {
+              id: 'status',
+              head: m.status,
+              type: 'select_one',
+              style: () => ({padding: 0}),
+              typeIcon: null,
+              width: 0,
+              options: () => Obj.keys(KoboMealCfmStatus).map(_ => ({value: _, label: _})),
+              renderValue: row => row?.tags?.status ?? KoboMealCfmStatus.Open,
+              render: row => (
+                <IpSelectSingle
+                  value={row.tags?.status ?? KoboMealCfmStatus.Open ?? ''}
+                  onChange={(tagChange) => {
+                    ctx.updateTag.call({
+                      formId: row.formId,
+                      answerId: row.id,
+                      key: 'status',
+                      value: tagChange,
+                    })
+                  }}
+                  options={Obj.keys(KoboMealCfmStatus)
+                    .filter(_ => !ctx.authorizations.sum.admin ? _ !== KoboMealCfmStatus.Archived : true)
+                    .map(_ => ({
+                      value: _, children: <>{cfmStatusIcon[_]}</>,
+                    }))
+                  }
+                />
+              ),
+            },
             {
               type: 'select_one',
               id: 'priority',

@@ -32,6 +32,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   select,
   onFiltersChange,
   onDataChange,
+  defaultFilters,
   ...props
 }: SheetTableProps<T>) => {
   const mappedColumns = useMemo(() => {
@@ -64,6 +65,7 @@ export const Sheet = <T extends SheetRow = SheetRow>({
         getRenderRowKey={getRenderRowKey}
         onFiltersChange={onFiltersChange}
         onDataChange={onDataChange}
+        defaultFilters={defaultFilters}
       >
         <_Sheet
           rowsPerPageOptions={rowsPerPageOptions}

@@ -28,7 +28,8 @@ export enum CfmDataPriority {
 export enum KoboMealCfmStatus {
   Open = 'Open',
   Close = 'Close',
-  Processing = 'Processing'
+  Processing = 'Processing',
+  Archived = 'Archived',
 }
 
 export enum KoboMealCfmArea {

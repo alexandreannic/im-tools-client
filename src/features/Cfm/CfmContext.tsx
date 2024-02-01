@@ -36,6 +36,7 @@ export const cfmStatusIcon = {
   [KoboMealCfmStatus.Close]: <TableIcon tooltip="Close" color="success">check_circle</TableIcon>,
   [KoboMealCfmStatus.Open]: <TableIcon tooltip="Open" color="warning">new_releases</TableIcon>,
   [KoboMealCfmStatus.Processing]: <TableIcon tooltip="Processing" color="info">schedule</TableIcon>,
+  [KoboMealCfmStatus.Archived]: <TableIcon tooltip="Processing" color="disabled">archive</TableIcon>,
 } as const
 
 export const cfmStatusIconLabel = Obj.map(cfmStatusIcon, (k, v) => [
