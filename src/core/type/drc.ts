@@ -1,4 +1,4 @@
-import {Enum} from '@alexandreannic/ts-utils'
+import {Obj} from '@alexandreannic/ts-utils'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 
 export enum DrcOffice {
@@ -104,7 +104,7 @@ export enum DrcProject {
 }
 
 export class DrcProjectHelper {
-  static readonly list = Enum.keys(DrcProject)
+  static readonly list = Obj.keys(DrcProject)
 
   static readonly projectByDonor: Record<DrcDonor, DrcProject[]> = {
     [DrcDonor.BHA]: [DrcProject['UKR-000284 BHA'], DrcProject['UKR-000345 BHA2']],
@@ -131,7 +131,7 @@ export class DrcProjectHelper {
     [DrcDonor.HoffmansAndHusmans]: [DrcProject['UKR-000341 Hoffmans & Husmans']],
   }
 
-  static readonly donorByProject: Record<DrcProject, DrcDonor> = Enum.entries(DrcProjectHelper.projectByDonor)
+  static readonly donorByProject: Record<DrcProject, DrcDonor> = Obj.entries(DrcProjectHelper.projectByDonor)
     .reduce((acc, [donor, projects]) => {
       projects.forEach(project => {
         acc[project] = donor
@@ -140,7 +140,7 @@ export class DrcProjectHelper {
     }, {} as Record<DrcProject, DrcDonor>)
 
   static readonly searchByCode = (code?: string): DrcProject | undefined => {
-    if (code) return Enum.values(DrcProject).find(_ => _.includes(code))
+    if (code) return Obj.values(DrcProject).find(_ => _.includes(code))
   }
 
   static readonly budgetByProject: Partial<Record<DrcProject, number>> = {

@@ -13,14 +13,14 @@ import {useSession} from '@/core/Session/SessionContext'
 import {DrcOffice, DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useIpToast} from '@/core/useToast'
-import {Obj, Seq, seq} from '@alexandreannic/ts-utils'
+import {fnSwitch, Obj, Seq, seq} from '@alexandreannic/ts-utils'
 import {Meal_CfmInternal} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternal'
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {useI18n} from '@/core/i18n'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 import {KeyOf} from '@/core/type/generic'
-import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
-import {Box} from '@mui/material'
+import {TableIcon, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
+import {Box, BoxProps} from '@mui/material'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,
@@ -32,21 +32,25 @@ export enum CfmDataOrigin {
   External = 'External',
 }
 
-export const cfmStatusIcon = {
-  [KoboMealCfmStatus.Close]: <TableIcon tooltip="Close" color="success">check_circle</TableIcon>,
-  [KoboMealCfmStatus.Open]: <TableIcon tooltip="Open" color="warning">new_releases</TableIcon>,
-  [KoboMealCfmStatus.Processing]: <TableIcon tooltip="Processing" color="info">schedule</TableIcon>,
-  [KoboMealCfmStatus.Archived]: <TableIcon tooltip="Processing" color="disabled">archive</TableIcon>,
-} as const
+export const CfmStatusIcon = ({status, ...props}: {
+  status: KoboMealCfmStatus
+} & Omit<TableIconProps, 'children'>) => fnSwitch(status, {
+  [KoboMealCfmStatus.Close]: <TableIcon {...props} tooltip="Close" color="success">check_circle</TableIcon>,
+  [KoboMealCfmStatus.Open]: <TableIcon {...props} tooltip="Open" color="warning">new_releases</TableIcon>,
+  [KoboMealCfmStatus.Processing]: <TableIcon {...props} tooltip="Processing" color="info">schedule</TableIcon>,
+  [KoboMealCfmStatus.Archived]: <TableIcon {...props} tooltip="Processing" color="disabled">archive</TableIcon>,
+})
 
-export const cfmStatusIconLabel = Obj.map(cfmStatusIcon, (k, v) => [
-  k,
-  <>
-    {cfmStatusIcon[k]}&nbsp;
-    {k}
-  </> as any
-])
+export const CfmStatusIconLabel = ({status, ...props}: {
+  status: KoboMealCfmStatus
+} & Omit<BoxProps, 'status' | 'children'>) => (
+  <Box component="span" {...props}>
+    <CfmStatusIcon status={status} sx={{mr: 1}}/>
+    {status}
+  </Box>
+)
 
+export const cfmStatusIconIndex = Obj.mapValues(KoboMealCfmStatus, _ => <CfmStatusIcon status={_}/>)
 
 export type CfmData = {
   readonly origin: CfmDataOrigin
@@ -97,8 +101,16 @@ export interface CfmContext {
   }
   schemaInternal: KoboSchemaHelper.Bundle
   schemaExternal: KoboSchemaHelper.Bundle
-  updateTag: UseAsyncMultiple<(_: {formId: KoboId, answerId: KoboAnswerId, key: keyof KoboMealCfmTag, value: any}) => Promise<void>, KoboId>
-  asyncRemove: UseAsyncMultiple<(_: {formId: KoboId, answerId: KoboAnswerId}) => Promise<void>, KoboId>
+  updateTag: UseAsyncMultiple<(_: {
+    formId: KoboId,
+    answerId: KoboAnswerId,
+    key: keyof KoboMealCfmTag,
+    value: any
+  }) => Promise<void>, KoboId>
+  asyncRemove: UseAsyncMultiple<(_: {
+    formId: KoboId,
+    answerId: KoboAnswerId
+  }) => Promise<void>, KoboId>
   users: UseFetcher<ApiSdk['user']['search']>
   data: UseFetcher<() => Promise<{
     [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal, KoboMealCfmTag>[]

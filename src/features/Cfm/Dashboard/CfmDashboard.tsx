@@ -1,5 +1,5 @@
 import {Page} from '@/shared/Page'
-import {CfmData, CfmDataOrigin, cfmStatusIcon, cfmStatusIconLabel, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, CfmDataOrigin, CfmStatusIconLabel, useCfmContext} from '@/features/Cfm/CfmContext'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import React, {useMemo, useState} from 'react'
 import {Period, PeriodHelper} from '@/core/type/period'
@@ -10,7 +10,7 @@ import {useI18n} from '@/core/i18n'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {today} from '@/features/Mpca/Dashboard/MpcaDashboard'
 import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
-import {Obj, seq} from '@alexandreannic/ts-utils'
+import {Enum, Obj, seq} from '@alexandreannic/ts-utils'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
@@ -56,7 +56,7 @@ export const CfmDashboard = () => {
         getValue: _ => _.tags?.status,
         getOptions: () => Obj.keys(KoboMealCfmStatus).map(_ => DataFilter.buildOption(
           _,
-          cfmStatusIconLabel[_]
+          <CfmStatusIconLabel status={KoboMealCfmStatus[_]}/>
         ))
       },
       oblast: {
@@ -146,7 +146,11 @@ export const CfmDashboard = () => {
         <Div column>
           <Panel savableAsImg expendable title={m.category}>
             <PanelBody>
-              <ChartBarSingleBy data={filteredData} by={_ => _.tags?.status} label={cfmStatusIconLabel}/>
+              <ChartBarSingleBy
+                data={filteredData}
+                by={_ => _.tags?.status}
+                label={Obj.mapValues(KoboMealCfmStatus, _ => <CfmStatusIconLabel status={_}/>)}
+              />
             </PanelBody>
           </Panel>
           <Panel savableAsImg expendable title={m.category}>

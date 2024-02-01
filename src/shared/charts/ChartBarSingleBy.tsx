@@ -1,6 +1,6 @@
 import {ChartDataVal, ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import React, {useMemo} from 'react'
+import React, {ReactNode, useMemo} from 'react'
 import {chain} from '@/utils/utils'
 import {ChartBar} from '@/shared/charts/ChartBar'
 import {Checkbox} from '@mui/material'
@@ -9,7 +9,7 @@ import {KeyOf} from '@/core/type/generic'
 export const ChartBarSingleBy = <
   D extends Record<string, any>,
   K extends string,
-  O extends Record<K, string>,
+  O extends Record<K, ReactNode>,
 >({
   by,
   data,

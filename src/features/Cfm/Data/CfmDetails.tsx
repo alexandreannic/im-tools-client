@@ -1,4 +1,4 @@
-import {CfmData, cfmMakeEditRequestKey, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, cfmMakeEditRequestKey, CfmStatusIconLabel, useCfmContext} from '@/features/Cfm/CfmContext'
 import {useNavigate, useParams} from 'react-router'
 import {Page, PageTitle} from '@/shared/Page'
 import * as yup from 'yup'
@@ -9,12 +9,10 @@ import {ListRow} from '@/shared/ListRow'
 import {useI18n} from '@/core/i18n'
 import React from 'react'
 import {CfmDataProgram, CfmDataSource, KoboMealCfmArea, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {KoboSelectTag} from '@/shared/KoboSelectTag'
 import {DrcOffice} from '@/core/type/drc'
 import {Utils} from '@/utils/utils'
-import {AaSelect} from '@/shared/Select/Select'
-import {Enum} from '@alexandreannic/ts-utils'
+import {Enum, Obj} from '@alexandreannic/ts-utils'
 import {CfmPriorityLogo} from '@/features/Cfm/Data/CfmTable'
 import {IpBtn} from '@/shared/Btn'
 import {cfmIndex} from '@/features/Cfm/Cfm'
@@ -23,6 +21,7 @@ import {Modal} from 'mui-extension/lib/Modal'
 import {Meal_CfmInternalOptions} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {TableInput} from '@/shared/TableInput'
+import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -69,26 +68,12 @@ export const CfmDetails = ({entry}: {
             formId={entry.formId}
             answerId={entry.id}
             enumerator={KoboMealCfmStatus}
-            translate={{
-              [KoboMealCfmStatus.Close]: (
-                <Box sx={{display: 'flex', alignItems: 'center'}}>
-                  <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Close} color="success">check_circle</TableIcon>
-                  {m._cfm.status.Close}
-                </Box>
-              ),
-              [KoboMealCfmStatus.Open]: (
-                <Box sx={{display: 'flex', alignItems: 'center'}}>
-                  <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Open} color="warning">new_releases</TableIcon>
-                  {m._cfm.status.Open}
-                </Box>
-              ),
-              [KoboMealCfmStatus.Processing]: (
-                <Box sx={{display: 'flex', alignItems: 'center'}}>
-                  <TableIcon sx={{mr: 1}} tooltip={m._cfm.status.Processing} color="info">schedule</TableIcon>
-                  {m._cfm.status.Processing}
-                </Box>
-              ),
-            }}
+            translate={new Obj(KoboMealCfmStatus)
+              .filter(_ => !ctx.authorizations.sum.admin ? _ !== KoboMealCfmStatus.Archived : true)
+              .mapValues(k => (
+                <CfmStatusIconLabel key={k} status={k!} sx={{display: 'flex', alignItems: 'center'}}/>
+              )).get()
+            }
           />
         </>
       }>
@@ -193,16 +178,6 @@ export const CfmDetails = ({entry}: {
                   entry={entry}
                 />
               </ListRow>
-              <Divider sx={{mb: 2}}/>
-              <TableInput
-                value={entry.tags?.notes}
-                multiline
-                rows={8}
-                label={m.note}
-                onChange={_ => {
-                  ctx.updateTag.call({formId: entry.formId, answerId: entry.id, key: 'notes', value: _})
-                }}
-              />
             </PanelBody>
           </Panel>
         </Grid>
@@ -210,7 +185,7 @@ export const CfmDetails = ({entry}: {
       <Panel>
         <PanelHead>{m._cfm.feedback} {entry.external_feedback_type ? `(${m._cfm._feedbackType[entry.external_feedback_type!]})` : ``}</PanelHead>
         <PanelBody>
-          <AaSelect
+          <IpSelectSingle
             sx={{mb: 2}}
             disabled={entry.form === CfmDataSource.Internal}
             defaultValue={entry.category}
@@ -220,11 +195,23 @@ export const CfmDetails = ({entry}: {
             options={Enum.entries(Meal_CfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
           />
           <Box>{entry.feedback}</Box>
+
           {entry.comments && <Txt block sx={{mt: 2}} bold size="big">{m.comments}</Txt>}
           {entry.comments}
+
+          <Txt block sx={{mt: 2}} bold size="big">{m.note}</Txt>
+          <TableInput
+            value={entry.tags?.notes}
+            multiline
+            minRows={6}
+            maxRows={10}
+            onChange={_ => {
+              ctx.updateTag.call({formId: entry.formId, answerId: entry.id, key: 'notes', value: _})
+            }}
+          />
         </PanelBody>
       </Panel>
-      {canEdit && (
+      {ctx.authorizations.sum.admin && (
         <Box sx={{display: 'flex', justifyContent: 'center'}}>
           <Modal
             loading={ctx.asyncRemove.loading[cfmMakeEditRequestKey(entry.formId, entry.id)]}

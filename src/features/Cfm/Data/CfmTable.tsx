@@ -12,7 +12,7 @@ import {Utils} from '@/utils/utils'
 import {TableIcon, TableIconBtn, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect} from '@/shared/Select/Select'
 import {DrcOffice} from '@/core/type/drc'
-import {CfmData, cfmMakeEditRequestKey, cfmStatusIcon, useCfmContext} from '@/features/Cfm/CfmContext'
+import {CfmData, cfmMakeEditRequestKey, CfmStatusIcon, cfmStatusIconIndex, useCfmContext} from '@/features/Cfm/CfmContext'
 import {NavLink} from 'react-router-dom'
 import {cfmIndex} from '@/features/Cfm/Cfm'
 import {IpIconBtn} from '@/shared/IconBtn'
@@ -131,7 +131,7 @@ export const CfmTable = ({}: any) => {
         tag: 'status',
         value: KoboMealCfmStatus.Open,
         enumerator: KoboMealCfmStatus,
-        translate: cfmStatusIcon
+        translate: cfmStatusIconIndex
       }),
       office: buildTagEnumColumn({
         head: m.office,
@@ -206,7 +206,7 @@ export const CfmTable = ({}: any) => {
                   options={Obj.keys(KoboMealCfmStatus)
                     .filter(_ => !ctx.authorizations.sum.admin ? _ !== KoboMealCfmStatus.Archived : true)
                     .map(_ => ({
-                      value: _, children: <>{cfmStatusIcon[_]}</>,
+                      value: _, children: <CfmStatusIcon status={KoboMealCfmStatus[_]}/>,
                     }))
                   }
                 />
