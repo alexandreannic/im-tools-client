@@ -18,6 +18,7 @@ import {BasicDialog} from '@/shared/BasicDialog'
 import {UUID} from '@/core/type/generic'
 import {Utils} from '@/utils/utils'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {Group} from '@/core/sdk/server/group/GroupItem'
 
 interface GoupForm {
   name: string
@@ -38,8 +39,24 @@ export const AdminGroups = () => {
   const asyncItemCreate = useAsync(api.group.createItem)
   const asyncItemItem = useAsync(api.group.updateItem)
   const asyncItemDelete = useAsync(api.group.deleteItem, {requestKey: _ => _[0]})
+  const asyncDuplicate = useAsync(async (g: Group) => {
+    const {id, items, createdAt, name, ...params} = g
+    const newGroup = await asyncCreate.call({
+      name: `${name} (copy)`,
+      ...params
+    })
+    await Promise.all(items.map(item => {
+      return api.group.createItem(newGroup.id, {
+        ...item,
+        drcJob: item.drcJob ? [item.drcJob] : undefined,
+      })
+    }))
+  }, {requestKey: _ => _[0].id})
 
-  const [selectedGroupId, setSelectedGroupId] = useState<{groupId: UUID, accessId?: UUID} | undefined>()
+  const [selectedGroupId, setSelectedGroupId] = useState<{
+    groupId: UUID,
+    accessId?: UUID
+  } | undefined>()
 
   useEffect(() => {
     fetcher.fetch()
@@ -124,7 +141,7 @@ export const AdminGroups = () => {
               )
             },
             {
-              id: 'actions', width: 24, align: 'right', render: _ => <>
+              id: 'actions', width: 84, align: 'right', render: _ => <>
                 <Modal
                   onOpen={groupForm.reset}
                   onConfirm={(e, close) => groupForm.handleSubmit(form => {
@@ -141,7 +158,8 @@ export const AdminGroups = () => {
                 >
                   <IpIconBtn size="small">edit</IpIconBtn>
                 </Modal>
-                <IpIconBtn size="small" onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading[_.id]}>delete</IpIconBtn>
+                <IpIconBtn size="small" tooltip={m.duplicate} onClick={() => asyncDuplicate.call(_)} loading={asyncDuplicate.loading[_.id]}>content_copy</IpIconBtn>
+                <IpIconBtn size="small" tooltip={m.remove} onClick={() => asyncRemove.call(_.id)} loading={asyncRemove.loading[_.id]}>delete</IpIconBtn>
               </>
             },
           ]}

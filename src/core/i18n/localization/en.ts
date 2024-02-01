@@ -245,6 +245,7 @@ export const en = Object.freeze({
     firstName: 'First name',
     patronyme: 'Patronyme',
     data: 'Data',
+    duplicate: 'Duplicate',
     duplication: 'Duplication',
     deduplication: 'Deduplication',
     wfpDeduplication: 'WFP Deduplication',

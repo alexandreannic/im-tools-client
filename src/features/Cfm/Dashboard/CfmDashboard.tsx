@@ -88,7 +88,7 @@ export const CfmDashboard = () => {
   const [filters, setFilters] = usePersistentState<DataFilter.InferShape<typeof shape>>({}, {storageKey: 'cfm-dashboard-filters'})
 
   const filteredByDateData = useMemo(() => {
-    return ctx.mappedData.filter(_ => PeriodHelper.isDateIn(period, _.date))
+    return ctx.mappedData.filter(_ => PeriodHelper.isDateIn(period, _.submissionTime))
   }, [period, ctx.mappedData])
 
   const filteredData = useMemo(() => {
