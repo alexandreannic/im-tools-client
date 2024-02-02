@@ -117,6 +117,7 @@ export interface CfmContext {
     [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal, KoboMealCfmTag>[]
   }>>
   mappedData: Seq<CfmData>
+  visibleData: Seq<CfmData>
 }
 
 const CfmContext = React.createContext({} as CfmContext)
@@ -203,23 +204,26 @@ export const CfmProvider = ({
         ..._,
       })
     })
-    return seq(res)
-      .filter(_ => {
-        if (_.tags?.deletedBy) return false
-        if (session.email === _.tags?.focalPointEmail)
-          return true
-        if (!authorizations.sum.read)
-          return false
-        if (authorizations.accessiblePrograms && !authorizations.accessiblePrograms.includes(_.tags?.program!))
-          return false
-        if (authorizations.accessibleOffices && !authorizations.accessibleOffices.includes(_.tags?.office!))
-          return false
-        // if (authorizations.accessibleEmails && !authorizations.accessibleEmails.includes(_.tags?.focalPointEmail!))
-        //   return false
-        return true
-      })
-      .sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
+    return seq(res).sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
+
   }, [fetcherData])
+
+  const visibleData = useMemo(() => {
+    return mappedData.filter(_ => {
+      if (_.tags?.deletedBy) return false
+      if (session.email === _.tags?.focalPointEmail)
+        return true
+      if (!authorizations.sum.read)
+        return false
+      if (authorizations.accessiblePrograms && !authorizations.accessiblePrograms.includes(_.tags?.program!))
+        return false
+      if (authorizations.accessibleOffices && !authorizations.accessibleOffices.includes(_.tags?.office!))
+        return false
+      // if (authorizations.accessibleEmails && !authorizations.accessibleEmails.includes(_.tags?.focalPointEmail!))
+      //   return false
+      return true
+    })
+  }, [fetcherData, authorizations.accessiblePrograms, authorizations.accessibleOffices])
 
   const updateTag = useAsync((params: {
     formId: KoboId,
@@ -285,6 +289,7 @@ export const CfmProvider = ({
       fetcherData: fetcherData,
       users,
       mappedData,
+      visibleData,
       schemaInternal,
       schemaExternal,
     }}>

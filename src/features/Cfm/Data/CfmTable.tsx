@@ -119,7 +119,7 @@ export const CfmTable = ({}: any) => {
       ),
       ...sheetProps,
     }
-  }, [ctx.mappedData])
+  }, [ctx.visibleData])
 
   const column = useMemo(() => {
     return {
@@ -146,7 +146,7 @@ export const CfmTable = ({}: any) => {
         enumerator: CfmDataProgram,
       })
     }
-  }, [ctx.mappedData])
+  }, [ctx.visibleData])
 
   return (
     <Page width="full">
@@ -179,7 +179,7 @@ export const CfmTable = ({}: any) => {
               />
             </>
           }
-          data={ctx.mappedData}
+          data={ctx.visibleData}
           loading={ctx.fetcherData.loading}
           getRenderRowKey={_ => _.form + _.id}
           columns={[
@@ -282,7 +282,7 @@ export const CfmTable = ({}: any) => {
             {
               width: 170,
               type: 'select_one',
-              // options: () => seq(ctx.mappedData).map(_ => _.tags?.focalPointEmail).compact().distinct(_ => _).map(SheetUtils.buildOption),
+              // options: () => seq(ctx.visibleData).map(_ => _.tags?.focalPointEmail).compact().distinct(_ => _).map(SheetUtils.buildOption),
               renderValue: _ => _.tags?.focalPointEmail,
               head: m.focalPoint,
               renderOption: _ => _.tags?.focalPointEmail,
