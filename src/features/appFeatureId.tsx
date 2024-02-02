@@ -104,9 +104,10 @@ export const appFeaturesIndex: Record<AppFeatureId, AppFeature> = {
     color: '#1f9b97',
     path: '/meal',
     showIf: (u, accesses) => {
-      return u?.admin || accesses && !!accesses
-        .filter(Access.filterByFeature(AppFeatureId.kobo_database))
-        .find(_ => _.params?.koboFormId === KoboIndex.byName('bn_re').id)
+      return true
+      // u?.admin || accesses && !!accesses
+      //   .filter(Access.filterByFeature(AppFeatureId.kobo_database))
+      //   .find(_ => _.params?.koboFormId === KoboIndex.byName('bn_re').id)
       // return u?.admin || accesses && !!accesses.find(_ => _.featureId === AppFeatureId.mpca)
     }
   },

@@ -191,7 +191,6 @@ export const _DashboardMealVisitPdf = () => {
             <Title sx={{mb: .5}} size="big">General Observation</Title>
             <Box sx={{textAlign: 'justify'}}>
               {entry.fcpc}
-              {entry.fcpc}
             </Box>
 
             {/*<Box sx={{display: 'grid', mt: 1, mx: -.5, gridTemplateColumns: '1fr 1fr 1fr'}}>*/}
