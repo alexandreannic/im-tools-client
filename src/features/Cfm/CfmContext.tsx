@@ -112,7 +112,7 @@ export interface CfmContext {
     answerId: KoboAnswerId
   }) => Promise<void>, KoboId>
   users: UseFetcher<ApiSdk['user']['search']>
-  data: UseFetcher<() => Promise<{
+  fetcherData: UseFetcher<() => Promise<{
     [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal, KoboMealCfmTag>[]
     [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal, KoboMealCfmTag>[]
   }>>
@@ -157,7 +157,7 @@ export const CfmProvider = ({
     }
   }, [session, accesses])
 
-  const data = useFetcher(async (filters?: CfmDataFilters) => {
+  const fetcherData = useFetcher(async (filters?: CfmDataFilters) => {
     const [external, internal] = await Promise.all([
       api.kobo.typedAnswers.searchMealCfmExternal(filters).then(_ => _.data),
       api.kobo.typedAnswers.searchMealCfmInternal(filters).then(_ => _.data),
@@ -167,7 +167,7 @@ export const CfmProvider = ({
 
   const mappedData = useMemo(() => {
     const res: CfmData[] = []
-    data.get?.[CfmDataSource.External].forEach(_ => {
+    fetcherData.get?.[CfmDataSource.External].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride
       res.push({
         category,
@@ -185,7 +185,7 @@ export const CfmProvider = ({
         ..._,
       })
     })
-    data?.get?.[CfmDataSource.Internal].forEach(_ => {
+    fetcherData?.get?.[CfmDataSource.Internal].forEach(_ => {
       const category = _.tags?.feedbackTypeOverride ?? _.feedback_type
       const koboCode = _.project_code === 'Other' ? _.project_code_specify : _.project_code
       const parsedCode = koboCode?.match(/UKR.(000\d\d\d)/)?.[1]
@@ -219,7 +219,7 @@ export const CfmProvider = ({
         return true
       })
       .sort((b, a) => (a.date ?? a.submissionTime).getTime() - (b.date ?? b.submissionTime).getTime())
-  }, [data])
+  }, [fetcherData])
 
   const updateTag = useAsync((params: {
     formId: KoboId,
@@ -233,7 +233,7 @@ export const CfmProvider = ({
       tags: {[params.key]: params.value}
     }).then(() => {
       const formName = formIdMapping[params.formId]
-      data.set(prev => prev ? ({
+      fetcherData.set(prev => prev ? ({
         ...prev,
         [formName]: prev[formName].map(_ => {
           if (_.id === params.answerId) {
@@ -273,7 +273,7 @@ export const CfmProvider = ({
   })
 
   useEffect(() => {
-    data.fetch()
+    fetcherData.fetch()
     users.fetch()
   }, [])
 
@@ -282,7 +282,7 @@ export const CfmProvider = ({
       authorizations,
       asyncRemove,
       updateTag,
-      data,
+      fetcherData: fetcherData,
       users,
       mappedData,
       schemaInternal,

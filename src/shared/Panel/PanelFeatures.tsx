@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ReactNode, useRef, useState} from 'react'
-import {Box, Icon} from '@mui/material'
+import {Box, Icon, useTheme} from '@mui/material'
 import {IconBtn} from 'mui-extension'
 import html2canvas from 'html2canvas'
 import {Utils} from '@/utils/utils'
@@ -16,9 +16,13 @@ export const PanelFeatures = ({
 }) => {
   const [expended, setExpended] = useState(false)
   const content = useRef<HTMLDivElement>(null)
-
+  const t = useTheme()
   const saveAsImg = () => {
-    html2canvas(content.current!, {}).then(_ => Utils.openCanvasInNewTab(_, 'imaa-tools-static'))
+    html2canvas(content.current!, {
+      allowTaint: true,
+      backgroundColor: 'transparent',
+      // backgroundColor: t.palette.background.default,
+    }).then(_ => Utils.openCanvasInNewTab(_, 'imaa-tools-static'))
   }
 
   return (

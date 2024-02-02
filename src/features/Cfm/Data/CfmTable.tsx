@@ -61,7 +61,7 @@ export const CfmTable = ({}: any) => {
       api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, KoboIndex.byName('meal_cfmInternal').id),
       api.koboApi.synchronizeAnswers(kobo.drcUa.server.prod, KoboIndex.byName('meal_cfmExternal').id),
     ])
-    await ctx.data.fetch({force: true, clean: false})
+    await ctx.fetcherData.fetch({force: true, clean: false})
   })
   // const {toastHttpError, toastLoading} = useAaToast()
   //
@@ -180,7 +180,7 @@ export const CfmTable = ({}: any) => {
             </>
           }
           data={ctx.mappedData}
-          loading={ctx.data.loading}
+          loading={ctx.fetcherData.loading}
           getRenderRowKey={_ => _.form + _.id}
           columns={[
             {
