@@ -2,27 +2,39 @@ import {KoboAnswer, KoboMappedAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {currentProtectionProjects, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {useMemo} from 'react'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {Enum, map} from '@alexandreannic/ts-utils'
+import {map, Obj} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/type/drc'
 import {useI18n} from '@/core/i18n'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
-import {KoboIndex} from '@/core/koboForms/KoboIndex'
+import {KoboIndex} from '@/core/KoboIndex'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {EcrecCashRegistrationPaymentStatus, EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
+import {Ecrec_CashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_CashRegistration/Ecrec_CashRegistration'
 
 export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, SheetColumnProps<KoboMappedAnswer>[]> = {
+      // [KoboIndex.byName('ecrec_cashRegistration').id]: [
+      //   {
+      //     id: 'status',
+      //     head: m.status,
+      //     type: 'select_one',
+      //     width: 200,
+      //     options: () => SheetUtils.buildOptions(Obj.keys(EcrecCashRegistrationPaymentStatus), true),
+      //     tooltip: (row: KoboAnswer<Ecrec_CashRegistration.T, EcrecCashRegistrationTags>) => row,
+      //   }
+      // ],
       [KoboIndex.byName('protection_communityMonitoring').id]: [
         {
           id: 'tags_project',
           head: m.project,
           type: 'select_multiple',
           width: 200,
-          options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+          options: () => SheetUtils.buildOptions(Obj.keys(DrcProject), true),
           tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project,
           renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blank,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
@@ -44,7 +56,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           head: m.project,
           type: 'select_multiple',
           width: 200,
-          options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+          options: () => SheetUtils.buildOptions(Obj.keys(DrcProject), true),
           tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project,
           renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.project ?? SheetUtils.blank,
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
@@ -66,7 +78,7 @@ export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
           head: m.project,
           type: 'select_multiple',
           width: 200,
-          options: () => SheetUtils.buildOptions(Enum.keys(DrcProject), true),
+          options: () => SheetUtils.buildOptions(Obj.keys(DrcProject), true),
           tooltip: (row: KoboAnswer<any, ProtectionHhsTags>) => row.tags?.projects,
           renderValue: (row: KoboAnswer<any, ProtectionHhsTags>) => map(row.tags?.projects, p => p.length === 0 ? undefined : p) ?? [SheetUtils.blank],
           // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,

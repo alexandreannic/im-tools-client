@@ -12,7 +12,7 @@ import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 
 // do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area

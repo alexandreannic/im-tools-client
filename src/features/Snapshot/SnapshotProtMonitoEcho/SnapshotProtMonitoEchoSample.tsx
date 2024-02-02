@@ -14,7 +14,7 @@ import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
-import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Person} from '@/core/type/person'
 
 export const SnapshotProtMonitoEchoSample = () => {

@@ -5,13 +5,13 @@ import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {DrcProject} from '@/core/type/drc'
 import {enrichProtHHS_2_1} from '@/features/Protection/DashboardMonito/dashboardHelper'
-import {Bn_ReOptions} from '@/core/generatedKoboInterface/Bn_Re/Bn_ReOptions'
+import {Bn_ReOptions} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_ReOptions'
 import {AiOblast} from '@/core/uaLocation/aiOblasts'
 import {AiRaions} from '@/core/uaLocation/aiRaions'
 import {AiHromadas} from '@/core/uaLocation/aiHromadas'
 import {Person} from '@/core/type/person'
 import Gender = Person.Gender
-import {Protection_groupSession} from '@/core/generatedKoboInterface/Protection_groupSession'
+import {Protection_groupSession} from '@/core/sdk/server/kobo/generatedInterface/Protection_groupSession'
 
 const disaggregatePersons = (persons: Person.Person[]) => {
   const personsDefined = persons.filter(_ => !!_.gender && !!_.age)

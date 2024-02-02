@@ -1,4 +1,4 @@
-import {KoboFormName} from '@/core/koboForms/KoboIndex'
+import {KoboFormName} from '@/core/KoboIndex'
 import {useSession} from '@/core/Session/SessionContext'
 import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
 import React from 'react'

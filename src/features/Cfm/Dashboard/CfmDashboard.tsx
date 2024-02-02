@@ -15,7 +15,7 @@ import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {appConfig} from '@/conf/AppConfig'
-import {KoboGeneralMapping} from '@/core/koboForms/koboGeneralMapping'
+import {KoboGeneralMapping} from '@/core/sdk/server/kobo/custom/KoboGeneralMapping'
 import {ChartLineBy} from '@/shared/charts/ChartLineBy'
 import {format} from 'date-fns'
 

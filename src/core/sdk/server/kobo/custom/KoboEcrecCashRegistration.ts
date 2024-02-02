@@ -1,7 +1,10 @@
 import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
 export enum EcrecCashRegistrationPaymentStatus {
-  Paid = 'Paid'
+  Paid = 'Paid',
+  Rejected = 'Rejected',
+  InternallyReferred = 'InternallyReferred',
+  Received = 'Received',
 }
 
 export enum EcrecCashRegistrationProgram {

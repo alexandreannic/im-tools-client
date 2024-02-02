@@ -3,7 +3,7 @@ import {useI18n} from '@/core/i18n'
 import {useTheme} from '@mui/material'
 import {Div, SlidePanel} from '@/shared/PdfLayout/PdfSlide'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
-import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 
 export const ProtectionDashboardMonitoPN = ({
   data,

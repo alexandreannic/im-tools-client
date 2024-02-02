@@ -1,10 +1,10 @@
-import {Protection_pss} from '@/core/generatedKoboInterface/Protection_pss'
+import {Protection_pss} from '@/core/sdk/server/kobo/generatedInterface/Protection_pss'
 import {DrcOffice, DrcProjectHelper} from '@/core/type/drc'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
-import {Bn_Re} from '@/core/generatedKoboInterface/Bn_Re/Bn_Re'
+import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_Re'
 import {Person} from '@/core/type/person'
-import {Bn_ReOptions} from '@/core/generatedKoboInterface/Bn_Re/Bn_ReOptions'
+import {Bn_ReOptions} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_ReOptions'
 
 export interface PersonWithStatus extends Person.Person {
   status?: Protection_pss.Option<'hh_char_hh_det_status'>

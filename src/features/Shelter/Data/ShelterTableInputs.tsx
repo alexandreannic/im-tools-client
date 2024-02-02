@@ -3,7 +3,7 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect, AaSelectBase, AaSelectSimple} from '@/shared/Select/Select'
 import React from 'react'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {Shelter_TAOptions} from '@/core/generatedKoboInterface/Shelter_TA/Shelter_TAOptions'
+import {Shelter_TAOptions} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TAOptions'
 import {Enum} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 

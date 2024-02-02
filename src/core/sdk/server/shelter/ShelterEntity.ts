@@ -1,7 +1,7 @@
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Shelter_TA} from '@/core/generatedKoboInterface/Shelter_TA/Shelter_TA'
+import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TA'
 import {ShelterNtaTags, ShelterTaPriceLevel, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
-import {Shelter_NTA} from '@/core/generatedKoboInterface/Shelter_NTA/Shelter_NTA'
+import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA/Shelter_NTA'
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcOffice} from '@/core/type/drc'
 

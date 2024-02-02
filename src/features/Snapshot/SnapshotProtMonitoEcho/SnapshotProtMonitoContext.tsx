@@ -4,7 +4,7 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Protection/Dashboard
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useI18n} from '@/core/i18n'
 import {seq, Seq} from '@alexandreannic/ts-utils'
-import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
+import {Protection_Hhs2_1} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Period} from '@/core/type/period'
 

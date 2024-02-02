@@ -1,5 +1,5 @@
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {Partnership_partnersDatabaseOptions} from '@/core/generatedKoboInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
+import {Partnership_partnersDatabaseOptions} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {Enum, fnSwitch, Seq} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/type/drc'
 import React, {useState} from 'react'

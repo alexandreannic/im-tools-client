@@ -1,11 +1,11 @@
 import React, {ReactNode, useContext, useState} from 'react'
-import {KoboIndex} from '@/core/koboForms/KoboIndex'
+import {KoboIndex} from '@/core/KoboIndex'
 import {UseShelterData} from '@/features/Shelter/useShelterData'
 import {ShelterNtaTags, ShelterTaTags} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {UseShelterActions, useShelterActions} from '@/features/Shelter/useShelterActions'
 import {AccessSum} from '@/core/sdk/server/access/Access'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Shelter_NTA} from '@/core/generatedKoboInterface/Shelter_NTA/Shelter_NTA'
+import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA/Shelter_NTA'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 
 export interface ShelterContext {

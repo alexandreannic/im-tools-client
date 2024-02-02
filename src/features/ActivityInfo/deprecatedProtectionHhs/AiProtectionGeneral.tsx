@@ -10,7 +10,7 @@ import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/
 import {IpBtn} from '@/shared/Btn'
 import {AaSelect} from '@/shared/Select/Select'
 import {useIpToast} from '@/core/useToast'
-import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
 import {alreadySentKobosInApril} from './missSubmittedData'

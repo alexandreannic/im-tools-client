@@ -8,7 +8,7 @@ import {toPercent} from '@/utils/utils'
 import {ChartPieWidgetBy} from '@/shared/charts/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 
 export const SnapshotProtMonitoNN2Safety = () => {

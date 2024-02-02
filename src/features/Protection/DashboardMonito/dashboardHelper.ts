@@ -1,5 +1,5 @@
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {Protection_Hhs2_1} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1'
+import {Protection_Hhs2_1} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {fnSwitch, mapFor, seq} from '@alexandreannic/ts-utils'
 import {ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
 

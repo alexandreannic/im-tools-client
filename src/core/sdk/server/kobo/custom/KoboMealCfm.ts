@@ -1,6 +1,6 @@
 import {DrcOffice, DrcProject} from '@/core/type/drc'
 import {fnSwitch} from '@alexandreannic/ts-utils'
-import {Meal_CfmInternal} from '@/core/generatedKoboInterface/Meal_CfmInternal/Meal_CfmInternal'
+import {Meal_CfmInternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal/Meal_CfmInternal'
 import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
 export enum CfmDataSource {

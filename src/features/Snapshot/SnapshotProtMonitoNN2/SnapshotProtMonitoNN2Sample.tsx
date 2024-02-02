@@ -12,7 +12,7 @@ import {ChartPie} from '@/shared/charts/ChartPie'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
-import {Protection_Hhs2_1Options} from '@/core/generatedKoboInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
+import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Person} from '@/core/type/person'
 
 export const SnapshotProtMonitoNN2Sample = () => {

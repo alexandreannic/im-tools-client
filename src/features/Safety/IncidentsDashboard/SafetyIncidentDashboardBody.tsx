@@ -13,7 +13,7 @@ import {DashboardSafetyIncidentsPageProps} from '@/features/Safety/IncidentsDash
 import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
 import {CommentsPanel, CommentsPanelProps} from '@/shared/CommentsPanel'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {SafetyIncidentTrackerOptions} from '@/core/generatedKoboInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
+import {SafetyIncidentTrackerOptions} from '@/core/sdk/server/kobo/generatedInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
 
 export const SafetyIncidentDashboardBody = ({
   data,

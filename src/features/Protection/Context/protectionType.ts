@@ -1,7 +1,7 @@
 import {DrcDonor, DrcOffice, DrcProject} from '@/core/type/drc'
 import {Oblast, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {Person} from '@/core/type/person'
-import {Protection_pss} from '@/core/generatedKoboInterface/Protection_pss'
+import {Protection_pss} from '@/core/sdk/server/kobo/generatedInterface/Protection_pss'
 import {KoboAnswerMetaData} from '@/core/sdk/server/kobo/Kobo'
 
 export interface PersonWithStatus extends Person.Person {

@@ -8,7 +8,7 @@ import {useSession} from '@/core/Session/SessionContext'
 import {appFeaturesIndex} from '@/features/appFeatureId'
 import {NoFeatureAccessPage} from '@/shared/NoFeatureAccessPage'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
-import {KoboFormName} from '@/core/koboForms/KoboIndex'
+import {KoboFormName} from '@/core/KoboIndex'
 import {SafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboard'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 

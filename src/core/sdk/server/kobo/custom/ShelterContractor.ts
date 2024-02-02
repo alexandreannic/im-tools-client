@@ -1,6 +1,6 @@
-import {Shelter_TA} from '@/core/generatedKoboInterface/Shelter_TA/Shelter_TA'
+import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TA'
 import {Enum} from '@alexandreannic/ts-utils'
-import {Shelter_TAOptions} from '@/core/generatedKoboInterface/Shelter_TA/Shelter_TAOptions'
+import {Shelter_TAOptions} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TAOptions'
 import {KoboShelterTa} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 
 export enum ShelterContractor {

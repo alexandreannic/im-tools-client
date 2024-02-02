@@ -1,9 +1,9 @@
 import React, {Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState} from 'react'
-import {KoboIndex} from '@/core/koboForms/KoboIndex'
+import {KoboIndex} from '@/core/KoboIndex'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer, KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
-import {Meal_VisitMonitoring} from '@/core/generatedKoboInterface/Meal_VisitMonitoring/Meal_VisitMonitoring'
+import {Meal_VisitMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring/Meal_VisitMonitoring'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 import {Period} from '@/core/type/period'
 

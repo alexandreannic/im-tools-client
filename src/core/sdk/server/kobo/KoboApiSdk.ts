@@ -3,7 +3,7 @@ import {UUID} from '@/core/type/generic'
 import {ApiKoboForm, Kobo, KoboAnswer, KoboAnswerId, KoboId} from './Kobo'
 import {KoboSchema} from './KoboApi'
 import {appConfig, AppConfig} from '@/conf/AppConfig'
-import {kobo} from '@/core/koboForms/KoboIndex'
+import {kobo} from '@/core/KoboIndex'
 import {ApiPaginate, ApiPagination} from '@/core/sdk/server/_core/ApiSdkUtils'
 
 

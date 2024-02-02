@@ -7,7 +7,7 @@ import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_hhs2_2} from '@/core/generatedKoboInterface/Protection_hhs2_2'
+import {Protection_hhs2_2} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs2_2'
 
 export const ProtectionDashboardMonitoHousing = ({
   data,
