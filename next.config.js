@@ -2,6 +2,7 @@
 module.exports = {
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
+  staticPageGenerationTimeout: 200,
   transpilePackages: ['mui-extension'],
   typescript: {
     // !! WARN !!
