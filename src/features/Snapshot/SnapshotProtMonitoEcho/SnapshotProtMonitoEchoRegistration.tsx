@@ -7,13 +7,14 @@ import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {ChartPieWidget} from '@/shared/charts/ChartPieWidget'
 import {getIdpsAnsweringRegistrationQuestion} from '@/features/Protection/DashboardMonito/ProtectionDashboardMonitoDocument'
 import {chain} from '@/utils/utils'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBar} from '@/shared/charts/ChartBar'
 import {ChartPieWidgetBy} from '@/shared/charts/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Person} from '@/core/type/person'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 
 export const SnapshotProtMonitoEchoRegistration = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -28,7 +29,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               const z = ChartHelperOld.byCategory({
                 categories: computed.categoryOblasts('where_are_you_current_living_oblast'),
                 data: computed.flatData,
-                filter: _ => _.lackDoc.includes('passport') || _.lackDoc.includes('tin'),
+                filter: _ => !!_.lackDoc && (_.lackDoc.includes('passport') || _.lackDoc.includes('tin')),
               })
               return z[OblastIndex.byName('Kharkivska').iso]
             }}>
@@ -96,7 +97,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               <ChartBarMultipleBy
                 data={data}
                 by={_ => _.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
-                label={Protection_Hhs2_1Options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
+                label={Protection_Hhs2.options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
                 mergeOptions={{
                   distrust_of_public_institutions_and_authorities: 'other_specify',
                   discrimination: 'other_specify',
@@ -126,22 +127,32 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                 data: data.flatMap(_ => _.persons).map(_ => _.lackDoc).compact(),
                 filterValue: ['none', 'unable_unwilling_to_answer'],
               }))
-                .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
+                .map(ChartHelperOld.setLabel(Protection_Hhs2.options.does_1_lack_doc))
                 .map(ChartHelperOld.sortBy.value)
                 .get}>
                 {_ => <ChartBar data={_}/>}
               </Lazy>
             </SlidePanel>
             <SlidePanel>
-              <ChartPieWidgetBy
+              <ChartPieWidgetByKey
                 hideEvolution
                 compare={{before: computed.lastMonth}}
                 title={m.lackOfHousingDoc}
-                filterBase={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('unable_unwilling_to_answer')}
-                filter={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('none')}
+                property="what_housing_land_and_property_documents_do_you_lack"
+                filterBase={_ => !_.includes('unable_unwilling_to_answer')}
+                filter={_ => !_.includes('none')}
                 data={data}
                 {...snapShotDefaultPieProps}
               />
+              {/*<ChartPieWidgetBy*/}
+              {/*  hideEvolution*/}
+              {/*  compare={{before: computed.lastMonth}}*/}
+              {/*  title={m.lackOfHousingDoc}*/}
+              {/*  filterBase={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('unable_unwilling_to_answer')}*/}
+              {/*  filter={_ => !_.what_housing_land_and_property_documents_do_you_lack.includes('none')}*/}
+              {/*  data={data}*/}
+              {/*  {...snapShotDefaultPieProps}*/}
+              {/*/>*/}
               <ChartBarMultipleBy
                 data={data}
                 by={_ => _.what_housing_land_and_property_documents_do_you_lack}
@@ -157,7 +168,7 @@ export const SnapshotProtMonitoEchoRegistration = () => {
                   inheritance_will: 'other_specify',
                 }}
                 label={{
-                  ...Protection_Hhs2_1Options.what_housing_land_and_property_documents_do_you_lack,
+                  ...Protection_Hhs2.options.what_housing_land_and_property_documents_do_you_lack,
                   construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'Construction stage',
                   document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by authority',
                   // document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by local self-government proving a damaged house',

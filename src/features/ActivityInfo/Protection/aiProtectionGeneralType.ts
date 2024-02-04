@@ -1,8 +1,8 @@
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/type/drc'
 import {AiTypeProtectionRmm} from '@/features/ActivityInfo/Protection/aiProtectionGeneralInterface'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export namespace AiProtectionGeneralType {
 
@@ -34,7 +34,7 @@ export namespace AiProtectionGeneralType {
     answer: KoboAnswer<any>
   }
 
-  export const mapStatus = (s: (keyof typeof Protection_Hhs2_1Options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
+  export const mapStatus = (s: (keyof typeof Protection_Hhs2.options['do_you_identify_as_any_of_the_following']) | undefined): any => fnSwitch(s!, {
     returnee: 'Returnees',
     non_displaced: 'Non-Displaced',
     idp: 'IDPs',

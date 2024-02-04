@@ -9,9 +9,9 @@ import {toPercent} from '@/utils/utils'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {Txt} from 'mui-extension'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 
 export const SnapshotProtMonitoEchoNeeds = () => {
@@ -65,7 +65,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
               <ChartBarMultipleBy
                 data={data}
                 by={_ => _.what_are_the_barriers_to_accessing_health_services}
-                label={Protection_Hhs2_1Options.what_are_the_barriers_to_accessing_health_services}
+                label={Protection_Hhs2.options.what_are_the_barriers_to_accessing_health_services}
                 filterValue={['unable_unwilling_to_answer']}
                 limit={5}
               />
@@ -85,7 +85,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                 by={_ => _.why_dont_they_have_status}
                 filter={_ => _.why_dont_they_have_status !== 'unable_unwilling_to_answer'}
                 label={{
-                  ...Protection_Hhs2_1Options.why_dont_they_have_status,
+                  ...Protection_Hhs2.options.why_dont_they_have_status,
                   inability_to_access_registration_safety_risks: 'Inability to access registration',
                   status_registration_not_requested: 'Disability status not applied for',
                   status_registration_rejected_not_meeting_the_criteria_as_per_ukrainian_procedure: 'Status registration rejected',
@@ -114,7 +114,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
               <ChartBarMultipleBy
                 data={data}
                 by={_ => _.what_are_your_main_concerns_regarding_your_accommodation}
-                label={Protection_Hhs2_1Options.what_are_your_main_concerns_regarding_your_accommodation}
+                label={Protection_Hhs2.options.what_are_your_main_concerns_regarding_your_accommodation}
                 filterValue={['unable_unwilling_to_answer', 'none']}
               />
             </SlidePanel>
@@ -130,7 +130,7 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                   'destroyed',
                   'unfinished',
                 ])}
-                label={Protection_Hhs2_1Options.what_is_the_general_condition_of_your_accommodation}
+                label={Protection_Hhs2.options.what_is_the_general_condition_of_your_accommodation}
                 filter={_ => _.what_is_the_general_condition_of_your_accommodation !== 'unable_unwilling_to_answer'}
               />
             </SlidePanel>

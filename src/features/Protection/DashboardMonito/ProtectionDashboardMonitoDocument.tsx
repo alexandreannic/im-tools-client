@@ -4,7 +4,6 @@ import React, {useMemo, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Box, Icon} from '@mui/material'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {chain} from '@/utils/utils'
@@ -16,6 +15,7 @@ import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Person} from '@/core/type/person'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
   return base
@@ -99,7 +99,7 @@ export const ProtectionDashboardMonitoDocument = ({
             <ChartBarMultipleBy
               data={data}
               by={_ => _.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
-              label={Protection_Hhs2_1Options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
+              label={Protection_Hhs2.options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
               filterValue={[
                 'no',
                 'unable_unwilling_to_answer',
@@ -134,7 +134,7 @@ export const ProtectionDashboardMonitoDocument = ({
               data: filteredPersons.map(_ => _.lackDoc).compact(),
               filterValue: ['none', 'unable_unwilling_to_answer'],
             }))
-              .map(ChartHelperOld.setLabel(Protection_Hhs2_1Options.does_1_lack_doc))
+              .map(ChartHelperOld.setLabel(Protection_Hhs2.options.does_1_lack_doc))
               .map(ChartHelperOld.sortBy.value)
               .get}>
               {_ => <ChartBar data={_}/>}
@@ -155,7 +155,7 @@ export const ProtectionDashboardMonitoDocument = ({
               by={_ => _.what_housing_land_and_property_documents_do_you_lack}
               filterValue={['unable_unwilling_to_answer', 'none']}
               label={{
-                ...Protection_Hhs2_1Options.what_housing_land_and_property_documents_do_you_lack,
+                ...Protection_Hhs2.options.what_housing_land_and_property_documents_do_you_lack,
                 construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'Construction stage',
                 document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by local self-government proving a damaged house',
                 cost_estimation_certificate_state_commission_issued_when_personal_request_is_made: 'Cost estimation certificate - state commission',

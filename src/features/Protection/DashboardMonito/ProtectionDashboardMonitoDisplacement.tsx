@@ -12,8 +12,8 @@ import {chain} from '@/utils/utils'
 import {Enum} from '@alexandreannic/ts-utils'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 // do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area
 // what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members
@@ -75,7 +75,7 @@ export const ProtectionDashboardMonitoDisplacement = ({
           <ChartBarMultipleBy
             data={data}
             by={_ => _.why_did_you_leave_your_area_of_origin}
-            label={Protection_Hhs2_1Options.why_did_you_leave_your_area_of_origin}
+            label={Protection_Hhs2.options.why_did_you_leave_your_area_of_origin}
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>
@@ -96,7 +96,7 @@ export const ProtectionDashboardMonitoDisplacement = ({
             data={data}
             filterValue={['unable_unwilling_to_answer', 'none', 'other_specify']}
             by={_ => _.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns}
-            label={Protection_Hhs2_1Options.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns}
+            label={Protection_Hhs2.options.did_you_or_any_member_of_your_household_on_your_displacement_journey_experience_safety_or_security_concerns}
           />
         </SlidePanel>
         <SlidePanel title={m.intentions}>
@@ -107,7 +107,7 @@ export const ProtectionDashboardMonitoDisplacement = ({
             checked={intentionFilters}
             onToggle={_ => setIntentionFilters(prev => ({...prev, [_]: prev[_] ? !prev[_] : true}))}
             label={{
-              ...Protection_Hhs2_1Options.what_are_your_households_intentions_in_terms_of_place_of_residence,
+              ...Protection_Hhs2.options.what_are_your_households_intentions_in_terms_of_place_of_residence,
               return_to_the_area_of_origin: m.returnToThePlaceOfHabitualResidence
             }}
           />
@@ -125,21 +125,21 @@ export const ProtectionDashboardMonitoDisplacement = ({
                   data={filteredData}
                   filterValue={['unable_unwilling_to_answer']}
                   by={_ => _.what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community}
-                  label={Protection_Hhs2_1Options.what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community}
+                  label={Protection_Hhs2.options.what_factors_would_be_key_to_support_your_successful_integration_into_the_local_community}
                 />
                 <SlidePanelTitle sx={{mt: 4}}>{m.protHHS2.factorToReturn}</SlidePanelTitle>
                 <ChartBarMultipleBy
                   data={filteredData}
                   filterValue={['unable_unwilling_to_answer']}
                   by={_ => _.what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin}
-                  label={Protection_Hhs2_1Options.what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin}
+                  label={Protection_Hhs2.options.what_would_be_the_deciding_factor_in_your_return_to_your_area_of_origin}
                 />
                 <SlidePanelTitle sx={{mt: 4}}>{m.protHHS2.reasonForRelocate}</SlidePanelTitle>
                 <ChartBarMultipleBy
                   data={filteredData}
                   filterValue={['unable_unwilling_to_answer']}
                   by={_ => _.why_are_planning_to_relocate_from_your_current_place_of_residence}
-                  label={Protection_Hhs2_1Options.why_are_planning_to_relocate_from_your_current_place_of_residence}
+                  label={Protection_Hhs2.options.why_are_planning_to_relocate_from_your_current_place_of_residence}
                 />
               </>
             )}

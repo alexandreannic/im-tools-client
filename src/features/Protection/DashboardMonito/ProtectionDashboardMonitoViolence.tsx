@@ -7,12 +7,12 @@ import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {ChartBar} from '@/shared/charts/ChartBar'
 import {forceArrayStringInference} from '@/utils/utils'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Protection_Hhs2_1} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {Checkbox} from '@mui/material'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {ChartHelper} from '@/shared/charts/chartHelper'
 import {Person} from '@/core/type/person'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export const ProtectionDashboardMonitoViolence = ({
   data,
@@ -164,7 +164,7 @@ export const ProtectionDashboardMonitoViolence = ({
             data={data}
             filterValue={['unable_unwilling_to_answer']}
             by={_ => _.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
-            label={Protection_Hhs2_1Options.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
+            label={Protection_Hhs2.options.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
           />
         </SlidePanel>
       </Div>
@@ -173,7 +173,7 @@ export const ProtectionDashboardMonitoViolence = ({
           ChartHelper.multiple({
             data: groupedIndividualsType.type,
             filterValue: ['unable_unwilling_to_answer']
-          }).setLabel(Protection_Hhs2_1Options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence)
+          }).setLabel(Protection_Hhs2.options.what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence)
             .sortBy.value().get()
         }>
           {_ => (
@@ -186,7 +186,7 @@ export const ProtectionDashboardMonitoViolence = ({
           ChartHelper.multiple({
             data: groupedIndividualsType.when,
             // filterValue: ['unable_unwilling_to_answer']
-          }).setLabel(Protection_Hhs2_1Options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence)
+          }).setLabel(Protection_Hhs2.options.when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence)
             .sortBy
             .value()
             .get()

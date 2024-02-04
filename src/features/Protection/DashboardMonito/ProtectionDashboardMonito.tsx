@@ -4,7 +4,6 @@ import {useI18n} from '@/core/i18n'
 import {useProtectionDashboardMonitoData} from './useProtectionDashboardMonitoData'
 import {ProtectionDashboardMonitoSample} from './ProtectionDashboardMonitoSample'
 import {DashboardLayout} from '@/shared/DashboardLayout/DashboardLayout'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ProtectionDashboardMonitoDocument} from './ProtectionDashboardMonitoDocument'
 import {ProtectionDashboardMonitoLivelihood} from './ProtectionDashboardMonitoLivelihood'
 import {Alert, Txt} from 'mui-extension'
@@ -28,6 +27,7 @@ import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 type CustomFilterOptionFilters = {
   hhComposition?: (keyof Messages['protHHS2']['_hhComposition'])[]
@@ -67,12 +67,12 @@ export const ProtectionDashboardMonito = () => {
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
-  const getOption = (p: keyof ProtHHS2Enrich, option: keyof typeof Protection_Hhs2_1Options = p as any) => () => {
+  const getOption = (p: keyof ProtHHS2Enrich, option: keyof typeof Protection_Hhs2.options = p as any) => () => {
     return _answers.get
       ?.flatMap(_ => _[p] as any)
       .distinct(_ => _)
       .compact()
-      .map((_: any) => ({value: _, label: (Protection_Hhs2_1Options[option] as any)[_]}))
+      .map((_: any) => ({value: _, label: (Protection_Hhs2.options[option] as any)[_]}))
       .sortByString(_ => _.label ?? '', 'a-z')
   }
 

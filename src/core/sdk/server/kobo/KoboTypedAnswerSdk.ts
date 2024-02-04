@@ -1,37 +1,32 @@
 import {ApiClient} from '../ApiClient'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {KoboIndex} from '@/core/KoboIndex'
-import {mapProtection_Hhs2_1} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Mapping'
-import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_Re'
-import {mapBn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_ReMapping'
-import {mapShelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TAMapping'
-import {mapShelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA/Shelter_NTAMapping'
 import {ShelterNtaTags, ShelterTaTagsHelper} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
 import {ProtectionCommunityMonitoringTags, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
-import {mapMeal_CfmExternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmExternal/Meal_CfmExternalMapping'
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {RapidResponseMechanism} from '@/core/sdk/server/kobo/generatedInterface/RapidResponseMechanism/RapidResponseMechanism'
-import {mapRapidResponseMechanism} from '@/core/sdk/server/kobo/generatedInterface/RapidResponseMechanism/RapidResponseMechanismMapping'
-import {mapShelter_CashForRepair} from '@/core/sdk/server/kobo/generatedInterface/Shelter_CashForRepair/Shelter_CashForRepairMapping'
-import {Shelter_CashForRepair} from '@/core/sdk/server/kobo/generatedInterface/Shelter_CashForRepair/Shelter_CashForRepair'
-import {Bn_OldMpcaNfi} from '@/core/sdk/server/kobo/generatedInterface/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
-import {mapBn_OldMpcaNfi} from '@/core/sdk/server/kobo/generatedInterface/Bn_OldMpcaNfi/Bn_OldMpcaNfiMapping'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
-import {mapBn_cashForRentApplication} from '@/core/sdk/server/kobo/generatedInterface/Bn_cashForRentApplication/Bn_cashForRentApplicationMapping'
-import {Bn_cashForRentApplication} from '@/core/sdk/server/kobo/generatedInterface/Bn_cashForRentApplication/Bn_cashForRentApplication'
-import {mapMeal_CfmInternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal/Meal_CfmInternalMapping'
-import {mapEcrec_CashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_CashRegistration/Ecrec_CashRegistrationMapping'
-import {mapMeal_VisitMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring/Meal_VisitMonitoringMapping'
 import {KoboAnswerFilter, KoboAnswerSdk} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import {mapMeal_VerificationWinterization} from '@/core/sdk/server/kobo/generatedInterface/Meal_VerificationWinterization/Meal_VerificationWinterizationMapping'
-import {mapMeal_VerificationEcrec} from '@/core/sdk/server/kobo/generatedInterface/Meal_VerificationEcrec/Meal_VerificationEcrecMapping'
-import {mapPartnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseMapping'
 import {EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
 import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 import {Protection_communityMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Protection_communityMonitoring'
 import {Protection_pss} from '@/core/sdk/server/kobo/generatedInterface/Protection_pss'
 import {Protection_groupSession} from '@/core/sdk/server/kobo/generatedInterface/Protection_groupSession'
 import {Protection_gbv} from '@/core/sdk/server/kobo/generatedInterface/Protection_gbv'
+import {Shelter_NTA} from './generatedInterface/Shelter_NTA'
+import {Meal_CfmInternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal'
+import {Meal_CfmExternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmExternal'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import {Meal_VerificationWinterization} from '@/core/sdk/server/kobo/generatedInterface/Meal_VerificationWinterization'
+import {Meal_VerificationEcrec} from '@/core/sdk/server/kobo/generatedInterface/Meal_VerificationEcrec'
+import {Bn_OldMpcaNfi} from '@/core/sdk/server/kobo/generatedInterface/Bn_OldMpcaNfi'
+import {Bn_RapidResponse} from '@/core/sdk/server/kobo/generatedInterface/Bn_RapidResponse'
+import {Meal_VisitMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring'
+import {Bn_cashForRentApplication} from '@/core/sdk/server/kobo/generatedInterface/Bn_cashForRentApplication'
+import {Shelter_cashForRepair} from '@/core/sdk/server/kobo/generatedInterface/Shelter_cashForRepair'
+import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
+import {Partnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase'
+import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA'
+import {Ecrec_sectoralCashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_sectoralCashRegistration'
 
 
 export type KoboUnwrapAnserType<T extends keyof KoboTypedAnswerSdk> = Promise<Awaited<ReturnType<KoboTypedAnswerSdk[T]>>['data']>
@@ -46,40 +41,40 @@ export class KoboTypedAnswerSdk {
   private readonly search = this.sdk.search
 
   readonly searchBn_Re = (filters: KoboAnswerFilter = {}) => {
-    return this.search<Bn_Re>({
+    return this.search<Bn_Re.T>({
       formId: KoboIndex.byName('bn_re').id,
-      fnMap: mapBn_Re,
+      fnMap: Bn_Re.map,
       ...filters,
     })
   }
 
   readonly searcheBn_cashForRepair = (filters: KoboAnswerFilter = {}) => {
-    return this.search<Shelter_CashForRepair>({
+    return this.search<Shelter_cashForRepair.T>({
       formId: KoboIndex.byName('shelter_cashForRepair').id,
-      fnMap: mapShelter_CashForRepair,
+      fnMap: Shelter_cashForRepair.map,
       ...filters,
     })
   }
 
   readonly searchBn_cashForRentApplication = (filters: KoboAnswerFilter = {}) => {
-    return this.search<Bn_cashForRentApplication>({
+    return this.search<Bn_cashForRentApplication.T>({
       formId: KoboIndex.byName('bn_cashForRentApplication').id,
-      fnMap: mapBn_cashForRentApplication,
+      fnMap: Bn_cashForRentApplication.map,
       ...filters,
     })
   }
 
   readonly searchBn_MpcaNfiOld = (filters: KoboAnswerFilter = {}) => {
-    return this.search<Bn_OldMpcaNfi>({
+    return this.search<Bn_OldMpcaNfi.T>({
       formId: KoboIndex.byName('bn_1_mpcaNfi').id,
-      fnMap: mapBn_OldMpcaNfi,
+      fnMap: Bn_OldMpcaNfi.map,
       ...filters,
     })
   }
   readonly searchBn_RapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
-    return this.search<RapidResponseMechanism>({
+    return this.search<Bn_RapidResponse.T.T>({
       formId: KoboIndex.byName('bn_rapidResponse').id,
-      fnMap: mapRapidResponseMechanism,
+      fnMap: Bn_RapidResponse.map,
       ...filters,
     })
   }
@@ -87,7 +82,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMeal_VisitMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_visitMonitoring').id,
-      fnMap: mapMeal_VisitMonitoring,
+      fnMap: Meal_VisitMonitoring.map,
       ...filters,
     })
   }
@@ -95,7 +90,7 @@ export class KoboTypedAnswerSdk {
   readonly searchPartnersDatabase = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('partnership_partnersDatabase').id,
-      fnMap: mapPartnership_partnersDatabase,
+      fnMap: Partnership_partnersDatabase.map,
       ...filters,
     })
   }
@@ -103,7 +98,7 @@ export class KoboTypedAnswerSdk {
   readonly searchShelterTa = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('shelter_ta').id,
-      fnMap: mapShelter_TA,
+      fnMap: Shelter_TA.map,
       fnMapTags: ShelterTaTagsHelper.mapTags,
       ...filters,
     })
@@ -112,7 +107,7 @@ export class KoboTypedAnswerSdk {
   readonly searchShelterNta = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('shelter_nta').id,
-      fnMap: mapShelter_NTA,
+      fnMap: Shelter_NTA.map,
       fnMapTags: _ => _ as ShelterNtaTags,
       ...filters,
     })
@@ -121,7 +116,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMealCfmInternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_cfmInternal').id,
-      fnMap: mapMeal_CfmInternal,
+      fnMap: Meal_CfmInternal.map,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })
@@ -130,7 +125,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMealCfmExternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_cfmExternal').id,
-      fnMap: mapMeal_CfmExternal,
+      fnMap: Meal_CfmExternal.map,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })
@@ -139,7 +134,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_Hhs2 = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_hhs2_1').id,
-      fnMap: mapProtection_Hhs2_1,
+      fnMap: Protection_Hhs2.map,
       fnMapTags: _ => _ as ProtectionHhsTags,
       ...filters,
     })
@@ -189,7 +184,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMeal_verificationEcrec = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_verificationEcrec').id,
-      fnMap: mapMeal_VerificationEcrec,
+      fnMap: Meal_VerificationEcrec.map,
       ...filters,
     })
   }
@@ -197,7 +192,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMeal_verificationWinterization = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_verificationWinterization').id,
-      fnMap: mapMeal_VerificationWinterization,
+      fnMap: Meal_VerificationWinterization.map,
       ...filters,
     })
   }
@@ -205,7 +200,7 @@ export class KoboTypedAnswerSdk {
   readonly searchEcrec_cashRegistration = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('ecrec_cashRegistration').id,
-      fnMap: mapEcrec_CashRegistration,
+      fnMap: Ecrec_sectoralCashRegistration.map,
       fnMapTags: _ => _ as EcrecCashRegistrationTags,
       ...filters,
     })

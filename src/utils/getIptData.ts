@@ -26,7 +26,7 @@ export const getProtHhsIptData = (data?: Seq<ProtHHS2Enrich>) => {
         _.staff_to_insert_their_DRC_office === 'kharkiv' ||
         _.staff_to_insert_their_DRC_office === 'lviv'
       )
-      .groupBy(_ => _.staff_to_insert_their_DRC_office)
+      .groupBy(_ => _.staff_to_insert_their_DRC_office!)
     Enum.entries(ChartHelperOld.sortBy.custom(['dnipro', 'kharkiv', 'chernihiv', 'lviv'])(byOffice)).forEach(([base, v]) => {
       Enum.entries(ChartHelperOld.sortBy.custom([Gender.Male, Gender.Female])(
         seq(v)
