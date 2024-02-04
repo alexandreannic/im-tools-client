@@ -1,5 +1,5 @@
 import {Box} from '@mui/material'
-import React, {ReactNode, useCallback, useEffect} from 'react'
+import React, {ReactNode, useCallback, useEffect, useState} from 'react'
 import {Txt} from 'mui-extension'
 import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
 import {useAppSettings} from '@/core/context/ConfigContext'
@@ -17,6 +17,9 @@ import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
+import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
+import {today} from '@/features/Mpca/Dashboard/MpcaDashboard'
+import {Page} from '@/shared/Page'
 
 export const Pan = ({
   title,
@@ -50,12 +53,31 @@ export const Pan = ({
   )
 }
 
-const period: Period = {
-  start: startOfMonth(new Date(2023, 6)),
-  end: endOfMonth(new Date(2023, 8)),
+// Female - Жінка; Male - Чоловік; Other - Інше
+const en = {
+  'Household respondents per displacement group': 'Household respondents per displacement group',
+  'Surveyed households per age and gender groups': 'Surveyed households per age and gender groups',
+  'Intentions per displacement status': `Intentions per displacement status`,
+  'Factors influencing the sense of safety': 'Factors influencing the sense of safety',
+  'Major stress factors': 'Major stress factors',
+  'Concerns about the current place of residence': 'Concerns about the current place of residence',
+  'Barriers to access to health services': 'Barriers to access to health services',
+  'Main sources of income': 'Main sources of income',
 }
 
-const translationsUa: DeepPartial<typeof Protection_Hhs2_1Options> = {
+const ua = {
+  'Surveyed households per age and gender groups': `Опитанні сім'ї за віком і статтю `,
+  'Household respondents per displacement group': 'Сімї за статусом переміщеної особи',
+  'Intentions per displacement status': `Наміри щодо статусу переміщенної особи`,
+  'Factors influencing the sense of safety': 'Відчуття безпеки: Фактори, які впливають на це',
+  'Major stress factors': 'Найбільші фактори стресу',
+  'Concerns about the current place of residence': 'Переживання щодо поточного місця проживання',
+  'Barriers to access to health services': 'Перешкоди доступу до медичних послуг',
+  'Main sources of income': 'Головні джерела доходу',
+  // 'Main sources of income': 'Головні джерела доходу переміщених осіб',
+}
+
+const optionsUa: DeepPartial<typeof Protection_Hhs2_1Options> = {
   'do_you_identify_as_any_of_the_following': {
     idp: 'Внутрішньо переміщена особа',
     non_displaced: 'Не переміщена особа',
@@ -142,16 +164,20 @@ const translationsUa: DeepPartial<typeof Protection_Hhs2_1Options> = {
 export default () => {
   const {api} = useAppSettings()
   const {m, currentLang: lang, setLang} = useI18n()
+  const [period, setPeriod] = useState<Partial<Period>>({
+    start: startOfMonth(new Date(2023, 6)),
+    end: endOfMonth(new Date(2023, 8)),
+  })
   // const [lang, setLang] = usePersistentState('en', {storageKey: 'romanegraph3'})
-  const req = () => api.kobo.typedAnswers.searchProtection_Hhs2({
+  const req = (period: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
     filters: period
   }).then(_ => seq(_.data).map(enrichProtHHS_2_1))
 
   const fetcher = useFetcher(req)
 
   useEffect(() => {
-    fetcher.fetch()
-  }, [])
+    fetcher.fetch({clean: false, force: true}, period)
+  }, [period])
 
   const data = fetcher.get
 
@@ -163,23 +189,31 @@ export default () => {
   if (!data) return
 
   let index = 0
-  const title = (title: string) => `Graph ${++index}. ${title}`
+  const title = (title: keyof typeof en) => `${lang === 'ua' ? 'Графік' : 'Graph'} ${++index}. ${lang === 'ua' ? ua[title] : en[title]}`
 
   return (
-    <>
-      <SnapshotHeader period={period}/>
+    <Page loading={fetcher.loading} sx={{background: 'white'}}>
+      <PeriodPicker
+        defaultValue={[period.start, period.end]}
+        onChange={([start, end]) => {
+          setPeriod(prev => ({...prev, start, end}))
+        }}
+        label={[m.start, m.endIncluded]}
+        max={today}
+      />
       <ScRadioGroup inline dense sx={{display: 'inline-flex'}} value={lang} onChange={setLang}>
         <ScRadioGroupItem value="en">EN</ScRadioGroupItem>
         <ScRadioGroupItem value="ua">UA</ScRadioGroupItem>
       </ScRadioGroup>
+      <SnapshotHeader period={period}/>
       <Pan title={title('Household respondents per displacement group')}>
         {/*<Pan title={title('Сімї за статусом переміщеної особи')}>*/}
         <ChartBarSingleBy
           data={data}
           by={_ => _.do_you_identify_as_any_of_the_following}
           label={{
-            ...lang === 'en' ? {} : translationsUa.do_you_identify_as_any_of_the_following,
             ...Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following,
+            ...lang === 'en' ? {} : optionsUa.do_you_identify_as_any_of_the_following,
           }}
         />
       </Pan>
@@ -206,8 +240,8 @@ export default () => {
           filter={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence !== 'unable_unwilling_to_answer'}
           by={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence,
             ...Protection_Hhs2_1Options.what_are_your_households_intentions_in_terms_of_place_of_residence,
+            ...lang === 'en' ? {} : optionsUa.what_are_your_households_intentions_in_terms_of_place_of_residence,
           }}
         />
         <Txt bold block color="hint" size="small" sx={{mt: 3}}>{m.nonDisplaced}</Txt>
@@ -216,7 +250,7 @@ export default () => {
           filter={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence !== 'unable_unwilling_to_answer'}
           by={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence,
+            ...lang === 'en' ? {} : optionsUa.what_are_your_households_intentions_in_terms_of_place_of_residence,
             ...Protection_Hhs2_1Options.what_are_your_households_intentions_in_terms_of_place_of_residence,
           }}
         />
@@ -226,56 +260,56 @@ export default () => {
           filter={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence !== 'unable_unwilling_to_answer'}
           by={_ => _.what_are_your_households_intentions_in_terms_of_place_of_residence}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_are_your_households_intentions_in_terms_of_place_of_residence,
+            ...lang === 'en' ? {} : optionsUa.what_are_your_households_intentions_in_terms_of_place_of_residence,
             ...Protection_Hhs2_1Options.what_are_your_households_intentions_in_terms_of_place_of_residence,
           }}
         />
       </Pan>
-      <Pan title={title('Відчуття безпеки: Фактори, які впливають на це')}>
+      <Pan title={title('Factors influencing the sense of safety')}>
         <ChartBarMultipleBy
           data={data}
           filterValue={['unable_unwilling_to_answer']}
           by={_ => _.what_are_the_main_factors_that_make_this_location_feel_unsafe}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_are_the_main_factors_that_make_this_location_feel_unsafe,
+            ...lang === 'en' ? {} : optionsUa.what_are_the_main_factors_that_make_this_location_feel_unsafe,
             ...Protection_Hhs2_1Options.what_are_the_main_factors_that_make_this_location_feel_unsafe,
           }}
         />
       </Pan>
-      <Pan title={title('Найбільші фактори стресу')}>
+      <Pan title={title('Major stress factors')}>
         <ChartBarMultipleBy
           data={data}
           filterValue={['unable_unwilling_to_answer']}
           by={_ => _.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members,
+            ...lang === 'en' ? {} : optionsUa.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members,
             ...Protection_Hhs2_1Options.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members,
           }}
         />
       </Pan>
-      <Pan title={title('Переживання щодо поточного місця проживання')}>
+      <Pan title={title('Concerns about the current place of residence')}>
         <ChartBarMultipleBy
           data={data.filter(_ => !_.what_are_your_main_concerns_regarding_your_accommodation?.includes('none'))}
           filterValue={['unable_unwilling_to_answer']}
           by={_ => _.what_are_your_main_concerns_regarding_your_accommodation}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_are_your_main_concerns_regarding_your_accommodation,
+            ...lang === 'en' ? {} : optionsUa.what_are_your_main_concerns_regarding_your_accommodation,
             ...Protection_Hhs2_1Options.what_are_your_main_concerns_regarding_your_accommodation,
           }}
         />
       </Pan>
-      <Pan title={title('Перешкоди доступу до медичних послуг')}>
+      <Pan title={title('Barriers to access to health services')}>
         <ChartBarMultipleBy
           data={data}
           filterValue={['unable_unwilling_to_answer']}
           by={_ => _.what_are_the_barriers_to_accessing_health_services}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_are_the_barriers_to_accessing_health_services,
+            ...lang === 'en' ? {} : optionsUa.what_are_the_barriers_to_accessing_health_services,
             ...Protection_Hhs2_1Options.what_are_the_barriers_to_accessing_health_services,
           }}
         />
       </Pan>
-      <Pan title={title('Головні джерела доходу переміщених осіб')}>
+      <Pan title={title('Main sources of income')}>
         <ChartBarMultipleBy
           data={data}
           mergeOptions={{
@@ -284,11 +318,11 @@ export default () => {
           filterValue={['unable_unwilling_to_answer']}
           by={_ => _.what_are_the_main_sources_of_income_of_your_household}
           label={{
-            ...lang === 'en' ? {} : translationsUa.what_are_the_main_sources_of_income_of_your_household,
+            ...lang === 'en' ? {} : optionsUa.what_are_the_main_sources_of_income_of_your_household,
             ...Protection_Hhs2_1Options.what_are_the_main_sources_of_income_of_your_household,
           }}
         />
       </Pan>
-    </>
+    </Page>
   )
 }
