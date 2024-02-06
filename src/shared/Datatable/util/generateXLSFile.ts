@@ -15,7 +15,7 @@ export const generateXLSFromArray = async <T>(fileName: string, params: Generate
   ;[params].flatMap(_ => _).map(({
     data, schema, datatableName
   }) => {
-    const datatable = workbook.addWorkdatatable(datatableName)
+    const datatable = workbook.addWorksheet(datatableName)
     const header = datatable.addRow(schema.map(_ => _.head))
     // header.fill = {
     //   type: 'pattern',
