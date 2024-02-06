@@ -17,8 +17,7 @@ import {CommentsPanel} from '@/shared/CommentsPanel'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {NavLink} from 'react-router-dom'
-import {Meal_VisitMonitoringOptions} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
-import {Meal_VisitMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring/Meal_VisitMonitoring'
+import {Meal_VisitMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring'
 import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {mealIndex} from '@/features/Meal/Meal'
@@ -28,7 +27,7 @@ import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 
 export interface DashboardPageProps {
   filters: Record<string, string[]>
-  data: Seq<KoboAnswer<Meal_VisitMonitoring>>
+  data: Seq<KoboAnswer<Meal_VisitMonitoring.T>>
 }
 
 const mapOblast = OblastIndex.koboOblastIndexIso
@@ -41,7 +40,7 @@ export const MealVisitDashboard = () => {
   const [optionFilter, setOptionFilters] = useState<Record<string, string[] | undefined>>({})
 
   const filterShape = useMemo(() => {
-    return DataFilter.makeShape<KoboAnswer<Meal_VisitMonitoring>>({
+    return DataFilter.makeShape<KoboAnswer<Meal_VisitMonitoring.T>>({
       oblast: {
         icon: 'location_on',
         getOptions: () => schema.schemaHelper.getOptionsByQuestionName('mdro').map(_ => ({value: _.name, label: _.label[langIndex]})),
@@ -168,43 +167,43 @@ export const MealVisitDashboard = () => {
               </SlidePanel>
               <SlidePanel title={m.donor}>
                 <ChartBarMultipleBy
-                  label={Meal_VisitMonitoringOptions.mdd_001}
+                  label={Meal_VisitMonitoring.options.mdd_001}
                   data={data}
                   by={_ => _.mdd_001}
                 />
               </SlidePanel>
               <SlidePanel>
                 <ChartPieWidgetBy title={m.mealMonitoringVisit.securityConcerns} filter={_ => _.ssy === 'yes'} data={data} sx={{mb: 1}}/>
-                <ChartBarMultipleBy data={data} by={_ => _.sst} label={Meal_VisitMonitoringOptions.sst}/>
+                <ChartBarMultipleBy data={data} by={_ => _.sst} label={Meal_VisitMonitoring.options.sst}/>
               </SlidePanel>
               <SlidePanel>
                 <ChartPieWidgetBy title={m.mealMonitoringVisit.concerns} filter={_ => _.sef === 'yes'} data={data} sx={{mb: 1}}/>
-                <ChartBarMultipleBy data={data} by={_ => _.sei} label={Meal_VisitMonitoringOptions.sei}/>
+                <ChartBarMultipleBy data={data} by={_ => _.sei} label={Meal_VisitMonitoring.options.sei}/>
               </SlidePanel>
               <SlidePanel>
                 <ChartPieWidgetBy title={m.mealMonitoringVisit.criticalConcern} filter={_ => _.visf === 'yes'} data={data} sx={{mb: 1}}/>
-                <ChartBarMultipleBy data={data} by={_ => _.visp} label={Meal_VisitMonitoringOptions.visp}/>
+                <ChartBarMultipleBy data={data} by={_ => _.visp} label={Meal_VisitMonitoring.options.visp}/>
               </SlidePanel>
             </Div>
 
             <Div column sx={{maxHeight: '33%'}}>
               <SlidePanel title={m.mealMonitoringVisit.nfiDistribution}>
-                <ChartBarMultipleBy data={data} by={_ => _.pan} label={Meal_VisitMonitoringOptions.pan}/>
+                <ChartBarMultipleBy data={data} by={_ => _.pan} label={Meal_VisitMonitoring.options.pan}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.ecrec}>
-                <ChartBarSingleBy data={data} by={_ => _.pae} label={Meal_VisitMonitoringOptions.pae}/>
+                <ChartBarSingleBy data={data} by={_ => _.pae} label={Meal_VisitMonitoring.options.pae}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.shelter}>
-                <ChartBarSingleBy data={data} by={_ => _.pas} label={Meal_VisitMonitoringOptions.pas}/>
+                <ChartBarSingleBy data={data} by={_ => _.pas} label={Meal_VisitMonitoring.options.pas}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.lau}>
-                <ChartBarSingleBy data={data} by={_ => _.pal} label={Meal_VisitMonitoringOptions.pal}/>
+                <ChartBarSingleBy data={data} by={_ => _.pal} label={Meal_VisitMonitoring.options.pal}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.protection}>
-                <ChartBarSingleBy data={data} by={_ => _.pap} label={Meal_VisitMonitoringOptions.pap}/>
+                <ChartBarSingleBy data={data} by={_ => _.pap} label={Meal_VisitMonitoring.options.pap}/>
               </SlidePanel>
               <SlidePanel title={m.mealMonitoringVisit.eore}>
-                <ChartBarSingleBy data={data} by={_ => _.pao} label={Meal_VisitMonitoringOptions.pao}/>
+                <ChartBarSingleBy data={data} by={_ => _.pao} label={Meal_VisitMonitoring.options.pao}/>
               </SlidePanel>
             </Div>
 

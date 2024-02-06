@@ -1,10 +1,10 @@
-import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_Re'
+import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 import {fnSwitch} from '@alexandreannic/ts-utils'
 import {Person} from '@/core/type/person'
 
 export class KoboBnReHelper {
 
-  static readonly getPersons = (_: Bn_Re): Person.Person[] => {
+  static readonly getPersons = (_: Bn_Re.T): Person.Person[] => {
     return [
       ...(_.hh_char_hhh_age || _.hh_char_hhh_gender) ? [{age: _.hh_char_hhh_age, gender: _.hh_char_hhh_gender}] : [],
       ...(_.hh_char_res_age || _.hh_char_res_gender) ? [{age: _.hh_char_res_age, gender: _.hh_char_res_gender}] : [],

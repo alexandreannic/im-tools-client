@@ -72,7 +72,7 @@ export class KoboTypedAnswerSdk {
     })
   }
   readonly searchBn_RapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
-    return this.search<Bn_RapidResponse.T.T>({
+    return this.search<Bn_RapidResponse.T>({
       formId: KoboIndex.byName('bn_rapidResponse').id,
       fnMap: Bn_RapidResponse.map,
       ...filters,

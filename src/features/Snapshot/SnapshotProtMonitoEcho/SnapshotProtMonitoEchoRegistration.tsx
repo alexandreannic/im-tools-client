@@ -85,12 +85,12 @@ export const SnapshotProtMonitoEchoRegistration = () => {
               </Div>
             </SlidePanel>
             <SlidePanel>
-              <ChartPieWidgetBy
+              <ChartPieWidgetByKey
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.accessBarriersToObtainDocumentation}
-                filter={_ => !_.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation.includes('no')}
-                filterBase={_ => !_?.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation
-                  .includes('unable_unwilling_to_answer')}
+                property="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
+                filter={_ => !_.includes('no')}
+                filterBase={_ => !_.includes('unable_unwilling_to_answer')}
                 data={data}
                 {...snapShotDefaultPieProps}
               />

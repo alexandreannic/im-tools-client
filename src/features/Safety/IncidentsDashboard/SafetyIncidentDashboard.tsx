@@ -7,8 +7,6 @@ import {KoboIndex} from '@/core/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
-import {SafetyIncidentTracker} from '@/core/sdk/server/kobo/generatedInterface/SafetyIncidentTracker/SafetyIncidentTracker'
-import {SafetyIncidentTrackerOptions} from '@/core/sdk/server/kobo/generatedInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {Page} from '@/shared/Page'
@@ -16,6 +14,7 @@ import {useSafetyIncidentDashboard} from '@/features/Safety/IncidentsDashboard/u
 import {SafetyIncidentDashboardBody} from '@/features/Safety/IncidentsDashboard/SafetyIncidentDashboardBody'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Period} from '@/core/type/period'
+import {Safety_incidentTracker} from '@/core/sdk/server/kobo/generatedInterface/Safety_incidentTracker'
 
 export interface DashboardSafetyIncidentsPageProps {
   filters: DataFilter.Filter
@@ -23,8 +22,8 @@ export interface DashboardSafetyIncidentsPageProps {
   computed: NonNullable<ReturnType<typeof useSafetyIncidentDashboard>>
 }
 
-// export const SafetyIncidentsTrackerBarChart = makeKoboBarChartComponent<SafetyIncidentTracker, typeof SafetyIncidentTrackerOptions>({
-//   options: SafetyIncidentTrackerOptions
+// export const SafetyIncidentsTrackerBarChart = makeKoboBarChartComponent<SafetyIncidentTracker, typeof Safety_incidentTracker.options>({
+//   options: Safety_incidentTracker.options
 // })
 
 export const SafetyIncidentDashboard = () => {
@@ -32,17 +31,17 @@ export const SafetyIncidentDashboard = () => {
   const {m} = useI18n()
   const _period = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('safety_incident').id))
 
-  const filterShape = DataFilter.makeShape<KoboAnswer<SafetyIncidentTracker>>({
+  const filterShape = DataFilter.makeShape<KoboAnswer<Safety_incidentTracker.T>>({
     oblast: {
       icon: 'location_on',
       getValue: _ => _.oblast,
-      getOptions: () => DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.oblast),
+      getOptions: () => DataFilter.buildOptionsFromObject(Safety_incidentTracker.options.oblast),
       label: m.oblast,
     },
     attackType: {
       icon: 'rocket_launch',
       getValue: _ => _.attack_type,
-      getOptions: () => DataFilter.buildOptionsFromObject(SafetyIncidentTrackerOptions.attack_type),
+      getOptions: () => DataFilter.buildOptionsFromObject(Safety_incidentTracker.options.attack_type),
       label: m.safety.attackTypes,
       multiple: true,
     }

@@ -23,11 +23,11 @@ import {Autocomplete} from '@mui/material'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
-import {Meal_CfmInternalOptions} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {SelectDrcProject} from '@/shared/SelectDrcProject'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
+import {Meal_CfmInternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal'
 
 export interface CfmDataFilters extends KoboAnswerFilter {
 }
@@ -264,7 +264,7 @@ export const CfmTable = ({}: any) => {
               head: m.project,
               id: 'project',
               width: 180,
-              // options: () => Enum.keys(Meal_CfmInternalOptions.feedback_type).map(k => ({value: k, label: ctx.schemaExternal.translate('feedback_type', k)})),
+              // options: () => Enum.keys(Meal_CfmInternal.options.feedback_type).map(k => ({value: k, label: ctx.schemaExternal.translate('feedback_type', k)})),
               renderValue: _ => _.project,
               renderOption: _ => _.project,
               render: row => row.form === CfmDataSource.Internal
@@ -332,7 +332,7 @@ export const CfmTable = ({}: any) => {
                   onChange={newValue => {
                     ctx.updateTag.call({formId: row.formId, answerId: row.id, key: 'feedbackTypeOverride', value: newValue})
                   }}
-                  options={Enum.entries(Meal_CfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
+                  options={Enum.entries(Meal_CfmInternal.options.feedback_type).map(([k, v]) => ({value: k, children: v}))}
                 />
             },
             {
@@ -366,7 +366,7 @@ export const CfmTable = ({}: any) => {
               head: m.gender,
               width: 80,
               id: 'gender',
-              options: () => Enum.keys(Meal_CfmInternalOptions.gender).map(value => ({value, label: ctx.schemaExternal.translate.choice('gender', value)})),
+              options: () => Enum.keys(Meal_CfmInternal.options.gender).map(value => ({value, label: ctx.schemaExternal.translate.choice('gender', value)})),
               renderValue: _ => _.gender,
               render: _ => ctx.schemaExternal.translate.choice('gender', _.gender)
             },

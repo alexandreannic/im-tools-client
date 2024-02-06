@@ -1,5 +1,4 @@
 import {SlidePanel} from '@/shared/PdfLayout/PdfSlide'
-import {Partnership_partnersDatabaseOptions} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {Enum, fnSwitch, Seq} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/type/drc'
 import React, {useState} from 'react'
@@ -7,6 +6,7 @@ import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {useI18n} from '@/core/i18n'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
+import {Partnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase'
 
 export const PanershipPanelDonor = ({
   data,
@@ -23,7 +23,7 @@ export const PanershipPanelDonor = ({
       </ScRadioGroup>
       {fnSwitch(mode, {
         donor: (
-          <ChartBarSingleBy data={data.flatMap(_ => _.group_vi2hh32).compact()} label={Partnership_partnersDatabaseOptions.Donor} by={_ => _.Donor!}/>
+          <ChartBarSingleBy data={data.flatMap(_ => _.group_vi2hh32).compact()} label={Partnership_partnersDatabase.options.Donor} by={_ => _.Donor!}/>
         ),
         project: (
           <ChartBarSingleBy

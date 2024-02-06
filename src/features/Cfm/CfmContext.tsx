@@ -6,7 +6,6 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {KoboIndex} from '@/core/KoboIndex'
 import {CfmDataFilters} from '@/features/Cfm/Data/CfmTable'
 import {CfmDataPriority, CfmDataProgram, CfmDataSource, KoboMealCfmHelper, KoboMealCfmStatus, KoboMealCfmTag} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
-import {Meal_CfmExternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmExternal/Meal_CfmExternal'
 import {Access, AccessSum} from '@/core/sdk/server/access/Access'
 import {AppFeatureId} from '@/features/appFeatureId'
 import {useSession} from '@/core/Session/SessionContext'
@@ -14,13 +13,14 @@ import {DrcOffice, DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {useIpToast} from '@/core/useToast'
 import {fnSwitch, Obj, Seq, seq} from '@alexandreannic/ts-utils'
-import {Meal_CfmInternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal/Meal_CfmInternal'
 import {OblastIndex, OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {useI18n} from '@/core/i18n'
 import {useFetcher, UseFetcher} from '@/shared/hook/useFetcher'
 import {KeyOf} from '@/core/type/generic'
 import {TableIcon, TableIconProps} from '@/features/Mpca/MpcaData/TableIcon'
 import {Box, BoxProps} from '@mui/material'
+import {Meal_CfmInternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal'
+import {Meal_CfmExternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmExternal'
 
 const formIdMapping: Record<string, CfmDataSource> = {
   [KoboIndex.byName('meal_cfmExternal').id]: CfmDataSource.External,
@@ -64,22 +64,22 @@ export type CfmData = {
   readonly project?: DrcProject
   readonly oblast: OblastName
   readonly oblastIso: OblastISO
-  readonly category?: Meal_CfmInternal['feedback_type']
-  readonly external_prot_support?: Meal_CfmExternal['prot_support']
-  readonly internal_existing_beneficiary?: Meal_CfmInternal['existing_beneficiary']
-  // internal_project_code?: Meal_CfmInternal['project_code']
+  readonly category?: Meal_CfmInternal.T['feedback_type']
+  readonly external_prot_support?: Meal_CfmExternal.T['prot_support']
+  readonly internal_existing_beneficiary?: Meal_CfmInternal.T['existing_beneficiary']
+  // internal_project_code?: Meal_CfmInternal.T['project_code']
   // external_thanks_feedback?: MealCfmExternal['thanks_feedback']
   // external_complaint?: MealCfmExternal['complaint']
-  external_consent?: Meal_CfmExternal['consent']
-  external_feedback_type?: Meal_CfmExternal['feedback_type']
-  // internal_feedback?: Meal_CfmInternal['feedback']
-  // internal?: Pick<Meal_CfmInternal, 'feedback' | 'existing_beneficiary' | 'project_code'>
+  external_consent?: Meal_CfmExternal.T['consent']
+  external_feedback_type?: Meal_CfmExternal.T['feedback_type']
+  // internal_feedback?: Meal_CfmInternal.T['feedback']
+  // internal?: Pick<Meal_CfmInternal.T, 'feedback' | 'existing_beneficiary' | 'project_code'>
   // external?: Pick<MealCfmExternal, 'prot_support' | 'thanks_feedback' | 'complaint' | 'consent' | 'feedback_type'>
-} & Pick<KoboAnswer<Meal_CfmInternal>,
+} & Pick<KoboAnswer<Meal_CfmInternal.T>,
   // 'ben_det_oblast' |
   'ben_det_raion' |
   'ben_det_hromada'
-> & Pick<KoboAnswer<Meal_CfmInternal>,
+> & Pick<KoboAnswer<Meal_CfmInternal.T>,
   'id' |
   'start' |
   'date' |
@@ -113,8 +113,8 @@ export interface CfmContext {
   }) => Promise<void>, KoboId>
   users: UseFetcher<ApiSdk['user']['search']>
   fetcherData: UseFetcher<() => Promise<{
-    [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal, KoboMealCfmTag>[]
-    [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal, KoboMealCfmTag>[]
+    [CfmDataSource.Internal]: KoboAnswer<Meal_CfmInternal.T, KoboMealCfmTag>[]
+    [CfmDataSource.External]: KoboAnswer<Meal_CfmExternal.T, KoboMealCfmTag>[]
   }>>
   mappedData: Seq<CfmData>
   visibleData: Seq<CfmData>

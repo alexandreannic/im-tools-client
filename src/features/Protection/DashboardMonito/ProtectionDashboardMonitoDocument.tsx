@@ -88,12 +88,12 @@ export const ProtectionDashboardMonitoDocument = ({
           </Lazy>
           <SlidePanel>
             <ChartPieWidgetByKey
+              data={data}
               compare={{before: computed.lastMonth}}
               property="have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation"
               title={m.protHHS2.accessBarriersToObtainDocumentation}
               filter={_ => !_.includes('no')}
-              filterBase={_ => !_?.includes('unable_unwilling_to_answer')}
-              data={data}
+              filterBase={_ => !_.includes('unable_unwilling_to_answer')}
               sx={{mb: 2}}
             />
             <ChartBarMultipleBy

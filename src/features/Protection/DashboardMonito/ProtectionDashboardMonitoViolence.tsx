@@ -3,11 +3,9 @@ import React, {useMemo, useState} from 'react'
 import {useI18n} from '@/core/i18n'
 import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Lazy} from '@/shared/Lazy'
-import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {ChartBar} from '@/shared/charts/ChartBar'
 import {forceArrayStringInference} from '@/utils/utils'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import {Protection_Hhs2_1} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {Checkbox} from '@mui/material'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {ChartHelper} from '@/shared/charts/chartHelper'
@@ -43,9 +41,9 @@ export const ProtectionDashboardMonitoViolence = ({
   const groupedIndividualsType = useMemo(() => {
     // Verbose but more performant than functional version
     const res = {
-      type: seq() as Seq<Protection_Hhs2_1['what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence']>,
-      when: seq() as Seq<Protection_Hhs2_1['when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence']>,
-      who: seq() as Seq<Protection_Hhs2_1['who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence']>,
+      type: seq() as Seq<Protection_Hhs2.T['what_type_of_incidents_took_place_has_any_adult_male_member_experienced_violence']>,
+      when: seq() as Seq<Protection_Hhs2.T['when_did_the_incidents_occur_has_any_adult_male_member_experienced_violence']>,
+      who: seq() as Seq<Protection_Hhs2.T['who_were_the_perpetrators_of_the_incident_has_any_adult_male_member_experienced_violence']>,
     }
     data.forEach(_ => {
       res.type.push(...[

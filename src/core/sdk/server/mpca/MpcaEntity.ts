@@ -1,11 +1,11 @@
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcDonor, DrcOffice, DrcProject} from '@/core/type/drc'
-import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_Re'
 import {KoboAnswerId, KoboAttachment, KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 import {WfpDeduplication} from '@/core/sdk/server/wfpDeduplication/WfpDeduplication'
 import {DeepPartial, Enum} from '@alexandreannic/ts-utils'
 import {KoboFormName} from '@/core/KoboIndex'
 import {Person} from '@/core/type/person'
+import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 
 export interface MpcaTypeTag extends KoboBaseTags {
   projects?: DrcProject[]
@@ -65,7 +65,7 @@ export interface MpcaEntity {
   amountUahDedup?: number
   amountUahFinal?: number
   amountUahCommitted?: number
-  benefStatus?: Bn_Re['ben_det_res_stat']
+  benefStatus?: Bn_Re.T['ben_det_res_stat']
   lastName?: string
   firstName?: string
   patronyme?: string

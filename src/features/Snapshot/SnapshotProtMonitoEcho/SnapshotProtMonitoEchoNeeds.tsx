@@ -37,9 +37,11 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                   }).percent, 0),
                   healthPn: toPercent(ChartHelperOld.percentage({
                     data: data.filter(_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer'),
-                    value: _ => _.what_is_your_1_priority?.includes('health_1_2')
-                      || _.what_is_your_2_priority?.includes('health_1_2')
-                      || _.what_is_your_3_priority?.includes('health_1_2'),
+                    value: _ => !!(
+                      _.what_is_your_1_priority?.includes('health_1_2') ||
+                      _.what_is_your_2_priority?.includes('health_1_2') ||
+                      _.what_is_your_3_priority?.includes('health_1_2')
+                    ),
                   }).percent, 0)
                 }
               }}>

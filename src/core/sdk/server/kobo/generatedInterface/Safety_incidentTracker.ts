@@ -1,165 +1,125 @@
-export namespace Meal_VisitMonitoring {
+export namespace Safety_incidentTracker {
   export type Option<T extends keyof typeof options> = keyof (typeof options)[T]
 
-  // Form id: a8GkjWBQDfxVADGHWJDrUw
+  // Form id: aAJNkn7v9fRL2XqQCgEkXf
   export interface T {
     start: string,
     end: string,
-    // md/mda [select_one] Area
-    mda: undefined | Option<'mda'>,
-    // md/mdro [select_one] Responsible office:
-    mdro: undefined | Option<'mdro'>,
-    // md/mdd [date] Date of visit
-    mdd: Date | undefined,
-    // md/md_det_oblast [select_one] Oblast
-    md_det_oblast: undefined | Option<'md_det_oblast'>,
-    // md/md_det_raion [select_one] Raion
-    md_det_raion: undefined | Option<'md_det_raion'>,
-    // md/md_det_hromada [select_one] Hromada
-    md_det_hromada: undefined | Option<'md_det_hromada'>,
-    // md/mds [text] Settlement
-    mds: string | undefined,
-    // md/location_details [text] Location details
-    location_details: string | undefined,
-    // md/mdp [select_one] MEAL Focal Point
-    mdp: undefined | Option<'mdp'>,
-    // md/mdd_001 [select_multiple] DONOR:
-    mdd_001: undefined | Option<'mdd_001'>[],
-    // md/mdt [select_multiple] With which team was conducted visit?
-    mdt: undefined | Option<'mdt'>[],
-    // md/whom [text] With whom?
-    whom: string | undefined,
-    // md/visit_type [select_one] Visit type?
-    visit_type: undefined | Option<'visit_type'>,
-    // md/visit_type_specify [text] Please specify
-    visit_type_specify: string | undefined,
-    // md/mdc [text] Name of collective center?
-    mdc: string | undefined,
-    // md/mdo [text] Other:
-    mdo: string | undefined,
-    // pa/pan [select_multiple] If NFI distribution, then:
-    pan: undefined | Option<'pan'>[],
-    // pa/pae [select_one] If EcRec:
-    pae: undefined | Option<'pae'>,
-    // pa/pas [select_one] If Shelter:
-    pas: undefined | Option<'pas'>,
-    // pa/pal [select_one] If LAU:
-    pal: undefined | Option<'pal'>,
-    // pa/pap [select_one] If Protection:
-    pap: undefined | Option<'pap'>,
-    // pa/pao [select_one] If EORE:
-    pao: undefined | Option<'pao'>,
-    // pa/paoth [text] Other:
-    paoth: string | undefined,
-    // sem [integer] What percentage of beneficiaries for this activity are male?
-    sem: number | undefined,
-    // sew [integer] What percentage of beneficiaries for this activity are female?
-    sew: number | undefined,
-    // sey [select_one] If a NFI distribution: Are there priority queues for vulnerable individuals?
-    sey: undefined | Option<'visf'>,
-    // set [text] If no, please explain why:
-    set: string | undefined,
-    // sef [select_one] Any concerns to flag?
-    sef: undefined | Option<'visf'>,
-    // sei [select_multiple] If YES – Details to be provided
-    sei: undefined | Option<'sei'>[],
-    // ssc/ssy [select_one] Were there any security concerns during this activity?
-    ssy: undefined | Option<'visf'>,
-    // ssc/sst [select_multiple] If yes, please select the type of situation:
-    sst: undefined | Option<'sst'>[],
-    // ssc/sso [text] Other:
-    sso: string | undefined,
-    // cca/ccm [select_one] Did DRC staff inform beneficiaries of how they can provide feedback through the CFM mechanism?
-    ccm: undefined | Option<'visf'>,
-    // cca/ccn [text] If no, please explain why:
-    ccn: string | undefined,
-    // cca/ccs [select_one] Was DRC staff behaviour in line with DRC Code of Conduct standards?
-    ccs: undefined | Option<'visf'>,
-    // cca/ccsn [text] If no, please explain why:
-    ccsn: string | undefined,
-    // cca/ccd [select_one] Did any beneficiaries report of not feeling safe around DRC staff?
-    ccd: undefined | Option<'visf'>,
-    // cca/ccdn [text] If no, please explain why:
-    ccdn: string | undefined,
-    // cca/ccc [select_one] Were CFM flyers distributed?
-    ccc: undefined | Option<'visf'>,
-    // cca/cccn [text] If no, please explain why:
-    cccn: string | undefined,
-    // pmi/pmid [select_one] Have you been asked for permission to collect your data?
-    pmid: undefined | Option<'visf'>,
-    // pmi/pmidn [text] If no, please explain why:
-    pmidn: string | undefined,
-    // pmi/pmic [select_one] For vulnerable staff, were issues handled with care and confidentiality?
-    pmic: undefined | Option<'visf'>,
-    // pmi/pmicn [text] If no, please explain why:
-    pmicn: string | undefined,
-    // qti/qtip [select_one] Was the assistance from DRC timely for people?
-    qtip: undefined | Option<'visf'>,
-    // qti/qtipn [text] If no, please explain why:
-    qtipn: string | undefined,
-    // qti/qtia [select_one] Was the activity of quality and in line with the planned activity?
-    qtia: undefined | Option<'visf'>,
-    // qti/qtian [text] If no, please explain why:
-    qtian: string | undefined,
-    // vis/visb [select_one] Were all DRC staff in visibility and easily identified by beneficiaries?
-    visb: undefined | Option<'visf'>,
-    // vis/visbn [text] If no, please explain why:
-    visbn: string | undefined,
-    // vis/visf [select_one] Any critical concerns to flag?
-    visf: undefined | Option<'visf'>,
-    // vis/visp [select_multiple] If YES, ‘’any details to be provided’’
-    visp: undefined | Option<'visp'>[],
-    // vis/vispo [text] Other:
-    vispo: string | undefined,
-    // fcp/fcpc [text] Comments
-    fcpc: string | undefined,
-    // fcp/fspp [note] Photos of the visit
-    fspp: string,
-    // fcp/fcp1 [image] The photo of the visit
-    fcp1: string,
-    // fcp/fcp2 [image] The photo of the visit
-    fcp2: string,
-    // fcp/fcp3 [image] The photo of the visit
-    fcp3: string,
-    // fcp/fcp4 [image] The photo of the visit
-    fcp4: string,
-    // fcp/fcp5 [image] The photo of the visit
-    fcp5: string,
-    // fcp/fcp6 [image] The photo of the visit
-    fcp6: string,
-    // fcp/fcp7 [image] The photo of the visit
-    fcp7: string,
-    // fcp/fcp8 [image] The photo of the visit
-    fcp8: string,
-    // fcp/fcp9 [image] The photo of the visit
-    fcp9: string,
-    // fcp/fcp10 [image] The photo of the visit
-    fcp10: string,
-    // fcp/fcpl [text] Link to the folder with photos
-    fcpl: string | undefined,
+    // ii/date_time [datetime] Date, time
+    date_time: Date | undefined,
+    // ii/oblast [select_one] Oblast
+    oblast: undefined | Option<'oblast'>,
+    // ii/raion [select_one] Raion
+    raion: undefined | Option<'raion'>,
+    // ii/hromada [select_one] Hromada
+    hromada: undefined | Option<'hromada'>,
+    // ii/attack [select_one] Attack:
+    attack: undefined | Option<'zie_visit_person'>,
+    // ii/attack_type [select_multiple] Type attacks:
+    attack_type: undefined | Option<'attack_type'>[],
+    // ii/attack_type_other [text] If "Other", please specify
+    attack_type_other: string | undefined,
+    // ii/what_destroyed [select_multiple] What was destroyed:
+    what_destroyed: undefined | Option<'what_destroyed'>[],
+    // ii/what_destroyed_other [text] If "Other", please specify
+    what_destroyed_other: string | undefined,
+    // ii/type_casualties [select_multiple] Type of casualties
+    type_casualties: undefined | Option<'type_casualties'>[],
+    // ii/not_number_casualities [note] #### 🔘 Number of casualties:
+    not_number_casualities: string,
+    // ii/dead [integer] Dead
+    dead: number | undefined,
+    // ii/injured [integer] Injured
+    injured: number | undefined,
+    // af/foreign_dignitary_visiting [select_one] Was a foreign dignitary visiting?
+    foreign_dignitary_visiting: undefined | Option<'zie_visit_person'>,
+    // af/foreign_dignitary_visiting_yes [text] Who; what; where
+    foreign_dignitary_visiting_yes: string | undefined,
+    // af/wuaf [select_one] Was there an advance by the UAF?
+    wuaf: undefined | Option<'drone_attack_activity'>,
+    // af/wuaf_yes [select_multiple] What channels was this reported on
+    wuaf_yes: undefined | Option<'zie_visit_person_rep'>[],
+    // af/wraf [select_one] Was there an advance by the RAF?
+    wraf: undefined | Option<'drone_attack_activity'>,
+    // af/wraf_yes [select_multiple] What channels was this reported on
+    wraf_yes: undefined | Option<'zie_visit_person_rep'>[],
+    // af/headline_event [select_one] Was there a headline event: grain deal; sinking of a capital ship; mass surrenders of RAF; mass retreat of RAF; mass capture of RAF
+    headline_event: undefined | Option<'zie_visit_person'>,
+    // af/headline_event_rep [select_multiple] What channels was this reported on
+    headline_event_rep: undefined | Option<'zie_visit_person_rep'>[],
+    // af/headline_event_wh [text] Please provide more detail on the information provided
+    headline_event_wh: string | undefined,
+    // af/zie_statement [select_one] Did Zielenskiy (or other cabinet minister) make a statement to an international body: foreign parliament; UN general assembly/security council/institution; prime minister; president; etc.
+    zie_statement: undefined | Option<'zie_visit_person'>,
+    // af/zie_statement_rep [select_multiple] What channels was this reported on
+    zie_statement_rep: undefined | Option<'zie_visit_person_rep'>[],
+    // af/zie_statement_wh [text] Please provide more detail on the information provided
+    zie_statement_wh: string | undefined,
+    // af/zie_visit_location [select_one] Did Zielenskiy (or other cabinet minister) visit a high-profile location in Ukraine
+    zie_visit_location: undefined | Option<'zie_visit_person'>,
+    // af/zie_visit_location_rep [select_multiple] What channels was this reported on
+    zie_visit_location_rep: undefined | Option<'zie_visit_person_rep'>[],
+    // af/zie_visit_location_wh [text] Please provide more detail on the information provided
+    zie_visit_location_wh: string | undefined,
+    // af/zie_visit_person [select_one] Did Zielenskiy (or other cabinet minister) visit a high-profile person in Ukraine
+    zie_visit_person: undefined | Option<'zie_visit_person'>,
+    // af/zie_visit_person_rep [select_multiple] What channels was this reported on
+    zie_visit_person_rep: undefined | Option<'zie_visit_person_rep'>[],
+    // af/zie_visit_person_wh [text] Please provide more detail on the information provided
+    zie_visit_person_wh: string | undefined,
+    // af/drone_attack_activity [select_one] Was there a drone attack or other partisan activity in the RF
+    drone_attack_activity: undefined | Option<'drone_attack_activity'>,
+    // af/level_confidence [select_one] What is your overall level of confidence in the sources used to report on the information surrounding this attack
+    level_confidence: undefined | Option<'level_confidence'>,
+    // report_summary [text] Report summary
+    report_summary: string | undefined,
   }
 
   export const options = {
-    mda: {
-      'we': `West`,
-      'ea': `East`,
-      'no': `North`,
-      'so': `South`,
-      'ky': `Kyiv`
+    zie_visit_person: {
+      'yes': `Yes`,
+      'no': `No`
     },
-    mdro: {
-      'Ky': `Kyiv`,
-      'Lv': `Lviv`,
-      'Dn': `Dnipro`,
-      'Kh': `Kharkiv ( Merefa)`,
-      'Ch': `Chernihiv`,
-      'Su': `Sumy`,
-      'My': `Mykolaiv`,
-      'Ma': `Mariupol`,
-      'Sl': `Slovyansk`,
-      'Se': `Severodonetsk`
+    attack_type: {
+      'drone': `Drone`,
+      'missile': `Missile`,
+      'hypersonic': `Hypersonic`,
+      'artillery': `Artillery`,
+      'other': `Other`
     },
-    md_det_oblast: {
+    what_destroyed: {
+      'dtcr': `Critical national infrastructure (bridge; power grid; school; hospital; etc.`,
+      'dtgb': `Government building`,
+      'dtmt': `Military target`,
+      'dtca': `Residential civilian area`,
+      'dtcc': `City center`,
+      'dtho': `Hotel`,
+      'other': `Other`
+    },
+    type_casualties: {
+      'clmi': `Military`,
+      'clci': `Civilian`,
+      'clgo': `Government`,
+      'clin': `International (journalist; humanitarian; foreign fighter)`
+    },
+    zie_visit_person_rep: {
+      'socialmedia': `Social media`,
+      'international': `International`,
+      'nationalmedia': `National`
+    },
+    drone_attack_activity: {
+      'yes': `Yes`,
+      'no': `No`,
+      'not': `Not Specified`
+    },
+    level_confidence: {
+      '1': `1`,
+      '2': `2`,
+      '3': `3`,
+      '4': `4`,
+      '5': `5`
+    },
+    oblast: {
       'aroc': `Autonomous Republic of Crimea`,
       'vinnytska': `Vinnytsia`,
       'volynska': `Volyn`,
@@ -186,9 +146,9 @@ export namespace Meal_VisitMonitoring {
       'chernivetska': `Chernivtsi`,
       'chernihivska': `Chernihiv`,
       'citykyiv': `City Kyiv`,
-      'sevastopilska': `City Sevastopil`
+      'sevastopilska': `Sevastopil`
     },
-    md_det_raion: {
+    raion: {
       'zvenyhorodskyi': `Zvenyhorodskyi`,
       'zolotoniskyi': `Zolotoniskyi`,
       'umanskyi': `Umanskyi`,
@@ -318,7 +278,7 @@ export namespace Meal_VisitMonitoring {
       'korostenskyi': `Korostenskyi`,
       'novohrad-volynskyi': `Novohrad-Volynskyi`
     },
-    md_det_hromada: {
+    hromada: {
       'abrykosivska': `Abrykosivska`,
       'abrykosivska_2': `Abrykosivska`,
       'adzhamska': `Adzhamska`,
@@ -2089,156 +2049,6 @@ export namespace Meal_VisitMonitoring {
       'zymnovodivska': `Zymnovodivska`,
       'zymohirivska': `Zymohirivska`,
       'zymynska': `Zymynska`
-    },
-    mdp: {
-      'YP': `Yuliia Plesak`,
-      'NL': `Nataliya Ilkiv`,
-      'IS': `Isabel Mary Pearson`,
-      'YK': `Yulia Kulakova`,
-      'YH': `Yelysavets Haliuk`,
-      'OR': `Oleksii Reshetnikov`,
-      'VD': `Viktor Denysenko`,
-      'AK': `Artem Koniev`,
-      'ISM': `Isabel Mary Pearson`,
-      'PI': `Polina Isechko`,
-      'ANC': `Anna Chupryna`,
-      'YUK': `Yulia Kulakova`,
-      'KC': `Kateryna Chulska`,
-      'OD': `Olesya Dantseva`,
-      'LA': `Liliia Antonova`,
-      'IB': `Iryna Bidna`,
-      'ISMA': `Isabel Mary Pearson`,
-      'AC': `Anna Chuprina`,
-      'OO': `Oleksandr Oleksandrov`,
-      'ANNC': `Anna Chupryna`,
-      'KAC': `Kateryna Chulska`
-    },
-    mdd_001: {
-      'bha': `UKR-000284 BHA`,
-      'ech1': `UKR-000223 ECHO`,
-      'ech2': `UKR-000250 ECHO`,
-      'echo1': `UKR-000269 ECHO`,
-      'echo2': `UKR-000322 ECHO`,
-      'sdc': `UKR-000226 SDC`,
-      'fcdo': `UKR-000247 FCDO`,
-      'fcd': `UKR-000285 FCDO`,
-      'okf': `UKR-000309 OKF`,
-      'ofda': `UKR-000189 OFDA`,
-      'pspu': `UKR-000304 PSPU`,
-      'pofu': `UKR-000270 Pooled Funds`,
-      'finm': `UKR-000249 Finnish MFA`,
-      'frem': `UKR-000293 French MFA`,
-      'euics': `UKR-000212 EU IcSP`,
-      'euic': `UKR-000255 EU IcSP`,
-      'fmofa': `UKR-000243 FMoFA`,
-      'pmra': `UKR-000230 PM WRA`,
-      'pmka': `UKR-000231 PM WKA`,
-      'sida': `SIDA 518-570A`,
-      'sida43': `UKR-000343 SIDA`,
-      'eu4y': `UKR-000132 EU4Youth`,
-      'uhf1': `UKR-000256 UHF`,
-      'uhf2': `UKR-000271 UHF2`,
-      'uhf3': `UKR-000276 UHF3`,
-      'uhf4': `UKR-000314 UHF4`,
-      'uhf5': `UKR-000316 UHF5`,
-      'uhf6': `UKR-000336 UHF6`,
-      'uhf7': `UKR-000352 UHF7`,
-      'unhcr': `UKR-000291_292 UNHCR`,
-      'unhc': `UKR-000308 UNHCR`,
-      'danid': `UKR-000266 DANIDA`,
-      'dani': `UKR-000267 DANIDA`,
-      'dut1': `UKR-000294 Dutch I`,
-      'dut2': `UKR-000306 Dutch II`,
-      'nono': `UKR-000298 Novo-Nordisk`,
-      'sdcs': `UKR-000290 SDC Shelter`,
-      'mofa': `UKR-000301 DANISH MoFA`,
-      'nadn': `Needs assessment (DRC/NRC)`,
-      'bha2': `UKR-000345 BHA SCI`
-    },
-    mdt: {
-      'nfi': `NFI`,
-      'ecrec': `EcRec`,
-      'shelter': `Shelter`,
-      'lau': `LAU`,
-      'prote': `Protection`,
-      'eore': `EORE`,
-      'cbte': `CB team`,
-      'pate': `Partnership team`,
-      'gbv': `GBV`,
-      'livelihood': `Livelihood`,
-      'oth': `Other:`
-    },
-    visit_type: {
-      'shadowing': `Shadowing/”tag-along”`,
-      'monitoring': `Monitoring visit: conducting interviews/case stories`,
-      'handover': `Handover or Activity completion visit`,
-      'meeting': `Meeting with community, authorities, mobilizers etc.`,
-      'other': `Other`
-    },
-    pan: {
-      'mpca': `MPCA`,
-      'hkmv': `HKMV (Family Hygiene Kits on the Move)`,
-      'hkf': `HKF (Family Hygiene Kits)`,
-      'wkb': `WKB (Baby winter kits)`,
-      'cfr': `CFR (Cash for Rent)`,
-      'bk': `BK (Baby Hygiene Kits)`,
-      'ks': `KS (Kitchen sets)`,
-      'nfkf': `NFKF (Family NFI kits + kitchen set (KS))`,
-      'bln': `BLN (High thermal blanket)`,
-      'nficc': `NFICC (NFI kit for the Collective Center)`,
-      'esk': `ESK (Emergency Shelter kit)`,
-      'hkcc': `HKCC (Insitutional Hygiene kit for Collective Center)`,
-      'cff': `CFF (Cash for Fuel)`
-    },
-    pae: {
-      'mmg': `Monitoring Micro grants`,
-      'msg': `Monitoring SME grants`,
-      'mag': `Monitoring Agro grants`,
-      'mvg': `Monitoring VET grant`
-    },
-    pas: {
-      'har': `House/ apartment repair (mid-term assessment of the repair work)`,
-      'harm': `House/ apartment repair (Handover completion visit)`,
-      'ipb': `Institution/ public building repair (mid-term assessment of the repair work)`,
-      'ipbm': `Institution/ public building repair (Handover completion visit)`,
-      'cfr': `Cash for Repair (cash for building repair registration)`,
-      'cfs': `Cash for Shelter (cash for building repair assessment)`
-    },
-    pal: {
-      'mc': `Mobile Clinic`
-    },
-    pap: {
-      'pss': `PSS`,
-      'obse': `Observation`,
-      'cbp': `Community based Protection`
-    },
-    pao: {
-      'eose': `EORE session / ToT`
-    },
-    visf: {
-      'yes': `Yes`,
-      'no': `No`
-    },
-    sei: {
-      'ssc': `Safety & security concerns`,
-      'cca': `Code of Conduct & Accountability`,
-      'pmi': `Protection Mainstreaming improvements`,
-      'qti': `Quality & Timeliness`,
-      'vis': `Visibility`
-    },
-    sst: {
-      'taa': `There was an air alarm`,
-      'tns': `There was no shelter`,
-      'fdd': `Fray during distribution`,
-      'tsc': `The space wasnt suitable to such a crowd: people were pushing and quarreling`,
-      'bwc': `Bad weather conditions`,
-      'oth': `Other:`
-    },
-    visp: {
-      'psea': `PSEA`,
-      'mof': `Misappropriation of funds/ suspected corruption`,
-      'fod': `Falsification of documents`,
-      'oth': `Other`
     }
   }
 
@@ -2254,14 +2064,17 @@ export namespace Meal_VisitMonitoring {
 
   export const map = (_: Record<keyof T, any>): T => ({
     ..._,
-    mdd: _.mdd ? new Date(_.mdd) : undefined,
-    mdd_001: _.mdd_001?.split(' '),
-    mdt: _.mdt?.split(' '),
-    pan: _.pan?.split(' '),
-    sem: _.sem ? +_.sem : undefined,
-    sew: _.sew ? +_.sew : undefined,
-    sei: _.sei?.split(' '),
-    sst: _.sst?.split(' '),
-    visp: _.visp?.split(' '),
+    date_time: _.date_time ? new Date(_.date_time) : undefined,
+    attack_type: _.attack_type?.split(' '),
+    what_destroyed: _.what_destroyed?.split(' '),
+    type_casualties: _.type_casualties?.split(' '),
+    dead: _.dead ? +_.dead : undefined,
+    injured: _.injured ? +_.injured : undefined,
+    wuaf_yes: _.wuaf_yes?.split(' '),
+    wraf_yes: _.wraf_yes?.split(' '),
+    headline_event_rep: _.headline_event_rep?.split(' '),
+    zie_statement_rep: _.zie_statement_rep?.split(' '),
+    zie_visit_location_rep: _.zie_visit_location_rep?.split(' '),
+    zie_visit_person_rep: _.zie_visit_person_rep?.split(' '),
   }) as T
 }

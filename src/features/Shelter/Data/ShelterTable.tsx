@@ -2,7 +2,6 @@ import React, {useMemo, useState} from 'react'
 import {Page} from '@/shared/Page'
 import {Sheet} from '@/shared/Sheet/Sheet'
 import {Enum, fnSwitch, map, seq} from '@alexandreannic/ts-utils'
-import {Shelter_NTAOptions} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA/Shelter_NTAOptions'
 import {useI18n} from '@/core/i18n'
 import {AaSelect} from '@/shared/Select/Select'
 import {Panel} from '@/shared/Panel'
@@ -26,6 +25,7 @@ import {Datepicker} from '@/shared/Datepicker/Datepicker'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {TableInput} from '@/shared/TableInput'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
+import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA'
 
 export const ShelterTable = () => {
   const ctx = useShelterContext()
@@ -95,7 +95,7 @@ export const ShelterTable = () => {
       {
         id: 'oblast',
         type: 'select_one',
-        options: () => Enum.entries(Shelter_NTAOptions.ben_det_oblast).map(([value, label]) => ({value, label})),
+        options: () => Enum.entries(Shelter_NTA.options.ben_det_oblast).map(([value, label]) => ({value, label})),
         head: m.oblast,
         render: _ => ctx.nta.schema.translate.choice('ben_det_oblast', _.nta?.ben_det_oblast),
         renderValue: _ => _.nta?.ben_det_oblast,
@@ -103,7 +103,7 @@ export const ShelterTable = () => {
       {
         id: 'raion',
         type: 'string',
-        // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+        // options: () => Enum.entries(Shelter_NTA.options.ben_det_raion).map(([value, label]) => ({value, label})),
         head: m.raion,
         render: _ => ctx.nta.schema.translate.choice('ben_det_oblast', _.nta?.ben_det_oblast),
         renderValue: _ => _.nta?.ben_det_raion,
@@ -111,14 +111,14 @@ export const ShelterTable = () => {
       {
         id: 'settelment',
         type: 'string',
-        // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+        // options: () => Enum.entries(Shelter_NTA.options.ben_det_raion).map(([value, label]) => ({value, label})),
         head: m._shelter.settlement,
         render: _ => _.nta?.settlement,
         renderValue: _ => _.nta?.settlement,
       }, {
         id: 'street',
         type: 'string',
-        // options: () => Enum.entries(Shelter_NTAOptions.ben_det_raion).map(([value, label]) => ({value, label})),
+        // options: () => Enum.entries(Shelter_NTA.options.ben_det_raion).map(([value, label]) => ({value, label})),
         head: m._shelter.street,
         render: _ => _.nta?.street,
         renderValue: _ => _.nta?.street,
@@ -182,7 +182,7 @@ export const ShelterTable = () => {
         id: 'owner_tenant_type',
         type: 'select_one',
         head: m._shelter.owner,
-        options: () => Enum.entries(Shelter_NTAOptions.owner_tenant_type).map(([value, label]) => ({value, label})),
+        options: () => Enum.entries(Shelter_NTA.options.owner_tenant_type).map(([value, label]) => ({value, label})),
         renderValue: _ => _.nta?.owner_tenant_type,
         render: _ => ctx.nta.schema.translate.choice('owner_tenant_type', _.nta?.owner_tenant_type),
       },
@@ -196,7 +196,7 @@ export const ShelterTable = () => {
         id: 'document_type',
         type: 'select_one',
         head: m._shelter.documentType,
-        options: () => Enum.entries(Shelter_NTAOptions.document_type).map(([value, label]) => ({value, label})),
+        options: () => Enum.entries(Shelter_NTA.options.document_type).map(([value, label]) => ({value, label})),
         renderValue: _ => _.nta?.document_type,
         render: _ => ctx.nta.schema.translate.choice('document_type', _.nta?.document_type),
       },
@@ -204,7 +204,7 @@ export const ShelterTable = () => {
         id: 'dwelling_type',
         type: 'select_one',
         head: m._shelter.accommodation,
-        options: () => Enum.entries(Shelter_NTAOptions.dwelling_type).map(([value, label]) => ({value, label})),
+        options: () => Enum.entries(Shelter_NTA.options.dwelling_type).map(([value, label]) => ({value, label})),
         render: _ => ctx.nta.schema.translate.choice('dwelling_type', _.nta?.dwelling_type),
         renderValue: _ => _.nta?.dwelling_type,
       },
@@ -214,7 +214,7 @@ export const ShelterTable = () => {
         align: 'center',
         width: 0,
         head: m._shelter.ownershipDocumentExist,
-        options: () => Enum.entries(Shelter_NTAOptions.pregnant_lac).map(([value, label]) => ({value, label})),
+        options: () => Enum.entries(Shelter_NTA.options.pregnant_lac).map(([value, label]) => ({value, label})),
         renderValue: _ => _.nta?.ownership_verification,
         render: _ => fnSwitch(_.nta?.ownership_verification!, {
           yes: <TableIcon color="success">check_circle</TableIcon>,

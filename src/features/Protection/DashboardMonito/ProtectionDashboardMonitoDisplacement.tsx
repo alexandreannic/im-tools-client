@@ -114,7 +114,7 @@ export const ProtectionDashboardMonitoDisplacement = ({
           <Lazy deps={[data, intentionFilters]} fn={() => {
             return data.filter(_ => {
               const checked = Enum.entries(intentionFilters).filter(([, v]) => !!v).map(([k]) => k)
-              return checked.length === 0 || checked.includes(_.what_are_your_households_intentions_in_terms_of_place_of_residence)
+              return checked.length === 0 || checked.includes(_.what_are_your_households_intentions_in_terms_of_place_of_residence!)
             })
           }}>
             {filteredData => (

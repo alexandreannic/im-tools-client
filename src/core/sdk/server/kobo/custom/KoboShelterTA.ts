@@ -1,12 +1,12 @@
 import {ShelterContractor} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TA'
+import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA'
 import {NumberKeys} from '@/core/type/generic'
 import {map} from '@alexandreannic/ts-utils'
 import {DrcProject} from '@/core/type/drc'
 import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
 
 export namespace KoboShelterTa {
-  const lot1: NumberKeys<Shelter_TA>[] = [
+  const lot1: NumberKeys<Shelter_TA.T>[] = [
     'dismantling_of_structures',
     'singleshutter_window_tripleglazed_pc',
     'singleshutter_window_tripleglazed_m',
@@ -27,7 +27,7 @@ export namespace KoboShelterTa {
     'doubleglazed_upvc_door_m',
   ]
 
-  const lot2: NumberKeys<Shelter_TA>[] = [
+  const lot2: NumberKeys<Shelter_TA.T>[] = [
     'dismantling_of_structures2',
     'wall_repair_clay_bricks_m',
     'wall_repair_concrete_blocks_m',
@@ -68,11 +68,11 @@ export namespace KoboShelterTa {
     'wall_mountes_cable_wiring_lm',
   ]
 
-  export const hasLot1 = (row?: Shelter_TA): boolean | undefined => {
+  export const hasLot1 = (row?: Shelter_TA.T): boolean | undefined => {
     if (row) return !!lot1.find(k => map(row[k], _ => _ > 0) ?? false)
   }
 
-  export const hasLot2 = (row?: Shelter_TA): boolean | undefined => {
+  export const hasLot2 = (row?: Shelter_TA.T): boolean | undefined => {
     if (row) return !!lot2.find(k => map(row[k], _ => _ > 0) ?? false)
   }
 }

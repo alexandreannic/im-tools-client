@@ -17,10 +17,10 @@ import {ShelterDashboard} from '@/features/Shelter/Dasbhoard/ShelterDashboard'
 import {useShelterData} from '@/features/Shelter/useShelterData'
 import {seq} from '@alexandreannic/ts-utils'
 import {Access} from '@/core/sdk/server/access/Access'
-import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA/Shelter_NTA'
 import {SidebarSection} from '@/shared/Layout/Sidebar/SidebarSection'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA'
 
 const relatedKoboForms: KoboFormName[] = [
   'shelter_nta',
@@ -80,7 +80,7 @@ export const ShelterWithAccess = () => {
   const {access, allowedOffices} = useMemo(() => {
     const dbAccesses = seq(accesses).filter(Access.filterByFeature(AppFeatureId.kobo_database))
     const allowedOffices = dbAccesses.flatMap(_ => {
-      return _.params?.filters?.back_office as Shelter_NTA['back_office'][] | undefined
+      return _.params?.filters?.back_office as Shelter_NTA.T['back_office'][] | undefined
     }).compact()
     return {
       access: Access.toSum(dbAccesses, session.admin),

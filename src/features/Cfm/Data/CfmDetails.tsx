@@ -18,10 +18,10 @@ import {IpBtn} from '@/shared/Btn'
 import {cfmIndex} from '@/features/Cfm/Cfm'
 import {useSession} from '@/core/Session/SessionContext'
 import {Modal} from 'mui-extension/lib/Modal'
-import {Meal_CfmInternalOptions} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal/Meal_CfmInternalOptions'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {TableInput} from '@/shared/TableInput'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
+import {Meal_CfmInternal} from '@/core/sdk/server/kobo/generatedInterface/Meal_CfmInternal'
 
 const routeParamsSchema = yup.object({
   formId: yup.string().required(),
@@ -192,7 +192,7 @@ export const CfmDetails = ({entry}: {
             onChange={newValue => {
               ctx.updateTag.call({formId: entry.formId, answerId: entry.id, key: 'feedbackTypeOverride', value: newValue})
             }}
-            options={Enum.entries(Meal_CfmInternalOptions.feedback_type).map(([k, v]) => ({value: k, children: v}))}
+            options={Enum.entries(Meal_CfmInternal.options.feedback_type).map(([k, v]) => ({value: k, children: v}))}
           />
           <Box>{entry.feedback}</Box>
 
