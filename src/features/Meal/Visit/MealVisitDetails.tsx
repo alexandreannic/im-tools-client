@@ -219,9 +219,7 @@ export const _DashboardMealVisitPdf = () => {
               {seq(mapFor(10, i => (entry as any)['fcp' + (i + 1)]))
                 .map(fileName => koboImgHelper({attachments: entry.attachments, fileName}).fullUrl)
                 .compact()
-                .map(x =>
-                  <CompressedImg key={x} url={x} height={600}/>
-                )}
+                .map(x => <CompressedImg key={x} url={x!} height={600}/>)}
             </Box>
             <Box sx={{breakInside: 'avoid', display: 'flex', justifyContent: 'space-between', mt: 1}}>
               <Box>
