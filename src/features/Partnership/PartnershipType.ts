@@ -1,9 +1,9 @@
 import {OblastISO, OblastName} from '@/shared/UkraineMap/oblastIndex'
 import {DrcDonor, DrcSector} from '@/core/type/drc'
-import {Partnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase/Partnership_partnersDatabase'
 import {KoboId} from '@/core/sdk/server/kobo/Kobo'
+import {Partnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase'
 
-export interface PartnershipData extends Partnership_partnersDatabase {
+export interface PartnershipData extends Partnership_partnersDatabase.T {
   id: KoboId
   computed: {
     name?: string
@@ -12,17 +12,17 @@ export interface PartnershipData extends Partnership_partnersDatabase {
   oblastIso?: OblastISO[]
   donors?: DrcDonor[]
   sectors?: DrcSector[]
-  relationWithDrc?: Partnership_partnersDatabase['Is_there_an_ongoing_relationsh']
+  relationWithDrc?: Partnership_partnersDatabase.T['Is_there_an_ongoing_relationsh']
   ownWarehouse?: boolean
-  ownVehicle?: Partnership_partnersDatabase['Own_vehicles']
-  recommendationActivities?: Partnership_partnersDatabase['The_organization_is_g_type_of_activities']
+  ownVehicle?: Partnership_partnersDatabase.T['Own_vehicles']
+  recommendationActivities?: Partnership_partnersDatabase.T['The_organization_is_g_type_of_activities']
   rapidMobilization?: boolean
   hardToReachAccess?: boolean
-  targetedMinorities?: Partnership_partnersDatabase['Select_if_the_organi_inorities_in_Ukraine']
-  assistanceRequested?: Partnership_partnersDatabase['Which_assistance_would_the_CSO']
-  dueDiligenceThreshold?: Partnership_partnersDatabase['Sub_Grant_Funding_Threshold']
-  dueDiligenceFinalized?: Partnership_partnersDatabase['Has_due_diligence_been_finaliz']
-  dueRisk?: Partnership_partnersDatabase['Overall_Residual_Risk']
+  targetedMinorities?: Partnership_partnersDatabase.T['Select_if_the_organi_inorities_in_Ukraine']
+  assistanceRequested?: Partnership_partnersDatabase.T['Which_assistance_would_the_CSO']
+  dueDiligenceThreshold?: Partnership_partnersDatabase.T['Sub_Grant_Funding_Threshold']
+  dueDiligenceFinalized?: Partnership_partnersDatabase.T['Has_due_diligence_been_finaliz']
+  dueRisk?: Partnership_partnersDatabase.T['Overall_Residual_Risk']
 }
 
 // export interface PartnershipSga {

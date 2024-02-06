@@ -80,7 +80,7 @@ export class ProtectionDataHelper {
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
       oblast: OblastIndex.byIso(d.where_are_you_current_living_oblast),
       raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)?._5w as any,
-      hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada)?._5w as any,
+      hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada!)?._5w as any,
       project: [...d.tags?.projects ?? [], DrcProject['UKR-000322 ECHO2']],
       donor: d.tags?.projects?.map(_ => DrcProjectHelper.donorByProject[_!]),
       persons: d.persons.map(_ => ({

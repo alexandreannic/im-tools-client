@@ -1,10 +1,8 @@
 import {useAppSettings} from '@/core/context/ConfigContext'
 import React, {useEffect, useState} from 'react'
 import {Page} from '@/shared/Page'
-import {Bn_OldMpcaNfi} from '@/core/sdk/server/kobo/generatedInterface/Bn_OldMpcaNfi/Bn_OldMpcaNfi'
 import {map, seq, Seq} from '@alexandreannic/ts-utils'
 import {mapWashRMM, WashRMM} from './aiWashInterface'
-import {bn_OldMpcaNfiOptions} from '@/core/sdk/server/kobo/generatedInterface/Bn_OldMpcaNfi/Bn_OldMpcaNfiOptions'
 import {ActivityInfoActions, AiSendBtn} from '../shared/ActivityInfoActions'
 import {format, subMonths} from 'date-fns'
 import {useI18n} from '@/core/i18n'
@@ -17,27 +15,28 @@ import {Sheet} from '@/shared/Sheet/Sheet'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {ActiviftyInfoRecords} from '@/core/sdk/server/activity-info/ActiviftyInfoType'
-import {Bn_ReOptions} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_ReOptions'
 import {Utils} from '@/utils/utils'
 import {KoboBnReHelper} from '@/core/sdk/server/kobo/custom/KoboBnRe'
 import {NonNullableKeys} from '@/utils/utilsType'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {useAsync} from '@/shared/hook/useAsync'
 import {Person} from '@/core/type/person'
+import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
+import {Bn_OldMpcaNfi} from '@/core/sdk/server/kobo/generatedInterface/Bn_OldMpcaNfi'
 
 interface Answer {
   id: KoboAnswerId
   start: Date
-  oblast: keyof typeof bn_OldMpcaNfiOptions['oblast'] | undefined
-  raion: keyof typeof bn_OldMpcaNfiOptions['raion'] | undefined
-  hromada: keyof typeof bn_OldMpcaNfiOptions['hromada'] | undefined
+  oblast: keyof typeof Bn_OldMpcaNfi.options['oblast'] | undefined
+  raion: keyof typeof Bn_OldMpcaNfi.options['raion'] | undefined
+  hromada: keyof typeof Bn_OldMpcaNfi.options['hromada'] | undefined
   settlement: string,
-  HKF_: NonNullable<Bn_OldMpcaNfi['HKF_']>
-  HKMV_: NonNullable<Bn_OldMpcaNfi['HKMV_']>
-  BK1: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_']>
-  BK2: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit']>
-  BK3: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_001']>
-  BK4: NonNullable<Bn_OldMpcaNfi['BK_Baby_Kit_002']>
+  HKF_: NonNullable<Bn_OldMpcaNfi.T['HKF_']>
+  HKMV_: NonNullable<Bn_OldMpcaNfi.T['HKMV_']>
+  BK1: NonNullable<Bn_OldMpcaNfi.T['BK_Baby_Kit_']>
+  BK2: NonNullable<Bn_OldMpcaNfi.T['BK_Baby_Kit']>
+  BK3: NonNullable<Bn_OldMpcaNfi.T['BK_Baby_Kit_001']>
+  BK4: NonNullable<Bn_OldMpcaNfi.T['BK_Baby_Kit_002']>
   persons: NonNullableKeys<Person.Person>[]
 }
 
@@ -119,9 +118,9 @@ const toFormData = ({
   Utils.groupBy({
     data: answers,
     groups: [
-      {by: _ => Bn_ReOptions.ben_det_prev_oblast[_.oblast!] ?? _.oblast},
-      {by: _ => Bn_ReOptions.ben_det_raion[_.raion!] ?? _.raion},
-      {by: _ => Bn_ReOptions.ben_det_hromada[_.hromada!] ?? _.hromada},
+      {by: _ => Bn_Re.options.ben_det_prev_oblast[_.oblast!] ?? _.oblast},
+      {by: _ => Bn_Re.options.ben_det_raion[_.raion!] ?? _.raion},
+      {by: _ => Bn_Re.options.ben_det_hromada[_.hromada!] ?? _.hromada},
       {by: _ => _.settlement},
     ],
     finalTransform: (grouped, [enOblast, enRaion, enHromada, settlement]) => {

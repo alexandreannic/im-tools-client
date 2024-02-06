@@ -13,7 +13,7 @@ import {DashboardSafetyIncidentsPageProps} from '@/features/Safety/IncidentsDash
 import {MinusRusChartPanel} from '@/features/Safety/IncidentsDashboard/MinusRusChartPanel'
 import {CommentsPanel, CommentsPanelProps} from '@/shared/CommentsPanel'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {SafetyIncidentTrackerOptions} from '@/core/sdk/server/kobo/generatedInterface/SafetyIncidentTracker/SafetyIncidentTrackerOptions'
+import {Safety_incidentTracker} from '@/core/sdk/server/kobo/generatedInterface/Safety_incidentTracker'
 
 export const SafetyIncidentDashboardBody = ({
   data,
@@ -75,21 +75,21 @@ export const SafetyIncidentDashboardBody = ({
           <ChartBarMultipleBy
             data={data}
             by={_ => _.attack_type}
-            label={SafetyIncidentTrackerOptions.attack_type}
+            label={Safety_incidentTracker.options.attack_type}
           />
         </SlidePanel>
         <SlidePanel title={m.safety.target}>
           <ChartBarMultipleBy
             data={data}
             by={_ => _.what_destroyed}
-            label={SafetyIncidentTrackerOptions.what_destroyed}
+            label={Safety_incidentTracker.options.what_destroyed}
           />
         </SlidePanel>
         <SlidePanel title={m.safety.typeOfCasualties}>
           <ChartBarMultipleBy
             data={data}
             by={_ => _.type_casualties}
-            label={SafetyIncidentTrackerOptions.type_casualties}
+            label={Safety_incidentTracker.options.type_casualties}
           />
         </SlidePanel>
       </Div>
@@ -141,7 +141,7 @@ export const SafetyIncidentDashboardBody = ({
             id: _.id,
             title: m.safety.attackOfOn(_.oblastISO, _.attack_type),
             date: _.date_time,
-            desc: _.Attack_details,
+            desc: _.report_summary,
           }) as CommentsPanelProps['data'][0])}>
             {_ => <CommentsPanel pageSize={10} data={_}/>}
           </Lazy>

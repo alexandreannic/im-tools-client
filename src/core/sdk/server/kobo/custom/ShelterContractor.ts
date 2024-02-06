@@ -1,7 +1,6 @@
-import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TA'
 import {Enum} from '@alexandreannic/ts-utils'
-import {Shelter_TAOptions} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TAOptions'
 import {KoboShelterTa} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
+import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA'
 
 export enum ShelterContractor {
   'Artbudservice' = 'Artbudservice',
@@ -28,7 +27,7 @@ export class ShelterContractorPrices {
     oblast,
     lot,
   }: {
-    oblast?: keyof typeof Shelter_TAOptions['ben_det_oblast']
+    oblast?: keyof typeof Shelter_TA.options['ben_det_oblast']
     lot: 1 | 2
   }): ShelterContractor[] => {
     const contractors = oblasts[oblast as keyof typeof oblasts] ?? Enum.values(ShelterContractor)
@@ -45,7 +44,7 @@ export class ShelterContractorPrices {
   }: {
     contractor1?: ShelterContractor
     contractor2?: ShelterContractor
-    answer?: Shelter_TA
+    answer?: Shelter_TA.T
   }): number | undefined | null => {
     if (!answer || (!contractor1 && !contractor2)) return undefined
     try {
@@ -71,8 +70,8 @@ export class ShelterContractorPrices {
   }
 }
 
-const lot1: (keyof Shelter_TA)[] = [
-// const lot1: NumberKeys<keyof Shelter_TA>[] = [
+const lot1: (keyof Shelter_TA.T)[] = [
+// const lot1: NumberKeys<keyof Shelter_TA.T>[] = [
   'dismantling_of_structures',
   'singleshutter_window_tripleglazed_m',
   'singleshutter_windowdoubleglazed_m',
@@ -86,7 +85,7 @@ const lot1: (keyof Shelter_TA)[] = [
   'doubleglazed_upvc_door_m',
 ]
 
-const lot2: (keyof Shelter_TA)[] = [
+const lot2: (keyof Shelter_TA.T)[] = [
   'dismantling_of_structures2',
   'wall_repair_clay_bricks_m',
   'wall_repair_concrete_blocks_m',
@@ -127,7 +126,7 @@ const lot2: (keyof Shelter_TA)[] = [
   'wall_mountes_cable_wiring_lm',
 ]
 
-const WAITING_FOR_PRICES_LOT1: Partial<Record<keyof Shelter_TA, number>> = {
+const WAITING_FOR_PRICES_LOT1: Partial<Record<keyof Shelter_TA.T, number>> = {
   dismantling_of_structures: -1,
   singleshutter_window_tripleglazed_m: -1,
   singleshutter_windowdoubleglazed_m: -1,
@@ -141,7 +140,7 @@ const WAITING_FOR_PRICES_LOT1: Partial<Record<keyof Shelter_TA, number>> = {
   doubleglazed_upvc_door_m: -1,
 }
 
-const WAITING_FOR_PRICES_LOT2: Partial<Record<keyof Shelter_TA, number>> = {
+const WAITING_FOR_PRICES_LOT2: Partial<Record<keyof Shelter_TA.T, number>> = {
   dismantling_of_structures2: -1,
   wall_repair_clay_bricks_m: -1,
   wall_repair_concrete_blocks_m: -1,
@@ -187,7 +186,7 @@ const WAITING_FOR_PRICES = {
   ...WAITING_FOR_PRICES_LOT2,
 }
 
-const pricesCents: Partial<Record<ShelterContractor, Partial<Record<keyof Shelter_TA, number>>>> = {
+const pricesCents: Partial<Record<ShelterContractor, Partial<Record<keyof Shelter_TA.T, number>>>> = {
   [ShelterContractor['Zhilvest']]: {
     dismantling_of_structures2: 140000,
     wall_repair_clay_bricks_m: 1284000,

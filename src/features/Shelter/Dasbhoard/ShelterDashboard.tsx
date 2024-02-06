@@ -22,7 +22,6 @@ import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
 import {useShelterContext} from '@/features/Shelter/ShelterContext'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Shelter_NTAOptions} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA/Shelter_NTAOptions'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {ChartPieWidgetBy} from '@/shared/charts/ChartPieWidgetBy'
 import {shelterDrcProject, ShelterProgress, ShelterTagValidation, ShelterTaPriceLevel} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
@@ -32,6 +31,7 @@ import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {Period, PeriodHelper} from '@/core/type/period'
 import {AgeGroupTable} from '@/shared/AgeGroupTable'
 import {appConfig} from '@/conf/AppConfig'
+import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA'
 
 const today = new Date()
 
@@ -246,14 +246,14 @@ export const _ShelterDashboard = ({
           <ChartBarMultipleBy
             data={data.filter(_ => !!_.nta?.hh_char_dis_select)}
             by={_ => _.nta?.hh_char_dis_select ?? []}
-            label={Shelter_NTAOptions.hh_char_dis_select}
+            label={Shelter_NTA.options.hh_char_dis_select}
           />
         </SlidePanel>
         <SlidePanel title={m.status}>
           <ChartBarSingleBy
             data={data.filter(_ => !!_.nta?.ben_det_res_stat)}
             by={_ => _.nta?.ben_det_res_stat}
-            label={Shelter_NTAOptions.ben_det_res_stat}
+            label={Shelter_NTA.options.ben_det_res_stat}
           />
         </SlidePanel>
       </Div>

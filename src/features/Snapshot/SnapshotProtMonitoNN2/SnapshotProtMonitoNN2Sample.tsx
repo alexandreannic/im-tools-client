@@ -12,8 +12,8 @@ import {ChartPie} from '@/shared/charts/ChartPie'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Person} from '@/core/type/person'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export const SnapshotProtMonitoNN2Sample = () => {
   const theme = useTheme()
@@ -79,7 +79,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
                   <ChartBarSingleBy
                     data={data}
                     by={_ => _.what_is_the_type_of_your_household}
-                    label={Protection_Hhs2_1Options.what_is_the_type_of_your_household}
+                    label={Protection_Hhs2.options.what_is_the_type_of_your_household}
                   />
                 </SlidePanel>
               </Div>
@@ -96,7 +96,7 @@ export const SnapshotProtMonitoNN2Sample = () => {
                   <ChartBarSingleBy
                     data={data}
                     by={_ => _.do_you_identify_as_any_of_the_following}
-                    label={Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following}
+                    label={Protection_Hhs2.options.do_you_identify_as_any_of_the_following}
                   />
                 </SlidePanel>
               </Div>

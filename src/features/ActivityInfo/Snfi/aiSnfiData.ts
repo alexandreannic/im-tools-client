@@ -9,11 +9,7 @@ import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import {ShelterEntity} from '@/core/sdk/server/shelter/ShelterEntity'
-import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA/Shelter_NTA'
-import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TA'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_Re'
-import {Bn_ReOptions} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re/Bn_ReOptions'
 import {ShelterNorth202312} from '@/features/ActivityInfo/Snfi/shelterNorth202312'
 import {aiOblasts} from '@/core/uaLocation/aiOblasts'
 import {aiRaions} from '@/core/uaLocation/aiRaions'
@@ -21,16 +17,19 @@ import {aiHromadas} from '@/core/uaLocation/aiHromadas'
 import {KoboBnReHelper} from '@/core/sdk/server/kobo/custom/KoboBnRe'
 import {Person} from '@/core/type/person'
 import {Period, PeriodHelper} from '@/core/type/period'
+import {Shelter_NTA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_NTA'
+import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA'
+import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 
 export type AiSnfiBundle = Omit<AiBundle, 'data'> & {
-  nta?: KoboAnswer<Shelter_NTA>[]
-  ta?: KoboAnswer<Shelter_TA>[]
-  esk?: KoboAnswer<Bn_Re>[]
+  nta?: KoboAnswer<Shelter_NTA.T>[]
+  ta?: KoboAnswer<Shelter_TA.T>[]
+  esk?: KoboAnswer<Bn_Re.T>[]
 }
 
 export class AiShelterData {
 
-  static readonly mapBnreDonor = (_?: keyof typeof Bn_ReOptions.back_donor) => {
+  static readonly mapBnreDonor = (_?: keyof typeof Bn_Re.options.back_donor) => {
     if (!_) return
     if (_.includes('uhf_')) return DrcProject['UKR-000314 UHF4']
     if (_.includes('bha_')) return DrcProject['UKR-000345 BHA2']

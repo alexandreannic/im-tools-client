@@ -4,9 +4,9 @@ import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Protection/Dashboard
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useI18n} from '@/core/i18n'
 import {seq, Seq} from '@alexandreannic/ts-utils'
-import {Protection_Hhs2_1} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Period} from '@/core/type/period'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export interface SnapshotProtMonitoContext {
   computed: NonNullable<UseProtHHS2Data>
@@ -24,8 +24,8 @@ export const SnapshotProtMonitoringProvider = ({
   children,
 }: {
   filters?: {
-    currentOblast?: Protection_Hhs2_1['where_are_you_current_living_oblast'][],
-    drcOffice?: Protection_Hhs2_1['staff_to_insert_their_DRC_office'][],
+    currentOblast?: Protection_Hhs2.T['where_are_you_current_living_oblast'][],
+    drcOffice?: Protection_Hhs2.T['staff_to_insert_their_DRC_office'][],
   }
   period: Partial<Period>,
   children: ReactNode

@@ -14,8 +14,8 @@ import {SnapshotHeader} from '@/features/Snapshot/SnapshotHeader'
 import {Enum, seq} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {Person} from '@/core/type/person'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export const SnapshotProtMonitoEchoSample = () => {
   const theme = useTheme()
@@ -114,12 +114,12 @@ export const SnapshotProtMonitoEchoSample = () => {
                   <ChartBarSingleBy
                     data={data}
                     by={_ => _.what_is_the_type_of_your_household}
-                    label={Protection_Hhs2_1Options.what_is_the_type_of_your_household}
+                    label={Protection_Hhs2.options.what_is_the_type_of_your_household}
                   />
                 </SlidePanel>
                 <SlidePanel>
                   <SlidePanelTitle>{m.displacementStatus}</SlidePanelTitle>
-                  <ChartBarSingleBy data={data} by={_ => _.do_you_identify_as_any_of_the_following} label={Protection_Hhs2_1Options.do_you_identify_as_any_of_the_following}/>
+                  <ChartBarSingleBy data={data} by={_ => _.do_you_identify_as_any_of_the_following} label={Protection_Hhs2.options.do_you_identify_as_any_of_the_following}/>
                 </SlidePanel>
               </Div>
             </Div>

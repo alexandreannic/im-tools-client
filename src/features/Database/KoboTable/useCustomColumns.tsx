@@ -10,8 +10,6 @@ import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {KoboIndex} from '@/core/KoboIndex'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-import {EcrecCashRegistrationPaymentStatus, EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
-import {Ecrec_CashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_CashRegistration/Ecrec_CashRegistration'
 
 export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
   const ctx = useDatabaseKoboTableContext()

@@ -3,9 +3,9 @@ import {TableIcon} from '@/features/Mpca/MpcaData/TableIcon'
 import {AaSelect, AaSelectBase, AaSelectSimple} from '@/shared/Select/Select'
 import React from 'react'
 import {ShelterContractor, ShelterContractorPrices} from '@/core/sdk/server/kobo/custom/ShelterContractor'
-import {Shelter_TAOptions} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA/Shelter_TAOptions'
 import {Enum} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
+import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA'
 
 export const ShelterSelectStatus = (props: Pick<AaSelectSimple<ShelterProgress>, 'value' | 'defaultValue' | 'onChange'> & Pick<AaSelectBase, 'disabled' | 'sx' | 'label'>) => {
   const {m} = useI18n()
@@ -38,7 +38,7 @@ export const ShelterSelectContractor = ({
   oblast,
   ...props
 }: Pick<AaSelectSimple<ShelterContractor>, 'value' | 'defaultValue' | 'onChange'> & Pick<AaSelectBase, 'disabled' | 'sx' | 'label'> & {
-  oblast?: keyof typeof Shelter_TAOptions['ben_det_oblast']
+  oblast?: keyof typeof Shelter_TA.options['ben_det_oblast']
 }) => {
   return (
     <AaSelect

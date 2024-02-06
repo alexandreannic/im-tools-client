@@ -4,7 +4,6 @@ import React, {ReactNode} from 'react'
 import {Box, Checkbox, GlobalStyles, Icon, ThemeProvider} from '@mui/material'
 import {Txt, TxtProps} from 'mui-extension'
 import {useI18n} from '@/core/i18n'
-import {Meal_VisitMonitoringOptions} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring/Meal_VisitMonitoringOptions'
 import {muiTheme} from '@/core/theme'
 import {DRCLogoLarge} from '@/shared/logo/logo'
 import {capitalize} from '@/utils/utils'
@@ -15,6 +14,7 @@ import {koboImgHelper} from '@/shared/TableImg/KoboAttachedImg'
 import {CompressedImg} from '@/shared/CompressedImg'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {Meal_VisitMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring'
 
 const urlValidation = yup.object({
   id: yup.string().required()
@@ -148,7 +148,7 @@ export const _DashboardMealVisitPdf = () => {
           <td>
             <Box>
               <Row label={m.project}>
-                {entry.mdd_001?.map(_ => Meal_VisitMonitoringOptions.mdd_001[_]).join(', ')}
+                {entry.mdd_001?.map(_ => Meal_VisitMonitoring.options.mdd_001[_]).join(', ')}
               </Row>
               <Row label={m.location}>
                 {schema.translate.choice('md_det_oblast', entry.md_det_oblast)} oblast,&nbsp;

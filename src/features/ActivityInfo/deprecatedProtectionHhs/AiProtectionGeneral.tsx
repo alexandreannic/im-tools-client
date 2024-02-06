@@ -10,7 +10,6 @@ import {Box, Icon, Table, TableBody, TableCell, TableHead, TableRow} from '@mui/
 import {IpBtn} from '@/shared/Btn'
 import {AaSelect} from '@/shared/Select/Select'
 import {useIpToast} from '@/core/useToast'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {useI18n} from '@/core/i18n'
 import {alreadySentKobosInApril} from './missSubmittedData'
@@ -22,6 +21,7 @@ import {useAsync} from '@/shared/hook/useAsync'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Person} from '@/core/type/person'
 import {PeriodHelper} from '@/core/type/period'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export const AiProtectionGeneral = () => {
   const {api} = useAppSettings()
@@ -68,7 +68,7 @@ export const AiProtectionGeneral = () => {
               label="Oblast"
               defaultValue={selectedOblast?.split('_')[0] ?? ''}
               onChange={_ => setSelectedOblast(_)}
-              options={Object.keys(Protection_Hhs2_1Options.staff_to_insert_their_DRC_office).map(_ => ({value: _, children: _.split('_')[0]}))}
+              options={Object.keys(Protection_Hhs2.options.staff_to_insert_their_DRC_office).map(_ => ({value: _, children: _.split('_')[0]}))}
             />
           </>
 
@@ -115,12 +115,12 @@ const _ActivityInfo = ({
       }
       return 'OLD'
     })).forEach(([planCode, byPlanCode]) => {
-      Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast)).forEach(([oblast, byOblast]) => {
-        Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion)).forEach(([raion, byRaion]) => {
-          Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada)).forEach(([hromada, byHromada]) => {
-            const enOblast = Protection_Hhs2_1Options.what_is_your_area_of_origin_oblast[oblast]
-            const enRaion = Protection_Hhs2_1Options.what_is_your_area_of_origin_raion[raion]
-            const enHromada = Protection_Hhs2_1Options.what_is_your_area_of_origin_hromada[hromada]
+      Enum.entries(byPlanCode.groupBy(_ => _.where_are_you_current_living_oblast!)).forEach(([oblast, byOblast]) => {
+        Enum.entries(byOblast.filter(_ => _.where_are_you_current_living_raion !== undefined).groupBy(_ => _.where_are_you_current_living_raion!)).forEach(([raion, byRaion]) => {
+          Enum.entries(byRaion.groupBy(_ => _.where_are_you_current_living_hromada!)).forEach(([hromada, byHromada]) => {
+            const enOblast = Protection_Hhs2.options.what_is_your_area_of_origin_oblast![oblast]
+            const enRaion = Protection_Hhs2.options.what_is_your_area_of_origin_raion![raion]
+            const enHromada = Protection_Hhs2.options.what_is_your_area_of_origin_hromada![hromada]
             const activity: AiTypeProtectionRmm.FormParams = {
               'Plan Code': planCode as any,
               Oblast: AILocationHelper.findOblast(enOblast) ?? (('⚠️' + oblast) as any),

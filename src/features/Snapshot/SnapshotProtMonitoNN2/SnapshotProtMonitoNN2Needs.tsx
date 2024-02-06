@@ -8,8 +8,8 @@ import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEch
 import {Lazy} from '@/shared/Lazy'
 import {toPercent} from '@/utils/utils'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export const SnapshotProtMonitoNN2Needs = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -26,9 +26,9 @@ export const SnapshotProtMonitoNN2Needs = () => {
                 return {
                   healthPn: toPercent(ChartHelperOld.percentage({
                     data,
-                    value: _ => _.what_is_your_1_priority?.includes('health_1_2')
+                    value: _ => !!(_.what_is_your_1_priority?.includes('health_1_2')
                       || _.what_is_your_2_priority?.includes('health_1_2')
-                      || _.what_is_your_3_priority?.includes('health_1_2'),
+                      || _.what_is_your_3_priority?.includes('health_1_2')),
                   }).percent, 0),
                   damagedAcc: toPercent(ChartHelperOld.percentage({
                     data: data.map(_ => _.what_is_the_general_condition_of_your_accommodation).compact(),
@@ -60,7 +60,7 @@ export const SnapshotProtMonitoNN2Needs = () => {
               />
               <ChartBarMultipleBy
                 by={_ => _.what_are_the_barriers_to_accessing_health_services}
-                label={Protection_Hhs2_1Options.what_are_the_barriers_to_accessing_health_services}
+                label={Protection_Hhs2.options.what_are_the_barriers_to_accessing_health_services}
                 data={data}
                 filterValue={['unable_unwilling_to_answer']}
                 limit={5}
@@ -80,7 +80,7 @@ export const SnapshotProtMonitoNN2Needs = () => {
                 by={_ => _.why_dont_they_have_status}
                 filter={_ => _.why_dont_they_have_status !== 'unable_unwilling_to_answer'}
                 label={{
-                  ...Protection_Hhs2_1Options.why_dont_they_have_status,
+                  ...Protection_Hhs2.options.why_dont_they_have_status,
                   status_registration_not_requested: 'Disability status not applied for',
                   status_registration_rejected_not_meeting_the_criteria_as_per_ukrainian_procedure: 'Status registration rejected',
                 }}
@@ -97,13 +97,13 @@ export const SnapshotProtMonitoNN2Needs = () => {
                 {...snapShotDefaultPieProps}
                 compare={{before: computed.lastMonth}}
                 title={m.protHHS2.mainConcernsRegardingHousing}
-                filter={_ => !_.what_are_your_main_concerns_regarding_your_accommodation.includes('none')}
+                filter={_ => !_.what_are_your_main_concerns_regarding_your_accommodation?.includes('none')}
                 data={data}
                 sx={{mb: 1}}
               />
               <ChartBarMultipleBy
                 by={_ => _.what_are_your_main_concerns_regarding_your_accommodation}
-                label={Protection_Hhs2_1Options.what_are_your_main_concerns_regarding_your_accommodation}
+                label={Protection_Hhs2.options.what_are_your_main_concerns_regarding_your_accommodation}
                 data={data}
                 filterValue={['unable_unwilling_to_answer', 'none']}
               />
@@ -113,7 +113,7 @@ export const SnapshotProtMonitoNN2Needs = () => {
               <ChartBarSingleBy
                 data={data}
                 by={_ => _.what_is_the_general_condition_of_your_accommodation}
-                label={Protection_Hhs2_1Options.what_is_the_general_condition_of_your_accommodation}
+                label={Protection_Hhs2.options.what_is_the_general_condition_of_your_accommodation}
                 sortBy={ChartHelperOld.sortBy.custom([
                   'sound_condition',
                   'partially_damaged',

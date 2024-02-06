@@ -4,7 +4,6 @@ import {Utils} from '@/utils/utils'
 import {fnSwitch, seq} from '@alexandreannic/ts-utils'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
 import {DrcProject} from '@/core/type/drc'
-import {Ecrec_CashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_CashRegistration/Ecrec_CashRegistration'
 import {addDays, format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
@@ -13,8 +12,9 @@ import groupByGenderAndGroup = Person.groupByGenderAndGroup
 import Gender = Person.Gender
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
+import {Ecrec_sectoralCashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_sectoralCashRegistration'
 
-export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_CashRegistration>
+export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_sectoralCashRegistration.T>
 
 export class AiFslcData {
 

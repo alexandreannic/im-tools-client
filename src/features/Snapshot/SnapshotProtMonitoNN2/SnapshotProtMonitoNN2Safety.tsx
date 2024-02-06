@@ -8,8 +8,8 @@ import {toPercent} from '@/utils/utils'
 import {ChartPieWidgetBy} from '@/shared/charts/ChartPieWidgetBy'
 import {snapShotDefaultPieProps} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_Hhs2_1Options} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2_1/Protection_Hhs2_1Options'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
+import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
 
 export const SnapshotProtMonitoNN2Safety = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -54,7 +54,7 @@ export const SnapshotProtMonitoNN2Safety = () => {
               <ChartBarMultipleBy
                 data={data}
                 by={_ => _.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
-                label={Protection_Hhs2_1Options.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
+                label={Protection_Hhs2.options.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
                 filterValue={['unable_unwilling_to_answer']}
               />
             </SlidePanel>
@@ -78,22 +78,22 @@ export const SnapshotProtMonitoNN2Safety = () => {
                   '_4_very_safe',
                 ])}
                 by={_ => _.please_rate_your_sense_of_safety_in_this_location}
-                label={Protection_Hhs2_1Options.please_rate_your_sense_of_safety_in_this_location}
+                label={Protection_Hhs2.options.please_rate_your_sense_of_safety_in_this_location}
                 filter={_ => _.please_rate_your_sense_of_safety_in_this_location !== 'unable_unwilling_to_answer'}
               />
               <SlidePanelTitle sx={{mt: 4}}>{m.influencingFactors}</SlidePanelTitle>
               <ChartBarMultipleBy
                 data={data}
                 by={_ => _.what_are_the_main_factors_that_make_this_location_feel_unsafe}
-                label={Protection_Hhs2_1Options.what_are_the_main_factors_that_make_this_location_feel_unsafe}
+                label={Protection_Hhs2.options.what_are_the_main_factors_that_make_this_location_feel_unsafe}
                 filterValue={['unable_unwilling_to_answer']}
               />
             </SlidePanel>
             <SlidePanel>
               <ChartPieWidgetBy
                 title={m.protHHS2.freedomOfMovement}
-                filter={_ => !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area.includes('no')}
-                filterBase={_ => !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area.includes('unable_unwilling_to_answer')}
+                filter={_ => !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area!.includes('no')}
+                filterBase={_ => !!_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area && !_.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area.includes('unable_unwilling_to_answer')}
                 compare={{before: computed.lastMonth}}
                 data={data}
                 {...snapShotDefaultPieProps}
@@ -101,7 +101,7 @@ export const SnapshotProtMonitoNN2Safety = () => {
               <ChartBarMultipleBy
                 data={data}
                 by={_ => _.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area}
-                label={Protection_Hhs2_1Options.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area}
+                label={Protection_Hhs2.options.do_you_or_your_household_members_experience_any_barriers_to_movements_in_and_around_the_area}
                 filterValue={['no', 'unable_unwilling_to_answer']}
               />
             </SlidePanel>

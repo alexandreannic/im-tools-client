@@ -17,7 +17,6 @@ import {Utils} from '@/utils/utils'
 import {DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {Txt} from 'mui-extension'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
-import {Partnership_partnersDatabaseOptions} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase/Partnership_partnersDatabaseOptions'
 import {PanershipPanelDonor} from '@/features/Partnership/Dashboard/PanershipPanelDonor'
 import {PartnershipData} from '@/features/Partnership/PartnershipType'
 import {useSetStateIp} from '@/shared/hook/useSetState'
@@ -29,6 +28,7 @@ import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
 import {appConfig} from '@/conf/AppConfig'
+import {Partnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase'
 
 export const PartnershipDashboard = ({}: {}) => {
   const ctx = usePartnershipContext()
@@ -68,7 +68,7 @@ export const _PartnershipDashboard = ({
   const ctx = usePartnershipContext()
   const mappedData = ctx.data.mappedData!
 
-  const getOptions = (questionName: keyof typeof Partnership_partnersDatabaseOptions) => {
+  const getOptions = (questionName: keyof typeof Partnership_partnersDatabase.options) => {
     return schema.schemaHelper.getOptionsByQuestionName(questionName)
       .map(_ => ({value: _.name, label: schema.translate.choice(questionName, _.name)}))
   }
@@ -296,8 +296,8 @@ export const _PartnershipDashboard = ({
                   return {
                     name: year,
                     ['Youth-led partners']: distincted.sum(_ => _.Is_this_a_youth_led_organization === 'yes' || _.Select_if_the_organi_inorities_in_Ukraine?.includes('children') ? 1 : 0) / distincted.length * 100,
-                    ['Elders and/or PwD focused partners']: distincted.sum(_ => _.Is_this_a_women_led_organization === 'yes' || _.Select_if_the_organi_inorities_in_Ukraine?.includes(
-                      'women_s_rights') ? 1 : 0) / distincted.length * 100,
+                    ['Elders and/or PwD focused partners']: distincted.sum(_ => _.Is_this_a_women_led_organization === 'yes'
+                    || _.Select_if_the_organi_inorities_in_Ukraine?.includes('women_and_girls') ? 1 : 0) / distincted.length * 100,
                   }
                 })
                 return res
@@ -392,7 +392,7 @@ export const _PartnershipDashboard = ({
             <ChartBarMultipleBy
               data={filteredAndPickedData}
               by={_ => _.Select_if_the_organi_inorities_in_Ukraine!}
-              label={Partnership_partnersDatabaseOptions.Minority_group}
+              label={Partnership_partnersDatabase.options.Minority_group}
             />
           </SlidePanel>
           <Panel>
@@ -401,7 +401,7 @@ export const _PartnershipDashboard = ({
               <ChartBarMultipleBy
                 data={filteredAndPickedData}
                 by={_ => _.Which_sectors_does_the_organiz!}
-                label={Partnership_partnersDatabaseOptions.Sectors_funded}
+                label={Partnership_partnersDatabase.options.Sectors_funded}
               />
             </PanelBody>
           </Panel>
