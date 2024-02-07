@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {lazy, useEffect, useMemo, useState} from 'react'
 import {Enum, map, seq, Seq} from '@alexandreannic/ts-utils'
 import {useI18n} from '@/core/i18n'
 import {useProtectionDashboardMonitoData} from './useProtectionDashboardMonitoData'
@@ -9,7 +9,6 @@ import {ProtectionDashboardMonitoLivelihood} from './ProtectionDashboardMonitoLi
 import {Alert, Txt} from 'mui-extension'
 import {ProtectionDashboardMonitoHousing} from './ProtectionDashboardMonitoHousing'
 import {ProtectionDashboardMonitoDisplacement} from './ProtectionDashboardMonitoDisplacement'
-import {ProtectionDashboardMonitoPN} from './ProtectionDashboardMonitoPN'
 import {PeriodPicker} from '@/shared/PeriodPicker/PeriodPicker'
 import {ProtectionDashboardMonitoFamilyUnity} from './ProtectionDashboardMonitoFamilyUnity'
 import {ProtectionDashboardMonitoSafety} from './ProtectionDashboardMonitoSafety'
@@ -28,6 +27,11 @@ import {useFetcher} from '@/shared/hook/useFetcher'
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
 import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+
+const ProtectionDashboardMonitoPN: any = lazy(() => import('./ProtectionDashboardMonitoPN')
+  .then(module => ({
+    default: module.ProtectionDashboardMonitoPN,
+  })))
 
 type CustomFilterOptionFilters = {
   hhComposition?: (keyof Messages['protHHS2']['_hhComposition'])[]
@@ -261,7 +265,12 @@ export const ProtectionDashboardMonito = () => {
           {icon: 'rocket_launch', name: 'safety', title: m.protHHS2.safetyAndSecurity, component: () => <ProtectionDashboardMonitoSafety {...panelProps}/>},
           {icon: 'local_police', name: 'violence', title: m.protHHS2.protectionIncidents, component: () => <ProtectionDashboardMonitoViolence {...panelProps}/>},
           {icon: 'healing', name: 'disability', title: m.protHHS2.disabilityAndHealth, component: () => <ProtectionDashboardMonitoDisability {...panelProps}/>},
-          {icon: 'traffic', name: 'priorityneeds', title: m.priorityNeeds, component: () => <ProtectionDashboardMonitoPN {...panelProps}/>},
+          {
+            icon: 'traffic',
+            name: 'priorityneeds',
+            title: m.priorityNeeds,
+            component: () => <ProtectionDashboardMonitoPN {...panelProps}/>
+          },
         ]
       })()}/>
   )

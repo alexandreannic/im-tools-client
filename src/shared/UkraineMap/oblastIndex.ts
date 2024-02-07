@@ -44,33 +44,33 @@ export class OblastIndex {
   }
 
   static readonly shortNamesIndex: Partial<Record<OblastISO, string>> = {
-    // 'UA01': `Autonomous Republic of Crimea`,
-    // 'UA71': `Cherkaska`,
+    'UA01': `TODO Autonomous Republic of Crimea`,
+    'UA71': `TODO Cherkaska`,
     'UA74': `Chernihiv`, // ok
-    // 'UA73': `Chernivetska`,
+    'UA73': `Chernivtsi`,
     'UA12': `Dnipropetrovsk`, // ok
     'UA14': `Donetsk`, // ok
     'UA26': `Ivano-Frankivsk`, // ok
     'UA63': `Kharkiv`, // ok
     'UA65': `Kherson`, // ok
-    // 'UA68': `Khmelnytska`,
-    // 'UA35': `Kirovohradska`,
-    // 'UA80': `Kyiv`,
-    // 'UA32': `Kyivska`,
+    'UA68': `TODO Khmelnytska`,
+    'UA35': `TODO Kirovohradska`,
+    'UA80': `TODO Kyiv`,
+    'UA32': `TODO Kyivska`,
     'UA44': `Luhanska`, // UA-09 in Real but UA-44 in Activity Info
     'UA46': `Lviv`, // ok
     'UA48': `Mykolaiv`, // ok
-    // 'UA51': `Odeska`,
-    // 'UA53': `Poltavska`,
-    // 'UA56': `Rivnenska`,
-    // 'UA85': `Sevastopol`,
+    'UA51': `TODO Odeska`,
+    'UA53': `TODO Poltavska`,
+    'UA56': `TODO Rivnenska`,
+    'UA85': `TODO Sevastopol`,
     'UA59': `Sumy`,
-    // 'UA61': `Ternopilska`,
-    // 'UA05': `Vinnytska`,
+    'UA61': `TODO Ternopilska`,
+    'UA05': `TODO Vinnytska`,
     'UA07': `Volyn`, // ok
-    // 'UA21': `Zakarpatska`,
+    'UA21': `TODO Zakarpatska`,
     'UA23': `Zaporizhzhia`, // ok
-    // 'UA18': `Zhytomyrska`
+    'UA18': `TODO Zhytomyrska`
   }
 
   static readonly names: OblastName[] = [

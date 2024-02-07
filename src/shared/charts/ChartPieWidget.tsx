@@ -61,14 +61,14 @@ export const ChartPieWidget = ({
             {title}
           </SlidePanelTitle>
           <Box sx={{display: 'inline-flex', lineHeight: 1, alignItems: 'flex-start'}}>
-            <Txt bold sx={{fontSize: dense ? '1.6em' : '1.7em'}}>{renderPercent(value / base, true, fractionDigits)}</Txt>
+            <Txt bold sx={{fontSize: dense ? '1.6em' : '1.7em', letterSpacing: '1px'}}>{renderPercent(value / base, true, fractionDigits)}</Txt>
             {showValue !== undefined && (
               <Txt color="disabled" sx={{ml: .5, fontWeight: '400'}}>
-              <span style={{fontSize: '1.6em', letterSpacing: '2px'}}>
+              <span style={{fontWeight: '400', fontSize: '1.6em'}}>
                 &nbsp;{formatLargeNumber(value)}
               </span>
                 {showBase !== undefined && (
-                  <span style={{fontSize: '1.2em'}}>/{formatLargeNumber(base)}</span>
+                  <span style={{fontWeight: '400', fontSize: '1.2em'}}>/{formatLargeNumber(base)}</span>
                 )}
                 {/*<Txt color="disabled" sx={{fontSize: '1.4em', fontWeight: 'lighter'}}>)</Txt>*/}
               </Txt>

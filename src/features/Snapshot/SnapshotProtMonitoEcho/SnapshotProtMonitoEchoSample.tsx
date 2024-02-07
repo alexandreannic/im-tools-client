@@ -43,7 +43,7 @@ export const SnapshotProtMonitoEchoSample = () => {
                   .filter(([k, v]) => v.value > 0)
                   .map(([k]) => {
                     const r = OblastIndex.byIso(k).shortName
-                    if (!r) throw new Error('')
+                    if (!r) throw new Error(k)
                     return r
                   })
                   .sortByString(_ => _)

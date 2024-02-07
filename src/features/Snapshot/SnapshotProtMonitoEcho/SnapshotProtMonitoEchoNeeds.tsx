@@ -30,23 +30,54 @@ export const SnapshotProtMonitoEchoNeeds = () => {
                   barriersRural: toPercent(ChartHelperOld.percentage({
                     data: data.filter(_ => _.type_of_site === 'rural_area'),
                     value: _ => _.do_you_have_access_to_health_care_in_your_current_location !== 'yes',
-                  }).percent, 0),
+                  }).percent, 1),
                   barriersUrban: toPercent(ChartHelperOld.percentage({
                     data: data.filter(_ => _.type_of_site === 'urban_area'),
                     value: _ => _.do_you_have_access_to_health_care_in_your_current_location !== 'yes',
-                  }).percent, 0),
+                  }).percent, 1),
+                  healthPnCount: data.filter(_ => _.what_is_your_1_priority?.includes('health_1_2') ||
+                    _.what_is_your_2_priority?.includes('health_1_2') ||
+                    _.what_is_your_3_priority?.includes('health_1_2')).length,
                   healthPn: toPercent(ChartHelperOld.percentage({
-                    data: data.filter(_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer'),
+                    data: data
+                    // .filter(_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer')
+                    ,
                     value: _ => !!(
                       _.what_is_your_1_priority?.includes('health_1_2') ||
                       _.what_is_your_2_priority?.includes('health_1_2') ||
                       _.what_is_your_3_priority?.includes('health_1_2')
                     ),
-                  }).percent, 0)
+                  }).percent, 1),
+                  healthPnUrban: toPercent(ChartHelperOld.percentage({
+                    data: data.filter(_ => _.type_of_site === 'urban_area')
+                    // .filter(_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer')
+                    ,
+                    value: _ => !!(
+                      _.what_is_your_1_priority?.includes('health_1_2') ||
+                      _.what_is_your_2_priority?.includes('health_1_2') ||
+                      _.what_is_your_3_priority?.includes('health_1_2')
+                    ),
+                  }).percent, 1),
+                  healthPnRural: toPercent(ChartHelperOld.percentage({
+                    data: data.filter(_ => _.type_of_site === 'rural_area')
+                    // .filter(_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer')
+                    ,
+                    value: _ => !!(
+                      _.what_is_your_1_priority?.includes('health_1_2') ||
+                      _.what_is_your_2_priority?.includes('health_1_2') ||
+                      _.what_is_your_3_priority?.includes('health_1_2')
+                    ),
+                  }).percent, 1)
                 }
               }}>
                 {_ =>
                   <p>
+                    <div>healthPnCount: {_.healthPnCount}</div>
+                    <div>healthPn: {_.healthPn}</div>
+                    <div>healthPnRural: {_.healthPnRural}</div>
+                    <div>healthPnUrban: {_.healthPnUrban}</div>
+                    <div>barriersRural: {_.barriersRural}</div>
+                    <div>barriersUrban: {_.barriersUrban}</div>
                     Risk of eviction is the top priority concern of IDP respondents (<b>34%</b>). The risk of closure of collective sites in the coming months <Txt color="hint">(Resolution
                     #930)</Txt>, coupled
                     with the rising cost of housing and utilities, are likely to increase precariousness and hardship among IDP communities at the onset of winter.

@@ -110,6 +110,7 @@ export const en = Object.freeze({
     answer: 'Answer',
     calculations: 'Calculations',
     value: 'Value',
+    percent: 'Percent',
     Pending: 'Pending',
     recap: 'Recap',
     Approved: 'Approved',

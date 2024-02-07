@@ -44,6 +44,7 @@ export const ScRadioGroupItem = <T, >({
       sx={{
         ...sx,
         minHeight,
+        px: 1,
         display: 'flex',
         alignItems: 'flex-start',
         border: t => '1px solid ' + t.palette.divider,
@@ -112,7 +113,8 @@ export const ScRadioGroupItem = <T, >({
             size={dense ? 'small' : undefined}
             checked={selected}
             sx={{
-              marginLeft: 1,
+              marginLeft: -.5,
+              marginRight: 0,
               minHeight: minHeight,
             }}/>
         ) : (
@@ -122,13 +124,14 @@ export const ScRadioGroupItem = <T, >({
             // size={dense ? 'small' : undefined}
             checked={selected}
             sx={{
-              marginLeft: 1,
+              marginLeft: -.5,
+              marginRight: 0,
               minHeight: minHeight,
             }}
           />
         )
       )}
-      {icon && <Icon sx={{color: t => t.palette.text.disabled, mr: .5, alignSelf: 'center'}}>{icon}</Icon>}
+      {icon && <Icon sx={{color: t => t.palette.text.disabled, mr: 1, alignSelf: 'center'}}>{icon}</Icon>}
       <Box
         sx={{
           alignSelf: 'center',
@@ -137,8 +140,6 @@ export const ScRadioGroupItem = <T, >({
           pt: 1.5,
           pb: 1.5,
           flexDirection: 'column',
-          ml: hideRadio ? 2 : .5,
-          mr: 2,
           width: '100%',
           ...dense && {
             pt: .5,
