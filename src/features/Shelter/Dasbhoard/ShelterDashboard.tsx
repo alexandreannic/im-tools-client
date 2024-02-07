@@ -63,7 +63,6 @@ export const ShelterDashboard = () => {
           .map(_ => ({value: _, label: _}))
       },
       raion: {
-        // icon: 'location_on',
         label: m.raion,
         getValue: _ => _.nta?.ben_det_raion,
         getOptions: (get) => get().map(_ => _.nta?.ben_det_raion).compact()
@@ -71,7 +70,6 @@ export const ShelterDashboard = () => {
           .sort().map(_ => ({value: _, label: ctx.nta.schema.translate.choice('ben_det_raion', _)}))
       },
       hromada: {
-        // icon: 'location_on',
         label: m.hromada,
         getValue: _ => _.nta?.ben_det_hromada,
         getOptions: (get) => get()

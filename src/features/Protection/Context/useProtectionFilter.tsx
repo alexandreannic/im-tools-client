@@ -42,6 +42,23 @@ export const useProtectionFilters = (data?: Seq<ProtectionActivity>, flatData?: 
         getValue: _ => _.oblast.name,
         getOptions: () => DataFilter.buildOptions(d.flatMap(_ => _.oblast.name!).distinct(_ => _).sort())
       },
+      raion: {
+        label: m.raion,
+        getValue: _ => _.raion,
+        getOptions: (get) => get().map(_ => _.raion).compact()
+          .distinct(_ => _)
+          .sort().map(_ => ({value: _, label: _}))
+      },
+      hromada: {
+        label: m.hromada,
+        getValue: _ => _.hromada,
+        getOptions: (get) => get()
+          .map(_ => _.hromada)
+          .compact()
+          .distinct(_ => _)
+          .sort()
+          .map(_ => ({value: _, label: _}))
+      },
       project: {
         multiple: true,
         icon: appConfig.icons.project,

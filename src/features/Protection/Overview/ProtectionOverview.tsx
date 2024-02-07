@@ -27,12 +27,12 @@ import {ProtectionOverviewFilterCustom} from '@/features/Protection/Overview/Pro
 export const ProtectionOverview = () => {
   const ctx = useProtectionContext()
   const {m, formatLargeNumber} = useI18n()
-  const {conf} = useAppSettings()
   if (!ctx.data) return
   const data = ctx.data
   return (
     <Page width="lg">
       <DataFilterLayout
+        data={data.filtered}
         filters={ctx.filters.filters}
         shapes={ctx.filters.shape}
         setFilters={ctx.filters.setFilters}
