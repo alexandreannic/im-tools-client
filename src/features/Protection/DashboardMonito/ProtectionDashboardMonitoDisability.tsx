@@ -6,7 +6,7 @@ import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {ChartBarMultipleByKey} from '@/shared/charts/ChartBarMultipleByKey'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
-import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
 export const ProtectionDashboardMonitoDisability = ({
   data,
@@ -29,7 +29,7 @@ export const ProtectionDashboardMonitoDisability = ({
             property="do_you_have_a_household_member_that_has_a_lot_of_difficulty"
             data={data}
             label={{
-              ...Protection_Hhs2.options.do_you_have_a_household_member_that_has_a_lot_of_difficulty,
+              ...Protection_hhs3.options.do_you_have_a_household_member_that_has_a_lot_of_difficulty,
               wg_using_your_usual_language_have_difficulty_communicating: m.protHHS2.wg_using_your_usual_language_have_difficulty_communicating,
             }}
             filterValue={['no', 'unable_unwilling_to_answer']}
@@ -45,7 +45,7 @@ export const ProtectionDashboardMonitoDisability = ({
             data={data}
             sx={{mb: 1}}
           />
-          <ChartBarSingleBy data={data} by={_ => _.why_dont_they_have_status} label={Protection_Hhs2.options.why_dont_they_have_status}/>
+          <ChartBarSingleBy data={data} by={_ => _.why_dont_they_have_status} label={Protection_hhs3.options.why_dont_they_have_status}/>
         </SlidePanel>
       </Div>
       <Div column>
@@ -62,7 +62,7 @@ export const ProtectionDashboardMonitoDisability = ({
           <ChartBarMultipleBy
             data={data}
             by={_ => _.what_are_the_barriers_to_accessing_health_services}
-            label={Protection_Hhs2.options.what_are_the_barriers_to_accessing_health_services}
+            label={Protection_hhs3.options.what_are_the_barriers_to_accessing_health_services}
             filterValue={['unable_unwilling_to_answer']}
           />
         </SlidePanel>

@@ -1,5 +1,4 @@
 import {KoboFormName} from '@/core/KoboIndex'
-import {useSession} from '@/core/Session/SessionContext'
 import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
 import React from 'react'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
@@ -71,7 +70,6 @@ export const Protection = () => {
 }
 
 export const ProtectionWithContext = () => {
-  const {session, accesses} = useSession()
   const ctx = useProtectionContext()
 
   return (

@@ -4,7 +4,6 @@ import {fnSwitch, PromiseReturn} from '@alexandreannic/ts-utils'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {DrcProject} from '@/core/type/drc'
-import {enrichProtHHS_2_1} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {AiOblast} from '@/core/uaLocation/aiOblasts'
 import {AiRaions} from '@/core/uaLocation/aiRaions'
 import {AiHromadas} from '@/core/uaLocation/aiHromadas'
@@ -46,10 +45,10 @@ export const getAiLocation = (d: Pick<Protection_groupSession.T, 'ben_det_oblast
 
 export class ActivityInfoProtectionMapper {
 
-  static readonly mapHhs = (reportingMonth: string) => (res: PromiseReturn<ReturnType<ApiSdk['kobo']['typedAnswers']['searchProtection_Hhs2']>>) => {
+  static readonly mapHhs = (reportingMonth: string) => (res: PromiseReturn<ReturnType<ApiSdk['kobo']['typedAnswers']['searchProtection_hhs3']>>) => {
     const data: AiProtectionGeneralType.Data[] = []
 
-    res.data.map(enrichProtHHS_2_1).forEach(d => {
+    res.data.forEach(d => {
       d.persons!.forEach(ind => {
         data.push({
           answer: d,

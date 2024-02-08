@@ -2,7 +2,7 @@ import {ApiClient} from '../ApiClient'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {KoboIndex} from '@/core/KoboIndex'
 import {ShelterNtaTags, ShelterTaTagsHelper} from '@/core/sdk/server/kobo/custom/KoboShelterTA'
-import {ProtectionCommunityMonitoringTags, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection'
+import {KoboProtection_hhs3, ProtectionCommunityMonitoringTags, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {KoboAnswerFilter, KoboAnswerSdk} from '@/core/sdk/server/kobo/KoboAnswerSdk'
@@ -27,7 +27,7 @@ import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 import {Partnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase'
 import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA'
 import {Ecrec_sectoralCashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_sectoralCashRegistration'
-
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
 export type KoboUnwrapAnserType<T extends keyof KoboTypedAnswerSdk> = Promise<Awaited<ReturnType<KoboTypedAnswerSdk[T]>>['data']>
 
@@ -43,7 +43,7 @@ export class KoboTypedAnswerSdk {
   readonly searchBn_Re = (filters: KoboAnswerFilter = {}) => {
     return this.search<Bn_Re.T>({
       formId: KoboIndex.byName('bn_re').id,
-      fnMap: Bn_Re.map,
+      fnMapKobo: Bn_Re.map,
       ...filters,
     })
   }
@@ -51,7 +51,7 @@ export class KoboTypedAnswerSdk {
   readonly searcheBn_cashForRepair = (filters: KoboAnswerFilter = {}) => {
     return this.search<Shelter_cashForRepair.T>({
       formId: KoboIndex.byName('shelter_cashForRepair').id,
-      fnMap: Shelter_cashForRepair.map,
+      fnMapKobo: Shelter_cashForRepair.map,
       ...filters,
     })
   }
@@ -59,7 +59,7 @@ export class KoboTypedAnswerSdk {
   readonly searchBn_cashForRentApplication = (filters: KoboAnswerFilter = {}) => {
     return this.search<Bn_cashForRentApplication.T>({
       formId: KoboIndex.byName('bn_cashForRentApplication').id,
-      fnMap: Bn_cashForRentApplication.map,
+      fnMapKobo: Bn_cashForRentApplication.map,
       ...filters,
     })
   }
@@ -67,14 +67,14 @@ export class KoboTypedAnswerSdk {
   readonly searchBn_MpcaNfiOld = (filters: KoboAnswerFilter = {}) => {
     return this.search<Bn_OldMpcaNfi.T>({
       formId: KoboIndex.byName('bn_1_mpcaNfi').id,
-      fnMap: Bn_OldMpcaNfi.map,
+      fnMapKobo: Bn_OldMpcaNfi.map,
       ...filters,
     })
   }
   readonly searchBn_RapidResponseMechanism = (filters: KoboAnswerFilter = {}) => {
     return this.search<Bn_RapidResponse.T>({
       formId: KoboIndex.byName('bn_rapidResponse').id,
-      fnMap: Bn_RapidResponse.map,
+      fnMapKobo: Bn_RapidResponse.map,
       ...filters,
     })
   }
@@ -82,7 +82,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMeal_VisitMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_visitMonitoring').id,
-      fnMap: Meal_VisitMonitoring.map,
+      fnMapKobo: Meal_VisitMonitoring.map,
       ...filters,
     })
   }
@@ -90,7 +90,7 @@ export class KoboTypedAnswerSdk {
   readonly searchPartnersDatabase = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('partnership_partnersDatabase').id,
-      fnMap: Partnership_partnersDatabase.map,
+      fnMapKobo: Partnership_partnersDatabase.map,
       ...filters,
     })
   }
@@ -98,7 +98,7 @@ export class KoboTypedAnswerSdk {
   readonly searchShelterTa = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('shelter_ta').id,
-      fnMap: Shelter_TA.map,
+      fnMapKobo: Shelter_TA.map,
       fnMapTags: ShelterTaTagsHelper.mapTags,
       ...filters,
     })
@@ -107,7 +107,7 @@ export class KoboTypedAnswerSdk {
   readonly searchShelterNta = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('shelter_nta').id,
-      fnMap: Shelter_NTA.map,
+      fnMapKobo: Shelter_NTA.map,
       fnMapTags: _ => _ as ShelterNtaTags,
       ...filters,
     })
@@ -116,7 +116,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMealCfmInternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_cfmInternal').id,
-      fnMap: Meal_CfmInternal.map,
+      fnMapKobo: Meal_CfmInternal.map,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })
@@ -125,7 +125,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMealCfmExternal = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_cfmExternal').id,
-      fnMap: Meal_CfmExternal.map,
+      fnMapKobo: Meal_CfmExternal.map,
       fnMapTags: KoboMealCfmHelper.map,
       ...filters,
     })
@@ -134,8 +134,18 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_Hhs2 = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_hhs2_1').id,
-      fnMap: Protection_Hhs2.map,
+      fnMapKobo: Protection_Hhs2.map,
       fnMapTags: _ => _ as ProtectionHhsTags,
+      ...filters,
+    })
+  }
+
+  readonly searchProtection_hhs3 = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: KoboIndex.byName('protection_hhs3').id,
+      fnMapKobo: Protection_hhs3.map,
+      fnMapTags: _ => _ as ProtectionHhsTags,
+      fnMapCustom: KoboProtection_hhs3.map,
       ...filters,
     })
   }
@@ -143,7 +153,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_communityMonitoring = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_communityMonitoring').id,
-      fnMap: Protection_communityMonitoring.map,
+      fnMapKobo: Protection_communityMonitoring.map,
       fnMapTags: _ => _ as ProtectionCommunityMonitoringTags,
       ...filters,
     })
@@ -152,7 +162,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_pss = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_pss').id,
-      fnMap: Protection_pss.map,
+      fnMapKobo: Protection_pss.map,
       ...filters,
     })
   }
@@ -160,7 +170,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_groupSession = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_groupSession').id,
-      fnMap: Protection_groupSession.map,
+      fnMapKobo: Protection_groupSession.map,
       ...filters,
     })
   }
@@ -168,7 +178,7 @@ export class KoboTypedAnswerSdk {
   readonly searchProtection_gbv = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('protection_gbv').id,
-      fnMap: Protection_gbv.map,
+      fnMapKobo: Protection_gbv.map,
       ...filters,
     })
   }
@@ -176,7 +186,7 @@ export class KoboTypedAnswerSdk {
   readonly searchSafetyIncident = (filters: KoboAnswerFilter = {}): Promise<ApiPaginate<KoboAnswer<KoboSafetyIncidentHelper.Type>>> => {
     return this.search({
       formId: KoboIndex.byName('safety_incident').id,
-      fnMap: KoboSafetyIncidentHelper.mapData,
+      fnMapKobo: KoboSafetyIncidentHelper.mapData,
       ...filters,
     })
   }
@@ -184,7 +194,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMeal_verificationEcrec = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_verificationEcrec').id,
-      fnMap: Meal_VerificationEcrec.map,
+      fnMapKobo: Meal_VerificationEcrec.map,
       ...filters,
     })
   }
@@ -192,7 +202,7 @@ export class KoboTypedAnswerSdk {
   readonly searchMeal_verificationWinterization = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('meal_verificationWinterization').id,
-      fnMap: Meal_VerificationWinterization.map,
+      fnMapKobo: Meal_VerificationWinterization.map,
       ...filters,
     })
   }
@@ -200,7 +210,7 @@ export class KoboTypedAnswerSdk {
   readonly searchEcrec_cashRegistration = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('ecrec_cashRegistration').id,
-      fnMap: Ecrec_sectoralCashRegistration.map,
+      fnMapKobo: Ecrec_sectoralCashRegistration.map,
       fnMapTags: _ => _ as EcrecCashRegistrationTags,
       ...filters,
     })

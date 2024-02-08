@@ -4,7 +4,7 @@ import {useI18n} from '@/core/i18n'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'
 import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
-import {currentProtectionProjects} from '@/core/sdk/server/kobo/custom/KoboProtection'
+import {currentProtectionProjects} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
 import {KoboIndex} from '@/core/KoboIndex'
 import {SelectCashStatus} from '@/shared/customInput/SelectCashStatus'
 

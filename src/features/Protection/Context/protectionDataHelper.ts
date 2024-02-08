@@ -5,11 +5,10 @@ import {Kobo, KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {DrcProject, DrcProjectHelper} from '@/core/type/drc'
 import {Protection_gbv} from '@/core/sdk/server/kobo/generatedInterface/Protection_gbv'
 import {Protection_groupSession} from '@/core/sdk/server/kobo/generatedInterface/Protection_groupSession'
-import {ProtHHS2Enrich} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {AILocationHelper} from '@/core/uaLocation/_LocationHelper'
 import {getAiLocation} from '@/features/ActivityInfo/Protection/aiProtectionGeneralMapper'
-import {fnSwitch} from '@alexandreannic/ts-utils'
+import {KoboProtection_hhs3} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
 
 export class ProtectionDataHelper {
 
@@ -72,7 +71,7 @@ export class ProtectionDataHelper {
     }
   }
 
-  static readonly mapHhs = (d: ProtHHS2Enrich): ProtectionActivity => {
+  static readonly mapHhs = (d: KoboProtection_hhs3.T): ProtectionActivity => {
     return {
       ...Kobo.extraxtAnswerMetaData(d),
       date: d.submissionTime,
@@ -83,16 +82,7 @@ export class ProtectionDataHelper {
       hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada!)?._5w as any,
       project: [...d.tags?.projects ?? [], DrcProject['UKR-000322 ECHO2']],
       donor: d.tags?.projects?.map(_ => DrcProjectHelper.donorByProject[_!]),
-      persons: d.persons.map(_ => ({
-        ..._,
-        status: fnSwitch(d.do_you_identify_as_any_of_the_following!, {
-          idp: 'idp',
-          returnee: 'returnee',
-          refugee: 'refugee',
-          non_displaced: 'non-displaced',
-          unable_unwilling_to_answer: 'other'
-        })
-      })),
+      persons: d.persons
     }
   }
 }

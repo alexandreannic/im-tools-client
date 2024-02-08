@@ -22,10 +22,6 @@ export interface DashboardSafetyIncidentsPageProps {
   computed: NonNullable<ReturnType<typeof useSafetyIncidentDashboard>>
 }
 
-// export const SafetyIncidentsTrackerBarChart = makeKoboBarChartComponent<SafetyIncidentTracker, typeof Safety_incidentTracker.options>({
-//   options: Safety_incidentTracker.options
-// })
-
 export const SafetyIncidentDashboard = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()

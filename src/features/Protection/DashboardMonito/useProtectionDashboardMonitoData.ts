@@ -4,9 +4,9 @@ import {chain} from '@/utils/utils'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {ukraineSvgPath} from '@/shared/UkraineMap/ukraineSvgPath'
 import {subDays} from 'date-fns'
-import {ProtHHS2Enrich} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {OblastISO} from '@/shared/UkraineMap/oblastIndex'
 import {Person} from '@/core/type/person'
+import {KoboProtection_hhs3} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
 
 export type UseProtHHS2Data = ReturnType<typeof useProtectionDashboardMonitoData>
 
@@ -15,7 +15,7 @@ export const protectionDashboardMonitoPreviousPeriodDeltaDays = 90
 export const useProtectionDashboardMonitoData = ({
   data,
 }: {
-  data?: Seq<ProtHHS2Enrich>
+  data?: Seq<KoboProtection_hhs3.T>
 }) => {
   const ageGroup = useCallback((ageGroup: Person.AgeGroup, hideOther?: boolean) => {
     const gb = Person.groupByGenderAndGroup(ageGroup)(data?.flatMap(_ => _.persons)!)
@@ -38,8 +38,8 @@ export const useProtectionDashboardMonitoData = ({
       column: 'where_are_you_current_living_oblast' | 'what_is_your_area_of_origin_oblast' = 'where_are_you_current_living_oblast'
     ) => Enum.keys(ukraineSvgPath)
       .reduce(
-        (acc, isoCode) => ({...acc, [isoCode]: (_: ProtHHS2Enrich): boolean => _[column] === isoCode}),
-        {} as Record<OblastISO, (_: ProtHHS2Enrich) => boolean>
+        (acc, isoCode) => ({...acc, [isoCode]: (_: KoboProtection_hhs3.T): boolean => _[column] === isoCode}),
+        {} as Record<OblastISO, (_: KoboProtection_hhs3.T) => boolean>
       )
 
     const byCurrentOblast = ChartHelperOld.byCategory({
