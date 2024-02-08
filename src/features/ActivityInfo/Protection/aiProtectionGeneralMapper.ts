@@ -8,9 +8,9 @@ import {AiOblast} from '@/core/uaLocation/aiOblasts'
 import {AiRaions} from '@/core/uaLocation/aiRaions'
 import {AiHromadas} from '@/core/uaLocation/aiHromadas'
 import {Person} from '@/core/type/person'
-import Gender = Person.Gender
 import {Protection_groupSession} from '@/core/sdk/server/kobo/generatedInterface/Protection_groupSession'
 import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
+import Gender = Person.Gender
 
 const disaggregatePersons = (persons: Person.Person[]) => {
   const personsDefined = persons.filter(_ => !!_.gender && !!_.age)

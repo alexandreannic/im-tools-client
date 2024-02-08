@@ -4,7 +4,6 @@ import {fnSwitch} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 import {Person} from '@/core/type/person'
-import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
 export interface PersonDetails extends Person.Person {
   status?: Protection_pss.Option<'hh_char_hh_det_status'>

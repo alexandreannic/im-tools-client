@@ -1,8 +1,8 @@
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
 import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
-import Gender = Person.Gender
 import {Person} from '@/core/type/person'
 import {KoboProtection_hhs3} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
+import Gender = Person.Gender
 
 export const getProtHhsIptData = (data?: Seq<KoboProtection_hhs3.T>) => {
   const csv: {base: string, gender: string, ageGroup: string, total: number}[] = []

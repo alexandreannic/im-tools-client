@@ -8,11 +8,11 @@ import {addDays, format} from 'date-fns'
 import {ActivityInfoSdk} from '@/core/sdk/server/activity-info/ActiviftyInfoSdk'
 import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
-import groupByGenderAndGroup = Person.groupByGenderAndGroup
-import Gender = Person.Gender
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
 import {Ecrec_sectoralCashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_sectoralCashRegistration'
+import groupByGenderAndGroup = Person.groupByGenderAndGroup
+import Gender = Person.Gender
 
 export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_sectoralCashRegistration.T>
 

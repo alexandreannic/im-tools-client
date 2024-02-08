@@ -1,4 +1,4 @@
-import {Enum, Obj, Seq} from '@alexandreannic/ts-utils'
+import {Obj, Seq} from '@alexandreannic/ts-utils'
 import {format} from 'date-fns'
 import React, {useMemo} from 'react'
 import {StringKeys} from '../../core/type/generic'

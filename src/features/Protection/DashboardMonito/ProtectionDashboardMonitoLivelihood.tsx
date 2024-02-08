@@ -11,7 +11,7 @@ import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {ChartLineByKey} from '@/shared/charts/ChartLineByKey'
 import {Divider} from '@mui/material'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import { Obj } from '@alexandreannic/ts-utils'
+import {Obj} from '@alexandreannic/ts-utils'
 import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
 export const ProtectionDashboardMonitoLivelihood = ({

@@ -1,7 +1,6 @@
 import {NonNullableKeys} from '@/utils/utilsType'
 import {Enum, Obj, seq} from '@alexandreannic/ts-utils'
 import {KeyOf} from '@/core/type/generic'
-import {ca} from 'date-fns/locale'
 
 export namespace Person {
 

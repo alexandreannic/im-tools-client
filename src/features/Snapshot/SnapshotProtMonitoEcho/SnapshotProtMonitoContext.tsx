@@ -1,14 +1,12 @@
 import React, {ReactNode, useContext, useEffect} from 'react'
-import {UseProtHHS2Data, useProtectionDashboardMonitoData} from '@/features/Protection/DashboardMonito/useProtectionDashboardMonitoData'
+import {useProtectionDashboardMonitoData, UseProtHHS2Data} from '@/features/Protection/DashboardMonito/useProtectionDashboardMonitoData'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {useI18n} from '@/core/i18n'
 import {seq, Seq} from '@alexandreannic/ts-utils'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Period} from '@/core/type/period'
 import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
-import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
-import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
-import {KoboProtection_hhs3, ProtectionHhsTags} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
+import {KoboProtection_hhs3} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
 
 export interface SnapshotProtMonitoContext {
   computed: NonNullable<UseProtHHS2Data>
