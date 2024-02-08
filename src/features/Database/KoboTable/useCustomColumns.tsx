@@ -10,22 +10,33 @@ import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {KoboIndex} from '@/core/KoboIndex'
 import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
+import {EcrecCashRegistrationPaymentStatus, EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
+import {Ecrec_sectoralCashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_sectoralCashRegistration'
 
 export const useCustomColumns = (): SheetColumnProps<KoboMappedAnswer>[] => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, SheetColumnProps<KoboMappedAnswer>[]> = {
-      // [KoboIndex.byName('ecrec_cashRegistration').id]: [
-      //   {
-      //     id: 'status',
-      //     head: m.status,
-      //     type: 'select_one',
-      //     width: 200,
-      //     options: () => SheetUtils.buildOptions(Obj.keys(EcrecCashRegistrationPaymentStatus), true),
-      //     tooltip: (row: KoboAnswer<Ecrec_CashRegistration.T, EcrecCashRegistrationTags>) => row,
-      //   }
-      // ],
+      [KoboIndex.byName('ecrec_cashRegistration').id]: [
+        {
+          id: 'status',
+          head: m.status,
+          type: 'select_one',
+          width: 200,
+          options: () => SheetUtils.buildOptions(Obj.keys(EcrecCashRegistrationPaymentStatus), true),
+          tooltip: (row: KoboAnswer<Ecrec_sectoralCashRegistration.T, EcrecCashRegistrationTags>) => row,
+          render: (row: KoboAnswer<Ecrec_sectoralCashRegistration.T, EcrecCashRegistrationTags>) => (
+            <IpSelectSingle
+              disabled={!ctx.canEdit}
+              value={row.tags?.status}
+              placeholder={m.project}
+              onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'status'})}
+              options={Obj.values(EcrecCashRegistrationPaymentStatus).map(k => ({value: k, children: k}))}
+            />
+          )
+        }
+      ],
       [KoboIndex.byName('protection_communityMonitoring').id]: [
         {
           id: 'tags_project',
