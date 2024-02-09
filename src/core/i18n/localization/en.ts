@@ -323,7 +323,7 @@ export const en = Object.freeze({
     requests: 'Requests',
     selectADatabase: 'Select a Kobo form',
     noIdp: 'Non-IDP',
-    comparedToPreviousMonth: 'Compared to 30 days ago',
+    comparedToPreviousMonth: (n: number) => `Compared to ${n} days ago`,
     idps: 'IDPs',
     nonDisplaced: 'Non-displaced',
     refugeesAndReturnees: 'Refugees and returnees',

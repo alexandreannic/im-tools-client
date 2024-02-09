@@ -30,7 +30,7 @@ export const ProtectionDashboardMonitoPN = ({
 
   const mostSelected = useMemo(() => {
     const byCategory = ChartHelper.single({
-      data: data.flatMap(_ => [_.what_is_your_1_priority, _.what_is_your_2_priority, _.what_is_your_3_priority]).filter(_ => _ !== 'unable_unwilling_to_answer' && _ !== 'none').compact()
+      data: fixedData.flatMap(_ => [_.what_is_your_1_priority, _.what_is_your_2_priority, _.what_is_your_3_priority]).filter(_ => _ !== 'unable_unwilling_to_answer' && _ !== 'none').compact()
     }).get()
     const sorted = Obj.entries(byCategory).sort(([a, av], [b, bv]) => bv.value - av.value).splice(0, 4).map(([label, value]) => ({label, value}))
     return {
@@ -41,13 +41,13 @@ export const ProtectionDashboardMonitoPN = ({
 
   const table = useMemo(() => {
     const pn1 = ChartHelper.single({
-      data: data.map(_ => _.what_is_your_1_priority).filter(_ => _ !== 'unable_unwilling_to_answer').compact(),
+      data: fixedData.map(_ => _.what_is_your_1_priority).filter(_ => _ !== 'unable_unwilling_to_answer').compact(),
     }).get()
     const pn2 = ChartHelper.single({
-      data: data.map(_ => _.what_is_your_2_priority).filter(_ => _ !== 'unable_unwilling_to_answer').compact(),
+      data: fixedData.map(_ => _.what_is_your_2_priority).filter(_ => _ !== 'unable_unwilling_to_answer').compact(),
     }).get()
     const pn3 = ChartHelper.single({
-      data: data.map(_ => _.what_is_your_3_priority).filter(_ => _ !== 'unable_unwilling_to_answer').compact(),
+      data: fixedData.map(_ => _.what_is_your_3_priority).filter(_ => _ !== 'unable_unwilling_to_answer').compact(),
     }).get()
     return Obj.keys(pn1).map(_ => ({
       need: _,
@@ -58,7 +58,7 @@ export const ProtectionDashboardMonitoPN = ({
       totalNeed2: seq(Obj.values(pn2)).sum(_ => _.value),
       totalNeed3: seq(Obj.values(pn3)).sum(_ => _.value),
     }))
-  }, [data])
+  }, [fixedData])
 
   return (
     <Div column>
