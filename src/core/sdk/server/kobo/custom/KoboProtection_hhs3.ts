@@ -19,10 +19,13 @@ export namespace KoboProtection_hhs3 {
     const r: T = d as unknown as T
     // TODO(Alex) Change kobo name of disabilities
     r.persons = d.hh_char_hh_det?.map((_, i) => {
+      console.log({id: d.id, i, group: d.hh_char_hh_doc, res: d.hh_char_hh_doc?.[i].does_lack_doc})
       return {
         ...KoboGeneralMapping.mapPersonWithStatus(_ as any),
-        lackDoc: d.hh_char_hh_doc?.[i].does_lack_doc,
-        isIdpRegistered: d.hh_char_hh_doc?.[i].is_member_registered
+        lackDoc: undefined,
+        isIdpRegistered: undefined,
+        // lackDoc: d.hh_char_hh_doc?.[i].does_lack_doc,
+        // isIdpRegistered: d.hh_char_hh_doc?.[i].is_member_registered
       }
     }) ?? []
     return r

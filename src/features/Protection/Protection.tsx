@@ -44,7 +44,7 @@ export const ProtectionSidebar = () => {
           )}
         </NavLink>
         <SidebarSection title={m.protHHS2.descTitle}>
-          <Link href={conf.linkToFeature('dashboard/protection-monitoring' as any, '')}>
+          <Link target="_blank" href={conf.linkToFeature('dashboard/protection-monitoring' as any, '')}>
             <SidebarItem icon="insights" iconEnd="open_in_new">{m.dashboard}</SidebarItem>
           </Link>
           <SidebarKoboLink size="small" path={path(mpcaIndex.siteMap.form('protection_hhs2_1'))} name="protection_hhs2_1"/>

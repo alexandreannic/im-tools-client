@@ -131,7 +131,11 @@ export const ProtectionDashboardMonitoDocument = ({
               {(_, last) => <ChartPieWidget dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
             </Lazy>
             <Lazy deps={[filteredPersons]} fn={() => ChartHelper.multiple({
-              data: filteredPersons.map(_ => _.lackDoc).compact(),
+              data: (() => {
+                const w = filteredPersons.map(_ => _.lackDoc).compact()
+                console.log(w)
+                return w
+              })(),
               filterValue: ['none', 'unable_unwilling_to_answer'],
             }).setLabel(Protection_hhs3.options.does_lack_doc).sortBy.value().get()}>
               {_ => <ChartBar data={_}/>}
