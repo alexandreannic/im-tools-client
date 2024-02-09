@@ -113,7 +113,10 @@ const KoboAnswerQuestionView = ({
     case 'image': {
       return <>
         <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
-        <KoboAttachedImg attachments={row.attachments} size={84} fileName={row[questionSchema.name] as string}/>
+        <Box>
+          <Txt block size="small" color="hint">{row[questionSchema.name]}</Txt>
+          <KoboAttachedImg attachments={row.attachments} size={84} fileName={row[questionSchema.name] as string}/>
+        </Box>
       </>
     }
     case 'text': {

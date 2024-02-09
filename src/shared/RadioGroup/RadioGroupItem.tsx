@@ -44,11 +44,11 @@ export const ScRadioGroupItem = <T, >({
       sx={{
         ...sx,
         minHeight,
-        px: 1,
+        // paddingRight: '2px',
+        px: dense ? 1.5 : 2,
         display: 'flex',
         alignItems: 'flex-start',
         border: t => '1px solid ' + t.palette.divider,
-        paddingRight: '2px',
         paddingBottom: '2px',
         transition: 'all .2s ease-in-out',
         cursor: 'pointer',
@@ -113,7 +113,7 @@ export const ScRadioGroupItem = <T, >({
             size={dense ? 'small' : undefined}
             checked={selected}
             sx={{
-              marginLeft: -.5,
+              marginLeft: -1,
               marginRight: 0,
               minHeight: minHeight,
             }}/>
@@ -124,7 +124,7 @@ export const ScRadioGroupItem = <T, >({
             // size={dense ? 'small' : undefined}
             checked={selected}
             sx={{
-              marginLeft: -.5,
+              marginLeft: -1,
               marginRight: 0,
               minHeight: minHeight,
             }}

@@ -51,9 +51,9 @@ export const ProtectionDashboardMonitoPN = ({
     }).get()
     return Obj.keys(pn1).map(_ => ({
       need: _,
-      need1: pn1[_].value,
-      need2: pn2[_].value,
-      need3: pn3[_].value,
+      need1: pn1[_]?.value ?? 0,
+      need2: pn2[_]?.value ?? 0,
+      need3: pn3[_]?.value ?? 0,
       totalNeed1: seq(Obj.values(pn1)).sum(_ => _.value),
       totalNeed2: seq(Obj.values(pn2)).sum(_ => _.value),
       totalNeed3: seq(Obj.values(pn3)).sum(_ => _.value),
@@ -81,7 +81,9 @@ export const ProtectionDashboardMonitoPN = ({
                 type: 'select_one',
                 id: 'need',
                 head: m.priorityNeeds,
-                render: _ => <Txt bold>{Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need}</Txt>
+                render: _ => <Txt bold>{Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need}</Txt>,
+                renderValue: _ => Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need,
+                renderOption: _ => Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need,
               },
               {
                 type: 'number',

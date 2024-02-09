@@ -148,7 +148,7 @@ export const _DashboardMealVisitPdf = () => {
           <td>
             <Box>
               <Row label={m.project}>
-                {entry.mdd_001?.map(_ => Meal_VisitMonitoring.options.mdd_001[_]).join(', ')}
+                {entry.mdd_001?.map(_ => schema.translate.choice('mdd_001', _)).join(', ')}
               </Row>
               <Row label={m.location}>
                 {schema.translate.choice('md_det_oblast', entry.md_det_oblast)} oblast,&nbsp;
