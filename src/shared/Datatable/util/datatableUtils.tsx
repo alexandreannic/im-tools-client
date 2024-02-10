@@ -58,36 +58,20 @@ type CallFnArgs<T extends SchemaItem[]> = {
   };
 };
 
-function callFn<T extends SchemaItem[]>(args: CallFnArgs<T>): void {
-}
-
-// Example usage
-callFn({
-  schema: [{id: 'first', type: 'string'}, {id: 'second', type: 'date'}],
-  filters: {jj: 'test', xxx: new Date(),},
-})
-
-const x = {
-  schema: [{id: 'first', type: 'string'}, {id: 'second', type: 'date'}]
-} as const
-
-const fn: { [K in (typeof x)[number]['id']]: string } = {'first': 'a'}
-
-
-
-
-
-
-
-
-
-
-chj_360_novonordisk
-dnk_360_novonordisk
-hrk_360_novonordisk
-lwo_360_novonordisk
-nlv_360_novonordisk
-
+// function callFn<T extends SchemaItem[]>(args: CallFnArgs<T>): void {
+// }
+//
+// // Example usage
+// callFn({
+//   schema: [{id: 'first', type: 'string'}, {id: 'second', type: 'date'}],
+//   filters: {jj: 'test', xxx: new Date(),},
+// })
+//
+// const x = {
+//   schema: [{id: 'first', type: 'string'}, {id: 'second', type: 'date'}]
+// } as const
+//
+// const fn: { [K in (typeof x)[number]['id']]: string } = {'first': 'a'}
 
 
 

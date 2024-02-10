@@ -12,6 +12,7 @@ import {Box, Switch} from '@mui/material'
 import {useRouter} from 'next/router'
 import {seq} from '@alexandreannic/ts-utils'
 import {useFetcher} from '@/shared/hook/useFetcher'
+import {Datatable} from '@/shared/Datatable/Datatable'
 
 export const AdminUsers = () => {
   const {api, conf} = useAppSettings()
@@ -38,7 +39,7 @@ export const AdminUsers = () => {
   return (
     <Page width="lg">
       <Panel>
-        <Sheet
+        <Datatable
           id="users"
           header={
             <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
@@ -50,6 +51,7 @@ export const AdminUsers = () => {
           data={filteredData}
           columns={[
             {
+              type: 'string',
               id: 'name',
               head: m.name,
               render: _ => _.name,
