@@ -2,12 +2,12 @@ import {useCallback, useMemo, useState} from 'react'
 import {multipleFilters, paginateData, Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {
+  DatatableColumn,
   DatatableFilterValue,
   DatatableFilterValueDate,
   DatatableFilterValueNumber,
   DatatableFilterValueSelect,
   DatatableFilterValueString,
-  DatatableInnerColumnProps,
   DatatableRow,
   DatatableSearch, DatatableTableProps
 } from '@/shared/Datatable/util/datatableType'
@@ -27,7 +27,7 @@ export const useDatatableData = <T extends DatatableRow>({
   defaultLimit?: number
   defaultFilters?: DatatableTableProps<T>['defaultFilters']
   data?: T[]
-  columnsIndex: Record<KeyOf<T>, DatatableInnerColumnProps<T>>
+  columnsIndex: Record<KeyOf<T>, DatatableColumn.InnerProps<T>>
 }) => {
   const [filters, setFilters] = useState<Record<KeyOf<T>, DatatableFilterValue>>(defaultFilters ?? {} as any)
   const [search, setSearch] = useState<DatatableSearch<any>>({
@@ -63,23 +63,23 @@ export const useDatatableData = <T extends DatatableRow>({
       if (!col.type) return
       const sorted = d.sort(fnSwitch(col.type, {
         number: () => (a: T, b: T) => {
-          const av = Utils.safeNumber(col.renderValue(a) as number, Number.MIN_SAFE_INTEGER)
-          const bv = Utils.safeNumber(col.renderValue(b) as number, Number.MIN_SAFE_INTEGER)
+          const av = Utils.safeNumber(col.render(a).value as number, Number.MIN_SAFE_INTEGER)
+          const bv = Utils.safeNumber(col.render(b).value as number, Number.MIN_SAFE_INTEGER)
           return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
         },
         date: () => (a: T, b: T) => {
           try {
-            const av = (col.renderValue(a) as Date).getTime() ?? 0
-            const bv = (col.renderValue(b) as Date).getTime() ?? 0
+            const av = (col.render(a).value as Date).getTime() ?? 0
+            const bv = (col.render(b).value as Date).getTime() ?? 0
             return (av - bv) * (search.orderBy === 'asc' ? -1 : 1)
           } catch (e) {
-            console.warn('Invalid date', col.renderValue(a))
+            console.warn('Invalid date', col.render(a).value)
             return -1
           }
         },
       }, () => (a: T, b: T) => {
-        const av = ('' + col.renderValue(a)) ?? ''
-        const bv = ('' + col.renderValue(b)) ?? ''
+        const av = ('' + col.render(a).value) ?? ''
+        const bv = ('' + col.render(b).value) ?? ''
         return av.localeCompare(bv) * (search.orderBy === 'asc' ? -1 : 1)
       }))
       return [...sorted]
@@ -113,7 +113,7 @@ const filterBy = <T extends DatatableRow>({
 }: {
   data?: T[],
   filters: Record<KeyOf<T>, DatatableFilterValue>
-  columnsIndex: Record<KeyOf<T>, DatatableInnerColumnProps<T>>
+  columnsIndex: Record<KeyOf<T>, DatatableColumn.InnerProps<T>>
 }) => {
   if (!data) return
   return multipleFilters(data, Enum.keys(filters).map((k, i) => {
@@ -124,7 +124,7 @@ const filterBy = <T extends DatatableRow>({
       case 'date': {
         return row => {
           const typedFilter = filter as DatatableFilterValueDate
-          const v = col.renderValue(row) as Date | undefined
+          const v = col.render(row).value as Date | undefined
           if (v === undefined) return false
           if (!((v as any) instanceof Date)) {
             console.warn(`Value of ${String(k)} is`, v, `but Date expected.`)
@@ -137,7 +137,7 @@ const filterBy = <T extends DatatableRow>({
       case 'select_one': {
         return row => {
           const typedFilter = filter as DatatableFilterValueSelect
-          const v = col.renderValue(row) as string
+          const v = col.render(row).value as string
           if (v === undefined) return false
           return (typedFilter).includes(v)
         }
@@ -145,7 +145,7 @@ const filterBy = <T extends DatatableRow>({
       case 'select_multiple': {
         return row => {
           const typedFilter = filter as DatatableFilterValueSelect
-          const v = col.renderValue(row) as string[]
+          const v = col.render(row).value as string[]
           const vArray = Array.isArray(v) ? v : [v]
           return !!vArray.find(_ => (typedFilter).includes(_))
         }
@@ -153,7 +153,7 @@ const filterBy = <T extends DatatableRow>({
       case 'number': {
         return row => {
           const typedFilter = filter as DatatableFilterValueNumber
-          const v = col.renderValue(row) as number | undefined
+          const v = col.render(row).value as number | undefined
           const min = typedFilter[0] as number | undefined
           const max = typedFilter[1] as number | undefined
           return v !== undefined && (max === undefined || v <= max) && (min === undefined || v >= min)
@@ -163,7 +163,7 @@ const filterBy = <T extends DatatableRow>({
         if (!col.type) return
         return row => {
           const typedFilter = filter as DatatableFilterValueString
-          const v = col.renderValue(row)
+          const v = col.render(row).value
           if (v === undefined && typedFilter?.filterBlank !== false) return false
           if (typedFilter?.value === undefined) return true
           if (typeof v !== 'string' && typeof v !== 'number') {

@@ -3,14 +3,13 @@ import React, {useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {Utils} from '@/utils/utils'
-import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
+import {Enum, map} from '@alexandreannic/ts-utils'
 import {IpIconBtn} from '../IconBtn'
 import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Datatable/util/generateXLSFile'
 import {DatatableBody} from './DatatableBody'
 import {DatatableHead} from './DatatableHead'
-import {DatatableRow, DatatableTableProps} from '@/shared/Datatable/util/datatableType'
-import {format} from 'date-fns'
+import {DatatableColumn, DatatableRow, DatatableTableProps} from '@/shared/Datatable/util/datatableType'
 import {DatatableProvider, useDatatableContext} from '@/shared/Datatable/context/DatatableContext'
 import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
@@ -35,22 +34,35 @@ export const Datatable = <T extends DatatableRow = DatatableRow>({
   defaultFilters,
   ...props
 }: DatatableTableProps<T>) => {
-  const mappedColumns = useMemo(() => {
+  const innerColumns: DatatableColumn.InnerProps<T>[] = useMemo(() => {
     return columns.map(col => {
-      if (col.type === 'select_one' || col.type === 'select_multiple') {
-        return {
-          ...col,
-          type: col.type as any,
-          renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id]),
-          renderOption: col.renderOption ?? col.render,
-          renderExport: col.renderExport === false ? false : col.renderExport ?? col.renderValue ?? col.render as any,
-        }
+      if (DatatableColumn.isLong(col)) {
+        return col
       }
-      return {
+      const w: DatatableColumn.InnerProps<T> = {
         ...col,
-        type: col.type,
-        renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id])
+        render: (_: T) => ({
+          label: col.render!(_) as any,
+          value: col.render!(_) as any,
+          option: col.render!(_) as any,
+        }) as any
       }
+      return w
+      // return col
+      // if (col.type === 'select_one' || col.type === 'select_multiple') {
+      //   return {
+      //     ...col,
+      //     type: col.type as any,
+      //     renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id]),
+      //     renderOption: col.renderOption ?? col.render,
+      //     renderExport: col.renderExport === false ? false : col.renderExport ?? col.renderValue ?? col.render as any,
+      //   }
+      // }
+      // return {
+      //   ...col,
+      //   type: col.type,
+      //   renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id])
+      // }
     })
   }, [columns])
 
@@ -58,7 +70,7 @@ export const Datatable = <T extends DatatableRow = DatatableRow>({
     <DatatableErrorBoundary>
       <DatatableProvider
         id={props.id}
-        columns={mappedColumns}
+        columns={innerColumns}
         data={data}
         defaultLimit={defaultLimit}
         select={select}
@@ -98,25 +110,25 @@ const _Datatable = <T extends DatatableRow>({
       _generateXLSFromArray.call(Utils.slugify(title) ?? 'noname', {
         datatableName: 'data',
         data: ctx.data.filteredAndSortedData,
-        schema: ctx.columns
-          .filter(_ => _.renderExport !== false)
-          .map((q, i) => ({
-            head: q.head as string ?? q.id,
-            render: (row: any) => {
-              // if (!q.renderExport || !q.renderValue) return
-              if (q.renderExport === true) return fnSwitch(q.type!, {
-                number: () => map(row[q.id], _ => +_),
-                date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
-              }, () => row[q.id])
-              if (q.renderExport) {
-                return q.renderExport(row)
-              }
-              if (q.renderValue) {
-                return q.renderValue(row)
-              }
-              return row[q.id]
-            }
-          })),
+        schema: ctx.columns as any
+          // .filter(_ => _.renderExport !== false)
+          // .map((q, i) => ({
+          //   head: q.head as string ?? q.id,
+          //   render: (row: any) => {
+          //     // if (!q.renderExport || !q.renderValue) return
+          //     if (q.renderExport === true) return fnSwitch(q.type!, {
+          //       number: () => map(row[q.id], _ => +_),
+          //       date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
+          //     }, () => row[q.id])
+          //     if (q.renderExport) {
+          //       return q.renderExport(row)
+          //     }
+          //     if (q.renderValue) {
+          //       return q.renderValue(row)
+          //     }
+          //     return row[q.id]
+          //   }
+          // })),
       })
     }
   }

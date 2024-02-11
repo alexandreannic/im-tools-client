@@ -1,4 +1,4 @@
-import {DatatableBlankValue, DatatableColumnProps, DatatableOptions, DatatableRow} from '@/shared/Datatable/util/datatableType'
+import {DatatableBlankValue, DatatableColumn, DatatableOptions, DatatableRow} from '@/shared/Datatable/util/datatableType'
 import React, {ReactNode} from 'react'
 
 export class DatatableUtils {
@@ -8,7 +8,7 @@ export class DatatableUtils {
     filters: 'datatable-filters-',
   }
   // static readonly FILTER_BLANK_TEXT = 'FILTER_BLANK_TEXT_someRandomTextToAvoidCollision_9fa3'
-  static readonly buildColumns = <T extends DatatableRow = DatatableRow>(_: DatatableColumnProps<T>[]) => _
+  static readonly buildColumns = <T extends DatatableRow = DatatableRow>(_: DatatableColumn.Props<T>[]) => _
 
   static readonly blank: DatatableBlankValue = ''
   static readonly blankLabel = <i>BLANK</i>
@@ -27,11 +27,6 @@ export class DatatableUtils {
 
   static readonly buildCustomOption = (_: string, label?: ReactNode): DatatableOptions => {
     return {value: _, label: label ?? _}
-  }
-
-  /** @deprecated*/
-  static readonly getValueGetter = <T extends DatatableRow>(col: Pick<DatatableColumnProps<T>, 'render' | 'renderValue'>, colName: string): (_: T, i?: number) => any => {
-    return col.renderValue ?? col.render as any ?? ((_: T, i: number) => _[colName])
   }
 }
 

@@ -4,14 +4,14 @@ import {UseDatatableData, useDatatableData} from '@/shared/Datatable/context/use
 import {DatatableModal, useDatatableModal} from '@/shared/Datatable/context/useDatatableModal'
 import {useSetStateIp} from '@/shared/hook/useSetState'
 import {seq} from '@alexandreannic/ts-utils'
-import {DatatableInnerColumnProps, DatatableRow, DatatableTableProps} from '@/shared/Datatable/util/datatableType'
+import {DatatableColumn, DatatableRow, DatatableTableProps} from '@/shared/Datatable/util/datatableType'
 import {UseDatatableOptions, useDatatableOptions} from '@/shared/Datatable/context/useDatatableOptions'
 
 export interface DatatableContext<T extends DatatableRow> {
   data: UseDatatableData<T>
-  columnsIndex: Record<string, DatatableInnerColumnProps<T>>
+  columnsIndex: Record<string, DatatableColumn.InnerProps<T>>
   select: DatatableTableProps<T>['select']
-  columns: DatatableInnerColumnProps<T>[]
+  columns: DatatableColumn.InnerProps<T>[]
   getRenderRowKey: DatatableTableProps<T>['getRenderRowKey']
   selected: UseSetState<string>
   modal: DatatableModal<T>
@@ -38,7 +38,7 @@ export const DatatableProvider = <T extends DatatableRow>({
 }: {
   id: string
   defaultLimit?: number
-  columns: DatatableInnerColumnProps<T>[]
+  columns: DatatableColumn.InnerProps<T>[]
   data: DatatableTableProps<T>['data']
   getRenderRowKey: DatatableTableProps<T>['getRenderRowKey']
   select: DatatableTableProps<T>['select']
@@ -51,7 +51,7 @@ export const DatatableProvider = <T extends DatatableRow>({
   children: ReactNode
 }) => {
   const selected = useSetStateIp<string>()
-  const columnsIndex = useMemo(() => seq(columns).reduceObject<Record<string, DatatableInnerColumnProps<T>>>(_ => [_.id, _]), [columns])
+  const columnsIndex = useMemo(() => seq(columns).reduceObject<Record<string, DatatableColumn.InnerProps<T>>>(_ => [_.id, _]), [columns])
   const data = useDatatableData<T>({
     id,
     columnsIndex,

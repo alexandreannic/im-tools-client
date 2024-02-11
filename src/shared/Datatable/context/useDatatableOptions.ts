@@ -1,4 +1,4 @@
-import {DatatableInnerColumnProps, DatatableOptions, DatatableRow} from '@/shared/Datatable/util/datatableType'
+import {DatatableColumn, DatatableOptions, DatatableRow} from '@/shared/Datatable/util/datatableType'
 import {useCallback, useEffect, useMemo} from 'react'
 import {DatatableUtils} from '@/shared/Datatable/util/datatableUtils'
 import {seq} from '@alexandreannic/ts-utils'
@@ -16,8 +16,8 @@ export const useDatatableOptions = <T extends DatatableRow>({
   columnsIndex,
 }: {
   data: UseDatatableData<T>
-  columns: DatatableInnerColumnProps<any>[],
-  columnsIndex: Record<KeyOf<T>, DatatableInnerColumnProps<any>>
+  columns: DatatableColumn.InnerProps<any>[],
+  columnsIndex: Record<KeyOf<T>, DatatableColumn.InnerProps<any>>
 }) => {
 
   const automaticOptionColumns = useMemo(() => columns.filter(_ =>
@@ -38,18 +38,18 @@ export const useDatatableOptions = <T extends DatatableRow>({
       } else {
         if (col.type === 'select_one') {
           optionsRef.set(columnId, seq(data.filterExceptBy(columnId))
-            ?.distinct(_ => col.renderValue(_))
-            .sort((a, b) => (col.renderValue(b) ?? '').localeCompare(col.renderValue(a) ?? ''))
+            ?.distinct(_ => col.render(_).value)
+            .sort((a, b) => (col.render(b).value ?? '').localeCompare(col.render(a).value ?? ''))
             .map(_ => DatatableUtils.buildCustomOption(
-              col.renderValue(_) as string,
-              col.renderOption(_) as string,
+              col.render(_).value as string,
+              col.render(_).option as string,
             )))
         } else if (col.type === 'select_multiple') {
           optionsRef.set(columnId, seq(data.filterExceptBy(columnId))
-            ?.flatMap(_ => col.renderValue(_))
+            ?.flatMap(_ => col.render(_).value)
             .distinct(_ => _)
             .sort((a, b) => (a ?? '').localeCompare(b ?? ''))
-            .map(_ => _ ? DatatableUtils.buildCustomOption(_, col.renderOption!(_) as string) : DatatableUtils.blankOption)
+            .map(_ => _ ? DatatableUtils.buildCustomOption(_, col.render(_).option as string) : DatatableUtils.blankOption)
           )
         }
       }

@@ -221,7 +221,7 @@ export const DatatableFilterDialogNumber = ({
   const col = ctx.columnsIndex[columnId]
   if (!col.type) return
   const {min, max} = useMemo(() => {
-    const values = seq(data).map(_ => col.renderValue(_) as number | undefined).compact()
+    const values = seq(data).map(_ => col.render(_).value as number | undefined).compact()
     return {
       min: Math.min(...values),
       max: Math.max(...values),

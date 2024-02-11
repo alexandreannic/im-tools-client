@@ -44,7 +44,7 @@ export interface DatatableTableProps<T extends DatatableRow, K extends string = 
   getRenderRowKey?: (_: T, index: number) => string
   onClickRows?: (_: T, event: React.MouseEvent<HTMLElement>) => void
   rowsPerPageOptions?: number[]
-  columns: DatatableColumnProps<T, K>[]
+  columns: DatatableColumn.Props<T, K>[]
   showColumnsToggle?: boolean
   hidePagination?: boolean
   showColumnsToggleBtnTooltip?: string
@@ -68,80 +68,168 @@ export interface DatatableTableProps<T extends DatatableRow, K extends string = 
   }
 }
 
-interface DatatableColumnPropsText<T extends DatatableRow> {
-  type?: Exclude<DatatablePropertyType, 'date' | 'number' | 'select_multiple' | 'select_one'>
-  renderValue?: (_: T) => string | number | undefined
+export namespace DatatableColumn {
+
+  export type RenderExport = null | string | number | undefined | Date
+  export type RenderTooltip = null | string | undefined
+  export type RenderT<T, TOption = never> = {
+    label: ReactNode
+    option: TOption
+    value: T
+    tooltip?: RenderTooltip
+    export?: RenderExport
+  }
+
+  export interface Base<T extends DatatableRow, K extends string = string> {
+    id: K
+    noSort?: boolean
+    width?: number
+    head?: string
+    align?: 'center' | 'right'
+    onClick?: (_: T) => void
+    hidden?: boolean
+    alwaysVisible?: boolean
+    style?: (_: T) => CSSProperties
+    styleHead?: CSSProperties
+    typeIcon?: ReactNode
+    className?: string | ((_: T) => string | undefined)
+    stickyEnd?: boolean
+  }
+
+  export namespace SelectOne {
+    export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
+    export type Render<T extends DatatableRow> = (_: T) => RenderT<string | undefined, ReactNode>
+    // export type Render<T extends DatatableRow> = (_: T) => ({
+    //   label: ReactNode
+    //   option: ReactNode
+    //   value: string | undefined
+    //   tooltip?: RenderTooltip
+    //   export?: RenderExport
+    // })
+    export type InnerType<T extends DatatableRow> = {
+      type: 'select_one'
+      options?: () => DatatableOptions[]
+      render: Render<T>
+    }
+    export type Type<T extends DatatableRow> = {
+      type: 'select_one'
+      options?: () => DatatableOptions[]
+      render: RenderShort<T> | Render<T>
+    }
+  }
+
+  export namespace SelectMultiple {
+    export type RenderShort<T extends DatatableRow> = (_: T) => string[]
+    export type Render<T extends DatatableRow> = (_: T) => ({
+      label: ReactNode
+      option: ReactNode
+      value: string[]
+      tooltip?: RenderTooltip
+      export?: RenderExport
+    })
+    export type InnerType<T extends DatatableRow> = {
+      type: 'select_multiple'
+      render: Render<T>
+      options?: () => DatatableOptions[]
+    }
+    export type Type<T extends DatatableRow> = {
+      type: 'select_multiple'
+      render: RenderShort<T> | Render<T>
+      options?: () => DatatableOptions[]
+    }
+  }
+
+  export namespace Undefined {
+    export type RenderShort<T extends DatatableRow> = (_: T) => ReactNode
+    export type InnerType<T extends DatatableRow> = {
+      type?: undefined
+      render: (_: T) => ({
+        tooltip?: RenderTooltip
+        export?: RenderExport
+        label: ReactNode
+        value: undefined
+      })
+    }
+    export type Type<T extends DatatableRow> = {
+      type?: undefined
+      render: RenderShort<T>
+    }
+  }
+
+  export namespace Text {
+    export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
+    export type Render<T extends DatatableRow> = (_: T) => ({
+      label: ReactNode
+      value: string | undefined
+      tooltip?: RenderTooltip
+      export?: RenderExport
+    })
+    export type InnerType<T extends DatatableRow> = {
+      type?: 'string'
+      render: Render<T>
+    }
+    export type Type<T extends DatatableRow> = {
+      type?: 'string'
+      render: RenderShort<T> | Render<T>
+    }
+  }
+
+  export namespace Date {
+    export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
+    export type Render<T extends DatatableRow> = (_: T) => ({
+      label: ReactNode
+      value: Date | undefined
+      tooltip?: RenderTooltip
+      export?: RenderExport
+    })
+    export type InnerType<T extends DatatableRow> = {
+      type: 'date'
+      render: Render<T>
+    }
+    export type Type<T extends DatatableRow> = {
+      type: 'date'
+      render: RenderShort<T> | Render<T>
+    }
+  }
+
+  export namespace Number {
+    export type InnerType<T extends DatatableRow> = {
+      type: 'number'
+      render: (_: T) => ({
+        label: ReactNode
+        value: number | undefined
+        tooltip?: RenderTooltip
+        export?: RenderExport
+      })
+    }
+    export type Type<T extends DatatableRow> = {
+      type: 'number'
+      render?: (_: T) => number | undefined
+    }
+  }
+
+  export type Props<T extends DatatableRow, K extends string = string> = Base<T, K> & (
+    Text.Type<T> |
+    SelectOne.Type<T> |
+    Date.Type<T> |
+    Number.Type<T> |
+    SelectMultiple.Type<T> |
+    Undefined.Type<T>
+    )
+  export type InnerProps<T extends DatatableRow, K extends string = string> = Base<T, K> & (
+    Text.InnerType<T> |
+    SelectOne.InnerType<T> |
+    Date.InnerType<T> |
+    Number.InnerType<T> |
+    SelectMultiple.InnerType<T> |
+    Undefined.Type<T>
+    )
+
+  export const isLong = (_: Props<any>): _ is InnerProps<any> => {
+    return typeof (_ as any).render({}) === 'object'
+  }
 }
 
-type DatatableColumnPropsSelectOne<T extends DatatableRow> = {
-  type: 'select_one'
-  renderValue?: (_: T) => string | undefined
-  options?: () => DatatableOptions[]
-  renderOption?: (_: T) => ReactNode
-}
-
-type DatatableColumnPropsSelectMultiple<T extends DatatableRow> = {
-  type: 'select_multiple'
-  renderValue?: (_: T) => string[] | undefined
-  options?: () => DatatableOptions[]
-  renderOption?: (_: T) => ReactNode
-}
-
-interface DatatableColumnPropsDate<T extends DatatableRow> {
-  type: 'date'
-  renderValue?: (_: T) => Date | undefined
-}
-
-interface DatatableColumnPropsNumber<T extends DatatableRow> {
-  type: 'number'
-  renderValue?: (_: T) => number | undefined
-}
-
-interface DatatableColumnPropsUndefined<T> {
-  type?: undefined
-  renderValue?: (_: T) => string | boolean | number | undefined
-}
-
-export type DatatableColumnProps<T extends DatatableRow, K extends string = string> = DatatableColumnPropsBase<T, K> & (
-  DatatableColumnPropsText<T> |
-  DatatableColumnPropsSelectOne<T> |
-  DatatableColumnPropsDate<T> |
-  DatatableColumnPropsNumber<T> |
-  DatatableColumnPropsSelectMultiple<T> |
-  DatatableColumnPropsUndefined<T>
-  )
-
-export interface DatatableColumnPropsBase<T extends DatatableRow, K extends string = string> {
-  // type?: DatatablePropertyType//'number' | 'date' | 'string' | 'select_one' | 'select_multiple'
-  // renderValue?: (_: T) => string | number | undefined
-  // sx?: (_: T) => SxProps<Theme> | undefined
-  // style?: CSSProperties
-  id: K
-  render: (_: T) => ReactNode
-  noSort?: boolean
-  width?: number
-  head?: string
-  align?: 'center' | 'right'
-  onClick?: (_: T) => void
-  renderExport?: boolean | ((_: T) => string | number | undefined | Date)
-  hidden?: boolean
-  alwaysVisible?: boolean
-  tooltip?: null | ((_: T) => undefined | string)
-  style?: (_: T) => CSSProperties
-  styleHead?: CSSProperties
-  typeIcon?: ReactNode
-  className?: string | ((_: T) => string | undefined)
-  stickyEnd?: boolean
-}
-
-export type DatatableInnerColumnProps<T extends DatatableRow> = Omit<DatatableColumnProps<T>, 'renderValue' | 'type'> & (
-  NonNullableKeys<DatatableColumnPropsText<T>> |
-  NonNullableKeys<DatatableColumnPropsSelectOne<T>> |
-  NonNullableKeys<DatatableColumnPropsSelectMultiple<T>> |
-  NonNullableKeys<DatatableColumnPropsDate<T>> |
-  NonNullableKeys<DatatableColumnPropsNumber<T>> |
-  DatatableColumnPropsUndefined<T>
-  )
 
 export type DatatableFilterValueString = {
   filterBlank?: boolean,
@@ -153,32 +241,32 @@ export type DatatableFilterValueNumber = [number | undefined, number | undefined
 export type DatatableFilterValue = DatatableFilterValueString | DatatableFilterValueSelect | DatatableFilterValueDate | DatatableFilterValueNumber
 export type DatatableBlankValue = ''
 
-type SchemaItem = {
-  id: string;
-  type: string;
-};
-
-type FilterValue<T extends SchemaItem> = T['type'] extends 'string'
-  ? string
-  : T['type'] extends 'date'
-    ? Date
-    : never;
-
-type Filters<T extends SchemaItem[]> = {
-  [K in T[number]['id']]: any
-};
-
-type CallFnArgs<T extends SchemaItem[]> = {
-  schema: T;
-  filters: Filters<T>;
-};
-
-function callFn<T extends SchemaItem[]>(args: CallFnArgs<T>): void {
-  // Your implementation here
-}
-
-// Example usage
-callFn({
-  schema: [{ id: 'first', type: 'string' }, { id: 'second', type: 'date' }],
-  filters: { xxx: 'test', second: new Date() },
-});
+// type SchemaItem = {
+//   id: string;
+//   type: string;
+// };
+//
+// type FilterValue<T extends SchemaItem> = T['type'] extends 'string'
+//   ? string
+//   : T['type'] extends 'date'
+//     ? Date
+//     : never;
+//
+// type Filters<T extends SchemaItem[]> = {
+//   [K in T[number]['id']]: any
+// };
+//
+// type CallFnArgs<T extends SchemaItem[]> = {
+//   schema: T;
+//   filters: Filters<T>;
+// };
+//
+// function callFn<T extends SchemaItem[]>(args: CallFnArgs<T>): void {
+//   // Your implementation here
+// }
+//
+// // Example usage
+// callFn({
+//   schema: [{ id: 'first', type: 'string' }, { id: 'second', type: 'date' }],
+//   filters: { xxx: 'test', second: new Date() },
+// });

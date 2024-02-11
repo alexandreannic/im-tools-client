@@ -59,23 +59,36 @@ export const AdminUsers = () => {
             {
               id: 'email',
               head: m.email,
-              render: _ => <Txt bold>{_.email}</Txt>,
+              render: _ => {
+                return {
+                  label: <Txt bold>{_.email}</Txt>,
+                  value: _.email,
+                }
+              },
               type: 'string',
             },
             {
               width: 110,
               id: 'createdAt',
               head: m.createdAt,
-              renderValue: _ => _.createdAt,
-              render: _ => <Txt color="hint">{formatDate(_.createdAt)}</Txt>,
               type: 'date',
+              render: _ => {
+                return {
+                  label: <Txt color="hint">{formatDate(_.createdAt)}</Txt>,
+                  value: _.createdAt,
+                }
+              },
             },
             {
               width: 140,
               id: 'lastConnectedAt',
               head: m.lastConnectedAt,
-              renderValue: _ => _.lastConnectedAt,
-              render: _ => _.lastConnectedAt && <Txt color="hint">{formatDateTime(_.lastConnectedAt)}</Txt>,
+              render: _ => {
+                return {
+                  label: _.lastConnectedAt && <Txt color="hint">{formatDateTime(_.lastConnectedAt)}</Txt>,
+                  value: _.lastConnectedAt,
+                }
+              },
               type: 'date',
             },
             {
@@ -98,8 +111,10 @@ export const AdminUsers = () => {
               width: 10,
               align: 'center',
               head: m.admin,
-              renderValue: _ => _.admin ? 'true' : 'false',
-              render: _ => _.admin && <TableIcon color="success">check_circle</TableIcon>,
+              render: _ => ({
+                label: _.admin && <TableIcon color="success">check_circle</TableIcon>,
+                value: _.admin ? 'true' : 'false',
+              }),
               options: () => [{value: 'true', label: m.yes}, {value: 'false', label: m.no}]
             },
             {
@@ -114,7 +129,7 @@ export const AdminUsers = () => {
                   onClick={() => connectAs(_.email)}
                   tooltip={m.connectAs}
                 />
-              ),
+              )
             },
           ]}
         />
