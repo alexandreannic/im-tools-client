@@ -101,6 +101,7 @@ export class AiFslcData {
               'Value per unit': amount,
               'Currency': 'UAH',
               'Frequency': 'One-off',
+              'Households': grouped.length,
               'Total Individuals Reached': grouped.sum(_ => _.ben_det_hh_size ?? 0),
               'New unique Individuals Reached': grouped.sum(_ => _.ben_det_hh_size ?? 0),
               'Girls': desagreg['0 - 17']?.Female,
