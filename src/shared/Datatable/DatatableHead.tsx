@@ -3,7 +3,7 @@ import {Box, Checkbox} from '@mui/material'
 import React from 'react'
 import {TableIcon, TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import {DatatableContext} from '@/shared/Datatable/context/DatatableContext'
-import {DatatableColumnProps, DatatableRow} from '@/shared/Datatable/util/datatableType'
+import {DatatableColumn, DatatableRow} from '@/shared/Datatable/util/datatableType'
 
 export const DatatableHead = (() => {
   const Component = <T extends DatatableRow>({
@@ -108,7 +108,7 @@ export const DatatableHeadContent = ({
   onOpenFilter,
   onOpenStats,
 }: {
-  column: DatatableColumnProps<any>
+  column: DatatableColumn.InnerProps<any>
   onOpenFilter: (e: any) => void
   onOpenStats: (e: any) => void
   active?: boolean

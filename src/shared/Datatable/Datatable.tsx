@@ -9,7 +9,7 @@ import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Datatable/util/generateXLSFile'
 import {DatatableBody} from './DatatableBody'
 import {DatatableHead} from './DatatableHead'
-import {DatatableColumn, DatatableRow, DatatableTableProps} from '@/shared/Datatable/util/datatableType'
+import {DatatableColumn, DatatableRow, DatatableTableProps,} from '@/shared/Datatable/util/datatableType'
 import {DatatableProvider, useDatatableContext} from '@/shared/Datatable/context/DatatableContext'
 import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
@@ -34,35 +34,31 @@ export const Datatable = <T extends DatatableRow = DatatableRow>({
   defaultFilters,
   ...props
 }: DatatableTableProps<T>) => {
-  const innerColumns: DatatableColumn.InnerProps<T>[] = useMemo(() => {
+  const innerColumns = useMemo(() => {
     return columns.map(col => {
-      if (DatatableColumn.isLong(col)) {
-        return col
+      if(DatatableColumn.isQuick(col)) {
+        col.render = ((_: T) => {
+          col
+          return {
+            label:
+          }
+        }
       }
-      const w: DatatableColumn.InnerProps<T> = {
-        ...col,
-        render: (_: T) => ({
-          label: col.render!(_) as any,
-          value: col.render!(_) as any,
-          option: col.render!(_) as any,
-        }) as any
-      }
-      return w
-      // return col
-      // if (col.type === 'select_one' || col.type === 'select_multiple') {
-      //   return {
-      //     ...col,
-      //     type: col.type as any,
-      //     renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id]),
-      //     renderOption: col.renderOption ?? col.render,
-      //     renderExport: col.renderExport === false ? false : col.renderExport ?? col.renderValue ?? col.render as any,
-      //   }
-      // }
-      // return {
-      //   ...col,
-      //   type: col.type,
-      //   renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id])
-      // }
+      // @ts-ignore
+      col.render = ((_: T) => {
+        const res = externRender(_)
+        // @ts-ignore
+        if (DatatableColumn.isQuick(res)) {
+          console.log('long', col.type, col.id, res)
+          returnres.
+        }
+        return {
+          value: res,
+          label: res,
+          tooltip: res,
+        } as ReturnType<DatatableColumn.InnerProps<T>['render']>
+      })
+      return col as DatatableColumn.InnerProps<T>
     })
   }, [columns])
 
@@ -111,24 +107,24 @@ const _Datatable = <T extends DatatableRow>({
         datatableName: 'data',
         data: ctx.data.filteredAndSortedData,
         schema: ctx.columns as any
-          // .filter(_ => _.renderExport !== false)
-          // .map((q, i) => ({
-          //   head: q.head as string ?? q.id,
-          //   render: (row: any) => {
-          //     // if (!q.renderExport || !q.renderValue) return
-          //     if (q.renderExport === true) return fnSwitch(q.type!, {
-          //       number: () => map(row[q.id], _ => +_),
-          //       date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
-          //     }, () => row[q.id])
-          //     if (q.renderExport) {
-          //       return q.renderExport(row)
-          //     }
-          //     if (q.renderValue) {
-          //       return q.renderValue(row)
-          //     }
-          //     return row[q.id]
-          //   }
-          // })),
+        // .filter(_ => _.renderExport !== false)
+        // .map((q, i) => ({
+        //   head: q.head as string ?? q.id,
+        //   render: (row: any) => {
+        //     // if (!q.renderExport || !q.renderValue) return
+        //     if (q.renderExport === true) return fnSwitch(q.type!, {
+        //       number: () => map(row[q.id], _ => +_),
+        //       date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
+        //     }, () => row[q.id])
+        //     if (q.renderExport) {
+        //       return q.renderExport(row)
+        //     }
+        //     if (q.renderValue) {
+        //       return q.renderValue(row)
+        //     }
+        //     return row[q.id]
+        //   }
+        // })),
       })
     }
   }

@@ -1,12 +1,12 @@
 import {Badge, Checkbox, Icon, IconButtonProps, Menu, MenuItem, Tooltip} from '@mui/material'
 import React from 'react'
 import {IconBtn, Txt} from 'mui-extension'
-import {DatatableColumnProps} from '@/shared/Datatable/util/datatableType'
+import {DatatableColumn} from '@/shared/Datatable/util/datatableType'
 
 interface Props extends Omit<IconButtonProps, 'onChange'> {
   // Hack because there is no way to make TS understand that the key of an object can
   // only be a string ({[key: string]: string} does not work...)
-  columns: DatatableColumnProps<any>[]
+  columns: DatatableColumn.InnerProps<any>[]
   hiddenColumns: string[]
   onChange: (_: string[]) => void
   title?: string

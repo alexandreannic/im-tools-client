@@ -19,7 +19,7 @@ export const DatatableModal = () => {
             title={column.head}
             anchorEl={popover.event.target}
             columnId={id}
-            renderValue={column.renderValue}
+            renderValue={(_: any) => column.render(_).value}
             options={ctx.options(id)}
             type={column.type}
             orderBy={ctx.data.search.orderBy}
@@ -52,7 +52,7 @@ export const DatatableModal = () => {
             return <NumberChoicesPopover
               anchorEl={popover.event.target}
               question={id}
-              mapValues={column.renderValue}
+              mapValues={(_: any) => column.render(_).value as any}
               data={ctx.data.filteredData ?? []}
               onClose={ctx.modal.statsPopover.close}
             />
@@ -61,7 +61,7 @@ export const DatatableModal = () => {
               <DatesPopover
                 anchorEl={popover.event.target}
                 title={column.head ?? id}
-                getValue={column.renderValue}
+                getValue={(_: any) => column.render(_).value as any}
                 data={ctx.data.filteredData ?? []}
                 onClose={ctx.modal.statsPopover.close}
               />
@@ -73,7 +73,7 @@ export const DatatableModal = () => {
               translations={ctx.options(id)}
               anchorEl={popover.event.target}
               multiple={column.type === 'select_multiple'}
-              getValue={column.renderValue as any}
+              getValue={(_: any) => column.render(_).value as any}
               title={column.head}
               data={ctx.data.filteredData ?? []}
               onClose={ctx.modal.statsPopover.close}

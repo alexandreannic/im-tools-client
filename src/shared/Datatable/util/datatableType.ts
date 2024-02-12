@@ -1,6 +1,5 @@
 import React, {CSSProperties, ReactNode} from 'react'
 import {BoxProps} from '@mui/material'
-import {NonNullableKeys} from '@/utils/utilsType'
 import {KeyOf} from '@/core/type/generic'
 import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 
@@ -70,14 +69,14 @@ export interface DatatableTableProps<T extends DatatableRow, K extends string = 
 
 export namespace DatatableColumn {
 
-  export type RenderExport = null | string | number | undefined | Date
-  export type RenderTooltip = null | string | undefined
-  export type RenderT<T, TOption = never> = {
+  export type Value = string[] | string | undefined | Date | number | null | boolean
+
+  export type RenderT<T extends Value, TOption = any> = {
     label: ReactNode
-    option: TOption
+    option?: TOption
     value: T
-    tooltip?: RenderTooltip
-    export?: RenderExport
+    tooltip?: string | undefined | null
+    export?: null | string | number | undefined | Date
   }
 
   export interface Base<T extends DatatableRow, K extends string = string> {
@@ -99,13 +98,6 @@ export namespace DatatableColumn {
   export namespace SelectOne {
     export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
     export type Render<T extends DatatableRow> = (_: T) => RenderT<string | undefined, ReactNode>
-    // export type Render<T extends DatatableRow> = (_: T) => ({
-    //   label: ReactNode
-    //   option: ReactNode
-    //   value: string | undefined
-    //   tooltip?: RenderTooltip
-    //   export?: RenderExport
-    // })
     export type InnerType<T extends DatatableRow> = {
       type: 'select_one'
       options?: () => DatatableOptions[]
@@ -114,19 +106,16 @@ export namespace DatatableColumn {
     export type Type<T extends DatatableRow> = {
       type: 'select_one'
       options?: () => DatatableOptions[]
-      render: RenderShort<T> | Render<T>
-    }
+    } & ({
+      renderQuick: Render<T>
+    } | {
+      render: RenderShort<T>
+    })
   }
 
   export namespace SelectMultiple {
     export type RenderShort<T extends DatatableRow> = (_: T) => string[]
-    export type Render<T extends DatatableRow> = (_: T) => ({
-      label: ReactNode
-      option: ReactNode
-      value: string[]
-      tooltip?: RenderTooltip
-      export?: RenderExport
-    })
+    export type Render<T extends DatatableRow> = (_: T) => RenderT<string[], ReactNode>
     export type InnerType<T extends DatatableRow> = {
       type: 'select_multiple'
       render: Render<T>
@@ -134,21 +123,19 @@ export namespace DatatableColumn {
     }
     export type Type<T extends DatatableRow> = {
       type: 'select_multiple'
-      render: RenderShort<T> | Render<T>
       options?: () => DatatableOptions[]
-    }
+    } & ({
+      renderQuick: Render<T>
+    } | {
+      render: RenderShort<T>
+    })
   }
 
   export namespace Undefined {
     export type RenderShort<T extends DatatableRow> = (_: T) => ReactNode
     export type InnerType<T extends DatatableRow> = {
       type?: undefined
-      render: (_: T) => ({
-        tooltip?: RenderTooltip
-        export?: RenderExport
-        label: ReactNode
-        value: undefined
-      })
+      render: (_: T) => RenderT<undefined>
     }
     export type Type<T extends DatatableRow> = {
       type?: undefined
@@ -158,56 +145,59 @@ export namespace DatatableColumn {
 
   export namespace Text {
     export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
-    export type Render<T extends DatatableRow> = (_: T) => ({
-      label: ReactNode
-      value: string | undefined
-      tooltip?: RenderTooltip
-      export?: RenderExport
-    })
+    export type Render<T extends DatatableRow> = (_: T) => RenderT<string | undefined>
     export type InnerType<T extends DatatableRow> = {
       type?: 'string'
       render: Render<T>
     }
     export type Type<T extends DatatableRow> = {
       type?: 'string'
-      render: RenderShort<T> | Render<T>
-    }
+    } & ({
+      renderQuick: Render<T>
+    } | {
+      render: RenderShort<T>
+    })
   }
 
   export namespace Date {
     export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
-    export type Render<T extends DatatableRow> = (_: T) => ({
-      label: ReactNode
-      value: Date | undefined
-      tooltip?: RenderTooltip
-      export?: RenderExport
-    })
+    export type Render<T extends DatatableRow> = (_: T) => RenderT<Date | undefined>
     export type InnerType<T extends DatatableRow> = {
       type: 'date'
       render: Render<T>
     }
     export type Type<T extends DatatableRow> = {
       type: 'date'
-      render: RenderShort<T> | Render<T>
-    }
+    } & ({
+      renderQuick: Render<T>
+    } | {
+      render: RenderShort<T>
+    })
   }
 
   export namespace Number {
+    export type RenderShort<T extends DatatableRow> = (_: T) => number | undefined
     export type InnerType<T extends DatatableRow> = {
       type: 'number'
-      render: (_: T) => ({
-        label: ReactNode
-        value: number | undefined
-        tooltip?: RenderTooltip
-        export?: RenderExport
-      })
+      render: (_: T) => RenderT<number | undefined>
     }
     export type Type<T extends DatatableRow> = {
       type: 'number'
-      render?: (_: T) => number | undefined
-    }
+    } & ({
+      renderQuick: RenderShort<T>
+    } | {
+      render: RenderShort<T>
+    })
   }
 
+  export type InnerProps<T extends DatatableRow, K extends string = string> = Base<T, K> & (
+    Text.InnerType<T> |
+    SelectOne.InnerType<T> |
+    Date.InnerType<T> |
+    Number.InnerType<T> |
+    SelectMultiple.InnerType<T> |
+    Undefined.InnerType<T>
+    )
   export type Props<T extends DatatableRow, K extends string = string> = Base<T, K> & (
     Text.Type<T> |
     SelectOne.Type<T> |
@@ -216,17 +206,9 @@ export namespace DatatableColumn {
     SelectMultiple.Type<T> |
     Undefined.Type<T>
     )
-  export type InnerProps<T extends DatatableRow, K extends string = string> = Base<T, K> & (
-    Text.InnerType<T> |
-    SelectOne.InnerType<T> |
-    Date.InnerType<T> |
-    Number.InnerType<T> |
-    SelectMultiple.InnerType<T> |
-    Undefined.Type<T>
-    )
 
-  export const isLong = (_: Props<any>): _ is InnerProps<any> => {
-    return typeof (_ as any).render({}) === 'object'
+  export const isQuick = (_: Props<any>): _ is InnerProps<any> => {
+    return !!(_ as any).renderQuick
   }
 }
 

@@ -37,7 +37,7 @@ export const DatatableBody = (() => {
               const render = _.render(item)
               return (
                 <td
-                  title={render.tooltip !== null ? (_.tooltip?.(item) ?? (render as any)) : undefined}
+                  title={render.tooltip as any}
                   key={i}
                   style={_.style?.(item)}
                   onClick={_.onClick ? () => _.onClick?.(item) : undefined}
@@ -51,7 +51,7 @@ export const DatatableBody = (() => {
                     }, _ => '')
                   ].join(' ')}
                 >
-                  {render}
+                  {JSON.stringify(render.label)}
                 </td>
               )
             })}
