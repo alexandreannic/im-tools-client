@@ -84,6 +84,7 @@ export const AiFslc = () => {
           {type: 'number', id: 'Value per unit', head: 'Value per unit', render: row => row.activity['Value per unit']},
           {type: 'select_one', id: 'Currency', head: 'Currency', render: row => row.activity['Currency']},
           {type: 'select_one', id: 'Frequency', head: 'Frequency', render: row => row.activity['Frequency']},
+          {type: 'number', id: 'Households', head: 'Households', render: row => row.activity['Households']},
           {type: 'number', id: 'Total Individuals Reached', head: 'Total Individuals Reached', render: row => row.activity['Total Individuals Reached']},
           {type: 'number', id: 'New unique Individuals Reached', head: 'New unique Individuals Reached', render: row => row.activity['New unique Individuals Reached']},
           {type: 'number', id: 'Girls', head: 'Girls', render: row => row.activity['Girls']},

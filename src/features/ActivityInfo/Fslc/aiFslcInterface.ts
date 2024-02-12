@@ -29,6 +29,8 @@ export namespace AiTypeFslc {
     'Value per unit'?: number,
     'Currency'?: Opt<'Currency'>,
     'Frequency'?: Opt<'Frequency'>,
+    // Informative, not reported
+    'Households': number,
     'Total Individuals Reached': number,
     'New unique Individuals Reached': number,
     'Girls': number,
