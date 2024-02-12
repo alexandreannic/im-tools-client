@@ -81,9 +81,9 @@ export const ProtectionDashboardMonitoPN = ({
                 type: 'select_one',
                 id: 'need',
                 head: m.priorityNeeds,
-                render: _ => <Txt bold>{Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need}</Txt>,
-                renderValue: _ => Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need,
-                renderOption: _ => Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need,
+                render: _ => <Txt bold>{Protection_hhs3.options.what_is_your_1_priority[_.need] ?? _.need}</Txt>,
+                renderValue: _ => Protection_hhs3.options.what_is_your_1_priority[_.need] ?? _.need,
+                renderOption: _ => Protection_hhs3.options.what_is_your_1_priority[_.need] ?? _.need,
               },
               {
                 type: 'number',
