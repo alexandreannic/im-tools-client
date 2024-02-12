@@ -3,27 +3,35 @@ import React, {ReactNode, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {makeSx} from '@/core/theme'
 
-type Option<T extends string | number = string> = {
+export type IpSelectOption<T extends string | number = string> = {
   value: T,
   children: ReactNode,
   key?: string
 }
 
-export type IpSelectSingleProps<T extends string | number = string> = {
+type TType = string | number
+
+export type IpSelectSingleBaseProps<T extends TType = string> = Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> & {
   label?: ReactNode
-  options: Option<T>[] | string[]
+  options: IpSelectOption<T>[] | string[]
   sx?: SxProps<Theme>
   defaultValue?: T
   value?: T | null
   multiple?: false
   hideNullOption?: boolean
-} & Pick<FormControlProps, 'placeholder' | 'disabled' | 'id'> & ({
+}
+
+export type IpSelectSingleNullableProps<T extends TType = string> = IpSelectSingleBaseProps<T> & {
   hideNullOption?: false
   onChange: (t: T | null, e: any) => void
-} | {
+}
+
+export type IpSelectSingleNonNullableProps<T extends TType = string> = IpSelectSingleBaseProps<T> & {
   hideNullOption: true
   onChange: (t: T, e: any) => void
-})
+}
+
+export type IpSelectSingleProps<T extends TType = string> = IpSelectSingleNonNullableProps<T> | IpSelectSingleNullableProps<T>
 
 const style = makeSx({
   item: {
@@ -34,7 +42,7 @@ const style = makeSx({
 
 const IGNORED_VALUE_EMPTY = ''
 
-export const IpSelectSingle = <T extends string | number>({
+export const IpSelectSingle = <T extends TType>({
   defaultValue,
   hideNullOption,
   label,
@@ -51,9 +59,9 @@ export const IpSelectSingle = <T extends string | number>({
   const options = useMemo(() => {
     const _options = props.options ?? []
     if (typeof _options[0] === 'string') {
-      return props.options.map(_ => ({value: _, children: _})) as Option<T>[]
+      return props.options.map(_ => ({value: _, children: _})) as IpSelectOption<T>[]
     }
-    return _options as Option<T>[]
+    return _options as IpSelectOption<T>[]
   }, [props.options])
 
   return (

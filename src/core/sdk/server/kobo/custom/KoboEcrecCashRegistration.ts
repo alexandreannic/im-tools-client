@@ -1,11 +1,5 @@
 import {KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
-
-export enum EcrecCashRegistrationPaymentStatus {
-  Paid = 'Paid',
-  Rejected = 'Rejected',
-  InternallyReferred = 'InternallyReferred',
-  Received = 'Received',
-}
+import {CashStatus} from '@/shared/customInput/SelectCashStatus'
 
 export enum EcrecCashRegistrationProgram {
   CashforAnimalFeed = 'CashforAnimalFeed',
@@ -13,7 +7,7 @@ export enum EcrecCashRegistrationProgram {
 }
 
 export interface EcrecCashRegistrationTags extends KoboBaseTags {
-  status?: EcrecCashRegistrationPaymentStatus
+  status?: CashStatus
   paidUah?: number
   program?: EcrecCashRegistrationProgram
 }

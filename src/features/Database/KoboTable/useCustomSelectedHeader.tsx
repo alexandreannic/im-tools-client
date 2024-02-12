@@ -6,17 +6,21 @@ import {KoboAnswerId} from '@/core/sdk/server/kobo/Kobo'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {currentProtectionProjects} from '@/core/sdk/server/kobo/custom/KoboProtection'
 import {KoboIndex} from '@/core/KoboIndex'
+import {SelectCashStatus} from '@/shared/customInput/SelectCashStatus'
 
 export const useCustomSelectedHeader = (selectedIds: KoboAnswerId[]): ReactNode => {
   const ctx = useDatabaseKoboTableContext()
   const {m} = useI18n()
   return useMemo(() => {
     const extra: Record<string, ReactNode> = {
-      // [KoboIndex.byName('ecrec_cashRegistration').id]: {
-      //   return (
-      //
-      //   )
-      // },
+      [KoboIndex.byName('ecrec_cashRegistration').id]: (
+        <SelectCashStatus
+          disabled={!ctx.canEdit}
+          sx={{maxWidth: 120}}
+          placeholder={m.project}
+          onChange={_ => ctx.asyncUpdateTag.call({answerIds: selectedIds, value: _, key: 'status'})}
+        />
+      ),
       [KoboIndex.byName('protection_communityMonitoring').id]: (
         <IpSelectSingle
           hideNullOption
