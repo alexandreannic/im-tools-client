@@ -12,7 +12,6 @@ import {useRouter} from 'next/router'
 import {seq} from '@alexandreannic/ts-utils'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Datatable} from '@/shared/Datatable/Datatable'
-import {Utils} from '@/utils/utils'
 
 export const AdminUsers = () => {
   const {api, conf} = useAppSettings()
