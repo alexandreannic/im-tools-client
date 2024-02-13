@@ -146,7 +146,6 @@ export const ShelterDashboard = () => {
 
   const filteredData = useMemo(() => {
     if (!filteredByDate) return
-    console.log('good', {filteredByDate, filterShape, filters})
     return DataFilter.filterData(filteredByDate, filterShape, filters)
   }, [ctx.data, filters, filterShape,])
 

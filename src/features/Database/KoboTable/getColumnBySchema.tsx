@@ -56,7 +56,7 @@ export const getColumnByQuestionSchema = <T extends Record<string, any | undefin
 }: GetColumnBySchemaProps<T> & {
   q: KoboQuestionSchema,
   getRow?: (_: T) => KoboMappedAnswer
-}): DatatableColumn.Props<any>[] => {
+}): DatatableColumn.Props<T>[] => {
   const {
     getId,
     getHead,
@@ -79,7 +79,7 @@ export const getColumnByQuestionSchema = <T extends Record<string, any | undefin
     id: getId(q),
     head: Utils.removeHtml(getHead(translateQuestion(q.name))),
   }
-  const res: DatatableColumn.Props<T>[] | DatatableColumn.Props<T> = (() => {
+  const res: DatatableColumn.Props<T>[] | DatatableColumn.Props<T> | undefined = (() => {
     switch (q.type) {
       case 'image': {
         return {
@@ -141,11 +141,12 @@ export const getColumnByQuestionSchema = <T extends Record<string, any | undefin
           renderQuick: row => getVal(row, q.name) as string,
         }
       }
-      case 'date':
+      case 'end':
+      case 'start':
+        return
       case 'datetime':
       case 'today':
-      case 'start':
-      case 'end': {
+      case 'date': {
         return {
           ...common,
           type: 'date',
@@ -261,7 +262,7 @@ export const getColumnByQuestionSchema = <T extends Record<string, any | undefin
       }
     }
   })()
-  return [res].flat()
+  return [res].flat().filter(_ => _ !== undefined) as DatatableColumn.Props<T>[]
 }
 
 

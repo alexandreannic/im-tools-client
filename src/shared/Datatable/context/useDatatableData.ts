@@ -138,7 +138,6 @@ const filterBy = <T extends DatatableRow>({
         return row => {
           const typedFilter = filter as DatatableFilterValueSelect
           const v = col.render(row).value as string
-          console.log(col.render(row), v)
           if (v === undefined) return false
           return (typedFilter).includes(v)
         }

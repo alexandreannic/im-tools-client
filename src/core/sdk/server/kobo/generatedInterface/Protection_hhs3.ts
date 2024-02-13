@@ -3617,9 +3617,7 @@ export namespace Protection_hhs3 {
     why_are_planning_to_relocate_from_your_current_place_of_residence: _.why_are_planning_to_relocate_from_your_current_place_of_residence?.split(' '),
     as_nonUkrainian_do_you_have_documentation: _.as_nonUkrainian_do_you_have_documentation?.split(' '),
     hh_char_hh_doc: _.hh_char_hh_doc?.map(extractQuestionName).map((_: any) => {
-      console.log(_.does_lack_doc)
       _['does_lack_doc'] = _.does_lack_doc?.split(' ')
-      console.log(_.does_lack_doc)
       return _
     }),
     do_you_have_any_of_the_following: _.do_you_have_any_of_the_following?.split(' '),

@@ -155,7 +155,6 @@ export const MinusRusChartPanel = () => {
             }), {}),
           }
         })
-        console.log(gb)
         if (minusRusCurveType === 'cumulative') return res
         return res.filter((_, i) => i > 0).map((_, i) => ({
           ..._,
