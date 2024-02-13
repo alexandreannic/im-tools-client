@@ -1,27 +1,26 @@
 import {Badge, Box, Icon, LinearProgress, TablePagination,} from '@mui/material'
-import React, {useEffect, useMemo} from 'react'
+import React, {isValidElement, useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {Utils} from '@/utils/utils'
 import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {IpIconBtn} from '../IconBtn'
 import {useMemoFn} from '@alexandreannic/react-hooks-lib'
-import {generateXLSFromArray} from '@/shared/Sheet/util/generateXLSFile'
-import {SheetBody} from './SheetBody'
-import {SheetHead} from './SheetHead'
-import {SheetRow, SheetTableProps} from '@/shared/Sheet/util/sheetType'
-import {format} from 'date-fns'
-import {SheetProvider, useSheetContext} from '@/shared/Sheet/context/SheetContext'
-import {DatatableColumnToggle} from '@/shared/Sheet/DatatableColumnsToggle'
+import {generateXLSFromArray} from '@/shared/Datatable/util/generateXLSFile'
+import {DatatableBody} from './DatatableBody'
+import {DatatableHead} from './DatatableHead'
+import {DatatableColumn, DatatableRow, DatatableTableProps,} from '@/shared/Datatable/util/datatableType'
+import {DatatableProvider, useDatatableContext} from '@/shared/Datatable/context/DatatableContext'
+import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
-import {SheetModal} from '@/shared/Sheet/SheetModal'
-import {SheetErrorBoundary} from '@/shared/Sheet/SheetErrorBundary'
-import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
-import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
+import {DatatableModal} from '@/shared/Datatable/DatatableModal'
+import {DatatableErrorBoundary} from '@/shared/Datatable/DatatableErrorBundary'
+import {DatatableUtils} from '@/shared/Datatable/util/datatableUtils'
+import {DatatableSkeleton} from '@/shared/Datatable/DatatableSkeleton'
 import {useAsync} from '@/shared/hook/useAsync'
+import {format} from 'date-fns'
 
-/** @deprecated use <Datatable/> */
-export const Sheet = <T extends SheetRow = SheetRow>({
+export const Datatable = <T extends DatatableRow = DatatableRow>({
   total,
   data,
   columns,
@@ -35,31 +34,35 @@ export const Sheet = <T extends SheetRow = SheetRow>({
   onDataChange,
   defaultFilters,
   ...props
-}: SheetTableProps<T>) => {
-  const mappedColumns = useMemo(() => {
+}: DatatableTableProps<T>) => {
+  const innerColumns = useMemo(() => {
     return columns.map(col => {
-      if (col.type === 'select_one' || col.type === 'select_multiple') {
-        return {
-          ...col,
-          type: col.type as any,
-          renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id]),
-          renderOption: col.renderOption ?? col.render,
-          renderExport: col.renderExport === false ? false : col.renderExport ?? col.renderValue ?? col.render as any,
+      if (DatatableColumn.isQuick(col)) {
+        if (col.type === undefined) {
+          (col as unknown as DatatableColumn.InnerProps<T>).render = (_: T) => {
+            const val = col.renderQuick(_) as any
+            return {label: val, value: undefined}
+          }
+        } else {
+          (col as unknown as DatatableColumn.InnerProps<T>).render = (_: T) => {
+            const val = col.renderQuick(_) as any
+            return {
+              label: val,
+              tooltip: val,
+              value: val,
+            }
+          }
         }
       }
-      return {
-        ...col,
-        type: col.type,
-        renderValue: col.renderValue ?? col.render as any ?? ((_: T) => _[col.id])
-      }
+      return col as DatatableColumn.InnerProps<T>
     })
   }, [columns])
 
   return (
-    <SheetErrorBoundary>
-      <SheetProvider
+    <DatatableErrorBoundary>
+      <DatatableProvider
         id={props.id}
-        columns={mappedColumns}
+        columns={innerColumns}
         data={data}
         defaultLimit={defaultLimit}
         select={select}
@@ -68,16 +71,16 @@ export const Sheet = <T extends SheetRow = SheetRow>({
         onDataChange={onDataChange}
         defaultFilters={defaultFilters}
       >
-        <_Sheet
+        <_Datatable
           rowsPerPageOptions={rowsPerPageOptions}
           {...props}
         />
-      </SheetProvider>
-    </SheetErrorBoundary>
+      </DatatableProvider>
+    </DatatableErrorBoundary>
   )
 }
 
-const _Sheet = <T extends SheetRow>({
+const _Datatable = <T extends DatatableRow>({
   header,
   id,
   showExportBtn,
@@ -88,8 +91,8 @@ const _Sheet = <T extends SheetRow>({
   title,
   onClickRows,
   ...props
-}: Pick<SheetTableProps<T>, 'onClickRows' | 'hidePagination' | 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
-  const ctx = useSheetContext()
+}: Pick<DatatableTableProps<T>, 'onClickRows' | 'hidePagination' | 'id' | 'title' | 'showExportBtn' | 'rowsPerPageOptions' | 'renderEmptyState' | 'header' | 'loading' | 'sx'>) => {
+  const ctx = useDatatableContext()
   const _generateXLSFromArray = useAsync(generateXLSFromArray)
   useEffect(() => ctx.select?.onSelect(ctx.selected.toArray), [ctx.selected.get])
   const {m} = useI18n()
@@ -97,25 +100,19 @@ const _Sheet = <T extends SheetRow>({
   const exportToCSV = () => {
     if (ctx.data.filteredAndSortedData) {
       _generateXLSFromArray.call(Utils.slugify(title) ?? 'noname', {
-        sheetName: 'data',
+        datatableName: 'data',
         data: ctx.data.filteredAndSortedData,
         schema: ctx.columns
-          .filter(_ => _.renderExport !== false)
+          .filter(_ => _.noCsvExport !== true)
           .map((q, i) => ({
             head: q.head as string ?? q.id,
             render: (row: any) => {
-              // if (!q.renderExport || !q.renderValue) return
-              if (q.renderExport === true) return fnSwitch(q.type!, {
-                number: () => map(row[q.id], _ => +_),
-                date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
-              }, () => row[q.id])
-              if (q.renderExport) {
-                return q.renderExport(row)
-              }
-              if (q.renderValue) {
-                return q.renderValue(row)
-              }
-              return row[q.id]
+              const rendered = q.render(row)
+              let value = rendered.export ?? rendered.label
+              if (isValidElement(value)) value = Utils.extractInnerText(value)
+              if (value instanceof Date) value = format(value, 'yyyy-MM-dd hh:mm:ss')
+              if (!isNaN(value as any)) value = +(value as number)
+              return value as any
             }
           })),
       })
@@ -124,7 +121,7 @@ const _Sheet = <T extends SheetRow>({
 
   const filterCount = useMemoFn(ctx.data.filters, _ => Enum.keys(_).length)
 
-  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], {storageKey: SheetUtils.localStorageKey.column + id})
+  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>([], {storageKey: DatatableUtils.localStorageKey.column + id})
   const filteredColumns = useMemo(() => ctx.columns.filter(_ => !hiddenColumns.includes(_.id)), [ctx.columns, hiddenColumns])
 
   return (
@@ -196,7 +193,7 @@ const _Sheet = <T extends SheetRow>({
           // width: 'max-coontent'
         }}>
           <Box id={id} component="table" className="borderY table" sx={{minWidth: '100%'}}>
-            <SheetHead
+            <DatatableHead
               data={ctx.data.filteredSortedAndPaginatedData?.data}
               search={ctx.data.search}
               filters={ctx.data.filters}
@@ -210,7 +207,7 @@ const _Sheet = <T extends SheetRow>({
             <tbody>
             {map(ctx.data.filteredSortedAndPaginatedData, data => {
               return data.data.length > 0 ? (
-                <SheetBody
+                <DatatableBody
                   onClickRows={onClickRows}
                   data={data.data}
                   select={ctx.select}
@@ -236,7 +233,7 @@ const _Sheet = <T extends SheetRow>({
       {loading && (ctx.data.data ? (
         <LinearProgress sx={{position: 'absolute', left: 0, right: 0, top: 0}}/>
       ) : (
-        <SheetSkeleton/>
+        <DatatableSkeleton/>
       ))}
       {!hidePagination && (
         <TablePagination
@@ -253,7 +250,7 @@ const _Sheet = <T extends SheetRow>({
           }}
         />
       )}
-      <SheetModal/>
+      <DatatableModal/>
     </Box>
   )
 }
