@@ -31,7 +31,7 @@ export const kobo = {
       shelter_ta: 'aTP5nwZjpyR7oy7bdMZktC',
       shelter_north: 'aCPdwVnnsYeReynJ7YnLGH',
       protection_hhs2_1: 'aQDZ2xhPUnNd43XzuQucVR',
-      protection_hhs3: 'aELsEdoTp3gNXgcmcMGKhK',
+      protection_hhs3: 'aDmHHT6QzBSwwy9WZcTRrM',
       protection_communityMonitoring: 'aQHBhYgevdzw8TR2Vq2ZdR',
       protection_groupSession: 'a8Tn94arrSaH2FQBhUa9Zo',
       protection_pss: 'a52hN5iiCW73mxqqfmEAfp',
