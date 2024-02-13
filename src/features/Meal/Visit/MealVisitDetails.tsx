@@ -14,7 +14,6 @@ import {koboImgHelper} from '@/shared/TableImg/KoboAttachedImg'
 import {CompressedImg} from '@/shared/CompressedImg'
 import {useMealVisitContext} from '@/features/Meal/Visit/MealVisitContext'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
-import {Meal_VisitMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Meal_VisitMonitoring'
 
 const urlValidation = yup.object({
   id: yup.string().required()

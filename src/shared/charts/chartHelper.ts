@@ -52,7 +52,9 @@ export class ChartHelper<K extends string = string> {
     filterValue?: K[],
     base?: 'percentOfTotalAnswers' | 'percentOfTotalChoices',
   }): ChartHelper<K> => {
-    const filteredData = data.compact().filter(_ => filterValue ? seq(_).intersect(filterValue).length === 0 : true)
+    const filteredData = data.compact().filter(_ => {
+      return filterValue ? seq(_).intersect(filterValue).length === 0 : true
+    })
     const flatData: K[] = filteredData.flatMap(_ => _)
     const obj = seq(flatData).reduceObject<Record<K, number>>((_, acc) => [_!, (acc[_!] ?? 0) + 1])
     const baseCount = fnSwitch(base!, {

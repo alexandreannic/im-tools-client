@@ -1,8 +1,8 @@
 import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {useI18n} from '@/core/i18n'
 import {Div} from '@/shared/PdfLayout/PdfSlide'
-import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
-import {useEffect, useMemo} from 'react'
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
+import {useMemo} from 'react'
 import {ChartHelper} from '@/shared/charts/chartHelper'
 import {Obj, seq} from '@alexandreannic/ts-utils'
 import {ChartPieWidget} from '@/shared/charts/ChartPieWidget'
@@ -66,7 +66,7 @@ export const ProtectionDashboardMonitoPN = ({
         {mostSelected.byCategory.map(_ =>
           <Panel key={_.label} sx={{flex: 1, mb: 0}}>
             <PanelBody>
-              <ChartPieWidget value={_.value.value} base={mostSelected.total} title={Protection_Hhs2.options.what_is_your_1_priority[_.label]} showValue/>
+              <ChartPieWidget value={_.value.value} base={mostSelected.total} title={Protection_hhs3.options.what_is_your_1_priority[_.label]} showValue/>
             </PanelBody>
           </Panel>
         )}
@@ -81,9 +81,9 @@ export const ProtectionDashboardMonitoPN = ({
                 type: 'select_one',
                 id: 'need',
                 head: m.priorityNeeds,
-                render: _ => <Txt bold>{Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need}</Txt>,
-                renderValue: _ => Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need,
-                renderOption: _ => Protection_Hhs2.options.what_is_your_1_priority[_.need] ?? _.need,
+                render: _ => <Txt bold>{Protection_hhs3.options.what_is_your_1_priority[_.need] ?? _.need}</Txt>,
+                renderValue: _ => Protection_hhs3.options.what_is_your_1_priority[_.need] ?? _.need,
+                renderOption: _ => Protection_hhs3.options.what_is_your_1_priority[_.need] ?? _.need,
               },
               {
                 type: 'number',
@@ -127,39 +127,6 @@ export const ProtectionDashboardMonitoPN = ({
             ]}
           />
         </Panel>
-        {/*<SlidePanel title={m.firstPriorityNeed}>*/}
-        {/*  <ChartBarSingleBy*/}
-        {/*    data={data}*/}
-        {/*    by={_ => _.what_is_your_1_priority}*/}
-        {/*    filter={_ => _.what_is_your_1_priority !== 'unable_unwilling_to_answer'}*/}
-        {/*    label={{*/}
-        {/*      ...Protection_Hhs2.options.what_is_your_1_priority,*/}
-        {/*      health_1_2: m.health,*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*</SlidePanel>*/}
-        {/*<SlidePanel title={m.secondPriorityNeed}>*/}
-        {/*  <ChartBarSingleBy*/}
-        {/*    data={data}*/}
-        {/*    by={_ => _.what_is_your_2_priority}*/}
-        {/*    filter={_ => _.what_is_your_2_priority !== 'unable_unwilling_to_answer'}*/}
-        {/*    label={{*/}
-        {/*      ...Protection_Hhs2.options.what_is_your_2_priority,*/}
-        {/*      health_1_2: m.health,*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*</SlidePanel>*/}
-        {/*<SlidePanel title={m.thirdPriorityNeed}>*/}
-        {/*  <ChartBarSingleBy*/}
-        {/*    data={data}*/}
-        {/*    by={_ => _.what_is_your_3_priority}*/}
-        {/*    filter={_ => _.what_is_your_3_priority !== 'unable_unwilling_to_answer'}*/}
-        {/*    label={{*/}
-        {/*      ...Protection_Hhs2.options.what_is_your_3_priority,*/}
-        {/*      health_1_2: m.health,*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*</SlidePanel>*/}
       </Div>
     </Div>
   )

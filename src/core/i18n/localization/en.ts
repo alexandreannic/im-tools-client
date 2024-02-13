@@ -1,9 +1,7 @@
-import {format, formatDistance, formatDuration as formatDurationFns, sub} from 'date-fns'
-import {externalLinks} from '../../externalLinks'
+import {formatDistance, formatDuration as formatDurationFns} from 'date-fns'
 import {appConfig} from '@/conf/AppConfig'
 import {capitalize} from '@/utils/utils'
 import {OblastIndex, OblastISO} from '@/shared/UkraineMap/oblastIndex'
-import {Period} from '@/core/type/period'
 
 const invalidDate = ''
 

@@ -1,7 +1,7 @@
 import {Box, Icon, Popover} from '@mui/material'
 import React, {useEffect, useState} from 'react'
 import {IpIconBtn} from '@/shared/IconBtn'
-import {Enum, Seq, seq} from '@alexandreannic/ts-utils'
+import {Enum, Seq} from '@alexandreannic/ts-utils'
 import {FilterLayoutProps} from '@/shared/DataFilter/DataFilterLayout'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
 import {IpSelectMultiple} from '@/shared/Select/SelectMultiple'

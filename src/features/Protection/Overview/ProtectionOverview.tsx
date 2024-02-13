@@ -21,7 +21,6 @@ import {ChartLineBy} from '@/shared/charts/ChartLineBy'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {koboFormTranslation} from '@/core/KoboIndex'
 import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
-import {useAppSettings} from '@/core/context/ConfigContext'
 import {ProtectionOverviewFilterCustom} from '@/features/Protection/Overview/ProtectionOverviewFilterCustom'
 
 export const ProtectionOverview = () => {

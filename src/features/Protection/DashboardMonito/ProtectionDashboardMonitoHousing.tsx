@@ -7,7 +7,7 @@ import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
-import {Protection_hhs2_2} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs2_2'
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
 export const ProtectionDashboardMonitoHousing = ({
   data,
@@ -25,7 +25,7 @@ export const ProtectionDashboardMonitoHousing = ({
               data={data}
               by={_ => _.what_is_your_current_housing_structure}
               filter={_ => _.what_is_your_current_housing_structure !== 'unable_unwilling_to_answer'}
-              label={Protection_hhs2_2.options.what_is_your_current_housing_structure}
+              label={Protection_hhs3.options.what_is_your_current_housing_structure}
             />
           </SlidePanel>
           <SlidePanel>
@@ -42,7 +42,7 @@ export const ProtectionDashboardMonitoHousing = ({
               data={data}
               by={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation}
               filter={_ => _.do_you_have_formal_rental_documents_to_stay_in_your_accommodation !== 'unable_unwilling_to_answer'}
-              label={Protection_hhs2_2.options.do_you_have_formal_rental_documents_to_stay_in_your_accommodation}
+              label={Protection_hhs3.options.do_you_have_formal_rental_documents_to_stay_in_your_accommodation}
             />
           </SlidePanel>
         </Div>
@@ -60,14 +60,14 @@ export const ProtectionDashboardMonitoHousing = ({
               data={data}
               by={_ => _.what_are_your_main_concerns_regarding_your_accommodation}
               filterValue={['unable_unwilling_to_answer', 'none']}
-              label={Protection_hhs2_2.options.what_are_your_main_concerns_regarding_your_accommodation}
+              label={Protection_hhs3.options.what_are_your_main_concerns_regarding_your_accommodation}
             />
           </SlidePanel>
           <SlidePanel title={m.accommodationCondition}>
             <ChartBarSingleBy
               data={data}
               by={_ => _.what_is_the_general_condition_of_your_accommodation}
-              label={Protection_hhs2_2.options.what_is_the_general_condition_of_your_accommodation}
+              label={Protection_hhs3.options.what_is_the_general_condition_of_your_accommodation}
               sortBy={ChartHelperOld.sortBy.custom([
                 'sound_condition',
                 'partially_damaged',

@@ -10,9 +10,9 @@ import {Box, Checkbox} from '@mui/material'
 import {Txt} from 'mui-extension'
 import {Enum} from '@alexandreannic/ts-utils'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
-import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
-type Filters = Pick<Record<keyof typeof Protection_Hhs2.options['are_you_separated_from_any_of_your_households_members'], boolean>,
+type Filters = Pick<Record<keyof typeof Protection_hhs3.options['are_you_separated_from_any_of_your_households_members'], boolean>,
   'partner' |
   'child_lt_18' |
   'child_gte_18' |
@@ -77,7 +77,7 @@ export const ProtectionDashboardMonitoFamilyUnity = ({
                 filterValue: ['unable_unwilling_to_answer', 'no'],
                 data: data.map(_ => _.are_you_separated_from_any_of_your_households_members).compact()
               }))
-                .map(ChartHelperOld.setLabel(Protection_Hhs2.options.are_you_separated_from_any_of_your_households_members))
+                .map(ChartHelperOld.setLabel(Protection_hhs3.options.are_you_separated_from_any_of_your_households_members))
                 .get
             }>
               {_ => <ChartBar
@@ -138,7 +138,7 @@ export const ProtectionDashboardMonitoFamilyUnity = ({
                 ...category.other_relative ? [_.where_is_your_other_relative] : [],
               ]).compact(),
               // filterValue: ['unable_unwilling_to_answer']
-            })).map(ChartHelperOld.setLabel(Protection_Hhs2.options.where_is_your_partner)).get
+            })).map(ChartHelperOld.setLabel(Protection_hhs3.options.where_is_your_partner)).get
             }>
               {_ => <ChartBar data={_}/>}
             </Lazy>
@@ -155,7 +155,7 @@ export const ProtectionDashboardMonitoFamilyUnity = ({
                 ...category.other_relative ? [_.where_is_your_other_relative_remain_behind_in_the_area_of_origin] : [],
               ]).compact(),
               // filterValue: ['unable_unwilling_to_answer']
-            })).map(ChartHelperOld.setLabel(Protection_Hhs2.options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
+            })).map(ChartHelperOld.setLabel(Protection_hhs3.options.where_is_your_partner_remain_behind_in_the_area_of_origin)).get
             }>
               {_ => <ChartBar data={_}/>}
             </Lazy>

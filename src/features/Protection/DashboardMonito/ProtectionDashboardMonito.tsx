@@ -18,7 +18,6 @@ import {ProtectionDashboardMonitoDisability} from '@/features/Protection/Dashboa
 import {KoboIndex} from '@/core/KoboIndex'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {DataFilter} from '@/shared/DataFilter/DataFilter'
-import {enrichProtHHS_2_1, ProtHHS2Enrich} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {DashboardFilterOptions} from '@/shared/DashboardLayout/DashboardFilterOptions'
 import LokiDb from 'lokijs'
 import {Messages} from '@/core/i18n/localization/en'
@@ -26,7 +25,9 @@ import {DataFilterLayout} from '@/shared/DataFilter/DataFilterLayout'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
-import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
+import {KoboProtection_hhs3} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
 
 const ProtectionDashboardMonitoPN: any = lazy(() => import('./ProtectionDashboardMonitoPN')
   .then(module => ({
@@ -40,22 +41,24 @@ type CustomFilterOptionFilters = {
 export interface DashboardPageProps {
   periodFilter: Partial<Period>
   optionFilter: CustomFilterOptionFilters & DataFilter.Filter
-  data: Seq<ProtHHS2Enrich>
+  data: Seq<KoboAnswer<KoboProtection_hhs3.T>>
   computed: NonNullable<ReturnType<typeof useProtectionDashboardMonitoData>>
 }
 
 export const ProtectionDashboardMonito = () => {
   const {api} = useAppSettings()
   const {m} = useI18n()
-  const _period = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('protection_hhs2_1').id))
+  const _period = useFetcher(() => api.kobo.answer.getPeriod(KoboIndex.byName('protection_hhs3').id))
   const [periodFilter, setPeriodFilter] = useState<Partial<Period>>({})
 
-  const _answers = useFetcher((filter?: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
+  const req = (filter?: Partial<Period>) => api.kobo.typedAnswers.searchProtection_hhs3({
     filters: {
       start: filter?.start,
       end: filter?.end,
     }
-  }).then(_ => seq(_.data).map(enrichProtHHS_2_1)) as Promise<Seq<ProtHHS2Enrich>>)
+  }).then(_ => seq(_.data))
+
+  const _answers = useFetcher(req)
 
   useEffect(() => {
     _period.fetch()
@@ -71,17 +74,17 @@ export const ProtectionDashboardMonito = () => {
       _answers.fetch({force: true, clean: false}, periodFilter)
   }, [periodFilter])
 
-  const getOption = (p: keyof ProtHHS2Enrich, option: keyof typeof Protection_Hhs2.options = p as any) => () => {
+  const getOption = (p: keyof KoboProtection_hhs3.T, option: keyof typeof Protection_hhs3.options = p as any) => () => {
     return _answers.get
       ?.flatMap(_ => _[p] as any)
       .distinct(_ => _)
       .compact()
-      .map((_: any) => ({value: _, label: (Protection_Hhs2.options[option] as any)[_]}))
+      .map((_: any) => ({value: _, label: (Protection_hhs3.options[option] as any)[_]}))
       .sortByString(_ => _.label ?? '', 'a-z')
   }
 
   const filterShape = useMemo(() => {
-    return DataFilter.makeShape<ProtHHS2Enrich>({
+    return DataFilter.makeShape<KoboProtection_hhs3.T>({
       staff_to_insert_their_DRC_office: {
         getValue: _ => _.staff_to_insert_their_DRC_office,
         icon: 'business',
@@ -107,8 +110,8 @@ export const ProtectionDashboardMonito = () => {
         label: m.typeOfSite
       },
       hh_sex_1: {
-        getValue: _ => _.hh_sex_1,
-        getOptions: getOption('hh_sex_1'),
+        getValue: _ => _.persons?.[0]?.gender,
+        getOptions: () => DataFilter.buildOptionsFromObject(Person.Gender),
         icon: 'female',
         label: m.respondent
       },
@@ -139,7 +142,7 @@ export const ProtectionDashboardMonito = () => {
 
   const database = useMemo(() => {
     if (!_answers.get) return
-    const loki = new LokiDb(KoboIndex.byName('protection_hhs2_1').id, {
+    const loki = new LokiDb(KoboIndex.byName('protection_hhs3').id, {
       persistenceMethod: 'memory',
     })
     const table = loki.addCollection('data', {
@@ -148,7 +151,6 @@ export const ProtectionDashboardMonito = () => {
         'where_are_you_current_living_oblast',
         'what_is_your_area_of_origin_oblast',
         'type_of_site',
-        'hh_sex_1',
         'do_you_identify_as_any_of_the_following',
         'what_is_the_type_of_your_household',
         'do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household',
@@ -160,12 +162,12 @@ export const ProtectionDashboardMonito = () => {
     return table
   }, [_answers.get])
 
-  const data: Seq<ProtHHS2Enrich> | undefined = useMemo(() => {
+  const data: Seq<KoboAnswer<KoboProtection_hhs3.T>> | undefined = useMemo(() => {
     return map(database, _ => {
       const {hhComposition, ...basicFilters} = optionFilter
-      const filtered = seq(DataFilter.filterDataFromLokiJs(_ as any, filterShape, basicFilters as any)) as Seq<ProtHHS2Enrich>
+      const filtered = seq(DataFilter.filterDataFromLokiJs(_ as any, filterShape, basicFilters as any)) as Seq<KoboProtection_hhs3.T>
       if (hhComposition && hhComposition.length > 0)
-        return filtered.filter(d => !!d.persons.find(p => {
+        return filtered.filter(d => !!d.persons?.find(p => {
           if (!p.age) return false
           if (p.gender === Person.Gender.Female) {
             if (hhComposition.includes('girl') && p.age < 17) return true

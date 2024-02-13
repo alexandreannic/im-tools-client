@@ -4,7 +4,6 @@ import {Txt} from 'mui-extension'
 import {PanelFeatures} from '@/shared/Panel/PanelFeatures'
 import {useAppSettings} from '@/core/context/ConfigContext'
 import {endOfMonth, startOfMonth} from 'date-fns'
-import {enrichProtHHS_2_1} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {DeepPartial, Enum, seq} from '@alexandreannic/ts-utils'
 import {snapshotAlternateColor} from '@/features/Snapshot/SnapshotProtMonitoEcho/SnapshotProtMonitoEcho'
 import {ChartBarStacker} from '@/shared/charts/ChartBarStacked'
@@ -169,9 +168,9 @@ export default () => {
     end: endOfMonth(new Date(2023, 8)),
   })
   // const [lang, setLang] = usePersistentState('en', {storageKey: 'romanegraph3'})
-  const req = (period: Partial<Period>) => api.kobo.typedAnswers.searchProtection_Hhs2({
+  const req = (period: Partial<Period>) => api.kobo.typedAnswers.searchProtection_hhs3({
     filters: period
-  }).then(_ => seq(_.data).map(enrichProtHHS_2_1))
+  }).then(_ => seq(_.data))
 
   const fetcher = useFetcher(req)
 

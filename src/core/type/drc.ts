@@ -1,5 +1,4 @@
 import {Obj} from '@alexandreannic/ts-utils'
-import {appFeaturesIndex} from '@/features/appFeatureId'
 
 export enum DrcOffice {
   Kyiv = 'Kyiv',

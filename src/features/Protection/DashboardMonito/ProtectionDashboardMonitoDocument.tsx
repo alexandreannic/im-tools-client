@@ -6,18 +6,18 @@ import {DashboardPageProps} from './ProtectionDashboardMonito'
 import {Box, Icon} from '@mui/material'
 import {Lazy} from '@/shared/Lazy'
 import {ChartHelperOld} from '@/shared/charts/chartHelperOld'
-import {chain} from '@/utils/utils'
 import {ChartPieWidget} from '@/shared/charts/ChartPieWidget'
 import {UkraineMap} from '@/shared/UkraineMap/UkraineMap'
 import {Enum, Seq} from '@alexandreannic/ts-utils'
-import {ProtHHS2Enrich, ProtHHS2Person} from '@/features/Protection/DashboardMonito/dashboardHelper'
 import {ScRadioGroup, ScRadioGroupItem} from '@/shared/RadioGroup'
 import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Person} from '@/core/type/person'
-import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
+import {KoboProtection_hhs3} from '@/core/sdk/server/kobo/custom/KoboProtection_hhs3'
+import {ChartHelper} from '@/shared/charts/chartHelper'
 
-export const getIdpsAnsweringRegistrationQuestion = (base: Seq<ProtHHS2Enrich>) => {
+export const getIdpsAnsweringRegistrationQuestion = (base: Seq<KoboProtection_hhs3.T>) => {
   return base
     .flatMap(_ => _.persons.map(p => ({..._, ...p})))
     .filter(_ => _.do_you_identify_as_any_of_the_following === 'idp')
@@ -35,7 +35,7 @@ export const ProtectionDashboardMonitoDocument = ({
   const [gender, setGender] = useState<Person.Gender[]>([])
   const [ageGroup, setAgeGroup] = useState<(keyof typeof Person.ageGroup.Quick)[]>([])
 
-  const filterPerson = (_: Seq<ProtHHS2Person>) => _.filter(_ => gender.length === 0 || gender.includes(_.gender!))
+  const filterPerson = (_: Seq<KoboProtection_hhs3.Person>) => _.filter(_ => gender.length === 0 || gender.includes(_.gender!))
     .filter(_ => {
       if (ageGroup.length === 0) return true
       return !!ageGroup.find(g => Person.filterByAgegroup(Person.ageGroup.Quick, g)(_))
@@ -99,7 +99,7 @@ export const ProtectionDashboardMonitoDocument = ({
             <ChartBarMultipleBy
               data={data}
               by={_ => _.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
-              label={Protection_Hhs2.options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
+              label={Protection_hhs3.options.have_you_experienced_any_barriers_in_obtaining_or_accessing_identity_documentation_and_or_hlp_documentation}
               filterValue={[
                 'no',
                 'unable_unwilling_to_answer',
@@ -130,13 +130,14 @@ export const ProtectionDashboardMonitoDocument = ({
             })}>
               {(_, last) => <ChartPieWidget dense sx={{mb: 2}} evolution={(_?.percent ?? 1) - (last?.percent ?? 1)} value={_.value} base={_.base}/>}
             </Lazy>
-            <Lazy deps={[filteredPersons]} fn={() => chain(ChartHelperOld.multiple({
-              data: filteredPersons.map(_ => _.lackDoc).compact(),
+            <Lazy deps={[filteredPersons]} fn={() => ChartHelper.multiple({
+              data: (() => {
+                const w = filteredPersons.map(_ => _.lackDoc).compact()
+                console.log(w)
+                return w
+              })(),
               filterValue: ['none', 'unable_unwilling_to_answer'],
-            }))
-              .map(ChartHelperOld.setLabel(Protection_Hhs2.options.does_1_lack_doc))
-              .map(ChartHelperOld.sortBy.value)
-              .get}>
+            }).setLabel(Protection_hhs3.options.does_lack_doc).sortBy.value().get()}>
               {_ => <ChartBar data={_}/>}
             </Lazy>
           </SlidePanel>
@@ -155,7 +156,7 @@ export const ProtectionDashboardMonitoDocument = ({
               by={_ => _.what_housing_land_and_property_documents_do_you_lack}
               filterValue={['unable_unwilling_to_answer', 'none']}
               label={{
-                ...Protection_Hhs2.options.what_housing_land_and_property_documents_do_you_lack,
+                ...Protection_hhs3.options.what_housing_land_and_property_documents_do_you_lack,
                 construction_stage_substituted_with_bti_certificate_following_completion_of_construction: 'Construction stage',
                 document_issues_by_local_self_government_proving_that_the_house_was_damaged_destroyed: 'Document issued by local self-government proving a damaged house',
                 cost_estimation_certificate_state_commission_issued_when_personal_request_is_made: 'Cost estimation certificate - state commission',

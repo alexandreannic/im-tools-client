@@ -1,8 +1,5 @@
-import {ChartDataVal, ChartHelperOld} from './chartHelperOld'
 import {Enum, seq, Seq} from '@alexandreannic/ts-utils'
-import {useI18n} from '../../core/i18n'
 import React, {ReactNode, useMemo} from 'react'
-import {chain} from '@/utils/utils'
 import {ChartBar} from '@/shared/charts/ChartBar'
 import {Checkbox} from '@mui/material'
 import {ChartHelper} from '@/shared/charts/chartHelper'

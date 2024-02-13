@@ -18,7 +18,6 @@ import {CfmDataPriority, KoboMealCfmStatus} from '@/core/sdk/server/kobo/custom/
 import {ChartPieWidget} from '@/shared/charts/ChartPieWidget'
 import {Box, LinearProgress} from '@mui/material'
 import {CfmAccess} from '@/features/Cfm/Access/CfmAccess'
-import {UaMapBy} from '@/features/DrcUaMap/UaMapBy'
 import {appConfig} from '@/conf/AppConfig'
 import {getKoboFormRouteProps, SidebarKoboLink} from '@/features/SidebarKoboLink'
 import {shelterIndex} from '@/features/Shelter/Shelter'

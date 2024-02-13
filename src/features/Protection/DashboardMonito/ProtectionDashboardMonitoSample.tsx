@@ -18,7 +18,7 @@ import {ChartPieWidgetByKey} from '@/shared/charts/ChartPieWidgetByKey'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {ChartBarSingleBy} from '@/shared/charts/ChartBarSingleBy'
 import {Person} from '@/core/type/person'
-import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
 const css = makeSx({
   table: {
@@ -34,6 +34,7 @@ const css = makeSx({
     '& > tr': {}
   },
 })
+
 export const ProtectionDashboardMonitoSample = ({
   data,
   computed
@@ -172,7 +173,7 @@ export const ProtectionDashboardMonitoSample = ({
                 data: data.map(_ => _.do_you_identify_as_any_of_the_following).compact(),
               }))
                 .map(ChartHelperOld.sortBy.value)
-                .map(ChartHelperOld.setLabel(Protection_Hhs2.options.do_you_identify_as_any_of_the_following))
+                .map(ChartHelperOld.setLabel(Protection_hhs3.options.do_you_identify_as_any_of_the_following))
                 .get}
             >
               {_ => <ChartBar data={_}/>}
@@ -192,14 +193,14 @@ export const ProtectionDashboardMonitoSample = ({
               data={data}
               by={_ => _.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household}
               filterValue={['no_specific_needs', 'unable_unwilling_to_answer', 'other_specify']}
-              label={Protection_Hhs2.options.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household}
+              label={Protection_hhs3.options.do_any_of_these_specific_needs_categories_apply_to_the_head_of_this_household}
             />
           </SlidePanel>
           <SlidePanel title={m.protHHS2.hhTypes}>
             <ChartBarSingleBy
               data={data}
               by={_ => _.what_is_the_type_of_your_household}
-              label={Protection_Hhs2.options.what_is_the_type_of_your_household}
+              label={Protection_hhs3.options.what_is_the_type_of_your_household}
             />
           </SlidePanel>
 

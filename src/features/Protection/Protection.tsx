@@ -1,5 +1,4 @@
 import {KoboFormName} from '@/core/KoboIndex'
-import {useSession} from '@/core/Session/SessionContext'
 import {HashRouter as Router, Navigate, NavLink, Route, Routes} from 'react-router-dom'
 import React from 'react'
 import {Sidebar, SidebarBody, SidebarItem} from '@/shared/Layout/Sidebar'
@@ -45,7 +44,7 @@ export const ProtectionSidebar = () => {
           )}
         </NavLink>
         <SidebarSection title={m.protHHS2.descTitle}>
-          <Link href={conf.linkToFeature('dashboard/protection-monitoring' as any, '')}>
+          <Link target="_blank" href={conf.linkToFeature('dashboard/protection-monitoring' as any, '')}>
             <SidebarItem icon="insights" iconEnd="open_in_new">{m.dashboard}</SidebarItem>
           </Link>
           <SidebarKoboLink size="small" path={path(mpcaIndex.siteMap.form('protection_hhs2_1'))} name="protection_hhs2_1"/>
@@ -71,7 +70,6 @@ export const Protection = () => {
 }
 
 export const ProtectionWithContext = () => {
-  const {session, accesses} = useSession()
   const ctx = useProtectionContext()
 
   return (

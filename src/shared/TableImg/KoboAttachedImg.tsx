@@ -35,7 +35,6 @@ export const koboImgHelper = ({
 }) => {
   const parsedFileName = parseKoboFileName(fileName)
   const url = parsedFileName ? attachments.find(_ => _.filename.includes(parsedFileName))?.download_small_url : undefined
-  if (parsedFileName) console.log(parsedFileName, attachments.map(_ => _.filename), url)
   return proxyKoboImg({
     url,
     serverId,
