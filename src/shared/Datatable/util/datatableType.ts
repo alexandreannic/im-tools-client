@@ -96,118 +96,123 @@ export namespace DatatableColumn {
   }
 
   export namespace SelectOne {
-    export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
+    export type RenderQuick<T extends DatatableRow> = (_: T) => string | undefined
     export type Render<T extends DatatableRow> = (_: T) => RenderT<string | undefined, ReactNode>
-    export type InnerType<T extends DatatableRow> = {
-      type: 'select_one'
+    export type BaseType = {
       options?: () => DatatableOptions[]
+      type: 'select_one'
+    }
+    export type TypeInner<T extends DatatableRow> = BaseType & {
       render: Render<T>
     }
-    export type Type<T extends DatatableRow> = {
-      type: 'select_one'
-      options?: () => DatatableOptions[]
-    } & ({
-      renderQuick: Render<T>
-    } | {
-      render: RenderShort<T>
-    })
+    export type TypeQuick<T extends DatatableRow> = BaseType & {
+      renderQuick: RenderQuick<T>
+    }
+    export type TypeOuter<T extends DatatableRow> = TypeInner<T> | TypeQuick<T>
   }
 
   export namespace SelectMultiple {
-    export type RenderShort<T extends DatatableRow> = (_: T) => string[]
+    export type RenderQuick<T extends DatatableRow> = (_: T) => string[]
     export type Render<T extends DatatableRow> = (_: T) => RenderT<string[], ReactNode>
-    export type InnerType<T extends DatatableRow> = {
-      type: 'select_multiple'
-      render: Render<T>
+    export type BaseType = {
       options?: () => DatatableOptions[]
+      type: 'select_multiple'
     }
-    export type Type<T extends DatatableRow> = {
-      type: 'select_multiple'
-      options?: () => DatatableOptions[]
-    } & ({
-      renderQuick: Render<T>
-    } | {
-      render: RenderShort<T>
-    })
+    export type TypeInner<T extends DatatableRow> = BaseType & {
+      render: Render<T>
+    }
+    export type TypeQuick<T extends DatatableRow> = BaseType & {
+      renderQuick: RenderQuick<T>
+    }
+    export type TypeOuter<T extends DatatableRow> = TypeInner<T> | TypeQuick<T>
   }
 
   export namespace Undefined {
-    export type RenderShort<T extends DatatableRow> = (_: T) => ReactNode
-    export type InnerType<T extends DatatableRow> = {
+    export type RenderQuick<T extends DatatableRow> = (_: T) => ReactNode
+    export type Render<T extends DatatableRow> = (_: T) => RenderT<undefined>
+    export type BaseType = {
       type?: undefined
-      render: (_: T) => RenderT<undefined>
     }
-    export type Type<T extends DatatableRow> = {
-      type?: undefined
-      render: RenderShort<T>
+    export type TypeInner<T extends DatatableRow> = BaseType & {
+      render: Render<T>
     }
+    export type TypeQuick<T extends DatatableRow> = BaseType & {
+      renderQuick: RenderQuick<T>
+    }
+    export type TypeOuter<T extends DatatableRow> = TypeInner<T> | TypeQuick<T>
   }
 
   export namespace Text {
-    export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
+    export type RenderQuick<T extends DatatableRow> = (_: T) => string | undefined
     export type Render<T extends DatatableRow> = (_: T) => RenderT<string | undefined>
-    export type InnerType<T extends DatatableRow> = {
-      type?: 'string'
+    export type BaseType = {
+      type: 'string'
+    }
+    export type TypeInner<T extends DatatableRow> = BaseType & {
       render: Render<T>
     }
-    export type Type<T extends DatatableRow> = {
-      type?: 'string'
-    } & ({
-      renderQuick: Render<T>
-    } | {
-      render: RenderShort<T>
-    })
+    export type TypeQuick<T extends DatatableRow> = BaseType & {
+      renderQuick: RenderQuick<T>
+    }
+    export type TypeOuter<T extends DatatableRow> = TypeInner<T> | TypeQuick<T>
   }
 
   export namespace Date {
-    export type RenderShort<T extends DatatableRow> = (_: T) => string | undefined
+    export type RenderQuick<T extends DatatableRow> = (_: T) => string | undefined
     export type Render<T extends DatatableRow> = (_: T) => RenderT<Date | undefined>
-    export type InnerType<T extends DatatableRow> = {
+    export type BaseType = {
       type: 'date'
+    }
+    export type TypeInner<T extends DatatableRow> = BaseType & {
       render: Render<T>
     }
-    export type Type<T extends DatatableRow> = {
-      type: 'date'
-    } & ({
-      renderQuick: Render<T>
-    } | {
-      render: RenderShort<T>
-    })
+    export type TypeQuick<T extends DatatableRow> = BaseType & {
+      renderQuick: RenderQuick<T>
+    }
+    export type TypeOuter<T extends DatatableRow> = TypeInner<T> | TypeQuick<T>
   }
 
   export namespace Number {
-    export type RenderShort<T extends DatatableRow> = (_: T) => number | undefined
-    export type InnerType<T extends DatatableRow> = {
+    export type RenderQuick<T extends DatatableRow> = (_: T) => number | undefined
+    export type Render<T extends DatatableRow> = (_: T) => RenderT<number | undefined>
+    export type BaseType = {
       type: 'number'
-      render: (_: T) => RenderT<number | undefined>
     }
-    export type Type<T extends DatatableRow> = {
-      type: 'number'
-    } & ({
-      renderQuick: RenderShort<T>
-    } | {
-      render: RenderShort<T>
-    })
+    export type TypeInner<T extends DatatableRow> = BaseType & {
+      render: Render<T>
+    }
+    export type TypeQuick<T extends DatatableRow> = BaseType & {
+      renderQuick: RenderQuick<T>
+    }
+    export type TypeOuter<T extends DatatableRow> = TypeInner<T> | TypeQuick<T>
   }
 
   export type InnerProps<T extends DatatableRow, K extends string = string> = Base<T, K> & (
-    Text.InnerType<T> |
-    SelectOne.InnerType<T> |
-    Date.InnerType<T> |
-    Number.InnerType<T> |
-    SelectMultiple.InnerType<T> |
-    Undefined.InnerType<T>
+    Text.TypeInner<T> |
+    SelectOne.TypeInner<T> |
+    Date.TypeInner<T> |
+    Number.TypeInner<T> |
+    SelectMultiple.TypeInner<T> |
+    Undefined.TypeInner<T>
     )
   export type Props<T extends DatatableRow, K extends string = string> = Base<T, K> & (
-    Text.Type<T> |
-    SelectOne.Type<T> |
-    Date.Type<T> |
-    Number.Type<T> |
-    SelectMultiple.Type<T> |
-    Undefined.Type<T>
+    Text.TypeOuter<T> |
+    SelectOne.TypeOuter<T> |
+    Date.TypeOuter<T> |
+    Number.TypeOuter<T> |
+    SelectMultiple.TypeOuter<T> |
+    Undefined.TypeOuter<T>
+    )
+  export type QuickProps<T extends DatatableRow, K extends string = string> = Base<T, K> & (
+    Text.TypeQuick<T> |
+    SelectOne.TypeQuick<T> |
+    Date.TypeQuick<T> |
+    Number.TypeQuick<T> |
+    SelectMultiple.TypeQuick<T> |
+    Undefined.TypeQuick<T>
     )
 
-  export const isQuick = (_: Props<any>): _ is InnerProps<any> => {
+  export const isQuick = (_: Props<any>): _ is QuickProps<any> => {
     return !!(_ as any).renderQuick
   }
 }

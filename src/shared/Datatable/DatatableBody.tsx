@@ -35,25 +35,30 @@ export const DatatableBody = (() => {
             )}
             {columns.map((_, i) => {
               const render = _.render(item)
-              return (
-                <td
-                  title={render.tooltip as any}
-                  key={i}
-                  style={_.style?.(item)}
-                  onClick={_.onClick ? () => _.onClick?.(item) : undefined}
-                  className={[
-                    'td',
-                    _.stickyEnd ? 'td-sticky-end' : '',
-                    _.type === 'number' ? 'td-right' : '',
-                    fnSwitch(_.align!, {
-                      'center': 'td-center',
-                      'right': 'td-right'
-                    }, _ => '')
-                  ].join(' ')}
-                >
-                  {JSON.stringify(render.label)}
-                </td>
-              )
+              try {
+                return (
+                  <td
+                    title={render.tooltip as any}
+                    key={i}
+                    style={_.style?.(item)}
+                    onClick={_.onClick ? () => _.onClick?.(item) : undefined}
+                    className={[
+                      'td',
+                      _.stickyEnd ? 'td-sticky-end' : '',
+                      _.type === 'number' ? 'td-right' : '',
+                      fnSwitch(_.align!, {
+                        'center': 'td-center',
+                        'right': 'td-right'
+                      }, _ => '')
+                    ].join(' ')}
+                  >
+                    {render.label}
+                  </td>
+                )
+              } catch (e) {
+                console.error(_.id, item)
+                throw e
+              }
             })}
           </tr>
         ))}

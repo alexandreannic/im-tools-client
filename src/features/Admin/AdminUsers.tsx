@@ -46,19 +46,19 @@ export const AdminUsers = () => {
               <Switch value={showDummyAccounts} onChange={e => setShowDummyAccounts(e.target.checked)}/>
             </Box>
           }
-          defaultLimit={200}
-          data={filteredData?.splice(50, 5)}
+          defaultLimit={100}
+          data={filteredData}
           columns={[
             {
               type: 'string',
               id: 'name',
               head: m.name,
-              render: _ => _.name,
+              renderQuick: _ => _.name,
             },
             {
               id: 'email',
               head: m.email,
-              renderQuick: _ => {
+              render: _ => {
                 return {
                   label: <Txt bold>{_.email}</Txt>,
                   value: _.email,
@@ -71,7 +71,7 @@ export const AdminUsers = () => {
               id: 'createdAt',
               head: m.createdAt,
               type: 'date',
-              renderQuick: _ => {
+              render: _ => {
                 return {
                   label: <Txt color="hint">{formatDate(_.createdAt)}</Txt>,
                   value: _.createdAt,
@@ -83,7 +83,7 @@ export const AdminUsers = () => {
               width: 140,
               id: 'lastConnectedAt',
               head: m.lastConnectedAt,
-              renderQuick: _ => {
+              render: _ => {
                 return {
                   label: _.lastConnectedAt && <Txt color="hint">{formatDateTime(_.lastConnectedAt)}</Txt>,
                   value: _.lastConnectedAt,
@@ -93,7 +93,7 @@ export const AdminUsers = () => {
             {
               id: 'drcJob',
               head: m.drcJob,
-              render: _ => _.drcJob,
+              renderQuick: _ => _.drcJob,
               type: 'select_one',
               options: () => seq(_users.get?.map(_ => _.drcJob)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
@@ -101,7 +101,7 @@ export const AdminUsers = () => {
               id: 'drcOffice',
               type: 'select_one',
               head: m.drcOffice,
-              render: _ => _.drcOffice,
+              renderQuick: _ => _.drcOffice,
               // options: () => seq(_users.get?.map(_ => _.drcOffice)).distinct(_ => _).compact().map(_ => ({value: _, label: _}))
             },
             {
@@ -110,7 +110,7 @@ export const AdminUsers = () => {
               width: 10,
               align: 'center',
               head: m.admin,
-              renderQuick: _ => ({
+              render: _ => ({
                 label: _.admin && <TableIcon color="success">check_circle</TableIcon>,
                 value: _.admin ? 'true' : 'false',
               }),
@@ -120,7 +120,7 @@ export const AdminUsers = () => {
               id: 'action',
               width: 10,
               align: 'right',
-              render: _ => (
+              renderQuick: _ => (
                 <IpIconBtn
                   disabled={_.email === conf.contact || _.email === session.email}
                   children="visibility"

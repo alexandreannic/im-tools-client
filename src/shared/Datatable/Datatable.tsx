@@ -36,28 +36,23 @@ export const Datatable = <T extends DatatableRow = DatatableRow>({
 }: DatatableTableProps<T>) => {
   const innerColumns = useMemo(() => {
     return columns.map(col => {
-      if(DatatableColumn.isQuick(col)) {
-        col.render = ((_: T) => {
-          col
-          return {
-            label:
+      if (DatatableColumn.isQuick(col)) {
+        if (col.type === undefined) {
+          (col as unknown as DatatableColumn.InnerProps<T>).render = (_: T) => {
+            const val = col.renderQuick(_) as any
+            return {label: val, value: undefined}
+          }
+        } else {
+          (col as unknown as DatatableColumn.InnerProps<T>).render = (_: T) => {
+            const val = col.renderQuick(_) as any
+            return {
+              label: val,
+              tooltip: val,
+              value: val,
+            }
           }
         }
       }
-      // @ts-ignore
-      col.render = ((_: T) => {
-        const res = externRender(_)
-        // @ts-ignore
-        if (DatatableColumn.isQuick(res)) {
-          console.log('long', col.type, col.id, res)
-          returnres.
-        }
-        return {
-          value: res,
-          label: res,
-          tooltip: res,
-        } as ReturnType<DatatableColumn.InnerProps<T>['render']>
-      })
       return col as DatatableColumn.InnerProps<T>
     })
   }, [columns])
