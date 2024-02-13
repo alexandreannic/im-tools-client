@@ -3,6 +3,7 @@ import {addMonths, differenceInMonths, isAfter, isBefore, startOfMonth} from 'da
 import {groupBy as _groupBy} from '@/utils/groupBy'
 import {NonNullableKeys} from '@/utils/utilsType'
 import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
+import {Children, isValidElement, ReactNode} from 'react'
 
 export const generateId = () => ('' + Math.random()).split('.')[1]
 
@@ -161,6 +162,19 @@ export const convertNumberIndexToLetter = (_: number) => {
 }
 
 export class Utils {
+
+  static readonly extractInnerText = (node: ReactNode): string => {
+    if (typeof node === 'string') {
+      return node
+    }
+    if (!node || !isValidElement(node) || !node.props || !node.props.children) {
+      return ''
+    }
+    if (Array.isArray(node.props.children)) {
+      return node.props.children.map(Utils.extractInnerText).join('')
+    }
+    return Utils.extractInnerText(node.props.children)
+  }
 
   static readonly hash = (s: string, salt: string = '') => {
     const str = s + salt

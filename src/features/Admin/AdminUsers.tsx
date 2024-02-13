@@ -12,6 +12,7 @@ import {useRouter} from 'next/router'
 import {seq} from '@alexandreannic/ts-utils'
 import {useFetcher} from '@/shared/hook/useFetcher'
 import {Datatable} from '@/shared/Datatable/Datatable'
+import {Utils} from '@/utils/utils'
 
 export const AdminUsers = () => {
   const {api, conf} = useAppSettings()
@@ -40,6 +41,7 @@ export const AdminUsers = () => {
       <Panel>
         <Datatable
           id="users"
+          showExportBtn
           header={
             <Box sx={{display: 'flex', alignItems: 'center', marginLeft: 'auto'}}>
               <Txt sx={{fontSize: '1rem'}} color="hint">{m.showDummyAccounts}</Txt>

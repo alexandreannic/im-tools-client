@@ -84,6 +84,7 @@ export namespace DatatableColumn {
     noSort?: boolean
     width?: number
     head?: string
+    noCsvExport?: boolean
     align?: 'center' | 'right'
     onClick?: (_: T) => void
     hidden?: boolean
@@ -104,7 +105,9 @@ export namespace DatatableColumn {
     }
     export type TypeInner<T extends DatatableRow> = BaseType & {
       render: Render<T>
-    }
+    } & ({
+      noCsvExport?: false
+    })
     export type TypeQuick<T extends DatatableRow> = BaseType & {
       renderQuick: RenderQuick<T>
     }

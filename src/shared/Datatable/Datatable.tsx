@@ -1,9 +1,9 @@
 import {Badge, Box, Icon, LinearProgress, TablePagination,} from '@mui/material'
-import React, {useEffect, useMemo} from 'react'
+import React, {isValidElement, useEffect, useMemo} from 'react'
 import {useI18n} from '@/core/i18n'
 import {Txt} from 'mui-extension'
 import {Utils} from '@/utils/utils'
-import {Enum, map} from '@alexandreannic/ts-utils'
+import {Enum, fnSwitch, map} from '@alexandreannic/ts-utils'
 import {IpIconBtn} from '../IconBtn'
 import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Datatable/util/generateXLSFile'
@@ -18,6 +18,7 @@ import {DatatableErrorBoundary} from '@/shared/Datatable/DatatableErrorBundary'
 import {DatatableUtils} from '@/shared/Datatable/util/datatableUtils'
 import {DatatableSkeleton} from '@/shared/Datatable/DatatableSkeleton'
 import {useAsync} from '@/shared/hook/useAsync'
+import {format} from 'date-fns'
 
 export const Datatable = <T extends DatatableRow = DatatableRow>({
   total,
@@ -101,25 +102,19 @@ const _Datatable = <T extends DatatableRow>({
       _generateXLSFromArray.call(Utils.slugify(title) ?? 'noname', {
         datatableName: 'data',
         data: ctx.data.filteredAndSortedData,
-        schema: ctx.columns as any
-        // .filter(_ => _.renderExport !== false)
-        // .map((q, i) => ({
-        //   head: q.head as string ?? q.id,
-        //   render: (row: any) => {
-        //     // if (!q.renderExport || !q.renderValue) return
-        //     if (q.renderExport === true) return fnSwitch(q.type!, {
-        //       number: () => map(row[q.id], _ => +_),
-        //       date: () => map(row[q.id], (_: Date) => format(_, 'yyyy-MM-dd hh:mm:ss'))
-        //     }, () => row[q.id])
-        //     if (q.renderExport) {
-        //       return q.renderExport(row)
-        //     }
-        //     if (q.renderValue) {
-        //       return q.renderValue(row)
-        //     }
-        //     return row[q.id]
-        //   }
-        // })),
+        schema: ctx.columns
+          .filter(_ => _.noCsvExport !== true)
+          .map((q, i) => ({
+            head: q.head as string ?? q.id,
+            render: (row: any) => {
+              const rendered = q.render(row)
+              let value = rendered.export ?? rendered.label
+              if (isValidElement(value)) value = Utils.extractInnerText(value)
+              if (value instanceof Date) value = format(value, 'yyyy-MM-dd hh:mm:ss')
+              if (!isNaN(value as any)) value = +(value as number)
+              return value as any
+            }
+          })),
       })
     }
   }
