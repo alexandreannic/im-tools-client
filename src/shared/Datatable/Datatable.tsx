@@ -9,7 +9,7 @@ import {useMemoFn} from '@alexandreannic/react-hooks-lib'
 import {generateXLSFromArray} from '@/shared/Datatable/util/generateXLSFile'
 import {DatatableBody} from './DatatableBody'
 import {DatatableHead} from './DatatableHead'
-import {DatatableColumn, DatatableRow, DatatableTableProps,} from '@/shared/Datatable/util/datatableType'
+import {DatatableColumn, DatatableRow, DatatableTableProps} from '@/shared/Datatable/util/datatableType'
 import {DatatableProvider, useDatatableContext} from '@/shared/Datatable/context/DatatableContext'
 import {DatatableColumnToggle} from '@/shared/Datatable/DatatableColumnsToggle'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
@@ -40,18 +40,26 @@ export const Datatable = <T extends DatatableRow = DatatableRow>({
       if (DatatableColumn.isQuick(col)) {
         if (col.type === undefined) {
           (col as unknown as DatatableColumn.InnerProps<T>).render = (_: T) => {
-            const val = col.renderQuick(_) as any
-            return {label: val, value: undefined}
+            const value = col.renderQuick(_) as any
+            return {label: value, value: undefined}
           }
         } else {
           (col as unknown as DatatableColumn.InnerProps<T>).render = (_: T) => {
-            const val = col.renderQuick(_) as any
+            const value = col.renderQuick(_) as any
             return {
-              label: val,
-              tooltip: val,
-              value: val,
+              label: value,
+              tooltip: value,
+              option: value,
+              value,
             }
           }
+        }
+      } else if (DatatableColumn.isInner(col)) {
+        const render = col.render
+        col.render = (_: T) => {
+          const rendered = render(_)
+          if (rendered.option === undefined) rendered.option = rendered.label
+          return rendered as any
         }
       }
       return col as DatatableColumn.InnerProps<T>

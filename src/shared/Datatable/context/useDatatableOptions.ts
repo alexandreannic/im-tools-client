@@ -38,19 +38,26 @@ export const useDatatableOptions = <T extends DatatableRow>({
       } else {
         if (col.type === 'select_one') {
           optionsRef.set(columnId, seq(data.filterExceptBy(columnId))
-            ?.distinct(_ => col.render(_).value)
-            .sort((a, b) => (col.render(b).value ?? '').localeCompare(col.render(a).value ?? ''))
+            ?.map(col.render)
+            .distinct(_ => _.value)
+            .sort((a, b) => (b.value ?? '').localeCompare(a.value ?? ''))
             .map(_ => DatatableUtils.buildCustomOption(
-              col.render(_).value as string,
-              col.render(_).option as string,
+              _.value as string,
+              _.option as string,
             )))
         } else if (col.type === 'select_multiple') {
-          optionsRef.set(columnId, seq(data.filterExceptBy(columnId))
-            ?.flatMap(_ => col.render(_).value)
-            .distinct(_ => _)
-            .sort((a, b) => (a ?? '').localeCompare(b ?? ''))
-            .map(_ => _ ? DatatableUtils.buildCustomOption(_, col.render(_).option as string) : DatatableUtils.blankOption)
-          )
+          throw new Error(`options not implemented for ${columnId}.`)
+          // optionsRef.set(columnId, seq(data.filterExceptBy(columnId))
+          //   ?.flatMap(_ => col.render(_).value)
+          //   .distinct(_ => _)
+          //   .sort((a, b) => (a ?? '').localeCompare(b ?? ''))
+          //   .map(_ => {
+          //     console.log(col)
+          //     console.log(_)
+          //     console.log(col.render(_))
+          //     return _ ? DatatableUtils.buildCustomOption(_, col.render(_).option as string) : DatatableUtils.blankOption
+          //   })
+          // )
         }
       }
     }

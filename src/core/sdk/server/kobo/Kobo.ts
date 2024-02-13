@@ -83,7 +83,7 @@ export type KoboAnswerMetaData<TTag extends KoboBaseTags = KoboBaseTags> = {
 export type KoboMappedAnswerType = string | string[] | Date | number | undefined | KoboAnswer<any>[]
 
 export type KoboAnswer<
-  TQuestion extends Record<string, any> = Record<string, string | undefined>,
+  TQuestion extends Record<string, any> = Record<string, any>,
   TTags extends KoboBaseTags = KoboBaseTags
 > = (KoboAnswerMetaData<TTags> & TQuestion)
 
@@ -125,6 +125,12 @@ export class Kobo {
         }
         case 'select_multiple': {
           mapped[question] = (answer as string).split(' ')
+          break
+        }
+        case 'begin_repeat': {
+          if (mapped[question]) {
+            mapped[question] = (mapped[question] as any).map((_: any) => Kobo.mapAnswerBySchema(indexedSchema, _))
+          }
           break
         }
         default:

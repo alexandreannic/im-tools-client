@@ -4,7 +4,8 @@ import {fnSwitch} from '@alexandreannic/ts-utils'
 import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 import {Person} from '@/core/type/person'
-import {tryy} from '@/utils/utils'
+import {Ecrec_cashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_cashRegistration'
+import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 
 export interface PersonDetails extends Person.Person {
   status?: Protection_pss.Option<'hh_char_hh_det_status'>
@@ -13,6 +14,17 @@ export interface PersonDetails extends Person.Person {
 
 export namespace KoboGeneralMapping {
 
+  type StandardKoboFormQuestion = Pick<Ecrec_cashRegistration.T,
+    'hh_char_hh_det' |
+    'hh_char_hhh_dis_select' |
+    'hh_char_hhh_age' |
+    'hh_char_hhh_gender' |
+    'hh_char_res_dis_select' |
+    'hh_char_res_age' |
+    'hh_char_res_gender'
+  >
+
+  import Gender = Person.Gender
   export const mapOffice = (o?: Protection_pss.Option<'staff_to_insert_their_DRC_office'>): undefined | DrcOffice => fnSwitch(o!, {
     chernihiv: DrcOffice.Chernihiv,
     dnipro: DrcOffice.Dnipro,
@@ -62,5 +74,76 @@ export namespace KoboGeneralMapping {
         'female': Person.Gender.Female,
       }, () => Person.Gender.Other)
     }
+  }
+
+  export type IndividualBreakdown = {
+    disabilities: Ecrec_cashRegistration.Option<'hh_char_dis_select'>[]
+    disabilitiesCount: number
+    elderlyCount: number
+    childrenCount: number
+    adultCount: number
+  }
+
+  export const addIndividualBreakdownColumn = <T extends StandardKoboFormQuestion>(row: T): T & {custom: IndividualBreakdown} => {
+    const p = KoboGeneralMapping.getPersonsFromStupidKoboForm(row)
+    ;(row as any).custom = KoboGeneralMapping.getIndividualBreakdown(p)
+    return (row as any)
+  }
+
+  export const getIndividualBreakdown = (hh: Person.PersonWDisability[]): IndividualBreakdown => {
+    const disabilities = new Set<Ecrec_cashRegistration.Option<'hh_char_dis_select'>>()
+    let disabilitiesCount = 0
+    let childrenCount = 0
+    let elderlyCount = 0
+    let adultCount = 0
+    hh?.forEach(_ => {
+      _.disabilities?.forEach(disabilities.add, disabilities)
+      if (_.age && _.age < 18) childrenCount++
+      if (_.age && _.age >= 18) adultCount++
+      if (_.age && _.age >= 60) elderlyCount++
+      if (_.disabilities && !_.disabilities.includes('diff_none')) disabilitiesCount++
+    })
+    disabilities.delete('diff_none')
+    return {
+      adultCount: adultCount,
+      elderlyCount: elderlyCount,
+      childrenCount: childrenCount,
+      disabilitiesCount: disabilitiesCount,
+      disabilities: Array.from(disabilities),
+    }
+  }
+
+  export const getPersonsFromStupidKoboForm = (d: StandardKoboFormQuestion): Person.PersonWDisability[] => {
+    return [
+      ...(d.hh_char_hh_det ?? []),
+      {
+        hh_char_hh_det_dis_select: d.hh_char_hhh_dis_select,
+        hh_char_hh_det_age: d.hh_char_hhh_age,
+        hh_char_hh_det_gender: d.hh_char_hhh_gender,
+      },
+      {
+        hh_char_hh_det_dis_select: d.hh_char_res_dis_select,
+        hh_char_hh_det_age: d.hh_char_res_age,
+        hh_char_hh_det_gender: d.hh_char_res_gender,
+      },
+    ].map(_ => ({
+      age: _.hh_char_hh_det_age,
+      gender: fnSwitch(_.hh_char_hh_det_gender!, {
+        female: Gender.Female,
+        male: Gender.Male,
+      }, () => Gender.Other),
+      disabilities: _.hh_char_hh_det_dis_select
+    }))
+  }
+
+  export const getPersonsFromStandardizedKoboForm = (d: StandardKoboFormQuestion): Person.PersonWDisability[] => {
+    return (d.hh_char_hh_det ?? []).map(_ => ({
+      age: _.hh_char_hh_det_age,
+      gender: fnSwitch(_.hh_char_hh_det_gender!, {
+        female: Gender.Female,
+        male: Gender.Male,
+      }, () => Gender.Other),
+      disabilities: _.hh_char_hh_det_dis_select
+    }))
   }
 }

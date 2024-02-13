@@ -1,6 +1,7 @@
 import {NonNullableKeys} from '@/utils/utilsType'
 import {Enum, Obj, seq} from '@alexandreannic/ts-utils'
 import {KeyOf} from '@/core/type/generic'
+import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 
 export namespace Person {
 
@@ -9,6 +10,12 @@ export namespace Person {
   export interface Person {
     age?: number
     gender?: Gender
+  }
+
+  export interface PersonWDisability extends Person {
+    age?: number
+    gender?: Gender
+    disabilities?: Bn_Re.Option<'hh_char_dis_select'>[]
   }
 
   export const create = (_: Person) => _

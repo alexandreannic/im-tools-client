@@ -115,10 +115,10 @@ export namespace DatatableColumn {
   }
 
   export namespace SelectMultiple {
-    export type RenderQuick<T extends DatatableRow> = (_: T) => string[]
-    export type Render<T extends DatatableRow> = (_: T) => RenderT<string[], ReactNode>
+    export type RenderQuick<T extends DatatableRow> = (_: T) => string[] | undefined
+    export type Render<T extends DatatableRow> = (_: T) => RenderT<string[] | undefined, ReactNode>
     export type BaseType = {
-      options?: () => DatatableOptions[]
+      options: () => DatatableOptions[]
       type: 'select_multiple'
     }
     export type TypeInner<T extends DatatableRow> = BaseType & {
@@ -217,6 +217,9 @@ export namespace DatatableColumn {
 
   export const isQuick = (_: Props<any>): _ is QuickProps<any> => {
     return !!(_ as any).renderQuick
+  }
+  export const isInner = (_: Props<any>): _ is InnerProps<any> => {
+    return !!(_ as any).render
   }
 }
 

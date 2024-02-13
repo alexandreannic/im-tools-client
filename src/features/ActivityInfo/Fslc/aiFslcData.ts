@@ -10,11 +10,11 @@ import {activityInfoFormIds} from '@/features/ActivityInfo/ActivityInfo'
 import {AiBundle} from '@/features/ActivityInfo/shared/AiType'
 import {Person} from '@/core/type/person'
 import {Period} from '@/core/type/period'
-import {Ecrec_sectoralCashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_sectoralCashRegistration'
+import {Ecrec_cashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_cashRegistration'
 import groupByGenderAndGroup = Person.groupByGenderAndGroup
 import Gender = Person.Gender
 
-export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_sectoralCashRegistration.T>
+export type AiFslcBundle = AiBundle<AiTypeFslc.Type, Ecrec_cashRegistration.T>
 
 export class AiFslcData {
 

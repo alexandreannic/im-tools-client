@@ -1,5 +1,4 @@
 import {KoboAnswer, KoboValidation} from '@/core/sdk/server/kobo/Kobo'
-import {Sheet} from '@/shared/Sheet/Sheet'
 import {IpBtn} from '@/shared/Btn'
 import {TableIconBtn} from '@/features/Mpca/MpcaData/TableIcon'
 import React, {useMemo, useState} from 'react'
@@ -13,14 +12,15 @@ import {Icon, Switch, Theme, useTheme} from '@mui/material'
 import {usePersistentState} from '@/shared/hook/usePersistantState'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
-import {useCustomColumns} from '@/features/Database/KoboTable/useCustomColumns'
-import {useCustomSelectedHeader} from '@/features/Database/KoboTable/useCustomSelectedHeader'
-import {SheetColumnProps} from '@/shared/Sheet/util/sheetType'
+import {useCustomColumns} from '@/features/Database/KoboTable/customization/useCustomColumns'
+import {useCustomSelectedHeader} from '@/features/Database/KoboTable/customization/useCustomSelectedHeader'
 import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {DatabaseTableProps} from '@/features/Database/KoboTable/DatabaseKoboTable'
-import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {DatabaseKoboSyncBtn} from '@/features/Database/KoboTable/DatabaseKoboSyncBtn'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {Datatable} from '@/shared/Datatable/Datatable'
+import {DatatableColumn} from '@/shared/Datatable/util/datatableType'
+import {DatatableUtils} from '@/shared/Datatable/util/datatableUtils'
 
 export const DatabaseKoboTableContent = ({
   onFiltersChange,
@@ -55,55 +55,56 @@ export const DatabaseKoboTableContent = ({
   }, [ctx.schema.schemaUnsanitized, langIndex, repeatGroupsAsColumns])
 
   const columns = useMemo(() => {
-    const action: SheetColumnProps<any> = {
+    const action: DatatableColumn.Props<any> = {
       id: 'actions',
       head: '',
       width: 0,
-      tooltip: null,
-      render: _ => (
+      renderQuick: _ => (
         <>
           <TableIconBtn tooltip={m.view} children="visibility" onClick={() => setOpenModalAnswer(_)}/>
           <TableIconBtn disabled={!ctx.canEdit} tooltip={m.edit} target="_blank" href={ctx.asyncEdit(_.id)} children="edit"/>
         </>
       )
     }
-    const validation: SheetColumnProps<any> = {
+    const validation: DatatableColumn.Props<any> = {
       id: 'validation',
       head: m.validation,
       width: 0,
       type: 'select_one',
-      tooltip: null,
-      renderValue: (row: KoboAnswer) => row.tags?._validation ?? SheetUtils.blank,
-      renderOption: (row: KoboAnswer) => row.tags?._validation ? m[row.tags?._validation!] : SheetUtils.blank,
-      render: (row: KoboAnswer) => (
-        <>
-          <IpSelectSingle
-            disabled={!ctx.canEdit || ctx.fetcherAnswers.loading}
-            value={row.tags?._validation}
-            options={[
-              {children: <Icon sx={{color: theme.palette.success.main}} title={m.Approved}>check_circle</Icon>, value: KoboValidation.Approved},
-              {children: <Icon sx={{color: theme.palette.error.main}} title={m.Rejected}>error</Icon>, value: KoboValidation.Rejected},
-              {children: <Icon sx={{color: theme.palette.warning.main}} title={m.Pending}>schedule</Icon>, value: KoboValidation.Pending},
-            ]}
-            onChange={(e) => {
-              ctx.updateTag({
-                formId: ctx.form.id,
-                answerIds: [row.id],
-                tags: {_validation: e},
-              })
-            }}
-          />
-        </>
-      )
+      render: (row: KoboAnswer) => {
+        const value = row.tags?._validation
+        return {
+          value: value ?? DatatableUtils.blank,
+          option: value ? m[value] : DatatableUtils.blank,
+          label: (
+            <IpSelectSingle
+              disabled={!ctx.canEdit || ctx.fetcherAnswers.loading}
+              value={value}
+              options={[
+                {children: <Icon sx={{color: theme.palette.success.main}} title={m.Approved}>check_circle</Icon>, value: KoboValidation.Approved},
+                {children: <Icon sx={{color: theme.palette.error.main}} title={m.Rejected}>error</Icon>, value: KoboValidation.Rejected},
+                {children: <Icon sx={{color: theme.palette.warning.main}} title={m.Pending}>schedule</Icon>, value: KoboValidation.Pending},
+              ]}
+              onChange={(e) => {
+                ctx.updateTag({
+                  formId: ctx.form.id,
+                  answerIds: [row.id],
+                  tags: {_validation: e},
+                })
+              }}
+            />
+          )
+        }
+      }
     }
-    return [...extraColumns, action, validation, ...schemaColumns]
+    return [action, validation, ...extraColumns, ...schemaColumns]
   }, [schemaColumns])
 
   const selectedHeader = useCustomSelectedHeader(selectedIds)
 
   return (
     <>
-      <Sheet
+      <Datatable
         onFiltersChange={onFiltersChange}
         onDataChange={onDataChange}
         select={ctx.canEdit && selectedHeader ? {

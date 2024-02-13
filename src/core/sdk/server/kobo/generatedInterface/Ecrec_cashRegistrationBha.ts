@@ -1,12 +1,14 @@
-export namespace Ecrec_sectoralCashRegistration {
+export namespace Ecrec_cashRegistrationBha {
 export type Option<T extends keyof typeof options> = keyof (typeof options)[T]
-	// Form id: aE5md7RfHiy4LJmddoFAQH
+	// Form id: aQCGR2fESUNFMYKVHMyAET
 	export interface T {
 	    start: string,
 	    end: string,
+	  // background/date [date] Date
+  date: Date | undefined,
 	  // background/back_office [select_one] 1.1 Select Office
   back_office: undefined | Option<'back_office'>,
-	  // background/back_enum [select_one] 1.2 Enumerator
+	  // background/back_enum [select_one] 1.2 Staff
   back_enum: undefined | Option<'back_enum'>,
 	  // background/back_donor [select_one] 1.3 Project
   back_donor: undefined | Option<'back_donor'>,
@@ -30,7 +32,7 @@ export type Option<T extends keyof typeof options> = keyof (typeof options)[T]
   ben_det_ph_number: number | undefined,
 	  // ben_det/ben_det_oblast [select_one] 2.5.1 Select oblast where registration is taking place
   ben_det_oblast: undefined | Option<'ben_det_prev_oblast'>,
-	  // ben_det/ben_det_raion [select_one] 2.5.2 Select raion where registration is taking place
+	  // ben_det/ben_det_raion [select_one] 2.5.2 Select Raion where registration is taking place
   ben_det_raion: undefined | string,
 	  // ben_det/ben_det_hromada [select_one] 2.5.3 Select hromada where registration is taking place
   ben_det_hromada: undefined | string,
@@ -40,139 +42,90 @@ export type Option<T extends keyof typeof options> = keyof (typeof options)[T]
   ben_det_res_stat: undefined | Option<'ben_det_res_stat'>,
 	  // ben_det/ben_det_prev_oblast [select_one] 2.6.1 What is your area of origin prior to displacement? (Select Oblast)
   ben_det_prev_oblast: undefined | Option<'ben_det_prev_oblast'>,
-	  // ben_det/ben_det_income [integer] 2.7 What was the total value in UAH of all the resources your household received in the last one month?
+	  // ben_det/ben_det_income [integer] 2.7 What was your total household income during the last one month?
   ben_det_income: number | undefined,
 	  // ben_det/ben_det_hh_size [integer] 2.8 Indicate the total number of people in your household, including the HHH
   ben_det_hh_size: number | undefined,
-	  // hh_char/hh_char_hhh [select_one] 3.1 Are you the head of your household?
-  hh_char_hhh: undefined | Option<'pay_det_tax_exempt'>,
-	  // hh_char/hh_char_res_gender [select_one] 3.1.1 Select gender of respondent?
-  hh_char_res_gender: undefined | Option<'hh_char_hh_det_gender'>,
-	  // hh_char/hh_char_res_age [integer] 3.1.2 Age of Respondent
-  hh_char_res_age: number | undefined,
-	  // hh_char/hh_char_res_dis_select [select_multiple] 3.1.3 Please select any of the below that apply to respondent
-  hh_char_res_dis_select: undefined | Option<'hh_char_dis_select'>[],
-	  // hh_char/hh_char_res_dis_level [select_one] 3.1.4 What is the level of difficulty for the selected options in the previous questions?
-  hh_char_res_dis_level: undefined | Option<'hh_char_dis_level'>,
-	  // hh_char/hh_char_hhh_gender [select_one] 3.2.1 What is the gender of Head of household?
-  hh_char_hhh_gender: undefined | Option<'hh_char_hh_det_gender'>,
-	  // hh_char/hh_char_hhh_age [integer] 3.2.2 What is the age of the Head of Household?
-  hh_char_hhh_age: number | undefined,
-	  // hh_char/hh_char_hhh_dis_select [select_multiple] 3.2.3 Please select any of the below that apply to Head of household
-  hh_char_hhh_dis_select: undefined | Option<'hh_char_dis_select'>[],
-	  // hh_char/hh_char_hhh_dis_level [select_one] 3.2.4 What is the level of difficulty for the selected options in the previous questions?
-  hh_char_hhh_dis_level: undefined | Option<'hh_char_dis_level'>,
-	  // hh_char/hh_char_civ_stat [select_one] 3.2.5 What is the civil status of the Head of Household?
+	  // hh_char/hh_char_civ_stat [select_one] 3.1 What is the civil status of the Head of Household?
   hh_char_civ_stat: undefined | Option<'hh_char_civ_stat'>,
-	    calc_hhh_res_dis_level: string,
 	    calc_char_civ_stat: string,
-	  // hh_char/hh_char_chh [note] This is a child headed household (high risk protection case), please refer immediately to a DRC Protection colleague and complete internal referral form.
-  hh_char_chh: string,
-	  // hh_char/hh_char_hh_det [begin_repeat] 3.1.5 HH Members
-  hh_char_hh_det: {hh_char_hh_det_gender: undefined | Option<'hh_char_hh_det_gender'> | undefined,hh_char_hh_det_age: number | undefined | undefined,hh_char_hh_det_dis_select: undefined | Option<'hh_char_dis_select'>[] | undefined,hh_char_hh_det_dis_level: undefined | Option<'hh_char_dis_level'> | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_baby_age: string | undefined,calc_preg: string | undefined,calc_det_dis_level: string | undefined}[] | undefined,
+	  // hh_char/hh_char_hh_det [begin_repeat] 3.1.2 HH Members
+  hh_char_hh_det: {hh_char_hh_det_gender: undefined | Option<'hh_char_hh_det_gender'> | undefined,hh_char_hh_det_age: number | undefined | undefined,hh_char_hh_det_dis_select: undefined | Option<'hh_char_hh_det_dis_select'>[] | undefined,hh_char_hh_det_dis_level: undefined | Option<'hh_char_hh_det_dis_level'> | undefined,calc_u18: string | undefined,calc_o60: string | undefined,calc_ed_age: string | undefined,calc_baby_age: string | undefined,calc_preg: string | undefined,calc_det_dis_level: string | undefined}[] | undefined,
 	    calc_tot_chi: string,
 	    calc_tot_ed_age: string,
 	    calc_tot_eld: string,
-	  // hh_char/hh_char_preg [select_one] 3.1.5.5 Are any of the females in the household pregnat or lactating?
-  hh_char_preg: undefined | Option<'pay_det_tax_exempt'>,
-	  // hh_char/hh_char_dis_note [note] **3.3 The next set of questions ask about difficulties you or members of your household may have doing certain activities. These questions only relates to household members over the age of 5 years old.**
-  hh_char_dis_note: string,
-	  // hh_char/hh_char_dis_select [select_multiple] 3.3.1 Please select any of the below that apply to you or a member of your household
-  hh_char_dis_select: undefined | Option<'hh_char_dis_select'>[],
-	  // hh_char/hh_char_dis_level [select_one] 3.3.2 What is the level of difficulty for the selected options in the previous questions?
-  hh_char_dis_level: undefined | Option<'hh_char_dis_level'>,
 	    calc_dis_level: string,
-	  // cash_farmers/what_primary_livelihood [select_one] What is the primary livelihood in the household:
+	  // hh_char/hh_char_preg [select_one] 3.1.2.5 Are any of the females in the household pregnat or lactating?
+  hh_char_preg: undefined | Option<'pay_det_tax_exempt'>,
+	  // hh_char/hh_char_chh [note] This is a child headed household (high risk protection case), please refer immediately to a DRC Protection colleague and complete internal referral form.
+  hh_char_chh: string,
+	  // cash_farmers/what_primary_livelihood [select_one] 4.1 What is the primary source of livelihoods in the household
   what_primary_livelihood: undefined | Option<'what_primary_livelihood'>,
-	  // cash_farmers/what_primary_livelihood_other [text] If "Other", please specify
+	  // cash_farmers/what_primary_livelihood_other [text] 4.1.1 If "Other", please specify
   what_primary_livelihood_other: string | undefined,
-	  // cash_farmers/consume_majority [select_one] Do you consume a majority of the crops you produce / livestock that you manage:
+	  // cash_farmers/has_agriculture_exp [select_one] 4.2 Is agriculture or farming the primary source of livelihood for your household?
+  has_agriculture_exp: undefined | Option<'pay_det_tax_exempt'>,
+	  // cash_farmers/consume_majority [select_one] 4.3 Do you consume a majority of the crops you produce / livestock that you manage
   consume_majority: undefined | Option<'pay_det_tax_exempt'>,
-	  // cash_farmers/land_own [decimal] How much land do you own:
+	  // cash_farmers/land_own [decimal] 4.4 How much land do you own
   land_own: number | undefined,
-	  // cash_farmers/land_cultivate [decimal] How much land do you cultivate or manage for crops and/or livestock:
+	  // cash_farmers/land_cultivate [decimal] 4.5 How much land do you cultivate or manage for crops and/or livestock
   land_cultivate: number | undefined,
-	  // cash_farmers/depend_basic_needs [select_one] Do you depend on farming to meet your basic needs?
+	  // cash_farmers/depend_basic_needs [select_one] 4.6 Do you depend on farming to meet your basic needs?
   depend_basic_needs: undefined | Option<'pay_det_tax_exempt'>,
-	  // cash_farmers/eligible_assistance_agricultural [select_multiple] If eligible for assistance, what agricultural inputs do you intend to purchase:
+	  // cash_farmers/household_access_water [select_one] 4.7 Does the household have access to water or other means of irrigation?
+  household_access_water: undefined | Option<'pay_det_tax_exempt'>,
+	  // cash_farmers/access_basic_farming_tools [select_one] 4.8 Does the household have access to some basic farming tools and equipment?
+  access_basic_farming_tools: undefined | Option<'pay_det_tax_exempt'>,
+	  // cash_farmers/eligible_assistance_agricultural [select_multiple] 4.9 If eligible for assistance, what agricultural inputs do you intend to purchase
   eligible_assistance_agricultural: undefined | Option<'eligible_assistance_agricultural'>[],
-	  // cash_farmers/eligible_assistance_agricultural_other [text] If "Other", please specify
+	  // cash_farmers/eligible_assistance_agricultural_other [text] 4.10 If "Other", please specify
   eligible_assistance_agricultural_other: string | undefined,
-	  // cash_farmers/not_many_livestock [note] ##### How many of the following livestock do you have:
-  not_many_livestock: string,
-	  // cash_farmers/many_sheep_goat [integer] Sheep/goat:
-  many_sheep_goat: number | undefined,
-	  // cash_farmers/many_milking [integer] Milking/lactating cow:
-  many_milking: number | undefined,
-	  // cash_farmers/many_cow [integer] Dry cow:
-  many_cow: number | undefined,
-	  // cash_farmers/many_pig [integer] Pig:
-  many_pig: number | undefined,
-	  // cash_farmers/many_poultry [integer] Poultry:
-  many_poultry: number | undefined,
-	    cal_cost_sheep_goat: string,
-	    cal_cost_milking: string,
-	    cal_cost_cow: string,
-	    cal_cost_pig: string,
-	    cal_cost_poultry: string,
-	    lim_cal_cost_sheep_goat: string,
-	    lim_cal_cost_milking: string,
-	    lim_cal_cost_cow: string,
-	    lim_cal_cost_pig: string,
-	    lim_cal_cost_poultry: string,
-	    no_cal_cost_all: string,
-	    cal_cost_all: string,
-	    cal_cost_450: string,
-	  // cash_farmers/not_cost_all [note] Total amount of assistance required by the household: ${no_cal_cost_all}$
-  not_cost_all: string,
-	  // cash_farmers/not_cost_assist [note] Total amount of assistance: ${cal_cost_all}$
-  not_cost_assist: string,
-	  // cash_farmers/barriers_providing_sufficient [select_one] Do you face barriers in providing sufficient quality and quantity of feed to your livestock?
-  barriers_providing_sufficient: undefined | Option<'pay_det_tax_exempt'>,
-	  // cash_farmers/barriers_providing_sufficient_yes [text] If "Yes", please specify
-  barriers_providing_sufficient_yes: string | undefined,
-	  // cash_farmers/eligible_cash_feed [select_multiple] If eligible for cash for animal feed, what animal feed do you intend to purchase?
-  eligible_cash_feed: undefined | Option<'eligible_cash_feed'>[],
-	  // cash_farmers/eligible_cash_feed_other [text] If "Other", please specify
-  eligible_cash_feed_other: string | undefined,
-	  // cash_farmers/animal_shelter_need [select_one] Is your animal shelter in need of rehabilitation?
-  animal_shelter_need: undefined | Option<'pay_det_tax_exempt'>,
-	  // cash_farmers/cash_animal_shelter [select_multiple] If eligible for cash for animal shelter assistance, what building materials do you intend to purchase
-  cash_animal_shelter: undefined | Option<'cash_animal_shelter'>[],
-	  // cash_farmers/cash_animal_shelter_other [text] If "Other", please specify
-  cash_animal_shelter_other: string | undefined,
-	  // livelihoods_score/income_spent_food [integer] In the last 7 days, what proportion of the overall household income was spent on food (human consumption)?
+	  // livelihoods_score/income_spent_food [integer] 4a.1 In the last 7 days, what proportion of the overall household income was spent on food (human consumption)?
   income_spent_food: number | undefined,
-	  // livelihoods_score/income_spent_nonfood [integer] In the last 7 days, what proportion of the overall household income was spent on non-food items and services such as health and education related services?
+	  // livelihoods_score/income_spent_nonfood [integer] 4a.2 In the last 7 days, what proportion of the overall household income was spent on non-food items and services such as health and education related services?
   income_spent_nonfood: number | undefined,
-	  // livelihoods_score/lcs_sell_hh_assets [select_one] In the last 30 days, did your household sell household assets/goods (furniture/household appliances (i.e. TV, radio, washing machine, etc.) smart phone/jewellery,...) due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_sell_hh_assets [select_one] 4a.3 In the last 30 days, did your household sell household assets/goods (furniture/household appliances (i.e. TV, radio, washing machine, etc.) smart phone/jewellery,...) due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_sell_hh_assets: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_spent_savings [select_one] In the last 30 days, did your household spend savings or сonsumed stocks "for a rainy day" due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_spent_savings [select_one] 4a.4 In the last 30 days, did your household spend savings or сonsumed stocks "for a rainy day" due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_spent_savings: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_forrowed_food [select_one] In the last 30 days, did your household purchase food on credit or borrowed food  due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_forrowed_food [select_one] 4a.5 In the last 30 days, did your household purchase food on credit or borrowed food  due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_forrowed_food: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_eat_elsewhere [select_one] In the last 30 days, did your household send household members to eat/live with another family or friends or eat at a food bank/soup kitchen/collective centre distributing food due to a lack of resources to cover to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_eat_elsewhere [select_one] 4a.6 In the last 30 days, did your household send household members to eat/live with another family or friends or eat at a food bank/soup kitchen/collective centre distributing food due to a lack of resources to cover to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_eat_elsewhere: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_sell_productive_assets [select_one] In the last 30 days, did your household sell productive assets or means of transport (sewing machine, bicycle, car, etc.) due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_sell_productive_assets [select_one] 4a.7 In the last 30 days, did your household sell productive assets or means of transport (sewing machine, bicycle, car, etc.) due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_sell_productive_assets: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_reduce_health_expenditures [select_one] In the last 30 days, did your household reduce essential health expenditures (including drugs,) due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities,  fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_reduce_health_expenditures [select_one] 4a.8 In the last 30 days, did your household reduce essential health expenditures (including drugs,) due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities,  fuel for heating, drinking water, etc.)?
   lcs_reduce_health_expenditures: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_reduce_education_expenditures [select_one] In the last 30 days, did your household reduce essential education expenditures due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water,  etc.)?
+	  // livelihoods_score/lcs_reduce_education_expenditures [select_one] 4a.9 In the last 30 days, did your household reduce essential education expenditures due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water,  etc.)?
   lcs_reduce_education_expenditures: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_sell_house [select_one] In the last 30 days, did your household sell house or land due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_sell_house [select_one] 4a.10 In the last 30 days, did your household sell house or land due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_sell_house: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_move_elsewhere [select_one] In the last 30 days, did your HH member(-s) move elsewhere in search of work due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_move_elsewhere [select_one] 4a.11 In the last 30 days, did your HH member(-s) move elsewhere in search of work due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_move_elsewhere: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_degrading_income_source [select_one] In the last 30 days, did your household use degrading sources of income, illegal work, or high risk jobs due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_degrading_income_source [select_one] 4a.12 In the last 30 days, did your household use degrading sources of income, illegal work, or high risk jobs due to a lack of resources to cover basic needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_degrading_income_source: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_ask_stranger [select_one] In the last 30 days, did your household have to ask strangers for money to cover essential needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
+	  // livelihoods_score/lcs_ask_stranger [select_one] 4a.13 In the last 30 days, did your household have to ask strangers for money to cover essential needs (such as food, shelter, health, education, utilities, fuel for heating, drinking water, etc.)?
   lcs_ask_stranger: undefined | Option<'lcs_ask_stranger'>,
-	  // livelihoods_score/lcs_reason [select_multiple] What were the main reasons why your household decided to use these strategies?
+	  // livelihoods_score/lcs_reason [select_multiple] 4a.14 What were the main reasons why your household decided to use these strategies?
   lcs_reason: undefined | Option<'lcs_reason'>[],
-	  // livelihoods_score/lcs_reason_other [text] If other, specify
+	  // livelihoods_score/lcs_reason_other [text] 4a.14.1 If other, specify
   lcs_reason_other: string | undefined,
+	  // contamination/known_contamination_your [select_one] 4b.1 Do you know of any contamination (e.g. unexploded ordnance) on your land which you are farming on?
+  known_contamination_your: undefined | Option<'known_contamination_next'>,
+	  // contamination/contamination_impact_your [select_one] 4b.2 Has this impacted your ability to farm this land?
+  contamination_impact_your: undefined | Option<'contamination_impact_next'>,
+	  // contamination/known_contamination_next [select_one] 4b.3 Do you know of any contamination (e.g. unexploded ordnance) on land of a neighbour or a small-scale farmer close by?
+  known_contamination_next: undefined | Option<'known_contamination_next'>,
+	  // contamination/contamination_impact_next [select_one] 4b.4 Do you know if this individual(s) still continues to farm their land?
+  contamination_impact_next: undefined | Option<'contamination_impact_next'>,
 	  // ass_inc/not_information [note] Your information has been collected and will be reviewed in line with the selection and vulnerability criteria. We will reach out to you to provide decision on eligibility
   not_information: string,
+	    calc_gen_sc_inc: string,
+	  // ass_inc/ass_inc_sc_inc [note] **You have met the critera for inclusion in programme. We will conduct further internal checks and revert to you with a final result.** <span style="color: red">Do not read this out to the household</span>
+  ass_inc_sc_inc: string,
+	  // ass_inc/ass_inc_sc_not_vul [note] **Unfortunately based upon our criteria, you do not qualify for program as you do not meet the threshold for vulnerability.**
+  ass_inc_sc_not_vul: string,
 	  // pay_det/pay_consent [select_one] 6.0 Thank you for answering the questions above, are you willing to provide your payment details?
   pay_consent: undefined | Option<'pay_det_tax_exempt'>,
 	  // pay_det/pay_det_s/pay_det_id_type [select_one] 6.1 What form of ID do you have?
@@ -207,10 +160,6 @@ export type Option<T extends keyof typeof options> = keyof (typeof options)[T]
   pay_zip: string | undefined,
 	  // pay_det/pay_det_s/pay_det_add_im [image] 6.4.6 Take a picture of the address page of passport
   pay_det_add_im: string,
-	  // pay_det/pay_det_s/pay_det_pay_meth_oth [text] 6.4.7 What other Payment methods do you prefer?
-  pay_det_pay_meth_oth: string | undefined,
-	  // pay_det/pay_det_s/pay_det_pay_meth_none [text] 6.4.8 Can you highlight the main reason that none of these payment methods are suitable to you?
-  pay_det_pay_meth_none: string | undefined,
 	  // fin_det/fin_det_res [text] 7.1 Other Comments from Respondent
   fin_det_res: string | undefined,
 	  // fin_det/fin_det_enum [text] 7.2 Other Comments from Enumerator
@@ -244,10 +193,6 @@ back_office: {
 	'umy': `Sumy(UMY)`
 },
 back_enum: {
-	'oleksandr_havrylov': `Oleksandr Havrylov`,
-	'ievgen_kylymenniy': `Ievgen Kylymenniy`,
-	'oleksandr_shmunk': `Oleksandr Shmunk`,
-	'inna_kovalchuk': `Inna Kovalchuk`,
 	'dmytro_ivanov': `Dmytro Ivanov`,
 	'henadii_petrychenko': `Henadii Petrychenko`,
 	'nadiia_yudaieva': `Nadiia Yudaieva`,
@@ -260,7 +205,12 @@ back_enum: {
 	'artem_chernukha_1': `Artem Chernukha`,
 	'lwo_ex1': `Extra 1`,
 	'lwo_ex2': `Extra 2`,
-	'polina_prusakova': `Polina Prusakova`,
+	'nataliia_lanina': `Nataliia Lanina`,
+	'nikita_zubenko': `Nikita Zubenko`,
+	'mykola_marchenko': `Mykola Marchenko`,
+	'olena_suhoniak': `Olena Suhoniak`,
+	'oleksii_marchenko': `Oleksii Marchenko`,
+	'svitlana_labunska': `Svitlana Labunska`,
 	'nlv_ex1': `Extra 1`,
 	'nlv_ex2': `Extra 2`,
 	'alina_bondarenko': `Alina Bondarenko`,
@@ -316,15 +266,61 @@ back_enum: {
 	'umy_ex1': `Extra 1`,
 	'umy_ex2': `Extra 2`,
 	'umy_ex3': `Extra 3`,
-	'umy_ex4': `Extra 4`,
-	'oleh_vyshnevskyi': `Oleh Vyshevskyi`
+	'umy_ex4': `Extra 4`
 },
 back_donor: {
-	'uhf6': `UHF-6 (UKR-000336)`,
-	'uhf7': `UHF-7 (UKR-000352)`
+	'ukr000348_bha': `BHA (UKR-000348)`
+},
+pay_det_tax_exempt: {
+	'yes': `Yes`,
+	'no': `No`
+},
+known_contamination_next: {
+	'yes': `Yes`,
+	'no': `No`,
+	'unable_unwilling_to_answer': `Unable/unwilling to answer`
+},
+contamination_impact_next: {
+	'still_farm_all_of_the_land': `Still farm all of the land`,
+	'partially_farm_the_land': `Partially farm the land`,
+	'stopped_farming_all_together': `Stopped farming all together`,
+	'unable_unwilling_to_answer': `Unable/unwilling to answer`
+},
+back_refer_who: {
+	'prot': `A = Protection`,
+	'legal': `B = Legal`,
+	'shelter': `C = Shelter`
+},
+lcs_ask_stranger: {
+	'yes': `Yes`,
+	'no_had_no_need_to_use_this_coping_strategy': `No, had no need to use this coping strategy`,
+	'no_have_already_exhausted_this_coping_strategy_and_cannot_use_it_again': `No, have already exhausted this coping strategy and cannot use it again`,
+	'not_applicable_this_coping_strategy_is_not_available_to_me': `Not applicable / This coping strategy is not available to me`,
+	'prefer_not_to_answer': `Prefer not to answer`
+},
+lcs_reason: {
+	'to_access_or_pay_for_food': `To access or pay for food`,
+	'to_access_or_pay_for_healthcare': `To access or pay for healthcare`,
+	'to_access_or_pay_for_shelter': `To access or pay for shelter`,
+	'to_access_or_pay_for_education': `To access or pay for education`,
+	'none': `None of the above`,
+	'other': `Other`,
+	'dont_know': `Don't know`
 },
 undefined: {
-	'ecrec': `MPCA`,
+	'hay': `Hay`,
+	'concentrated_feed': `Concentrated feed`,
+	'mineral_blocks': `Mineral blocks`,
+	'wheat_seeds': `Wheat seeds`,
+	'barley_seeds': `Barley seeds`,
+	'other': `Other`,
+	'bricks': `Bricks`,
+	'wood': `Wood`,
+	'plywood': `Plywood`,
+	'metal_panel': `Metal panel`,
+	'roof_panel': `Roof Panel`,
+	'cement': `Cement`,
+	'nails': `Nails`,
 	'no_damage': `No Structural Damage`,
 	'minor_damage': `Minor Damage (light or medium damages such as broken windows and doors, minor roof damage)`,
 	'heavy_damage': `Heavy Damage`,
@@ -346,48 +342,6 @@ undefined: {
 	'intermittent': `C = Comes on intermittent days`,
 	'rarely': `D = Rarely`,
 	'never': `E = Never`
-},
-pay_det_tax_exempt: {
-	'yes': `A = Yes`,
-	'no': `B = No`
-},
-back_refer_who: {
-	'prot': `A = Protection`,
-	'legal': `B = Legal`,
-	'shelter': `C = Shelter`
-},
-lcs_ask_stranger: {
-	'yes': `Yes`,
-	'no_had_no_need_to_use_this_coping_strategy': `No, had no need to use this coping strategy`,
-	'no_have_already_exhausted_this_coping_strategy_and_cannot_use_it_again': `No, have already exhausted this coping strategy and cannot use it again`,
-	'not_applicable_this_coping_strategy_is_not_available_to_me': `Not applicable / This coping strategy is not available to me`,
-	'prefer_not_to_answer': `Prefer not to answer`
-},
-lcs_reason: {
-	'to_access_or_pay_for_food': `To access or pay for food`,
-	'to_access_or_pay_for_healthcare': `To access or pay for healthcare`,
-	'to_access_or_pay_for_shelter': `To access or pay for shelter`,
-	'to_access_or_pay_for_education': `To access or pay for education`,
-	'other': `Other`,
-	'dont_know': `Don't know`
-},
-eligible_cash_feed: {
-	'hay': `Hay`,
-	'concentrated_feed': `Concentrated feed`,
-	'mineral_blocks': `Mineral blocks`,
-	'wheat_seeds': `Wheat seeds`,
-	'barley_seeds': `Barley seeds`,
-	'other': `Other`
-},
-cash_animal_shelter: {
-	'bricks': `Bricks`,
-	'wood': `Wood`,
-	'plywood': `Plywood`,
-	'metal_panel': `Metal panel`,
-	'roof_panel': `Roof Panel`,
-	'cement': `Cement`,
-	'nails': `Nails`,
-	'other': `Other`
 },
 ben_det_prev_oblast: {
 	'cherkaska': `Cherkaska`,
@@ -434,7 +388,7 @@ hh_char_civ_stat: {
 	'widow': `E = Widowed`,
 	'abandoned': `F = Abandoned`
 },
-hh_char_dis_select: {
+hh_char_hh_det_dis_select: {
 	'diff_see': `A = Have difficulty seeing, even if wearing glasses`,
 	'diff_hear': `B = Have difficulty hearing, even if using a hearing aid`,
 	'diff_walk': `C = Have difficulty walking or climbing steps`,
@@ -443,7 +397,7 @@ hh_char_dis_select: {
 	'diff_comm': `F = Have difficulty communicating, for example understanding or being understood`,
 	'diff_none': `G = None of the above apply`
 },
-hh_char_dis_level: {
+hh_char_hh_det_dis_level: {
 	'zero': `A = No, no difficulty`,
 	'one': `B = Yes, some difficulty`,
 	'two': `C = Yes, a lot of difficulty`,
@@ -464,9 +418,7 @@ pay_det_id_type: {
 pay_det_pay_meth: {
 	'raiff_trans': `A = Remittance Raiffaisen AVAL`,
 	'ukrpost': `B = Ukrposhta`,
-	'bank_card': `C = Bank card`,
-	'other_pay': `D = Other Payment Method`,
-	'none_pay': `E = None of the above fit my needs`
+	'bank_card': `C = Bank card`
 },
 what_primary_livelihood: {
 	'agricul': `Agricultural and/or livestock activities`,
@@ -517,23 +469,16 @@ const extractQuestionName = (_: Record<string, any>) => {
 
 export const map = (_: Record<keyof T, any>): T => ({
 	..._,
+	date: _.date ? new Date(_.date) : undefined,
 	ben_det_ph_number: _.ben_det_ph_number ? +_.ben_det_ph_number : undefined,
 	ben_det_income: _.ben_det_income ? +_.ben_det_income : undefined,
 	ben_det_hh_size: _.ben_det_hh_size ? +_.ben_det_hh_size : undefined,
-	hh_char_res_age: _.hh_char_res_age ? +_.hh_char_res_age : undefined,
-	hh_char_res_dis_select: _.hh_char_res_dis_select?.split(' '),
-	hh_char_hhh_age: _.hh_char_hhh_age ? +_.hh_char_hhh_age : undefined,
-	hh_char_hhh_dis_select: _.hh_char_hhh_dis_select?.split(' '),
-	hh_char_hh_det: _.hh_char_hh_det?.map(extractQuestionName),
-	hh_char_dis_select: _.hh_char_dis_select?.split(' '),
+	hh_char_hh_det: _.hh_char_hh_det?.map(extractQuestionName).map((_: any) => {
+		_['hh_char_hh_det_age'] = _.hh_char_hh_det_age ? +_.hh_char_hh_det_age : undefined
+		_['hh_char_hh_det_dis_select'] = _.hh_char_hh_det_dis_select?.split(' ')
+		return _	
+}),
 	eligible_assistance_agricultural: _.eligible_assistance_agricultural?.split(' '),
-	many_sheep_goat: _.many_sheep_goat ? +_.many_sheep_goat : undefined,
-	many_milking: _.many_milking ? +_.many_milking : undefined,
-	many_cow: _.many_cow ? +_.many_cow : undefined,
-	many_pig: _.many_pig ? +_.many_pig : undefined,
-	many_poultry: _.many_poultry ? +_.many_poultry : undefined,
-	eligible_cash_feed: _.eligible_cash_feed?.split(' '),
-	cash_animal_shelter: _.cash_animal_shelter?.split(' '),
 	income_spent_food: _.income_spent_food ? +_.income_spent_food : undefined,
 	income_spent_nonfood: _.income_spent_nonfood ? +_.income_spent_nonfood : undefined,
 	lcs_reason: _.lcs_reason?.split(' '),

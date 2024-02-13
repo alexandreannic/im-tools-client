@@ -7,6 +7,7 @@ import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema
 import {useI18n} from '@/core/i18n'
 import {KoboAnswer} from '@/core/sdk/server/kobo/Kobo'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
+import {Datatable} from '@/shared/Datatable/Datatable'
 
 export const DatabaseKoboTableGroupModal = ({
   groupData,
@@ -40,7 +41,7 @@ export const DatabaseKoboTableGroupModal = ({
         <Txt block sx={{maxWidth: 400}} truncate>{ctx.schema.translate.question(name)}</Txt>
       </PanelHead>
       <PanelBody>
-        <Sheet columns={columns} data={groupData} id={name}/>
+        <Datatable columns={columns} data={groupData} id={name}/>
       </PanelBody>
     </Popover>
   )

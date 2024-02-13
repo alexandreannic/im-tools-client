@@ -8,6 +8,7 @@ import {useIpToast} from '@/core/useToast'
 import {useI18n} from '@/core/i18n'
 import {UseFetcher} from '@/shared/hook/useFetcher'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
+import {databaseCustomMapping} from '@/features/Database/KoboTable/customization/customMapping'
 
 export interface DatabaseKoboContext {
   fetcherAnswers: UseFetcher<() => ReturnType<ApiSdk['kobo']['answer']['searchByAccess']>>
@@ -53,7 +54,13 @@ export const DatabaseKoboTableProvider = (props: {
   const refreshRequestedFlag = useRef(false)
 
   const mapData = (data: KoboAnswer[]) => {
-    const mapped = data.map(_ => Kobo.mapAnswerBySchema(props.schema.schemaHelper.questionIndex, _))
+    const mapped = data.map(_ => {
+      const m = Kobo.mapAnswerBySchema(props.schema.schemaHelper.questionIndex, _)
+      if (databaseCustomMapping[form.id]) {
+        return databaseCustomMapping[form.id](m)
+      }
+      return m
+    })
     return props.dataFilter ? mapped.filter(props.dataFilter) : mapped
   }
 

@@ -6,7 +6,7 @@ import {KoboProtection_hhs3, ProtectionCommunityMonitoringTags, ProtectionHhsTag
 import {KoboMealCfmHelper} from '@/core/sdk/server/kobo/custom/KoboMealCfm'
 import {KoboSafetyIncidentHelper} from '@/core/sdk/server/kobo/custom/KoboSafetyIncidentTracker'
 import {KoboAnswerFilter, KoboAnswerSdk} from '@/core/sdk/server/kobo/KoboAnswerSdk'
-import {EcrecCashRegistrationTags} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
+import {KoboEcrec_cashRegistration} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
 import {ApiPaginate} from '@/core/sdk/server/_core/ApiSdkUtils'
 import {Protection_communityMonitoring} from '@/core/sdk/server/kobo/generatedInterface/Protection_communityMonitoring'
 import {Protection_pss} from '@/core/sdk/server/kobo/generatedInterface/Protection_pss'
@@ -26,8 +26,10 @@ import {Shelter_cashForRepair} from '@/core/sdk/server/kobo/generatedInterface/S
 import {Bn_Re} from '@/core/sdk/server/kobo/generatedInterface/Bn_Re'
 import {Partnership_partnersDatabase} from '@/core/sdk/server/kobo/generatedInterface/Partnership_partnersDatabase'
 import {Shelter_TA} from '@/core/sdk/server/kobo/generatedInterface/Shelter_TA'
-import {Ecrec_sectoralCashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_sectoralCashRegistration'
+import {Ecrec_cashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_cashRegistration'
 import {Protection_hhs3} from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
+import {Ecrec_cashRegistrationBha} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_cashRegistrationBha'
+import {KoboGeneralMapping} from '@/core/sdk/server/kobo/custom/KoboGeneralMapping'
 
 export type KoboUnwrapAnserType<T extends keyof KoboTypedAnswerSdk> = Promise<Awaited<ReturnType<KoboTypedAnswerSdk[T]>>['data']>
 
@@ -207,11 +209,21 @@ export class KoboTypedAnswerSdk {
     })
   }
 
+  readonly searchEcrec_cashRegistrationBha = (filters: KoboAnswerFilter = {}) => {
+    return this.search({
+      formId: KoboIndex.byName('ecrec_cashRegistration').id,
+      fnMapKobo: Ecrec_cashRegistrationBha.map,
+      fnMapTags: _ => _ as KoboEcrec_cashRegistration.Tags,
+      ...filters,
+    })
+  }
+
   readonly searchEcrec_cashRegistration = (filters: KoboAnswerFilter = {}) => {
     return this.search({
       formId: KoboIndex.byName('ecrec_cashRegistration').id,
-      fnMapKobo: Ecrec_sectoralCashRegistration.map,
-      fnMapTags: _ => _ as EcrecCashRegistrationTags,
+      fnMapKobo: Ecrec_cashRegistration.map,
+      fnMapTags: _ => _ as KoboEcrec_cashRegistration.Tags,
+      fnMapCustom: KoboGeneralMapping.addIndividualBreakdownColumn,
       ...filters,
     })
   }

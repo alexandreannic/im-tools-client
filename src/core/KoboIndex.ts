@@ -10,6 +10,7 @@ export const kobo = {
     form: {
       safety_incident: 'aAJNkn7v9fRL2XqQCgEkXf',
       ecrec_cashRegistration: 'aE5md7RfHiy4LJmddoFAQH',
+      ecrec_cashRegistrationBha: 'aQCGR2fESUNFMYKVHMyAET',
       bn_rapidResponse: 'aMJL9DG8qEcULqTZTKQbrq',
       bn_cashForRentApplication: 'aBupWbhtUmA7so3532tYLa',
       bn_cashForRentRegistration: 'ajNzDaUuLkcEvjQhVsAmao',
@@ -71,6 +72,7 @@ export const koboFormById: Record<string, KoboFormName> = seq(Enum.entries(kobo.
 export const koboFormTranslation: Record<KoboFormName, string> = {
   safety_incident: '[Safety] Incident tracker',
   ecrec_cashRegistration: '[Ecrec] Sectoral Cash Registration',
+  ecrec_cashRegistrationBha: '[Ecrec] Sectoral Cash Registration BHA',
   bn_rapidResponse: '[Basic Needs] Rapid Response Mechanism',
   bn_cashForRentApplication: '[Basic Needs] Cash for Rent Application',
   bn_cashForRentRegistration: '[Basic Needs] Cash for Rent Registration',

@@ -7,10 +7,10 @@ import React, {useMemo, useState} from 'react'
 import {KoboAttachedImg} from '@/shared/TableImg/KoboAttachedImg'
 import {Txt} from 'mui-extension'
 import {useModal} from '@/shared/Modal/useModal'
-import {Sheet} from '@/shared/Sheet/Sheet'
 import {getColumnBySchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useDatabaseKoboTableContext} from '@/features/Database/KoboTable/DatabaseKoboContext'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
+import {Datatable} from '@/shared/Datatable/Datatable'
 
 export const useDatabaseKoboAnswerView = <T extends KoboAnswer<any, any> = any>(schema: KoboSchema) => {
   const [open, close] = useModal((answer: T) => (
@@ -134,7 +134,7 @@ const KoboAnswerQuestionView = ({
     case 'begin_repeat': {
       return <>
         <KoboQuestionLabelView>{ctx.translate.question(questionSchema.name)}</KoboQuestionLabelView>
-        <Sheet columns={columns!} data={row[questionSchema.name]} id={questionSchema.name}/>
+        <Datatable columns={columns!} data={row[questionSchema.name]} id={questionSchema.name}/>
       </>
     }
     case 'start':
