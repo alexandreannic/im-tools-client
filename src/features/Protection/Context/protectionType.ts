@@ -11,7 +11,8 @@ export interface PersonWithStatus extends Person.Person {
 export type ProtectionKoboForm =
   'protection_gbv' |
   'protection_pss' |
-  'protection_hhs2_1' |
+  'protection_hhs3' |
+  // 'protection_hhs2_1' |
   'protection_groupSession'
 
 // export type ProtectionKoboForm = ArrayValues<typeof ProtectionDataHelper.koboForms>

@@ -24,7 +24,7 @@ export class ProtectionDataHelper {
     const aiLoc = getAiLocation(d)
     return {
       ...Kobo.extraxtAnswerMetaData(d),
-      date: d.date ?? d.submissionTime,
+      date: d.date,
       koboForm: 'protection_pss',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
       oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast),
@@ -41,7 +41,7 @@ export class ProtectionDataHelper {
     const aiLoc = getAiLocation(d)
     return {
       ...Kobo.extraxtAnswerMetaData(d),
-      date: d.date ?? d.submissionTime,
+      date: d.date,
       koboForm: 'protection_gbv',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
       oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast),
@@ -58,7 +58,7 @@ export class ProtectionDataHelper {
     const aiLoc = getAiLocation(d)
     return {
       ...Kobo.extraxtAnswerMetaData(d),
-      date: d.date ?? d.submissionTime,
+      date: d.date,
       koboForm: 'protection_groupSession',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
       oblast: KoboGeneralMapping.mapOblast(d.ben_det_oblast),
@@ -74,8 +74,8 @@ export class ProtectionDataHelper {
   static readonly mapHhs = (d: KoboProtection_hhs3.T): ProtectionActivity => {
     return {
       ...Kobo.extraxtAnswerMetaData(d),
-      date: d.submissionTime,
-      koboForm: 'protection_hhs2_1',
+      date: d.date,
+      koboForm: 'protection_hhs3',
       office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
       oblast: OblastIndex.byIso(d.where_are_you_current_living_oblast),
       raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)?._5w as any,
@@ -85,4 +85,19 @@ export class ProtectionDataHelper {
       persons: d.persons
     }
   }
+
+  // static readonly mapHhsOld = (d: KoboProtection_hhs3.T): ProtectionActivity => {
+  //   return {
+  //     ...Kobo.extraxtAnswerMetaData(d),
+  //     date: d.submissionTime,
+  //     koboForm: 'protection_hhs2_1',
+  //     office: KoboGeneralMapping.mapOffice(d.staff_to_insert_their_DRC_office),
+  //     oblast: OblastIndex.byIso(d.where_are_you_current_living_oblast),
+  //     raion: AILocationHelper.findRaionByIso(d.where_are_you_current_living_raion)?._5w as any,
+  //     hromada: AILocationHelper.findHromadaByIso(d.where_are_you_current_living_hromada!)?._5w as any,
+  //     project: [...d.tags?.projects ?? [], DrcProject['UKR-000322 ECHO2']],
+  //     donor: d.tags?.projects?.map(_ => DrcProjectHelper.donorByProject[_!]),
+  //     persons: d.persons
+  //   }
+  // }
 }

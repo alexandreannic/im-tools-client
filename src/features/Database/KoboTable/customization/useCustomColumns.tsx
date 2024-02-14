@@ -155,7 +155,29 @@ export const useCustomColumns = (): DatatableColumn.Props<KoboMappedAnswer>[] =>
           type: 'select_multiple',
           width: 200,
           options: () => SheetUtils.buildOptions(Obj.keys(DrcProject), true),
-          // renderValue: (row: KoboMappedAnswer & {tags: ProtHhsTags}) => row.tags?.projects,
+          render: (row: KoboAnswer<any, ProtectionHhsTags>) => {
+            return {
+              tooltip: row.tags?.projects,
+              value: map(row.tags?.projects, p => p.length === 0 ? undefined : p) ?? [SheetUtils.blank],
+              label: (
+                <IpSelectMultiple
+                  disabled={!ctx.canEdit}
+                  value={row.tags?.projects ?? []}
+                  onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'projects'})}
+                  options={currentProtectionProjects.map(k => ({value: k, children: k}))}
+                />
+              )
+            }
+          }
+        }
+      ],
+      [KoboIndex.byName('protection_hhs3').id]: [
+        {
+          id: 'tags_project',
+          head: m.project,
+          type: 'select_multiple',
+          width: 200,
+          options: () => SheetUtils.buildOptions(Obj.keys(DrcProject), true),
           render: (row: KoboAnswer<any, ProtectionHhsTags>) => {
             return {
               tooltip: row.tags?.projects,
