@@ -97,11 +97,16 @@ export namespace KoboGeneralMapping {
     let elderlyCount = 0
     let adultCount = 0
     hh?.forEach(_ => {
-      _.disabilities?.forEach(disabilities.add, disabilities)
-      if (_.age && _.age < 18) childrenCount++
-      if (_.age && _.age >= 18) adultCount++
-      if (_.age && _.age >= 60) elderlyCount++
-      if (_.disabilities && !_.disabilities.includes('diff_none')) disabilitiesCount++
+      try {
+        _.disabilities?.forEach(disabilities.add, disabilities)
+        if (_.age && _.age < 18) childrenCount++
+        if (_.age && _.age >= 18) adultCount++
+        if (_.age && _.age >= 60) elderlyCount++
+        if (_.disabilities && !_.disabilities.includes('diff_none')) disabilitiesCount++
+      } catch (e) {
+        console.log(_)
+        throw e
+      }
     })
     disabilities.delete('diff_none')
     return {

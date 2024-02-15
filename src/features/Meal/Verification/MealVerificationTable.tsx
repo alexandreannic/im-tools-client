@@ -2,7 +2,6 @@ import {useAppSettings} from '@/core/context/ConfigContext'
 import {fnSwitch, map, Seq, seq} from '@alexandreannic/ts-utils'
 import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 import {Page, PageTitle} from '@/shared/Page'
-import {Sheet} from '@/shared/Sheet/Sheet'
 import {alpha, Box, Icon, Tooltip, useTheme} from '@mui/material'
 import {capitalize, toPercent} from '@/utils/utils'
 import {useI18n} from '@/core/i18n'
@@ -19,7 +18,6 @@ import * as yup from 'yup'
 import {MealVerificationAnsers, MealVerificationAnswersStatus, MealVerificationStatus} from '@/core/sdk/server/mealVerification/MealVerification'
 import {mealVerificationActivities, MealVerificationActivity, mealVerificationConf} from '@/features/Meal/Verification/mealVerificationConfig'
 import {ApiSdk} from '@/core/sdk/server/ApiSdk'
-import {SheetSkeleton} from '@/shared/Sheet/SheetSkeleton'
 import {useAsync} from '@/shared/hook/useAsync'
 import {getColumnByQuestionSchema} from '@/features/Database/KoboTable/getColumnBySchema'
 import {useMealVerificationContext} from '@/features/Meal/Verification/MealVerificationContext'
@@ -28,6 +26,8 @@ import {useFetcher} from '@/shared/hook/useFetcher'
 import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {KoboIndex} from '@/core/KoboIndex'
 import {KoboSchemaHelper} from '@/features/KoboSchema/koboSchemaHelper'
+import {DatatableSkeleton} from '@/shared/Datatable/DatatableSkeleton'
+import {Datatable} from '@/shared/Datatable/Datatable'
 
 export enum MergedDataStatus {
   Selected = 'Selected',
@@ -126,7 +126,6 @@ export const MealVerificationTable = () => {
                   <MealVerificationLinkToForm koboFormId={activity.registration.koboFormId} sx={{mr: 2}}/>
                   <MealVerificationLinkToForm koboFormId={activity.verification.koboFormId}/>
                 </Box>
-
                 {capitalize(dateFromNow(mealVerification.createdAt))} by <b>{mealVerification.createdBy}</b>
                 <Box>{mealVerification.desc}</Box>
               </Box>
@@ -139,7 +138,7 @@ export const MealVerificationTable = () => {
           />
         </>
       ) : (
-        <SheetSkeleton/>
+        <DatatableSkeleton/>
       )}
     </Page>
   )
@@ -271,7 +270,7 @@ const MealVerificationTableContent = <
         </Div>
       )}
       <Panel>
-        <Sheet
+        <Datatable
           showExportBtn
           id="meal-verif-ecrec"
           loading={fetcherDataVerified.loading || fetcherDataOrigin.loading}
@@ -314,7 +313,7 @@ const MealVerificationTableContent = <
               renderExport: false,
               head: '',
               style: _ => ({fontWeight: t.typography.fontWeightBold}),
-              render: _ => {
+              renderQuick: _ => {
                 const verif = indexVerification[_.data.id]
                 return (
                   <>
@@ -360,7 +359,7 @@ const MealVerificationTableContent = <
               id: 'taxid',
               head: m.taxID,
               type: 'string',
-              render: _ => _.data[activity.joinColumn]
+              renderQuick: _ => _.data[activity.joinColumn]
             },
             {
               id: 'status',
@@ -368,17 +367,18 @@ const MealVerificationTableContent = <
               align: 'center',
               head: m.status,
               type: 'select_one',
-              renderValue: _ => _.status,
-              renderOption: _ => fnSwitch(_.status, {
-                NotSelected: <TableIcon color="disabled">do_disturb_on</TableIcon>,
-                Completed: <TableIcon color="success">check_circle</TableIcon>,
-                Selected: <TableIcon color="warning">schedule</TableIcon>,
-              }),
-              render: _ => fnSwitch(_.status, {
-                NotSelected: <TableIcon color="disabled">do_disturb_on</TableIcon>,
-                Completed: <TableIcon color="success">check_circle</TableIcon>,
-                Selected: <TableIcon color="warning">schedule</TableIcon>,
-              })
+              render: _ => {
+                const label = fnSwitch(_.status, {
+                  NotSelected: <TableIcon color="disabled">do_disturb_on</TableIcon>,
+                  Completed: <TableIcon color="success">check_circle</TableIcon>,
+                  Selected: <TableIcon color="warning">schedule</TableIcon>,
+                })
+                return {
+                  value: _.status,
+                  label: label,
+                  option: label
+                }
+              },
             },
             ...activity.dataColumns?.flatMap(c => {
               const q = schema.schemaHelper.questionIndex[c]
@@ -408,47 +408,35 @@ const MealVerificationTableContent = <
                       background: alpha(t.palette.error.main, .08)
                     }
                 },
-                renderExport: (_: MergedData) => {
-                  const isOption = schema.schemaHelper.questionIndex[c].type === 'select_one' || schema.schemaHelper.questionIndex[c].type === 'select_multiple'
-                  const dataCheck = _.dataCheck && isOption ? schema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
-                  const data = isOption ? schema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
-                  switch (display) {
-                    case 'data':
-                      return data
-                    case 'dataCheck':
-                      return dataCheck ?? '???'
-                    case 'all':
-                      return (data ?? '""') + ' = ' + (dataCheck ?? '???')
-                  }
-                },
-                renderOption: (_: MergedData) => _.dataCheck
-                  ? areEquals(c, _) ? <Icon color="success">check</Icon> : <Icon color="error">close</Icon>
-                  : '',
-                renderValue: (_: MergedData) => _.dataCheck
-                  ? areEquals(c, _) ? '1' : '0'
-                  : '',
                 render: (_: MergedData) => {
                   const isOption = schema.schemaHelper.questionIndex[c].type === 'select_one' || schema.schemaHelper.questionIndex[c].type === 'select_multiple'
                   const dataCheck = _.dataCheck && isOption ? schema.translate.choice(c, _.dataCheck?.[c] as string) : _.dataCheck?.[c]
                   const data = isOption ? schema.translate.choice(c, _.data?.[c] as string) : _.data?.[c]
-                  switch (display) {
-                    case 'data':
-                      return data
-                    case 'dataCheck':
-                      return dataCheck ?? <TableIcon color="disabled">schedule</TableIcon>
-                    case 'all':
-                      return <>{data ?? '""'} = {_.dataCheck ? dataCheck ?? '""' : <TableIcon color="disabled">schedule</TableIcon>}</>
+                  return {
+                    option: _.dataCheck ? areEquals(c, _) ? <Icon color="success">check</Icon> : <Icon color="error">close</Icon> : '',
+                    value: _.dataCheck ? areEquals(c, _) ? '1' : '0' : '',
+                    label: fnSwitch(display, {
+                      'data': data,
+                      'dataCheck': dataCheck ?? <TableIcon color="disabled">schedule</TableIcon>,
+                      'all': <>{data ?? '""'} = {_.dataCheck ? dataCheck ?? '""' : <TableIcon color="disabled">schedule</TableIcon>}</>,
+                    }),
+                    export: fnSwitch(display, {
+                      'data': data,
+                      'dataCheck': dataCheck ?? '???',
+                      'all': (data ?? '""') + ' = ' + (dataCheck ?? '???'),
+                    }),
                   }
-                }
+                },
               } as const
             }),
             {
               id: 'total',
+              type: 'number',
               head: m.total,
               stickyEnd: true,
               align: 'right',
               style: _ => ({fontWeight: t.typography.fontWeightBold}),
-              render: _ => (
+              renderQuick: _ => (
                 _.dataCheck ? toPercent(_.score / activity.verifiedColumns.length) : ''
               )
             }
