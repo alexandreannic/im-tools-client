@@ -17,8 +17,9 @@ export enum ShelterContractor {
   'Zhilvest' = 'Zhilvest',
   'Framplus' = 'Framplus',
   'Kronos' = 'Kronos',
-  'Monolit' = 'Monolit'
-
+  'Monolit' = 'Monolit',
+  'Darwin' = 'Darwin',
+  'Cash' = 'Cash',
 }
 
 export class ShelterContractorPrices {
@@ -488,6 +489,7 @@ const oblasts = {
     // ShelterContractor['Kramelitbud'],
     ShelterContractor['Donmegastroy'],
     ShelterContractor['Kronos'],
+    ShelterContractor['Darwin'],
     ShelterContractor['Monolit'],
   ],
   sumska: [
@@ -505,6 +507,8 @@ const oblasts = {
     ShelterContractor['Framplus'],
     ShelterContractor['Kronos'],
     ShelterContractor['Monolit'],
+    ShelterContractor['Darwin'],
+    ShelterContractor['Cash'],
   ]
 
 }

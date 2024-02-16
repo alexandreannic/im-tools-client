@@ -10,10 +10,11 @@ import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {KoboIndex} from '@/core/KoboIndex'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {KoboEcrec_cashRegistration} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
-import {CashStatus, SelectCashStatus} from '@/shared/customInput/SelectCashStatus'
+import {CashStatus, SelectCashStatus, SelectShelterCashStatus, ShelterCashStatus} from '@/shared/customInput/SelectCashStatus'
 import {DatatableColumn} from '@/shared/Datatable/util/datatableType'
 import {DatatableUtils} from '@/shared/Datatable/util/datatableUtils'
 import {Ecrec_cashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_cashRegistration'
+import {KoboGeneralMapping} from '@/core/sdk/server/kobo/custom/KoboGeneralMapping'
 
 export const useCustomColumns = (): DatatableColumn.Props<KoboMappedAnswer>[] => {
   const ctx = useDatabaseKoboTableContext()
@@ -25,35 +26,35 @@ export const useCustomColumns = (): DatatableColumn.Props<KoboMappedAnswer>[] =>
         head: m.children,
         type: 'number',
         width: 20,
-        renderQuick: (row: KoboEcrec_cashRegistration.T) => row.custom.childrenCount,
+        renderQuick: (row: {custom: KoboGeneralMapping.IndividualBreakdown}) => row.custom.childrenCount,
       },
       {
         id: 'custom_adult',
         head: m.adults + ' 18+',
         type: 'number',
         width: 20,
-        renderQuick: (row: KoboEcrec_cashRegistration.T) => row.custom.adultCount,
+        renderQuick: (row: {custom: KoboGeneralMapping.IndividualBreakdown}) => row.custom.adultCount,
       },
       {
         id: 'custom_elderly',
         head: m.elderly + ' 60+',
         type: 'number',
         width: 20,
-        renderQuick: (row: KoboEcrec_cashRegistration.T) => row.custom.elderlyCount,
+        renderQuick: (row: {custom: KoboGeneralMapping.IndividualBreakdown}) => row.custom.elderlyCount,
       },
       {
         id: 'custom_disabilitiesCount',
         head: m.PwDs,
         type: 'number',
         width: 20,
-        renderQuick: (row: KoboEcrec_cashRegistration.T) => row.custom.disabilitiesCount,
+        renderQuick: (row: {custom: KoboGeneralMapping.IndividualBreakdown}) => row.custom.disabilitiesCount,
       },
       {
         id: 'custom_disabilities',
         head: m.disabilities,
         type: 'select_multiple',
         options: () => Obj.entries(Ecrec_cashRegistration.options.hh_char_dis_select).map(([k, v]) => DatatableUtils.buildCustomOption(k, v)),
-        render: (row: KoboEcrec_cashRegistration.T) => {
+        render: (row: {custom: KoboGeneralMapping.IndividualBreakdown}) => {
           return {
             value: row.custom.disabilities,
             label: row.custom.disabilities.map(_ => Ecrec_cashRegistration.options.hh_char_dis_select[_]).join(' | '),
@@ -81,6 +82,26 @@ export const useCustomColumns = (): DatatableColumn.Props<KoboMappedAnswer>[] =>
         }
       }
     })
+    const paymentStatusShelter: DatatableColumn.Props<any> = ({
+      id: 'custom_status',
+      head: m.status,
+      type: 'select_one',
+      width: 120,
+      options: () => SheetUtils.buildOptions(Obj.keys(ShelterCashStatus), true),
+      render: (row: any) => {
+        return {
+          value: row.tags?.status,
+          label: (
+            <SelectShelterCashStatus
+              disabled={!ctx.canEdit}
+              value={row.tags?.status}
+              placeholder={m.project}
+              onChange={_ => ctx.asyncUpdateTag.call({answerIds: [row.id], value: _, key: 'status'})}
+            />
+          )
+        }
+      }
+    })
 
     const extra: Record<string, DatatableColumn.Props<any>[]> = {
       [KoboIndex.byName('shelter_nta').id]: [...individualsBreakdown,],
@@ -88,6 +109,10 @@ export const useCustomColumns = (): DatatableColumn.Props<KoboMappedAnswer>[] =>
       [KoboIndex.byName('bn_cashForRentApplication').id]: [...individualsBreakdown,],
       [KoboIndex.byName('bn_re').id]: [
         // paymentStatus,
+        ...individualsBreakdown,
+      ],
+      [KoboIndex.byName('shelter_cashForShelter').id]: [
+        paymentStatus,
         ...individualsBreakdown,
       ],
       [KoboIndex.byName('ecrec_cashRegistration').id]: [

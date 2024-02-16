@@ -78,7 +78,6 @@ export const DatabaseTable = ({
   const formName = KoboIndex.searchById(formId)?.name
 
   useEffect(function getSchema() {
-    console.log('fetch', formName)
     if (formName) ctxSchema.fetchers.fetch({force: false}, formName)
     else fetcherSchemaIfUnknown.fetch()
   }, [formId])
