@@ -10,7 +10,7 @@ import {IpSelectSingle} from '@/shared/Select/SelectSingle'
 import {KoboIndex} from '@/core/KoboIndex'
 import {SheetUtils} from '@/shared/Sheet/util/sheetUtils'
 import {KoboEcrec_cashRegistration} from '@/core/sdk/server/kobo/custom/KoboEcrecCashRegistration'
-import {CashStatus, SelectCashStatus, SelectShelterCashStatus, ShelterCashStatus} from '@/shared/customInput/SelectCashStatus'
+import {CashStatus, SelectCashStatus, SelectShelterCashStatus, ShelterCashStatus} from '@/shared/customInput/SelectStatus'
 import {DatatableColumn} from '@/shared/Datatable/util/datatableType'
 import {DatatableUtils} from '@/shared/Datatable/util/datatableUtils'
 import {Ecrec_cashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_cashRegistration'
@@ -112,7 +112,7 @@ export const useCustomColumns = (): DatatableColumn.Props<KoboMappedAnswer>[] =>
         ...individualsBreakdown,
       ],
       [KoboIndex.byName('shelter_cashForShelter').id]: [
-        paymentStatus,
+        paymentStatusShelter,
         ...individualsBreakdown,
       ],
       [KoboIndex.byName('ecrec_cashRegistration').id]: [

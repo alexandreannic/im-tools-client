@@ -21,6 +21,7 @@ import {useKoboSchemaContext} from '@/features/KoboSchema/KoboSchemaContext'
 import {Datatable} from '@/shared/Datatable/Datatable'
 import {DatatableColumn} from '@/shared/Datatable/util/datatableType'
 import {DatatableUtils} from '@/shared/Datatable/util/datatableUtils'
+import {SelectValidationStatus} from '@/shared/customInput/SelectStatus'
 
 export const DatabaseKoboTableContent = ({
   onFiltersChange,
@@ -77,14 +78,10 @@ export const DatabaseKoboTableContent = ({
           value: value ?? DatatableUtils.blank,
           option: value ? m[value] : DatatableUtils.blank,
           label: (
-            <IpSelectSingle
+            <SelectValidationStatus
+              compact
               disabled={!ctx.canEdit || ctx.fetcherAnswers.loading}
               value={value}
-              options={[
-                {children: <Icon sx={{color: theme.palette.success.main}} title={m.Approved}>check_circle</Icon>, value: KoboValidation.Approved},
-                {children: <Icon sx={{color: theme.palette.error.main}} title={m.Rejected}>error</Icon>, value: KoboValidation.Rejected},
-                {children: <Icon sx={{color: theme.palette.warning.main}} title={m.Pending}>schedule</Icon>, value: KoboValidation.Pending},
-              ]}
               onChange={(e) => {
                 ctx.updateTag({
                   formId: ctx.form.id,

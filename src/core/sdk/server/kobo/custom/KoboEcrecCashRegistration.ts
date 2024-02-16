@@ -1,5 +1,5 @@
 import {KoboAnswer, KoboBaseTags} from '@/core/sdk/server/kobo/Kobo'
-import {CashStatus} from '@/shared/customInput/SelectCashStatus'
+import {CashStatus} from '@/shared/customInput/SelectStatus'
 import {Ecrec_cashRegistration} from '@/core/sdk/server/kobo/generatedInterface/Ecrec_cashRegistration'
 import {KoboGeneralMapping} from '@/core/sdk/server/kobo/custom/KoboGeneralMapping'
 

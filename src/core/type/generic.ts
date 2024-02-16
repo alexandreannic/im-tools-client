@@ -4,7 +4,7 @@ export type ValueOf<T> = T[keyof T];
 
 export type KeyOf<T> = Extract<keyof T, string>
 
-export type StateStatus = 'error' | 'warning' | 'info' | 'success' | 'none'
+export type StateStatus = 'error' | 'warning' | 'info' | 'success' | 'disabled'
 
 export type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends Record<string, unknown>

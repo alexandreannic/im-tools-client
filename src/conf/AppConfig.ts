@@ -78,7 +78,8 @@ export const appConfig = {
     error: 'error',
     warning: 'warning',
     success: 'check_circle',
-    info: 'info'
+    info: 'info',
+    disabled: 'disabled'
   },
   other: {
     protection: {

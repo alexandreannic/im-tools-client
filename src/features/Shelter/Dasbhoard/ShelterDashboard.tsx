@@ -98,7 +98,7 @@ export const ShelterDashboard = () => {
       validationStatus: {
         icon: 'check',
         label: m._shelter.validationStatus,
-        getValue: _ => _.nta?.tags?.validation,
+        getValue: _ => _.nta?.tags?._validation,
         getOptions: (get) => DataFilter.buildOptionsFromObject(ShelterTagValidation),
       },
       status: {
