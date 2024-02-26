@@ -14,6 +14,7 @@ import {OblastIndex} from '@/shared/UkraineMap/oblastIndex'
 import {useTheme} from '@mui/material'
 import {ChartBarMultipleBy} from '@/shared/charts/ChartBarMultipleBy'
 import {Protection_Hhs2} from '@/core/sdk/server/kobo/generatedInterface/Protection_Hhs2'
+import { Protection_hhs3 } from '@/core/sdk/server/kobo/generatedInterface/Protection_hhs3'
 
 export const SnapshotProtMonitoEchoSafety = () => {
   const {data, computed, period} = useSnapshotProtMonitoringContext()
@@ -108,15 +109,23 @@ export const SnapshotProtMonitoEchoSafety = () => {
                     //   })
                     // }}
                   >
-                    Perceptions of safety vary significantly depending on the surveyed area. Overall <b>37%</b> of respondents indicated a poor sense of safety mainly due to
-                    shelling presence or armed actors and UXOs contamination. This figure is particularly high in the areas of
-                    Kherson (<b>60%</b>), Sumy (<b>43%</b>) and Chernihiv (<b>38%</b>). <b>1%</b> of respondents reported protection incidents experienced by
-                    household members over the past 6 months.
+                   Reports of significant stress and deterioration of mental health and wellbeing continue to be prevalent in Ukraine. 
+                   Older individuals and those with disabilities are more prone to experiencing psychological distress, often stemming from an elevated sense of loneliness, a lack of social engagement, and a shortage of communal spaces for interaction and connection with others.
                   </p>
                 }
               </Lazy>
             </SlideTxt>
             <SlidePanel>
+            <SlidePanelTitle>{m.majorStressFactors}</SlidePanelTitle>
+          <ChartBarMultipleBy
+            data={data}
+            filterValue={['unable_unwilling_to_answer']}
+            by={_ => _.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
+            label={Protection_hhs3.options.what_do_you_think_feel_are_the_major_stress_factors_for_you_and_your_household_members}
+            limit={5}
+          />
+        </SlidePanel>
+            {/* <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.typeOfIncident}</SlidePanelTitle>
               <Lazy deps={[groupedIndividualsType.type]} fn={() =>
                 chain(ChartHelperOld.multiple({
@@ -135,7 +144,7 @@ export const SnapshotProtMonitoEchoSafety = () => {
                   <ChartBar data={_}/>
                 )}
               </Lazy>
-            </SlidePanel>
+            </SlidePanel> */}
             <SlidePanel>
               <SlidePanelTitle>{m.protHHS2.freedomOfMovement}</SlidePanelTitle>
               <ChartBarMultipleBy
